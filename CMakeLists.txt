@@ -12,7 +12,7 @@ ENDIF(GRAPHICS)
 SET(CMAKE_CXX_FLAGS "-Wno-deprecated -O2")
 
 ADD_EXECUTABLE(lovelab src/main.cpp src/LoveLab.cpp src/Simulation.cpp
-src/SimSimple2D.cpp src/SimulationObject.cpp src/ObjectSimple2D.cpp
+src/SimSimple2D.cpp src/ScriptableObject.cpp src/SimulationObject.cpp src/ObjectSimple2D.cpp
 src/PlantSimple2D.cpp src/AnimatSimple2D.cpp src/functions.cpp
 src/Gridbrain.cpp src/Grid.cpp src/GridbrainComponent
 src/GridbrainComponentSet.cpp src/PopulationDynamics.cpp

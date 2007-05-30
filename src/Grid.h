@@ -20,21 +20,14 @@
 #ifndef __INCLUDE_GRID_H
 #define __INCLUDE_GRID_H
 
+#include "ScriptableObject.h"
 #include "GridbrainComponentSet.h"
 
 #include <vector>
 #include <list>
 #include <map>
 
-extern "C"
-{
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
-}
-#include "Lunar.h"
-
-class Grid
+class Grid : public ScriptableObject
 {
 public:
 	static const int ALPHA;

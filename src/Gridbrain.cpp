@@ -53,7 +53,10 @@ Gridbrain::~Gridbrain()
 	}
 	for (unsigned int i = 0; i < _grids_count; i++)
 	{
-		delete _grids_vec[i];
+		if (!_grids_vec[i]->_created_by_script)
+		{
+			delete _grids_vec[i];
+		}
 	}
 	_grids_count = 0;
 }

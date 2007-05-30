@@ -258,6 +258,8 @@ Lunar<Grid>::RegType Grid::methods[] = {
 
 Grid::Grid(lua_State* L)
 {
+	_created_by_script = true;
+
 	_type = 0;
 	_width = 0;
 	_height = 0;

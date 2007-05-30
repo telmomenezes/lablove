@@ -54,6 +54,7 @@ public:
 		lua_pushvalue(L, -1);           // dup new_T function
 		set(L, methods, "new");         // add new_T to method table
 		set(L, -3, "__call");           // mt.__call = new_T
+
 		lua_setmetatable(L, methods);
 
 		// fill method table with methods from class T
