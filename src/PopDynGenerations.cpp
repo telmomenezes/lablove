@@ -18,7 +18,7 @@
  */
 
 #include "PopDynGenerations.h"
-#include "Love.h"
+#include "LoveLab.h"
 #include "Object.h"
 #include "functions.h"
 #include "random.h"
@@ -67,7 +67,7 @@ void PopDynGenerations::init()
 		{
 			Object* org = (*iter_species)->clone();
 			org->place_random();
-			Love::get_instance().get_simulation()->add_object(org);
+			LoveLab::get_instance().get_simulation()->add_object(org);
 			(*iter_species_org_list)->push_back(org);
 		}
 
@@ -88,7 +88,7 @@ void PopDynGenerations::init()
 			Object* org = (*iter_species)->clone(false);
 			org->init();
 			org->place_random();
-			Love::get_instance().get_simulation()->add_object(org);
+			LoveLab::get_instance().get_simulation()->add_object(org);
 			(*iter_species_org_list)->push_back(org);
 		}
 
@@ -100,8 +100,8 @@ void PopDynGenerations::init()
 
 void PopDynGenerations::on_cycle()
 {
-	if (((Love::get_instance().get_simulation()->time() % _generation_time) == 0)
-		&& (Love::get_instance().get_simulation()->time() != 0))
+	if (((LoveLab::get_instance().get_simulation()->time() % _generation_time) == 0)
+		&& (LoveLab::get_instance().get_simulation()->time() != 0))
 	{
 		list<Object*>::iterator iter_species = _evolving_species.begin();
 		list<long>::iterator iter_pop = _evolving_species_populations.begin();
@@ -161,7 +161,7 @@ void PopDynGenerations::on_cycle()
 				new_organism = best_organism->clone();
 				new_organism->set_energy(0.0f);
 				new_organism->place_random();
-				Love::get_instance().get_simulation()->add_object(new_organism);
+				LoveLab::get_instance().get_simulation()->add_object(new_organism);
 
 				// Mutate
 				new_organism->mutate();
@@ -174,7 +174,7 @@ void PopDynGenerations::on_cycle()
 			{
 				Object* org = (*iter_species_org_list)->front();
 				(*iter_species_org_list)->pop_front();
-				Love::get_instance().get_simulation()->remove_object(org);
+				LoveLab::get_instance().get_simulation()->remove_object(org);
 			}
 
 			iter_species++;
@@ -192,11 +192,11 @@ void PopDynGenerations::on_organism_death(Object* org)
 	{
 		if (org->get_species_id() == (*iter_species)->get_species_id())
 		{
-			Love::get_instance().get_simulation()->remove_object(org);
+			LoveLab::get_instance().get_simulation()->remove_object(org);
 
 			Object* org = (*iter_species)->clone();
 			org->place_random();
-			Love::get_instance().get_simulation()->add_object(org);
+			LoveLab::get_instance().get_simulation()->add_object(org);
 		}
 
 		iter_species++;

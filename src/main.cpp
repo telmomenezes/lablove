@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "Love.h"
+#include "LoveLab.h"
 #include "SimSimple2D.h"
 #include "PlantSimple2D.h"
 #include "AnimatSimple2D.h"
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 	luaopen_math(L);
 	luaopen_debug(L);
 	
-	Luna<Love>::Register(L);
+	Luna<LoveLab>::Register(L);
 	Luna<SimSimple2D>::Register(L);
 	Luna<PlantSimple2D>::Register(L);
 	Luna<AnimatSimple2D>::Register(L);
@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	Love::get_instance().run();
+	LoveLab::get_instance().run();
 
 	lua_close(L);
 

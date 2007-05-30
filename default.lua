@@ -27,14 +27,14 @@ initial_connections = 10
 
 ----------------------------------------------
 
-love = Love()
-love:create()
-love:set_seed_index(1)
+love_lab = LoveLab()
+love_lab:create()
+love_lab:set_seed_index(1)
 
 sim = SimSimple2D()
 sim:set_world_dimensions(world_width, world_height, view_range * 2)
 
-love:set_simulation(sim)
+love_lab:set_simulation(sim)
 animat = AnimatSimple2D(initial_connections, 25)
 
 animat:set_size(10.0)

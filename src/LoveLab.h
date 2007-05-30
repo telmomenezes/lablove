@@ -17,11 +17,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_LOVE_H)
-#define __INCLUDE_LOVE_H
+#if !defined(__INCLUDE_LOVELAB_H)
+#define __INCLUDE_LOVELAB_H
 
 #include "Simulation.h"
-#include "Console.h"
 #include "KeyboardMouseHandler.h"
 
 #ifdef __LOVE_GRAPHICS
@@ -40,12 +39,12 @@ extern "C"
 }
 #include "luna.h"
 
-class Love : public KeyboardMouseHandler
+class LoveLab : public KeyboardMouseHandler
 {
 public:
-	Love();
-	virtual ~Love();
-	static Love& get_instance();
+	LoveLab();
+	virtual ~LoveLab();
+	static LoveLab& get_instance();
 	void create();
 	void set_simulation(Simulation* simulation){_simulation = simulation;}
 	Simulation* get_simulation(){return _simulation;}
@@ -56,13 +55,10 @@ public:
 	bool running(){return !_stop;}
 	void run();
 	void cycle();
-	void set_show_console(bool show){_show_console = show;}
-	bool get_show_console(){return _show_console;}
 	void set_draw_brain(bool draw){_draw_brain = draw;}
 	bool get_draw_brain(){return _draw_brain;}
 	unsigned int get_screen_width(){return _screen_width;}
 	unsigned int get_screen_height(){return _screen_height;}
-	Console* get_console(){return _console;}
 	void add_keyboard_mouse_handler(KeyboardMouseHandler* handler);
 	void remove_keyboard_mouse_handler();
 
@@ -71,21 +67,20 @@ public:
 #endif
 
 	static const char className[];
-        static Luna<Love>::RegType methods[];
+        static Luna<LoveLab>::RegType methods[];
 
-        Love(lua_State* L);
+        LoveLab(lua_State* L);
         int create(lua_State* L);
 	int set_simulation(lua_State* L);
 	int set_seed_index(lua_State* L);
 
 private:
-	static Love* _love;
+	static LoveLab* _love;
 	Simulation* _simulation;
 	bool _stop;
 	int _screen_width;
 	int _screen_height;
 	int _color_depth;
-	Console* _console;
 	bool _show_console;
 	bool _draw_brain;
 	unsigned long _cycle_start_time;

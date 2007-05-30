@@ -19,14 +19,14 @@ view_angle = 100.0
 
 ----------------------------------------------
 
-love = Love()
-love:create()
-love:set_seed_index(1)
+love_lab = LoveLab()
+love_lab:create()
+love_lab:set_seed_index(1)
 
 sim = SimSimple2D()
 sim:set_world_dimensions(world_width, world_height, view_range * 2)
 
-love:set_simulation(sim)
+love_lab:set_simulation(sim)
 animat = AnimatSimple2D(10, 25)
 
 animat:set_size(10.0)
@@ -88,7 +88,7 @@ animat:set_beta_grid(grid2)
 
 plant = PlantSimple2D()
 plant:set_size(5.0)
-plant:set_energy(1.0)
+plant:set_initial_energy(1.0)
 
 pop_dyn = PopDynGenerations()
 sim:set_population_dynamics(pop_dyn)

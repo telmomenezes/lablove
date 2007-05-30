@@ -18,7 +18,7 @@
  */
 
 #include "PopDynFixedSpecies.h"
-#include "Love.h"
+#include "LoveLab.h"
 #include "Object.h"
 #include "functions.h"
 #include "random.h"
@@ -66,7 +66,7 @@ void PopDynFixedSpecies::init()
 		{
 			Object* org = (*iter_species)->clone();
 			org->place_random();
-			Love::get_instance().get_simulation()->add_object(org);
+			LoveLab::get_instance().get_simulation()->add_object(org);
 			(*iter_species_org_vec)->push_back(org);
 		}
 
@@ -88,7 +88,7 @@ void PopDynFixedSpecies::init()
 			org->init();
 			org->set_energy(org->get_initial_energy());
 			org->place_random();
-			Love::get_instance().get_simulation()->add_object(org);
+			LoveLab::get_instance().get_simulation()->add_object(org);
 			(*iter_species_org_vec)->push_back(org);
 		}
 
@@ -100,9 +100,9 @@ void PopDynFixedSpecies::init()
 
 void PopDynFixedSpecies::on_cycle()
 {
-	if ((Love::get_instance().get_simulation()->time() % 1000) == 0)
+	if ((LoveLab::get_instance().get_simulation()->time() % 1000) == 0)
 	{
-		printf("%d", Love::get_instance().get_simulation()->time());
+		printf("%d", LoveLab::get_instance().get_simulation()->time());
 		for (unsigned int i = 0; i < _evolving_species_fitness.size(); i++)
 		{
 			printf(", %f, %f",
@@ -123,12 +123,12 @@ void PopDynFixedSpecies::on_organism_death(Object* org)
 	{
 		if (org->get_species_id() == (*iter_species)->get_species_id())
 		{
-			Love::get_instance().get_simulation()->remove_object(org);
+			LoveLab::get_instance().get_simulation()->remove_object(org);
 
 			Object* org = (*iter_species)->clone();
 			org->set_energy(org->get_initial_energy());
 			org->place_random();
-			Love::get_instance().get_simulation()->add_object(org);
+			LoveLab::get_instance().get_simulation()->add_object(org);
 			return;
 		}
 
@@ -185,7 +185,7 @@ void PopDynFixedSpecies::on_organism_death(Object* org)
 			new_organism = best_organism->clone();
 			new_organism->set_energy(new_organism->get_initial_energy());
 			new_organism->place_random();
-			Love::get_instance().get_simulation()->add_object(new_organism);
+			LoveLab::get_instance().get_simulation()->add_object(new_organism);
 
 			// Mutate
 			new_organism->mutate();
@@ -202,7 +202,7 @@ void PopDynFixedSpecies::on_organism_death(Object* org)
 			
 			// Remove
 			(*(*iter_species_org_vec))[org_pos] = new_organism;
-			Love::get_instance().get_simulation()->remove_object(org);
+			LoveLab::get_instance().get_simulation()->remove_object(org);
 
 			return;
 		}

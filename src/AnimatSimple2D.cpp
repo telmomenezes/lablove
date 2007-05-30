@@ -18,7 +18,7 @@
  */
 
 #include "AnimatSimple2D.h"
-#include "Love.h"
+#include "LoveLab.h"
 #include "SimSimple2D.h"
 #include "math.h"
 #include "functions.h"
@@ -282,7 +282,7 @@ void AnimatSimple2D::end_cycle()
 void AnimatSimple2D::perception_step()
 {
 	// Determine cells to analyse
-	unsigned int cell_side = (unsigned int)(((SimSimple2D*)(Love::get_instance().get_simulation()))->get_cell_side());
+	unsigned int cell_side = (unsigned int)(((SimSimple2D*)(LoveLab::get_instance().get_simulation()))->get_cell_side());
 	int x = (int)_x;
 	int y = (int)_y;
 	int cell_pos_x = x % cell_side;
@@ -305,7 +305,7 @@ void AnimatSimple2D::perception_step()
 	{
 		left = true;
 	}
-	if ((cell_x < (((SimSimple2D*)(Love::get_instance().get_simulation()))->get_world_cell_width() - 1))
+	if ((cell_x < (((SimSimple2D*)(LoveLab::get_instance().get_simulation()))->get_world_cell_width() - 1))
 		&& (right_limit >= cell_side))
 	{
 		right = true;
@@ -314,7 +314,7 @@ void AnimatSimple2D::perception_step()
 	{
 		top = true;
 	}
-	if ((cell_y < (((SimSimple2D*)(Love::get_instance().get_simulation()))->get_world_cell_length() - 1))
+	if ((cell_y < (((SimSimple2D*)(LoveLab::get_instance().get_simulation()))->get_world_cell_length() - 1))
 		&& (bottom_limit >= cell_side))
 	{
 		bottom = true;
@@ -359,8 +359,8 @@ void AnimatSimple2D::perception_step()
 void AnimatSimple2D::scan_cell(int cell_x, int cell_y)
 {
 	ObjectSimple2D* obj = (ObjectSimple2D*)
-		((SimSimple2D*)(Love::get_instance().get_simulation()))->get_cell_grid()[
-		(cell_y * ((SimSimple2D*)(Love::get_instance().get_simulation()))->get_world_cell_width()) + cell_x];
+		((SimSimple2D*)(LoveLab::get_instance().get_simulation()))->get_cell_grid()[
+		(cell_y * ((SimSimple2D*)(LoveLab::get_instance().get_simulation()))->get_world_cell_width()) + cell_x];
 
 	while (obj)
 	{
@@ -454,7 +454,7 @@ void AnimatSimple2D::eat()
 	if (_nearest_food)
 	{
 		delta_energy(_nearest_food->get_energy());
-		Love::get_instance().get_simulation()->kill_organism(_nearest_food);
+		LoveLab::get_instance().get_simulation()->kill_organism(_nearest_food);
 	}
 }
 
@@ -602,7 +602,7 @@ void AnimatSimple2D::mutate()
 #ifdef __LOVE_GRAPHICS
 void AnimatSimple2D::draw()
 {
-	SimSimple2D* sim = (SimSimple2D*)(Love::get_instance().get_simulation());
+	SimSimple2D* sim = (SimSimple2D*)(LoveLab::get_instance().get_simulation());
 
 	float x = _x - sim->get_view_x();
 	float y = _y - sim->get_view_y();

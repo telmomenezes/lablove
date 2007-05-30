@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "Love.h"
+#include "LoveLab.h"
 #include "functions.h"
 #include "random.h"
 
@@ -25,15 +25,14 @@
 #include "GL/gl.h"
 #endif
 
-Love* Love::_love = NULL;
+LoveLab* LoveLab::_love = NULL;
 
-Love::Love()
+LoveLab::LoveLab()
 {
 	_stop = false;
 	_screen_width = 800;
 	_screen_height = 600;
 	_color_depth = 32;
-	_console = new Console(80, 40);
 	_show_console = false;
 	_cycle_start_time = 0;
 	_last_cycle_start_time = 0;
@@ -45,13 +44,12 @@ Love::Love()
         sprintf(_fps_string_buffer, "");
 }
 
-Love::Love(lua_State* L)
+LoveLab::LoveLab(lua_State* L)
 {
 	_stop = false;
 	_screen_width = 800;
 	_screen_height = 600;
 	_color_depth = 32;
-	_console = new Console(80, 40);
 	_show_console = false;
 	_cycle_start_time = 0;
 	_last_cycle_start_time = 0;
@@ -63,27 +61,22 @@ Love::Love(lua_State* L)
         sprintf(_fps_string_buffer, "");
 }
 
-Love::~Love()
+LoveLab::~LoveLab()
 {
-	if (_console != NULL)
-	{
-		delete _console;
-		_console = NULL;
-	}
 }
 
-void Love::create()
+void LoveLab::create()
 {
 	_love = this;
 	_love->add_keyboard_mouse_handler(this);
 }
 
-Love& Love::get_instance()
+LoveLab& LoveLab::get_instance()
 {	
 	return *_love;
 }
 
-void Love::set_screen_dimensions(unsigned int screen_width,
+void LoveLab::set_screen_dimensions(unsigned int screen_width,
 					unsigned int screen_height,
 					unsigned int color_depth)
 {
@@ -92,12 +85,12 @@ void Love::set_screen_dimensions(unsigned int screen_width,
 	_color_depth = color_depth;
 }
 
-void Love::set_seed_index(unsigned int index)
+void LoveLab::set_seed_index(unsigned int index)
 {
 	random_seed_index(index);
 }
 
-void Love::run()
+void LoveLab::run()
 {
 #ifdef __LOVE_GRAPHICS
 	const SDL_VideoInfo *info;
@@ -134,15 +127,13 @@ void Love::run()
 
 	_simulation->init();
 
-	console_write("LOVE Simulation - Life On a Virtual Environment");
-
 	while (running())
 	{
 		cycle();
 	}
 }
 
-void Love::cycle()
+void LoveLab::cycle()
 {
 #ifdef __LOVE_GRAPHICS
 	_last_cycle_start_time = _cycle_start_time;
@@ -167,11 +158,6 @@ void Love::cycle()
 
 	glColor3f(0.15, 0.15, 0.15);
 	_font.print(10, _screen_height - 10, "%s", _fps_string_buffer);
-
-	if (_show_console)
-	{
-		_console->draw();
-	}
 
 	if (_draw_brain)
 	{
@@ -240,26 +226,23 @@ void Love::cycle()
 #endif
 }
 
-void Love::add_keyboard_mouse_handler(KeyboardMouseHandler* handler)
+void LoveLab::add_keyboard_mouse_handler(KeyboardMouseHandler* handler)
 {
 	_handlers_list.push_front(handler);
 }
 
-void Love::remove_keyboard_mouse_handler()
+void LoveLab::remove_keyboard_mouse_handler()
 {
 	_handlers_list.pop_front();
 }
 
 #ifdef __LOVE_GRAPHICS
-bool Love::on_key_up(int key)
+bool LoveLab::on_key_up(int key)
 {
 	switch (key)
 	{
 	case SDLK_ESCAPE:
 		_stop = true;
-		return true;
-	case SDLK_TAB:
-		set_show_console(!get_show_console());
 		return true;
 	case SDLK_b:
 		set_draw_brain(!get_draw_brain());
@@ -269,16 +252,16 @@ bool Love::on_key_up(int key)
 }
 #endif
 
-const char Love::className[] = "Love";
+const char LoveLab::className[] = "LoveLab";
 
-Luna<Love>::RegType Love::methods[] = {
-        {"create", &Love::create},
-	{"set_simulation", &Love::set_simulation},
-        {"set_seed_index", &Love::set_seed_index},
+Luna<LoveLab>::RegType LoveLab::methods[] = {
+        {"create", &LoveLab::create},
+	{"set_simulation", &LoveLab::set_simulation},
+        {"set_seed_index", &LoveLab::set_seed_index},
         {0,0}
 };
 
-int Love::create(lua_State* L)
+int LoveLab::create(lua_State* L)
 {
         create();
         return 0;
@@ -286,14 +269,14 @@ int Love::create(lua_State* L)
 
 
 
-int Love::set_simulation(lua_State *L)
+int LoveLab::set_simulation(lua_State *L)
 {
-        Simulation* sim = (Simulation*)Luna<Love>::pointer(L, 1);
+        Simulation* sim = (Simulation*)Luna<LoveLab>::pointer(L, 1);
         set_simulation(sim);
         return 0;
 }
 
-int Love::set_seed_index(lua_State* L)
+int LoveLab::set_seed_index(lua_State* L)
 {
         int index = luaL_checkint(L, 1);
         set_seed_index(index);

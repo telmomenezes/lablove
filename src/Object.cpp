@@ -18,7 +18,7 @@
  */
 
 #include "Object.h"
-#include "Love.h"
+#include "LoveLab.h"
 #include <stdlib.h>
 #include "functions.h"
 
@@ -30,7 +30,7 @@ Object::Object()
         _species_id = 0;
 	_energy = 0;
 	_initial_energy = 0;
-	_creation_time = Love::get_instance().get_simulation()->time();
+	_creation_time = LoveLab::get_instance().get_simulation()->time();
 }
 
 Object::Object(Object* obj)
@@ -41,7 +41,7 @@ Object::Object(Object* obj)
         _energy = obj->_energy;
 	_initial_energy = obj->_initial_energy;
         _species_id = obj->_species_id;
-	_creation_time = Love::get_instance().get_simulation()->time();
+	_creation_time = LoveLab::get_instance().get_simulation()->time();
 }
 
 Object::~Object()
@@ -50,9 +50,9 @@ Object::~Object()
 
 void Object::draw_brain()
 {
-	int x = (Love::get_instance().get_screen_width() / 2) - 160;
-	int y = (Love::get_instance().get_screen_height() / 2) - 4;
-	//stringColor(Love::get_instance().get_screen(), x, y, "Can not display brain of selected object", COLOR_INFO);
+	int x = (LoveLab::get_instance().get_screen_width() / 2) - 160;
+	int y = (LoveLab::get_instance().get_screen_height() / 2) - 4;
+	//stringColor(LoveLab::get_instance().get_screen(), x, y, "Can not display brain of selected object", COLOR_INFO);
 }
 
 int Object::set_initial_energy(lua_State* L)

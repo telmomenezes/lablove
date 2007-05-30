@@ -18,7 +18,7 @@
  */
 
 #include "ObjectSimple2D.h"
-#include "Love.h"
+#include "LoveLab.h"
 #include "SimSimple2D.h"
 #include <stdlib.h>
 #include "functions.h"
@@ -75,7 +75,7 @@ ObjectSimple2D::~ObjectSimple2D()
 
 void ObjectSimple2D::set_pos(float x, float y)
 {
-	SimSimple2D* sim = (SimSimple2D*)(Love::get_instance().get_simulation());
+	SimSimple2D* sim = (SimSimple2D*)(LoveLab::get_instance().get_simulation());
 
 	if ((x < 0)
 		|| (y < 0)
@@ -160,7 +160,7 @@ void ObjectSimple2D::set_rot(float rot)
 {
 	if (_selected)
 	{
-		SimSimple2D* sim = (SimSimple2D*)(Love::get_instance().get_simulation());
+		SimSimple2D* sim = (SimSimple2D*)(LoveLab::get_instance().get_simulation());
 
 		int x1 = (int)_x - (int)sim->get_view_x();
 		int y1 = (int)_y - (int)sim->get_view_y();
@@ -181,7 +181,7 @@ void ObjectSimple2D::set_rot(float rot)
 
 void ObjectSimple2D::place_random()
 {
-	SimSimple2D* sim = (SimSimple2D*)Love::get_instance().get_simulation();
+	SimSimple2D* sim = (SimSimple2D*)LoveLab::get_instance().get_simulation();
 
 	unsigned int world_width = (unsigned int)sim->get_world_width();
 	unsigned int world_length = (unsigned int)sim->get_world_length();
@@ -196,14 +196,14 @@ void ObjectSimple2D::on_cycle()
 
 	if (_energy < 0)
 	{
-		Love::get_instance().get_simulation()->kill_organism(this);
+		LoveLab::get_instance().get_simulation()->kill_organism(this);
 	}
 
 	if (_max_age > 0)
 	{
-		if (Love::get_instance().get_simulation()->time() - _creation_time >= _max_age)
+		if (LoveLab::get_instance().get_simulation()->time() - _creation_time >= _max_age)
 		{
-			Love::get_instance().get_simulation()->kill_organism(this);
+			LoveLab::get_instance().get_simulation()->kill_organism(this);
 		}
 	}
 }
@@ -238,7 +238,7 @@ int ObjectSimple2D::set_metabolism(lua_State* L)
 
 int ObjectSimple2D::set_color(lua_State* L)
 {
-	MoleculeRGB* color = (MoleculeRGB*)Luna<Love>::pointer(L, 1);
+	MoleculeRGB* color = (MoleculeRGB*)Luna<LoveLab>::pointer(L, 1);
         set_color(color);
         return 0;
 }

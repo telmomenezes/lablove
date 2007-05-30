@@ -18,7 +18,7 @@
  */
 
 #include "SimSimple2D.h"
-#include "Love.h"
+#include "LoveLab.h"
 #include "ObjectSimple2D.h"
 #include <math.h>
 #include "functions.h"
@@ -124,14 +124,14 @@ void SimSimple2D::move_view(int delta_x, int delta_y)
 		_view_y = 0;
 	}
 
-	if ((_view_x + Love::get_instance().get_screen_width()) >= (unsigned int)_world_width)
+	if ((_view_x + LoveLab::get_instance().get_screen_width()) >= (unsigned int)_world_width)
 	{
-		_view_x = ((unsigned int)_world_width) - Love::get_instance().get_screen_width();
+		_view_x = ((unsigned int)_world_width) - LoveLab::get_instance().get_screen_width();
 	}
 
-	if ((_view_y + Love::get_instance().get_screen_height()) >= (unsigned int)_world_length)
+	if ((_view_y + LoveLab::get_instance().get_screen_height()) >= (unsigned int)_world_length)
 	{
-		_view_y = ((unsigned int)_world_length) - Love::get_instance().get_screen_height();
+		_view_y = ((unsigned int)_world_length) - LoveLab::get_instance().get_screen_height();
 	}
 }
 
@@ -169,19 +169,19 @@ void SimSimple2D::draw_before_objects()
 		glBegin(GL_LINES);
 
 		unsigned int division = cell_side - (_view_x % cell_side);
-		while (division < Love::get_instance().get_screen_width())
+		while (division < LoveLab::get_instance().get_screen_width())
 		{
 			glVertex2f(division, 0);
-			glVertex2f(division, Love::get_instance().get_screen_height());
+			glVertex2f(division, LoveLab::get_instance().get_screen_height());
 
 			division += cell_side;
 		}
 
 		division = cell_side - (_view_y % cell_side);
-		while (division < Love::get_instance().get_screen_height())
+		while (division < LoveLab::get_instance().get_screen_height())
 		{
 			glVertex2f(0, division);
-			glVertex2f(Love::get_instance().get_screen_width(), division);
+			glVertex2f(LoveLab::get_instance().get_screen_width(), division);
 
 			division += cell_side;
 		}

@@ -18,38 +18,7 @@
  */
 
 #include "functions.h"
-#include "Love.h"
 #include <math.h>
-
-void console_write(char* text, unsigned int color)
-{
-	Love::get_instance().get_console()->write(text, color);
-}
-
-void console_write_ln(char* text, unsigned int color)
-{
-	Love::get_instance().get_console()->write_ln(text, color);
-}
-
-void console_write_int(int value, unsigned int color)
-{
-	Love::get_instance().get_console()->write_int(value, color);
-}
-
-void console_write_float(float value, unsigned int color)
-{
-	Love::get_instance().get_console()->write_float(value, color);
-}
-
-void console_write_double(double value, unsigned int color)
-{
-	Love::get_instance().get_console()->write_double(value, color);
-}
-
-void console_new_line()
-{
-	Love::get_instance().get_console()->new_line();
-}
 
 float normalize_angle(float angle)
 {

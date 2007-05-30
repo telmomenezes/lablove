@@ -18,7 +18,7 @@
  */
 
 #include "Simulation.h"
-#include "Love.h"
+#include "LoveLab.h"
 #include <math.h>
 #include "functions.h"
 #include "PopulationDynamics.h"
@@ -50,7 +50,7 @@ Simulation::~Simulation()
 void Simulation::init()
 {
 	_population_dynamics->init();
-	Love::get_instance().add_keyboard_mouse_handler(this);
+	LoveLab::get_instance().add_keyboard_mouse_handler(this);
 }
 
 void Simulation::add_object(Object* object)

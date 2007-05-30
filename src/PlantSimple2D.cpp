@@ -18,7 +18,7 @@
  */
 
 #include "PlantSimple2D.h"
-#include "Love.h"
+#include "LoveLab.h"
 #include "math.h"
 #include "defines.h"
 #include "SimSimple2D.h"
@@ -59,7 +59,7 @@ Object* PlantSimple2D::clone(bool full)
 #ifdef __LOVE_GRAPHICS
 void PlantSimple2D::draw()
 {
-	SimSimple2D* sim = (SimSimple2D*)(Love::get_instance().get_simulation());
+	SimSimple2D* sim = (SimSimple2D*)(LoveLab::get_instance().get_simulation());
 
 	float x = (int)_x - (int)sim->get_view_x();
 	float y = (int)_y - (int)sim->get_view_y();
