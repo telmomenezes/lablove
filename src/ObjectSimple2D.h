@@ -20,7 +20,7 @@
 #if !defined(__INCLUDE_OBJECT_SIMPLE_2D_H)
 #define __INCLUDE_OBJECT_SIMPLE_2D_H
 
-#include "Object.h"
+#include "SimulationObject.h"
 #include "MoleculeRGB.h"
 
 extern "C"
@@ -31,7 +31,7 @@ extern "C"
 }
 #include "luna.h"
 
-class ObjectSimple2D : public Object
+class ObjectSimple2D : public SimulationObject
 {
 public:
 	ObjectSimple2D();

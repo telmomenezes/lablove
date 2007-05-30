@@ -17,12 +17,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "Object.h"
+#include "SimulationObject.h"
 #include "LoveLab.h"
 #include <stdlib.h>
 #include "functions.h"
 
-Object::Object()
+SimulationObject::SimulationObject()
 {
 	_deleted = false;
 	_selected = false;
@@ -33,7 +33,7 @@ Object::Object()
 	_creation_time = LoveLab::get_instance().get_simulation()->time();
 }
 
-Object::Object(Object* obj)
+SimulationObject::SimulationObject(SimulationObject* obj)
 {
 	_deleted = false;
 	_selected = false;
@@ -44,18 +44,18 @@ Object::Object(Object* obj)
 	_creation_time = LoveLab::get_instance().get_simulation()->time();
 }
 
-Object::~Object()
+SimulationObject::~SimulationObject()
 {	
 }
 
-void Object::draw_brain()
+void SimulationObject::draw_brain()
 {
 	int x = (LoveLab::get_instance().get_screen_width() / 2) - 160;
 	int y = (LoveLab::get_instance().get_screen_height() / 2) - 4;
 	//stringColor(LoveLab::get_instance().get_screen(), x, y, "Can not display brain of selected object", COLOR_INFO);
 }
 
-int Object::set_initial_energy(lua_State* L)
+int SimulationObject::set_initial_energy(lua_State* L)
 {
         float energy = luaL_checknumber(L, 1);
         set_initial_energy(energy);

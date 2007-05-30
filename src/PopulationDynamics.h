@@ -20,7 +20,7 @@
 #if !defined(__INCLUDE_POPULATION_DYNAMICS_H)
 #define __INCLUDE_POPULATION_DYNAMICS_H
 
-#include "Object.h"
+#include "SimulationObject.h"
 
 class PopulationDynamics
 {
@@ -30,7 +30,7 @@ public:
 
 	virtual void init() = 0;
 	virtual void on_cycle() = 0;
-	virtual void on_organism_death(Object* org) = 0;
+	virtual void on_organism_death(SimulationObject* org) = 0;
 };
 #endif
 

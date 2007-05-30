@@ -19,7 +19,7 @@
 
 #include "PopDynFixedSpecies.h"
 #include "LoveLab.h"
-#include "Object.h"
+#include "SimulationObject.h"
 #include "functions.h"
 #include "random.h"
 
@@ -33,21 +33,21 @@ PopDynFixedSpecies::~PopDynFixedSpecies()
 {
 }
 
-void PopDynFixedSpecies::add_static_species(Object* org, long population)
+void PopDynFixedSpecies::add_static_species(SimulationObject* org, long population)
 {
 	org->set_species_id(++CURRENT_SPECIES_ID);
 	_static_species.push_back(org);
 	_static_species_populations.push_back(population);
-	vector<Object*>* org_vec = new vector<Object*>();
+	vector<SimulationObject*>* org_vec = new vector<SimulationObject*>();
 	_static_species_organism_vecs.push_back(org_vec);
 }
 
-void PopDynFixedSpecies::add_evolving_species(Object* org, long population)
+void PopDynFixedSpecies::add_evolving_species(SimulationObject* org, long population)
 {
 	org->set_species_id(++CURRENT_SPECIES_ID);
 	_evolving_species.push_back(org);
 	_evolving_species_populations.push_back(population);
-	vector<Object*>* org_vec = new vector<Object*>();
+	vector<SimulationObject*>* org_vec = new vector<SimulationObject*>();
 	_evolving_species_organism_vecs.push_back(org_vec);
 	_evolving_species_death_count.push_back(0);
 	_evolving_species_fitness.push_back(0);
@@ -56,15 +56,15 @@ void PopDynFixedSpecies::add_evolving_species(Object* org, long population)
 
 void PopDynFixedSpecies::init()
 {
-	list<Object*>::iterator iter_species = _static_species.begin();
+	list<SimulationObject*>::iterator iter_species = _static_species.begin();
 	list<long>::iterator iter_pop = _static_species_populations.begin();
-	list<vector<Object*>*>::iterator iter_species_org_vec = _static_species_organism_vecs.begin();
+	list<vector<SimulationObject*>*>::iterator iter_species_org_vec = _static_species_organism_vecs.begin();
 
 	while (iter_species != _static_species.end())
 	{
 		for (unsigned int i = 0; i < (*iter_pop); i++)
 		{
-			Object* org = (*iter_species)->clone();
+			SimulationObject* org = (*iter_species)->clone();
 			org->place_random();
 			LoveLab::get_instance().get_simulation()->add_object(org);
 			(*iter_species_org_vec)->push_back(org);
@@ -84,7 +84,7 @@ void PopDynFixedSpecies::init()
 
 		for (unsigned int i = 0; i < (*iter_pop); i++)
 		{
-			Object* org = (*iter_species)->clone(false);
+			SimulationObject* org = (*iter_species)->clone(false);
 			org->init();
 			org->set_energy(org->get_initial_energy());
 			org->place_random();
@@ -116,16 +116,16 @@ void PopDynFixedSpecies::on_cycle()
 	}
 }
 
-void PopDynFixedSpecies::on_organism_death(Object* org)
+void PopDynFixedSpecies::on_organism_death(SimulationObject* org)
 {
-	list<Object*>::iterator iter_species = _static_species.begin();
+	list<SimulationObject*>::iterator iter_species = _static_species.begin();
 	while (iter_species != _static_species.end())
 	{
 		if (org->get_species_id() == (*iter_species)->get_species_id())
 		{
 			LoveLab::get_instance().get_simulation()->remove_object(org);
 
-			Object* org = (*iter_species)->clone();
+			SimulationObject* org = (*iter_species)->clone();
 			org->set_energy(org->get_initial_energy());
 			org->place_random();
 			LoveLab::get_instance().get_simulation()->add_object(org);
@@ -137,13 +137,13 @@ void PopDynFixedSpecies::on_organism_death(Object* org)
 
 	iter_species = _evolving_species.begin();
 	list<long>::iterator iter_pop = _evolving_species_populations.begin();
-	list<vector<Object*>*>::iterator iter_species_org_vec = _evolving_species_organism_vecs.begin();
+	list<vector<SimulationObject*>*>::iterator iter_species_org_vec = _evolving_species_organism_vecs.begin();
 	unsigned int species_pos = 0;
 	while (iter_species != _evolving_species.end())
 	{
 		if (org->get_species_id() == (*iter_species)->get_species_id())
 		{
-			vector<Object*>::iterator iter_org;
+			vector<SimulationObject*>::iterator iter_org;
 
 			int org_pos = -1;
 			int cur_pos = 0;
@@ -158,10 +158,10 @@ void PopDynFixedSpecies::on_organism_death(Object* org)
 				cur_pos++;
 			}
 
-			Object* new_organism = NULL;
+			SimulationObject* new_organism = NULL;
 
 			// Tournment selection of 2
-			Object* best_organism = NULL;
+			SimulationObject* best_organism = NULL;
 			float best_fitness = 0.0f;
 
 			for (unsigned int tournment_step = 0; tournment_step < 2; tournment_step++)
@@ -228,7 +228,7 @@ PopDynFixedSpecies::PopDynFixedSpecies(lua_State* L)
 
 int PopDynFixedSpecies::add_static_species(lua_State *L)
 {
-        Object* obj = (Object*)Luna<PopDynFixedSpecies>::pointer(L, 1);
+        SimulationObject* obj = (SimulationObject*)Luna<PopDynFixedSpecies>::pointer(L, 1);
         int population = luaL_checkint(L, 2);
         add_static_species(obj, population);
         return 0;
@@ -236,7 +236,7 @@ int PopDynFixedSpecies::add_static_species(lua_State *L)
 
 int PopDynFixedSpecies::add_evolving_species(lua_State *L)
 {
-        Object* obj = (Object*)Luna<PopDynFixedSpecies>::pointer(L, 1);
+        SimulationObject* obj = (SimulationObject*)Luna<PopDynFixedSpecies>::pointer(L, 1);
         int population = luaL_checkint(L, 2);
         add_evolving_species(obj, population);
         return 0;

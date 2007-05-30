@@ -42,10 +42,10 @@ public:
 	virtual ~PopDynGenerations();
 	virtual void init();
 	virtual void on_cycle();
-	virtual void on_organism_death(Object* org);
+	virtual void on_organism_death(SimulationObject* org);
 
-	void add_static_species(Object* org, long population);
-	void add_evolving_species(Object* org, long population);
+	void add_static_species(SimulationObject* org, long population);
+	void add_evolving_species(SimulationObject* org, long population);
 	void set_generation_time(unsigned int time){_generation_time = time;}
 
 	static const char className[];
@@ -58,10 +58,10 @@ public:
 
 protected:
 
-	list<Object*> _static_species;
-	list<Object*> _evolving_species;
-	list<list<Object*>*> _static_species_organism_lists;
-	list<list<Object*>*> _evolving_species_organism_lists;
+	list<SimulationObject*> _static_species;
+	list<SimulationObject*> _evolving_species;
+	list<list<SimulationObject*>*> _static_species_organism_lists;
+	list<list<SimulationObject*>*> _evolving_species_organism_lists;
 	list<long> _static_species_populations;
 	list<long> _evolving_species_populations;
 

@@ -200,7 +200,7 @@ AnimatSimple2D::~AnimatSimple2D()
 	}
 }
 
-Object* AnimatSimple2D::clone(bool full)
+SimulationObject* AnimatSimple2D::clone(bool full)
 {
 	return new AnimatSimple2D(this, full);
 }
@@ -504,7 +504,7 @@ void AnimatSimple2D::action_step()
 	}
 }
 
-void AnimatSimple2D::on_scan_object(Object* obj, bool visible, bool contact, float angle, float distance)
+void AnimatSimple2D::on_scan_object(SimulationObject* obj, bool visible, bool contact, float angle, float distance)
 {
 	float normalized_value;
 
@@ -659,7 +659,7 @@ const char AnimatSimple2D::className[] = "AnimatSimple2D";
 Luna<AnimatSimple2D>::RegType AnimatSimple2D::methods[] = {
 	{"set_size", &ObjectSimple2D::set_size},
 	{"set_color", &ObjectSimple2D::set_color},
-	{"set_initial_energy", &Object::set_initial_energy},
+	{"set_initial_energy", &SimulationObject::set_initial_energy},
         {"set_view_range", &AnimatSimple2D::set_view_range},
 	{"set_view_angle", &AnimatSimple2D::set_view_angle},
 	{"set_alpha_objects_grid", &AnimatSimple2D::set_alpha_objects_grid},

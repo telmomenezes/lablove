@@ -39,7 +39,7 @@ Simulation::Simulation(lua_State* L)
 
 Simulation::~Simulation()
 {
-	list<Object*>::iterator iter_obj;
+	list<SimulationObject*>::iterator iter_obj;
 	for (iter_obj = _objects.begin(); iter_obj != _objects.end(); ++iter_obj)
 	{
 		delete *iter_obj;
@@ -53,12 +53,12 @@ void Simulation::init()
 	LoveLab::get_instance().add_keyboard_mouse_handler(this);
 }
 
-void Simulation::add_object(Object* object)
+void Simulation::add_object(SimulationObject* object)
 {
 	_objects.push_back(object);
 }
 
-void Simulation::remove_object(Object* object)
+void Simulation::remove_object(SimulationObject* object)
 {
 	if (object->is_selected())
 	{
@@ -66,7 +66,7 @@ void Simulation::remove_object(Object* object)
 	}
 
 	bool stop = false;
-	list<Object*>::iterator iter_obj;
+	list<SimulationObject*>::iterator iter_obj;
 	for (iter_obj = _objects.begin(); (iter_obj != _objects.end()) && !stop; ++iter_obj)
 	{
 		if((*iter_obj) == object)
@@ -80,7 +80,7 @@ void Simulation::remove_object(Object* object)
 
 void Simulation::cycle()
 {
-	list<Object*>::iterator iter_obj;
+	list<SimulationObject*>::iterator iter_obj;
 
 	for (iter_obj = _objects_to_kill.begin();
 		iter_obj != _objects_to_kill.end();
@@ -98,7 +98,7 @@ void Simulation::cycle()
 
 	for (iter_obj = _objects.begin(); iter_obj != _objects.end(); ++iter_obj)
 	{
-		Object* obj = *iter_obj;
+		SimulationObject* obj = *iter_obj;
 		obj->on_cycle();
 #ifdef __LOVE_GRAPHICS
 		obj->draw();
@@ -108,7 +108,7 @@ void Simulation::cycle()
 	_simulation_time++;
 }
 
-void Simulation::set_selected_object(Object* object)
+void Simulation::set_selected_object(SimulationObject* object)
 {
 	if (_selected_object != NULL)
 	{
@@ -121,7 +121,7 @@ void Simulation::set_selected_object(Object* object)
 	}
 }
 
-void Simulation::kill_organism(Object* org)
+void Simulation::kill_organism(SimulationObject* org)
 {
 	if (org->_deleted)
 	{

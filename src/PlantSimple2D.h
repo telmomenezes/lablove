@@ -36,7 +36,7 @@ public:
 	PlantSimple2D();
 	PlantSimple2D(PlantSimple2D* plant) : ObjectSimple2D(plant){}
 	virtual ~PlantSimple2D();
-	virtual Object* clone(bool full=true);
+	virtual SimulationObject* clone(bool full=true);
 
 	virtual bool is_food(){return true;}
 

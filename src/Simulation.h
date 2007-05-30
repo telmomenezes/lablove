@@ -20,7 +20,7 @@
 #if !defined(__INCLUDE_SIMULATION_H)
 #define __INCLUDE_SIMULATION_H
 
-#include "Object.h"
+#include "SimulationObject.h"
 #include "PopulationDynamics.h"
 #include "KeyboardMouseHandler.h"
 
@@ -43,15 +43,15 @@ public:
 
 	void init();
 
-	virtual void add_object(Object* object);
-	virtual void remove_object(Object* object);
+	virtual void add_object(SimulationObject* object);
+	virtual void remove_object(SimulationObject* object);
 	void cycle();
-	virtual Object* get_object_by_screen_pos(int x, int y)=0;
-	void set_selected_object(Object* object);
-	Object* get_selected_object(){return _selected_object;}
+	virtual SimulationObject* get_object_by_screen_pos(int x, int y)=0;
+	void set_selected_object(SimulationObject* object);
+	SimulationObject* get_selected_object(){return _selected_object;}
 	void set_population_dynamics(PopulationDynamics* pop_dyn){_population_dynamics = pop_dyn;}
 	PopulationDynamics* get_population_dynamics(){return _population_dynamics;}
-	virtual void kill_organism(Object* org);
+	virtual void kill_organism(SimulationObject* org);
 	unsigned long time(){return _simulation_time;}
 
 	static const char className[];
@@ -63,11 +63,11 @@ public:
 protected:
 	virtual void draw_before_objects(){}
 	
-	list<Object*> _objects;
-	list<Object*> _objects_to_kill;
+	list<SimulationObject*> _objects;
+	list<SimulationObject*> _objects_to_kill;
 
 	unsigned long _simulation_time;
-	Object* _selected_object;
+	SimulationObject* _selected_object;
 	PopulationDynamics* _population_dynamics;
 };
 #endif

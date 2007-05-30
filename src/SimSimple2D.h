@@ -44,7 +44,7 @@ public:
 	void set_world_dimensions(float world_width,
 			float world_length,
 			float cell_side);
-	virtual void remove_object(Object* object);
+	virtual void remove_object(SimulationObject* object);
 	float get_world_width(){return _world_width;}
 	float get_world_length(){return _world_length;}
 	int get_view_x(){return _view_x;}
@@ -59,7 +59,7 @@ public:
 	unsigned int get_world_cell_length(){return _world_cell_length;}
 	
 	void move_view(int delta_x, int delta_y);
-	Object* get_object_by_screen_pos(int x, int y);
+	SimulationObject* get_object_by_screen_pos(int x, int y);
 
 #ifdef __LOVE_GRAPHICS
 	virtual bool on_key_down(int keycode);

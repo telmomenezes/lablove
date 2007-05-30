@@ -83,7 +83,7 @@ void SimSimple2D::set_world_dimensions(float world_width,
 	
 }
 
-void SimSimple2D::remove_object(Object* object)
+void SimSimple2D::remove_object(SimulationObject* object)
 {
 	ObjectSimple2D* obj = (ObjectSimple2D*)object;
 
@@ -135,9 +135,9 @@ void SimSimple2D::move_view(int delta_x, int delta_y)
 	}
 }
 
-Object* SimSimple2D::get_object_by_screen_pos(int x, int y)
+SimulationObject* SimSimple2D::get_object_by_screen_pos(int x, int y)
 {
-	list<Object*>::iterator iter_obj;
+	list<SimulationObject*>::iterator iter_obj;
 	for (iter_obj = _objects.begin(); iter_obj != _objects.end(); ++iter_obj)
 	{
 		ObjectSimple2D* obj = (ObjectSimple2D*)(*iter_obj);
@@ -271,7 +271,7 @@ bool SimSimple2D::on_mouse_button_down(int button, int x, int y)
 		_last_mouse_y = y;
 		_mouse_pressed = true;
 
-		Object* object = get_object_by_screen_pos(x, y);
+		SimulationObject* object = get_object_by_screen_pos(x, y);
 
 		if (object != NULL)
 		{

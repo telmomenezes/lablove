@@ -43,10 +43,10 @@ public:
 	virtual ~PopDynFixedSpecies();
 	virtual void init();
 	virtual void on_cycle();
-	virtual void on_organism_death(Object* org);
+	virtual void on_organism_death(SimulationObject* org);
 
-	void add_static_species(Object* org, long population);
-	void add_evolving_species(Object* org, long population);
+	void add_static_species(SimulationObject* org, long population);
+	void add_evolving_species(SimulationObject* org, long population);
 
 	static const char className[];
         static Luna<PopDynFixedSpecies>::RegType methods[];
@@ -56,10 +56,10 @@ public:
         int add_evolving_species(lua_State* L);
 
 protected:
-	list<Object*> _static_species;
-	list<Object*> _evolving_species;
-	list<vector<Object*>*> _static_species_organism_vecs;
-	list<vector<Object*>*> _evolving_species_organism_vecs;
+	list<SimulationObject*> _static_species;
+	list<SimulationObject*> _evolving_species;
+	list<vector<SimulationObject*>*> _static_species_organism_vecs;
+	list<vector<SimulationObject*>*> _evolving_species_organism_vecs;
 	list<long> _static_species_populations;
 	list<long> _evolving_species_populations;
 	vector<unsigned int> _evolving_species_death_count;

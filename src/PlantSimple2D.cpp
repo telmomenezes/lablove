@@ -51,7 +51,7 @@ PlantSimple2D::~PlantSimple2D()
 {	
 }
 
-Object* PlantSimple2D::clone(bool full)
+SimulationObject* PlantSimple2D::clone(bool full)
 {
 	return new PlantSimple2D(this);
 }
@@ -86,7 +86,7 @@ const char PlantSimple2D::className[] = "PlantSimple2D";
 Luna<PlantSimple2D>::RegType PlantSimple2D::methods[] = {
 	{"set_size", &ObjectSimple2D::set_size},
 	{"set_color", &ObjectSimple2D::set_color},
-	{"set_initial_energy", &Object::set_initial_energy},
+	{"set_initial_energy", &SimulationObject::set_initial_energy},
 	{"set_age_range", &ObjectSimple2D::set_age_range},
 	{"set_metabolism", &ObjectSimple2D::set_metabolism},
         {0,0}

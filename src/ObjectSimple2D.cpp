@@ -45,7 +45,7 @@ ObjectSimple2D::ObjectSimple2D()
 	_metabolism = 0.0f;
 }
 
-ObjectSimple2D::ObjectSimple2D(ObjectSimple2D* obj) : Object(obj)
+ObjectSimple2D::ObjectSimple2D(ObjectSimple2D* obj) : SimulationObject(obj)
 {
 	_size = obj->_size;
 	_size_squared = obj->_size_squared;

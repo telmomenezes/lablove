@@ -17,8 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_OBJECT_H)
-#define __INCLUDE_OBJECT_H
+#if !defined(__INCLUDE_SIMULATION_OBJECT_H)
+#define __INCLUDE_SIMULATION_OBJECT_H
 
 extern "C"
 {
@@ -28,14 +28,14 @@ extern "C"
 }
 #include "luna.h"
 
-class Object
+class SimulationObject
 {
 public:
-	Object();
-	Object(Object* obj);
-	virtual ~Object();
+	SimulationObject();
+	SimulationObject(SimulationObject* obj);
+	virtual ~SimulationObject();
 
-	virtual Object* clone(bool full=true) = 0;
+	virtual SimulationObject* clone(bool full=true) = 0;
 	virtual void init(){}
 
 	virtual void draw(){};
@@ -54,7 +54,7 @@ public:
 	void set_energy(float energy){_energy = energy;}
 	void set_initial_energy(float energy){_initial_energy = energy;}
 
-	virtual Object* crossover(Object* other_parent){return this;}
+	virtual SimulationObject* crossover(SimulationObject* other_parent){return this;}
 	virtual void mutate(){}
 
 	virtual void place_random()=0;

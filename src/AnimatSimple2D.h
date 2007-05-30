@@ -38,7 +38,7 @@ public:
 	AnimatSimple2D();
 	AnimatSimple2D(AnimatSimple2D* anim, bool full=true);
 	virtual ~AnimatSimple2D();
-	virtual Object* clone(bool full=true);
+	virtual SimulationObject* clone(bool full=true);
 	virtual void init();
 	void init_test();
 
@@ -90,7 +90,7 @@ public:
 	int set_rotate_cost(lua_State* L);
 
 protected:
-	virtual void on_scan_object(Object* obj, bool visible, bool contact, float angle, float distance);
+	virtual void on_scan_object(SimulationObject* obj, bool visible, bool contact, float angle, float distance);
 	void scan_cell(int cell_x, int cell_y);
 	virtual void end_cycle();
 
@@ -110,7 +110,7 @@ protected:
 	float _go_cost;
 	float _rotate_cost;
 
-	Object* _nearest_food;
+	SimulationObject* _nearest_food;
 	float _distance_to_nearest_food;
 
 	MoleculeTable* _color_molecule_table;
