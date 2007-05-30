@@ -118,7 +118,7 @@ void MoleculeRGB::mutate()
 
 const char MoleculeRGB::className[] = "MoleculeRGB";
 
-Luna<MoleculeRGB>::RegType MoleculeRGB::methods[] = {
+Lunar<MoleculeRGB>::RegType MoleculeRGB::methods[] = {
         {0,0}
 };
 

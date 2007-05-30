@@ -33,7 +33,7 @@ extern "C"
 #include "lauxlib.h"
 #include "lualib.h"
 }
-#include "luna.h"
+#include "Lunar.h"
 
 class Simulation : public KeyboardMouseHandler
 {
@@ -55,7 +55,7 @@ public:
 	unsigned long time(){return _simulation_time;}
 
 	static const char className[];
-        static Luna<Simulation>::RegType methods[];
+        static Lunar<Simulation>::RegType methods[];
 
         Simulation(lua_State* L);
 	int set_population_dynamics(lua_State* L);

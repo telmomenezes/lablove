@@ -32,7 +32,7 @@ extern "C"
 #include "lauxlib.h"
 #include "lualib.h"
 }
-#include "luna.h"
+#include "Lunar.h"
 
 class PopDynFixedSpecies : public PopulationDynamics
 {
@@ -49,7 +49,7 @@ public:
 	void add_evolving_species(SimulationObject* org, long population);
 
 	static const char className[];
-        static Luna<PopDynFixedSpecies>::RegType methods[];
+        static Lunar<PopDynFixedSpecies>::RegType methods[];
 
         PopDynFixedSpecies(lua_State* L);
         int add_static_species(lua_State* L);

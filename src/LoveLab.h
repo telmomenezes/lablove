@@ -37,7 +37,7 @@ extern "C"
 #include "lauxlib.h"
 #include "lualib.h"
 }
-#include "luna.h"
+#include "Lunar.h"
 
 class LoveLab : public KeyboardMouseHandler
 {
@@ -67,7 +67,7 @@ public:
 #endif
 
 	static const char className[];
-        static Luna<LoveLab>::RegType methods[];
+        static Lunar<LoveLab>::RegType methods[];
 
         LoveLab(lua_State* L);
         int create(lua_State* L);

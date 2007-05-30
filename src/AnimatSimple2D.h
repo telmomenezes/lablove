@@ -30,7 +30,7 @@ extern "C"
 #include "lauxlib.h"
 #include "lualib.h"
 }
-#include "luna.h"
+#include "Lunar.h"
 
 class AnimatSimple2D : public ObjectSimple2D
 {
@@ -78,7 +78,7 @@ public:
 	float _action_eat_param;
 
 	static const char className[];
-        static Luna<AnimatSimple2D>::RegType methods[];
+        static Lunar<AnimatSimple2D>::RegType methods[];
 
         AnimatSimple2D(lua_State* L);
         int set_view_range(lua_State* L);

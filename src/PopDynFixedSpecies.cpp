@@ -216,7 +216,7 @@ void PopDynFixedSpecies::on_organism_death(SimulationObject* org)
 
 const char PopDynFixedSpecies::className[] = "PopDynFixedSpecies";
 
-Luna<PopDynFixedSpecies>::RegType PopDynFixedSpecies::methods[] = {
+Lunar<PopDynFixedSpecies>::RegType PopDynFixedSpecies::methods[] = {
         {"add_static_species", &PopDynFixedSpecies::add_static_species},
         {"add_evolving_species", &PopDynFixedSpecies::add_evolving_species},
         {0,0}
@@ -228,7 +228,7 @@ PopDynFixedSpecies::PopDynFixedSpecies(lua_State* L)
 
 int PopDynFixedSpecies::add_static_species(lua_State *L)
 {
-        SimulationObject* obj = (SimulationObject*)Luna<PopDynFixedSpecies>::pointer(L, 1);
+        SimulationObject* obj = (SimulationObject*)Lunar<PopDynFixedSpecies>::pointer(L, 1);
         int population = luaL_checkint(L, 2);
         add_static_species(obj, population);
         return 0;
@@ -236,7 +236,7 @@ int PopDynFixedSpecies::add_static_species(lua_State *L)
 
 int PopDynFixedSpecies::add_evolving_species(lua_State *L)
 {
-        SimulationObject* obj = (SimulationObject*)Luna<PopDynFixedSpecies>::pointer(L, 1);
+        SimulationObject* obj = (SimulationObject*)Lunar<PopDynFixedSpecies>::pointer(L, 1);
         int population = luaL_checkint(L, 2);
         add_evolving_species(obj, population);
         return 0;

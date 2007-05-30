@@ -32,7 +32,7 @@ extern "C"
 #include "lauxlib.h"
 #include "lualib.h"
 }
-#include "luna.h"
+#include "Lunar.h"
 
 class Grid
 {
@@ -84,7 +84,7 @@ public:
 	void set_col_conn_count(unsigned int col, unsigned int count){_columns_connections_count_vec[col] = count;}
 
 	static const char className[];
-        static Luna<Grid>::RegType methods[];
+        static Lunar<Grid>::RegType methods[];
 
         Grid(lua_State* L);
         int add_component_set(lua_State* L);

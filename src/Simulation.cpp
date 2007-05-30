@@ -135,14 +135,14 @@ void Simulation::kill_organism(SimulationObject* org)
 
 const char Simulation::className[] = "Simulation";
 
-Luna<Simulation>::RegType Simulation::methods[] = {
+Lunar<Simulation>::RegType Simulation::methods[] = {
 	{"set_population_dynamics", &Simulation::set_population_dynamics},
         {0,0}
 };
 
 int Simulation::set_population_dynamics(lua_State *L)
 {
-        PopulationDynamics* pop_dyn = (PopulationDynamics*)Luna<Simulation>::pointer(L, 1);
+        PopulationDynamics* pop_dyn = (PopulationDynamics*)Lunar<Simulation>::pointer(L, 1);
         set_population_dynamics(pop_dyn);
         return 0;
 }

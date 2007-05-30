@@ -31,7 +31,7 @@ extern "C"
 #include "lauxlib.h"
 #include "lualib.h"
 }
-#include "luna.h"
+#include "Lunar.h"
 
 class PopDynGenerations : public PopulationDynamics
 {
@@ -49,7 +49,7 @@ public:
 	void set_generation_time(unsigned int time){_generation_time = time;}
 
 	static const char className[];
-        static Luna<PopDynGenerations>::RegType methods[];
+        static Lunar<PopDynGenerations>::RegType methods[];
 
         PopDynGenerations(lua_State* L);
         int add_static_species(lua_State* L);

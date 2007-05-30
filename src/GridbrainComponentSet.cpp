@@ -42,7 +42,7 @@ void GridbrainComponentSet::add_component(int type, float parameter)
 
 const char GridbrainComponentSet::className[] = "GridbrainComponentSet";
 
-Luna<GridbrainComponentSet>::RegType GridbrainComponentSet::methods[] = {
+Lunar<GridbrainComponentSet>::RegType GridbrainComponentSet::methods[] = {
 	{"add_component", &GridbrainComponentSet::add_component},
         {0,0}
 };

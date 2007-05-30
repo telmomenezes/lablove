@@ -28,7 +28,7 @@ extern "C"
 #include "lauxlib.h"
 #include "lualib.h"
 }
-#include "luna.h"
+#include "Lunar.h"
 
 class PlantSimple2D : public ObjectSimple2D
 {
@@ -45,7 +45,7 @@ public:
 #endif
 
 	static const char className[];
-        static Luna<PlantSimple2D>::RegType methods[];
+        static Lunar<PlantSimple2D>::RegType methods[];
 
         PlantSimple2D(lua_State* L);
 };

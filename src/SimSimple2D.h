@@ -33,7 +33,7 @@ extern "C"
 #include "lauxlib.h"
 #include "lualib.h"
 }
-#include "luna.h"
+#include "Lunar.h"
 
 class SimSimple2D : public Simulation
 {
@@ -70,7 +70,7 @@ public:
 #endif
 
 	static const char className[];
-        static Luna<SimSimple2D>::RegType methods[];
+        static Lunar<SimSimple2D>::RegType methods[];
 
         SimSimple2D(lua_State* L);
         int set_world_dimensions(lua_State* L);

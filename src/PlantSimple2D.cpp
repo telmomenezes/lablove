@@ -83,7 +83,7 @@ void PlantSimple2D::draw()
 
 const char PlantSimple2D::className[] = "PlantSimple2D";
 
-Luna<PlantSimple2D>::RegType PlantSimple2D::methods[] = {
+Lunar<PlantSimple2D>::RegType PlantSimple2D::methods[] = {
 	{"set_size", &ObjectSimple2D::set_size},
 	{"set_color", &ObjectSimple2D::set_color},
 	{"set_initial_energy", &SimulationObject::set_initial_energy},

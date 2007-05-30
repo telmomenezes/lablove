@@ -28,7 +28,7 @@ extern "C"
 #include "lauxlib.h"
 #include "lualib.h"
 }
-#include "luna.h"
+#include "Lunar.h"
 
 class MoleculeRGB : public Molecule
 {
@@ -44,7 +44,7 @@ public:
 	virtual void mutate();
 
 	static const char className[];
-        static Luna<MoleculeRGB>::RegType methods[];
+        static Lunar<MoleculeRGB>::RegType methods[];
 
         MoleculeRGB(lua_State* L);
 

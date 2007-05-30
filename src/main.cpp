@@ -35,7 +35,7 @@ extern "C"
 #include "lualib.h"
 }
 
-#include "luna.h"
+#include "Lunar.h"
 
 int main(int argc, char *argv[])
 {
@@ -48,15 +48,15 @@ int main(int argc, char *argv[])
 	luaopen_math(L);
 	luaopen_debug(L);
 	
-	Luna<LoveLab>::Register(L);
-	Luna<SimSimple2D>::Register(L);
-	Luna<PlantSimple2D>::Register(L);
-	Luna<AnimatSimple2D>::Register(L);
-	Luna<PopDynGenerations>::Register(L);
-	Luna<PopDynFixedSpecies>::Register(L);
-	Luna<Grid>::Register(L);
-	Luna<GridbrainComponentSet>::Register(L);
-	Luna<MoleculeRGB>::Register(L);
+	Lunar<LoveLab>::Register(L);
+	Lunar<SimSimple2D>::Register(L);
+	Lunar<PlantSimple2D>::Register(L);
+	Lunar<AnimatSimple2D>::Register(L);
+	Lunar<PopDynGenerations>::Register(L);
+	Lunar<PopDynFixedSpecies>::Register(L);
+	Lunar<Grid>::Register(L);
+	Lunar<GridbrainComponentSet>::Register(L);
+	Lunar<MoleculeRGB>::Register(L);
 
 	GridbrainComponent::init_lua_table(L);
 

@@ -656,7 +656,7 @@ void AnimatSimple2D::draw()
 
 const char AnimatSimple2D::className[] = "AnimatSimple2D";
 
-Luna<AnimatSimple2D>::RegType AnimatSimple2D::methods[] = {
+Lunar<AnimatSimple2D>::RegType AnimatSimple2D::methods[] = {
 	{"set_size", &ObjectSimple2D::set_size},
 	{"set_color", &ObjectSimple2D::set_color},
 	{"set_initial_energy", &SimulationObject::set_initial_energy},
@@ -687,14 +687,14 @@ int AnimatSimple2D::set_view_angle(lua_State* L)
 
 int AnimatSimple2D::set_alpha_objects_grid(lua_State* L)
 {
-	Grid* grid = (Grid*)Luna<AnimatSimple2D>::pointer(L, 1);
+	Grid* grid = (Grid*)Lunar<AnimatSimple2D>::pointer(L, 1);
 	set_alpha_objects_grid(grid);
 	return 0;
 }
 
 int AnimatSimple2D::set_beta_grid(lua_State* L)
 {
-	Grid* grid = (Grid*)Luna<AnimatSimple2D>::pointer(L, 1);
+	Grid* grid = (Grid*)Lunar<AnimatSimple2D>::pointer(L, 1);
 	set_beta_grid(grid);
 	return 0;
 }

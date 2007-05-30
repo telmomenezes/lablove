@@ -249,7 +249,7 @@ unsigned int Grid::get_x_by_offset(unsigned int offset)
 
 const char Grid::className[] = "Grid";
 
-Luna<Grid>::RegType Grid::methods[] = {
+Lunar<Grid>::RegType Grid::methods[] = {
 	{"add_component_set", &Grid::add_component_set},
 	{"set_width", &Grid::set_width},
 	{"set_height", &Grid::set_height},
@@ -273,7 +273,7 @@ Grid::Grid(lua_State* L)
 
 int Grid::add_component_set(lua_State *L)
 {
-        GridbrainComponentSet* set = (GridbrainComponentSet*)Luna<Grid>::pointer(L, 1);
+        GridbrainComponentSet* set = (GridbrainComponentSet*)Lunar<Grid>::pointer(L, 1);
         int end_column = luaL_checkint(L, 2);
         add_component_set(set, end_column);
         return 0;

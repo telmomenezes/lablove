@@ -29,7 +29,7 @@ extern "C"
 #include "lauxlib.h"
 #include "lualib.h"
 }
-#include "luna.h"
+#include "Lunar.h"
 
 using namespace std;
 
@@ -44,7 +44,7 @@ public:
 	GridbrainComponent* get_random();
 
 	static const char className[];
-        static Luna<GridbrainComponentSet>::RegType methods[];
+        static Lunar<GridbrainComponentSet>::RegType methods[];
 
         GridbrainComponentSet(lua_State* L);
         int add_component(lua_State* L);

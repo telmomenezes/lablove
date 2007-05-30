@@ -311,7 +311,7 @@ bool SimSimple2D::on_mouse_move(int x, int y)
 
 const char SimSimple2D::className[] = "SimSimple2D";
 
-Luna<SimSimple2D>::RegType SimSimple2D::methods[] = {
+Lunar<SimSimple2D>::RegType SimSimple2D::methods[] = {
 	{"set_population_dynamics", &Simulation::set_population_dynamics},
         {"set_world_dimensions", &SimSimple2D::set_world_dimensions},
         {0,0}
