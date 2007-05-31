@@ -40,12 +40,14 @@ void GridbrainComponentSet::add_component(int type, float parameter)
 	add_component(comp);
 }
 
-const char GridbrainComponentSet::className[] = "GridbrainComponentSet";
+const char GridbrainComponentSet::class_name[] = "GridbrainComponentSet";
 
-Lunar<GridbrainComponentSet>::RegType GridbrainComponentSet::methods[] = {
+Orbit<GridbrainComponentSet>::MethodType GridbrainComponentSet::methods[] = {
 	{"add_component", &GridbrainComponentSet::add_component},
         {0,0}
 };
+
+Orbit<GridbrainComponentSet>::NumberGlobalType GridbrainComponentSet::number_globals[] = {{0,0}};
 
 GridbrainComponentSet::GridbrainComponentSet(lua_State* L)
 {

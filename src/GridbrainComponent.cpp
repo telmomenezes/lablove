@@ -37,7 +37,7 @@ GridbrainComponent::~GridbrainComponent()
 {
 }
 
-void GridbrainComponent::init_lua_table(lua_State* L)
+void GridbrainComponent::init_lua_globals(lua_State* L)
 {
 	lua_pushnumber(L, 0);
 	lua_setglobal(L, "GBCOMP_NUL");

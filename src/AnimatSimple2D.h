@@ -24,13 +24,7 @@
 #include "Gridbrain.h"
 #include "MoleculeTable.h"
 
-extern "C"
-{
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
-}
-#include "Lunar.h"
+#include "Orbit.h"
 
 class AnimatSimple2D : public ObjectSimple2D
 {
@@ -77,8 +71,9 @@ public:
 	bool _action_eat;
 	float _action_eat_param;
 
-	static const char className[];
-        static Lunar<AnimatSimple2D>::RegType methods[];
+	static const char class_name[];
+        static Orbit<AnimatSimple2D>::MethodType methods[];
+	static Orbit<AnimatSimple2D>::NumberGlobalType number_globals[];
 
         AnimatSimple2D(lua_State* L);
         int set_view_range(lua_State* L);

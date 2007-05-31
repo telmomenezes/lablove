@@ -28,14 +28,7 @@
 #include "GridbrainComponentSet.h"
 #include "MoleculeRGB.h"
 
-extern "C"
-{
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
-}
-
-#include "Lunar.h"
+#include "Orbit.h"
 
 int main(int argc, char *argv[])
 {
@@ -48,17 +41,17 @@ int main(int argc, char *argv[])
 	luaopen_math(L);
 	luaopen_debug(L);
 	
-	Lunar<LoveLab>::Register(L);
-	Lunar<SimSimple2D>::Register(L);
-	Lunar<PlantSimple2D>::Register(L);
-	Lunar<AnimatSimple2D>::Register(L);
-	Lunar<PopDynGenerations>::Register(L);
-	Lunar<PopDynFixedSpecies>::Register(L);
-	Lunar<Grid>::Register(L);
-	Lunar<GridbrainComponentSet>::Register(L);
-	Lunar<MoleculeRGB>::Register(L);
+	Orbit<LoveLab>::orbit_register(L);
+	Orbit<SimSimple2D>::orbit_register(L);
+	Orbit<PlantSimple2D>::orbit_register(L);
+	Orbit<AnimatSimple2D>::orbit_register(L);
+	Orbit<PopDynGenerations>::orbit_register(L);
+	Orbit<PopDynFixedSpecies>::orbit_register(L);
+	Orbit<Grid>::orbit_register(L);
+	Orbit<GridbrainComponentSet>::orbit_register(L);
+	Orbit<MoleculeRGB>::orbit_register(L);
 
-	GridbrainComponent::init_lua_table(L);
+	GridbrainComponent::init_lua_globals(L);
 
 	char* script_file = "default.lua";
 	if (argc == 2)

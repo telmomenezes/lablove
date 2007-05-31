@@ -203,14 +203,16 @@ void PopDynGenerations::on_organism_death(SimulationObject* org)
 	}
 }
 
-const char PopDynGenerations::className[] = "PopDynGenerations";
+const char PopDynGenerations::class_name[] = "PopDynGenerations";
 
-Lunar<PopDynGenerations>::RegType PopDynGenerations::methods[] = {
+Orbit<PopDynGenerations>::MethodType PopDynGenerations::methods[] = {
         {"add_static_species", &PopDynGenerations::add_static_species},
         {"add_evolving_species", &PopDynGenerations::add_evolving_species},
 	{"set_generation_time", &PopDynGenerations::set_generation_time},
         {0,0}
 };
+
+Orbit<PopDynGenerations>::NumberGlobalType PopDynGenerations::number_globals[] = {{0,0}};
 
 PopDynGenerations::PopDynGenerations(lua_State* L)
 {
@@ -220,7 +222,7 @@ PopDynGenerations::PopDynGenerations(lua_State* L)
 
 int PopDynGenerations::add_static_species(lua_State *L)
 {
-        SimulationObject* obj = (SimulationObject*)Lunar<PopDynGenerations>::pointer(L, 1);
+        SimulationObject* obj = (SimulationObject*)Orbit<PopDynGenerations>::pointer(L, 1);
         int population = luaL_checkint(L, 2);
         add_static_species(obj, population);
         return 0;
@@ -228,7 +230,7 @@ int PopDynGenerations::add_static_species(lua_State *L)
 
 int PopDynGenerations::add_evolving_species(lua_State *L)
 {
-        SimulationObject* obj = (SimulationObject*)Lunar<PopDynGenerations>::pointer(L, 1);
+        SimulationObject* obj = (SimulationObject*)Orbit<PopDynGenerations>::pointer(L, 1);
         int population = luaL_checkint(L, 2);
         add_evolving_species(obj, population);
         return 0;

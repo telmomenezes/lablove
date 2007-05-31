@@ -654,9 +654,9 @@ void AnimatSimple2D::draw()
 }
 #endif
 
-const char AnimatSimple2D::className[] = "AnimatSimple2D";
+const char AnimatSimple2D::class_name[] = "AnimatSimple2D";
 
-Lunar<AnimatSimple2D>::RegType AnimatSimple2D::methods[] = {
+Orbit<AnimatSimple2D>::MethodType AnimatSimple2D::methods[] = {
 	{"set_size", &ObjectSimple2D::set_size},
 	{"set_color", &ObjectSimple2D::set_color},
 	{"set_initial_energy", &SimulationObject::set_initial_energy},
@@ -670,6 +670,8 @@ Lunar<AnimatSimple2D>::RegType AnimatSimple2D::methods[] = {
 	{"set_rotate_cost", &AnimatSimple2D::set_rotate_cost},
         {0,0}
 };
+
+Orbit<AnimatSimple2D>::NumberGlobalType AnimatSimple2D::number_globals[] = {{0,0}};
 
 int AnimatSimple2D::set_view_range(lua_State* L)
 {
@@ -687,14 +689,14 @@ int AnimatSimple2D::set_view_angle(lua_State* L)
 
 int AnimatSimple2D::set_alpha_objects_grid(lua_State* L)
 {
-	Grid* grid = (Grid*)Lunar<AnimatSimple2D>::pointer(L, 1);
+	Grid* grid = (Grid*)Orbit<AnimatSimple2D>::pointer(L, 1);
 	set_alpha_objects_grid(grid);
 	return 0;
 }
 
 int AnimatSimple2D::set_beta_grid(lua_State* L)
 {
-	Grid* grid = (Grid*)Lunar<AnimatSimple2D>::pointer(L, 1);
+	Grid* grid = (Grid*)Orbit<AnimatSimple2D>::pointer(L, 1);
 	set_beta_grid(grid);
 	return 0;
 }

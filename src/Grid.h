@@ -22,6 +22,7 @@
 
 #include "ScriptableObject.h"
 #include "GridbrainComponentSet.h"
+#include "Orbit.h"
 
 #include <vector>
 #include <list>
@@ -76,8 +77,9 @@ public:
 	unsigned int get_col_conn_count(unsigned int col){return _columns_connections_count_vec[col];}
 	void set_col_conn_count(unsigned int col, unsigned int count){_columns_connections_count_vec[col] = count;}
 
-	static const char className[];
-        static Lunar<Grid>::RegType methods[];
+	static const char class_name[];
+        static Orbit<Grid>::MethodType methods[];
+	static Orbit<Grid>::NumberGlobalType number_globals[];
 
         Grid(lua_State* L);
         int add_component_set(lua_State* L);

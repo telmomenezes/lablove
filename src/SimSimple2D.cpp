@@ -309,13 +309,15 @@ bool SimSimple2D::on_mouse_move(int x, int y)
 }
 #endif
 
-const char SimSimple2D::className[] = "SimSimple2D";
+const char SimSimple2D::class_name[] = "SimSimple2D";
 
-Lunar<SimSimple2D>::RegType SimSimple2D::methods[] = {
+Orbit<SimSimple2D>::MethodType SimSimple2D::methods[] = {
 	{"set_population_dynamics", &Simulation::set_population_dynamics},
         {"set_world_dimensions", &SimSimple2D::set_world_dimensions},
         {0,0}
 };
+
+Orbit<SimSimple2D>::NumberGlobalType SimSimple2D::number_globals[] = {{0,0}};
 
 int SimSimple2D::set_world_dimensions(lua_State* L)
 {

@@ -81,9 +81,9 @@ void PlantSimple2D::draw()
 }
 #endif
 
-const char PlantSimple2D::className[] = "PlantSimple2D";
+const char PlantSimple2D::class_name[] = "PlantSimple2D";
 
-Lunar<PlantSimple2D>::RegType PlantSimple2D::methods[] = {
+Orbit<PlantSimple2D>::MethodType PlantSimple2D::methods[] = {
 	{"set_size", &ObjectSimple2D::set_size},
 	{"set_color", &ObjectSimple2D::set_color},
 	{"set_initial_energy", &SimulationObject::set_initial_energy},
@@ -91,4 +91,6 @@ Lunar<PlantSimple2D>::RegType PlantSimple2D::methods[] = {
 	{"set_metabolism", &ObjectSimple2D::set_metabolism},
         {0,0}
 };
+
+Orbit<PlantSimple2D>::NumberGlobalType PlantSimple2D::number_globals[] = {{0,0}};
 

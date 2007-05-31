@@ -27,13 +27,7 @@
 #include <list>
 using namespace std;
 
-extern "C"
-{
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
-}
-#include "Lunar.h"
+#include "Orbit.h"
 
 class Simulation : public KeyboardMouseHandler
 {
@@ -54,10 +48,6 @@ public:
 	virtual void kill_organism(SimulationObject* org);
 	unsigned long time(){return _simulation_time;}
 
-	static const char className[];
-        static Lunar<Simulation>::RegType methods[];
-
-        Simulation(lua_State* L);
 	int set_population_dynamics(lua_State* L);
 
 protected:

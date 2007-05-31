@@ -45,7 +45,7 @@ public:
 	GridbrainComponent();
 	virtual ~GridbrainComponent();
 
-	static void init_lua_table(lua_State* L);
+	static void init_lua_globals(lua_State* L);
 
 	int _type;
 	float _input;

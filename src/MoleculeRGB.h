@@ -22,13 +22,7 @@
 
 #include "Molecule.h"
 
-extern "C"
-{
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
-}
-#include "Lunar.h"
+#include "Orbit.h"
 
 class MoleculeRGB : public Molecule
 {
@@ -43,8 +37,9 @@ public:
 	virtual void init_random();
 	virtual void mutate();
 
-	static const char className[];
-        static Lunar<MoleculeRGB>::RegType methods[];
+	static const char class_name[];
+        static Orbit<MoleculeRGB>::MethodType methods[];
+	static Orbit<MoleculeRGB>::NumberGlobalType number_globals[];
 
         MoleculeRGB(lua_State* L);
 

@@ -26,13 +26,7 @@
 #include <vector>
 using namespace std;
 
-extern "C"
-{
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
-}
-#include "Lunar.h"
+#include "Orbit.h"
 
 class PopDynFixedSpecies : public PopulationDynamics
 {
@@ -48,8 +42,9 @@ public:
 	void add_static_species(SimulationObject* org, long population);
 	void add_evolving_species(SimulationObject* org, long population);
 
-	static const char className[];
-        static Lunar<PopDynFixedSpecies>::RegType methods[];
+	static const char class_name[];
+        static Orbit<PopDynFixedSpecies>::MethodType methods[];
+	static Orbit<PopDynFixedSpecies>::NumberGlobalType number_globals[];
 
         PopDynFixedSpecies(lua_State* L);
         int add_static_species(lua_State* L);

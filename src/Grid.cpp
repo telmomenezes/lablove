@@ -247,14 +247,16 @@ unsigned int Grid::get_x_by_offset(unsigned int offset)
 	return (internal_offset / _height);
 }
 
-const char Grid::className[] = "Grid";
+const char Grid::class_name[] = "Grid";
 
-Lunar<Grid>::RegType Grid::methods[] = {
+Orbit<Grid>::MethodType Grid::methods[] = {
 	{"add_component_set", &Grid::add_component_set},
 	{"set_width", &Grid::set_width},
 	{"set_height", &Grid::set_height},
         {0,0}
 };
+
+Orbit<Grid>::NumberGlobalType Grid::number_globals[] = {{0,0}};
 
 Grid::Grid(lua_State* L)
 {
@@ -275,7 +277,7 @@ Grid::Grid(lua_State* L)
 
 int Grid::add_component_set(lua_State *L)
 {
-        GridbrainComponentSet* set = (GridbrainComponentSet*)Lunar<Grid>::pointer(L, 1);
+        GridbrainComponentSet* set = (GridbrainComponentSet*)Orbit<Grid>::pointer(L, 1);
         int end_column = luaL_checkint(L, 2);
         add_component_set(set, end_column);
         return 0;

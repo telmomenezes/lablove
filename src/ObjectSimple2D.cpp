@@ -238,7 +238,7 @@ int ObjectSimple2D::set_metabolism(lua_State* L)
 
 int ObjectSimple2D::set_color(lua_State* L)
 {
-	MoleculeRGB* color = (MoleculeRGB*)Lunar<LoveLab>::pointer(L, 1);
+	MoleculeRGB* color = (MoleculeRGB*)Orbit<LoveLab>::pointer(L, 1);
         set_color(color);
         return 0;
 }

@@ -27,13 +27,7 @@
 #include <list>
 using namespace std;
 
-extern "C"
-{
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
-}
-#include "Lunar.h"
+#include "Orbit.h"
 
 class SimSimple2D : public Simulation
 {
@@ -69,8 +63,9 @@ public:
 	virtual bool on_mouse_move(int x, int y);
 #endif
 
-	static const char className[];
-        static Lunar<SimSimple2D>::RegType methods[];
+	static const char class_name[];
+        static Orbit<SimSimple2D>::MethodType methods[];
+	static Orbit<SimSimple2D>::NumberGlobalType number_globals[];
 
         SimSimple2D(lua_State* L);
         int set_world_dimensions(lua_State* L);

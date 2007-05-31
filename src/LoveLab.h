@@ -31,13 +31,7 @@
 #include <list>
 using namespace std;
 
-extern "C"
-{
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
-}
-#include "Lunar.h"
+#include "Orbit.h"
 
 class LoveLab : public KeyboardMouseHandler
 {
@@ -66,8 +60,9 @@ public:
 	virtual bool on_key_up(int keycode);
 #endif
 
-	static const char className[];
-        static Lunar<LoveLab>::RegType methods[];
+	static const char class_name[];
+        static Orbit<LoveLab>::MethodType methods[];
+	static Orbit<LoveLab>::NumberGlobalType number_globals[];
 
         LoveLab(lua_State* L);
         int create(lua_State* L);

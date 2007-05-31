@@ -20,8 +20,6 @@
 #if !defined(__INCLUDE_SCRIPTABLE_OBJECT_H)
 #define __INCLUDE_SCRIPTABLE_OBJECT_H
 
-#include "Lunar.h"
-
 class ScriptableObject
 {
 public:

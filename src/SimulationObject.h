@@ -20,13 +20,7 @@
 #if !defined(__INCLUDE_SIMULATION_OBJECT_H)
 #define __INCLUDE_SIMULATION_OBJECT_H
 
-extern "C"
-{
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
-}
-#include "Lunar.h"
+#include "Orbit.h"
 
 class SimulationObject
 {

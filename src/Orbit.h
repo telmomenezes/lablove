@@ -1,13 +1,9 @@
 /*
- * Adapted by Telmo Menezes
- *
- * 14 Mar 2007
- * pointer function created
- *
+ * Based on Lunar, modified by Telmo Menezes
  */
 
-#if !defined(__INCLUDE_LUNAR_H)
-#define __INCLUDE_LUNAR_H
+#if !defined(__INCLUDE_ORBIT_H)
+#define __INCLUDE_ORBIT_H
 
 extern "C"
 {
@@ -15,32 +11,33 @@ extern "C"
 #include "lauxlib.h"
 }
 
-template <typename T> class Lunar
+template <typename T> class Orbit
 {
 	typedef struct { T *pT; } userdataType;
 
 public:
 	typedef int (T::*mfp)(lua_State *L);
-	typedef struct {const char *name; mfp mfunc;} RegType;
+	typedef struct {const char* name; mfp mfunc;} MethodType;
+	typedef struct {const char* name; float value;} NumberGlobalType;
 
-	static void Register(lua_State *L)
+	static void orbit_register(lua_State *L)
 	{
 		lua_newtable(L);
-		int methods = lua_gettop(L);
+		int class_table = lua_gettop(L);
 
-		luaL_newmetatable(L, T::className);
+		luaL_newmetatable(L, T::class_name);
 		int metatable = lua_gettop(L);
 
 		// store method table in globals so that
 		// scripts can add functions written in Lua.
-		lua_pushvalue(L, methods);
-		set(L, LUA_GLOBALSINDEX, T::className);
+		lua_pushvalue(L, class_table);
+		set(L, LUA_GLOBALSINDEX, T::class_name);
 
 		// hide metatable from Lua getmetatable()
-		lua_pushvalue(L, methods);
+		lua_pushvalue(L, class_table);
 		set(L, metatable, "__metatable");
 
-		lua_pushvalue(L, methods);
+		lua_pushvalue(L, class_table);
 		set(L, metatable, "__index");
 
 		lua_pushcfunction(L, tostring_T);
@@ -52,18 +49,26 @@ public:
 		lua_newtable(L);                // mt for method table
 		lua_pushcfunction(L, new_T);
 		lua_pushvalue(L, -1);           // dup new_T function
-		set(L, methods, "new");         // add new_T to method table
+		set(L, class_table, "new");         // add new_T to method table
 		set(L, -3, "__call");           // mt.__call = new_T
 
-		lua_setmetatable(L, methods);
+		lua_setmetatable(L, class_table);
 
-		// fill method table with methods from class T
-		for (RegType *l = T::methods; l->name; l++)
+		// fill class table with methods from class T
+		for (MethodType *l = T::methods; l->name; l++)
 		{
 			lua_pushstring(L, l->name);
 			lua_pushlightuserdata(L, (void*)l);
 			lua_pushcclosure(L, thunk, 1);
-			lua_settable(L, methods);
+			lua_settable(L, class_table);
+		}
+
+		// fill class table with number globals from class T
+		for (NumberGlobalType *l = T::number_globals; l->name; l++)
+		{
+			lua_pushstring(L, l->name);
+			lua_pushnumber(L, l->value);
+			lua_settable(L, class_table);
 		}
 
 		lua_pop(L, 2);  // drop metatable and method table
@@ -77,10 +82,10 @@ public:
 			int errfunc=0)
 	{
 		int base = lua_gettop(L) - nargs;  // userdata index
-		if (!luaL_checkudata(L, base, T::className))
+		if (!luaL_checkudata(L, base, T::class_name))
 		{
 			lua_settop(L, base-1);           // drop userdata and args
-			lua_pushfstring(L, "not a valid %s userdata", T::className);
+			lua_pushfstring(L, "not a valid %s userdata", T::class_name);
 			return -1;
 		}
 
@@ -89,7 +94,7 @@ public:
 		if (lua_isnil(L, -1))
 		{            // no method?
 			lua_settop(L, base-1);           // drop userdata and args
-			lua_pushfstring(L, "%s missing method '%s'", T::className, method);
+			lua_pushfstring(L, "%s missing method '%s'", T::class_name, method);
 			return -1;
 		}
 		lua_insert(L, base);               // put method under userdata, args
@@ -104,7 +109,7 @@ public:
 			}
 			lua_pushfstring(L,
 					"%s:%s status = %d\n%s",
-					T::className,
+					T::class_name,
 					method,
 					status,
 					msg);
@@ -122,10 +127,10 @@ public:
 			lua_pushnil(L);
 			return 0;
 		}
-		luaL_getmetatable(L, T::className);  // lookup metatable in Lua registry
+		luaL_getmetatable(L, T::class_name);  // lookup metatable in Lua registry
 		if (lua_isnil(L, -1))
 		{
-			luaL_error(L, "%s missing metatable", T::className);
+			luaL_error(L, "%s missing metatable", T::class_name);
 		}
 		int mt = lua_gettop(L);
     		subtable(L, mt, "userdata", "v");
@@ -155,10 +160,10 @@ public:
 	static T *check(lua_State *L, int narg)
 	{
 		userdataType *ud =
-			static_cast<userdataType*>(luaL_checkudata(L, narg, T::className));
+			static_cast<userdataType*>(luaL_checkudata(L, narg, T::class_name));
 		if(!ud)
 		{
-			luaL_typerror(L, narg, T::className);
+			luaL_typerror(L, narg, T::class_name);
 		}
 		return ud->pT;  // pointer to T object
 	}
@@ -168,12 +173,12 @@ public:
 	static void* pointer(lua_State* L, int narg)
 	{
 		userdataType* ud = static_cast<userdataType*>(lua_touserdata(L, narg));
-		if(!ud) luaL_typerror(L, narg, T::className);
+		if(!ud) luaL_typerror(L, narg, T::class_name);
 		return (void*)ud->pT;  // pointer to T object
 	}
 
 private:
-	Lunar();  // hide default constructor
+	Orbit();  // hide default constructor
 
 	// member function dispatcher
 	static int thunk(lua_State *L)
@@ -182,7 +187,7 @@ private:
 		T *obj = check(L, 1);  // get 'self', or if you prefer, 'this'
 		lua_remove(L, 1);  // remove self so member function args start at index 1
 		// get member function from upvalue
-		RegType *l = static_cast<RegType*>(lua_touserdata(L, lua_upvalueindex(1)));
+		MethodType *l = static_cast<MethodType*>(lua_touserdata(L, lua_upvalueindex(1)));
 		return (obj->*(l->mfunc))(L);  // call member function
 	}
 
@@ -223,7 +228,7 @@ private:
 		userdataType *ud = static_cast<userdataType*>(lua_touserdata(L, 1));
 		T *obj = ud->pT;
 		sprintf(buff, "%p", obj);
-		lua_pushfstring(L, "%s (%s)", T::className, buff);
+		lua_pushfstring(L, "%s (%s)", T::class_name, buff);
 		return 1;
 	}
 

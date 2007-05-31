@@ -30,13 +30,6 @@ Simulation::Simulation()
 	_population_dynamics = NULL;
 }
 
-Simulation::Simulation(lua_State* L)
-{
-	_simulation_time = 0;
-	_selected_object = NULL;
-	_population_dynamics = NULL;
-}
-
 Simulation::~Simulation()
 {
 	list<SimulationObject*>::iterator iter_obj;
@@ -133,16 +126,9 @@ void Simulation::kill_organism(SimulationObject* org)
 	_objects_to_kill.push_back(org);
 }
 
-const char Simulation::className[] = "Simulation";
-
-Lunar<Simulation>::RegType Simulation::methods[] = {
-	{"set_population_dynamics", &Simulation::set_population_dynamics},
-        {0,0}
-};
-
 int Simulation::set_population_dynamics(lua_State *L)
 {
-        PopulationDynamics* pop_dyn = (PopulationDynamics*)Lunar<Simulation>::pointer(L, 1);
+        PopulationDynamics* pop_dyn = (PopulationDynamics*)Orbit<LoveLab>::pointer(L, 1);
         set_population_dynamics(pop_dyn);
         return 0;
 }

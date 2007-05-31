@@ -116,11 +116,13 @@ void MoleculeRGB::mutate()
 	}
 }
 
-const char MoleculeRGB::className[] = "MoleculeRGB";
+const char MoleculeRGB::class_name[] = "MoleculeRGB";
 
-Lunar<MoleculeRGB>::RegType MoleculeRGB::methods[] = {
+Orbit<MoleculeRGB>::MethodType MoleculeRGB::methods[] = {
         {0,0}
 };
+
+Orbit<MoleculeRGB>::NumberGlobalType MoleculeRGB::number_globals[] = {{0,0}};
 
 MoleculeRGB::MoleculeRGB(lua_State* L)
 {

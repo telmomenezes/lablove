@@ -23,13 +23,7 @@
 #include "GridbrainComponent.h"
 #include <vector>
 
-extern "C"
-{
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
-}
-#include "Lunar.h"
+#include "Orbit.h"
 
 using namespace std;
 
@@ -43,8 +37,9 @@ public:
 	void add_component(int type, float parameter);
 	GridbrainComponent* get_random();
 
-	static const char className[];
-        static Lunar<GridbrainComponentSet>::RegType methods[];
+	static const char class_name[];
+        static Orbit<GridbrainComponentSet>::MethodType methods[];
+	static Orbit<GridbrainComponentSet>::NumberGlobalType number_globals[];
 
         GridbrainComponentSet(lua_State* L);
         int add_component(lua_State* L);

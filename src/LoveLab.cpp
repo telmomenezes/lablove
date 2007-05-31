@@ -252,14 +252,16 @@ bool LoveLab::on_key_up(int key)
 }
 #endif
 
-const char LoveLab::className[] = "LoveLab";
+const char LoveLab::class_name[] = "LoveLab";
 
-Lunar<LoveLab>::RegType LoveLab::methods[] = {
+Orbit<LoveLab>::MethodType LoveLab::methods[] = {
         {"create", &LoveLab::create},
 	{"set_simulation", &LoveLab::set_simulation},
         {"set_seed_index", &LoveLab::set_seed_index},
         {0,0}
 };
+
+Orbit<LoveLab>::NumberGlobalType LoveLab::number_globals[] = {{0,0}};
 
 int LoveLab::create(lua_State* L)
 {
@@ -271,7 +273,7 @@ int LoveLab::create(lua_State* L)
 
 int LoveLab::set_simulation(lua_State *L)
 {
-        Simulation* sim = (Simulation*)Lunar<LoveLab>::pointer(L, 1);
+        Simulation* sim = (Simulation*)Orbit<LoveLab>::pointer(L, 1);
         set_simulation(sim);
         return 0;
 }
