@@ -317,7 +317,18 @@ Orbit<SimSimple2D>::MethodType SimSimple2D::methods[] = {
         {0,0}
 };
 
-Orbit<SimSimple2D>::NumberGlobalType SimSimple2D::number_globals[] = {{0,0}};
+Orbit<SimSimple2D>::NumberGlobalType SimSimple2D::number_globals[] = {
+	{"PERCEPTION_NULL", PERCEPTION_NULL},
+	{"PERCEPTION_COLOR", PERCEPTION_COLOR},
+	{"PERCEPTION_POSITION", PERCEPTION_POSITION},
+	{"PERCEPTION_PROXIMITY", PERCEPTION_PROXIMITY},
+	{"PERCEPTION_IN_CONTACT", PERCEPTION_IN_CONTACT},
+	{"ACTION_NULL", ACTION_NULL},
+	{"ACTION_GO", ACTION_GO},
+	{"ACTION_ROTATE", ACTION_ROTATE},
+	{"ACTION_EAT", ACTION_EAT},
+	{0,0}
+};
 
 int SimSimple2D::set_world_dimensions(lua_State* L)
 {

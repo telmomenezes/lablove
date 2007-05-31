@@ -29,6 +29,10 @@
 #include "MoleculeRGB.h"
 
 #include "Orbit.h"
+extern "C"
+{
+#include "lualib.h"
+}
 
 int main(int argc, char *argv[])
 {
@@ -48,10 +52,10 @@ int main(int argc, char *argv[])
 	Orbit<PopDynGenerations>::orbit_register(L);
 	Orbit<PopDynFixedSpecies>::orbit_register(L);
 	Orbit<Grid>::orbit_register(L);
+	Orbit<GridbrainComponent>::orbit_register(L);
 	Orbit<GridbrainComponentSet>::orbit_register(L);
 	Orbit<MoleculeRGB>::orbit_register(L);
 
-	GridbrainComponent::init_lua_globals(L);
 
 	char* script_file = "default.lua";
 	if (argc == 2)

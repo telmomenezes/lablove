@@ -34,7 +34,7 @@ public:
 	virtual ~GridbrainComponentSet();
 
 	void add_component(GridbrainComponent* component);
-	void add_component(int type, float parameter);
+	void add_component(GridbrainComponent::Type type, float parameter);
 	GridbrainComponent* get_random();
 
 	static const char class_name[];

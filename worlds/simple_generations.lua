@@ -34,24 +34,23 @@ animat:set_view_range(view_range)
 animat:set_view_angle(view_angle)
 
 per_set = GridbrainComponentSet()
-per_set:add_component(GBCOMP_PER, 1)
-per_set:add_component(GBCOMP_PER, 2)
-per_set:add_component(GBCOMP_PER, 3)
-per_set:add_component(GBCOMP_PER, 4)
-per_set:add_component(GBCOMP_PER, 5)
+per_set:add_component(GridbrainComponent.PER, SimSimple2D.PERCEPTION_COLOR)
+per_set:add_component(GridbrainComponent.PER, SimSimple2D.PERCEPTION_POSITION)
+per_set:add_component(GridbrainComponent.PER, SimSimple2D.PERCEPTION_PROXIMITY)
+per_set:add_component(GridbrainComponent.PER, SimSimple2D.PERCEPTION_IN_CONTACT)
 
 alpha_set = GridbrainComponentSet()
 if THR then
-	alpha_set:add_component(GBCOMP_THR, 0)
+	alpha_set:add_component(GridbrainComponent.THR, 0)
 end
 if MAX then
-	alpha_set:add_component(GBCOMP_MAX, 0)
+	alpha_set:add_component(GridbrainComponent.MAX, 0)
 end
 if MUL then
-	alpha_set:add_component(GBCOMP_MUL, 0)
+	alpha_set:add_component(GridbrainComponent.MUL, 0)
 end
 if NOT then
-	alpha_set:add_component(GBCOMP_NOT, 0)
+	alpha_set:add_component(GridbrainComponent.NOT, 0)
 end
 
 grid = Grid()
@@ -63,19 +62,19 @@ grid:add_component_set(alpha_set, -1)
 animat:set_alpha_objects_grid(grid);
 
 act_set = GridbrainComponentSet()
-act_set:add_component(GBCOMP_ACT, 1)
-act_set:add_component(GBCOMP_ACT, 2)
-act_set:add_component(GBCOMP_ACT, 3)
+act_set:add_component(GridbrainComponent.ACT, SimSimple2D.ACTION_GO)
+act_set:add_component(GridbrainComponent.ACT, SimSimple2D.ACTION_ROTATE)
+act_set:add_component(GridbrainComponent.ACT, SimSimple2D.ACTION_EAT)
 
 beta_set = GridbrainComponentSet()
 if THR then
-	beta_set:add_component(GBCOMP_THR, 0)
+	beta_set:add_component(GridbrainComponent.THR, 0)
 end
 if MAX then
-	beta_set:add_component(GBCOMP_MUL, 0)
+	beta_set:add_component(GridbrainComponent.MUL, 0)
 end
 if NOT then
-	beta_set:add_component(GBCOMP_NOT, 0)
+	beta_set:add_component(GridbrainComponent.NOT, 0)
 end
 	
 grid2 = Grid()

@@ -18,12 +18,10 @@
  */
 
 #include "Gridbrain.h"
-#include "actions.h"
-#include "perceptions.h"
-#include "states.h"
 #include "functions.h"
-#include <stdlib.h>
 #include "random.h"
+
+#include <stdlib.h>
 #include <string.h>
 
 Gridbrain::Gridbrain()
@@ -254,7 +252,7 @@ bool Gridbrain::is_aggregator(int type)
 void Gridbrain::set_component(unsigned int x,
 				unsigned int y,
 				unsigned int grid_number,
-				int type,
+				GridbrainComponent::Type type,
 				float parameter)
 {
 	Grid* grid = _grids_vec[grid_number];

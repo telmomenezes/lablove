@@ -22,32 +22,24 @@
 
 #include "GridbrainConnection.h"
 
-extern "C"
-{
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
-}
+#include "Orbit.h"
+
 
 class GridbrainComponent
 {
 public:
-	static const int NUL;
-	static const int PER;
-	static const int STA;
-	static const int ACT;
-	static const int THR;
-	static const int AGG;
-	static const int MAX;
-	static const int MUL;
-	static const int NOT;
+	enum Type {NUL, PER, STA, ACT, THR, AGG, MAX, MUL, NOT};
 
 	GridbrainComponent();
 	virtual ~GridbrainComponent();
 
-	static void init_lua_globals(lua_State* L);
+	static const char class_name[];
+        static Orbit<GridbrainComponent>::MethodType methods[];
+	static Orbit<GridbrainComponent>::NumberGlobalType number_globals[];
 
-	int _type;
+        GridbrainComponent(lua_State* L);
+
+	Type _type;
 	float _input;
 	float _output;
 	float _recurrent_input;

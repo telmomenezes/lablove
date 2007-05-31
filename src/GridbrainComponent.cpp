@@ -19,17 +19,11 @@
 
 #include "GridbrainComponent.h"
 
-const int GridbrainComponent::NUL = 0;
-const int GridbrainComponent::PER = 1;
-const int GridbrainComponent::STA = 2;
-const int GridbrainComponent::ACT = 3;
-const int GridbrainComponent::THR = 4;
-const int GridbrainComponent::AGG = 5;
-const int GridbrainComponent::MAX = 6;
-const int GridbrainComponent::MUL = 7;
-const int GridbrainComponent::NOT = 8;
-
 GridbrainComponent::GridbrainComponent()
+{
+}
+
+GridbrainComponent::GridbrainComponent(lua_State* L)
 {
 }
 
@@ -37,25 +31,20 @@ GridbrainComponent::~GridbrainComponent()
 {
 }
 
-void GridbrainComponent::init_lua_globals(lua_State* L)
-{
-	lua_pushnumber(L, 0);
-	lua_setglobal(L, "GBCOMP_NUL");
-	lua_pushnumber(L, 1);
-	lua_setglobal(L, "GBCOMP_PER");
-	lua_pushnumber(L, 2);
-	lua_setglobal(L, "GBCOMP_STA");
-	lua_pushnumber(L, 3);
-	lua_setglobal(L, "GBCOMP_ACT");
-	lua_pushnumber(L, 4);
-	lua_setglobal(L, "GBCOMP_THR");
-	lua_pushnumber(L, 5);
-	lua_setglobal(L, "GBCOMP_AGG");
-	lua_pushnumber(L, 6);
-	lua_setglobal(L, "GBCOMP_MAX");
-	lua_pushnumber(L, 7);
-	lua_setglobal(L, "GBCOMP_MUL");
-	lua_pushnumber(L, 8);
-	lua_setglobal(L, "GBCOMP_NOT");
-}
+const char GridbrainComponent::class_name[] = "GridbrainComponent";
+
+Orbit<GridbrainComponent>::MethodType GridbrainComponent::methods[] = {{0,0}};
+
+Orbit<GridbrainComponent>::NumberGlobalType GridbrainComponent::number_globals[] = {
+	{"NUL", NUL},
+	{"PER", PER},
+	{"STA", STA},
+	{"ACT", ACT},
+	{"THR", THR},
+	{"AGG", AGG},
+	{"MAX", MAX},
+	{"MUL", MUL},
+	{"NOT", NOT},
+	{0,0}
+};
 

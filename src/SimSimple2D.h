@@ -32,6 +32,18 @@ using namespace std;
 class SimSimple2D : public Simulation
 {
 public:
+
+	enum Perception {PERCEPTION_NULL,
+				PERCEPTION_COLOR,
+				PERCEPTION_POSITION,
+				PERCEPTION_PROXIMITY,
+				PERCEPTION_IN_CONTACT};
+
+	enum Action {ACTION_NULL,
+			ACTION_GO,
+			ACTION_ROTATE,
+			ACTION_EAT};
+
 	SimSimple2D();
 	virtual ~SimSimple2D();
 

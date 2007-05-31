@@ -23,8 +23,6 @@
 #include "math.h"
 #include "functions.h"
 #include "defines.h"
-#include "perceptions.h"
-#include "actions.h"
 
 #ifdef __LOVE_GRAPHICS
 #include "GL/gl.h"
@@ -150,9 +148,9 @@ void AnimatSimple2D::init()
 
 void AnimatSimple2D::init_test()
 {
-	_gridbrain->set_component(0, 0, 0, GridbrainComponent::PER, (float)PERCEPTION_POSITION);
-	_gridbrain->set_component(0, 1, 0, GridbrainComponent::PER, (float)PERCEPTION_PROXIMITY);
-	_gridbrain->set_component(0, 2, 0, GridbrainComponent::PER, (float)PERCEPTION_COLOR);
+	_gridbrain->set_component(0, 0, 0, GridbrainComponent::PER, (float)SimSimple2D::PERCEPTION_POSITION);
+	_gridbrain->set_component(0, 1, 0, GridbrainComponent::PER, (float)SimSimple2D::PERCEPTION_PROXIMITY);
+	_gridbrain->set_component(0, 2, 0, GridbrainComponent::PER, (float)SimSimple2D::PERCEPTION_COLOR);
 	_gridbrain->set_component(1, 0, 0, GridbrainComponent::THR, 0);
 	_gridbrain->set_component(1, 1, 0, GridbrainComponent::MAX, 0);
 	_gridbrain->set_component(2, 0, 0, GridbrainComponent::MUL, 0);
@@ -161,9 +159,9 @@ void AnimatSimple2D::init_test()
 
 	_gridbrain->set_component(0, 0, 1, GridbrainComponent::NOT, 0);
 	_gridbrain->set_component(0, 2, 1, GridbrainComponent::NOT, 0);
-	_gridbrain->set_component(1, 0, 1, GridbrainComponent::ACT, (float)ACTION_ROTATE);
-	_gridbrain->set_component(1, 1, 1, GridbrainComponent::ACT, (float)ACTION_GO);
-	_gridbrain->set_component(1, 2, 1, GridbrainComponent::ACT, (float)ACTION_EAT);
+	_gridbrain->set_component(1, 0, 1, GridbrainComponent::ACT, (float)SimSimple2D::ACTION_ROTATE);
+	_gridbrain->set_component(1, 1, 1, GridbrainComponent::ACT, (float)SimSimple2D::ACTION_GO);
+	_gridbrain->set_component(1, 2, 1, GridbrainComponent::ACT, (float)SimSimple2D::ACTION_EAT);
 
 	_gridbrain->add_connection(0, 0, 0, 1, 0, 0, 1.0f);
 	_gridbrain->add_connection(0, 1, 0, 1, 1, 0, 0.1f);
@@ -253,15 +251,15 @@ void AnimatSimple2D::computation_step()
 		{
 			switch (action_type)
 			{
-				case ACTION_GO:
+				case SimSimple2D::ACTION_GO:
 					_action_go = true;
 					_action_go_param += output;
 					break;
-				case ACTION_ROTATE:
+				case SimSimple2D::ACTION_ROTATE:
 					_action_rotate = true;
 					_action_rotate_param += output;
 					break;
-				case ACTION_EAT:
+				case SimSimple2D::ACTION_EAT:
 					_action_eat = true;
 					_action_eat_param += output;
 					break;
@@ -523,13 +521,13 @@ void AnimatSimple2D::on_scan_object(SimulationObject* obj, bool visible, bool co
 
 		switch (perception_type)
 		{
-			case PERCEPTION_COLOR:
+			case SimSimple2D::PERCEPTION_COLOR:
 				grid->set_input(perception_number,
 						_current_input_depth,
 						((ObjectSimple2D*)obj)->get_color()->bind(_color_molecule_table->get_molecule(perception_molecule)));
 				break;
 
-			case PERCEPTION_IN_CONTACT:
+			case SimSimple2D::PERCEPTION_IN_CONTACT:
 				if (contact)
 				{
 					grid->set_input(perception_number, _current_input_depth, 1.0f);
@@ -540,7 +538,7 @@ void AnimatSimple2D::on_scan_object(SimulationObject* obj, bool visible, bool co
 				}
 				break;
 
-			case PERCEPTION_POSITION:
+			case SimSimple2D::PERCEPTION_POSITION:
 				normalized_value = 0.0f;
 				if (visible)
 				{
@@ -549,7 +547,7 @@ void AnimatSimple2D::on_scan_object(SimulationObject* obj, bool visible, bool co
 				grid->set_input(perception_number, _current_input_depth, normalized_value);
 				break;
 
-			case PERCEPTION_PROXIMITY:
+			case SimSimple2D::PERCEPTION_PROXIMITY:
 				normalized_value = 0.0f;
 				if (visible)
 				{

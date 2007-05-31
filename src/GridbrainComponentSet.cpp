@@ -32,7 +32,7 @@ GridbrainComponent* GridbrainComponentSet::get_random()
 	return _component_vec[random() % _size];
 }
 
-void GridbrainComponentSet::add_component(int type, float parameter)
+void GridbrainComponentSet::add_component(GridbrainComponent::Type type, float parameter)
 {
 	GridbrainComponent* comp = new GridbrainComponent();
 	comp->_type = type;
@@ -58,7 +58,7 @@ int GridbrainComponentSet::add_component(lua_State *L)
 {
 	int type = luaL_checkint(L, 1);
         int parameter = luaL_checkint(L, 2);
-        add_component(type, (float)parameter);
+        add_component((GridbrainComponent::Type)type, (float)parameter);
         return 0;
 }
 

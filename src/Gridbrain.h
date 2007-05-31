@@ -46,7 +46,7 @@ public:
 	void set_component(unsigned int x,
 				unsigned int y,
 				unsigned int grid_number,
-				int type,
+				GridbrainComponent::Type type,
 				float parameter);
 	void add_connection(unsigned int x_orig,
 				unsigned int y_orig,
