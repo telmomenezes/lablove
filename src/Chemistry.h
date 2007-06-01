@@ -17,22 +17,22 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_MOLECULE_TABLE_H)
-#define __INCLUDE_MOLECULE_TABLE_H
+#if !defined(__INCLUDE_CHEMISTRY_H)
+#define __INCLUDE_CHEMISTRY_H
 
 #include "Molecule.h"
 #include <vector>
 
 using namespace std;
 
-class MoleculeTable
+class Chemistry
 {
 public:
-	MoleculeTable();
-	virtual ~MoleculeTable();
-	MoleculeTable* clone();
+	Chemistry();
+	virtual ~Chemistry();
+	Chemistry* clone();
 
-	Molecule* get_molecule(unsigned int index);
+	Chemistry* get_molecule(unsigned int index);
 	void add_molecule(Molecule* mol);
 	void mutate();
 

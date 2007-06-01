@@ -17,13 +17,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "MoleculeTable.h"
+#include "Chemistry.h"
 
-MoleculeTable::MoleculeTable()
+Chemistry::Chemistry()
 {
 }
 
-MoleculeTable::~MoleculeTable()
+Chemistry::~Chemistry()
 {
 	vector<Molecule*>::iterator iter_molecule;
 
@@ -37,9 +37,9 @@ MoleculeTable::~MoleculeTable()
 	_molecule_vec.clear();
 }
 
-MoleculeTable* MoleculeTable::clone()
+Chemistry* Chemistry::clone()
 {
-	MoleculeTable* mt = new MoleculeTable();
+	Chemistry* mt = new Chemistry();
 
 	vector<Molecule*>::iterator iter_molecule;
 
@@ -53,17 +53,17 @@ MoleculeTable* MoleculeTable::clone()
 	return mt;
 }
 
-Molecule* MoleculeTable::get_molecule(unsigned int index)
+Molecule* Chemistry::get_molecule(unsigned int index)
 {
 	return _molecule_vec[index];
 }
 
-void MoleculeTable::add_molecule(Molecule* mol)
+void Chemistry::add_molecule(Molecule* mol)
 {
 	_molecule_vec.push_back(mol);
 }
 
-void MoleculeTable::mutate()
+void Chemistry::mutate()
 {
 	unsigned int index = random() % _molecule_vec.size();
 	_molecule_vec[index]->mutate();
