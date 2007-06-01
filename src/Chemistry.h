@@ -32,7 +32,7 @@ public:
 	virtual ~Chemistry();
 	Chemistry* clone();
 
-	Chemistry* get_molecule(unsigned int index);
+	Molecule* get_molecule(unsigned int index);
 	void add_molecule(Molecule* mol);
 	void mutate();
 

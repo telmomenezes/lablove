@@ -22,7 +22,6 @@
 
 #include "ObjectSimple2D.h"
 #include "Gridbrain.h"
-#include "MoleculeTable.h"
 
 #include "Orbit.h"
 
@@ -107,8 +106,6 @@ protected:
 
 	SimulationObject* _nearest_food;
 	float _distance_to_nearest_food;
-
-	MoleculeTable* _color_molecule_table;
 };
 #endif
 

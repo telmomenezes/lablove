@@ -49,8 +49,6 @@ AnimatSimple2D::AnimatSimple2D()
 
 	_go_cost = 0.0f;
 	_rotate_cost = 0.0f;
-
-	_color_molecule_table = NULL;
 }
 
 AnimatSimple2D::AnimatSimple2D(lua_State* L)
@@ -79,8 +77,6 @@ AnimatSimple2D::AnimatSimple2D(lua_State* L)
 
 	_go_cost = 0.0f;
 	_rotate_cost = 0.0f;
-
-	_color_molecule_table = NULL;
 }
 
 AnimatSimple2D::AnimatSimple2D(AnimatSimple2D* anim, bool full) : ObjectSimple2D(anim)
@@ -88,14 +84,6 @@ AnimatSimple2D::AnimatSimple2D(AnimatSimple2D* anim, bool full) : ObjectSimple2D
 	_max_input_depth = anim->_max_input_depth;
 	_initial_connections = anim->_initial_connections;
 	_gridbrain = anim->_gridbrain->clone(full);
-	if (full)
-	{
-		_color_molecule_table = anim->_color_molecule_table->clone();
-	}
-	else
-	{
-		_color_molecule_table = NULL;
-	}
 	_current_input_depth = 0;
 
 	_view_range = anim->_view_range;
@@ -128,15 +116,6 @@ void AnimatSimple2D::set_beta_grid(Grid* grid)
 
 void AnimatSimple2D::init()
 {
-	_color_molecule_table = new MoleculeTable();
-
-	for (unsigned int i = 0; i < 5; i++)
-	{
-		MoleculeRGB* mol = new MoleculeRGB();
-		mol->init_random();
-		_color_molecule_table->add_molecule(mol);
-	}
-
 	_gridbrain->init();
 
 	for (unsigned int i = 0; i < _initial_connections; i++)
@@ -189,12 +168,6 @@ AnimatSimple2D::~AnimatSimple2D()
 	{
 		delete _gridbrain;
 		_gridbrain = NULL;
-	}
-
-	if (_color_molecule_table != NULL)
-	{
-		delete _color_molecule_table;
-		_color_molecule_table = NULL;
 	}
 }
 
@@ -522,9 +495,9 @@ void AnimatSimple2D::on_scan_object(SimulationObject* obj, bool visible, bool co
 		switch (perception_type)
 		{
 			case SimSimple2D::PERCEPTION_COLOR:
-				grid->set_input(perception_number,
+				/*grid->set_input(perception_number,
 						_current_input_depth,
-						((ObjectSimple2D*)obj)->get_color()->bind(_color_molecule_table->get_molecule(perception_molecule)));
+						((ObjectSimple2D*)obj)->get_color()->bind(_color_molecule_table->get_molecule(perception_molecule)));*/
 				break;
 
 			case SimSimple2D::PERCEPTION_IN_CONTACT:
