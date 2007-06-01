@@ -21,14 +21,17 @@
 #define __INCLUDE_CHEMISTRY_H
 
 #include "Molecule.h"
+#include "Orbit.h"
+
 #include <vector>
+#include <string>
 
 using namespace std;
 
 class Chemistry
 {
 public:
-	Chemistry();
+	Chemistry(string name, Molecule* ref_molecule);
 	virtual ~Chemistry();
 	Chemistry* clone();
 
@@ -36,7 +39,15 @@ public:
 	void add_molecule(Molecule* mol);
 	void mutate();
 
+	static const char class_name[];
+        static Orbit<Chemistry>::MethodType methods[];
+	static Orbit<Chemistry>::NumberGlobalType number_globals[];
+
+        Chemistry(lua_State* L);
+
 protected:
+	string _name;
+	Molecule* _reference_molecule;
 	vector<Molecule*> _molecule_vec;
 };
 #endif

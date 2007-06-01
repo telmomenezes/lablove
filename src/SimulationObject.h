@@ -20,7 +20,12 @@
 #if !defined(__INCLUDE_SIMULATION_OBJECT_H)
 #define __INCLUDE_SIMULATION_OBJECT_H
 
+#include "Chemistry.h"
 #include "Orbit.h"
+
+#include <map>
+
+using namespace std;
 
 class SimulationObject
 {
@@ -38,7 +43,6 @@ public:
 	virtual bool is_food(){return false;}
 	void set_selected(bool selected){_selected = selected;}
 	bool is_selected(){return _selected;}
-	virtual void draw_brain();
 
         unsigned int get_species_id(){return _species_id;}
 	void set_species_id(unsigned int id){_species_id = id;}
@@ -63,6 +67,7 @@ protected:
 	float _energy;
 	float _initial_energy;
 	unsigned long _creation_time;
+	map<string, Chemistry*> _chemistries_map;
 };
 #endif
 

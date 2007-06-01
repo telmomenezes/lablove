@@ -19,8 +19,19 @@
 
 #include "Chemistry.h"
 
-Chemistry::Chemistry()
+Chemistry::Chemistry(string name, Molecule* ref_molecule)
 {
+	_name = name;
+	_reference_molecule = ref_molecule;
+}
+
+Chemistry::Chemistry(lua_State* L)
+{
+	const char* name = luaL_checkstring(L, 1);
+	Molecule* molecule = (Molecule*)Orbit<Chemistry>::pointer(L, 2);
+
+	_name = string(name);
+	_reference_molecule = molecule;
 }
 
 Chemistry::~Chemistry()
@@ -39,7 +50,7 @@ Chemistry::~Chemistry()
 
 Chemistry* Chemistry::clone()
 {
-	Chemistry* mt = new Chemistry();
+	Chemistry* mt = new Chemistry(_name, _reference_molecule->clone());
 
 	vector<Molecule*>::iterator iter_molecule;
 
@@ -68,4 +79,12 @@ void Chemistry::mutate()
 	unsigned int index = random() % _molecule_vec.size();
 	_molecule_vec[index]->mutate();
 }
+
+const char Chemistry::class_name[] = "Chemistry";
+
+Orbit<Chemistry>::MethodType Chemistry::methods[] = {
+        {0,0}
+};
+
+Orbit<Chemistry>::NumberGlobalType Chemistry::number_globals[] = {{0,0}};
 

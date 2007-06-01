@@ -45,14 +45,17 @@ SimulationObject::SimulationObject(SimulationObject* obj)
 }
 
 SimulationObject::~SimulationObject()
-{	
-}
-
-void SimulationObject::draw_brain()
 {
-	int x = (LoveLab::get_instance().get_screen_width() / 2) - 160;
-	int y = (LoveLab::get_instance().get_screen_height() / 2) - 4;
-	//stringColor(LoveLab::get_instance().get_screen(), x, y, "Can not display brain of selected object", COLOR_INFO);
+	map<string, Chemistry*>::iterator iter_chems;
+
+	for (iter_chems = _chemistries_map.begin();
+		iter_chems != _chemistries_map.end();
+		iter_chems++)
+	{
+		delete (*iter_chems).second;
+	}
+
+	_chemistries_map.clear();
 }
 
 int SimulationObject::set_initial_energy(lua_State* L)

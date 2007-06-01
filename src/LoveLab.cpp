@@ -112,7 +112,7 @@ void LoveLab::run()
 		exit(2);
 	}
 
- 	SDL_WM_SetCaption("Love Simulation", "Love Simulation");
+ 	SDL_WM_SetCaption("LOVE Lab", "LOVE Lab");
 
 	glViewport(0, 0, (GLint) _screen_width, (GLint) _screen_height);
 	glClearColor(1.0, 1.0, 1.0, 0.0);
@@ -158,31 +158,6 @@ void LoveLab::cycle()
 
 	glColor3f(0.15, 0.15, 0.15);
 	_font.print(10, _screen_height - 10, "%s", _fps_string_buffer);
-
-	if (_draw_brain)
-	{
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glColor4f(0.0, 0.0, 0.0, 0.5);
-		glBegin(GL_POLYGON);
-		glVertex2f(0, 0);
-		glVertex2f(_screen_width, 0);
-		glVertex2f(_screen_width, _screen_height);
-		glVertex2f(0, _screen_height);
-		glEnd();
-
-		if (_simulation->get_selected_object())
-		{
-			_simulation->get_selected_object()->draw_brain();
-		}
-		else
-		{
-			glColor3f(1.0, 1.0, 1.0);
-			int x = (_screen_width / 2) - 72;
-			int y = (_screen_height / 2) - 4;
-			_font.print(x, y, "No object selected");
-		}
-	}
 
 	glFlush();
 	SDL_GL_SwapBuffers();
