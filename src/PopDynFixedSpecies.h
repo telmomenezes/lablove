@@ -36,30 +36,30 @@ public:
 	PopDynFixedSpecies();
 	virtual ~PopDynFixedSpecies();
 	virtual void init();
-	virtual void on_cycle();
-	virtual void on_organism_death(SimulationObject* org);
+	virtual void onCycle();
+	virtual void onOrganismDeath(SimulationObject* org);
 
-	void add_static_species(SimulationObject* org, long population);
-	void add_evolving_species(SimulationObject* org, long population);
+	void addStaticSpecies(SimulationObject* org, long population);
+	void addEvolvingSpecies(SimulationObject* org, long population);
 
-	static const char class_name[];
-        static Orbit<PopDynFixedSpecies>::MethodType methods[];
-	static Orbit<PopDynFixedSpecies>::NumberGlobalType number_globals[];
+	static const char mClassName[];
+        static Orbit<PopDynFixedSpecies>::MethodType mMethods[];
+	static Orbit<PopDynFixedSpecies>::NumberGlobalType mNumberGlobals[];
 
-        PopDynFixedSpecies(lua_State* L);
-        int add_static_species(lua_State* L);
-        int add_evolving_species(lua_State* L);
+        PopDynFixedSpecies(lua_State* luaState);
+        int addStaticSpecies(lua_State* luaState);
+        int addEvolvingSpecies(lua_State* luaState);
 
 protected:
-	list<SimulationObject*> _static_species;
-	list<SimulationObject*> _evolving_species;
-	list<vector<SimulationObject*>*> _static_species_organism_vecs;
-	list<vector<SimulationObject*>*> _evolving_species_organism_vecs;
-	list<long> _static_species_populations;
-	list<long> _evolving_species_populations;
-	vector<unsigned int> _evolving_species_death_count;
-	vector<float> _evolving_species_fitness;
-	vector<float> _evolving_species_best_fitness;
+	list<SimulationObject*> mStaticSpecies;
+	list<SimulationObject*> mEvolvingSpecies;
+	list<vector<SimulationObject*>*> mStaticSpeciesOrganismVecs;
+	list<vector<SimulationObject*>*> mEvolvingSpeciesOrganismVecs;
+	list<long> mStaticSpeciesPopulations;
+	list<long> mEvolvingSpeciesPopulations;
+	vector<unsigned int> mEvolvingSpeciesDeathCount;
+	vector<float> mEvolvingSpeciesFitness;
+	vector<float> mEvolvingSpeciesBestFitness;
 };
 #endif
 

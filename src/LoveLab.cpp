@@ -25,40 +25,34 @@
 #include "GL/gl.h"
 #endif
 
-LoveLab* LoveLab::_love = NULL;
+LoveLab* LoveLab::mLove = NULL;
 
 LoveLab::LoveLab()
 {
-	_stop = false;
-	_screen_width = 800;
-	_screen_height = 600;
-	_color_depth = 32;
-	_show_console = false;
-	_cycle_start_time = 0;
-	_last_cycle_start_time = 0;
-	_fps = 0;
-	_fps_sum = 0.0f;
-        _show_console = false;
-	_draw_brain = false;
+	mStop = false;
+	mScreenWidth = 800;
+	mScreenHeight = 600;
+	mColorDepth = 32;
+	mCycleStartTime = 0;
+	mLastCycleStartTime = 0;
+	mFPS = 0;
+	mFPSSum = 0.0f;
 
-        sprintf(_fps_string_buffer, "");
+        sprintf(mFPSStringBuffer, "");
 }
 
-LoveLab::LoveLab(lua_State* L)
+LoveLab::LoveLab(lua_State* luaState)
 {
-	_stop = false;
-	_screen_width = 800;
-	_screen_height = 600;
-	_color_depth = 32;
-	_show_console = false;
-	_cycle_start_time = 0;
-	_last_cycle_start_time = 0;
-	_fps = 0;
-	_fps_sum = 0.0f;
-        _show_console = false;
-	_draw_brain = false;
+	mStop = false;
+	mScreenWidth = 800;
+	mScreenHeight = 600;
+	mColorDepth = 32;
+	mCycleStartTime = 0;
+	mLastCycleStartTime = 0;
+	mFPS = 0;
+	mFPSSum = 0.0f;
 
-        sprintf(_fps_string_buffer, "");
+        sprintf(mFPSStringBuffer, "");
 }
 
 LoveLab::~LoveLab()
@@ -67,35 +61,35 @@ LoveLab::~LoveLab()
 
 void LoveLab::create()
 {
-	_love = this;
-	_love->add_keyboard_mouse_handler(this);
+	mLove = this;
+	mLove->addKeyboardMouseHandler(this);
 }
 
-LoveLab& LoveLab::get_instance()
+LoveLab& LoveLab::getInstance()
 {	
-	return *_love;
+	return *mLove;
 }
 
-void LoveLab::set_screen_dimensions(unsigned int screen_width,
-					unsigned int screen_height,
-					unsigned int color_depth)
+void LoveLab::setScreenDimensions(unsigned int screenWidth,
+					unsigned int screenHeight,
+					unsigned int colorDepth)
 {
-	_screen_width = screen_width;
-	_screen_height = screen_height;
-	_color_depth = color_depth;
+	mScreenWidth = screenWidth;
+	mScreenHeight = screenHeight;
+	mColorDepth = colorDepth;
 }
 
-void LoveLab::set_seed_index(unsigned int index)
+void LoveLab::setSeedIndex(unsigned int index)
 {
-	random_seed_index(index);
+	randomSeedIndex(index);
 }
 
 void LoveLab::run()
 {
 #ifdef __LOVE_GRAPHICS
 	const SDL_VideoInfo *info;
-	Uint8  video_bpp;
-	Uint32 videoflags;
+	Uint8  videoBpp;
+	Uint32 videoFlags;
         
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
@@ -104,28 +98,28 @@ void LoveLab::run()
 	}
 	atexit(SDL_Quit);
 
-	videoflags = SDL_OPENGL;
+	videoFlags = SDL_OPENGL;
 
-	if ((SDL_SetVideoMode(_screen_width, _screen_height, _color_depth, videoflags)) == NULL )
+	if ((SDL_SetVideoMode(mScreenWidth, mScreenHeight, mColorDepth, videoFlags)) == NULL )
 	{
-		fprintf(stderr, "Couldn't set %ix%i video mode: %s\n", _screen_width, _screen_height, SDL_GetError());
+		fprintf(stderr, "Couldn't set %ix%i video mode: %s\n", mScreenWidth, mScreenHeight, SDL_GetError());
 		exit(2);
 	}
 
  	SDL_WM_SetCaption("LOVE Lab", "LOVE Lab");
 
-	glViewport(0, 0, (GLint) _screen_width, (GLint) _screen_height);
+	glViewport(0, 0, (GLint) mScreenWidth, (GLint) mScreenHeight);
 	glClearColor(1.0, 1.0, 1.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT);
-	glOrtho(0, _screen_width, 0, _screen_height, -1.0, 1.0);
+	glOrtho(0, mScreenWidth, 0, mScreenHeight, -1.0, 1.0);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	_font.init();
+	mFont.init();
 #endif
 
-	_simulation->init();
+	mSimulation->init();
 
 	while (running())
 	{
@@ -136,28 +130,28 @@ void LoveLab::run()
 void LoveLab::cycle()
 {
 #ifdef __LOVE_GRAPHICS
-	_last_cycle_start_time = _cycle_start_time;
-	_cycle_start_time = SDL_GetTicks();
+	mLastCycleStartTime = mCycleStartTime;
+	mCycleStartTime = SDL_GetTicks();
 
 	glClear(GL_COLOR_BUFFER_BIT);
 #endif
 
-	_simulation->cycle();
+	mSimulation->cycle();
 
 #ifdef __LOVE_GRAPHICS
-	long cycle_ticks = _cycle_start_time - _last_cycle_start_time;
-	double cycle_time = ((double)cycle_ticks) / 1000.0f;
-	_fps_sum += 1.0f / cycle_time;
+	long cycleTicks = mCycleStartTime - mLastCycleStartTime;
+	double cycleTime = ((double)cycleTicks) / 1000.0f;
+	mFPSSum += 1.0f / cycleTime;
 
-	if ((_simulation->time() % 100) == 0)
+	if ((mSimulation->time() % 100) == 0)
 	{
-		_fps = _fps_sum / 100.0f;
-		_fps_sum = 0.0f;
-		sprintf(_fps_string_buffer, "FPS: %f", _fps);
+		mFPS = mFPSSum / 100.0f;
+		mFPSSum = 0.0f;
+		sprintf(mFPSStringBuffer, "FPS: %f", mFPS);
 	}
 
 	glColor3f(0.15, 0.15, 0.15);
-	_font.print(10, _screen_height - 10, "%s", _fps_string_buffer);
+	mFont.print(10, mScreenHeight - 10, "%s", mFPSStringBuffer);
 
 	glFlush();
 	SDL_GL_SwapBuffers();
@@ -165,80 +159,78 @@ void LoveLab::cycle()
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
-		list<KeyboardMouseHandler*>::iterator iter_handler = _handlers_list.begin();
+		list<KeyboardMouseHandler*>::iterator iterHandler = mHandlersList.begin();
 		bool handled = false;
-		while ((!handled) && (iter_handler != _handlers_list.end()))
+		while ((!handled) && (iterHandler != mHandlersList.end()))
 		{
 			switch (event.type)
 			{
 				case SDL_KEYDOWN:
-					(*iter_handler)->on_key_down(event.key.keysym.sym);
+					(*iterHandler)->onKeyDown(event.key.keysym.sym);
 					break;
 				case SDL_KEYUP:
-					(*iter_handler)->on_key_up(event.key.keysym.sym);
+					(*iterHandler)->onKeyUp(event.key.keysym.sym);
 					break;
 				case SDL_MOUSEBUTTONDOWN:
-					(*iter_handler)->on_mouse_button_down(event.button.button,
+					(*iterHandler)->onMouseButtonDown(event.button.button,
 										event.button.x,
-										_screen_height - event.button.y);
+										mScreenHeight - event.button.y);
 					break;
 				case SDL_MOUSEBUTTONUP:
-					(*iter_handler)->on_mouse_button_up(event.button.button,
+					(*iterHandler)->onMouseButtonUp(event.button.button,
 										event.button.x,
-										_screen_height - event.button.y);
+										mScreenHeight - event.button.y);
 					break;
 				case SDL_MOUSEMOTION:
-					(*iter_handler)->on_mouse_move(event.button.x,
-									_screen_height - event.button.y);
+					(*iterHandler)->onMouseMove(event.button.x,
+									mScreenHeight - event.button.y);
 					break;
 				default:
 					break;
 			}
 
-			iter_handler++;
+			iterHandler++;
 		}
 	}
 #endif
 }
 
-void LoveLab::add_keyboard_mouse_handler(KeyboardMouseHandler* handler)
+void LoveLab::addKeyboardMouseHandler(KeyboardMouseHandler* handler)
 {
-	_handlers_list.push_front(handler);
+	mHandlersList.push_front(handler);
 }
 
-void LoveLab::remove_keyboard_mouse_handler()
+void LoveLab::removeKeyboardMouseHandler()
 {
-	_handlers_list.pop_front();
+	mHandlersList.pop_front();
 }
 
 #ifdef __LOVE_GRAPHICS
-bool LoveLab::on_key_up(int key)
+bool LoveLab::onKeyUp(int key)
 {
 	switch (key)
 	{
 	case SDLK_ESCAPE:
-		_stop = true;
+		mStop = true;
 		return true;
-	case SDLK_b:
-		set_draw_brain(!get_draw_brain());
 	default:
 		return false;
 	}
 }
 #endif
 
-const char LoveLab::class_name[] = "LoveLab";
+const char LoveLab::mClassName[] = "LoveLab";
 
-Orbit<LoveLab>::MethodType LoveLab::methods[] = {
+Orbit<LoveLab>::MethodType LoveLab::mMethods[] = {
         {"create", &LoveLab::create},
-	{"set_simulation", &LoveLab::set_simulation},
-        {"set_seed_index", &LoveLab::set_seed_index},
+	{"setSimulation", &LoveLab::setSimulation},
+        {"setSeedIndex", &LoveLab::setSeedIndex},
         {0,0}
 };
 
-Orbit<LoveLab>::NumberGlobalType LoveLab::number_globals[] = {{0,0}};
+Orbit<LoveLab>::NumberGlobalType LoveLab::mNumberGlobals[] = {{0,0}};
 
-int LoveLab::create(lua_State* L)
+int LoveLab::create(lua_State* luaState)
 {
         create();
         return 0;
@@ -246,17 +238,17 @@ int LoveLab::create(lua_State* L)
 
 
 
-int LoveLab::set_simulation(lua_State *L)
+int LoveLab::setSimulation(lua_State* luaState)
 {
-        Simulation* sim = (Simulation*)Orbit<LoveLab>::pointer(L, 1);
-        set_simulation(sim);
+        Simulation* sim = (Simulation*)Orbit<LoveLab>::pointer(luaState, 1);
+        setSimulation(sim);
         return 0;
 }
 
-int LoveLab::set_seed_index(lua_State* L)
+int LoveLab::setSeedIndex(lua_State* luaState)
 {
-        int index = luaL_checkint(L, 1);
-        set_seed_index(index);
+        int index = luaL_checkint(luaState, 1);
+        setSeedIndex(index);
         return 0;
 }
 

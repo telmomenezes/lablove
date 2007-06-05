@@ -34,18 +34,18 @@ public:
 	virtual Molecule* clone();
 
 	virtual float bind(Molecule* mol);
-	virtual void init_random();
+	virtual void initRandom();
 	virtual void mutate();
 
-	static const char class_name[];
-        static Orbit<MoleculeRGB>::MethodType methods[];
-	static Orbit<MoleculeRGB>::NumberGlobalType number_globals[];
+	static const char mClassName[];
+        static Orbit<MoleculeRGB>::MethodType mMethods[];
+	static Orbit<MoleculeRGB>::NumberGlobalType mNumberGlobals[];
 
-        MoleculeRGB(lua_State* L);
+        MoleculeRGB(lua_State* luaState);
 
-	float _red;
-	float _green;
-	float _blue;
+	float mRed;
+	float mGreen;
+	float mBlue;
 };
 #endif
 

@@ -25,46 +25,46 @@
 
 Simulation::Simulation()
 {
-	_simulation_time = 0;
-	_selected_object = NULL;
-	_population_dynamics = NULL;
+	mSimulationTime = 0;
+	mSelectedObject = NULL;
+	mPopulationDynamics = NULL;
 }
 
 Simulation::~Simulation()
 {
-	list<SimulationObject*>::iterator iter_obj;
-	for (iter_obj = _objects.begin(); iter_obj != _objects.end(); ++iter_obj)
+	list<SimulationObject*>::iterator iterObj;
+	for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
 	{
-		delete *iter_obj;
+		delete *iterObj;
 	}
-        _objects.clear();
+        mObjects.clear();
 }
 
 void Simulation::init()
 {
-	_population_dynamics->init();
-	LoveLab::get_instance().add_keyboard_mouse_handler(this);
+	mPopulationDynamics->init();
+	LoveLab::getInstance().addKeyboardMouseHandler(this);
 }
 
-void Simulation::add_object(SimulationObject* object)
+void Simulation::addObject(SimulationObject* object)
 {
-	_objects.push_back(object);
+	mObjects.push_back(object);
 }
 
-void Simulation::remove_object(SimulationObject* object)
+void Simulation::removeObject(SimulationObject* object)
 {
-	if (object->is_selected())
+	if (object->isSelected())
 	{
-		_selected_object = NULL;
+		mSelectedObject = NULL;
 	}
 
 	bool stop = false;
-	list<SimulationObject*>::iterator iter_obj;
-	for (iter_obj = _objects.begin(); (iter_obj != _objects.end()) && !stop; ++iter_obj)
+	list<SimulationObject*>::iterator iterObj;
+	for (iterObj = mObjects.begin(); (iterObj != mObjects.end()) && !stop; ++iterObj)
 	{
-		if((*iter_obj) == object)
+		if((*iterObj) == object)
 		{
-			_objects.erase(iter_obj);
+			mObjects.erase(iterObj);
 			delete object;
 			return;
 		}
@@ -73,63 +73,63 @@ void Simulation::remove_object(SimulationObject* object)
 
 void Simulation::cycle()
 {
-	list<SimulationObject*>::iterator iter_obj;
+	list<SimulationObject*>::iterator iterObj;
 
-	for (iter_obj = _objects_to_kill.begin();
-		iter_obj != _objects_to_kill.end();
-		iter_obj++)
+	for (iterObj = mObjectsToKill.begin();
+		iterObj != mObjectsToKill.end();
+		iterObj++)
 	{
-		_population_dynamics->on_organism_death(*iter_obj);
+		mPopulationDynamics->onOrganismDeath(*iterObj);
 	}
-	_objects_to_kill.clear();
+	mObjectsToKill.clear();
 
-	_population_dynamics->on_cycle();
+	mPopulationDynamics->onCycle();
 
 #ifdef __LOVE_GRAPHICS
-	draw_before_objects();
+	drawBeforeObjects();
 #endif
 
-	for (iter_obj = _objects.begin(); iter_obj != _objects.end(); ++iter_obj)
+	for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
 	{
-		SimulationObject* obj = *iter_obj;
-		obj->on_cycle();
+		SimulationObject* obj = *iterObj;
+		obj->onCycle();
 #ifdef __LOVE_GRAPHICS
 		obj->draw();
 #endif
 	}
 
-	_simulation_time++;
+	mSimulationTime++;
 }
 
-void Simulation::set_selected_object(SimulationObject* object)
+void Simulation::setSelectedObject(SimulationObject* object)
 {
-	if (_selected_object != NULL)
+	if (mSelectedObject != NULL)
 	{
-		_selected_object->set_selected(false);
+		mSelectedObject->setSelected(false);
 	}
-	_selected_object = object;
-	if (_selected_object != NULL)
+	mSelectedObject = object;
+	if (mSelectedObject != NULL)
 	{
-		_selected_object->set_selected(true);
+		mSelectedObject->setSelected(true);
 	}
 }
 
-void Simulation::kill_organism(SimulationObject* org)
+void Simulation::killOrganism(SimulationObject* org)
 {
-	if (org->_deleted)
+	if (org->mDeleted)
 	{
 		return;
 	}
 
-	org->_deleted = true;
+	org->mDeleted = true;
 
-	_objects_to_kill.push_back(org);
+	mObjectsToKill.push_back(org);
 }
 
-int Simulation::set_population_dynamics(lua_State *L)
+int Simulation::setPopulationDynamics(lua_State *luaState)
 {
-        PopulationDynamics* pop_dyn = (PopulationDynamics*)Orbit<LoveLab>::pointer(L, 1);
-        set_population_dynamics(pop_dyn);
+        PopulationDynamics* popDyn = (PopulationDynamics*)Orbit<LoveLab>::pointer(luaState, 1);
+        setPopulationDynamics(popDyn);
         return 0;
 }
 

@@ -22,21 +22,21 @@
 
 typedef struct
 {
-	unsigned long _column_orig;
-	unsigned long _row_orig;
-	unsigned int _grid_orig;
-	unsigned long _column_targ;
-	unsigned long _row_targ;
-	unsigned int _grid_targ;
-	unsigned int _target;
-	bool _inter_grid;
-	float _weight;
-	void* _prev_connection;
-	void* _next_connection;
-	void* _prev_global_connection;
-	void* _next_global_connection;
-	void* _orig_component;
-	bool _feed_forward;
+	unsigned long mColumnOrig;
+	unsigned long mRowOrig;
+	unsigned int mGridOrig;
+	unsigned long mColumnTarg;
+	unsigned long mRowTarg;
+	unsigned int mGridTarg;
+	unsigned int mTarget;
+	bool mInterGrid;
+	float mWeight;
+	void* mPrevConnection;
+	void* mNextConnection;
+	void* mPrevGlobalConnection;
+	void* mNextGlobalConnection;
+	void* mOrigComponent;
+	bool mFeedForward;
 } GridbrainConnection;
 
 #endif

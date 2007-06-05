@@ -8,57 +8,57 @@
 
 GridbrainComponentSet::GridbrainComponentSet()
 {
-	_size = 0;
+	mSize = 0;
 }
 
 
 GridbrainComponentSet::~GridbrainComponentSet()
 {
-	for (unsigned int i = 0; i < _size; i++)
+	for (unsigned int i = 0; i < mSize; i++)
 	{
-		delete _component_vec[i];
+		delete mComponentVec[i];
 	}
-	_component_vec.clear();
+	mComponentVec.clear();
 }
 
-void GridbrainComponentSet::add_component(GridbrainComponent* component)
+void GridbrainComponentSet::addComponent(GridbrainComponent* component)
 {
-	_component_vec.push_back(component);
-	_size++;
+	mComponentVec.push_back(component);
+	mSize++;
 }
 
-GridbrainComponent* GridbrainComponentSet::get_random()
+GridbrainComponent* GridbrainComponentSet::getRandom()
 {
-	return _component_vec[random() % _size];
+	return mComponentVec[random() % mSize];
 }
 
-void GridbrainComponentSet::add_component(GridbrainComponent::Type type, float parameter)
+void GridbrainComponentSet::addComponent(GridbrainComponent::Type type, float parameter)
 {
 	GridbrainComponent* comp = new GridbrainComponent();
-	comp->_type = type;
-	comp->_parameter = parameter;
-	add_component(comp);
+	comp->mType = type;
+	comp->mParameter = parameter;
+	addComponent(comp);
 }
 
-const char GridbrainComponentSet::class_name[] = "GridbrainComponentSet";
+const char GridbrainComponentSet::mClassName[] = "GridbrainComponentSet";
 
-Orbit<GridbrainComponentSet>::MethodType GridbrainComponentSet::methods[] = {
-	{"add_component", &GridbrainComponentSet::add_component},
+Orbit<GridbrainComponentSet>::MethodType GridbrainComponentSet::mMethods[] = {
+	{"addComponent", &GridbrainComponentSet::addComponent},
         {0,0}
 };
 
-Orbit<GridbrainComponentSet>::NumberGlobalType GridbrainComponentSet::number_globals[] = {{0,0}};
+Orbit<GridbrainComponentSet>::NumberGlobalType GridbrainComponentSet::mNumberGlobals[] = {{0,0}};
 
-GridbrainComponentSet::GridbrainComponentSet(lua_State* L)
+GridbrainComponentSet::GridbrainComponentSet(lua_State* luaState)
 {
-	_size = 0;
+	mSize = 0;
 }
 
-int GridbrainComponentSet::add_component(lua_State *L)
+int GridbrainComponentSet::addComponent(lua_State* luaState)
 {
-	int type = luaL_checkint(L, 1);
-        int parameter = luaL_checkint(L, 2);
-        add_component((GridbrainComponent::Type)type, (float)parameter);
+	int type = luaL_checkint(luaState, 1);
+        int parameter = luaL_checkint(luaState, 2);
+        addComponent((GridbrainComponent::Type)type, (float)parameter);
         return 0;
 }
 

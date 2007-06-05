@@ -24,23 +24,23 @@
 
 MoleculeRGB::MoleculeRGB()
 {
-	_red = 0.0f;
-	_green = 0.0f;
-	_blue = 0.0f;
+	mRed = 0.0f;
+	mGreen = 0.0f;
+	mBlue = 0.0f;
 }
 
 MoleculeRGB::MoleculeRGB(float r, float g, float b)
 {
-	_red = r;
-	_green = g;
-	_blue = b;
+	mRed = r;
+	mGreen = g;
+	mBlue = b;
 }
 
 MoleculeRGB::MoleculeRGB(MoleculeRGB* mol)
 {
-	_red = mol->_red;
-	_green = mol->_green;
-	_blue = mol->_blue;
+	mRed = mol->mRed;
+	mGreen = mol->mGreen;
+	mBlue = mol->mBlue;
 }
 
 MoleculeRGB::~MoleculeRGB()
@@ -55,79 +55,79 @@ Molecule* MoleculeRGB::clone()
 float MoleculeRGB::bind(Molecule* mol)
 {
 	// TODO: check type
-	MoleculeRGB* mol_rgb = (MoleculeRGB*)mol;
+	MoleculeRGB* molRGB = (MoleculeRGB*)mol;
 
 	double distance = 0.0f;
-	distance += fabsf(_red - mol_rgb->_red);
-	distance += fabsf(_green - mol_rgb->_green);
-	distance += fabsf(_blue - mol_rgb->_blue);
+	distance += fabsf(mRed - molRGB->mRed);
+	distance += fabsf(mGreen - molRGB->mGreen);
+	distance += fabsf(mBlue - molRGB->mBlue);
 
 	distance = distance / 3.0f;
 	return distance;
 }
 
-void MoleculeRGB::init_random()
+void MoleculeRGB::initRandom()
 {
-	_red = random_uniform_float(0.0f, 1.0f);
-	_green = random_uniform_float(0.0f, 1.0f);
-	_blue = random_uniform_float(0.0f, 1.0f);
+	mRed = randomUniformFloat(0.0f, 1.0f);
+	mGreen = randomUniformFloat(0.0f, 1.0f);
+	mBlue = randomUniformFloat(0.0f, 1.0f);
 }
 
 void MoleculeRGB::mutate()
 {
-	float delta = random_uniform_float(-1.0f, 1.0f);
+	float delta = randomUniformFloat(-1.0f, 1.0f);
 	unsigned int selector = random() % 3;
 
 	switch (selector)
 	{
 	case 0:
-		_red += delta;
-		if (_red > 1.0f)
+		mRed += delta;
+		if (mRed > 1.0f)
 		{
-			_red = 1.0f;
+			mRed = 1.0f;
 		}
-		else if (_red < 0.0f)
+		else if (mRed < 0.0f)
 		{
-			_red = 0.0f;
+			mRed = 0.0f;
 		}
 		break;
 	case 1:
-		_green += delta;
-		if (_green > 1.0f)
+		mGreen += delta;
+		if (mGreen > 1.0f)
 		{
-			_green = 1.0f;
+			mGreen = 1.0f;
 		}
-		else if (_green < 0.0f)
+		else if (mGreen < 0.0f)
 		{
-			_green = 0.0f;
+			mGreen = 0.0f;
 		}
 		break;
 	case 2:
-		_blue += delta;
-		if (_blue > 1.0f)
+		mBlue += delta;
+		if (mBlue > 1.0f)
 		{
-			_blue = 1.0f;
+			mBlue = 1.0f;
 		}
-		else if (_blue < 0.0f)
+		else if (mBlue < 0.0f)
 		{
-			_blue = 0.0f;
+			mBlue = 0.0f;
 		}
 		break;
 	}
 }
 
-const char MoleculeRGB::class_name[] = "MoleculeRGB";
+const char MoleculeRGB::mClassName[] = "MoleculeRGB";
 
-Orbit<MoleculeRGB>::MethodType MoleculeRGB::methods[] = {
+Orbit<MoleculeRGB>::MethodType MoleculeRGB::mMethods[] = {
         {0,0}
 };
 
-Orbit<MoleculeRGB>::NumberGlobalType MoleculeRGB::number_globals[] = {{0,0}};
+Orbit<MoleculeRGB>::NumberGlobalType MoleculeRGB::mNumberGlobals[] = {{0,0}};
 
-MoleculeRGB::MoleculeRGB(lua_State* L)
+MoleculeRGB::MoleculeRGB(lua_State* luaState)
 {
-        _red = luaL_checknumber(L, 1);
-        _green = luaL_checknumber(L, 2);
-        _blue = luaL_checknumber(L, 3);
+        mRed = luaL_checknumber(luaState, 1);
+        mGreen = luaL_checknumber(luaState, 2);
+        mBlue = luaL_checknumber(luaState, 3);
 }
 

@@ -35,33 +35,33 @@ public:
 	PopDynGenerations();
 	virtual ~PopDynGenerations();
 	virtual void init();
-	virtual void on_cycle();
-	virtual void on_organism_death(SimulationObject* org);
+	virtual void onCycle();
+	virtual void onOrganismDeath(SimulationObject* org);
 
-	void add_static_species(SimulationObject* org, long population);
-	void add_evolving_species(SimulationObject* org, long population);
-	void set_generation_time(unsigned int time){_generation_time = time;}
+	void addStaticSpecies(SimulationObject* org, long population);
+	void addEvolvingSpecies(SimulationObject* org, long population);
+	void setGenerationTime(unsigned int time){mGenerationTime = time;}
 
-	static const char class_name[];
-        static Orbit<PopDynGenerations>::MethodType methods[];
-	static Orbit<PopDynGenerations>::NumberGlobalType number_globals[];
+	static const char mClassName[];
+        static Orbit<PopDynGenerations>::MethodType mMethods[];
+	static Orbit<PopDynGenerations>::NumberGlobalType mNumberGlobals[];
 
-        PopDynGenerations(lua_State* L);
-        int add_static_species(lua_State* L);
-        int add_evolving_species(lua_State* L);
-	int set_generation_time(lua_State* L);
+        PopDynGenerations(lua_State* luaState);
+        int addStaticSpecies(lua_State* luaState);
+        int addEvolvingSpecies(lua_State* luaState);
+	int setGenerationTime(lua_State* luaState);
 
 protected:
 
-	list<SimulationObject*> _static_species;
-	list<SimulationObject*> _evolving_species;
-	list<list<SimulationObject*>*> _static_species_organism_lists;
-	list<list<SimulationObject*>*> _evolving_species_organism_lists;
-	list<long> _static_species_populations;
-	list<long> _evolving_species_populations;
+	list<SimulationObject*> mStaticSpecies;
+	list<SimulationObject*> mEvolvingSpecies;
+	list<list<SimulationObject*>*> mStaticSpeciesOrganismLists;
+	list<list<SimulationObject*>*> mEvolvingSpeciesOrganismLists;
+	list<long> mStaticSpeciesPopulations;
+	list<long> mEvolvingSpeciesPopulations;
 
-	unsigned int _generation_time;
-	unsigned long _generation;
+	unsigned int mGenerationTime;
+	unsigned long mGeneration;
 };
 #endif
 

@@ -39,81 +39,81 @@ public:
 	virtual ~Grid();
 
 	void init();
-	void set_type(int type){_type = type;}
-	void set_number(unsigned int number){_number = number;}
-	void set_width(unsigned int width){_width = width;}
-	void set_height(unsigned int height){_height = height;}
-	void add_component_set(GridbrainComponentSet* component_set, int end_column=-1);
-	void set_offset(unsigned int offset){_offset = offset;}
-	int get_type(){return _type;}
-	unsigned int get_number(){return _number;}
-	unsigned int get_width(){return _width;}
-	unsigned int get_height(){return _height;}
-	unsigned int get_size(){return _size;}
-	unsigned int get_offset(){return _offset;}
-	GridbrainComponent* get_random_component(unsigned int pos);
-	void set_input(unsigned int number, unsigned int depth, float value);
-	unsigned int add_perception(GridbrainComponent* per);
-	unsigned int add_action(GridbrainComponent* act);
-	void init_input_matrix(unsigned int max_input_depth);
-	float* get_input_matrix(){return _input_matrix;}
-	void init_output_vector();
-	float* get_output_vector(){return _output_vector;}
-	unsigned int get_perception_type(unsigned int number);
-	unsigned int get_perception_molecule(unsigned int number);
-	void set_input_depth(unsigned int input_depth){_input_depth = input_depth;}
-	unsigned int get_input_depth(){return _input_depth;}
-	unsigned int get_max_input_depth(){return _max_input_depth;}
-	unsigned int get_perceptions_count(){return _perceptions_count;}
-	unsigned int get_actions_count(){return _actions_count;}
-	float get_output(unsigned int number);
-	unsigned int get_action_type(unsigned int number);
-	unsigned long get_row_code(unsigned int pos){return _rows_vec[pos];}
-	unsigned long get_column_code(unsigned int pos){return _columns_vec[pos];}
-	unsigned int get_x_by_code(unsigned long code){return _columns_map[code];}
-	unsigned int get_y_by_code(unsigned long code){return _rows_map[code];}
-	unsigned int get_x_by_offset(unsigned int offset);
-	void remove_input_output();
-	unsigned int get_col_conn_count(unsigned int col){return _columns_connections_count_vec[col];}
-	void set_col_conn_count(unsigned int col, unsigned int count){_columns_connections_count_vec[col] = count;}
+	void setType(int type){mType = type;}
+	void setNumber(unsigned int number){mNumber = number;}
+	void setWidth(unsigned int width){mWidth = width;}
+	void setHeight(unsigned int height){mHeight = height;}
+	void addComponentSet(GridbrainComponentSet* componentSet, int endColumn=-1);
+	void setOffset(unsigned int offset){mOffset = offset;}
+	int getType(){return mType;}
+	unsigned int getNumber(){return mNumber;}
+	unsigned int getWidth(){return mWidth;}
+	unsigned int getHeight(){return mHeight;}
+	unsigned int getSize(){return mSize;}
+	unsigned int getOffset(){return mOffset;}
+	GridbrainComponent* getRandomComponent(unsigned int pos);
+	void setInput(unsigned int number, unsigned int depth, float value);
+	unsigned int addPerception(GridbrainComponent* per);
+	unsigned int addAction(GridbrainComponent* act);
+	void initInputMatrix(unsigned int maxInputDepth);
+	float* getInputMatrix(){return mInputMatrix;}
+	void initOutputVector();
+	float* getOutputVector(){return mOutputVector;}
+	unsigned int getPerceptionType(unsigned int number);
+	unsigned int getPerceptionMolecule(unsigned int number);
+	void setInputDepth(unsigned int inputDepth){mInputDepth = inputDepth;}
+	unsigned int getInputDepth(){return mInputDepth;}
+	unsigned int getMaxInputDepth(){return mMaxInputDepth;}
+	unsigned int getPerceptionsCount(){return mPerceptionsCount;}
+	unsigned int getActionsCount(){return mActionsCount;}
+	float getOutput(unsigned int number);
+	unsigned int getActionType(unsigned int number);
+	unsigned long getRowCode(unsigned int pos){return mRowsVec[pos];}
+	unsigned long getColumnCode(unsigned int pos){return mColumnsVec[pos];}
+	unsigned int getXByCode(unsigned long code){return mColumnsMap[code];}
+	unsigned int getYByCode(unsigned long code){return mRowsMap[code];}
+	unsigned int getXByOffset(unsigned int offset);
+	void removeInputOutput();
+	unsigned int getColConnCount(unsigned int col){return mColumnsConnectionsCountVec[col];}
+	void setColConnCount(unsigned int col, unsigned int count){mColumnsConnectionsCountVec[col] = count;}
 
-	static const char class_name[];
-        static Orbit<Grid>::MethodType methods[];
-	static Orbit<Grid>::NumberGlobalType number_globals[];
+	static const char mClassName[];
+        static Orbit<Grid>::MethodType mMethods[];
+	static Orbit<Grid>::NumberGlobalType mNumberGlobals[];
 
-        Grid(lua_State* L);
-        int add_component_set(lua_State* L);
-	int set_width(lua_State* L);
-	int set_height(lua_State* L);
+        Grid(lua_State* luaState);
+        int addComponentSet(lua_State* luaState);
+	int setWidth(lua_State* luaState);
+	int setHeight(lua_State* luaState);
 
 	static unsigned int CURRENT_COLUMN_ID;
 	static unsigned int CURRENT_ROW_ID;
 
 protected:
-	int _type;
-	unsigned int _number;
-	unsigned int _width;
-	unsigned int _height;
-	unsigned int _size;
-	unsigned int _offset;
-	list<GridbrainComponentSet*> _component_set;
-	list<int> _component_set_end_column;
+	int mType;
+	unsigned int mNumber;
+	unsigned int mWidth;
+	unsigned int mHeight;
+	unsigned int mSize;
+	unsigned int mOffset;
+	list<GridbrainComponentSet*> mComponentSet;
+	list<int> mComponentSetEndColumn;
 
-	vector<unsigned long> _rows_vec;
-	vector<unsigned long> _columns_vec;
-	map<unsigned long, unsigned int> _rows_map;
-	map<unsigned long, unsigned int> _columns_map;
+	vector<unsigned long> mRowsVec;
+	vector<unsigned long> mColumnsVec;
+	map<unsigned long, unsigned int> mRowsMap;
+	map<unsigned long, unsigned int> mColumnsMap;
 
-	float* _input_matrix;
-	float* _output_vector;
-	unsigned int _max_input_depth;
-	unsigned int _input_depth;
-	vector<GridbrainComponent*> _perceptions_vec;
-	vector<GridbrainComponent*> _actions_vec;
-	unsigned int _perceptions_count;
-	unsigned int _actions_count;
+	float* mInputMatrix;
+	float* mOutputVector;
+	unsigned int mMaxInputDepth;
+	unsigned int mInputDepth;
+	vector<GridbrainComponent*> mPerceptionsVec;
+	vector<GridbrainComponent*> mActionsVec;
+	unsigned int mPerceptionsCount;
+	unsigned int mActionsCount;
 
-	vector<unsigned int> _columns_connections_count_vec;
+	vector<unsigned int> mColumnsConnectionsCountVec;
 };
 #endif
 

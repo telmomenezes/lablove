@@ -23,11 +23,11 @@
 class KeyboardMouseHandler
 {
 public:
-	virtual bool on_key_down(int keycode){return false;}
-	virtual bool on_key_up(int keycode){return false;}
-	virtual bool on_mouse_button_down(int button, int x, int y){return false;}
-	virtual bool on_mouse_button_up(int button, int x, int y){return false;}
-	virtual bool on_mouse_move(int x, int y){return false;}
+	virtual bool onKeyDown(int keycode){return false;}
+	virtual bool onKeyUp(int keycode){return false;}
+	virtual bool onMouseButtonDown(int button, int x, int y){return false;}
+	virtual bool onMouseButtonUp(int button, int x, int y){return false;}
+	virtual bool onMouseMove(int x, int y){return false;}
 };
 #endif
 

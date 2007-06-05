@@ -21,7 +21,7 @@
 
 ScriptableObject::ScriptableObject()
 {
-	_created_by_script = false;
+	mCreatedByScript = false;
 }
 
 ScriptableObject::~ScriptableObject()

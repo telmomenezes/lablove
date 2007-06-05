@@ -20,11 +20,11 @@
 #ifndef __INCLUDE_RANDOM_H
 #define __INCLUDE_RANDOM_H
 
-void random_seed_index(unsigned int seed_index);
-int random_uniform_int(int start, int end);
-float random_uniform_probability();
-bool random_uniform_bool();
-float random_uniform_float(float start, float end);
+void randomSeedIndex(unsigned int seedIndex);
+int randomUniformInt(int start, int end);
+float randomUniformProbability();
+bool randomUniformBool();
+float randomUniformFloat(float start, float end);
 
 #endif
 

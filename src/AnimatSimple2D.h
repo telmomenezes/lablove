@@ -33,79 +33,78 @@ public:
 	virtual ~AnimatSimple2D();
 	virtual SimulationObject* clone(bool full=true);
 	virtual void init();
-	void init_test();
+	void initTest();
 
-	void set_alpha_objects_grid(Grid* grid);
-	void set_beta_grid(Grid* grid);
+	void setAlphaObjectsGrid(Grid* grid);
+	void setBetaGrid(Grid* grid);
 
-	virtual void set_rot(float rot);
-	virtual void perception_step();
-	virtual void action_step();
-	virtual void on_cycle();
-	virtual void computation_step();
+	virtual void setRot(float rot);
+	virtual void perceptionStep();
+	virtual void actionStep();
+	virtual void onCycle();
+	virtual void computationStep();
 
 	//virtual AnimatSimple2D* crossover(Animat* other_parent);
 	virtual void mutate();
 
-	void set_view_range(float range);
-	void set_view_angle(float angle);
-	float get_view_range(){return _view_range;}
-	float get_view_angle(){return _view_angle;}
+	void setViewRange(float range);
+	void setViewAngle(float angle);
+	float getViewRange(){return mViewRange;}
+	float getViewAngle(){return mViewAngle;}
 
-	void go_front(float distance);
+	void goFront(float distance);
 	void rotate(float angle);
 	void eat();
 
-	void set_go_cost(float cost){_go_cost = cost;}
-	void set_rotate_cost(float cost){_rotate_cost = cost;}
+	void setGoCost(float cost){mGoCost = cost;}
+	void setRotateCost(float cost){mRotateCost = cost;}
 
 #ifdef __LOVE_GRAPHICS
 	virtual void draw();
 #endif
 
-	bool _action_go;
-	float _action_go_param;
-	bool _action_rotate;
-	float _action_rotate_param;
-	bool _action_eat;
-	float _action_eat_param;
+	bool mActionGo;
+	float mActionGoParam;
+	bool mActionRotate;
+	float mActionRotateParam;
+	bool mActionEat;
+	float mActionEatParam;
 
-	static const char class_name[];
-        static Orbit<AnimatSimple2D>::MethodType methods[];
-	static Orbit<AnimatSimple2D>::NumberGlobalType number_globals[];
+	static const char mClassName[];
+        static Orbit<AnimatSimple2D>::MethodType mMethods[];
+	static Orbit<AnimatSimple2D>::NumberGlobalType mNumberGlobals[];
 
-        AnimatSimple2D(lua_State* L);
-        int set_view_range(lua_State* L);
-	int set_view_angle(lua_State* L);
-	int set_alpha_objects_grid(lua_State* L);
-	int set_beta_grid(lua_State* L);
-
-	int set_go_cost(lua_State* L);
-	int set_rotate_cost(lua_State* L);
+        AnimatSimple2D(lua_State* luaState);
+        int setViewRange(lua_State* luaState);
+	int setViewAngle(lua_State* luaState);
+	int setAlphaObjectsGrid(lua_State* luaState);
+	int setBetaGrid(lua_State* luaState);
+	int setGoCost(lua_State* luaState);
+	int setRotateCost(lua_State* luaState);
 
 protected:
-	virtual void on_scan_object(SimulationObject* obj, bool visible, bool contact, float angle, float distance);
-	void scan_cell(int cell_x, int cell_y);
-	virtual void end_cycle();
+	virtual void onScanObject(SimulationObject* obj, bool visible, bool contact, float angle, float distance);
+	void scanCell(int cellX, int cellY);
+	virtual void endCycle();
 
-	Gridbrain* _gridbrain;
+	Gridbrain* mGridbrain;
 
-	unsigned int _current_input_depth;
-	unsigned int _number_of_perceptions;
-	unsigned int _max_input_depth;
-	unsigned int _initial_connections;
+	unsigned int mCurrentInputDepth;
+	unsigned int mNumberOfPerceptions;
+	unsigned int mMaxInputDepth;
+	unsigned int mInitialConnections;
 
-	float _view_range;
-	float _view_angle;
-	float _half_view_angle;
-	float _low_limit_view_angle;
-	float _high_limit_view_angle;
+	float mViewRange;
+	float mViewAngle;
+	float mHalfViewAngle;
+	float mLowLimitViewAngle;
+	float mHighLimitViewAngle;
 
-	float _go_cost;
-	float _rotate_cost;
+	float mGoCost;
+	float mRotateCost;
 
-	SimulationObject* _nearest_food;
-	float _distance_to_nearest_food;
+	SimulationObject* mNearestFood;
+	float mDistanceToNearestFood;
 };
 #endif
 

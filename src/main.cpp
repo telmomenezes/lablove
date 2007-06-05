@@ -36,45 +36,45 @@ extern "C"
 
 int main(int argc, char *argv[])
 {
-	lua_State *L = lua_open();
+	lua_State* luaState = lua_open();
 	
-	luaopen_base(L);
-	luaopen_table(L);
+	luaopen_base(luaState);
+	luaopen_table(luaState);
 	//luaopen_io(L);
-	luaopen_string(L);
-	luaopen_math(L);
-	luaopen_debug(L);
+	luaopen_string(luaState);
+	luaopen_math(luaState);
+	luaopen_debug(luaState);
 	
-	Orbit<LoveLab>::orbit_register(L);
-	Orbit<SimSimple2D>::orbit_register(L);
-	Orbit<PlantSimple2D>::orbit_register(L);
-	Orbit<AnimatSimple2D>::orbit_register(L);
-	Orbit<PopDynGenerations>::orbit_register(L);
-	Orbit<PopDynFixedSpecies>::orbit_register(L);
-	Orbit<Grid>::orbit_register(L);
-	Orbit<GridbrainComponent>::orbit_register(L);
-	Orbit<GridbrainComponentSet>::orbit_register(L);
-	Orbit<MoleculeRGB>::orbit_register(L);
+	Orbit<LoveLab>::orbitRegister(luaState);
+	Orbit<SimSimple2D>::orbitRegister(luaState);
+	Orbit<PlantSimple2D>::orbitRegister(luaState);
+	Orbit<AnimatSimple2D>::orbitRegister(luaState);
+	Orbit<PopDynGenerations>::orbitRegister(luaState);
+	Orbit<PopDynFixedSpecies>::orbitRegister(luaState);
+	Orbit<Grid>::orbitRegister(luaState);
+	Orbit<GridbrainComponent>::orbitRegister(luaState);
+	Orbit<GridbrainComponentSet>::orbitRegister(luaState);
+	Orbit<MoleculeRGB>::orbitRegister(luaState);
 
 
-	char* script_file = "default.lua";
+	char* scriptFile = "default.lua";
 	if (argc == 2)
 	{
-		script_file = argv[1];
+		scriptFile = argv[1];
 	}
 
-	int error = luaL_loadfile(L, script_file) || lua_pcall (L, 0, 0, 0);
+	int error = luaL_loadfile(luaState, scriptFile) || lua_pcall (luaState, 0, 0, 0);
 	
 	if (error)
 	{
-		printf("%s\n", lua_tostring (L, -1));
-		lua_pop (L, 1);
+		printf("%s\n", lua_tostring (luaState, -1));
+		lua_pop (luaState, 1);
 		return -1;
 	}
 
-	LoveLab::get_instance().run();
+	LoveLab::getInstance().run();
 
-	lua_close(L);
+	lua_close(luaState);
 
 	return 0;
 }

@@ -37,28 +37,28 @@ public:
 
 	void init();
 
-	virtual void add_object(SimulationObject* object);
-	virtual void remove_object(SimulationObject* object);
+	virtual void addObject(SimulationObject* object);
+	virtual void removeObject(SimulationObject* object);
 	void cycle();
-	virtual SimulationObject* get_object_by_screen_pos(int x, int y)=0;
-	void set_selected_object(SimulationObject* object);
-	SimulationObject* get_selected_object(){return _selected_object;}
-	void set_population_dynamics(PopulationDynamics* pop_dyn){_population_dynamics = pop_dyn;}
-	PopulationDynamics* get_population_dynamics(){return _population_dynamics;}
-	virtual void kill_organism(SimulationObject* org);
-	unsigned long time(){return _simulation_time;}
+	virtual SimulationObject* getObjectByScreenPos(int x, int y)=0;
+	void setSelectedObject(SimulationObject* object);
+	SimulationObject* getSelectedObject(){return mSelectedObject;}
+	void setPopulationDynamics(PopulationDynamics* popDyn){mPopulationDynamics = popDyn;}
+	PopulationDynamics* getPopulationDynamics(){return mPopulationDynamics;}
+	virtual void killOrganism(SimulationObject* org);
+	unsigned long time(){return mSimulationTime;}
 
-	int set_population_dynamics(lua_State* L);
+	int setPopulationDynamics(lua_State* luaState);
 
 protected:
-	virtual void draw_before_objects(){}
+	virtual void drawBeforeObjects(){}
 	
-	list<SimulationObject*> _objects;
-	list<SimulationObject*> _objects_to_kill;
+	list<SimulationObject*> mObjects;
+	list<SimulationObject*> mObjectsToKill;
 
-	unsigned long _simulation_time;
-	SimulationObject* _selected_object;
-	PopulationDynamics* _population_dynamics;
+	unsigned long mSimulationTime;
+	SimulationObject* mSelectedObject;
+	PopulationDynamics* mPopulationDynamics;
 };
 #endif
 

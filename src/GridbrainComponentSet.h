@@ -33,19 +33,19 @@ public:
 	GridbrainComponentSet();
 	virtual ~GridbrainComponentSet();
 
-	void add_component(GridbrainComponent* component);
-	void add_component(GridbrainComponent::Type type, float parameter);
-	GridbrainComponent* get_random();
+	void addComponent(GridbrainComponent* component);
+	void addComponent(GridbrainComponent::Type type, float parameter);
+	GridbrainComponent* getRandom();
 
-	static const char class_name[];
-        static Orbit<GridbrainComponentSet>::MethodType methods[];
-	static Orbit<GridbrainComponentSet>::NumberGlobalType number_globals[];
+	static const char mClassName[];
+        static Orbit<GridbrainComponentSet>::MethodType mMethods[];
+	static Orbit<GridbrainComponentSet>::NumberGlobalType mNumberGlobals[];
 
-        GridbrainComponentSet(lua_State* L);
-        int add_component(lua_State* L);
+        GridbrainComponentSet(lua_State* luaState);
+        int addComponent(lua_State* luaState);
 
-	vector<GridbrainComponent*> _component_vec;
-	unsigned int _size;
+	vector<GridbrainComponent*> mComponentVec;
+	unsigned int mSize;
 };
 #endif
 

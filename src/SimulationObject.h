@@ -39,35 +39,35 @@ public:
 
 	virtual void draw(){};
 	
-	virtual void on_cycle(){}
-	virtual bool is_food(){return false;}
-	void set_selected(bool selected){_selected = selected;}
-	bool is_selected(){return _selected;}
+	virtual void onCycle(){}
+	virtual bool isFood(){return false;}
+	void setSelected(bool selected){mSelected = selected;}
+	bool isSelected(){return mSelected;}
 
-        unsigned int get_species_id(){return _species_id;}
-	void set_species_id(unsigned int id){_species_id = id;}
-	float get_energy(){return _energy;}
-	float get_initial_energy(){return _initial_energy;}
-	void delta_energy(double delta){_energy += delta;}
-	void set_energy(float energy){_energy = energy;}
-	void set_initial_energy(float energy){_initial_energy = energy;}
+        unsigned int getSpeciesID(){return mSpeciesID;}
+	void setSpeciesID(unsigned int id){mSpeciesID = id;}
+	float getEnergy(){return mEnergy;}
+	float getInitialEnergy(){return mInitialEnergy;}
+	void deltaEnergy(double delta){mEnergy += delta;}
+	void setEnergy(float energy){mEnergy = energy;}
+	void setInitialEnergy(float energy){mInitialEnergy = energy;}
 
-	virtual SimulationObject* crossover(SimulationObject* other_parent){return this;}
+	virtual SimulationObject* crossover(SimulationObject* otherParent){return this;}
 	virtual void mutate(){}
 
-	virtual void place_random()=0;
+	virtual void placeRandom()=0;
 
-	int set_initial_energy(lua_State* L);
+	int setInitialEnergy(lua_State* luaState);
 
-	bool _deleted;
+	bool mDeleted;
 
 protected:
-	bool _selected;
-        unsigned int _species_id;
-	float _energy;
-	float _initial_energy;
-	unsigned long _creation_time;
-	map<string, Chemistry*> _chemistries_map;
+	bool mSelected;
+        unsigned int mSpeciesID;
+	float mEnergy;
+	float mInitialEnergy;
+	unsigned long mCreationTime;
+	map<string, Chemistry*> mChemistriesMap;
 };
 #endif
 

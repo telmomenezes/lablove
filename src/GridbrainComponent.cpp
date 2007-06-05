@@ -23,7 +23,7 @@ GridbrainComponent::GridbrainComponent()
 {
 }
 
-GridbrainComponent::GridbrainComponent(lua_State* L)
+GridbrainComponent::GridbrainComponent(lua_State* luaState)
 {
 }
 
@@ -31,11 +31,11 @@ GridbrainComponent::~GridbrainComponent()
 {
 }
 
-const char GridbrainComponent::class_name[] = "GridbrainComponent";
+const char GridbrainComponent::mClassName[] = "GridbrainComponent";
 
-Orbit<GridbrainComponent>::MethodType GridbrainComponent::methods[] = {{0,0}};
+Orbit<GridbrainComponent>::MethodType GridbrainComponent::mMethods[] = {{0,0}};
 
-Orbit<GridbrainComponent>::NumberGlobalType GridbrainComponent::number_globals[] = {
+Orbit<GridbrainComponent>::NumberGlobalType GridbrainComponent::mNumberGlobals[] = {
 	{"NUL", NUL},
 	{"PER", PER},
 	{"STA", STA},

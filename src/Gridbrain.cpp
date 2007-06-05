@@ -26,399 +26,397 @@
 
 Gridbrain::Gridbrain()
 {
-	_max_input_depth = 50;
-        _components = NULL;
-	_number_of_components = 0;
-	_connections = NULL;
-	_connections_count = 0;
-	_first_beta_index = 0;
-	_total_possible_connections = 0;
-	_beta_components_count = 0;
+	mMaxInputDepth = 50;
+        mComponents = NULL;
+	mNumberOfComponents = 0;
+	mConnections = NULL;
+	mConnectionsCount = 0;
+	mFirstBetaIndex = 0;
+	mTotalPossibleConnections = 0;
+	mBetaComponentsCount = 0;
 }
 
 Gridbrain::~Gridbrain()
 {
-	while (_connections != NULL)
+	while (mConnections != NULL)
 	{
-		GridbrainConnection* conn = _connections;
-		_connections = (GridbrainConnection*)conn->_next_global_connection;
+		GridbrainConnection* conn = mConnections;
+		mConnections = (GridbrainConnection*)conn->mNextGlobalConnection;
 		free(conn);
 	}
-	if (_components != NULL)
+	if (mComponents != NULL)
 	{
-        	free(_components);
-		_components = NULL;
+        	free(mComponents);
+		mComponents = NULL;
 	}
-	for (unsigned int i = 0; i < _grids_count; i++)
+	for (unsigned int i = 0; i < mGridsCount; i++)
 	{
-		if (!_grids_vec[i]->_created_by_script)
+		if (!mGridsVec[i]->mCreatedByScript)
 		{
-			delete _grids_vec[i];
+			delete mGridsVec[i];
 		}
 	}
-	_grids_count = 0;
+	mGridsCount = 0;
 }
 
 Gridbrain* Gridbrain::clone(bool full)
 {
 	Gridbrain* gb = new Gridbrain();
 
-	gb->_max_input_depth = _max_input_depth;
-	gb->_number_of_components = _number_of_components;
-	gb->_connections = NULL;
-	gb->_connections_count = 0;
-	gb->_grids_count = _grids_count;
-	gb->_first_beta_index = _first_beta_index;
-	gb->_total_possible_connections = _total_possible_connections;
-	gb->_beta_components_count = _beta_components_count;
+	gb->mMaxInputDepth = mMaxInputDepth;
+	gb->mNumberOfComponents = mNumberOfComponents;
+	gb->mConnections = NULL;
+	gb->mConnectionsCount = 0;
+	gb->mGridsCount = mGridsCount;
+	gb->mFirstBetaIndex = mFirstBetaIndex;
+	gb->mTotalPossibleConnections = mTotalPossibleConnections;
+	gb->mBetaComponentsCount = mBetaComponentsCount;
 
-	for (unsigned int i = 0; i < _grids_count; i++)
+	for (unsigned int i = 0; i < mGridsCount; i++)
 	{
-		Grid* grid = _grids_vec[i];
-		gb->_grids_vec.push_back(new Grid(grid));
+		Grid* grid = mGridsVec[i];
+		gb->mGridsVec.push_back(new Grid(grid));
 	}
 
 	if (full)
 	{
-		gb->_components = (GridbrainComponent*)malloc(_number_of_components * sizeof(GridbrainComponent));
+		gb->mComponents = (GridbrainComponent*)malloc(mNumberOfComponents * sizeof(GridbrainComponent));
 
 		unsigned int index = 0;
 
-		for (unsigned int index = 0; index < _number_of_components; index++)
+		for (unsigned int index = 0; index < mNumberOfComponents; index++)
 		{
-			gb->_components[index]._input = 0;
-			gb->_components[index]._output = 0;
-			gb->_components[index]._state = 0;
-			gb->_components[index]._perception_position = 0;
-			gb->_components[index]._action_position = 0;
-			gb->_components[index]._connections_count = 0;
-			gb->_components[index]._recurrent_input = 0;
-			gb->_components[index]._forward_flag = false;
-			gb->_components[index]._recurrent_flag = false;
-			gb->_components[index]._first_connection = NULL;
-			gb->_components[index]._type = _components[index]._type;
-			gb->_components[index]._parameter = _components[index]._parameter;
-			gb->_components[index]._offset = _components[index]._offset;
-			gb->_components[index]._aggregator = _components[index]._aggregator;
-			gb->_components[index]._column = _components[index]._column;
-			gb->_components[index]._row = _components[index]._row;
-			gb->_components[index]._grid = _components[index]._grid;
-			gb->_components[index]._molecule = _components[index]._molecule;
+			gb->mComponents[index].mInput = 0;
+			gb->mComponents[index].mOutput = 0;
+			gb->mComponents[index].mState = 0;
+			gb->mComponents[index].mPerceptionPosition = 0;
+			gb->mComponents[index].mActionPosition = 0;
+			gb->mComponents[index].mConnectionsCount = 0;
+			gb->mComponents[index].mRecurrentInput = 0;
+			gb->mComponents[index].mForwardFlag = false;
+			gb->mComponents[index].mRecurrentFlag = false;
+			gb->mComponents[index].mFirstConnection = NULL;
+			gb->mComponents[index].mType = mComponents[index].mType;
+			gb->mComponents[index].mParameter = mComponents[index].mParameter;
+			gb->mComponents[index].mOffset = mComponents[index].mOffset;
+			gb->mComponents[index].mAggregator = mComponents[index].mAggregator;
+			gb->mComponents[index].mColumn = mComponents[index].mColumn;
+			gb->mComponents[index].mRow = mComponents[index].mRow;
+			gb->mComponents[index].mGrid = mComponents[index].mGrid;
+			gb->mComponents[index].mMolecule = mComponents[index].mMolecule;
 		}
 
-		for (unsigned int index = 0; index < _number_of_components; index++)
+		for (unsigned int index = 0; index < mNumberOfComponents; index++)
 		{
-			GridbrainConnection* conn = _components[index]._first_connection;
+			GridbrainConnection* conn = mComponents[index].mFirstConnection;
 			while (conn != NULL)
 			{
-				Grid* grid_orig = _grids_vec[conn->_grid_orig];
-				Grid* grid_targ = _grids_vec[conn->_grid_targ];
-				gb->add_connection(grid_orig->get_x_by_code(conn->_column_orig),
-					grid_orig->get_y_by_code(conn->_row_orig),
-					conn->_grid_orig,
-					grid_targ->get_x_by_code(conn->_column_targ),
-					grid_targ->get_y_by_code(conn->_row_targ),
-					conn->_grid_targ,
-					conn->_weight);
-				conn = (GridbrainConnection*)conn->_next_connection;
+				Grid* gridOrig = mGridsVec[conn->mGridOrig];
+				Grid* gridTarg = mGridsVec[conn->mGridTarg];
+				gb->addConnection(gridOrig->getXByCode(conn->mColumnOrig),
+					gridOrig->getYByCode(conn->mRowOrig),
+					conn->mGridOrig,
+					gridTarg->getXByCode(conn->mColumnTarg),
+					gridTarg->getYByCode(conn->mRowTarg),
+					conn->mGridTarg,
+					conn->mWeight);
+				conn = (GridbrainConnection*)conn->mNextConnection;
 			}
 		}
 
-		gb->init_grids_input_output();
+		gb->initGridsInputOutput();
 	}
 
 	return gb;
 }
 
-void Gridbrain::add_grid(Grid* grid)
+void Gridbrain::addGrid(Grid* grid)
 {
-	grid->set_number(_grids_vec.size());
-	grid->set_offset(_number_of_components);
-	unsigned int grid_component_count = grid->get_height() * grid->get_width();
-	_number_of_components += grid_component_count;
+	grid->setNumber(mGridsVec.size());
+	grid->setOffset(mNumberOfComponents);
+	unsigned int gridComponentCount = grid->getHeight() * grid->getWidth();
+	mNumberOfComponents += gridComponentCount;
 
-	if (grid->get_type() == Grid::BETA)
+	if (grid->getType() == Grid::BETA)
 	{
-		_first_beta_index = _number_of_components;
-		_beta_components_count = grid_component_count;
+		mFirstBetaIndex = mNumberOfComponents;
+		mBetaComponentsCount = gridComponentCount;
 	}
 
 	grid->init();
-	_grids_vec.push_back(grid);
+	mGridsVec.push_back(grid);
 }
 
 void Gridbrain::init()
 {
-	_grids_count = _grids_vec.size();
+	mGridsCount = mGridsVec.size();
 
-	calc_connection_counts();
+	calcConnectionCounts();
 	
-        _components = (GridbrainComponent*)malloc(_number_of_components * sizeof(GridbrainComponent));
+        mComponents = (GridbrainComponent*)malloc(mNumberOfComponents * sizeof(GridbrainComponent));
 
 	// Init grids with random components
 
 	unsigned int pos = 0;
 
-	for (unsigned int i = 0; i < _grids_count; i++)
+	for (unsigned int i = 0; i < mGridsCount; i++)
 	{
-		Grid* grid = _grids_vec[i];
+		Grid* grid = mGridsVec[i];
 
 		for (unsigned int x = 0;
-			x < grid->get_width();
+			x < grid->getWidth();
 			x++)
 		{
 			for (unsigned int y = 0;
-				y < grid->get_height();
+				y < grid->getHeight();
 				y++)
 			{
-				GridbrainComponent* comp = grid->get_random_component(pos);
-				_components[pos]._input = 0;
-				_components[pos]._output = 0;
-				_components[pos]._recurrent_input = 0;
-				_components[pos]._connections_count = 0;
-				_components[pos]._first_connection = NULL;
-				_components[pos]._state = 0;
-				_components[pos]._forward_flag = false;
-				_components[pos]._recurrent_flag = false;
-				_components[pos]._perception_position = 0;
-				_components[pos]._action_position = 0;
-				_components[pos]._type = comp->_type;
-				_components[pos]._parameter = comp->_parameter;
-				_components[pos]._offset = pos;
-				_components[pos]._aggregator = is_aggregator(comp->_type);
-				_components[pos]._column = grid->get_column_code(x);
-				_components[pos]._row = grid->get_row_code(y);
-				_components[pos]._grid = i;
-				_components[pos]._molecule = random() % 5;
+				GridbrainComponent* comp = grid->getRandomComponent(pos);
+				mComponents[pos].mInput = 0;
+				mComponents[pos].mOutput = 0;
+				mComponents[pos].mRecurrentInput = 0;
+				mComponents[pos].mConnectionsCount = 0;
+				mComponents[pos].mFirstConnection = NULL;
+				mComponents[pos].mState = 0;
+				mComponents[pos].mForwardFlag = false;
+				mComponents[pos].mRecurrentFlag = false;
+				mComponents[pos].mPerceptionPosition = 0;
+				mComponents[pos].mActionPosition = 0;
+				mComponents[pos].mType = comp->mType;
+				mComponents[pos].mParameter = comp->mParameter;
+				mComponents[pos].mOffset = pos;
+				mComponents[pos].mAggregator = isAggregator(comp->mType);
+				mComponents[pos].mColumn = grid->getColumnCode(x);
+				mComponents[pos].mRow = grid->getRowCode(y);
+				mComponents[pos].mGrid = i;
+				mComponents[pos].mMolecule = random() % 5;
 
 				pos++;
 			}
 		}
 	}
 
-	init_grids_input_output();
+	initGridsInputOutput();
 }
 
-void Gridbrain::init_grids_input_output()
+void Gridbrain::initGridsInputOutput()
 {
-	for (unsigned int i = 0; i < _grids_count; i++)
+	for (unsigned int i = 0; i < mGridsCount; i++)
 	{
-		Grid* grid = _grids_vec[i];
-		init_grid_input_output(grid);		
+		Grid* grid = mGridsVec[i];
+		initGridInputOutput(grid);		
 	}
 }
 
-void Gridbrain::init_grid_input_output(Grid* grid)
+void Gridbrain::initGridInputOutput(Grid* grid)
 {
-	grid->remove_input_output();
-	unsigned int pos = grid->get_offset();
+	grid->removeInputOutput();
+	unsigned int pos = grid->getOffset();
 
 	for (unsigned int j = 0;
-		j < grid->get_size();
+		j < grid->getSize();
 		j++)
 	{
-		if (grid->get_type() == Grid::ALPHA)
+		if (grid->getType() == Grid::ALPHA)
 		{
-			if (_components[pos]._type == GridbrainComponent::PER)
+			if (mComponents[pos].mType == GridbrainComponent::PER)
 			{
-				_components[pos]._perception_position = grid->add_perception(&_components[pos]);
+				mComponents[pos].mPerceptionPosition = grid->addPerception(&mComponents[pos]);
 			}
 		}
 		else
 		{
-			if (_components[pos]._type == GridbrainComponent::ACT)
+			if (mComponents[pos].mType == GridbrainComponent::ACT)
 			{
-				_components[pos]._action_position = grid->add_action(&_components[pos]);
+				mComponents[pos].mActionPosition = grid->addAction(&mComponents[pos]);
 			}
 		}
 		pos++;
 	}
 
-	if (grid->get_type() == Grid::ALPHA)
+	if (grid->getType() == Grid::ALPHA)
 	{
-		grid->init_input_matrix(_max_input_depth);
+		grid->initInputMatrix(mMaxInputDepth);
 	}
 	else
 	{
-		grid->init_output_vector();
+		grid->initOutputVector();
 	}
 }
 
-bool Gridbrain::is_aggregator(int type)
+bool Gridbrain::isAggregator(int type)
 {
 	return ((type == GridbrainComponent::AGG ) || (type == GridbrainComponent::MAX));
 }
 
-void Gridbrain::set_component(unsigned int x,
+void Gridbrain::setComponent(unsigned int x,
 				unsigned int y,
-				unsigned int grid_number,
+				unsigned int gridNumber,
 				GridbrainComponent::Type type,
 				float parameter)
 {
-	Grid* grid = _grids_vec[grid_number];
+	Grid* grid = mGridsVec[gridNumber];
 
-	unsigned int pos = (x * grid->get_height()) + y + grid->get_offset();
+	unsigned int pos = (x * grid->getHeight()) + y + grid->getOffset();
 
-	_components[pos]._input = 0;
-	_components[pos]._output = 0;
-	_components[pos]._recurrent_input = 0;
-	_components[pos]._connections_count = 0;
-	_components[pos]._first_connection = NULL;
-	_components[pos]._state = 0;
-	_components[pos]._forward_flag = false;
-	_components[pos]._recurrent_flag = false;
-	_components[pos]._perception_position = 0;
-	_components[pos]._action_position = 0;
-	_components[pos]._type = type;
-	_components[pos]._parameter = parameter;
-	_components[pos]._aggregator = is_aggregator(type);
-	_components[pos]._column = grid->get_column_code(x);
-	_components[pos]._row = grid->get_row_code(y);
+	mComponents[pos].mInput = 0;
+	mComponents[pos].mOutput = 0;
+	mComponents[pos].mRecurrentInput = 0;
+	mComponents[pos].mConnectionsCount = 0;
+	mComponents[pos].mFirstConnection = NULL;
+	mComponents[pos].mState = 0;
+	mComponents[pos].mForwardFlag = false;
+	mComponents[pos].mRecurrentFlag = false;
+	mComponents[pos].mPerceptionPosition = 0;
+	mComponents[pos].mActionPosition = 0;
+	mComponents[pos].mType = type;
+	mComponents[pos].mParameter = parameter;
+	mComponents[pos].mAggregator = isAggregator(type);
+	mComponents[pos].mColumn = grid->getColumnCode(x);
+	mComponents[pos].mRow = grid->getRowCode(y);
 }
 
-void Gridbrain::add_connection(unsigned int x_orig,
-				unsigned int y_orig,
-				unsigned int g_orig,
-				unsigned int x_targ,
-				unsigned int y_targ,
-				unsigned int g_targ,
+void Gridbrain::addConnection(unsigned int xOrig,
+				unsigned int yOrig,
+				unsigned int gOrig,
+				unsigned int xTarg,
+				unsigned int yTarg,
+				unsigned int gTarg,
 				float weight)
 {
 	// TODO: disallow invalid connections?
-	if (connection_exists(x_orig, y_orig, g_orig, x_targ, y_targ, g_targ))
+	if (connectionExists(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg))
 	{
 		return;
 	}
 
-	Grid* grid = _grids_vec[g_orig];
-	unsigned int orig = (x_orig * grid->get_height()) + y_orig + grid->get_offset();
-	grid = _grids_vec[g_targ];
-	unsigned int target = (x_targ * grid->get_height()) + y_targ + grid->get_offset();
+	Grid* grid = mGridsVec[gOrig];
+	unsigned int orig = (xOrig * grid->getHeight()) + yOrig + grid->getOffset();
+	grid = mGridsVec[gTarg];
+	unsigned int target = (xTarg * grid->getHeight()) + yTarg + grid->getOffset();
 
-	GridbrainComponent* comp = &(_components[orig]);
-	GridbrainComponent* targ_comp = &(_components[target]);
+	GridbrainComponent* comp = &(mComponents[orig]);
+	GridbrainComponent* targComp = &(mComponents[target]);
 	GridbrainConnection* conn = (GridbrainConnection*)malloc(sizeof(GridbrainConnection));
-	conn->_column_orig = comp->_column;
-	conn->_row_orig = comp->_row;
-	conn->_grid_orig = comp->_grid;
-	conn->_column_targ = targ_comp->_column;
-	conn->_row_targ = targ_comp->_row;
-	conn->_grid_targ = targ_comp->_grid;
-	conn->_target = target;
-	conn->_weight = weight;
-	conn->_orig_component = comp;
-	conn->_feed_forward = true;
+	conn->mColumnOrig = comp->mColumn;
+	conn->mRowOrig = comp->mRow;
+	conn->mGridOrig = comp->mGrid;
+	conn->mColumnTarg = targComp->mColumn;
+	conn->mRowTarg = targComp->mRow;
+	conn->mGridTarg = targComp->mGrid;
+	conn->mTarget = target;
+	conn->mWeight = weight;
+	conn->mOrigComponent = comp;
+	conn->mFeedForward = true;
 
-	if (conn->_grid_orig == conn->_grid_targ)
+	if (conn->mGridOrig == conn->mGridTarg)
 	{
-		conn->_inter_grid = false;
+		conn->mInterGrid = false;
 
-		if (x_orig >= x_targ)
+		if (xOrig >= xTarg)
 		{
-			conn->_feed_forward = false;
+			conn->mFeedForward = false;
 		}
 	}
 	else
 	{
-		conn->_inter_grid = true;
+		conn->mInterGrid = true;
 	}
 
-	if (comp->_connections_count == 0)
+	if (comp->mConnectionsCount == 0)
 	{
-		comp->_first_connection = conn;
-		conn->_prev_connection = NULL;
-		conn->_next_connection = NULL;
+		comp->mFirstConnection = conn;
+		conn->mPrevConnection = NULL;
+		conn->mNextConnection = NULL;
 	}
 	else
 	{
-		GridbrainConnection* next_conn = comp->_first_connection;
-		conn->_prev_connection = NULL;
-		conn->_next_connection = next_conn;
-		comp->_first_connection = conn;
-		next_conn->_prev_connection = conn;
+		GridbrainConnection* nextConn = comp->mFirstConnection;
+		conn->mPrevConnection = NULL;
+		conn->mNextConnection = nextConn;
+		comp->mFirstConnection = conn;
+		nextConn->mPrevConnection = conn;
 	}
 
-	(comp->_connections_count)++;
+	(comp->mConnectionsCount)++;
 
-	GridbrainConnection* next_conn = _connections;
-	conn->_next_global_connection = next_conn;
-	conn->_prev_global_connection = NULL;
-	_connections = conn;
+	GridbrainConnection* nextConn = mConnections;
+	conn->mNextGlobalConnection = nextConn;
+	conn->mPrevGlobalConnection = NULL;
+	mConnections = conn;
 
-	if (next_conn != NULL)
+	if (nextConn != NULL)
 	{
-		next_conn->_prev_global_connection = conn;
+		nextConn->mPrevGlobalConnection = conn;
 	}
 
-	_connections_count++;
+	mConnectionsCount++;
 }
 
-bool Gridbrain::connection_exists(unsigned int x_orig,
-				unsigned int y_orig,
-				unsigned int g_orig,
-				unsigned int x_targ,
-				unsigned int y_targ,
-				unsigned int g_targ)
+bool Gridbrain::connectionExists(unsigned int xOrig,
+				unsigned int yOrig,
+				unsigned int gOrig,
+				unsigned int xTarg,
+				unsigned int yTarg,
+				unsigned int gTarg)
 {
-	Grid* grid = _grids_vec[g_orig];
-	unsigned int orig = (x_orig * grid->get_height()) + y_orig + grid->get_offset();
-	grid = _grids_vec[g_targ];
-	unsigned int target = (x_targ * grid->get_height()) + y_targ + grid->get_offset();
+	Grid* grid = mGridsVec[gOrig];
+	unsigned int orig = (xOrig * grid->getHeight()) + yOrig + grid->getOffset();
+	grid = mGridsVec[gTarg];
+	unsigned int target = (xTarg * grid->getHeight()) + yTarg + grid->getOffset();
 
-	GridbrainComponent* comp = &(_components[orig]);
-	GridbrainConnection* conn = comp->_first_connection;
+	GridbrainComponent* comp = &(mComponents[orig]);
+	GridbrainConnection* conn = comp->mFirstConnection;
 
 	unsigned int i = 0;
-	while ((conn) && (i < comp->_connections_count))
+	while ((conn) && (i < comp->mConnectionsCount))
 	{
-		if (conn->_target == target)
+		if (conn->mTarget == target)
 		{
 			return true;
 		}
 
-		conn = (GridbrainConnection*)conn->_next_connection;
+		conn = (GridbrainConnection*)conn->mNextConnection;
 		i++;
 	}
 
 	return false;
 }
 
-void Gridbrain::select_random_connection(unsigned int &x1,
+void Gridbrain::selectRandomConnection(unsigned int &x1,
 					unsigned int &y1,
 					unsigned int &g1,
 					unsigned int &x2,
 					unsigned int &y2,
 					unsigned int &g2)
 {
-	// TODO: don't assume beta is the last grid
-
-	unsigned int conn_pos = rand() % _total_possible_connections;
-	unsigned int cur_pos = 0;
-	unsigned int col_conn_count = 0;
+	unsigned int connPos = rand() % mTotalPossibleConnections;
+	unsigned int curPos = 0;
+	unsigned int colConnCount = 0;
 
 
-	Grid* grid_orig;
+	Grid* gridOrig;
 
 	bool found = false;
 	for (unsigned g = 0;
-		(g < _grids_count) && (!found);
+		(g < mGridsCount) && (!found);
 		g++)
 	{
-		grid_orig = _grids_vec[g];
-		unsigned int width = grid_orig->get_width();
+		gridOrig = mGridsVec[g];
+		unsigned int width = gridOrig->getWidth();
 		
 		for (unsigned int col = 0;
 			(col < width) && (!found);
 			col++)
 		{
-			col_conn_count = grid_orig->get_col_conn_count(col);
-			cur_pos += col_conn_count;
+			colConnCount = gridOrig->getColConnCount(col);
+			curPos += colConnCount;
 
-			if (cur_pos >= conn_pos)
+			if (curPos >= connPos)
 			{
-				g1 = grid_orig->get_number();
+				g1 = gridOrig->getNumber();
 				x1 = col;
-				y1 = random_uniform_int(0, grid_orig->get_height() - 1);
+				y1 = randomUniformInt(0, gridOrig->getHeight() - 1);
 				found = true;
 			}
 		}
@@ -426,40 +424,40 @@ void Gridbrain::select_random_connection(unsigned int &x1,
 
 	
 
-	if (grid_orig->get_type() == Grid::ALPHA)
+	if (gridOrig->getType() == Grid::ALPHA)
 	{
-		unsigned int targ_conn_pos = rand() % col_conn_count;
+		unsigned int targConnPos = rand() % colConnCount;
 
-		cur_pos = 0;
-		unsigned int width = grid_orig->get_width();
+		curPos = 0;
+		unsigned int width = gridOrig->getWidth();
 		for (unsigned int col = (x1 + 1); col < width; col++)
 		{
-			cur_pos += grid_orig->get_col_conn_count(col);
+			curPos += gridOrig->getColConnCount(col);
 
-			if (cur_pos >= targ_conn_pos)
+			if (curPos >= targConnPos)
 			{
-				g2 = grid_orig->get_number();
+				g2 = gridOrig->getNumber();
 				x2 = col;
-				y2 = random_uniform_int(0, grid_orig->get_height() - 1);
+				y2 = randomUniformInt(0, gridOrig->getHeight() - 1);
 				return;
 			}
 		}
 
 		// Assumes one beta at the end
-		g2 = _grids_count - 1;
+		g2 = mGridsCount - 1;
 	}
 	else
 	{
 		g2 = g1;
 	}
 
-	Grid* targ_grid = _grids_vec[g2];
+	Grid* targGrid = mGridsVec[g2];
 
-	x2 = random_uniform_int(0, targ_grid->get_width() - 1);
-	y2 = random_uniform_int(0, targ_grid->get_height() - 1);
+	x2 = randomUniformInt(0, targGrid->getWidth() - 1);
+	y2 = randomUniformInt(0, targGrid->getHeight() - 1);
 }
 
-void Gridbrain::add_random_connection()
+void Gridbrain::addRandomConnection()
 {
 	unsigned int x1;
 	unsigned int x2;
@@ -469,16 +467,16 @@ void Gridbrain::add_random_connection()
 	unsigned int g2;
 	float weight;
 
-	select_random_connection(x1, y1, g1, x2, y2, g2);
+	selectRandomConnection(x1, y1, g1, x2, y2, g2);
 	
-	weight = random_uniform_probability();
+	weight = randomUniformProbability();
 	
-	if (random_uniform_bool())
+	if (randomUniformBool())
 	{
 		weight = -weight;
 	}
 	
-	add_connection(x1, y1, g1, x2, y2, g2, weight);
+	addConnection(x1, y1, g1, x2, y2, g2, weight);
 }
 
 void Gridbrain::eval()
@@ -487,163 +485,163 @@ void Gridbrain::eval()
 	GridbrainConnection* conn;
 
 	// Reset all components
-	for (unsigned int i = 0; i < _number_of_components; i++)
+	for (unsigned int i = 0; i < mNumberOfComponents; i++)
 	{
-		comp = &(_components[i]);
+		comp = &(mComponents[i]);
 
-		comp->_input = 0;
-		comp->_state = 0;
-		comp->_forward_flag = false;
-		comp->_recurrent_flag = false;
+		comp->mInput = 0;
+		comp->mState = 0;
+		comp->mForwardFlag = false;
+		comp->mRecurrentFlag = false;
 
 		// Transfer recurrent inputs to direct inputs
-		if (i >= _first_beta_index)
+		if (i >= mFirstBetaIndex)
 		{
-			comp->_input = _components[i]._recurrent_input;
-			comp->_recurrent_input = 0;
+			comp->mInput = mComponents[i].mRecurrentInput;
+			comp->mRecurrentInput = 0;
 		}
 	}
 
 	// Evaluate grids
-	for (unsigned int grid_number = 0; grid_number < _grids_count; grid_number++)
+	for (unsigned int gridNumber = 0; gridNumber < mGridsCount; gridNumber++)
 	{
-		Grid* grid = _grids_vec[grid_number];
+		Grid* grid = mGridsVec[gridNumber];
 
-		unsigned int input_depth = 1;
-		int pass_count = 1;
-		unsigned int perceptions_count = 0;
-		if (grid->get_type() == Grid::ALPHA)
+		unsigned int inputDepth = 1;
+		int passCount = 1;
+		unsigned int perceptionsCount = 0;
+		if (grid->getType() == Grid::ALPHA)
 		{
-			pass_count = 2;
-			perceptions_count = grid->get_perceptions_count();
-			input_depth = grid->get_input_depth();
+			passCount = 2;
+			perceptionsCount = grid->getPerceptionsCount();
+			inputDepth = grid->getInputDepth();
 		}
 
-		unsigned int start_index;
-		unsigned int end_index;
+		unsigned int startIndex;
+		unsigned int endIndex;
 
-		start_index = grid->get_offset();
-		end_index = start_index + grid->get_size();
+		startIndex = grid->getOffset();
+		endIndex = startIndex + grid->getSize();
 
-		float* input_matrix = grid->get_input_matrix();
-		float* output_vector = grid->get_output_vector();
+		float* inputMatrix = grid->getInputMatrix();
+		float* outputVector = grid->getOutputVector();
 
-		for (unsigned int pass = 0; pass < pass_count; pass++)
+		for (unsigned int pass = 0; pass < passCount; pass++)
 		{
-			bool first_alpha = false;
-			if (pass < (pass_count - 1))
+			bool firstAlpha = false;
+			if (pass < (passCount - 1))
 			{
-				first_alpha = true;
+				firstAlpha = true;
 			}
 
-			unsigned int input_depth_offset = 0;
+			unsigned int inputDepthOffset = 0;
 
-			for (unsigned int i = 0; i < input_depth; i++)
+			for (unsigned int i = 0; i < inputDepth; i++)
 			{
-				if (grid->get_type() == Grid::ALPHA)
+				if (grid->getType() == Grid::ALPHA)
 				{
 					// reset alpha components except aggregators
-					for (unsigned int i = start_index; i < end_index; i++)
+					for (unsigned int i = startIndex; i < endIndex; i++)
 					{
-						comp = &(_components[i]);
+						comp = &(mComponents[i]);
 
-						if (!comp->_aggregator)
+						if (!comp->mAggregator)
 						{
-							if (comp->_type == GridbrainComponent::PER)
+							if (comp->mType == GridbrainComponent::PER)
 							{
 								// apply perceptions for this input depth
-								comp->_state =
-									input_matrix[comp->_perception_position
-											+ input_depth_offset];
+								comp->mState =
+									inputMatrix[comp->mPerceptionPosition
+											+ inputDepthOffset];
 							}
 							else
 							{
-								comp->_state = 0;
+								comp->mState = 0;
 							}
-							comp->_forward_flag = false;
-							comp->_recurrent_flag = false;
+							comp->mForwardFlag = false;
+							comp->mRecurrentFlag = false;
 						}
-						comp->_input = 0;
+						comp->mInput = 0;
 					}
 				}
 
-				for (unsigned int j = start_index; j < end_index; j++)
+				for (unsigned int j = startIndex; j < endIndex; j++)
 				{
-					comp = &(_components[j]);
-					conn = comp->_first_connection;
+					comp = &(mComponents[j]);
+					conn = comp->mFirstConnection;
 
 					// compute component output
 					float output;
-					if (comp->_type == GridbrainComponent::NUL)
+					if (comp->mType == GridbrainComponent::NUL)
 					{
 						//printf("NUL ");
 						output = 0.0f;
 					}
-					else if (comp->_type == GridbrainComponent::PER)
+					else if (comp->mType == GridbrainComponent::PER)
 					{
 						//printf("PER ");
-						output = comp->_state;
+						output = comp->mState;
 					}
-					else if (comp->_type == GridbrainComponent::STA)
+					else if (comp->mType == GridbrainComponent::STA)
 					{
 						//printf("STA ");
-						output = comp->_state;
+						output = comp->mState;
 					}
-					else if (comp->_type == GridbrainComponent::ACT)
+					else if (comp->mType == GridbrainComponent::ACT)
 					{
 						//printf("ACT ");
 						// TODO: return 1 if the action was executed?
-						output_vector[comp->_action_position] = comp->_input;
+						outputVector[comp->mActionPosition] = comp->mInput;
 						output = 0.0f;
 					}
-					else if (comp->_type == GridbrainComponent::THR)
+					else if (comp->mType == GridbrainComponent::THR)
 					{
 						//printf("THR ");
-						if ((comp->_input > 0.1)
-							|| (comp->_input < -0.1))
+						if ((comp->mInput > 0.1)
+							|| (comp->mInput < -0.1))
 						{
-							output = comp->_input;
+							output = comp->mInput;
 						}
 						else
 						{
 							output = 0.0f;
 						}
 					}
-					else if (comp->_type == GridbrainComponent::AGG)
+					else if (comp->mType == GridbrainComponent::AGG)
 					{
 						//printf("AGG ");
-						if ((comp->_input > 0.1)
-							|| (comp->_input < -0.1))
+						if ((comp->mInput > 0.1)
+							|| (comp->mInput < -0.1))
 						{
-							output = comp->_input;
+							output = comp->mInput;
 						}
 						else
 						{
 							output = 0.0f;
 						}
 					}
-					else if (comp->_type == GridbrainComponent::MAX)
+					else if (comp->mType == GridbrainComponent::MAX)
 					{
 						//printf("MAX ");
-						if (comp->_input >= comp->_state)
+						if (comp->mInput >= comp->mState)
 						{
 							output = 1.0f;
-							comp->_state = comp->_input;
+							comp->mState = comp->mInput;
 						}
 						else
 						{
 							output = 0.0f;
 						}
 					}
-					else if (comp->_type == GridbrainComponent::MUL)
+					else if (comp->mType == GridbrainComponent::MUL)
 					{
 						//printf("MUL ");
-						output = comp->_input;
+						output = comp->mInput;
 					}
-					else if (comp->_type == GridbrainComponent::NOT)
+					else if (comp->mType == GridbrainComponent::NOT)
 					{
 						//printf("NOT ");
-						if (comp->_input == 0.0f)
+						if (comp->mInput == 0.0f)
 						{
 							output = 1.0f;
 						}
@@ -665,209 +663,211 @@ void Gridbrain::eval()
 					{
 						output = -1.0f;
 					}
-					comp->_output = output;
+					comp->mOutput = output;
 
-					//printf("%f => %f\n", comp->_input, output);
+					//printf("%f => %f\n", comp->mInput, output);
 
 					// propagate outputs (inside grid if fist alpha)
-					for (unsigned int k = 0; k < comp->_connections_count; k++)
+					for (unsigned int k = 0; k < comp->mConnectionsCount; k++)
 					{
-						if ((!first_alpha) || (!conn->_inter_grid))
+						if ((!firstAlpha) || (!conn->mInterGrid))
 						{
-							GridbrainComponent* target_comp = &(_components[conn->_target]);
-							float input = output * conn->_weight;
+							GridbrainComponent* targetComp = &(mComponents[conn->mTarget]);
+							float input = output * conn->mWeight;
 
 							/*printf("(%d, %d, %d)[%f] -> (%d, %d, %d)[%f]\n",
-								conn->_column_orig,
-								conn->_row_orig,
-								conn->_grid_orig,
+								conn->mColumnOrig,
+								conn->mRowOrig,
+								conn->mGridOrig,
 								output,
-								conn->_column_targ,
-								conn->_row_targ,
-								conn->_grid_targ,
+								conn->mColumnTarg,
+								conn->mRowTarg,
+								conn->mGridTarg,
 								input);*/
 							
 							// Feed forward
-							if (conn->_feed_forward)
+							if (conn->mFeedForward)
 							{
-								if (target_comp->_type == GridbrainComponent::MUL)
+								if (targetComp->mType == GridbrainComponent::MUL)
 								{
-									if (!target_comp->_forward_flag)
+									if (!targetComp->mForwardFlag)
 									{
-										target_comp->_input = input;
-										target_comp->_forward_flag = true;
+										targetComp->mInput = input;
+										targetComp->mForwardFlag = true;
 									}
 									else
 									{
-										target_comp->_input *= input;
+										targetComp->mInput *= input;
 									}
 								}
 								else
 								{
-									target_comp->_input += input;
+									targetComp->mInput += input;
 								}
 							}
 							// Recurent
 							else
 							{
-								if (target_comp->_type == GridbrainComponent::MUL)
+								if (targetComp->mType == GridbrainComponent::MUL)
 								{
-									if (!target_comp->_recurrent_flag)
+									if (!targetComp->mRecurrentFlag)
 									{
-										target_comp->_recurrent_input = input;
-										target_comp->_recurrent_flag = true;
+										targetComp->mRecurrentInput = input;
+										targetComp->mRecurrentFlag = true;
 									}
 									else
 									{
-										target_comp->_recurrent_input *= input;
+										targetComp->mRecurrentInput *= input;
 									}
 								}
 								else
 								{
-									target_comp->_recurrent_input += input;
+									targetComp->mRecurrentInput += input;
 								}
 							}
 						}
-						conn = (GridbrainConnection*)conn->_next_connection;
+						conn = (GridbrainConnection*)conn->mNextConnection;
 					}
 				}
 
-				input_depth_offset += perceptions_count;
+				inputDepthOffset += perceptionsCount;
 			}
 		}
 	}
 }
 
-void Gridbrain::mutate_add_connection()
+void Gridbrain::mutateAddConnection()
 {
-	add_random_connection();
+	addRandomConnection();
 }
 
-void Gridbrain::mutate_remove_connection()
+void Gridbrain::mutateRemoveConnection()
 {
-	if (_connections_count > 0) 
+	if (mConnectionsCount > 0) 
 	{
-		unsigned int connection_pos = random_uniform_int(0, _connections_count - 1);
+		unsigned int connectionPos = randomUniformInt(0, mConnectionsCount - 1);
 
-		GridbrainConnection* conn = _connections;
-		for (unsigned int i = 0; i < connection_pos; i++)
+		GridbrainConnection* conn = mConnections;
+		for (unsigned int i = 0; i < connectionPos; i++)
 		{
-			conn = (GridbrainConnection*)conn->_next_global_connection;
+			conn = (GridbrainConnection*)conn->mNextGlobalConnection;
 		}
 
-		GridbrainComponent* comp = (GridbrainComponent*)conn->_orig_component;
-		comp->_connections_count--;
+		GridbrainComponent* comp = (GridbrainComponent*)conn->mOrigComponent;
+		comp->mConnectionsCount--;
 
-		if (conn->_prev_connection)
+		if (conn->mPrevConnection)
 		{
-			((GridbrainConnection*)conn->_prev_connection)->_next_connection = conn->_next_connection;
+			((GridbrainConnection*)conn->mPrevConnection)->mNextConnection = conn->mNextConnection;
 		}
 		else
 		{
-			comp->_first_connection = (GridbrainConnection*)conn->_next_connection;
+			comp->mFirstConnection = (GridbrainConnection*)conn->mNextConnection;
 		}
-		if (conn->_next_connection)
+		if (conn->mNextConnection)
 		{
-			((GridbrainConnection*)conn->_next_connection)->_prev_connection = conn->_prev_connection;
+			((GridbrainConnection*)conn->mNextConnection)->mPrevConnection = conn->mPrevConnection;
 		}
 
-		_connections_count--;
-		if (conn->_prev_global_connection)
+		mConnectionsCount--;
+		if (conn->mPrevGlobalConnection)
 		{
-			((GridbrainConnection*)conn->_prev_global_connection)->_next_global_connection = conn->_next_global_connection;
+			((GridbrainConnection*)conn->mPrevGlobalConnection)->mNextGlobalConnection =
+				conn->mNextGlobalConnection;
 		}
 		else
 		{
-			_connections = (GridbrainConnection*)conn->_next_global_connection;
+			mConnections = (GridbrainConnection*)conn->mNextGlobalConnection;
 		}
-		if (conn->_next_global_connection)
+		if (conn->mNextGlobalConnection)
 		{
-			((GridbrainConnection*)conn->_next_global_connection)->_prev_global_connection = conn->_prev_global_connection;
+			((GridbrainConnection*)conn->mNextGlobalConnection)->mPrevGlobalConnection =
+				conn->mPrevGlobalConnection;
 		}
 
 		free(conn);
 	}
 }
 
-void Gridbrain::mutate_change_connection_weight()
+void Gridbrain::mutateChangeConnectionWeight()
 {
-	if (_connections_count > 0) 
+	if (mConnectionsCount > 0) 
 	{
-		unsigned int connection_pos = random_uniform_int(0, _connections_count - 1);
+		unsigned int connectionPos = randomUniformInt(0, mConnectionsCount - 1);
 
-		GridbrainConnection* conn = _connections;
-		for (unsigned int i = 0; i < connection_pos; i++)
+		GridbrainConnection* conn = mConnections;
+		for (unsigned int i = 0; i < connectionPos; i++)
 		{
-			conn = (GridbrainConnection*)conn->_next_global_connection;
+			conn = (GridbrainConnection*)conn->mNextGlobalConnection;
 		}
 		
-		float new_weight = conn->_weight;
-		new_weight += random_uniform_float(-1.0f, 1.0f);
-		if (new_weight > 1.0f)
+		float newWeight = conn->mWeight;
+		newWeight += randomUniformFloat(-1.0f, 1.0f);
+		if (newWeight > 1.0f)
 		{
-			new_weight = 1.0f;
+			newWeight = 1.0f;
 		}
-		else if (new_weight < -1.0f)
+		else if (newWeight < -1.0f)
 		{
-			new_weight = -1.0f;
+			newWeight = -1.0f;
 		}
 
-		conn->_weight = new_weight;
+		conn->mWeight = newWeight;
 	}
 }
 
-void Gridbrain::mutate_change_component()
+void Gridbrain::mutateChangeComponent()
 {
-	unsigned int pos = random_uniform_int(0, _number_of_components - 1);
+	unsigned int pos = randomUniformInt(0, mNumberOfComponents - 1);
 
-	Grid* grid = _grids_vec[_components[pos]._grid];
+	Grid* grid = mGridsVec[mComponents[pos].mGrid];
 
-	GridbrainComponent* comp = grid->get_random_component(pos);
+	GridbrainComponent* comp = grid->getRandomComponent(pos);
 
-	_components[pos]._input = 0;
-	_components[pos]._output = 0;
-	_components[pos]._recurrent_input = 0;
-	_components[pos]._state = 0;
-	_components[pos]._forward_flag = false;
-	_components[pos]._recurrent_flag = false;
-	_components[pos]._perception_position = 0;
-	_components[pos]._action_position = 0;
-	_components[pos]._type = comp->_type;
-	_components[pos]._parameter = comp->_parameter;
-	_components[pos]._aggregator = is_aggregator(comp->_type);
-	_components[pos]._molecule = random() % 5;
+	mComponents[pos].mInput = 0;
+	mComponents[pos].mOutput = 0;
+	mComponents[pos].mRecurrentInput = 0;
+	mComponents[pos].mState = 0;
+	mComponents[pos].mForwardFlag = false;
+	mComponents[pos].mRecurrentFlag = false;
+	mComponents[pos].mPerceptionPosition = 0;
+	mComponents[pos].mActionPosition = 0;
+	mComponents[pos].mType = comp->mType;
+	mComponents[pos].mParameter = comp->mParameter;
+	mComponents[pos].mAggregator = isAggregator(comp->mType);
+	mComponents[pos].mMolecule = random() % 5;
 
-	init_grid_input_output(grid);
+	initGridInputOutput(grid);
 }
 
-Grid* Gridbrain::get_grid(unsigned int number)
+Grid* Gridbrain::getGrid(unsigned int number)
 {
-	return _grids_vec[number];
+	return mGridsVec[number];
 }
 
-void Gridbrain::calc_connection_counts()
+void Gridbrain::calcConnectionCounts()
 {
-	_total_possible_connections = 0;
+	mTotalPossibleConnections = 0;
 
-	for (unsigned int g = 0; g < _grids_count; g++)
+	for (unsigned int g = 0; g < mGridsCount; g++)
 	{
-		Grid* grid = _grids_vec[g];
-		unsigned int width = grid->get_width();
-		unsigned int height = grid->get_height();
+		Grid* grid = mGridsVec[g];
+		unsigned int width = grid->getWidth();
+		unsigned int height = grid->getHeight();
 
 		for (unsigned int col = 0; col < width; col++)
 		{
-			unsigned int possible_connections;
+			unsigned int possibleConnections;
 
-			possible_connections = _beta_components_count * height;
+			possibleConnections = mBetaComponentsCount * height;
 
-			if (grid->get_type() == Grid::ALPHA)
+			if (grid->getType() == Grid::ALPHA)
 			{
-				possible_connections += (width - col) * height * height;
+				possibleConnections += (width - col) * height * height;
 			}
 			
-			grid->set_col_conn_count(col, possible_connections);
-			_total_possible_connections += possible_connections;
+			grid->setColConnCount(col, possibleConnections);
+			mTotalPossibleConnections += possibleConnections;
 		}
 	}
 }

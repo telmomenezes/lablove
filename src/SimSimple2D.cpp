@@ -31,123 +31,123 @@
 
 SimSimple2D::SimSimple2D()
 {
-	_view_x = 0;
-	_view_y = 0;
-	_show_grid = false;
-	_show_view_range = false;
-	_cell_grid = NULL;
-	_last_mouse_x = 0;
-	_last_mouse_y = 0;
-	_mouse_pressed = false;
+	mViewX = 0;
+	mViewY = 0;
+	mShowGrid = false;
+	mShowViewRange = false;
+	mCellGrid = NULL;
+	mLastMouseX = 0;
+	mLastMouseY = 0;
+	mMousePressed = false;
 }
 
-SimSimple2D::SimSimple2D(lua_State* L)
+SimSimple2D::SimSimple2D(lua_State* luaState)
 {
-	_view_x = 0;
-	_view_y = 0;
-	_show_grid = false;
-	_show_view_range = false;
-	_cell_grid = NULL;
-	_last_mouse_x = 0;
-	_last_mouse_y = 0;
-	_mouse_pressed = false;
+	mViewX = 0;
+	mViewY = 0;
+	mShowGrid = false;
+	mShowViewRange = false;
+	mCellGrid = NULL;
+	mLastMouseX = 0;
+	mLastMouseY = 0;
+	mMousePressed = false;
 }
 
 SimSimple2D::~SimSimple2D()
 {
-	if (_cell_grid != NULL)
+	if (mCellGrid != NULL)
 	{
-		free(_cell_grid);
-		_cell_grid = NULL;
+		free(mCellGrid);
+		mCellGrid = NULL;
 	}
 }
 
-void SimSimple2D::set_world_dimensions(float world_width,
-			float world_length,
-			float cell_side)
+void SimSimple2D::setWorldDimensions(float worldWidth,
+			float worldLength,
+			float cellSide)
 {
-	_world_width = world_width;
-	_world_length = world_length;
-	_cell_side = cell_side;
-	_world_cell_width = (unsigned int)(ceilf(_world_width / _cell_side));
-	_world_cell_length = (unsigned int)(ceilf(_world_length / _cell_side));
+	mWorldWidth = worldWidth;
+	mWorldLength = worldLength;
+	mCellSide = cellSide;
+	mWorldCellWidth = (unsigned int)(ceilf(mWorldWidth / mCellSide));
+	mWorldCellLength = (unsigned int)(ceilf(mWorldLength / mCellSide));
 
-	unsigned int grid_size = _world_cell_width * _world_cell_length;
-	_cell_grid = (ObjectSimple2D**)malloc(sizeof(ObjectSimple2D*) * grid_size);
+	unsigned int gridSize = mWorldCellWidth * mWorldCellLength;
+	mCellGrid = (ObjectSimple2D**)malloc(sizeof(ObjectSimple2D*) * gridSize);
 
-	for (unsigned int i = 0; i < grid_size; i++)
+	for (unsigned int i = 0; i < gridSize; i++)
 	{
-		_cell_grid[i] = NULL;
+		mCellGrid[i] = NULL;
 	}
 
 	
 }
 
-void SimSimple2D::remove_object(SimulationObject* object)
+void SimSimple2D::removeObject(SimulationObject* object)
 {
 	ObjectSimple2D* obj = (ObjectSimple2D*)object;
 
-	if (obj->_next_cell_list != NULL)
+	if (obj->mNextCellList != NULL)
 	{
-		obj->_next_cell_list->_prev_cell_list = obj->_prev_cell_list;
+		obj->mNextCellList->mPrevCellList = obj->mPrevCellList;
 	}
 
-	if (obj->_prev_cell_list == NULL)
+	if (obj->mPrevCellList == NULL)
 	{
-		int cell_pos = obj->get_cell_pos();
+		int cellPos = obj->getCellPos();
 
-		if(cell_pos >= 0)
+		if(cellPos >= 0)
 		{
-			_cell_grid[cell_pos] = obj->_next_cell_list;
+			mCellGrid[cellPos] = obj->mNextCellList;
 		}
 	}
 	else
 	{
-		obj->_prev_cell_list->_next_cell_list = obj->_next_cell_list;
+		obj->mPrevCellList->mNextCellList = obj->mNextCellList;
 	}
 
-	Simulation::remove_object(object);
+	Simulation::removeObject(object);
 }
 
-void SimSimple2D::move_view(int delta_x, int delta_y)
+void SimSimple2D::moveView(int deltaX, int deltaY)
 {
-	_view_x -= delta_x;
-	_view_y -= delta_y;
+	mViewX -= deltaX;
+	mViewY -= deltaY;
 
-	if (_view_x < 0)
+	if (mViewX < 0)
 	{
-		_view_x = 0;
+		mViewX = 0;
 	}
 	
-	if (_view_y < 0)
+	if (mViewY < 0)
 	{
-		_view_y = 0;
+		mViewY = 0;
 	}
 
-	if ((_view_x + LoveLab::get_instance().get_screen_width()) >= (unsigned int)_world_width)
+	if ((mViewX + LoveLab::getInstance().getScreenWidth()) >= (unsigned int)mWorldWidth)
 	{
-		_view_x = ((unsigned int)_world_width) - LoveLab::get_instance().get_screen_width();
+		mViewX = ((unsigned int)mWorldWidth) - LoveLab::getInstance().getScreenWidth();
 	}
 
-	if ((_view_y + LoveLab::get_instance().get_screen_height()) >= (unsigned int)_world_length)
+	if ((mViewY + LoveLab::getInstance().getScreenHeight()) >= (unsigned int)mWorldLength)
 	{
-		_view_y = ((unsigned int)_world_length) - LoveLab::get_instance().get_screen_height();
+		mViewY = ((unsigned int)mWorldLength) - LoveLab::getInstance().getScreenHeight();
 	}
 }
 
-SimulationObject* SimSimple2D::get_object_by_screen_pos(int x, int y)
+SimulationObject* SimSimple2D::getObjectByScreenPos(int x, int y)
 {
-	list<SimulationObject*>::iterator iter_obj;
-	for (iter_obj = _objects.begin(); iter_obj != _objects.end(); ++iter_obj)
+	list<SimulationObject*>::iterator iterObj;
+	for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
 	{
-		ObjectSimple2D* obj = (ObjectSimple2D*)(*iter_obj);
+		ObjectSimple2D* obj = (ObjectSimple2D*)(*iterObj);
 
-		float dx = obj->_x - (float)(_view_x + x);
-		float dy = obj->_y - (float)(_view_y + y);
+		float dx = obj->mX - (float)(mViewX + x);
+		float dy = obj->mY - (float)(mViewY + y);
 		dx *= dx;
 		dy *= dy;
 
-		if ((dx + dy) <= obj->_size_squared)
+		if ((dx + dy) <= obj->mSizeSquared)
 		{
 			return obj;
 		}
@@ -157,33 +157,33 @@ SimulationObject* SimSimple2D::get_object_by_screen_pos(int x, int y)
 }
 
 #ifdef __LOVE_GRAPHICS
-void SimSimple2D::draw_before_objects()
+void SimSimple2D::drawBeforeObjects()
 {
-	if (_show_grid)
+	if (mShowGrid)
 	{
-		unsigned int cell_side = (unsigned int)_cell_side;
+		unsigned int cellSide = (unsigned int)mCellSide;
 
 		glColor3ub(DEF_S2D_GRID_COLOR_R,
 			DEF_S2D_GRID_COLOR_G,
 			DEF_S2D_GRID_COLOR_B);
 		glBegin(GL_LINES);
 
-		unsigned int division = cell_side - (_view_x % cell_side);
-		while (division < LoveLab::get_instance().get_screen_width())
+		unsigned int division = cellSide - (mViewX % cellSide);
+		while (division < LoveLab::getInstance().getScreenWidth())
 		{
 			glVertex2f(division, 0);
-			glVertex2f(division, LoveLab::get_instance().get_screen_height());
+			glVertex2f(division, LoveLab::getInstance().getScreenHeight());
 
-			division += cell_side;
+			division += cellSide;
 		}
 
-		division = cell_side - (_view_y % cell_side);
-		while (division < LoveLab::get_instance().get_screen_height())
+		division = cellSide - (mViewY % cellSide);
+		while (division < LoveLab::getInstance().getScreenHeight())
 		{
 			glVertex2f(0, division);
-			glVertex2f(LoveLab::get_instance().get_screen_width(), division);
+			glVertex2f(LoveLab::getInstance().getScreenWidth(), division);
 
-			division += cell_side;
+			division += cellSide;
 		}
 
 		glEnd();
@@ -191,7 +191,7 @@ void SimSimple2D::draw_before_objects()
 
 }
 
-bool SimSimple2D::on_key_down(int key)
+bool SimSimple2D::onKeyDown(int key)
 {
 	switch (key)
 	{
@@ -224,7 +224,7 @@ bool SimSimple2D::on_key_down(int key)
 	}
 }
 
-bool SimSimple2D::on_key_up(int key)
+bool SimSimple2D::onKeyUp(int key)
 {
 	switch (key)
 	{
@@ -253,29 +253,29 @@ bool SimSimple2D::on_key_up(int key)
 		}
 		return true;*/
 	case SDLK_g:
-		set_show_grid(!get_show_grid());
+		setShowGrid(!getShowGrid());
 		return true;
 	case SDLK_v:
-		set_show_view_range(!get_show_view_range());
+		setShowViewRange(!getShowViewRange());
 		return true;
 	default:
 		return false;
 	}
 }
 
-bool SimSimple2D::on_mouse_button_down(int button, int x, int y)
+bool SimSimple2D::onMouseButtonDown(int button, int x, int y)
 {
 	if (button == 1)
 	{
-		_last_mouse_x = x;
-		_last_mouse_y = y;
-		_mouse_pressed = true;
+		mLastMouseX = x;
+		mLastMouseY = y;
+		mMousePressed = true;
 
-		SimulationObject* object = get_object_by_screen_pos(x, y);
+		SimulationObject* object = getObjectByScreenPos(x, y);
 
 		if (object != NULL)
 		{
-			set_selected_object(object);
+			setSelectedObject(object);
 			return true;
 		}
 	}
@@ -283,41 +283,41 @@ bool SimSimple2D::on_mouse_button_down(int button, int x, int y)
 	return false;
 }
 
-bool SimSimple2D::on_mouse_button_up(int button, int x, int y)
+bool SimSimple2D::onMouseButtonUp(int button, int x, int y)
 {
 	if (button == 1)
 	{
-		_mouse_pressed = false;
+		mMousePressed = false;
 		return true;
 	}
 
 	return false;
 }
 
-bool SimSimple2D::on_mouse_move(int x, int y)
+bool SimSimple2D::onMouseMove(int x, int y)
 {
-	if (_mouse_pressed)
+	if (mMousePressed)
 	{
-		int new_x = x;
-		int new_y = y;
+		int newX = x;
+		int newY = y;
 
-		move_view(new_x - _last_mouse_x, new_y - _last_mouse_y);
+		moveView(newX - mLastMouseX, newY - mLastMouseY);
 
-		_last_mouse_x = new_x;
-		_last_mouse_y = new_y;
+		mLastMouseX = newX;
+		mLastMouseY = newY;
 	}
 }
 #endif
 
-const char SimSimple2D::class_name[] = "SimSimple2D";
+const char SimSimple2D::mClassName[] = "SimSimple2D";
 
-Orbit<SimSimple2D>::MethodType SimSimple2D::methods[] = {
-	{"set_population_dynamics", &Simulation::set_population_dynamics},
-        {"set_world_dimensions", &SimSimple2D::set_world_dimensions},
+Orbit<SimSimple2D>::MethodType SimSimple2D::mMethods[] = {
+	{"setPopulationDynamics", &Simulation::setPopulationDynamics},
+        {"setWorldDimensions", &SimSimple2D::setWorldDimensions},
         {0,0}
 };
 
-Orbit<SimSimple2D>::NumberGlobalType SimSimple2D::number_globals[] = {
+Orbit<SimSimple2D>::NumberGlobalType SimSimple2D::mNumberGlobals[] = {
 	{"PERCEPTION_NULL", PERCEPTION_NULL},
 	{"PERCEPTION_COLOR", PERCEPTION_COLOR},
 	{"PERCEPTION_POSITION", PERCEPTION_POSITION},
@@ -330,12 +330,12 @@ Orbit<SimSimple2D>::NumberGlobalType SimSimple2D::number_globals[] = {
 	{0,0}
 };
 
-int SimSimple2D::set_world_dimensions(lua_State* L)
+int SimSimple2D::setWorldDimensions(lua_State* luaState)
 {
-        int width = luaL_checkint(L, 1);
-        int height = luaL_checkint(L, 2);
-        int cell_side = luaL_checkint(L, 3);
-        set_world_dimensions(width, height, cell_side);
+        int width = luaL_checkint(luaState, 1);
+        int height = luaL_checkint(luaState, 2);
+        int cellSide = luaL_checkint(luaState, 3);
+        setWorldDimensions(width, height, cellSide);
         return 0;
 }
 

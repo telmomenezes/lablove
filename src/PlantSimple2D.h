@@ -32,17 +32,17 @@ public:
 	virtual ~PlantSimple2D();
 	virtual SimulationObject* clone(bool full=true);
 
-	virtual bool is_food(){return true;}
+	virtual bool isFood(){return true;}
 
 #ifdef __LOVE_GRAPHICS
 	virtual void draw();
 #endif
 
-	static const char class_name[];
-        static Orbit<PlantSimple2D>::MethodType methods[];
-	static Orbit<PlantSimple2D>::NumberGlobalType number_globals[];
+	static const char mClassName[];
+        static Orbit<PlantSimple2D>::MethodType mMethods[];
+	static Orbit<PlantSimple2D>::NumberGlobalType mNumberGlobals[];
 
-        PlantSimple2D(lua_State* L);
+        PlantSimple2D(lua_State* luaState);
 };
 #endif
 

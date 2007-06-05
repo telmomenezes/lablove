@@ -20,7 +20,7 @@
 #include "functions.h"
 #include <math.h>
 
-float normalize_angle(float angle)
+float normalizeAngle(float angle)
 {
 	float PI2 = M_PI * 2.0f;
 	while(angle > M_PI)

@@ -29,7 +29,7 @@ public:
 	virtual Molecule* clone() = 0;
 
 	virtual float bind(Molecule* mol) = 0;
-	virtual void init_random() = 0;
+	virtual void initRandom() = 0;
 	virtual void mutate() = 0;
 };
 #endif

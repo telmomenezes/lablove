@@ -29,22 +29,22 @@
 
 PlantSimple2D::PlantSimple2D()
 {
-	_next_cell_list = NULL;
-	_prev_cell_list = NULL;
+	mNextCellList = NULL;
+	mPrevCellList = NULL;
 
-	_cell_x = -1;
-	_cell_y = -1;
-	_cell_pos = -1;
+	mCellX = -1;
+	mCellY = -1;
+	mCellPos = -1;
 }
 
-PlantSimple2D::PlantSimple2D(lua_State* L)
+PlantSimple2D::PlantSimple2D(lua_State* luaState)
 {
-	_next_cell_list = NULL;
-	_prev_cell_list = NULL;
+	mNextCellList = NULL;
+	mPrevCellList = NULL;
 
-	_cell_x = -1;
-	_cell_y = -1;
-	_cell_pos = -1;
+	mCellX = -1;
+	mCellY = -1;
+	mCellPos = -1;
 }
 
 PlantSimple2D::~PlantSimple2D()
@@ -59,19 +59,19 @@ SimulationObject* PlantSimple2D::clone(bool full)
 #ifdef __LOVE_GRAPHICS
 void PlantSimple2D::draw()
 {
-	SimSimple2D* sim = (SimSimple2D*)(LoveLab::get_instance().get_simulation());
+	SimSimple2D* sim = (SimSimple2D*)(LoveLab::getInstance().getSimulation());
 
-	float x = (int)_x - (int)sim->get_view_x();
-	float y = (int)_y - (int)sim->get_view_y();
+	float x = (int)mX - (int)sim->getViewX();
+	float y = (int)mY - (int)sim->getViewY();
 
-	float p1x = x - _size;
-	float p2x = x + _size;
-	float p1y = y - _size;
-	float p2y = y + _size;
+	float p1x = x - mSize;
+	float p2x = x + mSize;
+	float p1y = y - mSize;
+	float p2y = y + mSize;
 
-	glColor3f(_color._red,
-			_color._green,
-			_color._blue);
+	glColor3f(mColor.mRed,
+			mColor.mGreen,
+			mColor.mBlue);
 	glBegin(GL_POLYGON);
 	glVertex2f(p1x, p1y);
 	glVertex2f(p2x, p1y);
@@ -81,16 +81,16 @@ void PlantSimple2D::draw()
 }
 #endif
 
-const char PlantSimple2D::class_name[] = "PlantSimple2D";
+const char PlantSimple2D::mClassName[] = "PlantSimple2D";
 
-Orbit<PlantSimple2D>::MethodType PlantSimple2D::methods[] = {
-	{"set_size", &ObjectSimple2D::set_size},
-	{"set_color", &ObjectSimple2D::set_color},
-	{"set_initial_energy", &SimulationObject::set_initial_energy},
-	{"set_age_range", &ObjectSimple2D::set_age_range},
-	{"set_metabolism", &ObjectSimple2D::set_metabolism},
+Orbit<PlantSimple2D>::MethodType PlantSimple2D::mMethods[] = {
+	{"setSize", &ObjectSimple2D::setSize},
+	{"setColor", &ObjectSimple2D::setColor},
+	{"setInitialEnergy", &SimulationObject::setInitialEnergy},
+	{"setAgeRange", &ObjectSimple2D::setAgeRange},
+	{"setMetabolism", &ObjectSimple2D::setMetabolism},
         {0,0}
 };
 
-Orbit<PlantSimple2D>::NumberGlobalType PlantSimple2D::number_globals[] = {{0,0}};
+Orbit<PlantSimple2D>::NumberGlobalType PlantSimple2D::mNumberGlobals[] = {{0,0}};
 

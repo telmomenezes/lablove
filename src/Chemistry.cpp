@@ -19,72 +19,72 @@
 
 #include "Chemistry.h"
 
-Chemistry::Chemistry(string name, Molecule* ref_molecule)
+Chemistry::Chemistry(string name, Molecule* refMolecule)
 {
-	_name = name;
-	_reference_molecule = ref_molecule;
+	mName = name;
+	mReferenceMolecule = refMolecule;
 }
 
-Chemistry::Chemistry(lua_State* L)
+Chemistry::Chemistry(lua_State* luaState)
 {
-	const char* name = luaL_checkstring(L, 1);
-	Molecule* molecule = (Molecule*)Orbit<Chemistry>::pointer(L, 2);
+	const char* name = luaL_checkstring(luaState, 1);
+	Molecule* molecule = (Molecule*)Orbit<Chemistry>::pointer(luaState, 2);
 
-	_name = string(name);
-	_reference_molecule = molecule;
+	mName = string(name);
+	mReferenceMolecule = molecule;
 }
 
 Chemistry::~Chemistry()
 {
-	vector<Molecule*>::iterator iter_molecule;
+	vector<Molecule*>::iterator iterMolecule;
 
-	for (iter_molecule = _molecule_vec.begin();
-		iter_molecule != _molecule_vec.end();
-		iter_molecule++)
+	for (iterMolecule = mMoleculeVec.begin();
+		iterMolecule != mMoleculeVec.end();
+		iterMolecule++)
 	{
-		delete (*iter_molecule);
+		delete (*iterMolecule);
 	}
 
-	_molecule_vec.clear();
+	mMoleculeVec.clear();
 }
 
 Chemistry* Chemistry::clone()
 {
-	Chemistry* mt = new Chemistry(_name, _reference_molecule->clone());
+	Chemistry* mt = new Chemistry(mName, mReferenceMolecule->clone());
 
-	vector<Molecule*>::iterator iter_molecule;
+	vector<Molecule*>::iterator iterMolecule;
 
-	for (iter_molecule = _molecule_vec.begin();
-		iter_molecule != _molecule_vec.end();
-		iter_molecule++)
+	for (iterMolecule = mMoleculeVec.begin();
+		iterMolecule != mMoleculeVec.end();
+		iterMolecule++)
 	{
-		mt->_molecule_vec.push_back((*iter_molecule)->clone());
+		mt->mMoleculeVec.push_back((*iterMolecule)->clone());
 	}
 
 	return mt;
 }
 
-Molecule* Chemistry::get_molecule(unsigned int index)
+Molecule* Chemistry::getMolecule(unsigned int index)
 {
-	return _molecule_vec[index];
+	return mMoleculeVec[index];
 }
 
-void Chemistry::add_molecule(Molecule* mol)
+void Chemistry::addMolecule(Molecule* mol)
 {
-	_molecule_vec.push_back(mol);
+	mMoleculeVec.push_back(mol);
 }
 
 void Chemistry::mutate()
 {
-	unsigned int index = random() % _molecule_vec.size();
-	_molecule_vec[index]->mutate();
+	unsigned int index = random() % mMoleculeVec.size();
+	mMoleculeVec[index]->mutate();
 }
 
-const char Chemistry::class_name[] = "Chemistry";
+const char Chemistry::mClassName[] = "Chemistry";
 
-Orbit<Chemistry>::MethodType Chemistry::methods[] = {
+Orbit<Chemistry>::MethodType Chemistry::mMethods[] = {
         {0,0}
 };
 
-Orbit<Chemistry>::NumberGlobalType Chemistry::number_globals[] = {{0,0}};
+Orbit<Chemistry>::NumberGlobalType Chemistry::mNumberGlobals[] = {{0,0}};
 

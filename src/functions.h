@@ -23,13 +23,7 @@
 // Temp hack to keep this working...
 #define COLOR_CONSOLE_TEXT 0
 
-void console_write(char* text, unsigned int color=COLOR_CONSOLE_TEXT);
-void console_write_ln(char* text, unsigned int color=COLOR_CONSOLE_TEXT);
-void console_write_int(int value, unsigned int color=COLOR_CONSOLE_TEXT);
-void console_write_float(float value, unsigned int color=COLOR_CONSOLE_TEXT);
-void console_write_double(double value, unsigned int color=COLOR_CONSOLE_TEXT);
-void console_new_line();
-float normalize_angle(float angle);
+float normalizeAngle(float angle);
 
 #endif
 

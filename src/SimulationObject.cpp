@@ -24,44 +24,44 @@
 
 SimulationObject::SimulationObject()
 {
-	_deleted = false;
-	_selected = false;
+	mDeleted = false;
+	mSelected = false;
 
-        _species_id = 0;
-	_energy = 0;
-	_initial_energy = 0;
-	_creation_time = LoveLab::get_instance().get_simulation()->time();
+        mSpeciesID = 0;
+	mEnergy = 0;
+	mInitialEnergy = 0;
+	mCreationTime = LoveLab::getInstance().getSimulation()->time();
 }
 
 SimulationObject::SimulationObject(SimulationObject* obj)
 {
-	_deleted = false;
-	_selected = false;
+	mDeleted = false;
+	mSelected = false;
 
-        _energy = obj->_energy;
-	_initial_energy = obj->_initial_energy;
-        _species_id = obj->_species_id;
-	_creation_time = LoveLab::get_instance().get_simulation()->time();
+        mEnergy = obj->mEnergy;
+	mInitialEnergy = obj->mInitialEnergy;
+        mSpeciesID = obj->mSpeciesID;
+	mCreationTime = LoveLab::getInstance().getSimulation()->time();
 }
 
 SimulationObject::~SimulationObject()
 {
-	map<string, Chemistry*>::iterator iter_chems;
+	map<string, Chemistry*>::iterator iterChems;
 
-	for (iter_chems = _chemistries_map.begin();
-		iter_chems != _chemistries_map.end();
-		iter_chems++)
+	for (iterChems = mChemistriesMap.begin();
+		iterChems != mChemistriesMap.end();
+		iterChems++)
 	{
-		delete (*iter_chems).second;
+		delete (*iterChems).second;
 	}
 
-	_chemistries_map.clear();
+	mChemistriesMap.clear();
 }
 
-int SimulationObject::set_initial_energy(lua_State* L)
+int SimulationObject::setInitialEnergy(lua_State* luaState)
 {
-        float energy = luaL_checknumber(L, 1);
-        set_initial_energy(energy);
+        float energy = luaL_checknumber(luaState, 1);
+        setInitialEnergy(energy);
         return 0;
 }
 

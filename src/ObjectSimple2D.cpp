@@ -26,220 +26,195 @@
 
 ObjectSimple2D::ObjectSimple2D()
 {
-	_x = -1.0f;
-	_y = -1.0f;
-	_size = 1.0f;
-	_size_squared = 1.0f;
-	_rot = 0.0f;
+	mX = -1.0f;
+	mY = -1.0f;
+	mSize = 1.0f;
+	mSizeSquared = 1.0f;
+	mRot = 0.0f;
 
-	_next_cell_list = NULL;
-	_prev_cell_list = NULL;
+	mNextCellList = NULL;
+	mPrevCellList = NULL;
 
-	_cell_x = -1;
-	_cell_y = -1;
-	_cell_pos = -1;
+	mCellX = -1;
+	mCellY = -1;
+	mCellPos = -1;
 
-	_max_age = 0;
-	_low_age_limit = 0;
-	_high_age_limit = 0;
-	_metabolism = 0.0f;
+	mMaxAge = 0;
+	mLowAgeLimit = 0;
+	mHighAgeLimit = 0;
+	mMetabolism = 0.0f;
 }
 
 ObjectSimple2D::ObjectSimple2D(ObjectSimple2D* obj) : SimulationObject(obj)
 {
-	_size = obj->_size;
-	_size_squared = obj->_size_squared;
-	_low_age_limit = obj->_low_age_limit;
-	_high_age_limit = obj->_high_age_limit;
+	mSize = obj->mSize;
+	mSizeSquared = obj->mSizeSquared;
+	mLowAgeLimit = obj->mLowAgeLimit;
+	mHighAgeLimit = obj->mHighAgeLimit;
 	
-	if (_high_age_limit > 0)
+	if (mHighAgeLimit > 0)
 	{
-		_max_age = random_uniform_int(_low_age_limit, _high_age_limit);
+		mMaxAge = randomUniformInt(mLowAgeLimit, mHighAgeLimit);
 	}
 	else
 	{
-		_max_age = 0;
+		mMaxAge = 0;
 	}
-	_metabolism = obj->_metabolism;
+	mMetabolism = obj->mMetabolism;
 
-	_x = -1.0f;
-	_y = -1.0f;
-	_rot = 0.0f;
+	mX = -1.0f;
+	mY = -1.0f;
+	mRot = 0.0f;
 
-	_color = MoleculeRGB(obj->_color);
+	mColor = MoleculeRGB(obj->mColor);
 }
 
 ObjectSimple2D::~ObjectSimple2D()
 {	
 }
 
-void ObjectSimple2D::set_pos(float x, float y)
+void ObjectSimple2D::setPos(float x, float y)
 {
-	SimSimple2D* sim = (SimSimple2D*)(LoveLab::get_instance().get_simulation());
+	SimSimple2D* sim = (SimSimple2D*)(LoveLab::getInstance().getSimulation());
 
 	if ((x < 0)
 		|| (y < 0)
-		|| (x >= sim->get_world_width())
-		|| (y >= sim->get_world_length()))
+		|| (x >= sim->getWorldWidth())
+		|| (y >= sim->getWorldLength()))
 	{
 		return;
 	}
 
-	unsigned int cell_side = (unsigned int)(sim->get_cell_side());
-	unsigned int target_cell_x = ((unsigned int)x) / cell_side;
-	unsigned int target_cell_y = ((unsigned int)y) / cell_side;
-	ObjectSimple2D** obj_grid = sim->get_cell_grid();
-	unsigned int world_cell_width = sim->get_world_cell_width();
-	unsigned int target_cell_pos = (target_cell_y * world_cell_width) + target_cell_x;
-	ObjectSimple2D* target_cell = obj_grid[target_cell_pos];
+	unsigned int cellSide = (unsigned int)(sim->getCellSide());
+	unsigned int targetCellX = ((unsigned int)x) / cellSide;
+	unsigned int targetCellY = ((unsigned int)y) / cellSide;
+	ObjectSimple2D** objGrid = sim->getCellGrid();
+	unsigned int worldCellWidth = sim->getWorldCellWidth();
+	unsigned int targetCellPos = (targetCellY * worldCellWidth) + targetCellX;
+	ObjectSimple2D* targetCell = objGrid[targetCellPos];
 
-	if (_x >= 0)
+	if (mX >= 0)
 	{
-		if ((_cell_x != target_cell_x) || (_cell_y != target_cell_y))
+		if ((mCellX != targetCellX) || (mCellY != targetCellY))
 		{
 			// Remove from origin cell
-			if (_next_cell_list != NULL)
+			if (mNextCellList != NULL)
 			{
-				_next_cell_list->_prev_cell_list = _prev_cell_list;
+				mNextCellList->mPrevCellList = mPrevCellList;
 			}
-			if (_prev_cell_list == NULL)
+			if (mPrevCellList == NULL)
 			{
-				obj_grid[_cell_pos] = _next_cell_list;
+				objGrid[mCellPos] = mNextCellList;
 			}
 			else
 			{
-				_prev_cell_list->_next_cell_list = _next_cell_list;
+				mPrevCellList->mNextCellList = mNextCellList;
 			}
 
 			// Insert in new target cell
-			_next_cell_list = target_cell;
-			_prev_cell_list = NULL;
-			if (target_cell != NULL)
+			mNextCellList = targetCell;
+			mPrevCellList = NULL;
+			if (targetCell != NULL)
 			{
-				target_cell->_prev_cell_list = this;
+				targetCell->mPrevCellList = this;
 			}
-			obj_grid[target_cell_pos] = this;
-			_cell_x = target_cell_x;
-			_cell_y = target_cell_y;
-			_cell_pos = target_cell_pos;
+			objGrid[targetCellPos] = this;
+			mCellX = targetCellX;
+			mCellY = targetCellY;
+			mCellPos = targetCellPos;
 		}
 	}
 	else
 	{
 		// Insert in target cell
-		_next_cell_list = target_cell;
-		_prev_cell_list = NULL;
-		if (target_cell != NULL)
+		mNextCellList = targetCell;
+		mPrevCellList = NULL;
+		if (targetCell != NULL)
 		{
-			target_cell->_prev_cell_list = this;
+			targetCell->mPrevCellList = this;
 		}
-		obj_grid[target_cell_pos] = this;
-		_cell_x = target_cell_x;
-		_cell_y = target_cell_y;
-		_cell_pos = target_cell_pos;
+		objGrid[targetCellPos] = this;
+		mCellX = targetCellX;
+		mCellY = targetCellY;
+		mCellPos = targetCellPos;
 	}
 
-	_x = x;
-	_y = y;
+	mX = x;
+	mY = y;
 }
 
-void ObjectSimple2D::set_size(float size)
+void ObjectSimple2D::setSize(float size)
 {
-	_size = size;
-	_size_squared = _size * _size;
+	mSize = size;
+	mSizeSquared = mSize * mSize;
 }
 
-void ObjectSimple2D::set_rot(float rot)
+void ObjectSimple2D::setRot(float rot)
 {
-	_rot = normalize_angle(rot);
+	mRot = normalizeAngle(rot);
 }
 
-
-
-/*void ObjectSimple2D::after_draw()
+void ObjectSimple2D::placeRandom()
 {
-	if (_selected)
+	SimSimple2D* sim = (SimSimple2D*)LoveLab::getInstance().getSimulation();
+
+	unsigned int worldWidth = (unsigned int)sim->getWorldWidth();
+	unsigned int worldLength = (unsigned int)sim->getWorldLength();
+
+	setPos(rand() % worldWidth, rand() % worldLength);
+	setRot(rand() % 360);
+}
+
+void ObjectSimple2D::onCycle()
+{
+	mEnergy -= mMetabolism;
+
+	if (mEnergy < 0)
 	{
-		SimSimple2D* sim = (SimSimple2D*)(LoveLab::get_instance().get_simulation());
-
-		int x1 = (int)_x - (int)sim->get_view_x();
-		int y1 = (int)_y - (int)sim->get_view_y();
-		int x2 = x1 + (int)_size;
-		int y2 = y1 + (int)_size;
-		x1 = x1 - (int)_size;
-		y1 = y1 - (int)_size;
-
-		glColor3f(0.2, 0.2, 0.9);
-		glBegin(GL_LINE_LOOP);
-		glVertex2f(x1, y1);
-		glVertex2f(x2, y1);
-		glVertex2f(x2, y2);
-		glVertex2f(x1, y2);
-		glEnd();
-	}
-}*/
-
-void ObjectSimple2D::place_random()
-{
-	SimSimple2D* sim = (SimSimple2D*)LoveLab::get_instance().get_simulation();
-
-	unsigned int world_width = (unsigned int)sim->get_world_width();
-	unsigned int world_length = (unsigned int)sim->get_world_length();
-
-	set_pos(rand() % world_width, rand() % world_length);
-	set_rot(rand() % 360);
-}
-
-void ObjectSimple2D::on_cycle()
-{
-	_energy -= _metabolism;
-
-	if (_energy < 0)
-	{
-		LoveLab::get_instance().get_simulation()->kill_organism(this);
+		LoveLab::getInstance().getSimulation()->killOrganism(this);
 	}
 
-	if (_max_age > 0)
+	if (mMaxAge > 0)
 	{
-		if (LoveLab::get_instance().get_simulation()->time() - _creation_time >= _max_age)
+		if (LoveLab::getInstance().getSimulation()->time() - mCreationTime >= mMaxAge)
 		{
-			LoveLab::get_instance().get_simulation()->kill_organism(this);
+			LoveLab::getInstance().getSimulation()->killOrganism(this);
 		}
 	}
 }
 
-void ObjectSimple2D::set_age_range(unsigned long low_age_limit, unsigned long high_age_limit)
+void ObjectSimple2D::setAgeRange(unsigned long lowAgeLimit, unsigned long highAgeLimit)
 {
-	_low_age_limit = low_age_limit;
-	_high_age_limit = high_age_limit;
+	mLowAgeLimit = lowAgeLimit;
+	mHighAgeLimit = highAgeLimit;
 }
 
-int ObjectSimple2D::set_size(lua_State* L)
+int ObjectSimple2D::setSize(lua_State* luaState)
 {
-        int size = luaL_checkint(L, 1);
-        set_size(size);
+        int size = luaL_checkint(luaState, 1);
+        setSize(size);
         return 0;
 }
 
-int ObjectSimple2D::set_age_range(lua_State* L)
+int ObjectSimple2D::setAgeRange(lua_State* luaState)
 {
-        int low_age_limit = luaL_checkint(L, 1);
-        int high_age_limit = luaL_checkint(L, 2);
-        set_age_range(low_age_limit, high_age_limit);
+        int lowAgeLimit = luaL_checkint(luaState, 1);
+        int highAgeLimit = luaL_checkint(luaState, 2);
+        setAgeRange(lowAgeLimit, highAgeLimit);
         return 0;
 }
 
-int ObjectSimple2D::set_metabolism(lua_State* L)
+int ObjectSimple2D::setMetabolism(lua_State* luaState)
 {
-        float metabolism = luaL_checknumber(L, 1);
-        set_metabolism(metabolism);
+        float metabolism = luaL_checknumber(luaState, 1);
+        setMetabolism(metabolism);
         return 0;
 }
 
-int ObjectSimple2D::set_color(lua_State* L)
+int ObjectSimple2D::setColor(lua_State* luaState)
 {
-	MoleculeRGB* color = (MoleculeRGB*)Orbit<LoveLab>::pointer(L, 1);
-        set_color(color);
+	MoleculeRGB* color = (MoleculeRGB*)Orbit<LoveLab>::pointer(luaState, 1);
+        setColor(color);
         return 0;
 }
 

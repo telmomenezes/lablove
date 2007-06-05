@@ -27,271 +27,271 @@ unsigned int Grid::CURRENT_ROW_ID = 0;
 
 Grid::Grid(int type, unsigned int width, unsigned int height)
 {
-	_type = type;
-	_width = width;
-	_height = height;
-	_number = 0;
-	_size = 0;
-	_offset = 0;
-	_input_matrix = NULL;
-	_output_vector = NULL;
-	_input_depth = 0;
-	_perceptions_count = 0;
-	_actions_count = 0;
+	mType = type;
+	mWidth = width;
+	mHeight = height;
+	mNumber = 0;
+	mSize = 0;
+	mOffset = 0;
+	mInputMatrix = NULL;
+	mOutputVector = NULL;
+	mInputDepth = 0;
+	mPerceptionsCount = 0;
+	mActionsCount = 0;
 }
 
 
 Grid::Grid(Grid* grid)
 {
-	_type = grid->_type;
-	_width = grid->_width;
-	_height = grid->_height;
-	_number = grid->_number;
-	_size = grid->_size;
-	_offset = grid->_offset;
-	_input_depth = 0;
-	_perceptions_count = 0;
-	_actions_count = 0;
-	_input_matrix = NULL;
-	_output_vector = NULL;
+	mType = grid->mType;
+	mWidth = grid->mWidth;
+	mHeight = grid->mHeight;
+	mNumber = grid->mNumber;
+	mSize = grid->mSize;
+	mOffset = grid->mOffset;
+	mInputDepth = 0;
+	mPerceptionsCount = 0;
+	mActionsCount = 0;
+	mInputMatrix = NULL;
+	mOutputVector = NULL;
 
-	list<GridbrainComponentSet*>::iterator iter_set;
-	for (iter_set = grid->_component_set.begin();
-		iter_set != grid->_component_set.end();
-		iter_set++)
+	list<GridbrainComponentSet*>::iterator iterSet;
+	for (iterSet = grid->mComponentSet.begin();
+		iterSet != grid->mComponentSet.end();
+		iterSet++)
 	{
-		_component_set.push_back(*iter_set);
+		mComponentSet.push_back(*iterSet);
 	}
 
-	list<int>::iterator iter_end_column;
-	for (iter_end_column = grid->_component_set_end_column.begin();
-		iter_end_column != grid->_component_set_end_column.end();
-		iter_end_column++)
+	list<int>::iterator iterEndColumn;
+	for (iterEndColumn = grid->mComponentSetEndColumn.begin();
+		iterEndColumn != grid->mComponentSetEndColumn.end();
+		iterEndColumn++)
 	{
-		_component_set_end_column.push_back(*iter_end_column);
+		mComponentSetEndColumn.push_back(*iterEndColumn);
 	}
 
-	for (unsigned int i = 0; i < _height; i++)
+	for (unsigned int i = 0; i < mHeight; i++)
 	{
-		unsigned long code = grid->_rows_vec[i];
-		_rows_vec.push_back(code);
-		_rows_map[code] = i;
+		unsigned long code = grid->mRowsVec[i];
+		mRowsVec.push_back(code);
+		mRowsMap[code] = i;
 	}
-	for (unsigned int i = 0; i < _width; i++)
+	for (unsigned int i = 0; i < mWidth; i++)
 	{
-		unsigned long code = grid->_columns_vec[i];
-		_columns_vec.push_back(code);
-		_columns_map[code] = i;
-		_columns_connections_count_vec.push_back(grid->_columns_connections_count_vec[i]);
+		unsigned long code = grid->mColumnsVec[i];
+		mColumnsVec.push_back(code);
+		mColumnsMap[code] = i;
+		mColumnsConnectionsCountVec.push_back(grid->mColumnsConnectionsCountVec[i]);
 	}
 }
 
 Grid::~Grid()
 {
-	if (_input_matrix != NULL)
+	if (mInputMatrix != NULL)
 	{
-		free(_input_matrix);
-		_input_matrix = NULL;
+		free(mInputMatrix);
+		mInputMatrix = NULL;
 	}
-	if (_output_vector != NULL)
+	if (mOutputVector != NULL)
 	{
-		free(_output_vector);
-		_output_vector = NULL;
+		free(mOutputVector);
+		mOutputVector = NULL;
 	}
 }
 
 void Grid::init()
 {
-	for (unsigned int i = 0; i < _width; i++)
+	for (unsigned int i = 0; i < mWidth; i++)
 	{
-		_columns_vec.push_back(CURRENT_COLUMN_ID);
-		_columns_map[CURRENT_COLUMN_ID] = i;
+		mColumnsVec.push_back(CURRENT_COLUMN_ID);
+		mColumnsMap[CURRENT_COLUMN_ID] = i;
 		CURRENT_COLUMN_ID++;
-		_columns_connections_count_vec.push_back(0);
+		mColumnsConnectionsCountVec.push_back(0);
 	}
-	for (unsigned int i = 0; i < _height; i++)
+	for (unsigned int i = 0; i < mHeight; i++)
 	{
-		_rows_vec.push_back(CURRENT_ROW_ID);
-		_rows_map[CURRENT_ROW_ID] = i;
+		mRowsVec.push_back(CURRENT_ROW_ID);
+		mRowsMap[CURRENT_ROW_ID] = i;
 		CURRENT_ROW_ID++;
 	}
 
-	_size = _width * _height;
+	mSize = mWidth * mHeight;
 }
 
-void Grid::add_component_set(GridbrainComponentSet* component_set, int end_column)
+void Grid::addComponentSet(GridbrainComponentSet* componentSet, int endColumn)
 {
-	_component_set.push_back(component_set);
-	_component_set_end_column.push_back(end_column);
+	mComponentSet.push_back(componentSet);
+	mComponentSetEndColumn.push_back(endColumn);
 }
 
-GridbrainComponent* Grid::get_random_component(unsigned int pos)
+GridbrainComponent* Grid::getRandomComponent(unsigned int pos)
 {
-	unsigned int column = get_x_by_offset(pos);
+	unsigned int column = getXByOffset(pos);
 
-	list<GridbrainComponentSet*>::iterator iter_set = _component_set.begin();
-	list<int>::iterator iter_end_column = _component_set_end_column.begin();
+	list<GridbrainComponentSet*>::iterator iterSet = mComponentSet.begin();
+	list<int>::iterator iterEndColumn = mComponentSetEndColumn.begin();
 
-	while (iter_set != _component_set.end())
+	while (iterSet != mComponentSet.end())
 	{
-		int end_column = (*iter_end_column);
+		int endColumn = (*iterEndColumn);
 
-		if ((column <= end_column) || (end_column == -1))
+		if ((column <= endColumn) || (endColumn == -1))
 		{
-			return (*iter_set)->get_random();
+			return (*iterSet)->getRandom();
 		}
 
-		iter_set++;
-		iter_end_column++;
+		iterSet++;
+		iterEndColumn++;
 	}
 
 	// TODO: error!
 	return NULL;
 }
 
-void Grid::set_input(unsigned int number, unsigned int depth, float value)
+void Grid::setInput(unsigned int number, unsigned int depth, float value)
 {
-	_input_matrix[(depth * _perceptions_count) + number] = value;
+	mInputMatrix[(depth * mPerceptionsCount) + number] = value;
 }
 
-unsigned int Grid::add_perception(GridbrainComponent* per)
+unsigned int Grid::addPerception(GridbrainComponent* per)
 {
-	for (unsigned int i = 0; i < _perceptions_vec.size(); i++)
+	for (unsigned int i = 0; i < mPerceptionsVec.size(); i++)
 	{
-		GridbrainComponent* cur_per = _perceptions_vec[i];
+		GridbrainComponent* curPer = mPerceptionsVec[i];
 
-		if ((cur_per->_parameter == per->_parameter) && (cur_per->_molecule == per->_molecule))
+		if ((curPer->mParameter == per->mParameter) && (curPer->mMolecule == per->mMolecule))
 		{
 			return i;
 		}
 	}
 
-	_perceptions_vec.push_back(per);
-	return (_perceptions_vec.size() - 1);
+	mPerceptionsVec.push_back(per);
+	return (mPerceptionsVec.size() - 1);
 }
 
-unsigned int Grid::add_action(GridbrainComponent* act)
+unsigned int Grid::addAction(GridbrainComponent* act)
 {
-	_actions_vec.push_back(act);
-	return (_actions_vec.size() - 1);
+	mActionsVec.push_back(act);
+	return (mActionsVec.size() - 1);
 }
 
-void Grid::init_input_matrix(unsigned int max_input_depth)
+void Grid::initInputMatrix(unsigned int maxInputDepth)
 {
-	_perceptions_count = _perceptions_vec.size();
-	_max_input_depth = max_input_depth;
-	unsigned int input_size = _perceptions_count * _max_input_depth;
+	mPerceptionsCount = mPerceptionsVec.size();
+	mMaxInputDepth = maxInputDepth;
+	unsigned int inputSize = mPerceptionsCount * mMaxInputDepth;
 
-	if (input_size >  0)
+	if (inputSize >  0)
 	{
-		_input_matrix = (float*)malloc(input_size * sizeof(float));
+		mInputMatrix = (float*)malloc(inputSize * sizeof(float));
 	}
 }
 
-void Grid::init_output_vector()
+void Grid::initOutputVector()
 {
-	_actions_count = _actions_vec.size();
+	mActionsCount = mActionsVec.size();
 
-	if (_actions_count > 0)
+	if (mActionsCount > 0)
 	{
-		_output_vector = (float*)malloc(_actions_count * sizeof(float));
+		mOutputVector = (float*)malloc(mActionsCount * sizeof(float));
 	}
 }
 
-unsigned int Grid::get_perception_type(unsigned int number)
+unsigned int Grid::getPerceptionType(unsigned int number)
 {
-	GridbrainComponent* comp = _perceptions_vec[number];
-	return (unsigned int)comp->_parameter;
+	GridbrainComponent* comp = mPerceptionsVec[number];
+	return (unsigned int)comp->mParameter;
 }
 
-unsigned int Grid::get_perception_molecule(unsigned int number)
+unsigned int Grid::getPerceptionMolecule(unsigned int number)
 {
-	GridbrainComponent* comp = _perceptions_vec[number];
-	return (unsigned int)comp->_molecule;
+	GridbrainComponent* comp = mPerceptionsVec[number];
+	return (unsigned int)comp->mMolecule;
 }
 
-float Grid::get_output(unsigned int number)
+float Grid::getOutput(unsigned int number)
 {
-	return _output_vector[number];
+	return mOutputVector[number];
 }
 
-unsigned int Grid::get_action_type(unsigned int number)
+unsigned int Grid::getActionType(unsigned int number)
 {
-	GridbrainComponent* comp = _actions_vec[number];
-	return (unsigned int)comp->_parameter;
+	GridbrainComponent* comp = mActionsVec[number];
+	return (unsigned int)comp->mParameter;
 }
 
-void Grid::remove_input_output()
+void Grid::removeInputOutput()
 {
-	if (_input_matrix != NULL)
+	if (mInputMatrix != NULL)
 	{
-		free(_input_matrix);
-		_input_matrix = NULL;
+		free(mInputMatrix);
+		mInputMatrix = NULL;
 	}
-	if (_output_vector != NULL)
+	if (mOutputVector != NULL)
 	{
-		free(_output_vector);
-		_output_vector = NULL;
+		free(mOutputVector);
+		mOutputVector = NULL;
 	}
 
-	_perceptions_count = 0;
-	_actions_count = 0;
+	mPerceptionsCount = 0;
+	mActionsCount = 0;
 
-	_perceptions_vec.clear();
-	_actions_vec.clear();
+	mPerceptionsVec.clear();
+	mActionsVec.clear();
 }
 
-unsigned int Grid::get_x_by_offset(unsigned int offset)
+unsigned int Grid::getXByOffset(unsigned int offset)
 {
-	unsigned int internal_offset = offset - _offset;
-	return (internal_offset / _height);
+	unsigned int internalOffset = offset - mOffset;
+	return (internalOffset / mHeight);
 }
 
-const char Grid::class_name[] = "Grid";
+const char Grid::mClassName[] = "Grid";
 
-Orbit<Grid>::MethodType Grid::methods[] = {
-	{"add_component_set", &Grid::add_component_set},
-	{"set_width", &Grid::set_width},
-	{"set_height", &Grid::set_height},
+Orbit<Grid>::MethodType Grid::mMethods[] = {
+	{"addComponentSet", &Grid::addComponentSet},
+	{"setWidth", &Grid::setWidth},
+	{"setHeight", &Grid::setHeight},
         {0,0}
 };
 
-Orbit<Grid>::NumberGlobalType Grid::number_globals[] = {{0,0}};
+Orbit<Grid>::NumberGlobalType Grid::mNumberGlobals[] = {{0,0}};
 
-Grid::Grid(lua_State* L)
+Grid::Grid(lua_State* luaState)
 {
-	_created_by_script = true;
+	mCreatedByScript = true;
 
-	_type = 0;
-	_width = 0;
-	_height = 0;
-	_number = 0;
-	_size = 0;
-	_offset = 0;
-	_input_matrix = NULL;
-	_output_vector = NULL;
-	_input_depth = 0;
-	_perceptions_count = 0;
-	_actions_count = 0;
+	mType = 0;
+	mWidth = 0;
+	mHeight = 0;
+	mNumber = 0;
+	mSize = 0;
+	mOffset = 0;
+	mInputMatrix = NULL;
+	mOutputVector = NULL;
+	mInputDepth = 0;
+	mPerceptionsCount = 0;
+	mActionsCount = 0;
 }
 
-int Grid::add_component_set(lua_State *L)
+int Grid::addComponentSet(lua_State* luaState)
 {
-        GridbrainComponentSet* set = (GridbrainComponentSet*)Orbit<Grid>::pointer(L, 1);
-        int end_column = luaL_checkint(L, 2);
-        add_component_set(set, end_column);
+        GridbrainComponentSet* set = (GridbrainComponentSet*)Orbit<Grid>::pointer(luaState, 1);
+        int endColumn = luaL_checkint(luaState, 2);
+        addComponentSet(set, endColumn);
         return 0;
 }
 
-int Grid::set_width(lua_State* L)
+int Grid::setWidth(lua_State* luaState)
 {
-	set_width(luaL_checkint(L, 1));
+	setWidth(luaL_checkint(luaState, 1));
 	return 0;
 }
 
-int Grid::set_height(lua_State* L)
+int Grid::setHeight(lua_State* luaState)
 {
-	set_height(luaL_checkint(L, 1));
+	setHeight(luaL_checkint(luaState, 1));
 	return 0;
 }
 

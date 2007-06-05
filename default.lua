@@ -1,116 +1,116 @@
-number_of_plants = 100
-number_of_animats = 100
+numberOfPlants = 100
+numberOfAnimats = 100
 
-world_width = 1000
-world_height = 1000
+worldWidth = 1000
+worldHeight = 1000
 
-grid_height = 10
-grid_alpha = 10
-grid_beta = 10
+gridHeight = 10
+gridAlpha = 10
+gridBeta = 10
 
 THR = true
 MAX = true
 MUL = true
 NOT = true
 
-view_range = 150.0
-view_angle = 100.0
+viewRange = 150.0
+viewAngle = 100.0
 
-high_age_limit = 550
-low_age_limit = 450
+highAgeLimit = 550
+lowAgeLimit = 450
 
 metabolism = 0.0
-go_cost = 0.0
-rotate_cost = 0.0
+goCost = 0.0
+rotateCost = 0.0
 
-initial_connections = 10
+initialConnections = 10
 
 ----------------------------------------------
 
-love_lab = LoveLab()
-love_lab:create()
-love_lab:set_seed_index(1)
+loveLab = LoveLab()
+loveLab:create()
+loveLab:setSeedIndex(0)
 
 sim = SimSimple2D()
-sim:set_world_dimensions(world_width, world_height, view_range * 2)
+sim:setWorldDimensions(worldWidth, worldHeight, viewRange * 2)
 
-love_lab:set_simulation(sim)
-animat = AnimatSimple2D(initial_connections, 25)
+loveLab:setSimulation(sim)
+animat = AnimatSimple2D(initialConnections, 25)
 
-animat:set_size(10.0)
-animat:set_view_range(view_range)
-animat:set_view_angle(view_angle)
-animat:set_age_range(low_age_limit, high_age_limit)
-animat:set_initial_energy(1.0)
-animat:set_metabolism(metabolism)
-animat:set_go_cost(go_cost)
-animat:set_rotate_cost(rotate_cost)
+animat:setSize(10.0)
+animat:setViewRange(viewRange)
+animat:setViewAngle(viewAngle)
+animat:setAgeRange(lowAgeLimit, highAgeLimit)
+animat:setInitialEnergy(1.0)
+animat:setMetabolism(metabolism)
+animat:setGoCost(goCost)
+animat:setRotateCost(rotateCost)
 
-animat_color = MoleculeRGB(1.0, 0.0, 0.0)
-animat:set_color(animat_color)
+animatColor = MoleculeRGB(1.0, 0.0, 0.0)
+animat:setColor(animatColor)
 
-per_set = GridbrainComponentSet()
-per_set:add_component(GridbrainComponent.PER, SimSimple2D.PERCEPTION_COLOR)
-per_set:add_component(GridbrainComponent.PER, SimSimple2D.PERCEPTION_POSITION)
-per_set:add_component(GridbrainComponent.PER, SimSimple2D.PERCEPTION_PROXIMITY)
-per_set:add_component(GridbrainComponent.PER, SimSimple2D.PERCEPTION_IN_CONTACT)
+perSet = GridbrainComponentSet()
+perSet:addComponent(GridbrainComponent.PER, SimSimple2D.PERCEPTION_COLOR)
+perSet:addComponent(GridbrainComponent.PER, SimSimple2D.PERCEPTION_POSITION)
+perSet:addComponent(GridbrainComponent.PER, SimSimple2D.PERCEPTION_PROXIMITY)
+perSet:addComponent(GridbrainComponent.PER, SimSimple2D.PERCEPTION_IN_CONTACT)
 
-alpha_set = GridbrainComponentSet()
+alphaSet = GridbrainComponentSet()
 if THR then
-	alpha_set:add_component(GridbrainComponent.THR, 0)
+	alphaSet:addComponent(GridbrainComponent.THR, 0)
 end
 if MAX then
-	alpha_set:add_component(GridbrainComponent.MAX, 0)
+	alphaSet:addComponent(GridbrainComponent.MAX, 0)
 end
 if MUL then
-	alpha_set:add_component(GridbrainComponent.MUL, 0)
+	alphaSet:addComponent(GridbrainComponent.MUL, 0)
 end
 if NOT then
-	alpha_set:add_component(GridbrainComponent.NOT, 0)
+	alphaSet:addComponent(GridbrainComponent.NOT, 0)
 end
 
 grid = Grid()
-grid:set_width(grid_alpha)
-grid:set_height(grid_height)
-grid:add_component_set(per_set, 0)
-grid:add_component_set(alpha_set, -1)
+grid:setWidth(gridAlpha)
+grid:setHeight(gridHeight)
+grid:addComponentSet(perSet, 0)
+grid:addComponentSet(alphaSet, -1)
 
-animat:set_alpha_objects_grid(grid);
+animat:setAlphaObjectsGrid(grid);
 
-act_set = GridbrainComponentSet()
-act_set:add_component(GridbrainComponent.ACT, SimSimple2D.ACTION_GO)
-act_set:add_component(GridbrainComponent.ACT, SimSimple2D.ACTION_ROTATE)
-act_set:add_component(GridbrainComponent.ACT, SimSimple2D.ACTION_EAT)
+actSet = GridbrainComponentSet()
+actSet:addComponent(GridbrainComponent.ACT, SimSimple2D.ACTION_GO)
+actSet:addComponent(GridbrainComponent.ACT, SimSimple2D.ACTION_ROTATE)
+actSet:addComponent(GridbrainComponent.ACT, SimSimple2D.ACTION_EAT)
 
-beta_set = GridbrainComponentSet()
+betaSet = GridbrainComponentSet()
 if THR then
-	beta_set:add_component(GridbrainComponent.THR, 0)
+	betaSet:addComponent(GridbrainComponent.THR, 0)
 end
 if MAX then
-	beta_set:add_component(GridbrainComponent.MUL, 0)
+	betaSet:addComponent(GridbrainComponent.MUL, 0)
 end
 if NOT then
-	beta_set:add_component(GridbrainComponent.NOT, 0)
+	betaSet:addComponent(GridbrainComponent.NOT, 0)
 end
 	
 grid2 = Grid()
-grid2:set_width(grid_beta)
-grid2:set_height(grid_height)
-grid2:add_component_set(beta_set, grid_beta - 2)
-grid2:add_component_set(act_set, -1)
+grid2:setWidth(gridBeta)
+grid2:setHeight(gridHeight)
+grid2:addComponentSet(betaSet, gridBeta - 2)
+grid2:addComponentSet(actSet, -1)
 
-animat:set_beta_grid(grid2)
+animat:setBetaGrid(grid2)
 
 plant = PlantSimple2D()
-plant:set_size(5.0)
-plant:set_initial_energy(1.0)
+plant:setSize(5.0)
+plant:setInitialEnergy(1.0)
 
-plant_color = MoleculeRGB(0.0, 1.0, 0.0)
-plant:set_color(plant_color)
+plantColor = MoleculeRGB(0.0, 1.0, 0.0)
+plant:setColor(plantColor)
 
-pop_dyn = PopDynFixedSpecies()
-sim:set_population_dynamics(pop_dyn)
+popDyn = PopDynFixedSpecies()
+sim:setPopulationDynamics(popDyn)
 
-pop_dyn:add_static_species(plant, number_of_plants)
-pop_dyn:add_evolving_species(animat, number_of_animats)
+popDyn:addStaticSpecies(plant, numberOfPlants)
+popDyn:addEvolvingSpecies(animat, numberOfAnimats)
 

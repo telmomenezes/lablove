@@ -38,64 +38,64 @@ public:
 
 	Gridbrain* clone(bool full=true);
 
-	void add_grid(Grid* grid);
+	void addGrid(Grid* grid);
 	void init();
 
-	bool is_aggregator(int type);
+	bool isAggregator(int type);
 
-	void set_component(unsigned int x,
+	void setComponent(unsigned int x,
 				unsigned int y,
-				unsigned int grid_number,
+				unsigned int gridNumber,
 				GridbrainComponent::Type type,
 				float parameter);
-	void add_connection(unsigned int x_orig,
-				unsigned int y_orig,
-				unsigned int g_orig,
-				unsigned int x_targ,
-				unsigned int y_targ,
-				unsigned int g_targ,
+	void addConnection(unsigned int xOrig,
+				unsigned int yOrig,
+				unsigned int gOrig,
+				unsigned int xTarg,
+				unsigned int yTarg,
+				unsigned int gTarg,
 				float weight);
-	bool connection_exists(unsigned int x_orig,
-				unsigned int y_orig,
-				unsigned int g_orig,
-				unsigned int x_targ,
-				unsigned int y_targ,
-				unsigned int g_targ);
-	void select_random_connection(unsigned int &x1,
+	bool connectionExists(unsigned int xOrig,
+				unsigned int yOrig,
+				unsigned int gOrig,
+				unsigned int xTarg,
+				unsigned int yTarg,
+				unsigned int gTarg);
+	void selectRandomConnection(unsigned int &x1,
 					unsigned int &y1,
 					unsigned int &g1,
 					unsigned int &x2,
 					unsigned int &y2,
 					unsigned int &g2);
-	void add_random_connection();
-	void set_max_input_depth(unsigned int max_input_depth){_max_input_depth = max_input_depth;}
+	void addRandomConnection();
+	void setMaxInputDepth(unsigned int maxInputDepth){mMaxInputDepth = maxInputDepth;}
 
 	void eval();
 	
-	Grid* get_grid(unsigned int number);
+	Grid* getGrid(unsigned int number);
 
-	void init_grids_input_output();
+	void initGridsInputOutput();
 
-	void mutate_add_connection();
-	void mutate_remove_connection();
-	void mutate_change_connection_weight();
-	void mutate_change_component();
+	void mutateAddConnection();
+	void mutateRemoveConnection();
+	void mutateChangeConnectionWeight();
+	void mutateChangeComponent();
 
 protected:
-	void init_grid_input_output(Grid* grid);
-	void calc_connection_counts();
+	void initGridInputOutput(Grid* grid);
+	void calcConnectionCounts();
 
-	vector<Grid*> _grids_vec;
+	vector<Grid*> mGridsVec;
 
-        GridbrainComponent* _components;
-	unsigned int _max_input_depth;
-	unsigned int _number_of_components;
-	GridbrainConnection* _connections;
-	unsigned int _connections_count;
-	unsigned int _grids_count;
-	unsigned int _first_beta_index;
-	unsigned int _total_possible_connections;
-	unsigned int _beta_components_count;
+        GridbrainComponent* mComponents;
+	unsigned int mMaxInputDepth;
+	unsigned int mNumberOfComponents;
+	GridbrainConnection* mConnections;
+	unsigned int mConnectionsCount;
+	unsigned int mGridsCount;
+	unsigned int mFirstBetaIndex;
+	unsigned int mTotalPossibleConnections;
+	unsigned int mBetaComponentsCount;
 };
 
 #endif

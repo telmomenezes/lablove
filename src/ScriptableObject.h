@@ -26,7 +26,7 @@ public:
 	ScriptableObject();
 	virtual ~ScriptableObject();
 
-	bool _created_by_script;
+	bool mCreatedByScript;
 };
 #endif
 

@@ -32,52 +32,52 @@ public:
 	ObjectSimple2D(ObjectSimple2D* obj);
 	virtual ~ObjectSimple2D();
 	
-	virtual void on_cycle();
+	virtual void onCycle();
 
-	virtual void set_pos(float x, float y);
-	virtual void set_size(float size);
-	virtual void set_rot(float rot);
-	float get_x(){return _x;}
-	float get_y(){return _y;}
-	float get_size(){return _size;}
-	float get_rot(){return _rot;}
+	virtual void setPos(float x, float y);
+	virtual void setSize(float size);
+	virtual void setRot(float rot);
+	float getX(){return mX;}
+	float getY(){return mY;}
+	float getSize(){return mSize;}
+	float getRot(){return mRot;}
 	//virtual void after_draw();
-	int get_cell_x(){return _cell_x;}
-	int get_cell_y(){return _cell_y;}
-	int get_cell_pos(){return _cell_pos;}
+	int getCellX(){return mCellX;}
+	int getCellY(){return mCellY;}
+	int getCellPos(){return mCellPos;}
 
-	virtual void place_random();
+	virtual void placeRandom();
 
-	void set_age_range(unsigned long low_age_limit, unsigned long high_age_limit);
-	void set_metabolism(float metabolism){_metabolism = metabolism;}
+	void setAgeRange(unsigned long lowAgeLimit, unsigned long highAgeLimit);
+	void setMetabolism(float metabolism){mMetabolism = metabolism;}
 
-	void set_color(MoleculeRGB* color){_color = MoleculeRGB(color);}
-	MoleculeRGB* get_color(){return &_color;}
+	void setColor(MoleculeRGB* color){mColor = MoleculeRGB(color);}
+	MoleculeRGB* getColor(){return &mColor;}
 
-        int set_size(lua_State* L);
-	int set_age_range(lua_State* L);
-	int set_metabolism(lua_State* L);
-	int set_color(lua_State* L);
+        int setSize(lua_State* luaState);
+	int setAgeRange(lua_State* luaState);
+	int setMetabolism(lua_State* luaState);
+	int setColor(lua_State* luaState);
 
-	float _x;
-	float _y;
-	float _size;
-	float _size_squared;
-	float _rot;
+	float mX;
+	float mY;
+	float mSize;
+	float mSizeSquared;
+	float mRot;
 
-	ObjectSimple2D* _next_cell_list;
-	ObjectSimple2D* _prev_cell_list;
+	ObjectSimple2D* mNextCellList;
+	ObjectSimple2D* mPrevCellList;
 
-	int _cell_x;
-	int _cell_y;
-	int _cell_pos;
+	int mCellX;
+	int mCellY;
+	int mCellPos;
 
 protected:
-	unsigned long _low_age_limit;
-	unsigned long _high_age_limit;
-	unsigned long _max_age;
-	float _metabolism;
-	MoleculeRGB _color;
+	unsigned long mLowAgeLimit;
+	unsigned long mHighAgeLimit;
+	unsigned long mMaxAge;
+	float mMetabolism;
+	MoleculeRGB mColor;
 };
 #endif
 

@@ -29,8 +29,8 @@ public:
 	virtual ~PopulationDynamics();
 
 	virtual void init() = 0;
-	virtual void on_cycle() = 0;
-	virtual void on_organism_death(SimulationObject* org) = 0;
+	virtual void onCycle() = 0;
+	virtual void onOrganismDeath(SimulationObject* org) = 0;
 };
 #endif
 

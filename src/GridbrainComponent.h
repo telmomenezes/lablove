@@ -33,31 +33,31 @@ public:
 	GridbrainComponent();
 	virtual ~GridbrainComponent();
 
-	static const char class_name[];
-        static Orbit<GridbrainComponent>::MethodType methods[];
-	static Orbit<GridbrainComponent>::NumberGlobalType number_globals[];
+	static const char mClassName[];
+        static Orbit<GridbrainComponent>::MethodType mMethods[];
+	static Orbit<GridbrainComponent>::NumberGlobalType mNumberGlobals[];
 
-        GridbrainComponent(lua_State* L);
+        GridbrainComponent(lua_State* luaState);
 
-	Type _type;
-	float _input;
-	float _output;
-	float _recurrent_input;
-	unsigned int _connections_count;
-	GridbrainConnection* _first_connection;
-	float _parameter;
-	float _state;
-	bool _aggregator;
-	bool _forward_flag;
-	bool _recurrent_flag;
-	unsigned int _offset;
-	unsigned int _perception_position;
-	unsigned int _action_position;
-	unsigned int _molecule;
+	Type mType;
+	float mInput;
+	float mOutput;
+	float mRecurrentInput;
+	unsigned int mConnectionsCount;
+	GridbrainConnection* mFirstConnection;
+	float mParameter;
+	float mState;
+	bool mAggregator;
+	bool mForwardFlag;
+	bool mRecurrentFlag;
+	unsigned int mOffset;
+	unsigned int mPerceptionPosition;
+	unsigned int mActionPosition;
+	unsigned int mMolecule;
 
-	unsigned long _column;
-	unsigned long _row;
-	unsigned int _grid;
+	unsigned long mColumn;
+	unsigned long mRow;
+	unsigned int mGrid;
 };
 
 #endif

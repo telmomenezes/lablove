@@ -38,56 +38,52 @@ class LoveLab : public KeyboardMouseHandler
 public:
 	LoveLab();
 	virtual ~LoveLab();
-	static LoveLab& get_instance();
+	static LoveLab& getInstance();
 	void create();
-	void set_simulation(Simulation* simulation){_simulation = simulation;}
-	Simulation* get_simulation(){return _simulation;}
-	void set_screen_dimensions(unsigned int screen_width,
-					unsigned int screen_height,
-					unsigned int color_depth);
-	void set_seed_index(unsigned int index);
-	bool running(){return !_stop;}
+	void setSimulation(Simulation* simulation){mSimulation = simulation;}
+	Simulation* getSimulation(){return mSimulation;}
+	void setScreenDimensions(unsigned int screenWidth,
+					unsigned int screenHeight,
+					unsigned int colorDepth);
+	void setSeedIndex(unsigned int index);
+	bool running(){return !mStop;}
 	void run();
 	void cycle();
-	void set_draw_brain(bool draw){_draw_brain = draw;}
-	bool get_draw_brain(){return _draw_brain;}
-	unsigned int get_screen_width(){return _screen_width;}
-	unsigned int get_screen_height(){return _screen_height;}
-	void add_keyboard_mouse_handler(KeyboardMouseHandler* handler);
-	void remove_keyboard_mouse_handler();
+	unsigned int getScreenWidth(){return mScreenWidth;}
+	unsigned int getScreenHeight(){return mScreenHeight;}
+	void addKeyboardMouseHandler(KeyboardMouseHandler* handler);
+	void removeKeyboardMouseHandler();
 
 #ifdef __LOVE_GRAPHICS
-	virtual bool on_key_up(int keycode);
+	virtual bool onKeyUp(int keycode);
 #endif
 
-	static const char class_name[];
-        static Orbit<LoveLab>::MethodType methods[];
-	static Orbit<LoveLab>::NumberGlobalType number_globals[];
+	static const char mClassName[];
+        static Orbit<LoveLab>::MethodType mMethods[];
+	static Orbit<LoveLab>::NumberGlobalType mNumberGlobals[];
 
-        LoveLab(lua_State* L);
-        int create(lua_State* L);
-	int set_simulation(lua_State* L);
-	int set_seed_index(lua_State* L);
+        LoveLab(lua_State* luaState);
+        int create(lua_State* luaState);
+	int setSimulation(lua_State* luaState);
+	int setSeedIndex(lua_State* luaState);
 
 private:
-	static LoveLab* _love;
-	Simulation* _simulation;
-	bool _stop;
-	int _screen_width;
-	int _screen_height;
-	int _color_depth;
-	bool _show_console;
-	bool _draw_brain;
-	unsigned long _cycle_start_time;
-	unsigned long _last_cycle_start_time;
-	double _fps;
-	double _fps_sum;
-	char _fps_string_buffer[255];
+	static LoveLab* mLove;
+	Simulation* mSimulation;
+	bool mStop;
+	int mScreenWidth;
+	int mScreenHeight;
+	int mColorDepth;
+	unsigned long mCycleStartTime;
+	unsigned long mLastCycleStartTime;
+	double mFPS;
+	double mFPSSum;
+	char mFPSStringBuffer[255];
 	
-	list<KeyboardMouseHandler*> _handlers_list;
+	list<KeyboardMouseHandler*> mHandlersList;
 
 #ifdef __LOVE_GRAPHICS
-	FontVera8 _font;
+	FontVera8 mFont;
 #endif
 };
 #endif

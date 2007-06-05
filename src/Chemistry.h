@@ -31,24 +31,24 @@ using namespace std;
 class Chemistry
 {
 public:
-	Chemistry(string name, Molecule* ref_molecule);
+	Chemistry(string name, Molecule* refMolecule);
 	virtual ~Chemistry();
 	Chemistry* clone();
 
-	Molecule* get_molecule(unsigned int index);
-	void add_molecule(Molecule* mol);
+	Molecule* getMolecule(unsigned int index);
+	void addMolecule(Molecule* mol);
 	void mutate();
 
-	static const char class_name[];
-        static Orbit<Chemistry>::MethodType methods[];
-	static Orbit<Chemistry>::NumberGlobalType number_globals[];
+	static const char mClassName[];
+        static Orbit<Chemistry>::MethodType mMethods[];
+	static Orbit<Chemistry>::NumberGlobalType mNumberGlobals[];
 
-        Chemistry(lua_State* L);
+        Chemistry(lua_State* luaState);
 
 protected:
-	string _name;
-	Molecule* _reference_molecule;
-	vector<Molecule*> _molecule_vec;
+	string mName;
+	Molecule* mReferenceMolecule;
+	vector<Molecule*> mMoleculeVec;
 };
 #endif
 
