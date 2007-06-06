@@ -53,8 +53,6 @@ public:
 	virtual void removeObject(SimulationObject* object);
 	float getWorldWidth(){return mWorldWidth;}
 	float getWorldLength(){return mWorldLength;}
-	int getViewX(){return mViewX;}
-	int getViewY(){return mViewY;}
 	float getCellSide(){return mCellSide;}
 	ObjectSimple2D** getCellGrid(){return mCellGrid;}
 	void setShowGrid(bool show){mShowGrid = show;}
@@ -64,7 +62,6 @@ public:
 	unsigned int getWorldCellWidth(){return mWorldCellWidth;}
 	unsigned int getWorldCellLength(){return mWorldCellLength;}
 	
-	void moveView(int deltaX, int deltaY);
 	SimulationObject* getObjectByScreenPos(int x, int y);
 
 #ifdef __LOVELAB_WITH_GRAPHICS
@@ -89,8 +86,6 @@ private:
 
 	float mWorldWidth;
 	float mWorldLength;
-	int mViewX;
-	int mViewY;
 
 	float mCellSide;
 	unsigned int mWorldCellWidth;
@@ -98,9 +93,6 @@ private:
 	ObjectSimple2D** mCellGrid;
 	bool mShowGrid;
 	bool mShowViewRange;
-	int mLastMouseX;
-	int mLastMouseY;
-	bool mMousePressed;
 };
 #endif
 

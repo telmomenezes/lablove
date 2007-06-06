@@ -55,8 +55,9 @@ class OgreApplication
 public:
 	OgreApplication();
 	virtual ~OgreApplication();
-	
-	void go();
+
+	bool init();
+	void start();
 
 protected:
 	Root *mRoot;
@@ -66,7 +67,6 @@ protected:
 	RenderWindow* mWindow;
 	Ogre::String mResourcePath;
 
-	bool setup();
 	bool configure();
 	void chooseSceneManager();
 	void createCamera();

@@ -20,6 +20,7 @@
 #ifdef __LOVELAB_WITH_GRAPHICS
 
 #include "OgreFrameListener.h"
+#include "LoveLab.h"
 
 using namespace Ogre;
 
@@ -285,9 +286,14 @@ void OgreFrameListener::showDebugOverlay(bool show)
 
 bool OgreFrameListener::frameStarted(const FrameEvent& evt)
 {
+	LoveLab::getInstance().cycle();
+
 	using namespace OIS;
 
-	if(mWindow->isClosed())	return false;
+	if (mWindow->isClosed())
+	{
+		return false;
+	}
 
 	//Need to capture/update each device
 	mKeyboard->capture();

@@ -27,26 +27,16 @@
 
 SimSimple2D::SimSimple2D()
 {
-	mViewX = 0;
-	mViewY = 0;
 	mShowGrid = false;
 	mShowViewRange = false;
 	mCellGrid = NULL;
-	mLastMouseX = 0;
-	mLastMouseY = 0;
-	mMousePressed = false;
 }
 
 SimSimple2D::SimSimple2D(lua_State* luaState)
 {
-	mViewX = 0;
-	mViewY = 0;
 	mShowGrid = false;
 	mShowViewRange = false;
 	mCellGrid = NULL;
-	mLastMouseX = 0;
-	mLastMouseY = 0;
-	mMousePressed = false;
 }
 
 SimSimple2D::~SimSimple2D()
@@ -105,50 +95,8 @@ void SimSimple2D::removeObject(SimulationObject* object)
 	Simulation::removeObject(object);
 }
 
-void SimSimple2D::moveView(int deltaX, int deltaY)
-{
-	mViewX -= deltaX;
-	mViewY -= deltaY;
-
-	if (mViewX < 0)
-	{
-		mViewX = 0;
-	}
-	
-	if (mViewY < 0)
-	{
-		mViewY = 0;
-	}
-
-	if ((mViewX + LoveLab::getInstance().getScreenWidth()) >= (unsigned int)mWorldWidth)
-	{
-		mViewX = ((unsigned int)mWorldWidth) - LoveLab::getInstance().getScreenWidth();
-	}
-
-	if ((mViewY + LoveLab::getInstance().getScreenHeight()) >= (unsigned int)mWorldLength)
-	{
-		mViewY = ((unsigned int)mWorldLength) - LoveLab::getInstance().getScreenHeight();
-	}
-}
-
 SimulationObject* SimSimple2D::getObjectByScreenPos(int x, int y)
 {
-	list<SimulationObject*>::iterator iterObj;
-	for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
-	{
-		ObjectSimple2D* obj = (ObjectSimple2D*)(*iterObj);
-
-		float dx = obj->mX - (float)(mViewX + x);
-		float dy = obj->mY - (float)(mViewY + y);
-		dx *= dx;
-		dy *= dy;
-
-		if ((dx + dy) <= obj->mSizeSquared)
-		{
-			return obj;
-		}
-	}
-
 	return NULL;
 }
 
@@ -265,47 +213,16 @@ bool SimSimple2D::onKeyUp(int key)
 
 bool SimSimple2D::onMouseButtonDown(int button, int x, int y)
 {
-	if (button == 1)
-	{
-		mLastMouseX = x;
-		mLastMouseY = y;
-		mMousePressed = true;
-
-		SimulationObject* object = getObjectByScreenPos(x, y);
-
-		if (object != NULL)
-		{
-			setSelectedObject(object);
-			return true;
-		}
-	}
-
 	return false;
 }
 
 bool SimSimple2D::onMouseButtonUp(int button, int x, int y)
 {
-	if (button == 1)
-	{
-		mMousePressed = false;
-		return true;
-	}
-
 	return false;
 }
 
 bool SimSimple2D::onMouseMove(int x, int y)
 {
-	if (mMousePressed)
-	{
-		int newX = x;
-		int newY = y;
-
-		moveView(newX - mLastMouseX, newY - mLastMouseY);
-
-		mLastMouseX = newX;
-		mLastMouseY = newY;
-	}
 }
 #endif
 

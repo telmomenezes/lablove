@@ -46,20 +46,13 @@ OgreApplication::~OgreApplication()
 	}
 }
 
-void OgreApplication::go()
+void OgreApplication::start()
 {
-	if (!setup())
-	{
-		return;
-	}
-
 	mRoot->startRendering();
-
-	// clean up
 	destroyScene();
 }
 
-bool OgreApplication::setup()
+bool OgreApplication::init()
 {
 	String pluginsPath;
 	// only use plugins.cfg if not static

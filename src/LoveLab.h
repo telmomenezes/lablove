@@ -28,6 +28,10 @@ using namespace std;
 
 #include "Orbit.h"
 
+#ifdef __LOVELAB_WITH_GRAPHICS
+#include "OgreApplication.h"
+#endif
+
 class LoveLab : public KeyboardMouseHandler
 {
 public:
@@ -39,15 +43,10 @@ public:
 	void create();
 	void setSimulation(Simulation* simulation){mSimulation = simulation;}
 	Simulation* getSimulation(){return mSimulation;}
-	void setScreenDimensions(unsigned int screenWidth,
-					unsigned int screenHeight,
-					unsigned int colorDepth);
 	void setSeedIndex(unsigned int index);
 	bool running(){return !mStop;}
 	void run();
 	void cycle();
-	unsigned int getScreenWidth(){return mScreenWidth;}
-	unsigned int getScreenHeight(){return mScreenHeight;}
 	void addKeyboardMouseHandler(KeyboardMouseHandler* handler);
 	void removeKeyboardMouseHandler();
 
@@ -68,16 +67,12 @@ private:
 	static LoveLab* mLove;
 	Simulation* mSimulation;
 	bool mStop;
-	int mScreenWidth;
-	int mScreenHeight;
-	int mColorDepth;
-	unsigned long mCycleStartTime;
-	unsigned long mLastCycleStartTime;
-	double mFPS;
-	double mFPSSum;
-	char mFPSStringBuffer[255];
 	
 	list<KeyboardMouseHandler*> mHandlersList;
+
+#ifdef __LOVELAB_WITH_GRAPHICS
+	OgreApplication* mOgreApp;
+#endif
 };
 #endif
 
