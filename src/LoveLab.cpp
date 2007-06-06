@@ -26,33 +26,28 @@ LoveLab* LoveLab::mLove = NULL;
 LoveLab::LoveLab()
 {
 	mStop = false;
-	mScreenWidth = 800;
-	mScreenHeight = 600;
-	mColorDepth = 32;
-	mCycleStartTime = 0;
-	mLastCycleStartTime = 0;
-	mFPS = 0;
-	mFPSSum = 0.0f;
-
-        sprintf(mFPSStringBuffer, "");
+#ifdef __LOVELAB_WITH_GRAPHICS
+	mOgreApp = NULL;
+#endif
 }
 
 LoveLab::LoveLab(lua_State* luaState)
 {
 	mStop = false;
-	mScreenWidth = 800;
-	mScreenHeight = 600;
-	mColorDepth = 32;
-	mCycleStartTime = 0;
-	mLastCycleStartTime = 0;
-	mFPS = 0;
-	mFPSSum = 0.0f;
-
-        sprintf(mFPSStringBuffer, "");
+#ifdef __LOVELAB_WITH_GRAPHICS
+	mOgreApp = NULL;
+#endif
 }
 
 LoveLab::~LoveLab()
 {
+#ifdef __LOVELAB_WITH_GRAPHICS
+	if (mOgreApp != NULL)
+	{
+		delete mOgreApp;
+		mOgreApp = NULL;
+	}
+#endif
 }
 
 void LoveLab::create()
@@ -66,15 +61,6 @@ LoveLab& LoveLab::getInstance()
 	return *mLove;
 }
 
-void LoveLab::setScreenDimensions(unsigned int screenWidth,
-					unsigned int screenHeight,
-					unsigned int colorDepth)
-{
-	mScreenWidth = screenWidth;
-	mScreenHeight = screenHeight;
-	mColorDepth = colorDepth;
-}
-
 void LoveLab::setSeedIndex(unsigned int index)
 {
 	randomSeedIndex(index);
@@ -83,80 +69,42 @@ void LoveLab::setSeedIndex(unsigned int index)
 void LoveLab::run()
 {
 #ifdef __LOVELAB_WITH_GRAPHICS
-/*
-	const SDL_VideoInfo *info;
-	Uint8  videoBpp;
-	Uint32 videoFlags;
-        
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	mOgreApp = new OgreApplication();
+
+	try
 	{
-		fprintf(stderr, "Couldn't initialize SDL: %s\n",SDL_GetError());
-		exit(1);
+		mOgreApp->init();
+		mSimulation->init();
+		mOgreApp->start();
 	}
-	atexit(SDL_Quit);
-
-	videoFlags = SDL_OPENGL;
-
-	if ((SDL_SetVideoMode(mScreenWidth, mScreenHeight, mColorDepth, videoFlags)) == NULL )
+	catch (Ogre::Exception& e)
 	{
-		fprintf(stderr, "Couldn't set %ix%i video mode: %s\n", mScreenWidth, mScreenHeight, SDL_GetError());
-		exit(2);
-	}
-
- 	SDL_WM_SetCaption("LOVE Lab", "LOVE Lab");
-
-	glViewport(0, 0, (GLint) mScreenWidth, (GLint) mScreenHeight);
-	glClearColor(1.0, 1.0, 1.0, 0.0);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glOrtho(0, mScreenWidth, 0, mScreenHeight, -1.0, 1.0);
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	mFont.init();
-*/
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+		MessageBox(NULL,
+			e.getFullDescription().c_str(),
+			"An exception has occured!",
+			MB_OK | MB_ICONERROR | MB_TASKMODAL);
+#else
+		std::cerr << "An exception has occured: " <<
+			e.getFullDescription().c_str() << std::endl;
 #endif
-
+	}
+#else
 	mSimulation->init();
 
 	while (running())
 	{
 		cycle();
 	}
+#endif
 }
 
 void LoveLab::cycle()
 {
-#ifdef __LOVELAB_WITH_GRAPHICS
-/*
-	mLastCycleStartTime = mCycleStartTime;
-	mCycleStartTime = SDL_GetTicks();
-
-	glClear(GL_COLOR_BUFFER_BIT);
-*/
-#endif
-
 	mSimulation->cycle();
 
 #ifdef __LOVELAB_WITH_GRAPHICS
 /*
-	long cycleTicks = mCycleStartTime - mLastCycleStartTime;
-	double cycleTime = ((double)cycleTicks) / 1000.0f;
-	mFPSSum += 1.0f / cycleTime;
-
-	if ((mSimulation->time() % 100) == 0)
-	{
-		mFPS = mFPSSum / 100.0f;
-		mFPSSum = 0.0f;
-		sprintf(mFPSStringBuffer, "FPS: %f", mFPS);
-	}
-
-	glColor3f(0.15, 0.15, 0.15);
-	mFont.print(10, mScreenHeight - 10, "%s", mFPSStringBuffer);
-
-	glFlush();
-	SDL_GL_SwapBuffers();
-
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
