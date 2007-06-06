@@ -21,10 +21,6 @@
 #include "functions.h"
 #include "random.h"
 
-#ifdef __LOVE_GRAPHICS
-#include "GL/gl.h"
-#endif
-
 LoveLab* LoveLab::mLove = NULL;
 
 LoveLab::LoveLab()
@@ -87,6 +83,7 @@ void LoveLab::setSeedIndex(unsigned int index)
 void LoveLab::run()
 {
 #ifdef __LOVE_GRAPHICS
+/*
 	const SDL_VideoInfo *info;
 	Uint8  videoBpp;
 	Uint32 videoFlags;
@@ -117,6 +114,7 @@ void LoveLab::run()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	mFont.init();
+*/
 #endif
 
 	mSimulation->init();
@@ -130,15 +128,18 @@ void LoveLab::run()
 void LoveLab::cycle()
 {
 #ifdef __LOVE_GRAPHICS
+/*
 	mLastCycleStartTime = mCycleStartTime;
 	mCycleStartTime = SDL_GetTicks();
 
 	glClear(GL_COLOR_BUFFER_BIT);
+*/
 #endif
 
 	mSimulation->cycle();
 
 #ifdef __LOVE_GRAPHICS
+/*
 	long cycleTicks = mCycleStartTime - mLastCycleStartTime;
 	double cycleTime = ((double)cycleTicks) / 1000.0f;
 	mFPSSum += 1.0f / cycleTime;
@@ -192,6 +193,7 @@ void LoveLab::cycle()
 			iterHandler++;
 		}
 	}
+*/
 #endif
 }
 
@@ -206,6 +208,7 @@ void LoveLab::removeKeyboardMouseHandler()
 }
 
 #ifdef __LOVE_GRAPHICS
+/*
 bool LoveLab::onKeyUp(int key)
 {
 	switch (key)
@@ -217,6 +220,7 @@ bool LoveLab::onKeyUp(int key)
 		return false;
 	}
 }
+*/
 #endif
 
 const char LoveLab::mClassName[] = "LoveLab";

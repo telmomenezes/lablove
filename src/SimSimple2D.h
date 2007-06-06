@@ -84,7 +84,7 @@ public:
 
 private:
 #ifdef __LOVE_GRAPHICS
-	virtual void drawBeforeObjects();
+	//virtual void drawBeforeObjects();
 #endif
 
 	float mWorldWidth;

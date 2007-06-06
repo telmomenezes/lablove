@@ -157,6 +157,7 @@ SimulationObject* SimSimple2D::getObjectByScreenPos(int x, int y)
 }
 
 #ifdef __LOVE_GRAPHICS
+/*
 void SimSimple2D::drawBeforeObjects()
 {
 	if (mShowGrid)
@@ -188,8 +189,8 @@ void SimSimple2D::drawBeforeObjects()
 
 		glEnd();
 	}
-
 }
+*/
 
 bool SimSimple2D::onKeyDown(int key)
 {
@@ -252,12 +253,15 @@ bool SimSimple2D::onKeyUp(int key)
 			m_human->setEat(false);
 		}
 		return true;*/
+
+	/*
 	case SDLK_g:
 		setShowGrid(!getShowGrid());
 		return true;
 	case SDLK_v:
 		setShowViewRange(!getShowViewRange());
 		return true;
+	*/
 	default:
 		return false;
 	}

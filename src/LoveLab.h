@@ -23,11 +23,6 @@
 #include "Simulation.h"
 #include "KeyboardMouseHandler.h"
 
-#ifdef __LOVE_GRAPHICS
-#include "SDL.h"
-#include "FontVera8.h"
-#endif
-
 #include <list>
 using namespace std;
 
@@ -55,7 +50,7 @@ public:
 	void removeKeyboardMouseHandler();
 
 #ifdef __LOVE_GRAPHICS
-	virtual bool onKeyUp(int keycode);
+	//virtual bool onKeyUp(int keycode);
 #endif
 
 	static const char mClassName[];
@@ -81,10 +76,6 @@ private:
 	char mFPSStringBuffer[255];
 	
 	list<KeyboardMouseHandler*> mHandlersList;
-
-#ifdef __LOVE_GRAPHICS
-	FontVera8 mFont;
-#endif
 };
 #endif
 

@@ -550,6 +550,7 @@ void AnimatSimple2D::mutate()
 #ifdef __LOVE_GRAPHICS
 void AnimatSimple2D::draw()
 {
+/*
 	SimSimple2D* sim = (SimSimple2D*)(LoveLab::getInstance().getSimulation());
 
 	float x = mX - sim->getViewX();
@@ -599,6 +600,7 @@ void AnimatSimple2D::draw()
 	glVertex2f(p2x, p2y);
 	glVertex2f(p3x, p3y);
 	glEnd();
+*/
 }
 #endif
 

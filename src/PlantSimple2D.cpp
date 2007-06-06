@@ -59,6 +59,7 @@ SimulationObject* PlantSimple2D::clone(bool full)
 #ifdef __LOVE_GRAPHICS
 void PlantSimple2D::draw()
 {
+/*	
 	SimSimple2D* sim = (SimSimple2D*)(LoveLab::getInstance().getSimulation());
 
 	float x = (int)mX - (int)sim->getViewX();
@@ -78,6 +79,7 @@ void PlantSimple2D::draw()
 	glVertex2f(p2x, p2y);
 	glVertex2f(p1x, p2y);
 	glEnd();
+*/
 }
 #endif
 
