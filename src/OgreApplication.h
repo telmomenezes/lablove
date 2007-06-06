@@ -79,7 +79,6 @@ protected:
 	void loadResources();
 
 	void createTriangle(const std::string& strName, const float r);
-	ManualObject* createXit();
 };
 
 #endif

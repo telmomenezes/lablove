@@ -23,10 +23,6 @@
 #include "defines.h"
 #include "SimSimple2D.h"
 
-#ifdef __LOVE_GRAPHICS
-#include "GL/gl.h"
-#endif
-
 PlantSimple2D::PlantSimple2D()
 {
 	mNextCellList = NULL;
@@ -56,7 +52,7 @@ SimulationObject* PlantSimple2D::clone(bool full)
 	return new PlantSimple2D(this);
 }
 
-#ifdef __LOVE_GRAPHICS
+#ifdef __LOVELAB_WITH_GRAPHICS
 void PlantSimple2D::draw()
 {
 /*	

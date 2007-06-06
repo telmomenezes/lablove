@@ -25,10 +25,6 @@
 #include "PopulationDynamics.h"
 #include "defines.h"
 
-#ifdef __LOVE_GRAPHICS
-#include "GL/gl.h"
-#endif
-
 SimSimple2D::SimSimple2D()
 {
 	mViewX = 0;
@@ -156,7 +152,7 @@ SimulationObject* SimSimple2D::getObjectByScreenPos(int x, int y)
 	return NULL;
 }
 
-#ifdef __LOVE_GRAPHICS
+#ifdef __LOVELAB_WITH_GRAPHICS
 /*
 void SimSimple2D::drawBeforeObjects()
 {

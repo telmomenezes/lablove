@@ -59,7 +59,7 @@ public:
 	void setGoCost(float cost){mGoCost = cost;}
 	void setRotateCost(float cost){mRotateCost = cost;}
 
-#ifdef __LOVE_GRAPHICS
+#ifdef __LOVELAB_WITH_GRAPHICS
 	virtual void draw();
 #endif
 

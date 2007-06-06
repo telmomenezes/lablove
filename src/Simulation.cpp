@@ -85,7 +85,7 @@ void Simulation::cycle()
 
 	mPopulationDynamics->onCycle();
 
-#ifdef __LOVE_GRAPHICS
+#ifdef __LOVELAB_WITH_GRAPHICS
 	drawBeforeObjects();
 #endif
 
@@ -93,7 +93,7 @@ void Simulation::cycle()
 	{
 		SimulationObject* obj = *iterObj;
 		obj->onCycle();
-#ifdef __LOVE_GRAPHICS
+#ifdef __LOVELAB_WITH_GRAPHICS
 		obj->draw();
 #endif
 	}

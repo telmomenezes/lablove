@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef __LOVELAB_WITH_GRAPHICS
+
 #include "OgreFrameListener.h"
 
 using namespace Ogre;
@@ -339,4 +341,6 @@ bool OgreFrameListener::frameEnded(const FrameEvent& evt)
 	updateStats();
 	return true;
 }
+
+#endif
 

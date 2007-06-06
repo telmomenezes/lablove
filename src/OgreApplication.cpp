@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef __LOVELAB_WITH_GRAPHICS
+
 #include "OgreApplication.h"
 
 using namespace Ogre;
@@ -154,65 +156,20 @@ void OgreApplication::createScene()
 	// Accept default settings: point light, white diffuse, just set position
 	// NB I could attach the light to a SceneNode if I wanted it to move automatically with
 	//  other objects, but I don't
-	l->setPosition(20,80,50);
+	l->setPosition(20, 80, 50);
 
-	//createSphere("mySphereMesh", 10, 10, 10);
-	//createTriangle("mySphereMesh", 10);
+	createTriangle("triang", 10);
 
-	/*for (unsigned int i = 0; i < 25; i++)
+	for (unsigned int i = 0; i < 25; i++)
 	{
 		char meshName[255];
 		sprintf(meshName, "tri%d", i);
-		Entity* sphereEntity = mSceneMgr->createEntity(meshName, "mySphereMesh");
+		Entity* sphereEntity = mSceneMgr->createEntity(meshName, "triang");
 		SceneNode* sphereNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
 		//sphereEntity->setMaterialName("Examples/Flare");
 		sphereNode->attachObject(sphereEntity);
 		sphereNode->setPosition(rand() % 200, rand() % 200, rand() % 200);
-	}*/
-
-	createXit();
- 
- 	/*
-	// Also add a nice starship in
-	Entity *ent = mSceneMgr->createEntity("razor", "razor.mesh");
-
-	mSceneMgr->getRootSceneNode()->attachObject(ent);
-
-	pThrusters = mSceneMgr->createParticleSystem("ParticleSys1", 200);
-
-	pThrusters ->setMaterialName("Examples/Flare");
-	pThrusters ->setDefaultDimensions(25, 25);
-
-	ParticleEmitter *pEmit1 = pThrusters->addEmitter("Point");
-	ParticleEmitter *pEmit2 = pThrusters->addEmitter("Point");
-
-	// Thruster 1
-	pEmit1->setAngle(Degree(3));
-	pEmit1->setTimeToLive(0.2);
-	pEmit1->setEmissionRate(70);
-
-	pEmit1->setParticleVelocity(50);
-
-	pEmit1->setDirection(-Vector3::UNIT_Z);
-	pEmit1->setColour(ColourValue::White, ColourValue::Red);
-
-	// Thruster 2
-	pEmit2->setAngle(Degree(3));
-	pEmit2->setTimeToLive(0.2);
-	pEmit2->setEmissionRate(70);
-
-	pEmit2->setParticleVelocity(50);
-
-	pEmit2->setDirection(-Vector3::UNIT_Z);
-	pEmit2->setColour(ColourValue::White, ColourValue::Red);
-
-	// Set the position of the thrusters
-	pEmit1->setPosition(Vector3(5.7f, 0.0f, 0.0f));
-	pEmit2->setPosition(Vector3(-18.0f, 0.0f, 0.0f));
-
-	mSceneMgr->getRootSceneNode()->createChildSceneNode(Vector3(0.0f, 6.5f, -67.0f))
-		->attachObject(pThrusters);
-	*/
+	}
 }
 
 void OgreApplication::createViewports()
@@ -262,92 +219,15 @@ void OgreApplication::loadResources()
 	ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 }
 
-void OgreApplication::createTriangle(const std::string& strName, const float r)
+void OgreApplication::createTriangle(const std::string& name, const float r)
 {
-	MeshPtr pSphere = MeshManager::getSingleton().createManual(strName, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-
-	SubMesh *pSphereVertex = pSphere->createSubMesh();
-
-	pSphere->sharedVertexData = new VertexData();
-	VertexData* vertexData = pSphere->sharedVertexData;
-
-	// define the vertex format
-	VertexDeclaration* vertexDecl = vertexData->vertexDeclaration;
-	size_t currOffset = 0;
-	// positions
-	vertexDecl->addElement(0, currOffset, VET_FLOAT3, VES_POSITION);
-	currOffset += VertexElement::getTypeSize(VET_FLOAT3);
-	// normals
-	vertexDecl->addElement(0, currOffset, VET_FLOAT3, VES_NORMAL);
-	currOffset += VertexElement::getTypeSize(VET_FLOAT3);
-	// two dimensional texture coordinates
-	vertexDecl->addElement(0, currOffset, VET_FLOAT2, VES_TEXTURE_COORDINATES, 0);
-	currOffset += VertexElement::getTypeSize(VET_FLOAT2);
-
-	// allocate the vertex buffer
-	vertexData->vertexCount = 3;
-	HardwareVertexBufferSharedPtr vBuf = HardwareBufferManager::getSingleton().createVertexBuffer(vertexDecl->getVertexSize(0), vertexData->vertexCount, HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
-	VertexBufferBinding* binding = vertexData->vertexBufferBinding;
-	binding->setBinding(0, vBuf);
-	float* pVertex = static_cast<float*>(vBuf->lock(HardwareBuffer::HBL_DISCARD));
-
-	// allocate index buffer
-	pSphereVertex->indexData->indexCount = 6;
-	pSphereVertex->indexData->indexBuffer = HardwareBufferManager::getSingleton().createIndexBuffer(HardwareIndexBuffer::IT_16BIT, pSphereVertex->indexData->indexCount, HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
-	HardwareIndexBufferSharedPtr iBuf = pSphereVertex->indexData->indexBuffer;
-	unsigned short* pIndices = static_cast<unsigned short*>(iBuf->lock(HardwareBuffer::HBL_DISCARD));
+	ManualObject* obj = new Ogre::ManualObject("MeshDecal");
 
 	float deltaAngle = Math::PI / 1.5f;
-
-	for(int i = 0; i < 3; i++)
-	{
-		float x = r * sinf(i * deltaAngle);
-		float y = r * cosf(i * deltaAngle);
-		float z = 0;
-
-		// Add one vertex to the strip which makes up the sphere
-		*pVertex++ = x;
-		*pVertex++ = y;
-		*pVertex++ = z;
-
-		Vector3 vNormal = Vector3(x, y, z).normalisedCopy();
-		*pVertex++ = vNormal.x;
-		*pVertex++ = vNormal.y;
-		*pVertex++ = vNormal.z;
-
-		*pVertex++ = 0;
-		*pVertex++ = 0;	
-	}
-
-	*pIndices++ = 2;
-	*pIndices++ = 1;
-	*pIndices++ = 0;
-	*pIndices++ = 0;
-	*pIndices++ = 1;
-	*pIndices++ = 2;
-
-	// Unlock
-	vBuf->unlock();
-	iBuf->unlock();
-	// Generate face list
-	pSphereVertex->useSharedVertices = true;
-
-	// the original code was missing this line:
-	pSphere->_setBounds( AxisAlignedBox( Vector3(-r, -r, -r), Vector3(r, r, r) ), false );
-	pSphere->_setBoundingSphereRadius(r);
-	// this line makes clear the mesh is loaded (avoids memory leaks)
-        pSphere->load();
-}
 	
-ManualObject* OgreApplication::createXit()
-{
-	ManualObject* meshDecal = new Ogre::ManualObject("MeshDecal");
-	mSceneMgr->getRootSceneNode()->attachObject(meshDecal);
-
-	float r = 10.0f;
-	float deltaAngle = Math::PI / 1.5f;
-
-	meshDecal->begin("", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+	obj->estimateVertexCount(3);
+	obj->estimateIndexCount(3);
+	obj->begin("", Ogre::RenderOperation::OT_TRIANGLE_LIST);
  
  	for(int i = 0; i < 3; i++)
 	{
@@ -355,16 +235,20 @@ ManualObject* OgreApplication::createXit()
 		float y = r * cosf(i * deltaAngle);
 		float z = 0;
 
-		meshDecal->position(Ogre::Vector3(x, y, z));
-		meshDecal->colour(1.0, 0.0, 0.0, 0.0);
+		obj->position(Ogre::Vector3(x, y, z));
 	}
 
-	meshDecal->index(2);
-	meshDecal->index(1);
-	meshDecal->index(0);
+	obj->index(2);
+	obj->index(1);
+	obj->index(0);
 
-	meshDecal->end();
+	obj->end();
 
-	return meshDecal;
+	MeshPtr mesh = obj->convertToMesh(name);
+	mesh->load();
+
+	delete obj;
 }
+
+#endif
 

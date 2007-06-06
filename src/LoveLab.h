@@ -33,7 +33,9 @@ class LoveLab : public KeyboardMouseHandler
 public:
 	LoveLab();
 	virtual ~LoveLab();
+
 	static LoveLab& getInstance();
+
 	void create();
 	void setSimulation(Simulation* simulation){mSimulation = simulation;}
 	Simulation* getSimulation(){return mSimulation;}
@@ -49,7 +51,7 @@ public:
 	void addKeyboardMouseHandler(KeyboardMouseHandler* handler);
 	void removeKeyboardMouseHandler();
 
-#ifdef __LOVE_GRAPHICS
+#ifdef __LOVELAB_WITH_GRAPHICS
 	//virtual bool onKeyUp(int keycode);
 #endif
 

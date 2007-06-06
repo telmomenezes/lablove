@@ -67,7 +67,7 @@ public:
 	void moveView(int deltaX, int deltaY);
 	SimulationObject* getObjectByScreenPos(int x, int y);
 
-#ifdef __LOVE_GRAPHICS
+#ifdef __LOVELAB_WITH_GRAPHICS
 	virtual bool onKeyDown(int keycode);
 	virtual bool onKeyUp(int keycode);
 	virtual bool onMouseButtonDown(int button, int x, int y);
@@ -83,7 +83,7 @@ public:
         int setWorldDimensions(lua_State* luaState);
 
 private:
-#ifdef __LOVE_GRAPHICS
+#ifdef __LOVELAB_WITH_GRAPHICS
 	//virtual void drawBeforeObjects();
 #endif
 

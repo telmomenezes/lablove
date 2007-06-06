@@ -82,7 +82,7 @@ void LoveLab::setSeedIndex(unsigned int index)
 
 void LoveLab::run()
 {
-#ifdef __LOVE_GRAPHICS
+#ifdef __LOVELAB_WITH_GRAPHICS
 /*
 	const SDL_VideoInfo *info;
 	Uint8  videoBpp;
@@ -127,7 +127,7 @@ void LoveLab::run()
 
 void LoveLab::cycle()
 {
-#ifdef __LOVE_GRAPHICS
+#ifdef __LOVELAB_WITH_GRAPHICS
 /*
 	mLastCycleStartTime = mCycleStartTime;
 	mCycleStartTime = SDL_GetTicks();
@@ -138,7 +138,7 @@ void LoveLab::cycle()
 
 	mSimulation->cycle();
 
-#ifdef __LOVE_GRAPHICS
+#ifdef __LOVELAB_WITH_GRAPHICS
 /*
 	long cycleTicks = mCycleStartTime - mLastCycleStartTime;
 	double cycleTime = ((double)cycleTicks) / 1000.0f;
@@ -207,7 +207,7 @@ void LoveLab::removeKeyboardMouseHandler()
 	mHandlersList.pop_front();
 }
 
-#ifdef __LOVE_GRAPHICS
+#ifdef __LOVELAB_WITH_GRAPHICS
 /*
 bool LoveLab::onKeyUp(int key)
 {
@@ -239,8 +239,6 @@ int LoveLab::create(lua_State* luaState)
         create();
         return 0;
 }
-
-
 
 int LoveLab::setSimulation(lua_State* luaState)
 {

@@ -24,10 +24,6 @@
 #include "functions.h"
 #include "defines.h"
 
-#ifdef __LOVE_GRAPHICS
-#include "GL/gl.h"
-#endif
-
 AnimatSimple2D::AnimatSimple2D()
 {
 	mMaxInputDepth = 0;
@@ -547,7 +543,7 @@ void AnimatSimple2D::mutate()
 	}
 }
 
-#ifdef __LOVE_GRAPHICS
+#ifdef __LOVELAB_WITH_GRAPHICS
 void AnimatSimple2D::draw()
 {
 /*

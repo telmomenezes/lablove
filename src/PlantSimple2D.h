@@ -34,7 +34,7 @@ public:
 
 	virtual bool isFood(){return true;}
 
-#ifdef __LOVE_GRAPHICS
+#ifdef __LOVELAB_WITH_GRAPHICS
 	virtual void draw();
 #endif
 

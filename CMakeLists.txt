@@ -26,7 +26,7 @@ src/OgreApplication.cpp src/OgreFrameListener.cpp)
 TARGET_LINK_LIBRARIES(lovelab lua dl)
 
 IF(GRAPHICS)
-	ADD_DEFINITIONS(-D__LOVE_GRAPHICS)
+	ADD_DEFINITIONS(-D__LOVELAB_WITH_GRAPHICS)
 	TARGET_LINK_LIBRARIES(lovelab OgreMain OIS Cg freeimage z m dl)
 ENDIF(GRAPHICS)
 
