@@ -17,7 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "OgreApplication.h"
 #include "LoveLab.h"
 #include "SimSimple2D.h"
 #include "PlantSimple2D.h"
@@ -28,6 +27,7 @@
 #include "GridbrainComponent.h"
 #include "GridbrainComponentSet.h"
 #include "MoleculeRGB.h"
+// TODO: Replace OGRE_PLATFORM with something more generic
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
 #include "windows.h"
@@ -38,31 +38,13 @@ extern "C"
 #include "lualib.h"
 }
 
+// TODO: Replace OGRE_PLATFORM with something more generic.
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)
 #else
 int main(int argc, char *argv[])
 #endif
 {
-	OgreApplication app;
-
-	try
-	{
-		app.go();
-	}
-	catch (Ogre::Exception& e)
-	{
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-		MessageBox(NULL,
-				e.getFullDescription().c_str(),
-				"An exception has occured!",
-				MB_OK | MB_ICONERROR | MB_TASKMODAL);
-#else
-		std::cerr << "An exception has occured: " <<
-			e.getFullDescription().c_str() << std::endl;
-#endif
-	}
-
 	lua_State* luaState = lua_open();
 	
 	luaopen_base(luaState);
@@ -99,7 +81,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	//LoveLab::getInstance().run();
+	LoveLab::getInstance().run();
 
 	lua_close(luaState);
 
