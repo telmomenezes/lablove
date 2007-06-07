@@ -110,7 +110,7 @@ void AnimatSimple2D::setBetaGrid(Grid* grid)
 	mGridbrain->addGrid(grid);
 }
 
-void AnimatSimple2D::init()
+void AnimatSimple2D::initRandom()
 {
 	mGridbrain->init();
 
@@ -171,6 +171,21 @@ SimulationObject* AnimatSimple2D::clone(bool full)
 {
 	return new AnimatSimple2D(this, full);
 }
+
+#if defined(__LOVELAB_WITH_GRAPHICS)
+void AnimatSimple2D::createGraphics()
+{
+	SceneManager* sceneMgr = LoveLab::getInstance().getOgreApplication()->getSceneManager();
+	char nodeName[255];
+	sprintf(nodeName, "loveobj%d", mID);
+	Entity* animEntity = sceneMgr->createEntity(nodeName, "animat");
+	mNode = sceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
+	//animEntity->setMaterialName("Examples/Flare");
+	mNode->attachObject(animEntity);
+	mNode->setPosition(mX, mY, 0);
+	mNode->scale(mSize, mSize, mSize);
+}
+#endif
 
 void AnimatSimple2D::setRot(float rot)
 {
@@ -543,63 +558,6 @@ void AnimatSimple2D::mutate()
 	}
 }
 
-#ifdef __LOVELAB_WITH_GRAPHICS
-void AnimatSimple2D::draw()
-{
-/*
-	SimSimple2D* sim = (SimSimple2D*)(LoveLab::getInstance().getSimulation());
-
-	float x = mX - sim->getViewX();
-	float y = mY - sim->getViewY();
-
-	if (sim->getShowViewRange())
-	{
-		float x = mX - sim->getViewX();
-		float y = mY - sim->getViewY();
-
-		float startAngle = mRot - (mViewAngle / 2.0f);
-		float endAngle = mRot + (mViewAngle / 2.0f);
-
-		glColor4ub(DEF_S2D_ANIMAT_VIEW_R,
-			DEF_S2D_ANIMAT_VIEW_G,
-			DEF_S2D_ANIMAT_VIEW_B,
-			DEF_S2D_ANIMAT_VIEW_A);
-		glBegin(GL_POLYGON);
-		glVertex2f(x, y);
-
-		float angle = startAngle;
-		while (angle < endAngle)
-		{
-			glVertex2f(x + (cosf(angle) * mViewRange), y + (sinf(angle) * mViewRange));
-			angle += 0.2f;
-		}
-		glVertex2f(x + (cosf(endAngle) * mViewRange), y + (sinf(endAngle) * mViewRange));
-
-		glEnd();
-	}
-
-	float a1 = mRot;
-	float a2 = mRot + (M_PI * 0.8f);
-	float a3 = mRot + (M_PI * 1.2f);
-	float p1x = x + (cosf(a1) * mSize);
-	float p1y = y + (sinf(a1) * mSize);
-	float p2x = x + (cosf(a2) * mSize);
-	float p2y = y + (sinf(a2) * mSize);
-	float p3x = x + (cosf(a3) * mSize);
-	float p3y = y + (sinf(a3) * mSize);
-
-	glColor3f(mColor.mRed,
-			mColor.mGreen,
-			mColor.mBlue);
-	glBegin(GL_POLYGON);
-	glVertex2f(p1x, p1y);
-	glVertex2f(p2x, p2y);
-	glVertex2f(p3x, p3y);
-	glEnd();
-*/
-}
-#endif
-
 const char AnimatSimple2D::mClassName[] = "AnimatSimple2D";
 
 Orbit<AnimatSimple2D>::MethodType AnimatSimple2D::mMethods[] = {
@@ -660,6 +618,61 @@ int AnimatSimple2D::setRotateCost(lua_State* luaState)
 	setRotateCost(cost);
 	return 0;
 }
+
+/*
+void AnimatSimple2D::draw()
+{
+	SimSimple2D* sim = (SimSimple2D*)(LoveLab::getInstance().getSimulation());
+
+	float x = mX - sim->getViewX();
+	float y = mY - sim->getViewY();
+
+	if (sim->getShowViewRange())
+	{
+		float x = mX - sim->getViewX();
+		float y = mY - sim->getViewY();
+
+		float startAngle = mRot - (mViewAngle / 2.0f);
+		float endAngle = mRot + (mViewAngle / 2.0f);
+
+		glColor4ub(DEF_S2D_ANIMAT_VIEW_R,
+			DEF_S2D_ANIMAT_VIEW_G,
+			DEF_S2D_ANIMAT_VIEW_B,
+			DEF_S2D_ANIMAT_VIEW_A);
+		glBegin(GL_POLYGON);
+		glVertex2f(x, y);
+
+		float angle = startAngle;
+		while (angle < endAngle)
+		{
+			glVertex2f(x + (cosf(angle) * mViewRange), y + (sinf(angle) * mViewRange));
+			angle += 0.2f;
+		}
+		glVertex2f(x + (cosf(endAngle) * mViewRange), y + (sinf(endAngle) * mViewRange));
+
+		glEnd();
+	}
+
+	float a1 = mRot;
+	float a2 = mRot + (M_PI * 0.8f);
+	float a3 = mRot + (M_PI * 1.2f);
+	float p1x = x + (cosf(a1) * mSize);
+	float p1y = y + (sinf(a1) * mSize);
+	float p2x = x + (cosf(a2) * mSize);
+	float p2y = y + (sinf(a2) * mSize);
+	float p3x = x + (cosf(a3) * mSize);
+	float p3y = y + (sinf(a3) * mSize);
+
+	glColor3f(mColor.mRed,
+			mColor.mGreen,
+			mColor.mBlue);
+	glBegin(GL_POLYGON);
+	glVertex2f(p1x, p1y);
+	glVertex2f(p2x, p2y);
+	glVertex2f(p3x, p3y);
+	glEnd();
+}
+*/
 
 /*void AnimatSimple2D::draw_brain()
 {

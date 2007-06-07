@@ -52,6 +52,7 @@ public:
 
 #ifdef __LOVELAB_WITH_GRAPHICS
 	//virtual bool onKeyUp(int keycode);
+	OgreApplication* getOgreApplication(){return mOgreApp;}
 #endif
 
 	static const char mClassName[];

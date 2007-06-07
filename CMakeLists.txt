@@ -22,7 +22,6 @@ src/PopDynGenerations.cpp src/PopDynFixedSpecies.cpp src/random.cpp
 src/Molecule.cpp src/MoleculeRGB.cpp src/Chemistry.cpp
 src/OgreApplication.cpp src/OgreFrameListener.cpp)
 
-
 TARGET_LINK_LIBRARIES(lovelab lua dl)
 
 IF(GRAPHICS)

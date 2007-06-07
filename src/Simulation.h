@@ -35,7 +35,7 @@ public:
 	Simulation();
 	virtual ~Simulation();
 
-	void init();
+	virtual void init();
 
 	virtual void addObject(SimulationObject* object);
 	virtual void removeObject(SimulationObject* object);
@@ -51,8 +51,6 @@ public:
 	int setPopulationDynamics(lua_State* luaState);
 
 protected:
-	virtual void drawBeforeObjects(){}
-	
 	list<SimulationObject*> mObjects;
 	list<SimulationObject*> mObjectsToKill;
 

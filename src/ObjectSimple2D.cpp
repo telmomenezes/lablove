@@ -43,6 +43,9 @@ ObjectSimple2D::ObjectSimple2D()
 	mLowAgeLimit = 0;
 	mHighAgeLimit = 0;
 	mMetabolism = 0.0f;
+#if defined(__LOVELAB_WITH_GRAPHICS)
+	mNode = NULL;
+#endif
 }
 
 ObjectSimple2D::ObjectSimple2D(ObjectSimple2D* obj) : SimulationObject(obj)
@@ -67,10 +70,24 @@ ObjectSimple2D::ObjectSimple2D(ObjectSimple2D* obj) : SimulationObject(obj)
 	mRot = 0.0f;
 
 	mColor = MoleculeRGB(obj->mColor);
+#if defined(__LOVELAB_WITH_GRAPHICS)
+	mNode = NULL;
+#endif
 }
 
 ObjectSimple2D::~ObjectSimple2D()
-{	
+{
+#if defined(__LOVELAB_WITH_GRAPHICS)
+	if (mNode != NULL)
+	{
+		SceneManager* sceneMgr = LoveLab::getInstance().getOgreApplication()->getSceneManager();
+		char nodeName[255];
+		sprintf(nodeName, "loveobj%d", mID);
+		MovableObject* obj = mNode->detachObject(nodeName);
+		sceneMgr->getRootSceneNode()->removeAndDestroyChild(nodeName);
+		delete obj;
+	}
+#endif
 }
 
 void ObjectSimple2D::setPos(float x, float y)
@@ -141,12 +158,25 @@ void ObjectSimple2D::setPos(float x, float y)
 
 	mX = x;
 	mY = y;
+
+#if defined(__LOVELAB_WITH_GRAPHICS)
+	if (mNode != NULL)
+	{
+		mNode->setPosition(mX, mY, 0);
+	}
+#endif
 }
 
 void ObjectSimple2D::setSize(float size)
 {
 	mSize = size;
 	mSizeSquared = mSize * mSize;
+#if defined(__LOVELAB_WITH_GRAPHICS)
+	if (mNode != NULL)
+	{
+		mNode->scale(size, size, size);
+	}
+#endif
 }
 
 void ObjectSimple2D::setRot(float rot)

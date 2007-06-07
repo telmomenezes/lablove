@@ -22,8 +22,12 @@
 #include <stdlib.h>
 #include "functions.h"
 
+unsigned long SimulationObject::CURRENT_ID = 0;
+
 SimulationObject::SimulationObject()
 {
+	mID = CURRENT_ID++;
+
 	mDeleted = false;
 	mSelected = false;
 
@@ -35,6 +39,8 @@ SimulationObject::SimulationObject()
 
 SimulationObject::SimulationObject(SimulationObject* obj)
 {
+	mID = CURRENT_ID++;
+
 	mDeleted = false;
 	mSelected = false;
 

@@ -85,17 +85,10 @@ void Simulation::cycle()
 
 	mPopulationDynamics->onCycle();
 
-#ifdef __LOVELAB_WITH_GRAPHICS
-	drawBeforeObjects();
-#endif
-
 	for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
 	{
 		SimulationObject* obj = *iterObj;
 		obj->onCycle();
-#ifdef __LOVELAB_WITH_GRAPHICS
-		obj->draw();
-#endif
 	}
 
 	mSimulationTime++;

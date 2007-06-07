@@ -59,6 +59,8 @@ public:
 	bool init();
 	void start();
 
+	SceneManager* getSceneManager(){return mSceneMgr;}
+
 protected:
 	Root *mRoot;
 	Camera* mCamera;
@@ -77,8 +79,6 @@ protected:
 	void setupResources();
 	void createResourceListener(){}
 	void loadResources();
-
-	void createTriangle(const std::string& strName, const float r);
 };
 
 #endif

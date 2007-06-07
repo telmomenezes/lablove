@@ -48,6 +48,40 @@ SimSimple2D::~SimSimple2D()
 	}
 }
 
+void SimSimple2D::init()
+{
+#ifdef __LOVELAB_WITH_GRAPHICS
+	ManualObject* obj = new Ogre::ManualObject("MeshDecal");
+
+	float deltaAngle = Math::PI / 1.5f;
+	
+	obj->estimateVertexCount(3);
+	obj->estimateIndexCount(3);
+	obj->begin("", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+ 
+ 	for(int i = 0; i < 3; i++)
+	{
+		float x = sinf(i * deltaAngle);
+		float y = cosf(i * deltaAngle);
+		float z = 0;
+
+		obj->position(Ogre::Vector3(x, y, z));
+	}
+
+	obj->index(2);
+	obj->index(1);
+	obj->index(0);
+
+	obj->end();
+
+	MeshPtr mesh = obj->convertToMesh("animat");
+	mesh->load();
+
+	delete obj;
+#endif
+	Simulation::init();
+}
+
 void SimSimple2D::setWorldDimensions(float worldWidth,
 			float worldLength,
 			float cellSide)

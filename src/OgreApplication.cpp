@@ -138,31 +138,10 @@ void OgreApplication::createScene()
 {
 	ParticleSystem *pThrusters;
 
-	// Set ambient light
 	mSceneMgr->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
 
-	// Create a skybox
-	//mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox", 50);
-
-	// Create a light
 	Light* l = mSceneMgr->createLight("MainLight");
-	// Accept default settings: point light, white diffuse, just set position
-	// NB I could attach the light to a SceneNode if I wanted it to move automatically with
-	//  other objects, but I don't
 	l->setPosition(20, 80, 50);
-
-	createTriangle("triang", 10);
-
-	for (unsigned int i = 0; i < 25; i++)
-	{
-		char meshName[255];
-		sprintf(meshName, "tri%d", i);
-		Entity* sphereEntity = mSceneMgr->createEntity(meshName, "triang");
-		SceneNode* sphereNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
-		//sphereEntity->setMaterialName("Examples/Flare");
-		sphereNode->attachObject(sphereEntity);
-		sphereNode->setPosition(rand() % 200, rand() % 200, rand() % 200);
-	}
 }
 
 void OgreApplication::createViewports()
@@ -210,37 +189,6 @@ void OgreApplication::setupResources()
 void OgreApplication::loadResources()
 {
 	ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-}
-
-void OgreApplication::createTriangle(const std::string& name, const float r)
-{
-	ManualObject* obj = new Ogre::ManualObject("MeshDecal");
-
-	float deltaAngle = Math::PI / 1.5f;
-	
-	obj->estimateVertexCount(3);
-	obj->estimateIndexCount(3);
-	obj->begin("", Ogre::RenderOperation::OT_TRIANGLE_LIST);
- 
- 	for(int i = 0; i < 3; i++)
-	{
-		float x = r * sinf(i * deltaAngle);
-		float y = r * cosf(i * deltaAngle);
-		float z = 0;
-
-		obj->position(Ogre::Vector3(x, y, z));
-	}
-
-	obj->index(2);
-	obj->index(1);
-	obj->index(0);
-
-	obj->end();
-
-	MeshPtr mesh = obj->convertToMesh(name);
-	mesh->load();
-
-	delete obj;
 }
 
 #endif

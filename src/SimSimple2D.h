@@ -47,6 +47,8 @@ public:
 	SimSimple2D();
 	virtual ~SimSimple2D();
 
+	virtual void init();
+
 	void setWorldDimensions(float worldWidth,
 			float worldLength,
 			float cellSide);

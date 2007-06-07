@@ -52,10 +52,22 @@ SimulationObject* PlantSimple2D::clone(bool full)
 	return new PlantSimple2D(this);
 }
 
-#ifdef __LOVELAB_WITH_GRAPHICS
+const char PlantSimple2D::mClassName[] = "PlantSimple2D";
+
+Orbit<PlantSimple2D>::MethodType PlantSimple2D::mMethods[] = {
+	{"setSize", &ObjectSimple2D::setSize},
+	{"setColor", &ObjectSimple2D::setColor},
+	{"setInitialEnergy", &SimulationObject::setInitialEnergy},
+	{"setAgeRange", &ObjectSimple2D::setAgeRange},
+	{"setMetabolism", &ObjectSimple2D::setMetabolism},
+        {0,0}
+};
+
+Orbit<PlantSimple2D>::NumberGlobalType PlantSimple2D::mNumberGlobals[] = {{0,0}};
+
+/*	
 void PlantSimple2D::draw()
 {
-/*	
 	SimSimple2D* sim = (SimSimple2D*)(LoveLab::getInstance().getSimulation());
 
 	float x = (int)mX - (int)sim->getViewX();
@@ -75,20 +87,5 @@ void PlantSimple2D::draw()
 	glVertex2f(p2x, p2y);
 	glVertex2f(p1x, p2y);
 	glEnd();
-*/
 }
-#endif
-
-const char PlantSimple2D::mClassName[] = "PlantSimple2D";
-
-Orbit<PlantSimple2D>::MethodType PlantSimple2D::mMethods[] = {
-	{"setSize", &ObjectSimple2D::setSize},
-	{"setColor", &ObjectSimple2D::setColor},
-	{"setInitialEnergy", &SimulationObject::setInitialEnergy},
-	{"setAgeRange", &ObjectSimple2D::setAgeRange},
-	{"setMetabolism", &ObjectSimple2D::setMetabolism},
-        {0,0}
-};
-
-Orbit<PlantSimple2D>::NumberGlobalType PlantSimple2D::mNumberGlobals[] = {{0,0}};
-
+*/

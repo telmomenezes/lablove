@@ -30,15 +30,20 @@ using namespace std;
 class SimulationObject
 {
 public:
+	static unsigned long CURRENT_ID;
+
 	SimulationObject();
 	SimulationObject(SimulationObject* obj);
 	virtual ~SimulationObject();
 
 	virtual SimulationObject* clone(bool full=true) = 0;
-	virtual void init(){}
+#ifdef __LOVELAB_WITH_GRAPHICS
+	virtual void createGraphics(){}
+#endif
+	virtual void initRandom(){}
 
-	virtual void draw(){};
-	
+	unsigned long getID(){return mID;}
+
 	virtual void onCycle(){}
 	virtual bool isFood(){return false;}
 	void setSelected(bool selected){mSelected = selected;}
@@ -62,6 +67,7 @@ public:
 	bool mDeleted;
 
 protected:
+	unsigned long mID;
 	bool mSelected;
         unsigned int mSpeciesID;
 	float mEnergy;

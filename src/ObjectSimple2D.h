@@ -25,6 +25,11 @@
 
 #include "Orbit.h"
 
+#if defined(__LOVELAB_WITH_GRAPHICS)
+#include "Ogre.h"
+using namespace Ogre;
+#endif
+
 class ObjectSimple2D : public SimulationObject
 {
 public:
@@ -78,6 +83,9 @@ protected:
 	unsigned long mMaxAge;
 	float mMetabolism;
 	MoleculeRGB mColor;
+#if defined(__LOVELAB_WITH_GRAPHICS)
+	SceneNode* mNode;
+#endif
 };
 #endif
 

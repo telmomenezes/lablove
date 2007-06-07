@@ -63,10 +63,16 @@ void PopDynGenerations::init()
 
 	while (iterSpecies != mStaticSpecies.end())
 	{
+		(*iterSpecies)->initRandom();
+
 		for (unsigned int i = 0; i < (*iterPop); i++)
 		{
 			SimulationObject* org = (*iterSpecies)->clone();
+			org->initRandom();
 			org->placeRandom();
+#ifdef __LOVELAB_WITH_GRAPHICS
+			org->createGraphics();
+#endif
 			LoveLab::getInstance().getSimulation()->addObject(org);
 			(*iterSpeciesOrgList)->push_back(org);
 		}
@@ -81,13 +87,16 @@ void PopDynGenerations::init()
 	iterSpeciesOrgList = mEvolvingSpeciesOrganismLists.begin();
 	while (iterSpecies != mEvolvingSpecies.end())
 	{
-		(*iterSpecies)->init();
+		(*iterSpecies)->initRandom();
 
 		for (unsigned int i = 0; i < (*iterPop); i++)
 		{
 			SimulationObject* org = (*iterSpecies)->clone(false);
-			org->init();
+			org->initRandom();
 			org->placeRandom();
+#ifdef __LOVELAB_WITH_GRAPHICS
+			org->createGraphics();
+#endif
 			LoveLab::getInstance().getSimulation()->addObject(org);
 			(*iterSpeciesOrgList)->push_back(org);
 		}
@@ -161,6 +170,9 @@ void PopDynGenerations::onCycle()
 				newOrganism = bestOrganism->clone();
 				newOrganism->setEnergy(0.0f);
 				newOrganism->placeRandom();
+#ifdef __LOVELAB_WITH_GRAPHICS
+				newOrganism->createGraphics();
+#endif
 				LoveLab::getInstance().getSimulation()->addObject(newOrganism);
 
 				// Mutate
@@ -196,6 +208,9 @@ void PopDynGenerations::onOrganismDeath(SimulationObject* org)
 
 			SimulationObject* org = (*iterSpecies)->clone();
 			org->placeRandom();
+#ifdef __LOVELAB_WITH_GRAPHICS
+			org->createGraphics();
+#endif
 			LoveLab::getInstance().getSimulation()->addObject(org);
 		}
 

@@ -62,10 +62,16 @@ void PopDynFixedSpecies::init()
 
 	while (iterSpecies != mStaticSpecies.end())
 	{
+		(*iterSpecies)->initRandom();
+
 		for (unsigned int i = 0; i < (*iterPop); i++)
 		{
 			SimulationObject* org = (*iterSpecies)->clone();
+			org->initRandom();
 			org->placeRandom();
+#ifdef __LOVELAB_WITH_GRAPHICS
+			org->createGraphics();
+#endif
 			LoveLab::getInstance().getSimulation()->addObject(org);
 			(*iterSpeciesOrgVec)->push_back(org);
 		}
@@ -80,14 +86,17 @@ void PopDynFixedSpecies::init()
 	iterSpeciesOrgVec = mEvolvingSpeciesOrganismVecs.begin();
 	while (iterSpecies != mEvolvingSpecies.end())
 	{
-		(*iterSpecies)->init();
+		(*iterSpecies)->initRandom();
 
 		for (unsigned int i = 0; i < (*iterPop); i++)
 		{
 			SimulationObject* org = (*iterSpecies)->clone(false);
-			org->init();
+			org->initRandom();
 			org->setEnergy(org->getInitialEnergy());
 			org->placeRandom();
+#ifdef __LOVELAB_WITH_GRAPHICS
+			org->createGraphics();
+#endif
 			LoveLab::getInstance().getSimulation()->addObject(org);
 			(*iterSpeciesOrgVec)->push_back(org);
 		}
@@ -128,6 +137,9 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
 			SimulationObject* org = (*iterSpecies)->clone();
 			org->setEnergy(org->getInitialEnergy());
 			org->placeRandom();
+#ifdef __LOVELAB_WITH_GRAPHICS
+			org->createGraphics();
+#endif
 			LoveLab::getInstance().getSimulation()->addObject(org);
 			return;
 		}
@@ -185,6 +197,9 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
 			newOrganism = bestOrganism->clone();
 			newOrganism->setEnergy(newOrganism->getInitialEnergy());
 			newOrganism->placeRandom();
+#ifdef __LOVELAB_WITH_GRAPHICS
+			newOrganism->createGraphics();
+#endif
 			LoveLab::getInstance().getSimulation()->addObject(newOrganism);
 
 			// Mutate

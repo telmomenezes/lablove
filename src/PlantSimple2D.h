@@ -34,10 +34,6 @@ public:
 
 	virtual bool isFood(){return true;}
 
-#ifdef __LOVELAB_WITH_GRAPHICS
-	virtual void draw();
-#endif
-
 	static const char mClassName[];
         static Orbit<PlantSimple2D>::MethodType mMethods[];
 	static Orbit<PlantSimple2D>::NumberGlobalType mNumberGlobals[];

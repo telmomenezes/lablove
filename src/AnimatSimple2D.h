@@ -32,8 +32,11 @@ public:
 	AnimatSimple2D(AnimatSimple2D* anim, bool full=true);
 	virtual ~AnimatSimple2D();
 	virtual SimulationObject* clone(bool full=true);
-	virtual void init();
+	virtual void initRandom();
 	void initTest();
+#if defined(__LOVELAB_WITH_GRAPHICS)
+	void createGraphics();
+#endif
 
 	void setAlphaObjectsGrid(Grid* grid);
 	void setBetaGrid(Grid* grid);
@@ -58,10 +61,6 @@ public:
 
 	void setGoCost(float cost){mGoCost = cost;}
 	void setRotateCost(float cost){mRotateCost = cost;}
-
-#ifdef __LOVELAB_WITH_GRAPHICS
-	virtual void draw();
-#endif
 
 	bool mActionGo;
 	float mActionGoParam;
