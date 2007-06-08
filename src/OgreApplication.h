@@ -60,6 +60,7 @@ public:
 	void start();
 
 	SceneManager* getSceneManager(){return mSceneMgr;}
+	Camera* getCamera(){return mCamera;}
 
 protected:
 	Root *mRoot;
@@ -71,11 +72,8 @@ protected:
 
 	bool configure();
 	void chooseSceneManager();
-	void createCamera();
 	void createFrameListener();
-	void createScene();
 	void destroyScene(){} 
-	void createViewports();
 	void setupResources();
 	void createResourceListener(){}
 	void loadResources();

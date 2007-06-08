@@ -51,26 +51,33 @@ SimSimple2D::~SimSimple2D()
 void SimSimple2D::init()
 {
 #ifdef __LOVELAB_WITH_GRAPHICS
+	// Create Animat Mesh
+	MaterialPtr material = MaterialManager::getSingleton().create(
+		"animatDefaultMaterial",
+		ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+	material->setAmbient(1.0, 0.1, 0.1);	
+
+
 	ManualObject* obj = new Ogre::ManualObject("MeshDecal");
 
 	float deltaAngle = Math::PI / 1.5f;
 	
 	obj->estimateVertexCount(3);
 	obj->estimateIndexCount(3);
-	obj->begin("", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+	obj->begin("animatDefaultMaterial", Ogre::RenderOperation::OT_TRIANGLE_LIST);
  
  	for(int i = 0; i < 3; i++)
 	{
 		float x = sinf(i * deltaAngle);
-		float y = cosf(i * deltaAngle);
-		float z = 0;
+		float y = 0;
+		float z = cosf(i * deltaAngle);
 
 		obj->position(Ogre::Vector3(x, y, z));
 	}
 
-	obj->index(2);
-	obj->index(1);
 	obj->index(0);
+	obj->index(1);
+	obj->index(2);
 
 	obj->end();
 
@@ -78,7 +85,44 @@ void SimSimple2D::init()
 	mesh->load();
 
 	delete obj;
+
+	// Create plant mesh
+	material = MaterialManager::getSingleton().create(
+		"plantDefaultMaterial",
+		ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+	material->setAmbient(0.1, 1.0, 0.1);
+
+	obj = new Ogre::ManualObject("MeshDecal");
+
+	obj->estimateVertexCount(4);
+	obj->estimateIndexCount(6);
+	obj->begin("plantDefaultMaterial", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+ 
+	obj->position(Ogre::Vector3(-0.5, 0, 0.5));
+	obj->position(Ogre::Vector3(-0.5, 0, -0.5));
+	obj->position(Ogre::Vector3(0.5, 0, -0.5));
+	obj->position(Ogre::Vector3(0.5, 0, 0.5));
+
+	obj->index(0);
+	obj->index(3);
+	obj->index(2);
+	obj->index(2);
+	obj->index(1);
+	obj->index(0);
+
+	obj->end();
+
+	mesh = obj->convertToMesh("plant");
+	mesh->load();
+
+	delete obj;
+
+	// Adjust camera position
+	Camera* camera = LoveLab::getInstance().getOgreApplication()->getCamera();
+	camera->setPosition(Vector3(mWorldWidth / 2, 200, 0));
+	camera->lookAt(Vector3(mWorldWidth / 2, 0, mWorldLength / 3));
 #endif
+
 	Simulation::init();
 }
 

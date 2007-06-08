@@ -52,6 +52,21 @@ SimulationObject* PlantSimple2D::clone(bool full)
 	return new PlantSimple2D(this);
 }
 
+#if defined(__LOVELAB_WITH_GRAPHICS)
+void PlantSimple2D::createGraphics()
+{
+	SceneManager* sceneMgr = LoveLab::getInstance().getOgreApplication()->getSceneManager();
+	char nodeName[255];
+	sprintf(nodeName, "loveobj%d", mID);
+	Entity* animEntity = sceneMgr->createEntity(nodeName, "plant");
+	mNode = sceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
+	//animEntity->setMaterialName("Examples/Flare");
+	mNode->attachObject(animEntity);
+	mNode->setPosition(mX, 0, mY);
+	mNode->scale(mSize, mSize, mSize);
+}
+#endif
+
 const char PlantSimple2D::mClassName[] = "PlantSimple2D";
 
 Orbit<PlantSimple2D>::MethodType PlantSimple2D::mMethods[] = {

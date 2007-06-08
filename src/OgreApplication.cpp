@@ -72,9 +72,24 @@ bool OgreApplication::init()
 		return false;
 	}
 
-	chooseSceneManager();
-	createCamera();
-	createViewports();
+	// Create the SceneManager, in this case a generic one
+	mSceneMgr = mRoot->createSceneManager(ST_GENERIC, "OgreSMInstance");
+
+	mCamera = mSceneMgr->createCamera("PlayerCam");
+
+	// Position it at 500 in Z direction
+	mCamera->setPosition(Vector3(0, 0, 500));
+	// Look back along -Z
+	mCamera->lookAt(Vector3(0, 0, -300));
+	mCamera->setNearClipDistance(5);
+
+	// Create one viewport, entire window
+	Viewport* vp = mWindow->addViewport(mCamera);
+	vp->setBackgroundColour(ColourValue(0,0,0));
+
+	// Alter the camera aspect ratio to match the viewport
+	mCamera->setAspectRatio(
+		Real(vp->getActualWidth()) / Real(vp->getActualHeight()));
 
 	// Set default mipmap level (NB some APIs ignore this)
 	TextureManager::getSingleton().setDefaultNumMipmaps(5);
@@ -84,8 +99,11 @@ bool OgreApplication::init()
 	// Load resources
 	loadResources();
 
-	// Create the scene
-	createScene();
+	// Create the light
+	mSceneMgr->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
+
+	Light* l = mSceneMgr->createLight("MainLight");
+	l->setPosition(20, 80, 50);
 
 	createFrameListener();
 
@@ -110,49 +128,10 @@ bool OgreApplication::configure()
 	}
 }
 
-void OgreApplication::chooseSceneManager()
-{
-	// Create the SceneManager, in this case a generic one
-	mSceneMgr = mRoot->createSceneManager(ST_GENERIC, "OgreSMInstance");
-}
-
-void OgreApplication::createCamera()
-{
-	// Create the camera
-	mCamera = mSceneMgr->createCamera("PlayerCam");
-
-	// Position it at 500 in Z direction
-	mCamera->setPosition(Vector3(0,0,500));
-	// Look back along -Z
-	mCamera->lookAt(Vector3(0,0,-300));
-	mCamera->setNearClipDistance(5);
-}
-
 void OgreApplication::createFrameListener()
 {
 	mFrameListener= new OgreFrameListener(mWindow, mCamera);
 	mRoot->addFrameListener(mFrameListener);
-}
-
-void OgreApplication::createScene()
-{
-	ParticleSystem *pThrusters;
-
-	mSceneMgr->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
-
-	Light* l = mSceneMgr->createLight("MainLight");
-	l->setPosition(20, 80, 50);
-}
-
-void OgreApplication::createViewports()
-{
-	// Create one viewport, entire window
-	Viewport* vp = mWindow->addViewport(mCamera);
-	vp->setBackgroundColour(ColourValue(0,0,0));
-
-	// Alter the camera aspect ratio to match the viewport
-	mCamera->setAspectRatio(
-		Real(vp->getActualWidth()) / Real(vp->getActualHeight()));
 }
 
 void OgreApplication::setupResources()

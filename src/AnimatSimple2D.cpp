@@ -182,7 +182,7 @@ void AnimatSimple2D::createGraphics()
 	mNode = sceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
 	//animEntity->setMaterialName("Examples/Flare");
 	mNode->attachObject(animEntity);
-	mNode->setPosition(mX, mY, 0);
+	mNode->setPosition(mX, 0, mY);
 	mNode->scale(mSize, mSize, mSize);
 }
 #endif

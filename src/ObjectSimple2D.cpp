@@ -162,7 +162,7 @@ void ObjectSimple2D::setPos(float x, float y)
 #if defined(__LOVELAB_WITH_GRAPHICS)
 	if (mNode != NULL)
 	{
-		mNode->setPosition(mX, mY, 0);
+		mNode->setPosition(mX, 0, mY);
 	}
 #endif
 }
