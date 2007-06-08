@@ -85,7 +85,7 @@ bool OgreApplication::init()
 
 	// Create one viewport, entire window
 	Viewport* vp = mWindow->addViewport(mCamera);
-	vp->setBackgroundColour(ColourValue(0,0,0));
+	vp->setBackgroundColour(ColourValue(0.8, 0.8, 0.8));
 
 	// Alter the camera aspect ratio to match the viewport
 	mCamera->setAspectRatio(
@@ -119,7 +119,7 @@ bool OgreApplication::configure()
 	{
 		// If returned true, user clicked OK so initialise
 		// Here we choose to let the system create a default rendering window by passing 'true'
-		mWindow = mRoot->initialise(true);
+		mWindow = mRoot->initialise(true, "LOVE Lab");
 		return true;
 	}
 	else

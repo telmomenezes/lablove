@@ -65,15 +65,19 @@ void SimSimple2D::init()
 	obj->estimateVertexCount(3);
 	obj->estimateIndexCount(3);
 	obj->begin("animatDefaultMaterial", Ogre::RenderOperation::OT_TRIANGLE_LIST);
- 
- 	for(int i = 0; i < 3; i++)
-	{
-		float x = sinf(i * deltaAngle);
-		float y = 0;
-		float z = cosf(i * deltaAngle);
 
-		obj->position(Ogre::Vector3(x, y, z));
-	}
+	float a = 0;
+	float x = sinf(a);
+	float z = cosf(a);
+	obj->position(Ogre::Vector3(x, 0, z));
+	a = Math::PI - 0.5f;
+	x = sinf(a);
+	z = cosf(a);
+	obj->position(Ogre::Vector3(x, 0, z));
+	a = Math::PI + 0.5f;
+	x = sinf(a);
+	z = cosf(a);
+	obj->position(Ogre::Vector3(x, 0, z));
 
 	obj->index(0);
 	obj->index(1);

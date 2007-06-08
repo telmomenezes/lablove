@@ -47,7 +47,7 @@ OgreFrameListener::OgreFrameListener(RenderWindow* win,
 	windowHndStr << windowHnd;
 	pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
 
-	mInputManager = InputManager::createInputSystem( pl );
+	mInputManager = InputManager::createInputSystem(pl);
 
 	//Create all devices (We only catch joystick exceptions here, as, most people have Key/Mouse)
 	mKeyboard = static_cast<Keyboard*>(mInputManager->createInputObject( OISKeyboard, bufferedKeys ));

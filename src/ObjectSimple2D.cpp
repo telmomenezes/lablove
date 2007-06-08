@@ -181,6 +181,13 @@ void ObjectSimple2D::setSize(float size)
 
 void ObjectSimple2D::setRot(float rot)
 {
+#if defined(__LOVELAB_WITH_GRAPHICS)
+	if (mNode != NULL)
+	{
+		mNode->yaw(Radian(mRot - rot));
+	}
+#endif
+
 	mRot = normalizeAngle(rot);
 }
 
@@ -192,7 +199,7 @@ void ObjectSimple2D::placeRandom()
 	unsigned int worldLength = (unsigned int)sim->getWorldLength();
 
 	setPos(rand() % worldWidth, rand() % worldLength);
-	setRot(rand() % 360);
+	setRot(randomUniformProbability() * M_PI * 2);
 }
 
 void ObjectSimple2D::onCycle()

@@ -183,6 +183,7 @@ void AnimatSimple2D::createGraphics()
 	//animEntity->setMaterialName("Examples/Flare");
 	mNode->attachObject(animEntity);
 	mNode->setPosition(mX, 0, mY);
+	mNode->yaw(Radian(mRot));
 	mNode->scale(mSize, mSize, mSize);
 }
 #endif
