@@ -18,7 +18,7 @@
  */
 
 #include "SimulationObject.h"
-#include "LoveLab.h"
+#include "Lab.h"
 #include <stdlib.h>
 #include "functions.h"
 
@@ -34,7 +34,7 @@ SimulationObject::SimulationObject()
         mSpeciesID = 0;
 	mEnergy = 0;
 	mInitialEnergy = 0;
-	mCreationTime = LoveLab::getInstance().getSimulation()->time();
+	mCreationTime = Lab::getInstance().getSimulation()->time();
 }
 
 SimulationObject::SimulationObject(SimulationObject* obj)
@@ -47,7 +47,7 @@ SimulationObject::SimulationObject(SimulationObject* obj)
         mEnergy = obj->mEnergy;
 	mInitialEnergy = obj->mInitialEnergy;
         mSpeciesID = obj->mSpeciesID;
-	mCreationTime = LoveLab::getInstance().getSimulation()->time();
+	mCreationTime = Lab::getInstance().getSimulation()->time();
 }
 
 SimulationObject::~SimulationObject()

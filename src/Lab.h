@@ -17,8 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_LOVELAB_H)
-#define __INCLUDE_LOVELAB_H
+#if !defined(__INCLUDE_LAB_H)
+#define __INCLUDE_LAB_H
 
 #include "Simulation.h"
 #include "InputHandler.h"
@@ -32,13 +32,13 @@ using namespace std;
 #include "OgreApplication.h"
 #endif
 
-class LoveLab : public InputHandler
+class Lab : public InputHandler
 {
 public:
-	LoveLab();
-	virtual ~LoveLab();
+	Lab();
+	virtual ~Lab();
 
-	static LoveLab& getInstance();
+	static Lab& getInstance();
 
 	void create();
 	void setSimulation(Simulation* simulation){mSimulation = simulation;}
@@ -58,16 +58,16 @@ public:
 #endif
 
 	static const char mClassName[];
-        static Orbit<LoveLab>::MethodType mMethods[];
-	static Orbit<LoveLab>::NumberGlobalType mNumberGlobals[];
+        static Orbit<Lab>::MethodType mMethods[];
+	static Orbit<Lab>::NumberGlobalType mNumberGlobals[];
 
-        LoveLab(lua_State* luaState);
+        Lab(lua_State* luaState);
         int create(lua_State* luaState);
 	int setSimulation(lua_State* luaState);
 	int setSeedIndex(lua_State* luaState);
 
 private:
-	static LoveLab* mLove;
+	static Lab* mLove;
 	Simulation* mSimulation;
 	bool mStop;
 	

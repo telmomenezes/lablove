@@ -18,7 +18,7 @@
  */
 
 #include "ObjectSimple2D.h"
-#include "LoveLab.h"
+#include "Lab.h"
 #include "SimSimple2D.h"
 #include <stdlib.h>
 #include "functions.h"
@@ -80,7 +80,7 @@ ObjectSimple2D::~ObjectSimple2D()
 #if defined(__LOVELAB_WITH_GRAPHICS)
 	if (mNode != NULL)
 	{
-		SceneManager* sceneMgr = LoveLab::getInstance().getOgreApplication()->getSceneManager();
+		SceneManager* sceneMgr = Lab::getInstance().getOgreApplication()->getSceneManager();
 		char nodeName[255];
 		sprintf(nodeName, "loveobj%d", mID);
 		MovableObject* obj = mNode->detachObject(nodeName);
@@ -92,7 +92,7 @@ ObjectSimple2D::~ObjectSimple2D()
 
 void ObjectSimple2D::setPos(float x, float y)
 {
-	SimSimple2D* sim = (SimSimple2D*)(LoveLab::getInstance().getSimulation());
+	SimSimple2D* sim = (SimSimple2D*)(Lab::getInstance().getSimulation());
 
 	if ((x < 0)
 		|| (y < 0)
@@ -193,7 +193,7 @@ void ObjectSimple2D::setRot(float rot)
 
 void ObjectSimple2D::placeRandom()
 {
-	SimSimple2D* sim = (SimSimple2D*)LoveLab::getInstance().getSimulation();
+	SimSimple2D* sim = (SimSimple2D*)Lab::getInstance().getSimulation();
 
 	unsigned int worldWidth = (unsigned int)sim->getWorldWidth();
 	unsigned int worldLength = (unsigned int)sim->getWorldLength();
@@ -208,14 +208,14 @@ void ObjectSimple2D::onCycle()
 
 	if (mEnergy < 0)
 	{
-		LoveLab::getInstance().getSimulation()->killOrganism(this);
+		Lab::getInstance().getSimulation()->killOrganism(this);
 	}
 
 	if (mMaxAge > 0)
 	{
-		if (LoveLab::getInstance().getSimulation()->time() - mCreationTime >= mMaxAge)
+		if (Lab::getInstance().getSimulation()->time() - mCreationTime >= mMaxAge)
 		{
-			LoveLab::getInstance().getSimulation()->killOrganism(this);
+			Lab::getInstance().getSimulation()->killOrganism(this);
 		}
 	}
 }
@@ -250,7 +250,7 @@ int ObjectSimple2D::setMetabolism(lua_State* luaState)
 
 int ObjectSimple2D::setColor(lua_State* luaState)
 {
-	MoleculeRGB* color = (MoleculeRGB*)Orbit<LoveLab>::pointer(luaState, 1);
+	MoleculeRGB* color = (MoleculeRGB*)Orbit<Lab>::pointer(luaState, 1);
         setColor(color);
         return 0;
 }

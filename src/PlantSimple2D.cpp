@@ -18,7 +18,7 @@
  */
 
 #include "PlantSimple2D.h"
-#include "LoveLab.h"
+#include "Lab.h"
 #include "math.h"
 #include "defines.h"
 #include "SimSimple2D.h"
@@ -55,7 +55,7 @@ SimulationObject* PlantSimple2D::clone(bool full)
 #if defined(__LOVELAB_WITH_GRAPHICS)
 void PlantSimple2D::createGraphics()
 {
-	SceneManager* sceneMgr = LoveLab::getInstance().getOgreApplication()->getSceneManager();
+	SceneManager* sceneMgr = Lab::getInstance().getOgreApplication()->getSceneManager();
 	char nodeName[255];
 	sprintf(nodeName, "loveobj%d", mID);
 	Entity* animEntity = sceneMgr->createEntity(nodeName, "plant");
@@ -84,7 +84,7 @@ Orbit<PlantSimple2D>::NumberGlobalType PlantSimple2D::mNumberGlobals[] = {{0,0}}
 /*	
 void PlantSimple2D::draw()
 {
-	SimSimple2D* sim = (SimSimple2D*)(LoveLab::getInstance().getSimulation());
+	SimSimple2D* sim = (SimSimple2D*)(Lab::getInstance().getSimulation());
 
 	float x = (int)mX - (int)sim->getViewX();
 	float y = (int)mY - (int)sim->getViewY();

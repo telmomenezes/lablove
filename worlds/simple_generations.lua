@@ -19,7 +19,7 @@ viewAngle = 100.0
 
 ----------------------------------------------
 
-loveLab = LoveLab()
+loveLab = Lab()
 loveLab:create()
 loveLab:setSeedIndex(1)
 

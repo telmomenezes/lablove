@@ -18,7 +18,7 @@
  */
 
 #include "PopDynGenerations.h"
-#include "LoveLab.h"
+#include "Lab.h"
 #include "SimulationObject.h"
 #include "functions.h"
 #include "random.h"
@@ -73,7 +73,7 @@ void PopDynGenerations::init()
 #ifdef __LOVELAB_WITH_GRAPHICS
 			org->createGraphics();
 #endif
-			LoveLab::getInstance().getSimulation()->addObject(org);
+			Lab::getInstance().getSimulation()->addObject(org);
 			(*iterSpeciesOrgList)->push_back(org);
 		}
 
@@ -97,7 +97,7 @@ void PopDynGenerations::init()
 #ifdef __LOVELAB_WITH_GRAPHICS
 			org->createGraphics();
 #endif
-			LoveLab::getInstance().getSimulation()->addObject(org);
+			Lab::getInstance().getSimulation()->addObject(org);
 			(*iterSpeciesOrgList)->push_back(org);
 		}
 
@@ -109,8 +109,8 @@ void PopDynGenerations::init()
 
 void PopDynGenerations::onCycle()
 {
-	if (((LoveLab::getInstance().getSimulation()->time() % mGenerationTime) == 0)
-		&& (LoveLab::getInstance().getSimulation()->time() != 0))
+	if (((Lab::getInstance().getSimulation()->time() % mGenerationTime) == 0)
+		&& (Lab::getInstance().getSimulation()->time() != 0))
 	{
 		list<SimulationObject*>::iterator iterSpecies = mEvolvingSpecies.begin();
 		list<long>::iterator iterPop = mEvolvingSpeciesPopulations.begin();
@@ -173,7 +173,7 @@ void PopDynGenerations::onCycle()
 #ifdef __LOVELAB_WITH_GRAPHICS
 				newOrganism->createGraphics();
 #endif
-				LoveLab::getInstance().getSimulation()->addObject(newOrganism);
+				Lab::getInstance().getSimulation()->addObject(newOrganism);
 
 				// Mutate
 				newOrganism->mutate();
@@ -186,7 +186,7 @@ void PopDynGenerations::onCycle()
 			{
 				SimulationObject* org = (*iterSpeciesOrgList)->front();
 				(*iterSpeciesOrgList)->pop_front();
-				LoveLab::getInstance().getSimulation()->removeObject(org);
+				Lab::getInstance().getSimulation()->removeObject(org);
 			}
 
 			iterSpecies++;
@@ -204,14 +204,14 @@ void PopDynGenerations::onOrganismDeath(SimulationObject* org)
 	{
 		if (org->getSpeciesID() == (*iterSpecies)->getSpeciesID())
 		{
-			LoveLab::getInstance().getSimulation()->removeObject(org);
+			Lab::getInstance().getSimulation()->removeObject(org);
 
 			SimulationObject* org = (*iterSpecies)->clone();
 			org->placeRandom();
 #ifdef __LOVELAB_WITH_GRAPHICS
 			org->createGraphics();
 #endif
-			LoveLab::getInstance().getSimulation()->addObject(org);
+			Lab::getInstance().getSimulation()->addObject(org);
 		}
 
 		iterSpecies++;

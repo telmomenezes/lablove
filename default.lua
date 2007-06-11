@@ -27,7 +27,7 @@ initialConnections = 10
 
 ----------------------------------------------
 
-loveLab = LoveLab()
+loveLab = Lab()
 loveLab:create()
 loveLab:setSeedIndex(0)
 

@@ -18,7 +18,7 @@
  */
 
 #include "SimSimple2D.h"
-#include "LoveLab.h"
+#include "Lab.h"
 #include "ObjectSimple2D.h"
 #include <math.h>
 #include "functions.h"
@@ -122,7 +122,7 @@ void SimSimple2D::init()
 	delete obj;
 
 	// Adjust camera position
-	Camera* camera = LoveLab::getInstance().getOgreApplication()->getCamera();
+	Camera* camera = Lab::getInstance().getOgreApplication()->getCamera();
 	camera->setPosition(Vector3(mWorldWidth / 2, 200, 0));
 	camera->lookAt(Vector3(mWorldWidth / 2, 0, mWorldLength / 3));
 #endif
@@ -196,19 +196,19 @@ void SimSimple2D::drawBeforeObjects()
 		glBegin(GL_LINES);
 
 		unsigned int division = cellSide - (mViewX % cellSide);
-		while (division < LoveLab::getInstance().getScreenWidth())
+		while (division < Lab::getInstance().getScreenWidth())
 		{
 			glVertex2f(division, 0);
-			glVertex2f(division, LoveLab::getInstance().getScreenHeight());
+			glVertex2f(division, Lab::getInstance().getScreenHeight());
 
 			division += cellSide;
 		}
 
 		division = cellSide - (mViewY % cellSide);
-		while (division < LoveLab::getInstance().getScreenHeight())
+		while (division < Lab::getInstance().getScreenHeight())
 		{
 			glVertex2f(0, division);
-			glVertex2f(LoveLab::getInstance().getScreenWidth(), division);
+			glVertex2f(Lab::getInstance().getScreenWidth(), division);
 
 			division += cellSide;
 		}

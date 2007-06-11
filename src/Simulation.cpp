@@ -18,7 +18,7 @@
  */
 
 #include "Simulation.h"
-#include "LoveLab.h"
+#include "Lab.h"
 #include <math.h>
 #include "functions.h"
 #include "PopulationDynamics.h"
@@ -43,7 +43,7 @@ Simulation::~Simulation()
 void Simulation::init()
 {
 	mPopulationDynamics->init();
-	LoveLab::getInstance().addInputHandler(this);
+	Lab::getInstance().addInputHandler(this);
 }
 
 void Simulation::addObject(SimulationObject* object)
@@ -121,7 +121,7 @@ void Simulation::killOrganism(SimulationObject* org)
 
 int Simulation::setPopulationDynamics(lua_State *luaState)
 {
-        PopulationDynamics* popDyn = (PopulationDynamics*)Orbit<LoveLab>::pointer(luaState, 1);
+        PopulationDynamics* popDyn = (PopulationDynamics*)Orbit<Lab>::pointer(luaState, 1);
         setPopulationDynamics(popDyn);
         return 0;
 }

@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "LoveLab.h"
+#include "Lab.h"
 #include "SimSimple2D.h"
 #include "PlantSimple2D.h"
 #include "AnimatSimple2D.h"
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 	luaopen_math(luaState);
 	luaopen_debug(luaState);
 	
-	Orbit<LoveLab>::orbitRegister(luaState);
+	Orbit<Lab>::orbitRegister(luaState);
 	Orbit<SimSimple2D>::orbitRegister(luaState);
 	Orbit<PlantSimple2D>::orbitRegister(luaState);
 	Orbit<AnimatSimple2D>::orbitRegister(luaState);
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	LoveLab::getInstance().run();
+	Lab::getInstance().run();
 
 	lua_close(luaState);
 

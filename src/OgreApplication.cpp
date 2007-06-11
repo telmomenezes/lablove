@@ -20,7 +20,7 @@
 #ifdef __LOVELAB_WITH_GRAPHICS
 
 #include "OgreApplication.h"
-#include "LoveLab.h"
+#include "Lab.h"
 
 using namespace Ogre;
 
@@ -277,7 +277,7 @@ bool OgreApplication::frameStarted(const FrameEvent& evt)
 		return false;
 	}
 
-	LoveLab::getInstance().beforeCycle(evt.timeSinceLastFrame);
+	Lab::getInstance().beforeCycle(evt.timeSinceLastFrame);
 
 	mKeyboard->capture();
 	mMouse->capture();
@@ -286,7 +286,7 @@ bool OgreApplication::frameStarted(const FrameEvent& evt)
 		mJoy->capture();
 	}
 
-	LoveLab::getInstance().cycle();
+	Lab::getInstance().cycle();
 
 	return true;
 }

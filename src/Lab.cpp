@@ -17,13 +17,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "LoveLab.h"
+#include "Lab.h"
 #include "functions.h"
 #include "random.h"
 
-LoveLab* LoveLab::mLove = NULL;
+Lab* Lab::mLove = NULL;
 
-LoveLab::LoveLab()
+Lab::Lab()
 {
 	mStop = false;
 #ifdef __LOVELAB_WITH_GRAPHICS
@@ -37,7 +37,7 @@ LoveLab::LoveLab()
 #endif
 }
 
-LoveLab::LoveLab(lua_State* luaState)
+Lab::Lab(lua_State* luaState)
 {
 	mStop = false;
 #ifdef __LOVELAB_WITH_GRAPHICS
@@ -45,7 +45,7 @@ LoveLab::LoveLab(lua_State* luaState)
 #endif
 }
 
-LoveLab::~LoveLab()
+Lab::~Lab()
 {
 #ifdef __LOVELAB_WITH_GRAPHICS
 	if (mOgreApp != NULL)
@@ -56,23 +56,23 @@ LoveLab::~LoveLab()
 #endif
 }
 
-void LoveLab::create()
+void Lab::create()
 {
 	mLove = this;
 	mLove->addInputHandler(this);
 }
 
-LoveLab& LoveLab::getInstance()
+Lab& Lab::getInstance()
 {	
 	return *mLove;
 }
 
-void LoveLab::setSeedIndex(unsigned int index)
+void Lab::setSeedIndex(unsigned int index)
 {
 	randomSeedIndex(index);
 }
 
-void LoveLab::run()
+void Lab::run()
 {
 #ifdef __LOVELAB_WITH_GRAPHICS
 	mOgreApp = new OgreApplication();
@@ -105,7 +105,7 @@ void LoveLab::run()
 #endif
 }
 
-void LoveLab::cycle()
+void Lab::cycle()
 {
 	mSimulation->cycle();
 
@@ -156,18 +156,18 @@ void LoveLab::cycle()
 #endif
 }
 
-void LoveLab::addInputHandler(InputHandler* handler)
+void Lab::addInputHandler(InputHandler* handler)
 {
 	mHandlersList.push_front(handler);
 }
 
-void LoveLab::removeInputHandler()
+void Lab::removeInputHandler()
 {
 	mHandlersList.pop_front();
 }
 
 #ifdef __LOVELAB_WITH_GRAPHICS
-bool LoveLab::onKeyDown(int key)
+bool Lab::onKeyDown(int key)
 {
 	switch (key)
 	{
@@ -206,7 +206,7 @@ bool LoveLab::onKeyDown(int key)
 	return false;
 }
 
-bool LoveLab::onMouseMove(int x, int y)
+bool Lab::onMouseMove(int x, int y)
 {
 	/*if (button pressed)
 	{
@@ -222,7 +222,7 @@ bool LoveLab::onMouseMove(int x, int y)
 	return true;
 }
 
-void LoveLab::beforeCycle(float timeSinceLastCycle)
+void Lab::beforeCycle(float timeSinceLastCycle)
 {
 	if (timeSinceLastCycle == 0)
 	{
@@ -241,31 +241,31 @@ void LoveLab::beforeCycle(float timeSinceLastCycle)
 }
 #endif
 
-const char LoveLab::mClassName[] = "LoveLab";
+const char Lab::mClassName[] = "Lab";
 
-Orbit<LoveLab>::MethodType LoveLab::mMethods[] = {
-        {"create", &LoveLab::create},
-	{"setSimulation", &LoveLab::setSimulation},
-        {"setSeedIndex", &LoveLab::setSeedIndex},
+Orbit<Lab>::MethodType Lab::mMethods[] = {
+        {"create", &Lab::create},
+	{"setSimulation", &Lab::setSimulation},
+        {"setSeedIndex", &Lab::setSeedIndex},
         {0,0}
 };
 
-Orbit<LoveLab>::NumberGlobalType LoveLab::mNumberGlobals[] = {{0,0}};
+Orbit<Lab>::NumberGlobalType Lab::mNumberGlobals[] = {{0,0}};
 
-int LoveLab::create(lua_State* luaState)
+int Lab::create(lua_State* luaState)
 {
         create();
         return 0;
 }
 
-int LoveLab::setSimulation(lua_State* luaState)
+int Lab::setSimulation(lua_State* luaState)
 {
-        Simulation* sim = (Simulation*)Orbit<LoveLab>::pointer(luaState, 1);
+        Simulation* sim = (Simulation*)Orbit<Lab>::pointer(luaState, 1);
         setSimulation(sim);
         return 0;
 }
 
-int LoveLab::setSeedIndex(lua_State* luaState)
+int Lab::setSeedIndex(lua_State* luaState)
 {
         int index = luaL_checkint(luaState, 1);
         setSeedIndex(index);
