@@ -28,6 +28,12 @@ LoveLab::LoveLab()
 	mStop = false;
 #ifdef __LOVELAB_WITH_GRAPHICS
 	mOgreApp = NULL;
+	mTranslateVector = Vector3::ZERO;
+	mNumScreenShots = 0;
+	mMoveScale = 0.0f;
+	mRotScale = 0.0f;
+	mMoveSpeed = 100;
+	mRotateSpeed = 36;
 #endif
 }
 
@@ -53,7 +59,7 @@ LoveLab::~LoveLab()
 void LoveLab::create()
 {
 	mLove = this;
-	mLove->addKeyboardMouseHandler(this);
+	mLove->addInputHandler(this);
 }
 
 LoveLab& LoveLab::getInstance()
@@ -104,11 +110,16 @@ void LoveLab::cycle()
 	mSimulation->cycle();
 
 #ifdef __LOVELAB_WITH_GRAPHICS
+	// Update camera position
+ 	mOgreApp->getCamera()->yaw(mRotX);
+	mOgreApp->getCamera()->pitch(mRotY);
+	mOgreApp->getCamera()->moveRelative(mTranslateVector);
+
 /*
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
-		list<KeyboardMouseHandler*>::iterator iterHandler = mHandlersList.begin();
+		list<InputHandler*>::iterator iterHandler = mHandlersList.begin();
 		bool handled = false;
 		while ((!handled) && (iterHandler != mHandlersList.end()))
 		{
@@ -145,30 +156,89 @@ void LoveLab::cycle()
 #endif
 }
 
-void LoveLab::addKeyboardMouseHandler(KeyboardMouseHandler* handler)
+void LoveLab::addInputHandler(InputHandler* handler)
 {
 	mHandlersList.push_front(handler);
 }
 
-void LoveLab::removeKeyboardMouseHandler()
+void LoveLab::removeInputHandler()
 {
 	mHandlersList.pop_front();
 }
 
 #ifdef __LOVELAB_WITH_GRAPHICS
-/*
-bool LoveLab::onKeyUp(int key)
+bool LoveLab::onKeyDown(int key)
 {
 	switch (key)
 	{
-	case SDLK_ESCAPE:
+	case KC_A:
+		mTranslateVector.x = -mMoveScale;	// Move camera left
+		return true;
+	case KC_D:
+		mTranslateVector.x = mMoveScale;	// Move camera RIGHT
+		return true;
+	case KC_UP:
+	case KC_W:
+		mTranslateVector.z = -mMoveScale;	// Move camera forward
+		return true;
+	case KC_DOWN:
+	case KC_S:
+		mTranslateVector.z = mMoveScale;	// Move camera backward
+		return true;
+	case KC_PGUP:
+		mTranslateVector.y = mMoveScale;	// Move camera up
+		return true;
+	case KC_PGDOWN:
+		mTranslateVector.y = -mMoveScale;	// Move camera down
+		return true;
+	case KC_RIGHT:
+		mOgreApp->getCamera()->yaw(-mRotScale);
+		return true;
+	case KC_LEFT:
+		mOgreApp->getCamera()->yaw(mRotScale);
+		return true;
+	case KC_ESCAPE:
+	case KC_Q:
 		mStop = true;
 		return true;
-	default:
-		return false;
 	}
+
+	return false;
 }
-*/
+
+bool LoveLab::onMouseMove(int x, int y)
+{
+	/*if (button pressed)
+	{
+		mTranslateVector.x += ms.X.rel * 0.13;
+		mTranslateVector.y -= ms.Y.rel * 0.13;
+
+		return true;
+	}*/
+	
+	mRotX = Degree(-x * 0.13);
+	mRotY = Degree(-y * 0.13);
+
+	return true;
+}
+
+void LoveLab::beforeCycle(float timeSinceLastCycle)
+{
+	if (timeSinceLastCycle == 0)
+	{
+		mMoveScale = 1;
+		mRotScale = 0.1;
+	}
+	else
+	{
+		mMoveScale = mMoveSpeed * timeSinceLastCycle;
+		mRotScale = mRotateSpeed * timeSinceLastCycle;
+	}
+
+	mRotX = 0;
+	mRotY = 0;
+	mTranslateVector = Ogre::Vector3::ZERO;
+}
 #endif
 
 const char LoveLab::mClassName[] = "LoveLab";

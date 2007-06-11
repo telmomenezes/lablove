@@ -17,10 +17,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_KEYBOARD_MOUSE_HANDLER_H)
-#define __INCLUDE_KEYBOARD_MOUSE_HANDLER_H
+#if !defined(__INCLUDE_INPUT_HANDLER_H)
+#define __INCLUDE_INPUT_HANDLER_H
 
-class KeyboardMouseHandler
+class InputHandler
 {
 public:
 	virtual bool onKeyDown(int keycode){return false;}

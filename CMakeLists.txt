@@ -19,8 +19,7 @@ src/PlantSimple2D.cpp src/AnimatSimple2D.cpp src/functions.cpp
 src/Gridbrain.cpp src/Grid.cpp src/GridbrainComponent
 src/GridbrainComponentSet.cpp src/PopulationDynamics.cpp
 src/PopDynGenerations.cpp src/PopDynFixedSpecies.cpp src/random.cpp
-src/Molecule.cpp src/MoleculeRGB.cpp src/Chemistry.cpp
-src/OgreApplication.cpp src/OgreFrameListener.cpp)
+src/Molecule.cpp src/MoleculeRGB.cpp src/Chemistry.cpp src/OgreApplication.cpp)
 
 TARGET_LINK_LIBRARIES(lovelab lua dl)
 

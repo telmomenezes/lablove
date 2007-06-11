@@ -22,10 +22,16 @@
 
 #include "Ogre.h"
 #include "OgreConfigFile.h"
-#include "OgreFrameListener.h"
+#include "OgreStringConverter.h"
+#include "OgreException.h"
+
+#define OIS_DYNAMIC_LIB
+#include <OIS/OIS.h>
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
 #include <CoreFoundation/CoreFoundation.h>
+
+
 
 std::string macBundlePath()
 {
@@ -49,8 +55,10 @@ std::string macBundlePath()
 #endif
 
 using namespace Ogre;
+using namespace OIS;
 
-class OgreApplication
+class OgreApplication : public FrameListener, public WindowEventListener,
+			public KeyListener, public MouseListener
 {
 public:
 	OgreApplication();
@@ -62,21 +70,42 @@ public:
 	SceneManager* getSceneManager(){return mSceneMgr;}
 	Camera* getCamera(){return mCamera;}
 
+	virtual void windowResized(RenderWindow* rw);
+	virtual void windowClosed(RenderWindow* rw);
+
+	bool frameStarted(const FrameEvent& evt);
+	bool frameEnded(const FrameEvent& evt);
+
+	virtual bool keyPressed(const KeyEvent &arg);
+	virtual bool keyReleased(const KeyEvent &arg);
+	virtual bool mouseMoved(const MouseEvent &arg);
+	virtual bool mousePressed(const MouseEvent &arg, MouseButtonID id);
+	virtual bool mouseReleased(const MouseEvent &arg, MouseButtonID id);
+
 protected:
+	bool configure();
+	void chooseSceneManager();
+	void destroyScene(){} 
+	void setupResources();
+	void initFrameListener();
+	void updateStats();
+
 	Root *mRoot;
 	Camera* mCamera;
 	SceneManager* mSceneMgr;
-	OgreFrameListener* mFrameListener;
 	RenderWindow* mWindow;
 	Ogre::String mResourcePath;
 
-	bool configure();
-	void chooseSceneManager();
-	void createFrameListener();
-	void destroyScene(){} 
-	void setupResources();
-	void createResourceListener(){}
-	void loadResources();
+	bool mStop;
+
+	int mSceneDetailIndex;
+	Overlay* mDebugOverlay;
+
+	//OIS Input devices
+	InputManager* mInputManager;
+	Mouse* mMouse;
+	Keyboard* mKeyboard;
+	JoyStick* mJoy;
 };
 
 #endif

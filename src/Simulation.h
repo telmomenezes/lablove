@@ -22,14 +22,14 @@
 
 #include "SimulationObject.h"
 #include "PopulationDynamics.h"
-#include "KeyboardMouseHandler.h"
+#include "InputHandler.h"
 
 #include <list>
 using namespace std;
 
 #include "Orbit.h"
 
-class Simulation : public KeyboardMouseHandler
+class Simulation : public InputHandler
 {
 public:
 	Simulation();

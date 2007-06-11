@@ -43,7 +43,7 @@ Simulation::~Simulation()
 void Simulation::init()
 {
 	mPopulationDynamics->init();
-	LoveLab::getInstance().addKeyboardMouseHandler(this);
+	LoveLab::getInstance().addInputHandler(this);
 }
 
 void Simulation::addObject(SimulationObject* object)

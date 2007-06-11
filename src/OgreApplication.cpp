@@ -20,26 +20,27 @@
 #ifdef __LOVELAB_WITH_GRAPHICS
 
 #include "OgreApplication.h"
+#include "LoveLab.h"
 
 using namespace Ogre;
 
 OgreApplication::OgreApplication()
 {
-	mFrameListener = 0;
 	mRoot = 0;
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
 	mResourcePath = macBundlePath() + "/Contents/Resources/";
 #else
 	mResourcePath = "";
 #endif
+	mStop = false;
 }
 
 OgreApplication::~OgreApplication()
 {
-	if (mFrameListener)
-	{
-		delete mFrameListener;
-	}
+	//Remove ourself as a Window listener
+	WindowEventUtilities::removeWindowEventListener(mWindow, this);
+	windowClosed(mWindow);
+
 	if (mRoot)
 	{
 		delete mRoot;
@@ -61,7 +62,8 @@ bool OgreApplication::init()
 #endif
 		
 	mRoot = new Root(pluginsPath, 
-		mResourcePath + "ogre.cfg", mResourcePath + "Ogre.log");
+				mResourcePath + "ogre.cfg",
+				mResourcePath + "Ogre.log");
 
 	setupResources();
 
@@ -77,15 +79,13 @@ bool OgreApplication::init()
 
 	mCamera = mSceneMgr->createCamera("PlayerCam");
 
-	// Position it at 500 in Z direction
 	mCamera->setPosition(Vector3(0, 0, 500));
-	// Look back along -Z
 	mCamera->lookAt(Vector3(0, 0, -300));
 	mCamera->setNearClipDistance(5);
 
 	// Create one viewport, entire window
 	Viewport* vp = mWindow->addViewport(mCamera);
-	vp->setBackgroundColour(ColourValue(0.8, 0.8, 0.8));
+	vp->setBackgroundColour(ColourValue(1.0, 1.0, 1.0));
 
 	// Alter the camera aspect ratio to match the viewport
 	mCamera->setAspectRatio(
@@ -94,10 +94,8 @@ bool OgreApplication::init()
 	// Set default mipmap level (NB some APIs ignore this)
 	TextureManager::getSingleton().setDefaultNumMipmaps(5);
 
-	// Create any resource listeners (for loading screens)
-	createResourceListener();
 	// Load resources
-	loadResources();
+	ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
 	// Create the light
 	mSceneMgr->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
@@ -105,7 +103,7 @@ bool OgreApplication::init()
 	Light* l = mSceneMgr->createLight("MainLight");
 	l->setPosition(20, 80, 50);
 
-	createFrameListener();
+	initFrameListener();
 
 	return true;
 }
@@ -119,19 +117,13 @@ bool OgreApplication::configure()
 	{
 		// If returned true, user clicked OK so initialise
 		// Here we choose to let the system create a default rendering window by passing 'true'
-		mWindow = mRoot->initialise(true, "LOVE Lab");
+		mWindow = mRoot->initialise(true, "LabLOVE");
 		return true;
 	}
 	else
 	{
 		return false;
 	}
-}
-
-void OgreApplication::createFrameListener()
-{
-	mFrameListener= new OgreFrameListener(mWindow, mCamera);
-	mRoot->addFrameListener(mFrameListener);
 }
 
 void OgreApplication::setupResources()
@@ -156,19 +148,178 @@ void OgreApplication::setupResources()
 			archName = i->second;
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
 			ResourceGroupManager::getSingleton().addResourceLocation(
-				String(macBundlePath() + "/" + archName), typeName, secName);
+				String(macBundlePath() + "/" + archName),
+				typeName,
+				secName);
 #else
 			ResourceGroupManager::getSingleton().addResourceLocation(
-				archName, typeName, secName);
+				archName,
+				typeName,
+				secName);
 #endif
 		}
 	}
 }
 
-void OgreApplication::loadResources()
+void OgreApplication::initFrameListener()
 {
-	ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+	mInputManager = 0;
+	mMouse = 0;
+	mKeyboard = 0;
+	mJoy = 0;
+	mDebugOverlay = OverlayManager::getSingleton().getByName("Core/DebugOverlay");
+
+	LogManager::getSingletonPtr()->logMessage("*** Initializing OIS ***");
+	ParamList pl;
+	size_t windowHnd = 0;
+	std::ostringstream windowHndStr;
+
+	mWindow->getCustomAttribute("WINDOW", &windowHnd);
+	windowHndStr << windowHnd;
+	pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
+
+	mInputManager = InputManager::createInputSystem(pl);
+
+	//Create all devices (We only catch joystick exceptions here, as, most people have Key/Mouse)
+	mKeyboard = static_cast<Keyboard*>(mInputManager->createInputObject(OISKeyboard, true));
+	mKeyboard->setEventCallback(this);
+	mMouse = static_cast<Mouse*>(mInputManager->createInputObject(OISMouse, true));
+	mMouse->setEventCallback(this);
+	try
+	{
+		mJoy = static_cast<JoyStick*>(mInputManager->createInputObject(OISJoyStick, true));
+	}
+	catch(...)
+	{
+		mJoy = 0;
+	}
+
+	//Set initial mouse clipping size
+	windowResized(mWindow);
+
+	mDebugOverlay->show();
+
+	//Register as a Window listener
+	WindowEventUtilities::addWindowEventListener(mWindow, this);
+
+	mRoot->addFrameListener(this);
 }
 
+void OgreApplication::updateStats()
+{
+	static String currFps = "Current FPS: ";
+	static String avgFps = "Average FPS: ";
+	static String bestFps = "Best FPS: ";
+	static String worstFps = "Worst FPS: ";
+	static String tris = "Triangle Count: ";
+	static String batches = "Batch Count: ";
+
+	// update stats when necessary
+	try {
+		OverlayElement* guiAvg = OverlayManager::getSingleton().getOverlayElement("Core/AverageFps");
+		OverlayElement* guiCurr = OverlayManager::getSingleton().getOverlayElement("Core/CurrFps");
+		OverlayElement* guiBest = OverlayManager::getSingleton().getOverlayElement("Core/BestFps");
+		OverlayElement* guiWorst = OverlayManager::getSingleton().getOverlayElement("Core/WorstFps");
+
+		const RenderTarget::FrameStats& stats = mWindow->getStatistics();
+		guiAvg->setCaption(avgFps + StringConverter::toString(stats.avgFPS));
+		guiCurr->setCaption(currFps + StringConverter::toString(stats.lastFPS));
+		guiBest->setCaption(bestFps + StringConverter::toString(stats.bestFPS)
+			+" "+StringConverter::toString(stats.bestFrameTime)+" ms");
+		guiWorst->setCaption(worstFps + StringConverter::toString(stats.worstFPS)
+			+" "+StringConverter::toString(stats.worstFrameTime)+" ms");
+
+		OverlayElement* guiTris = OverlayManager::getSingleton().getOverlayElement("Core/NumTris");
+		guiTris->setCaption(tris + StringConverter::toString(stats.triangleCount));
+
+		OverlayElement* guiBatches = OverlayManager::getSingleton().getOverlayElement("Core/NumBatches");
+		guiBatches->setCaption(batches + StringConverter::toString(stats.batchCount));
+	}
+	catch(...) { /* ignore */ }
+}
+
+void OgreApplication::windowResized(RenderWindow* rw)
+{
+	unsigned int width, height, depth;
+	int left, top;
+	rw->getMetrics(width, height, depth, left, top);
+
+	const MouseState &ms = mMouse->getMouseState();
+	ms.width = width;
+	ms.height = height;
+}
+
+void OgreApplication::windowClosed(RenderWindow* rw)
+{
+	//Only close for window that created OIS (the main window in these demos)
+	if (rw == mWindow)
+	{
+		if (mInputManager)
+		{
+			mInputManager->destroyInputObject(mMouse);
+			mInputManager->destroyInputObject(mKeyboard);
+			mInputManager->destroyInputObject(mJoy);
+
+			InputManager::destroyInputSystem(mInputManager);
+			mInputManager = 0;
+		}
+	}
+}
+
+bool OgreApplication::frameStarted(const FrameEvent& evt)
+{
+	if (mStop)
+	{
+		return false;
+	}
+	if (mWindow->isClosed())
+	{
+		return false;
+	}
+
+	LoveLab::getInstance().beforeCycle(evt.timeSinceLastFrame);
+
+	mKeyboard->capture();
+	mMouse->capture();
+	if (mJoy)
+	{
+		mJoy->capture();
+	}
+
+	LoveLab::getInstance().cycle();
+
+	return true;
+}
+
+bool OgreApplication::frameEnded(const FrameEvent& evt)
+{
+	updateStats();
+	return true;
+}
+
+bool OgreApplication::keyPressed(const KeyEvent &arg)
+{
+	return false;
+}
+
+bool OgreApplication::keyReleased(const KeyEvent &arg)
+{
+	return false;
+}
+
+bool OgreApplication::mouseMoved(const MouseEvent &arg)
+{
+	return false;
+}
+
+bool OgreApplication::mousePressed(const MouseEvent &arg, MouseButtonID id)
+{
+	return false;
+}
+
+bool OgreApplication::mouseReleased(const MouseEvent &arg, MouseButtonID id)
+{
+	return false;
+}
 #endif
 

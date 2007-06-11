@@ -21,7 +21,7 @@
 #define __INCLUDE_LOVELAB_H
 
 #include "Simulation.h"
-#include "KeyboardMouseHandler.h"
+#include "InputHandler.h"
 
 #include <list>
 using namespace std;
@@ -32,7 +32,7 @@ using namespace std;
 #include "OgreApplication.h"
 #endif
 
-class LoveLab : public KeyboardMouseHandler
+class LoveLab : public InputHandler
 {
 public:
 	LoveLab();
@@ -47,12 +47,14 @@ public:
 	bool running(){return !mStop;}
 	void run();
 	void cycle();
-	void addKeyboardMouseHandler(KeyboardMouseHandler* handler);
-	void removeKeyboardMouseHandler();
+	void addInputHandler(InputHandler* handler);
+	void removeInputHandler();
 
 #ifdef __LOVELAB_WITH_GRAPHICS
-	//virtual bool onKeyUp(int keycode);
+	virtual bool onKeyDown(int key);
+	virtual bool onMouseMove(int x, int y);
 	OgreApplication* getOgreApplication(){return mOgreApp;}
+	void beforeCycle(float timeSinceLastCycle);
 #endif
 
 	static const char mClassName[];
@@ -69,10 +71,19 @@ private:
 	Simulation* mSimulation;
 	bool mStop;
 	
-	list<KeyboardMouseHandler*> mHandlersList;
+	list<InputHandler*> mHandlersList;
 
 #ifdef __LOVELAB_WITH_GRAPHICS
 	OgreApplication* mOgreApp;
+
+	Vector3 mTranslateVector;
+	unsigned int mNumScreenShots;
+	float mMoveScale;
+	Degree mRotScale;
+	Radian mRotX;
+	Radian mRotY;
+	Real mMoveSpeed;
+	Degree mRotateSpeed;
 #endif
 };
 #endif
