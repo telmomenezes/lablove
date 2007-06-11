@@ -21,10 +21,6 @@
 #define __INCLUDE_LAB_H
 
 #include "Simulation.h"
-#include "InputHandler.h"
-
-#include <list>
-using namespace std;
 
 #include "Orbit.h"
 
@@ -32,7 +28,7 @@ using namespace std;
 #include "OgreApplication.h"
 #endif
 
-class Lab : public InputHandler
+class Lab
 {
 public:
 	Lab();
@@ -51,10 +47,7 @@ public:
 	void removeInputHandler();
 
 #ifdef __LOVELAB_WITH_GRAPHICS
-	virtual bool onKeyDown(int key);
-	virtual bool onMouseMove(int x, int y);
 	OgreApplication* getOgreApplication(){return mOgreApp;}
-	void beforeCycle(float timeSinceLastCycle);
 #endif
 
 	static const char mClassName[];
@@ -71,19 +64,8 @@ private:
 	Simulation* mSimulation;
 	bool mStop;
 	
-	list<InputHandler*> mHandlersList;
-
 #ifdef __LOVELAB_WITH_GRAPHICS
 	OgreApplication* mOgreApp;
-
-	Vector3 mTranslateVector;
-	unsigned int mNumScreenShots;
-	float mMoveScale;
-	Degree mRotScale;
-	Radian mRotX;
-	Radian mRotY;
-	Real mMoveSpeed;
-	Degree mRotateSpeed;
 #endif
 };
 #endif

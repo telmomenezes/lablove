@@ -43,7 +43,9 @@ Simulation::~Simulation()
 void Simulation::init()
 {
 	mPopulationDynamics->init();
-	Lab::getInstance().addInputHandler(this);
+#if defined(__LOVELAB_WITH_GRAPHICS)
+	Lab::getInstance().getOgreApplication()->addInputHandler(this);
+#endif
 }
 
 void Simulation::addObject(SimulationObject* object)

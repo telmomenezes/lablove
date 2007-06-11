@@ -33,6 +33,12 @@ OgreApplication::OgreApplication()
 	mResourcePath = "";
 #endif
 	mStop = false;
+	mTranslateVector = Vector3::ZERO;
+	mNumScreenShots = 0;
+	mMoveScale = 0.0f;
+	mRotScale = 0.0f;
+	mMoveSpeed = 100;
+	mRotateSpeed = 36;
 }
 
 OgreApplication::~OgreApplication()
@@ -104,6 +110,8 @@ bool OgreApplication::init()
 	l->setPosition(20, 80, 50);
 
 	initFrameListener();
+
+	addInputHandler(this);
 
 	return true;
 }
@@ -277,7 +285,20 @@ bool OgreApplication::frameStarted(const FrameEvent& evt)
 		return false;
 	}
 
-	Lab::getInstance().beforeCycle(evt.timeSinceLastFrame);
+	if (evt.timeSinceLastFrame == 0)
+	{
+		mMoveScale = 1;
+		mRotScale = 0.1;
+	}
+	else
+	{
+		mMoveScale = mMoveSpeed * evt.timeSinceLastFrame;
+		mRotScale = mRotateSpeed * evt.timeSinceLastFrame;
+	}
+
+	mRotX = 0;
+	mRotY = 0;
+	mTranslateVector = Ogre::Vector3::ZERO;
 
 	mKeyboard->capture();
 	mMouse->capture();
@@ -285,6 +306,11 @@ bool OgreApplication::frameStarted(const FrameEvent& evt)
 	{
 		mJoy->capture();
 	}
+
+	// Update camera position
+ 	mCamera->yaw(mRotX);
+	mCamera->pitch(mRotY);
+	mCamera->moveRelative(mTranslateVector);
 
 	Lab::getInstance().cycle();
 
@@ -299,11 +325,29 @@ bool OgreApplication::frameEnded(const FrameEvent& evt)
 
 bool OgreApplication::keyPressed(const KeyEvent &arg)
 {
+	list<InputHandler*>::iterator iterHandler = mHandlersList.begin();
+	while (iterHandler != mHandlersList.end())
+	{
+		if ((*iterHandler)->onKeyDown(arg.key))
+		{
+			return true;
+		}
+		iterHandler++;
+	}
 	return false;
 }
 
 bool OgreApplication::keyReleased(const KeyEvent &arg)
 {
+	list<InputHandler*>::iterator iterHandler = mHandlersList.begin();
+	while (iterHandler != mHandlersList.end())
+	{
+		if ((*iterHandler)->onKeyUp(arg.key))
+		{
+			return true;
+		}
+		iterHandler++;
+	}
 	return false;
 }
 
@@ -320,6 +364,71 @@ bool OgreApplication::mousePressed(const MouseEvent &arg, MouseButtonID id)
 bool OgreApplication::mouseReleased(const MouseEvent &arg, MouseButtonID id)
 {
 	return false;
+}
+
+bool OgreApplication::onKeyDown(int key)
+{
+	switch (key)
+	{
+	case KC_A:
+		mTranslateVector.x = -mMoveScale;	// Move camera left
+		return true;
+	case KC_D:
+		mTranslateVector.x = mMoveScale;	// Move camera RIGHT
+		return true;
+	case KC_UP:
+	case KC_W:
+		mTranslateVector.z = -mMoveScale;	// Move camera forward
+		return true;
+	case KC_DOWN:
+	case KC_S:
+		mTranslateVector.z = mMoveScale;	// Move camera backward
+		return true;
+	case KC_PGUP:
+		mTranslateVector.y = mMoveScale;	// Move camera up
+		return true;
+	case KC_PGDOWN:
+		mTranslateVector.y = -mMoveScale;	// Move camera down
+		return true;
+	case KC_RIGHT:
+		mCamera->yaw(-mRotScale);
+		return true;
+	case KC_LEFT:
+		mCamera->yaw(mRotScale);
+		return true;
+	case KC_ESCAPE:
+	case KC_Q:
+		mStop = true;
+		return true;
+	}
+
+	return false;
+}
+
+bool OgreApplication::onMouseMove(int x, int y)
+{
+	/*if (button pressed)
+	{
+		mTranslateVector.x += ms.X.rel * 0.13;
+		mTranslateVector.y -= ms.Y.rel * 0.13;
+
+		return true;
+	}*/
+	
+	mRotX = Degree(-x * 0.13);
+	mRotY = Degree(-y * 0.13);
+
+	return true;
+}
+
+void OgreApplication::addInputHandler(InputHandler* handler)
+{
+	mHandlersList.push_front(handler);
+}
+
+void OgreApplication::removeInputHandler()
+{
+	mHandlersList.pop_front();
 }
 #endif
 

@@ -25,13 +25,16 @@
 #include "OgreStringConverter.h"
 #include "OgreException.h"
 
+#include "InputHandler.h"
+
 #define OIS_DYNAMIC_LIB
 #include <OIS/OIS.h>
 
+#include <list>
+using namespace std;
+
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
 #include <CoreFoundation/CoreFoundation.h>
-
-
 
 std::string macBundlePath()
 {
@@ -58,7 +61,7 @@ using namespace Ogre;
 using namespace OIS;
 
 class OgreApplication : public FrameListener, public WindowEventListener,
-			public KeyListener, public MouseListener
+			public KeyListener, public MouseListener, public InputHandler
 {
 public:
 	OgreApplication();
@@ -81,6 +84,12 @@ public:
 	virtual bool mouseMoved(const MouseEvent &arg);
 	virtual bool mousePressed(const MouseEvent &arg, MouseButtonID id);
 	virtual bool mouseReleased(const MouseEvent &arg, MouseButtonID id);
+
+	virtual bool onKeyDown(int key);
+	virtual bool onMouseMove(int x, int y);
+
+	void addInputHandler(InputHandler* handler);
+	void removeInputHandler();
 
 protected:
 	bool configure();
@@ -106,6 +115,17 @@ protected:
 	Mouse* mMouse;
 	Keyboard* mKeyboard;
 	JoyStick* mJoy;
+
+	list<InputHandler*> mHandlersList;
+
+	Vector3 mTranslateVector;
+	unsigned int mNumScreenShots;
+	float mMoveScale;
+	Degree mRotScale;
+	Radian mRotX;
+	Radian mRotY;
+	Real mMoveSpeed;
+	Degree mRotateSpeed;
 };
 
 #endif

@@ -28,12 +28,6 @@ Lab::Lab()
 	mStop = false;
 #ifdef __LOVELAB_WITH_GRAPHICS
 	mOgreApp = NULL;
-	mTranslateVector = Vector3::ZERO;
-	mNumScreenShots = 0;
-	mMoveScale = 0.0f;
-	mRotScale = 0.0f;
-	mMoveSpeed = 100;
-	mRotateSpeed = 36;
 #endif
 }
 
@@ -59,7 +53,6 @@ Lab::~Lab()
 void Lab::create()
 {
 	mLove = this;
-	mLove->addInputHandler(this);
 }
 
 Lab& Lab::getInstance()
@@ -108,138 +101,7 @@ void Lab::run()
 void Lab::cycle()
 {
 	mSimulation->cycle();
-
-#ifdef __LOVELAB_WITH_GRAPHICS
-	// Update camera position
- 	mOgreApp->getCamera()->yaw(mRotX);
-	mOgreApp->getCamera()->pitch(mRotY);
-	mOgreApp->getCamera()->moveRelative(mTranslateVector);
-
-/*
-	SDL_Event event;
-	while (SDL_PollEvent(&event))
-	{
-		list<InputHandler*>::iterator iterHandler = mHandlersList.begin();
-		bool handled = false;
-		while ((!handled) && (iterHandler != mHandlersList.end()))
-		{
-			switch (event.type)
-			{
-				case SDL_KEYDOWN:
-					(*iterHandler)->onKeyDown(event.key.keysym.sym);
-					break;
-				case SDL_KEYUP:
-					(*iterHandler)->onKeyUp(event.key.keysym.sym);
-					break;
-				case SDL_MOUSEBUTTONDOWN:
-					(*iterHandler)->onMouseButtonDown(event.button.button,
-										event.button.x,
-										mScreenHeight - event.button.y);
-					break;
-				case SDL_MOUSEBUTTONUP:
-					(*iterHandler)->onMouseButtonUp(event.button.button,
-										event.button.x,
-										mScreenHeight - event.button.y);
-					break;
-				case SDL_MOUSEMOTION:
-					(*iterHandler)->onMouseMove(event.button.x,
-									mScreenHeight - event.button.y);
-					break;
-				default:
-					break;
-			}
-
-			iterHandler++;
-		}
-	}
-*/
-#endif
 }
-
-void Lab::addInputHandler(InputHandler* handler)
-{
-	mHandlersList.push_front(handler);
-}
-
-void Lab::removeInputHandler()
-{
-	mHandlersList.pop_front();
-}
-
-#ifdef __LOVELAB_WITH_GRAPHICS
-bool Lab::onKeyDown(int key)
-{
-	switch (key)
-	{
-	case KC_A:
-		mTranslateVector.x = -mMoveScale;	// Move camera left
-		return true;
-	case KC_D:
-		mTranslateVector.x = mMoveScale;	// Move camera RIGHT
-		return true;
-	case KC_UP:
-	case KC_W:
-		mTranslateVector.z = -mMoveScale;	// Move camera forward
-		return true;
-	case KC_DOWN:
-	case KC_S:
-		mTranslateVector.z = mMoveScale;	// Move camera backward
-		return true;
-	case KC_PGUP:
-		mTranslateVector.y = mMoveScale;	// Move camera up
-		return true;
-	case KC_PGDOWN:
-		mTranslateVector.y = -mMoveScale;	// Move camera down
-		return true;
-	case KC_RIGHT:
-		mOgreApp->getCamera()->yaw(-mRotScale);
-		return true;
-	case KC_LEFT:
-		mOgreApp->getCamera()->yaw(mRotScale);
-		return true;
-	case KC_ESCAPE:
-	case KC_Q:
-		mStop = true;
-		return true;
-	}
-
-	return false;
-}
-
-bool Lab::onMouseMove(int x, int y)
-{
-	/*if (button pressed)
-	{
-		mTranslateVector.x += ms.X.rel * 0.13;
-		mTranslateVector.y -= ms.Y.rel * 0.13;
-
-		return true;
-	}*/
-	
-	mRotX = Degree(-x * 0.13);
-	mRotY = Degree(-y * 0.13);
-
-	return true;
-}
-
-void Lab::beforeCycle(float timeSinceLastCycle)
-{
-	if (timeSinceLastCycle == 0)
-	{
-		mMoveScale = 1;
-		mRotScale = 0.1;
-	}
-	else
-	{
-		mMoveScale = mMoveSpeed * timeSinceLastCycle;
-		mRotScale = mRotateSpeed * timeSinceLastCycle;
-	}
-
-	mRotX = 0;
-	mRotY = 0;
-	mTranslateVector = Ogre::Vector3::ZERO;
-}
-#endif
 
 const char Lab::mClassName[] = "Lab";
 
