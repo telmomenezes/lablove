@@ -302,10 +302,6 @@ bool SimSimple2D::onMouseButtonUp(int button, int x, int y)
 {
 	return false;
 }
-
-bool SimSimple2D::onMouseMove(int x, int y)
-{
-}
 #endif
 
 const char SimSimple2D::mClassName[] = "SimSimple2D";

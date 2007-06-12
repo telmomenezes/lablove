@@ -71,7 +71,6 @@ public:
 	virtual bool onKeyUp(int keycode);
 	virtual bool onMouseButtonDown(int button, int x, int y);
 	virtual bool onMouseButtonUp(int button, int x, int y);
-	virtual bool onMouseMove(int x, int y);
 #endif
 
 	static const char mClassName[];

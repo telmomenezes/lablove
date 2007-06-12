@@ -353,6 +353,15 @@ bool OgreApplication::keyReleased(const KeyEvent &arg)
 
 bool OgreApplication::mouseMoved(const MouseEvent &arg)
 {
+	list<InputHandler*>::iterator iterHandler = mHandlersList.begin();
+	while (iterHandler != mHandlersList.end())
+	{
+		if ((*iterHandler)->onMouseMove(arg.state.X.rel, arg.state.Y.rel))
+		{
+			return true;
+		}
+		iterHandler++;
+	}
 	return false;
 }
 
