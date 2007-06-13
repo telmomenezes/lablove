@@ -70,10 +70,10 @@ void PopDynGenerations::init()
 			SimulationObject* org = (*iterSpecies)->clone();
 			org->initRandom();
 			org->placeRandom();
-#ifdef __LOVELAB_WITH_GRAPHICS
+#ifdef __LABLOVE_WITH_GRAPHICS
 			org->createGraphics();
 #endif
-			Lab::getInstance().getSimulation()->addObject(org);
+			Lab::getSingleton().getSimulation()->addObject(org);
 			(*iterSpeciesOrgList)->push_back(org);
 		}
 
@@ -94,10 +94,10 @@ void PopDynGenerations::init()
 			SimulationObject* org = (*iterSpecies)->clone(false);
 			org->initRandom();
 			org->placeRandom();
-#ifdef __LOVELAB_WITH_GRAPHICS
+#ifdef __LABLOVE_WITH_GRAPHICS
 			org->createGraphics();
 #endif
-			Lab::getInstance().getSimulation()->addObject(org);
+			Lab::getSingleton().getSimulation()->addObject(org);
 			(*iterSpeciesOrgList)->push_back(org);
 		}
 
@@ -109,8 +109,8 @@ void PopDynGenerations::init()
 
 void PopDynGenerations::onCycle()
 {
-	if (((Lab::getInstance().getSimulation()->time() % mGenerationTime) == 0)
-		&& (Lab::getInstance().getSimulation()->time() != 0))
+	if (((Lab::getSingleton().getSimulation()->time() % mGenerationTime) == 0)
+		&& (Lab::getSingleton().getSimulation()->time() != 0))
 	{
 		list<SimulationObject*>::iterator iterSpecies = mEvolvingSpecies.begin();
 		list<long>::iterator iterPop = mEvolvingSpeciesPopulations.begin();
@@ -170,10 +170,10 @@ void PopDynGenerations::onCycle()
 				newOrganism = bestOrganism->clone();
 				newOrganism->setEnergy(0.0f);
 				newOrganism->placeRandom();
-#ifdef __LOVELAB_WITH_GRAPHICS
+#ifdef __LABLOVE_WITH_GRAPHICS
 				newOrganism->createGraphics();
 #endif
-				Lab::getInstance().getSimulation()->addObject(newOrganism);
+				Lab::getSingleton().getSimulation()->addObject(newOrganism);
 
 				// Mutate
 				newOrganism->mutate();
@@ -186,7 +186,7 @@ void PopDynGenerations::onCycle()
 			{
 				SimulationObject* org = (*iterSpeciesOrgList)->front();
 				(*iterSpeciesOrgList)->pop_front();
-				Lab::getInstance().getSimulation()->removeObject(org);
+				Lab::getSingleton().getSimulation()->removeObject(org);
 			}
 
 			iterSpecies++;
@@ -204,14 +204,14 @@ void PopDynGenerations::onOrganismDeath(SimulationObject* org)
 	{
 		if (org->getSpeciesID() == (*iterSpecies)->getSpeciesID())
 		{
-			Lab::getInstance().getSimulation()->removeObject(org);
+			Lab::getSingleton().getSimulation()->removeObject(org);
 
 			SimulationObject* org = (*iterSpecies)->clone();
 			org->placeRandom();
-#ifdef __LOVELAB_WITH_GRAPHICS
+#ifdef __LABLOVE_WITH_GRAPHICS
 			org->createGraphics();
 #endif
-			Lab::getInstance().getSimulation()->addObject(org);
+			Lab::getSingleton().getSimulation()->addObject(org);
 		}
 
 		iterSpecies++;

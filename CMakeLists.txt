@@ -4,7 +4,7 @@ OPTION(GRAPHICS "Build the project with graphical visualization" ON)
 
 # TODO: look for or inplement a FindOgre.cmake module
 IF(GRAPHICS)
-	INCLUDE_DIRECTORIES("/usr/include/OGRE/")
+	INCLUDE_DIRECTORIES("/usr/include/OGRE/" "/usr/include/CEGUI")
 	#INCLUDE(${CMAKE_ROOT}/Modules/FindOgre.cmake)
 	#INCLUDE_DIRECTORIES(${OGRE_INCLUDE_DIR})
 ENDIF(GRAPHICS)
@@ -24,7 +24,7 @@ src/Molecule.cpp src/MoleculeRGB.cpp src/Chemistry.cpp src/OgreApplication.cpp)
 TARGET_LINK_LIBRARIES(lablove lua dl)
 
 IF(GRAPHICS)
-	ADD_DEFINITIONS(-D__LOVELAB_WITH_GRAPHICS)
-	TARGET_LINK_LIBRARIES(lablove OgreMain OIS Cg freeimage z m dl)
+	ADD_DEFINITIONS(-D__LABLOVE_WITH_GRAPHICS)
+	TARGET_LINK_LIBRARIES(lablove OgreMain OIS CEGUIBase CEGUIOgreRenderer Cg freeimage z m dl)
 ENDIF(GRAPHICS)
 

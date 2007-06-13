@@ -25,7 +25,7 @@
 
 #include "Orbit.h"
 
-#if defined(__LOVELAB_WITH_GRAPHICS)
+#if defined(__LABLOVE_WITH_GRAPHICS)
 #include "Ogre.h"
 using namespace Ogre;
 #endif
@@ -83,7 +83,7 @@ protected:
 	unsigned long mMaxAge;
 	float mMetabolism;
 	MoleculeRGB mColor;
-#if defined(__LOVELAB_WITH_GRAPHICS)
+#if defined(__LABLOVE_WITH_GRAPHICS)
 	SceneNode* mNode;
 #endif
 };

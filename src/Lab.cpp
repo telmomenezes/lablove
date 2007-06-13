@@ -26,7 +26,7 @@ Lab* Lab::mLove = NULL;
 Lab::Lab()
 {
 	mStop = false;
-#ifdef __LOVELAB_WITH_GRAPHICS
+#ifdef __LABLOVE_WITH_GRAPHICS
 	mOgreApp = NULL;
 #endif
 }
@@ -34,14 +34,14 @@ Lab::Lab()
 Lab::Lab(lua_State* luaState)
 {
 	mStop = false;
-#ifdef __LOVELAB_WITH_GRAPHICS
+#ifdef __LABLOVE_WITH_GRAPHICS
 	mOgreApp = NULL;
 #endif
 }
 
 Lab::~Lab()
 {
-#ifdef __LOVELAB_WITH_GRAPHICS
+#ifdef __LABLOVE_WITH_GRAPHICS
 	if (mOgreApp != NULL)
 	{
 		delete mOgreApp;
@@ -55,7 +55,7 @@ void Lab::create()
 	mLove = this;
 }
 
-Lab& Lab::getInstance()
+Lab& Lab::getSingleton()
 {	
 	return *mLove;
 }
@@ -67,7 +67,7 @@ void Lab::setSeedIndex(unsigned int index)
 
 void Lab::run()
 {
-#ifdef __LOVELAB_WITH_GRAPHICS
+#ifdef __LABLOVE_WITH_GRAPHICS
 	mOgreApp = new OgreApplication();
 
 	try

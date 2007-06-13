@@ -52,10 +52,10 @@ SimulationObject* PlantSimple2D::clone(bool full)
 	return new PlantSimple2D(this);
 }
 
-#if defined(__LOVELAB_WITH_GRAPHICS)
+#if defined(__LABLOVE_WITH_GRAPHICS)
 void PlantSimple2D::createGraphics()
 {
-	SceneManager* sceneMgr = Lab::getInstance().getOgreApplication()->getSceneManager();
+	SceneManager* sceneMgr = Lab::getSingleton().getOgreApplication()->getSceneManager();
 	char nodeName[255];
 	sprintf(nodeName, "loveobj%d", mID);
 	Entity* animEntity = sceneMgr->createEntity(nodeName, "plant");
@@ -84,7 +84,7 @@ Orbit<PlantSimple2D>::NumberGlobalType PlantSimple2D::mNumberGlobals[] = {{0,0}}
 /*	
 void PlantSimple2D::draw()
 {
-	SimSimple2D* sim = (SimSimple2D*)(Lab::getInstance().getSimulation());
+	SimSimple2D* sim = (SimSimple2D*)(Lab::getSingleton().getSimulation());
 
 	float x = (int)mX - (int)sim->getViewX();
 	float y = (int)mY - (int)sim->getViewY();

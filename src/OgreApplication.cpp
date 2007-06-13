@@ -17,10 +17,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifdef __LOVELAB_WITH_GRAPHICS
+#ifdef __LABLOVE_WITH_GRAPHICS
 
 #include "OgreApplication.h"
 #include "Lab.h"
+
+#include <CEGUI/elements/CEGUIPushButton.h>
 
 using namespace Ogre;
 
@@ -33,16 +35,43 @@ OgreApplication::OgreApplication()
 	mResourcePath = "";
 #endif
 	mStop = false;
+
+	mGUIRenderer = NULL;
+        mGUISystem = NULL;
+        mEditorGuiSheet = NULL;
+
 	mTranslateVector = Vector3::ZERO;
 	mNumScreenShots = 0;
 	mMoveScale = 0.0f;
 	mRotScale = 0.0f;
 	mMoveSpeed = 100;
 	mRotateSpeed = 36;
+
+	mMoveCameraLeft = false;
+	mMoveCameraRight = false;
+	mMoveCameraUp = false;
+	mMoveCameraDown = false;
+	mMoveCameraFront = false;
+	mMoveCameraBack = false;
 }
 
 OgreApplication::~OgreApplication()
 {
+	if (mEditorGuiSheet)
+	{
+		CEGUI::WindowManager::getSingleton().destroyWindow(mEditorGuiSheet);
+	}
+	if (mGUISystem)
+	{
+		delete mGUISystem;
+		mGUISystem = NULL;
+	}
+	if (mGUIRenderer)
+	{
+		delete mGUIRenderer;
+		mGUIRenderer = NULL;
+	}
+
 	//Remove ourself as a Window listener
 	WindowEventUtilities::removeWindowEventListener(mWindow, this);
 	windowClosed(mWindow);
@@ -108,6 +137,25 @@ bool OgreApplication::init()
 
 	Light* l = mSceneMgr->createLight("MainLight");
 	l->setPosition(20, 80, 50);
+
+	// Create GUI
+	mGUIRenderer = new CEGUI::OgreCEGUIRenderer(mWindow, Ogre::RENDER_QUEUE_OVERLAY, false, 3000, mSceneMgr);
+	mGUISystem = new CEGUI::System(mGUIRenderer);
+	CEGUI::Logger::getSingleton().setLoggingLevel(CEGUI::Informative);
+	CEGUI::SchemeManager::getSingleton().loadScheme((CEGUI::utf8*)"TaharezLookSkin.scheme");
+	mGUISystem->setDefaultMouseCursor((CEGUI::utf8*)"TaharezLook", (CEGUI::utf8*)"MouseArrow");
+	CEGUI::MouseCursor::getSingleton().setImage("TaharezLook", "MouseMoveCursor");
+	mGUISystem->setDefaultFont((CEGUI::utf8*)"BlueHighway-12");
+	mEditorGuiSheet = CEGUI::WindowManager::getSingleton().createWindow(
+		(CEGUI::utf8*)"DefaultWindow",
+		(CEGUI::utf8*)"Sheet");  
+	mGUISystem->setGUISheet(mEditorGuiSheet);
+
+	CEGUI::PushButton* quitButton = (CEGUI::PushButton*)CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Button", (CEGUI::utf8*)"Quit");
+	mEditorGuiSheet->addChildWindow((CEGUI::Window*)quitButton);
+	quitButton->setPosition(CEGUI::UVector2(cegui_reldim(0.90f), cegui_reldim(0.95f)));
+	quitButton->setSize(CEGUI::UVector2(cegui_reldim(0.06f), cegui_reldim(0.03f)));
+	quitButton->setText("Quit");
 
 	initFrameListener();
 
@@ -307,12 +355,9 @@ bool OgreApplication::frameStarted(const FrameEvent& evt)
 		mJoy->capture();
 	}
 
-	// Update camera position
- 	mCamera->yaw(mRotX);
-	mCamera->pitch(mRotY);
-	mCamera->moveRelative(mTranslateVector);
+	updateCamera();
 
-	Lab::getInstance().cycle();
+	Lab::getSingleton().cycle();
 
 	return true;
 }
@@ -321,6 +366,38 @@ bool OgreApplication::frameEnded(const FrameEvent& evt)
 {
 	updateStats();
 	return true;
+}
+
+void OgreApplication::updateCamera()
+{
+	if (mMoveCameraLeft)
+	{
+		mTranslateVector.x = -mMoveScale;
+	}
+	if (mMoveCameraRight)
+	{
+		mTranslateVector.x = mMoveScale;
+	}
+	if (mMoveCameraFront)
+	{
+		mTranslateVector.z = -mMoveScale;
+	}
+	if (mMoveCameraBack)
+	{
+		mTranslateVector.z = mMoveScale;
+	}
+	if (mMoveCameraUp)
+	{
+		mTranslateVector.y = mMoveScale;
+	}
+	if (mMoveCameraDown)
+	{
+		mTranslateVector.y = -mMoveScale;
+	}
+
+	mCamera->yaw(mRotX);
+	mCamera->pitch(mRotY);
+	mCamera->moveRelative(mTranslateVector);
 }
 
 bool OgreApplication::keyPressed(const KeyEvent &arg)
@@ -380,35 +457,74 @@ bool OgreApplication::onKeyDown(int key)
 	switch (key)
 	{
 	case KC_A:
-		mTranslateVector.x = -mMoveScale;	// Move camera left
+		mMoveCameraLeft = true;
 		return true;
 	case KC_D:
-		mTranslateVector.x = mMoveScale;	// Move camera RIGHT
+		mMoveCameraRight = true;
 		return true;
 	case KC_UP:
 	case KC_W:
-		mTranslateVector.z = -mMoveScale;	// Move camera forward
+		mMoveCameraFront = true;
 		return true;
 	case KC_DOWN:
 	case KC_S:
-		mTranslateVector.z = mMoveScale;	// Move camera backward
+		mMoveCameraBack = true;
 		return true;
 	case KC_PGUP:
-		mTranslateVector.y = mMoveScale;	// Move camera up
+		mMoveCameraUp = true;
 		return true;
 	case KC_PGDOWN:
-		mTranslateVector.y = -mMoveScale;	// Move camera down
+		mMoveCameraDown = true;
 		return true;
 	case KC_RIGHT:
-		mCamera->yaw(-mRotScale);
+		mMoveCameraRight = true;
 		return true;
 	case KC_LEFT:
-		mCamera->yaw(mRotScale);
+		mMoveCameraLeft = true;
 		return true;
 	case KC_ESCAPE:
 	case KC_Q:
 		mStop = true;
 		return true;
+	default:
+		return false;
+	}
+
+	return false;
+}
+
+bool OgreApplication::onKeyUp(int key)
+{
+	switch (key)
+	{
+	case KC_A:
+		mMoveCameraLeft = false;
+		return true;
+	case KC_D:
+		mMoveCameraRight = false;
+		return true;
+	case KC_UP:
+	case KC_W:
+		mMoveCameraFront = false;
+		return true;
+	case KC_DOWN:
+	case KC_S:
+		mMoveCameraBack = false;
+		return true;
+	case KC_PGUP:
+		mMoveCameraUp = false;
+		return true;
+	case KC_PGDOWN:
+		mMoveCameraDown = false;
+		return true;
+	case KC_RIGHT:
+		mMoveCameraRight = false;
+		return true;
+	case KC_LEFT:
+		mMoveCameraLeft = false;
+		return true;
+	default:
+		return false;
 	}
 
 	return false;

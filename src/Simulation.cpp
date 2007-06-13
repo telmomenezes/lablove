@@ -43,8 +43,8 @@ Simulation::~Simulation()
 void Simulation::init()
 {
 	mPopulationDynamics->init();
-#if defined(__LOVELAB_WITH_GRAPHICS)
-	Lab::getInstance().getOgreApplication()->addInputHandler(this);
+#if defined(__LABLOVE_WITH_GRAPHICS)
+	Lab::getSingleton().getOgreApplication()->addInputHandler(this);
 #endif
 }
 

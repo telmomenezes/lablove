@@ -37,7 +37,7 @@ public:
 	virtual ~SimulationObject();
 
 	virtual SimulationObject* clone(bool full=true) = 0;
-#ifdef __LOVELAB_WITH_GRAPHICS
+#ifdef __LABLOVE_WITH_GRAPHICS
 	virtual void createGraphics(){}
 #endif
 	virtual void initRandom(){}

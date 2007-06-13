@@ -32,7 +32,7 @@ public:
 	virtual ~PlantSimple2D();
 	virtual SimulationObject* clone(bool full=true);
 
-#if defined(__LOVELAB_WITH_GRAPHICS)
+#if defined(__LABLOVE_WITH_GRAPHICS)
 	void createGraphics();
 #endif
 

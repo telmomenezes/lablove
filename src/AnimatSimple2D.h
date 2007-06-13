@@ -34,7 +34,7 @@ public:
 	virtual SimulationObject* clone(bool full=true);
 	virtual void initRandom();
 	void initTest();
-#if defined(__LOVELAB_WITH_GRAPHICS)
+#if defined(__LABLOVE_WITH_GRAPHICS)
 	void createGraphics();
 #endif
 

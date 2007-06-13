@@ -172,10 +172,10 @@ SimulationObject* AnimatSimple2D::clone(bool full)
 	return new AnimatSimple2D(this, full);
 }
 
-#if defined(__LOVELAB_WITH_GRAPHICS)
+#if defined(__LABLOVE_WITH_GRAPHICS)
 void AnimatSimple2D::createGraphics()
 {
-	SceneManager* sceneMgr = Lab::getInstance().getOgreApplication()->getSceneManager();
+	SceneManager* sceneMgr = Lab::getSingleton().getOgreApplication()->getSceneManager();
 	char nodeName[255];
 	sprintf(nodeName, "loveobj%d", mID);
 	Entity* animEntity = sceneMgr->createEntity(nodeName, "animat");
@@ -265,7 +265,7 @@ void AnimatSimple2D::endCycle()
 void AnimatSimple2D::perceptionStep()
 {
 	// Determine cells to analyse
-	unsigned int cellSide = (unsigned int)(((SimSimple2D*)(Lab::getInstance().getSimulation()))->getCellSide());
+	unsigned int cellSide = (unsigned int)(((SimSimple2D*)(Lab::getSingleton().getSimulation()))->getCellSide());
 	int x = (int)mX;
 	int y = (int)mY;
 	int cellPosX = x % cellSide;
@@ -288,7 +288,7 @@ void AnimatSimple2D::perceptionStep()
 	{
 		left = true;
 	}
-	if ((cellX < (((SimSimple2D*)(Lab::getInstance().getSimulation()))->getWorldCellWidth() - 1))
+	if ((cellX < (((SimSimple2D*)(Lab::getSingleton().getSimulation()))->getWorldCellWidth() - 1))
 		&& (rightLimit >= cellSide))
 	{
 		right = true;
@@ -297,7 +297,7 @@ void AnimatSimple2D::perceptionStep()
 	{
 		top = true;
 	}
-	if ((cellY < (((SimSimple2D*)(Lab::getInstance().getSimulation()))->getWorldCellLength() - 1))
+	if ((cellY < (((SimSimple2D*)(Lab::getSingleton().getSimulation()))->getWorldCellLength() - 1))
 		&& (bottomLimit >= cellSide))
 	{
 		bottom = true;
@@ -342,8 +342,8 @@ void AnimatSimple2D::perceptionStep()
 void AnimatSimple2D::scanCell(int cellX, int cellY)
 {
 	ObjectSimple2D* obj = (ObjectSimple2D*)
-		((SimSimple2D*)(Lab::getInstance().getSimulation()))->getCellGrid()[
-		(cellY * ((SimSimple2D*)(Lab::getInstance().getSimulation()))->getWorldCellWidth()) + cellX];
+		((SimSimple2D*)(Lab::getSingleton().getSimulation()))->getCellGrid()[
+		(cellY * ((SimSimple2D*)(Lab::getSingleton().getSimulation()))->getWorldCellWidth()) + cellX];
 
 	while (obj)
 	{
@@ -437,7 +437,7 @@ void AnimatSimple2D::eat()
 	if (mNearestFood)
 	{
 		deltaEnergy(mNearestFood->getEnergy());
-		Lab::getInstance().getSimulation()->killOrganism(mNearestFood);
+		Lab::getSingleton().getSimulation()->killOrganism(mNearestFood);
 	}
 }
 
@@ -623,7 +623,7 @@ int AnimatSimple2D::setRotateCost(lua_State* luaState)
 /*
 void AnimatSimple2D::draw()
 {
-	SimSimple2D* sim = (SimSimple2D*)(Lab::getInstance().getSimulation());
+	SimSimple2D* sim = (SimSimple2D*)(Lab::getSingleton().getSimulation());
 
 	float x = mX - sim->getViewX();
 	float y = mY - sim->getViewY();

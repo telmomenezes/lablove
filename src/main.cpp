@@ -30,6 +30,7 @@
 // TODO: Replace OGRE_PLATFORM with something more generic
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
 #include "windows.h"
 #endif
 
@@ -81,7 +82,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	Lab::getInstance().run();
+	Lab::getSingleton().run();
 
 	lua_close(luaState);
 

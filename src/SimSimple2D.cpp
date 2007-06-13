@@ -50,7 +50,7 @@ SimSimple2D::~SimSimple2D()
 
 void SimSimple2D::init()
 {
-#ifdef __LOVELAB_WITH_GRAPHICS
+#ifdef __LABLOVE_WITH_GRAPHICS
 	// Create Animat Mesh
 	MaterialPtr material = MaterialManager::getSingleton().create(
 		"animatDefaultMaterial",
@@ -122,7 +122,7 @@ void SimSimple2D::init()
 	delete obj;
 
 	// Adjust camera position
-	Camera* camera = Lab::getInstance().getOgreApplication()->getCamera();
+	Camera* camera = Lab::getSingleton().getOgreApplication()->getCamera();
 	camera->setPosition(Vector3(mWorldWidth / 2, 200, 0));
 	camera->lookAt(Vector3(mWorldWidth / 2, 0, mWorldLength / 3));
 #endif
@@ -182,7 +182,7 @@ SimulationObject* SimSimple2D::getObjectByScreenPos(int x, int y)
 	return NULL;
 }
 
-#ifdef __LOVELAB_WITH_GRAPHICS
+#ifdef __LABLOVE_WITH_GRAPHICS
 /*
 void SimSimple2D::drawBeforeObjects()
 {
@@ -196,19 +196,19 @@ void SimSimple2D::drawBeforeObjects()
 		glBegin(GL_LINES);
 
 		unsigned int division = cellSide - (mViewX % cellSide);
-		while (division < Lab::getInstance().getScreenWidth())
+		while (division < Lab::getSingleton().getScreenWidth())
 		{
 			glVertex2f(division, 0);
-			glVertex2f(division, Lab::getInstance().getScreenHeight());
+			glVertex2f(division, Lab::getSingleton().getScreenHeight());
 
 			division += cellSide;
 		}
 
 		division = cellSide - (mViewY % cellSide);
-		while (division < Lab::getInstance().getScreenHeight())
+		while (division < Lab::getSingleton().getScreenHeight())
 		{
 			glVertex2f(0, division);
-			glVertex2f(Lab::getInstance().getScreenWidth(), division);
+			glVertex2f(Lab::getSingleton().getScreenWidth(), division);
 
 			division += cellSide;
 		}

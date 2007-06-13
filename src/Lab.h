@@ -24,7 +24,7 @@
 
 #include "Orbit.h"
 
-#ifdef __LOVELAB_WITH_GRAPHICS
+#ifdef __LABLOVE_WITH_GRAPHICS
 #include "OgreApplication.h"
 #endif
 
@@ -34,7 +34,7 @@ public:
 	Lab();
 	virtual ~Lab();
 
-	static Lab& getInstance();
+	static Lab& getSingleton();
 
 	void create();
 	void setSimulation(Simulation* simulation){mSimulation = simulation;}
@@ -46,7 +46,7 @@ public:
 	void addInputHandler(InputHandler* handler);
 	void removeInputHandler();
 
-#ifdef __LOVELAB_WITH_GRAPHICS
+#ifdef __LABLOVE_WITH_GRAPHICS
 	OgreApplication* getOgreApplication(){return mOgreApp;}
 #endif
 
@@ -64,7 +64,7 @@ private:
 	Simulation* mSimulation;
 	bool mStop;
 	
-#ifdef __LOVELAB_WITH_GRAPHICS
+#ifdef __LABLOVE_WITH_GRAPHICS
 	OgreApplication* mOgreApp;
 #endif
 };

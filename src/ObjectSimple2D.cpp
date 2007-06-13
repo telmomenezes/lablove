@@ -43,7 +43,7 @@ ObjectSimple2D::ObjectSimple2D()
 	mLowAgeLimit = 0;
 	mHighAgeLimit = 0;
 	mMetabolism = 0.0f;
-#if defined(__LOVELAB_WITH_GRAPHICS)
+#if defined(__LABLOVE_WITH_GRAPHICS)
 	mNode = NULL;
 #endif
 }
@@ -70,17 +70,17 @@ ObjectSimple2D::ObjectSimple2D(ObjectSimple2D* obj) : SimulationObject(obj)
 	mRot = 0.0f;
 
 	mColor = MoleculeRGB(obj->mColor);
-#if defined(__LOVELAB_WITH_GRAPHICS)
+#if defined(__LABLOVE_WITH_GRAPHICS)
 	mNode = NULL;
 #endif
 }
 
 ObjectSimple2D::~ObjectSimple2D()
 {
-#if defined(__LOVELAB_WITH_GRAPHICS)
+#if defined(__LABLOVE_WITH_GRAPHICS)
 	if (mNode != NULL)
 	{
-		SceneManager* sceneMgr = Lab::getInstance().getOgreApplication()->getSceneManager();
+		SceneManager* sceneMgr = Lab::getSingleton().getOgreApplication()->getSceneManager();
 		char nodeName[255];
 		sprintf(nodeName, "loveobj%d", mID);
 		MovableObject* obj = mNode->detachObject(nodeName);
@@ -92,7 +92,7 @@ ObjectSimple2D::~ObjectSimple2D()
 
 void ObjectSimple2D::setPos(float x, float y)
 {
-	SimSimple2D* sim = (SimSimple2D*)(Lab::getInstance().getSimulation());
+	SimSimple2D* sim = (SimSimple2D*)(Lab::getSingleton().getSimulation());
 
 	if ((x < 0)
 		|| (y < 0)
@@ -159,7 +159,7 @@ void ObjectSimple2D::setPos(float x, float y)
 	mX = x;
 	mY = y;
 
-#if defined(__LOVELAB_WITH_GRAPHICS)
+#if defined(__LABLOVE_WITH_GRAPHICS)
 	if (mNode != NULL)
 	{
 		mNode->setPosition(mX, 0, mY);
@@ -171,7 +171,7 @@ void ObjectSimple2D::setSize(float size)
 {
 	mSize = size;
 	mSizeSquared = mSize * mSize;
-#if defined(__LOVELAB_WITH_GRAPHICS)
+#if defined(__LABLOVE_WITH_GRAPHICS)
 	if (mNode != NULL)
 	{
 		mNode->scale(size, size, size);
@@ -181,7 +181,7 @@ void ObjectSimple2D::setSize(float size)
 
 void ObjectSimple2D::setRot(float rot)
 {
-#if defined(__LOVELAB_WITH_GRAPHICS)
+#if defined(__LABLOVE_WITH_GRAPHICS)
 	if (mNode != NULL)
 	{
 		mNode->yaw(Radian(mRot - rot));
@@ -193,7 +193,7 @@ void ObjectSimple2D::setRot(float rot)
 
 void ObjectSimple2D::placeRandom()
 {
-	SimSimple2D* sim = (SimSimple2D*)Lab::getInstance().getSimulation();
+	SimSimple2D* sim = (SimSimple2D*)Lab::getSingleton().getSimulation();
 
 	unsigned int worldWidth = (unsigned int)sim->getWorldWidth();
 	unsigned int worldLength = (unsigned int)sim->getWorldLength();
@@ -208,14 +208,14 @@ void ObjectSimple2D::onCycle()
 
 	if (mEnergy < 0)
 	{
-		Lab::getInstance().getSimulation()->killOrganism(this);
+		Lab::getSingleton().getSimulation()->killOrganism(this);
 	}
 
 	if (mMaxAge > 0)
 	{
-		if (Lab::getInstance().getSimulation()->time() - mCreationTime >= mMaxAge)
+		if (Lab::getSingleton().getSimulation()->time() - mCreationTime >= mMaxAge)
 		{
-			Lab::getInstance().getSimulation()->killOrganism(this);
+			Lab::getSingleton().getSimulation()->killOrganism(this);
 		}
 	}
 }

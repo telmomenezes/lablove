@@ -20,6 +20,19 @@
 #ifndef __INCLUDE_OGRE_APPLICATION_H__
 #define __INCLUDE_OGRE_APPLICATION_H__
 
+//mem probs without this next one
+#include <OgreNoMemoryMacros.h>
+#include <CEGUI/CEGUIImageset.h>
+#include <CEGUI/CEGUISystem.h>
+#include <CEGUI/CEGUILogger.h>
+#include <CEGUI/CEGUISchemeManager.h>
+#include <CEGUI/CEGUIWindowManager.h>
+#include <CEGUI/CEGUIWindow.h>
+#include "OgreCEGUIRenderer.h"
+#include "OgreCEGUIResourceProvider.h"
+//regular mem handler
+#include <OgreMemoryMacros.h>
+
 #include "Ogre.h"
 #include "OgreConfigFile.h"
 #include "OgreStringConverter.h"
@@ -86,6 +99,7 @@ public:
 	virtual bool mouseReleased(const MouseEvent &arg, MouseButtonID id);
 
 	virtual bool onKeyDown(int key);
+	virtual bool onKeyUp(int key);
 	virtual bool onMouseMove(int x, int y);
 
 	void addInputHandler(InputHandler* handler);
@@ -98,6 +112,7 @@ protected:
 	void setupResources();
 	void initFrameListener();
 	void updateStats();
+	void updateCamera();
 
 	Root *mRoot;
 	Camera* mCamera;
@@ -118,6 +133,11 @@ protected:
 
 	list<InputHandler*> mHandlersList;
 
+	CEGUI::OgreCEGUIRenderer* mGUIRenderer;
+	CEGUI::System* mGUISystem;
+	CEGUI::Window* mEditorGuiSheet;
+
+	// Camera control
 	Vector3 mTranslateVector;
 	unsigned int mNumScreenShots;
 	float mMoveScale;
@@ -126,6 +146,13 @@ protected:
 	Radian mRotY;
 	Real mMoveSpeed;
 	Degree mRotateSpeed;
+
+	bool mMoveCameraLeft;
+	bool mMoveCameraRight;
+	bool mMoveCameraUp;
+	bool mMoveCameraDown;
+	bool mMoveCameraFront;
+	bool mMoveCameraBack;
 };
 
 #endif
