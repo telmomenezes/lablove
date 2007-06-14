@@ -17,8 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifdef __LABLOVE_WITH_GRAPHICS
-
 #include "OgreApplication.h"
 #include "Lab.h"
 
@@ -35,10 +33,6 @@ OgreApplication::OgreApplication()
 	mResourcePath = "";
 #endif
 	mStop = false;
-
-	mGUIRenderer = NULL;
-        mGUISystem = NULL;
-        mEditorGuiSheet = NULL;
 
 	mTranslateVector = Vector3::ZERO;
 	mNumScreenShots = 0;
@@ -57,21 +51,6 @@ OgreApplication::OgreApplication()
 
 OgreApplication::~OgreApplication()
 {
-	if (mEditorGuiSheet)
-	{
-		CEGUI::WindowManager::getSingleton().destroyWindow(mEditorGuiSheet);
-	}
-	if (mGUISystem)
-	{
-		delete mGUISystem;
-		mGUISystem = NULL;
-	}
-	if (mGUIRenderer)
-	{
-		delete mGUIRenderer;
-		mGUIRenderer = NULL;
-	}
-
 	//Remove ourself as a Window listener
 	WindowEventUtilities::removeWindowEventListener(mWindow, this);
 	windowClosed(mWindow);
@@ -137,25 +116,6 @@ bool OgreApplication::init()
 
 	Light* l = mSceneMgr->createLight("MainLight");
 	l->setPosition(20, 80, 50);
-
-	// Create GUI
-	mGUIRenderer = new CEGUI::OgreCEGUIRenderer(mWindow, Ogre::RENDER_QUEUE_OVERLAY, false, 3000, mSceneMgr);
-	mGUISystem = new CEGUI::System(mGUIRenderer);
-	CEGUI::Logger::getSingleton().setLoggingLevel(CEGUI::Informative);
-	CEGUI::SchemeManager::getSingleton().loadScheme((CEGUI::utf8*)"LoveLookSkin.scheme");
-	mGUISystem->setDefaultMouseCursor((CEGUI::utf8*)"LoveLook", (CEGUI::utf8*)"MouseArrow");
-	//CEGUI::MouseCursor::getSingleton().setImage("LoveLook", "MouseMoveCursor");
-	mGUISystem->setDefaultFont((CEGUI::utf8*)"BlueHighway-12");
-	mEditorGuiSheet = CEGUI::WindowManager::getSingleton().createWindow(
-		(CEGUI::utf8*)"DefaultWindow",
-		(CEGUI::utf8*)"Sheet");  
-	mGUISystem->setGUISheet(mEditorGuiSheet);
-
-	CEGUI::PushButton* quitButton = (CEGUI::PushButton*)CEGUI::WindowManager::getSingleton().createWindow("LoveLook/Button", (CEGUI::utf8*)"Quit");
-	mEditorGuiSheet->addChildWindow((CEGUI::Window*)quitButton);
-	quitButton->setPosition(CEGUI::UVector2(cegui_reldim(0.90f), cegui_reldim(0.95f)));
-	quitButton->setSize(CEGUI::UVector2(cegui_reldim(0.06f), cegui_reldim(0.03f)));
-	quitButton->setText("Quit");
 
 	initFrameListener();
 
@@ -555,5 +515,4 @@ void OgreApplication::removeInputHandler()
 {
 	mHandlersList.pop_front();
 }
-#endif
 

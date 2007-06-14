@@ -20,19 +20,6 @@
 #ifndef __INCLUDE_OGRE_APPLICATION_H__
 #define __INCLUDE_OGRE_APPLICATION_H__
 
-//mem probs without this next one
-#include <OgreNoMemoryMacros.h>
-#include <CEGUI/CEGUIImageset.h>
-#include <CEGUI/CEGUISystem.h>
-#include <CEGUI/CEGUILogger.h>
-#include <CEGUI/CEGUISchemeManager.h>
-#include <CEGUI/CEGUIWindowManager.h>
-#include <CEGUI/CEGUIWindow.h>
-#include "OgreCEGUIRenderer.h"
-#include "OgreCEGUIResourceProvider.h"
-//regular mem handler
-#include <OgreMemoryMacros.h>
-
 #include "Ogre.h"
 #include "OgreConfigFile.h"
 #include "OgreStringConverter.h"
@@ -132,10 +119,6 @@ protected:
 	JoyStick* mJoy;
 
 	list<InputHandler*> mHandlersList;
-
-	CEGUI::OgreCEGUIRenderer* mGUIRenderer;
-	CEGUI::System* mGUISystem;
-	CEGUI::Window* mEditorGuiSheet;
 
 	// Camera control
 	Vector3 mTranslateVector;
