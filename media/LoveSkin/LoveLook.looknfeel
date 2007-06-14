@@ -2,10 +2,10 @@
 <Falagard>
     <!--
     ***************************************************
-        TaharezLook/Button
+        LoveLook/Button
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/Button">
+    <WidgetLook name="LoveLook/Button">
         <PropertyDefinition name="NormalTextColour" initialValue="FFFFFFFF" redrawOnWrite="true" />
         <PropertyDefinition name="HoverTextColour" initialValue="FFFFFFFF" redrawOnWrite="true" />
         <PropertyDefinition name="PushedTextColour" initialValue="FFFFFFFF" redrawOnWrite="true" />
@@ -38,9 +38,9 @@
                     <Dim type="Width"><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height"><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="LeftEdge" imageset="TaharezLook" image="ButtonLeftNormal" />
-                <Image type="RightEdge" imageset="TaharezLook" image="ButtonRightNormal" />
-                <Image type="Background" imageset="TaharezLook" image="ButtonMiddleNormal" />
+                <Image type="LeftEdge" imageset="LoveLook" image="ButtonLeftNormal" />
+                <Image type="RightEdge" imageset="LoveLook" image="ButtonRightNormal" />
+                <Image type="Background" imageset="LoveLook" image="ButtonMiddleNormal" />
             </FrameComponent>
             <ImageryComponent>
                 <Area>
@@ -62,9 +62,9 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="LeftEdge" imageset="TaharezLook" image="ButtonLeftHighlight" />
-                <Image type="RightEdge" imageset="TaharezLook" image="ButtonRightHighlight" />
-                <Image type="Background" imageset="TaharezLook" image="ButtonMiddleHighlight" />
+                <Image type="LeftEdge" imageset="LoveLook" image="ButtonLeftHighlight" />
+                <Image type="RightEdge" imageset="LoveLook" image="ButtonRightHighlight" />
+                <Image type="Background" imageset="LoveLook" image="ButtonMiddleHighlight" />
             </FrameComponent>
             <ImageryComponent>
                 <Area>
@@ -86,9 +86,9 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="LeftEdge" imageset="TaharezLook" image="ButtonLeftPushed" />
-                <Image type="RightEdge" imageset="TaharezLook" image="ButtonRightPushed" />
-                <Image type="Background" imageset="TaharezLook" image="ButtonMiddlePushed" />
+                <Image type="LeftEdge" imageset="LoveLook" image="ButtonLeftPushed" />
+                <Image type="RightEdge" imageset="LoveLook" image="ButtonRightPushed" />
+                <Image type="Background" imageset="LoveLook" image="ButtonMiddlePushed" />
             </FrameComponent>
             <ImageryComponent>
                 <Area>
@@ -148,10 +148,10 @@
     
     <!--
     ***************************************************
-        TaharezLook/RadioButton
+        LoveLook/RadioButton
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/RadioButton">
+    <WidgetLook name="LoveLook/RadioButton">
 		<PropertyDefinition name="NormalTextColour" initialValue="FFFFFFFF" redrawOnWrite="true" />
         <PropertyDefinition name="HoverTextColour" initialValue="FFFFFFFF" redrawOnWrite="true" />
         <PropertyDefinition name="PushedTextColour" initialValue="FFFFFFFF" redrawOnWrite="true" />
@@ -160,7 +160,7 @@
             <TextComponent>
                 <Area>
                     <Dim type="LeftEdge" >
-                        <ImageDim imageset="TaharezLook" image="RadioButtonNormal" dimension="Width">
+                        <ImageDim imageset="LoveLook" image="RadioButtonNormal" dimension="Width">
                             <DimOperator op="Add">
                                 <AbsoluteDim value="3" />
                             </DimOperator>
@@ -182,7 +182,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="RadioButtonNormal" />
+                <Image imageset="LoveLook" image="RadioButtonNormal" />
                 <VertFormat type="CentreAligned" />
                 <HorzFormat type="LeftAligned" />
             </ImageryComponent>
@@ -195,7 +195,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="RadioButtonHover" />
+                <Image imageset="LoveLook" image="RadioButtonHover" />
                 <VertFormat type="CentreAligned" />
                 <HorzFormat type="LeftAligned" />
             </ImageryComponent>
@@ -208,7 +208,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="RadioButtonMark" />
+                <Image imageset="LoveLook" image="RadioButtonMark" />
                 <VertFormat type="CentreAligned" />
                 <HorzFormat type="LeftAligned" />
             </ImageryComponent>
@@ -274,10 +274,10 @@
     
     <!--
     ***************************************************
-        TaharezLook/Checkbox
+        LoveLook/Checkbox
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/Checkbox">
+    <WidgetLook name="LoveLook/Checkbox">
 		<PropertyDefinition name="NormalTextColour" initialValue="FFFFFFFF" redrawOnWrite="true" />
         <PropertyDefinition name="HoverTextColour" initialValue="FFFFFFFF" redrawOnWrite="true" />
         <PropertyDefinition name="PushedTextColour" initialValue="FFFFFFFF" redrawOnWrite="true" />
@@ -286,7 +286,7 @@
             <TextComponent>
                 <Area>
                     <Dim type="LeftEdge" >
-                        <ImageDim imageset="TaharezLook" image="CheckboxNormal" dimension="Width">
+                        <ImageDim imageset="LoveLook" image="CheckboxNormal" dimension="Width">
                             <DimOperator op="Add">
                                 <AbsoluteDim value="3" />
                             </DimOperator>
@@ -308,7 +308,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="CheckboxNormal" />
+                <Image imageset="LoveLook" image="CheckboxNormal" />
                 <VertFormat type="CentreAligned" />
                 <HorzFormat type="LeftAligned" />
             </ImageryComponent>
@@ -321,7 +321,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="CheckboxHover" />
+                <Image imageset="LoveLook" image="CheckboxHover" />
                 <VertFormat type="CentreAligned" />
                 <HorzFormat type="LeftAligned" />
             </ImageryComponent>
@@ -334,7 +334,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="CheckboxMark" />
+                <Image imageset="LoveLook" image="CheckboxMark" />
                 <VertFormat type="CentreAligned" />
                 <HorzFormat type="LeftAligned" />
             </ImageryComponent>
@@ -400,15 +400,15 @@
     
     <!--
     ***************************************************
-        TaharezLook/Editbox
+        LoveLook/Editbox
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/Editbox">
+    <WidgetLook name="LoveLook/Editbox">
         <PropertyDefinition name="NormalTextColour" initialValue="FFFFFFFF" redrawOnWrite="true" />
         <PropertyDefinition name="SelectedTextColour" initialValue="FF000000" redrawOnWrite="true" />
         <PropertyDefinition name="ActiveSelectionColour" initialValue="FF607FFF" redrawOnWrite="true" />
         <PropertyDefinition name="InactiveSelectionColour" initialValue="FF808080" redrawOnWrite="true" />
-        <Property name="MouseCursorImage" value="set:TaharezLook image:MouseTextBar" />
+        <Property name="MouseCursorImage" value="set:LoveLook image:MouseTextBar" />
         <NamedArea name="TextArea">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="5" /></Dim>
@@ -425,9 +425,9 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="LeftEdge" imageset="TaharezLook" image="EditBoxLeft" />
-                <Image type="RightEdge" imageset="TaharezLook" image="EditBoxRight" />
-                <Image type="Background" imageset="TaharezLook" image="EditBoxMiddle" />
+                <Image type="LeftEdge" imageset="LoveLook" image="EditBoxLeft" />
+                <Image type="RightEdge" imageset="LoveLook" image="EditBoxRight" />
+                <Image type="Background" imageset="LoveLook" image="EditBoxMiddle" />
             </FrameComponent>
         </ImagerySection>
         <ImagerySection name="selection">
@@ -438,7 +438,7 @@
                     <Dim type="RightEdge" ><UnifiedDim scale="1.0" type="RightEdge" /></Dim>
                     <Dim type="BottomEdge" ><UnifiedDim scale="1.0" type="BottomEdge" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="TextSelectionBrush" />
+                <Image imageset="LoveLook" image="TextSelectionBrush" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Stretched" />
             </ImageryComponent>
@@ -448,10 +448,10 @@
                 <Area>
                     <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                     <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
-                    <Dim type="Width" ><ImageDim imageset="TaharezLook" image="EditBoxCarat" dimension="Width" /></Dim>
+                    <Dim type="Width" ><ImageDim imageset="LoveLook" image="EditBoxCarat" dimension="Width" /></Dim>
                     <Dim type="BottomEdge" ><UnifiedDim scale="1.0" type="BottomEdge" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="EditBoxCarat" />
+                <Image imageset="LoveLook" image="EditBoxCarat" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Stretched" />
             </ImageryComponent>
@@ -491,10 +491,10 @@
     
     <!--
     ***************************************************
-        TaharezLook/Titlebar
+        LoveLook/Titlebar
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/Titlebar">
+    <WidgetLook name="LoveLook/Titlebar">
         <PropertyDefinition name="CaptionColour" initialValue="FFFFFFFF" redrawOnWrite="true" />
         <ImagerySection name="main">
             <ImageryComponent>
@@ -504,7 +504,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1.0" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1.0" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="NewTitlebarLeft" />
+                <Image imageset="LoveLook" image="NewTitlebarLeft" />
                 <VertFormat type="Stretched" />
             </ImageryComponent>
             <ImageryComponent>
@@ -514,9 +514,9 @@
                     <Dim type="RightEdge" >
                         <UnifiedDim scale="1" type="RightEdge">
                             <DimOperator op="Subtract">
-                                <ImageDim imageset="TaharezLook" image="SysAreaRight" dimension="Width">
+                                <ImageDim imageset="LoveLook" image="SysAreaRight" dimension="Width">
                                     <DimOperator op="Add">
-                                        <ImageDim imageset="TaharezLook" image="SysAreaMiddle" dimension="Width" />
+                                        <ImageDim imageset="LoveLook" image="SysAreaMiddle" dimension="Width" />
                                     </DimOperator>
                                 </ImageDim>
                             </DimOperator>
@@ -524,7 +524,7 @@
                     </Dim>
                     <Dim type="Height" ><UnifiedDim scale="1.0" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="NewTitlebarRight" />
+                <Image imageset="LoveLook" image="NewTitlebarRight" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="RightAligned" />
             </ImageryComponent>
@@ -535,13 +535,13 @@
                     <Dim type="RightEdge" >
                         <UnifiedDim scale="1" type="RightEdge">
                             <DimOperator op="Subtract">
-                                <ImageDim imageset="TaharezLook" image="SysAreaRight" dimension="Width" />
+                                <ImageDim imageset="LoveLook" image="SysAreaRight" dimension="Width" />
                             </DimOperator>
                         </UnifiedDim>
                     </Dim>
                     <Dim type="Height" ><UnifiedDim scale="1.0" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="SysAreaMiddle" />
+                <Image imageset="LoveLook" image="SysAreaMiddle" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="RightAligned" />
             </ImageryComponent>
@@ -552,22 +552,22 @@
                     <Dim type="Width" ><UnifiedDim scale="1.0" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1.0" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="SysAreaRight" />
+                <Image imageset="LoveLook" image="SysAreaRight" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="RightAligned" />
             </ImageryComponent>
             <ImageryComponent>
                 <Area>
-                    <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="NewTitlebarLeft" dimension="Width" /></Dim>
+                    <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="NewTitlebarLeft" dimension="Width" /></Dim>
                     <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
                     <Dim type="RightEdge" >
                         <UnifiedDim scale="1" type="RightEdge">
                             <DimOperator op="Subtract">
-                                <ImageDim imageset="TaharezLook" image="SysAreaRight" dimension="Width">
+                                <ImageDim imageset="LoveLook" image="SysAreaRight" dimension="Width">
                                     <DimOperator op="Add">
-                                        <ImageDim imageset="TaharezLook" image="SysAreaMiddle" dimension="Width">
+                                        <ImageDim imageset="LoveLook" image="SysAreaMiddle" dimension="Width">
                                             <DimOperator op="Add">
-                                                <ImageDim imageset="TaharezLook" image="NewTitlebarRight" dimension="Width" />
+                                                <ImageDim imageset="LoveLook" image="NewTitlebarRight" dimension="Width" />
                                             </DimOperator>
                                         </ImageDim>
                                     </DimOperator>
@@ -577,7 +577,7 @@
                     </Dim>
                     <Dim type="Height" ><UnifiedDim scale="1.0" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="NewTitlebarMiddle" />
+                <Image imageset="LoveLook" image="NewTitlebarMiddle" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Stretched" />
             </ImageryComponent>
@@ -585,7 +585,7 @@
         <ImagerySection name="caption">
             <TextComponent>
                 <Area>
-                    <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="NewTitlebarLeft" dimension="Width" /></Dim>
+                    <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="NewTitlebarLeft" dimension="Width" /></Dim>
                     <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
                     <Dim type="Width" ><UnifiedDim scale="1" offset="-75" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
@@ -620,31 +620,31 @@
     
     <!--
     ***************************************************
-        TaharezLook/FrameWindow
+        LoveLook/FrameWindow
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/FrameWindow">
+    <WidgetLook name="LoveLook/FrameWindow">
         <PropertyLinkDefinition name="CaptionColour" widget="__auto_titlebar__" targetProperty="CaptionColour" initialValue="FFFFFFFF" />
         <PropertyLinkDefinition name="TitlebarFont" widget="__auto_titlebar__" targetProperty="Font" />
-        <Property name="NSSizingCursorImage" value="set:TaharezLook image:MouseNoSoCursor" />
-        <Property name="EWSizingCursorImage" value="set:TaharezLook image:MouseEsWeCursor" />
-        <Property name="NWSESizingCursorImage" value="set:TaharezLook image:MouseNwSeCursor" />
-        <Property name="NESWSizingCursorImage" value="set:TaharezLook image:MouseNeSwCursor" />
+        <Property name="NSSizingCursorImage" value="set:LoveLook image:MouseNoSoCursor" />
+        <Property name="EWSizingCursorImage" value="set:LoveLook image:MouseEsWeCursor" />
+        <Property name="NWSESizingCursorImage" value="set:LoveLook image:MouseNwSeCursor" />
+        <Property name="NESWSizingCursorImage" value="set:LoveLook image:MouseNeSwCursor" />
         <NamedArea name="ClientWithTitleWithFrame">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="WindowTopLeft" dimension="Width" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="WindowTopLeft" dimension="Width" /></Dim>
                 <Dim type="TopEdge" ><WidgetDim widget="__auto_titlebar__" dimension="BottomEdge" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="WindowTopRight" dimension="Width" />
+                            <ImageDim imageset="LoveLook" image="WindowTopRight" dimension="Width" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
                 <Dim type="BottomEdge" >
                     <UnifiedDim scale="1" type="BottomEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="WindowBottomEdge" dimension="Height" />
+                            <ImageDim imageset="LoveLook" image="WindowBottomEdge" dimension="Height" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
@@ -660,19 +660,19 @@
         </NamedArea>
         <NamedArea name="ClientNoTitleWithFrame">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="WindowTopLeft" dimension="Width" /></Dim>
-                <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="WindowTopEdge" dimension="Height" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="WindowTopLeft" dimension="Width" /></Dim>
+                <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="WindowTopEdge" dimension="Height" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="WindowTopRight" dimension="Width" />
+                            <ImageDim imageset="LoveLook" image="WindowTopRight" dimension="Width" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
                 <Dim type="BottomEdge" >
                     <UnifiedDim scale="1" type="BottomEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="WindowBottomEdge" dimension="Height" />
+                            <ImageDim imageset="LoveLook" image="WindowBottomEdge" dimension="Height" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
@@ -686,7 +686,7 @@
                 <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
             </Area>
         </NamedArea>
-        <Child type="TaharezLook/Titlebar" nameSuffix="__auto_titlebar__">
+        <Child type="LoveLook/Titlebar" nameSuffix="__auto_titlebar__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
@@ -695,14 +695,14 @@
             </Area>
             <Property name="AlwaysOnTop" value="False" />
         </Child>
-        <Child type="TaharezLook/SystemButton" nameSuffix="__auto_closebutton__">
+        <Child type="LoveLook/SystemButton" nameSuffix="__auto_closebutton__">
             <Area>
                 <Dim type="LeftEdge" >
                     <UnifiedDim scale="1" type="LeftEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="SysAreaRight" dimension="Width">
+                            <ImageDim imageset="LoveLook" image="SysAreaRight" dimension="Width">
                                 <DimOperator op="Add">
-                                    <ImageDim imageset="TaharezLook" image="SysAreaMiddle" dimension="Width" />
+                                    <ImageDim imageset="LoveLook" image="SysAreaMiddle" dimension="Width" />
                                 </DimOperator>
                             </ImageDim>
                         </DimOperator>
@@ -713,19 +713,19 @@
                         <DimOperator op="Multiply">
                             <WidgetDim widget="__auto_titlebar__" dimension="Height">
                                 <DimOperator op="Subtract">
-                                    <ImageDim imageset="TaharezLook" image="NewCloseButtonNormal" dimension="Width" />
+                                    <ImageDim imageset="LoveLook" image="NewCloseButtonNormal" dimension="Width" />
                                 </DimOperator>
                             </WidgetDim>
                         </DimOperator>
                     </AbsoluteDim>
                 </Dim>
-                <Dim type="Width" ><ImageDim imageset="TaharezLook" image="NewCloseButtonNormal" dimension="Width" /></Dim>
-                <Dim type="Height" ><ImageDim imageset="TaharezLook" image="NewCloseButtonNormal" dimension="Width" /></Dim>
+                <Dim type="Width" ><ImageDim imageset="LoveLook" image="NewCloseButtonNormal" dimension="Width" /></Dim>
+                <Dim type="Height" ><ImageDim imageset="LoveLook" image="NewCloseButtonNormal" dimension="Width" /></Dim>
             </Area>
             <Property name="AlwaysOnTop" value="True" />
-            <Property name="NormalImage" value="set:TaharezLook image:NewCloseButtonNormal" />
-            <Property name="HoverImage" value="set:TaharezLook image:NewCloseButtonHover" />
-            <Property name="PushedImage" value="set:TaharezLook image:NewCloseButtonPressed" />
+            <Property name="NormalImage" value="set:LoveLook image:NewCloseButtonNormal" />
+            <Property name="HoverImage" value="set:LoveLook image:NewCloseButtonHover" />
+            <Property name="PushedImage" value="set:LoveLook image:NewCloseButtonPressed" />
         </Child>
         <ImagerySection name="withtitle_frame">
             <FrameComponent>
@@ -735,12 +735,12 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="BottomEdge" ><UnifiedDim scale="1" type="BottomEdge" /></Dim>
                 </Area>
-                <Image type="BottomLeftCorner" imageset="TaharezLook" image="WindowBottomLeft" />
-                <Image type="BottomRightCorner" imageset="TaharezLook" image="WindowBottomRight" />
-                <Image type="LeftEdge" imageset="TaharezLook" image="WindowLeftEdge" />
-                <Image type="RightEdge" imageset="TaharezLook" image="WindowRightEdge" />
-                <Image type="BottomEdge" imageset="TaharezLook" image="WindowBottomEdge" />
-                <Image type="Background" imageset="TaharezLook" image="ClientBrush" />
+                <Image type="BottomLeftCorner" imageset="LoveLook" image="WindowBottomLeft" />
+                <Image type="BottomRightCorner" imageset="LoveLook" image="WindowBottomRight" />
+                <Image type="LeftEdge" imageset="LoveLook" image="WindowLeftEdge" />
+                <Image type="RightEdge" imageset="LoveLook" image="WindowRightEdge" />
+                <Image type="BottomEdge" imageset="LoveLook" image="WindowBottomEdge" />
+                <Image type="Background" imageset="LoveLook" image="ClientBrush" />
                 <VertFormat type="Tiled" />
                 <HorzFormat type="Tiled" />
             </FrameComponent>
@@ -753,14 +753,14 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="TopLeftCorner" imageset="TaharezLook" image="WindowTopLeft" />
-                <Image type="TopRightCorner" imageset="TaharezLook" image="WindowTopRight" />
-                <Image type="BottomLeftCorner" imageset="TaharezLook" image="WindowBottomLeft" />
-                <Image type="BottomRightCorner" imageset="TaharezLook" image="WindowBottomRight" />
-                <Image type="LeftEdge" imageset="TaharezLook" image="WindowLeftEdge" />
-                <Image type="RightEdge" imageset="TaharezLook" image="WindowRightEdge" />
-                <Image type="BottomEdge" imageset="TaharezLook" image="WindowBottomEdge" />
-                <Image type="Background" imageset="TaharezLook" image="ClientBrush" />
+                <Image type="TopLeftCorner" imageset="LoveLook" image="WindowTopLeft" />
+                <Image type="TopRightCorner" imageset="LoveLook" image="WindowTopRight" />
+                <Image type="BottomLeftCorner" imageset="LoveLook" image="WindowBottomLeft" />
+                <Image type="BottomRightCorner" imageset="LoveLook" image="WindowBottomRight" />
+                <Image type="LeftEdge" imageset="LoveLook" image="WindowLeftEdge" />
+                <Image type="RightEdge" imageset="LoveLook" image="WindowRightEdge" />
+                <Image type="BottomEdge" imageset="LoveLook" image="WindowBottomEdge" />
+                <Image type="Background" imageset="LoveLook" image="ClientBrush" />
                 <VertFormat type="Tiled" />
                 <HorzFormat type="Tiled" />
             </FrameComponent>
@@ -773,7 +773,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="BottomEdge" ><UnifiedDim scale="1" type="BottomEdge" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="ClientBrush" />
+                <Image imageset="LoveLook" image="ClientBrush" />
                 <VertFormat type="Tiled" />
                 <HorzFormat type="Tiled" />
             </ImageryComponent>
@@ -786,7 +786,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="ClientBrush" />
+                <Image imageset="LoveLook" image="ClientBrush" />
                 <VertFormat type="Tiled" />
                 <HorzFormat type="Tiled" />
             </ImageryComponent>
@@ -863,18 +863,18 @@
     
     <!--
     ***************************************************
-        TaharezLook/ProgressBar
+        LoveLook/ProgressBar
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/ProgressBar">
+    <WidgetLook name="LoveLook/ProgressBar">
         <NamedArea name="ProgressArea">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="ProgressBarLeft" dimension="Width" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="ProgressBarLeft" dimension="Width" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="ProgressBarRight" dimension="Width" />
+                            <ImageDim imageset="LoveLook" image="ProgressBarRight" dimension="Width" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
@@ -889,9 +889,9 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="LeftEdge" imageset="TaharezLook" image="ProgressBarLeft" />
-                <Image type="RightEdge" imageset="TaharezLook" image="ProgressBarRight" />
-                <Image type="Background" imageset="TaharezLook" image="ProgressBarMiddle" />
+                <Image type="LeftEdge" imageset="LoveLook" image="ProgressBarLeft" />
+                <Image type="RightEdge" imageset="LoveLook" image="ProgressBarRight" />
+                <Image type="Background" imageset="LoveLook" image="ProgressBarMiddle" />
             </FrameComponent>
         </ImagerySection>
         <ImagerySection name="progress_lights" >
@@ -902,7 +902,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="ProgressBarLitSegment" />
+                <Image imageset="LoveLook" image="ProgressBarLitSegment" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Tiled" />
             </ImageryComponent>
@@ -935,18 +935,18 @@
     
     <!--
     ***************************************************
-        TaharezLook/AlternateProgressBar
+        LoveLook/AlternateProgressBar
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/AltProgressBar">
+    <WidgetLook name="LoveLook/AltProgressBar">
         <NamedArea name="ProgressArea">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="AltProgressLeft" dimension="Width" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="AltProgressLeft" dimension="Width" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="2" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="AltProgressRight" dimension="Width" />
+                            <ImageDim imageset="LoveLook" image="AltProgressRight" dimension="Width" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
@@ -961,9 +961,9 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="LeftEdge" imageset="TaharezLook" image="AltProgressLeft" />
-                <Image type="RightEdge" imageset="TaharezLook" image="AltProgressRight" />
-                <Image type="Background" imageset="TaharezLook" image="AltProgressMiddle" />
+                <Image type="LeftEdge" imageset="LoveLook" image="AltProgressLeft" />
+                <Image type="RightEdge" imageset="LoveLook" image="AltProgressRight" />
+                <Image type="Background" imageset="LoveLook" image="AltProgressMiddle" />
             </FrameComponent>
         </ImagerySection>
         <ImagerySection name="progress_lights" >
@@ -974,7 +974,7 @@
                     <Dim type="Width" ><UnifiedDim scale="0.1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="AltProgressLight1" />
+                <Image imageset="LoveLook" image="AltProgressLight1" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Tiled" />
             </ImageryComponent>
@@ -985,7 +985,7 @@
                     <Dim type="Width" ><UnifiedDim scale="0.1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="AltProgressLight2" />
+                <Image imageset="LoveLook" image="AltProgressLight2" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Tiled" />
             </ImageryComponent>
@@ -996,7 +996,7 @@
                     <Dim type="Width" ><UnifiedDim scale="0.1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="AltProgressLight3" />
+                <Image imageset="LoveLook" image="AltProgressLight3" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Tiled" />
             </ImageryComponent>
@@ -1007,7 +1007,7 @@
                     <Dim type="Width" ><UnifiedDim scale="0.1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="AltProgressLight4" />
+                <Image imageset="LoveLook" image="AltProgressLight4" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Tiled" />
             </ImageryComponent>
@@ -1018,7 +1018,7 @@
                     <Dim type="Width" ><UnifiedDim scale="0.1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="AltProgressLight5" />
+                <Image imageset="LoveLook" image="AltProgressLight5" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Tiled" />
             </ImageryComponent>
@@ -1029,7 +1029,7 @@
                     <Dim type="Width" ><UnifiedDim scale="0.1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="AltProgressLight6" />
+                <Image imageset="LoveLook" image="AltProgressLight6" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Tiled" />
             </ImageryComponent>
@@ -1040,7 +1040,7 @@
                     <Dim type="Width" ><UnifiedDim scale="0.1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="AltProgressLight7" />
+                <Image imageset="LoveLook" image="AltProgressLight7" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Tiled" />
             </ImageryComponent>
@@ -1051,7 +1051,7 @@
                     <Dim type="Width" ><UnifiedDim scale="0.1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="AltProgressLight8" />
+                <Image imageset="LoveLook" image="AltProgressLight8" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Tiled" />
             </ImageryComponent>
@@ -1062,7 +1062,7 @@
                     <Dim type="Width" ><UnifiedDim scale="0.1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="AltProgressLight9" />
+                <Image imageset="LoveLook" image="AltProgressLight9" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Tiled" />
             </ImageryComponent>
@@ -1073,7 +1073,7 @@
                     <Dim type="Width" ><UnifiedDim scale="0.1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="AltProgressLight10" />
+                <Image imageset="LoveLook" image="AltProgressLight10" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Tiled" />
             </ImageryComponent>
@@ -1106,10 +1106,10 @@
     
     <!--
     ***************************************************
-        TaharezLook/VUMeter (progress bar)
+        LoveLook/VUMeter (progress bar)
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/VUMeter">
+    <WidgetLook name="LoveLook/VUMeter">
         <Property name="VerticalProgress" value="True" />
         <NamedArea name="ProgressArea">
             <Area>
@@ -1127,7 +1127,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="0.5" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="TextSelectionBrush" />
+                <Image imageset="LoveLook" image="TextSelectionBrush" />
                 <Colours topLeft="FF00FF00" topRight="FF00FF00" bottomLeft="FF00FF00" bottomRight="FF00FF00" />
                 <VertFormat type="Tiled" />
                 <HorzFormat type="Stretched" />
@@ -1139,7 +1139,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="0.3" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="TextSelectionBrush" />
+                <Image imageset="LoveLook" image="TextSelectionBrush" />
                 <Colours topLeft="FFFFFF00" topRight="FFFFFF00" bottomLeft="FFFFFF00" bottomRight="FFFFFF00" />
                 <VertFormat type="Tiled" />
                 <HorzFormat type="Stretched" />
@@ -1151,7 +1151,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="0.2" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="TextSelectionBrush" />
+                <Image imageset="LoveLook" image="TextSelectionBrush" />
                 <Colours topLeft="FFFF0000" topRight="FFFF0000" bottomLeft="FFFF0000" bottomRight="FFFF0000" />
                 <VertFormat type="Tiled" />
                 <HorzFormat type="Stretched" />
@@ -1177,10 +1177,10 @@
     
     <!--
     ***************************************************
-        TaharezLook/SliderThumb
+        LoveLook/SliderThumb
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/SliderThumb">
+    <WidgetLook name="LoveLook/SliderThumb">
         <Property name="VertFree" value="True" />
         <ImagerySection name="normal">
             <ImageryComponent>
@@ -1190,7 +1190,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1.0" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1.0" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="VertSliderThumbNormal" />
+                <Image imageset="LoveLook" image="VertSliderThumbNormal" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Stretched" />
             </ImageryComponent>
@@ -1203,7 +1203,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1.0" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1.0" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="VertSliderThumbHover" />
+                <Image imageset="LoveLook" image="VertSliderThumbHover" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Stretched" />
             </ImageryComponent>
@@ -1234,10 +1234,10 @@
     
     <!--
     ***************************************************
-        TaharezLook/Slider
+        LoveLook/Slider
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/Slider">
+    <WidgetLook name="LoveLook/Slider">
         <Property name="VerticalSlider" value="True" />
         <Property name="MouseButtonDownAutoRepeat" value="True" />
         <Property name="WantsMultiClickEvents" value="False" />
@@ -1249,12 +1249,12 @@
                 <Dim type="BottomEdge" ><UnifiedDim scale="1.0" type="BottomEdge" /></Dim>
             </Area>
         </NamedArea>
-        <Child  type="TaharezLook/SliderThumb" nameSuffix="__auto_thumb__">
+        <Child  type="LoveLook/SliderThumb" nameSuffix="__auto_thumb__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="Width" ><UnifiedDim scale="1.0" type="Width" /></Dim>
-                <Dim type="Height" ><ImageDim imageset="TaharezLook" image="VertSliderThumbNormal" dimension="Height" /></Dim>
+                <Dim type="Height" ><ImageDim imageset="LoveLook" image="VertSliderThumbNormal" dimension="Height" /></Dim>
             </Area>
         </Child>
         <ImagerySection name="main">
@@ -1265,7 +1265,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1.0" offset="-6" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1.0" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="VertSliderBody" />
+                <Image imageset="LoveLook" image="VertSliderBody" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Stretched" />
             </ImageryComponent>
@@ -1286,10 +1286,10 @@
     
     <!--
     ***************************************************
-        TaharezLook/HorizontalScrollbarThumb
+        LoveLook/HorizontalScrollbarThumb
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/HorizontalScrollbarThumb">
+    <WidgetLook name="LoveLook/HorizontalScrollbarThumb">
         <Property name="HorzFree" value="True" />
         <ImagerySection name="normal">
             <FrameComponent>
@@ -1299,9 +1299,9 @@
                     <Dim type="Width" ><UnifiedDim scale="1.0" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1.0" type="Height" /></Dim>
                 </Area>
-                <Image type="LeftEdge" imageset="TaharezLook" image="MiniHorzScrollThumbLeftNormal" />
-                <Image type="RightEdge" imageset="TaharezLook" image="MiniHorzScrollThumbRightNormal" />
-                <Image type="Background" imageset="TaharezLook" image="MiniHorzScrollThumbMiddleNormal" />
+                <Image type="LeftEdge" imageset="LoveLook" image="MiniHorzScrollThumbLeftNormal" />
+                <Image type="RightEdge" imageset="LoveLook" image="MiniHorzScrollThumbRightNormal" />
+                <Image type="Background" imageset="LoveLook" image="MiniHorzScrollThumbMiddleNormal" />
             </FrameComponent>
         </ImagerySection>
         <ImagerySection name="hover">
@@ -1312,9 +1312,9 @@
                     <Dim type="Width" ><UnifiedDim scale="1.0" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1.0" type="Height" /></Dim>
                 </Area>
-                <Image type="LeftEdge" imageset="TaharezLook" image="MiniHorzScrollThumbLeftHover" />
-                <Image type="RightEdge" imageset="TaharezLook" image="MiniHorzScrollThumbRightHover" />
-                <Image type="Background" imageset="TaharezLook" image="MiniHorzScrollThumbMiddleHover" />
+                <Image type="LeftEdge" imageset="LoveLook" image="MiniHorzScrollThumbLeftHover" />
+                <Image type="RightEdge" imageset="LoveLook" image="MiniHorzScrollThumbRightHover" />
+                <Image type="Background" imageset="LoveLook" image="MiniHorzScrollThumbMiddleHover" />
             </FrameComponent>
         </ImagerySection>
         <StateImagery name="Normal">
@@ -1343,48 +1343,48 @@
     
     <!--
     ***************************************************
-        TaharezLook/HorizontalScrollbar
+        LoveLook/HorizontalScrollbar
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/HorizontalScrollbar">
+    <WidgetLook name="LoveLook/HorizontalScrollbar">
         <NamedArea name="ThumbTrackArea">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="MiniHorzScrollLeftNormal" dimension="Width" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="MiniHorzScrollLeftNormal" dimension="Width" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1.0" type="RightEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="MiniHorzScrollRightNormal" dimension="Width" />
+                            <ImageDim imageset="LoveLook" image="MiniHorzScrollRightNormal" dimension="Width" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
                 <Dim type="BottomEdge" ><UnifiedDim scale="1.0" type="BottomEdge" /></Dim>
             </Area>
         </NamedArea>
-        <Child  type="TaharezLook/ImageButton" nameSuffix="__auto_incbtn__">
+        <Child  type="LoveLook/ImageButton" nameSuffix="__auto_incbtn__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
-                <Dim type="Width" ><ImageDim imageset="TaharezLook" image="MiniHorzScrollRightNormal" dimension="Width" /></Dim>
+                <Dim type="Width" ><ImageDim imageset="LoveLook" image="MiniHorzScrollRightNormal" dimension="Width" /></Dim>
                 <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
             </Area>
             <HorzAlignment type="RightAligned" />
-            <Property name="NormalImage" value="set:TaharezLook image:MiniHorzScrollRightNormal" />
-            <Property name="HoverImage" value="set:TaharezLook image:MiniHorzScrollRightHover" />
-            <Property name="PushedImage" value="set:TaharezLook image:MiniHorzScrollRightNormal" />
+            <Property name="NormalImage" value="set:LoveLook image:MiniHorzScrollRightNormal" />
+            <Property name="HoverImage" value="set:LoveLook image:MiniHorzScrollRightHover" />
+            <Property name="PushedImage" value="set:LoveLook image:MiniHorzScrollRightNormal" />
         </Child>
-        <Child  type="TaharezLook/ImageButton" nameSuffix="__auto_decbtn__">
+        <Child  type="LoveLook/ImageButton" nameSuffix="__auto_decbtn__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
-                <Dim type="Width" ><ImageDim imageset="TaharezLook" image="MiniHorzScrollLeftNormal" dimension="Width" /></Dim>
+                <Dim type="Width" ><ImageDim imageset="LoveLook" image="MiniHorzScrollLeftNormal" dimension="Width" /></Dim>
                 <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
             </Area>
-            <Property name="NormalImage" value="set:TaharezLook image:MiniHorzScrollLeftNormal" />
-            <Property name="HoverImage" value="set:TaharezLook image:MiniHorzScrollLeftHover" />
-            <Property name="PushedImage" value="set:TaharezLook image:MiniHorzScrollLeftNormal" />
+            <Property name="NormalImage" value="set:LoveLook image:MiniHorzScrollLeftNormal" />
+            <Property name="HoverImage" value="set:LoveLook image:MiniHorzScrollLeftHover" />
+            <Property name="PushedImage" value="set:LoveLook image:MiniHorzScrollLeftNormal" />
         </Child>
-        <Child  type="TaharezLook/HorizontalScrollbarThumb" nameSuffix="__auto_thumb__">
+        <Child  type="LoveLook/HorizontalScrollbarThumb" nameSuffix="__auto_thumb__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
@@ -1396,18 +1396,18 @@
         <ImagerySection name="main">
             <ImageryComponent>
                 <Area>
-                    <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="MiniHorzScrollLeftNormal" dimension="Width" /></Dim>
+                    <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="MiniHorzScrollLeftNormal" dimension="Width" /></Dim>
                     <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
                     <Dim type="RightEdge" >
                         <UnifiedDim scale="1.0" type="RightEdge">
                             <DimOperator op="Subtract">
-                                <ImageDim imageset="TaharezLook" image="MiniHorzScrollRightNormal" dimension="Width" />
+                                <ImageDim imageset="LoveLook" image="MiniHorzScrollRightNormal" dimension="Width" />
                             </DimOperator>
                         </UnifiedDim>
                     </Dim>
                     <Dim type="BottomEdge" ><UnifiedDim scale="1.0" type="BottomEdge" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="MiniHorzScrollBarSegment" />
+                <Image imageset="LoveLook" image="MiniHorzScrollBarSegment" />
                 <VertFormat type="CentreAligned" />
                 <HorzFormat type="Stretched" />
             </ImageryComponent>
@@ -1428,10 +1428,10 @@
     
     <!--
     ***************************************************
-        TaharezLook/VerticalScrollbarThumb
+        LoveLook/VerticalScrollbarThumb
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/VerticalScrollbarThumb">
+    <WidgetLook name="LoveLook/VerticalScrollbarThumb">
         <Property name="VertFree" value="True" />
         <ImagerySection name="normal">
             <FrameComponent>
@@ -1441,9 +1441,9 @@
                     <Dim type="Width" ><UnifiedDim scale="1.0" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1.0" type="Height" /></Dim>
                 </Area>
-                <Image type="TopEdge" imageset="TaharezLook" image="MiniVertScrollThumbTopNormal" />
-                <Image type="BottomEdge" imageset="TaharezLook" image="MiniVertScrollThumbBottomNormal" />
-                <Image type="Background" imageset="TaharezLook" image="MiniVertScrollThumbMiddleNormal" />
+                <Image type="TopEdge" imageset="LoveLook" image="MiniVertScrollThumbTopNormal" />
+                <Image type="BottomEdge" imageset="LoveLook" image="MiniVertScrollThumbBottomNormal" />
+                <Image type="Background" imageset="LoveLook" image="MiniVertScrollThumbMiddleNormal" />
             </FrameComponent>
         </ImagerySection>
         <ImagerySection name="hover">
@@ -1454,9 +1454,9 @@
                     <Dim type="Width" ><UnifiedDim scale="1.0" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1.0" type="Height" /></Dim>
                 </Area>
-                <Image type="TopEdge" imageset="TaharezLook" image="MiniVertScrollThumbTopHover" />
-                <Image type="BottomEdge" imageset="TaharezLook" image="MiniVertScrollThumbBottomHover" />
-                <Image type="Background" imageset="TaharezLook" image="MiniVertScrollThumbMiddleHover" />
+                <Image type="TopEdge" imageset="LoveLook" image="MiniVertScrollThumbTopHover" />
+                <Image type="BottomEdge" imageset="LoveLook" image="MiniVertScrollThumbBottomHover" />
+                <Image type="Background" imageset="LoveLook" image="MiniVertScrollThumbMiddleHover" />
             </FrameComponent>
         </ImagerySection>
         <StateImagery name="Normal">
@@ -1485,49 +1485,49 @@
     
     <!--
     ***************************************************
-        TaharezLook/VerticalScrollbar
+        LoveLook/VerticalScrollbar
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/VerticalScrollbar">
+    <WidgetLook name="LoveLook/VerticalScrollbar">
         <Property name="VerticalScrollbar" value="True" />
         <NamedArea name="ThumbTrackArea">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
-                <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="MiniVertScrollUpNormal" dimension="Height" /></Dim>
+                <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="MiniVertScrollUpNormal" dimension="Height" /></Dim>
                 <Dim type="RightEdge" ><UnifiedDim scale="1.0" type="RightEdge" /></Dim>
                 <Dim type="BottomEdge" >
                     <UnifiedDim scale="1.0" type="BottomEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="MiniVertScrollDownNormal" dimension="Height" />
+                            <ImageDim imageset="LoveLook" image="MiniVertScrollDownNormal" dimension="Height" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
             </Area>
         </NamedArea>
-        <Child  type="TaharezLook/ImageButton" nameSuffix="__auto_incbtn__">
+        <Child  type="LoveLook/ImageButton" nameSuffix="__auto_incbtn__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
-                <Dim type="Height" ><ImageDim imageset="TaharezLook" image="MiniVertScrollDownNormal" dimension="Height" /></Dim>
+                <Dim type="Height" ><ImageDim imageset="LoveLook" image="MiniVertScrollDownNormal" dimension="Height" /></Dim>
             </Area>
             <VertAlignment type="BottomAligned" />
-            <Property name="NormalImage" value="set:TaharezLook image:MiniVertScrollDownNormal" />
-            <Property name="HoverImage" value="set:TaharezLook image:MiniVertScrollDownHover" />
-            <Property name="PushedImage" value="set:TaharezLook image:MiniVertScrollDownNormal" />
+            <Property name="NormalImage" value="set:LoveLook image:MiniVertScrollDownNormal" />
+            <Property name="HoverImage" value="set:LoveLook image:MiniVertScrollDownHover" />
+            <Property name="PushedImage" value="set:LoveLook image:MiniVertScrollDownNormal" />
         </Child>
-        <Child  type="TaharezLook/ImageButton" nameSuffix="__auto_decbtn__">
+        <Child  type="LoveLook/ImageButton" nameSuffix="__auto_decbtn__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
-                <Dim type="Height" ><ImageDim imageset="TaharezLook" image="MiniVertScrollUpNormal" dimension="Height" /></Dim>
+                <Dim type="Height" ><ImageDim imageset="LoveLook" image="MiniVertScrollUpNormal" dimension="Height" /></Dim>
             </Area>
-            <Property name="NormalImage" value="set:TaharezLook image:MiniVertScrollUpNormal" />
-            <Property name="HoverImage" value="set:TaharezLook image:MiniVertScrollUpHover" />
-            <Property name="PushedImage" value="set:TaharezLook image:MiniVertScrollUpNormal" />
+            <Property name="NormalImage" value="set:LoveLook image:MiniVertScrollUpNormal" />
+            <Property name="HoverImage" value="set:LoveLook image:MiniVertScrollUpHover" />
+            <Property name="PushedImage" value="set:LoveLook image:MiniVertScrollUpNormal" />
         </Child>
-        <Child  type="TaharezLook/VerticalScrollbarThumb" nameSuffix="__auto_thumb__">
+        <Child  type="LoveLook/VerticalScrollbarThumb" nameSuffix="__auto_thumb__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
@@ -1540,17 +1540,17 @@
             <ImageryComponent>
                 <Area>
                     <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
-                    <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="MiniVertScrollUpNormal" dimension="Height" /></Dim>
+                    <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="MiniVertScrollUpNormal" dimension="Height" /></Dim>
                     <Dim type="RightEdge" ><UnifiedDim scale="1.0" type="RightEdge" /></Dim>
                     <Dim type="BottomEdge" >
                         <UnifiedDim scale="1.0" type="BottomEdge">
                             <DimOperator op="Subtract">
-                                <ImageDim imageset="TaharezLook" image="MiniVertScrollDownNormal" dimension="Height" />
+                                <ImageDim imageset="LoveLook" image="MiniVertScrollDownNormal" dimension="Height" />
                             </DimOperator>
                         </UnifiedDim>
                     </Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="MiniVertScrollBarSegment" />
+                <Image imageset="LoveLook" image="MiniVertScrollBarSegment" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="CentreAligned" />
             </ImageryComponent>
@@ -1571,25 +1571,25 @@
     
     <!--
     ***************************************************
-        TaharezLook/Listbox
+        LoveLook/Listbox
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/Listbox">
+    <WidgetLook name="LoveLook/Listbox">
         <NamedArea name="ItemRenderingArea">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="ListboxLeft" dimension="Width" /></Dim>
-                <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="ListboxTop" dimension="Height" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="ListboxLeft" dimension="Width" /></Dim>
+                <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="ListboxTop" dimension="Height" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="ListboxRight" dimension="Width" />
+                            <ImageDim imageset="LoveLook" image="ListboxRight" dimension="Width" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
                 <Dim type="BottomEdge" >
                     <UnifiedDim scale="1" type="BottomEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="ListboxBottom" dimension="Height" />
+                            <ImageDim imageset="LoveLook" image="ListboxBottom" dimension="Height" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
@@ -1597,12 +1597,12 @@
         </NamedArea>
         <NamedArea name="ItemRenderingAreaHScroll">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="ListboxLeft" dimension="Width" /></Dim>
-                <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="ListboxTop" dimension="Height" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="ListboxLeft" dimension="Width" /></Dim>
+                <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="ListboxTop" dimension="Height" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="ListboxRight" dimension="Width" />
+                            <ImageDim imageset="LoveLook" image="ListboxRight" dimension="Width" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
@@ -1617,8 +1617,8 @@
         </NamedArea>
         <NamedArea name="ItemRenderingAreaVScroll">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="ListboxLeft" dimension="Width" /></Dim>
-                <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="ListboxTop" dimension="Height" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="ListboxLeft" dimension="Width" /></Dim>
+                <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="ListboxTop" dimension="Height" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
@@ -1629,7 +1629,7 @@
                 <Dim type="BottomEdge" >
                     <UnifiedDim scale="1" type="BottomEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="ListboxBottom" dimension="Height" />
+                            <ImageDim imageset="LoveLook" image="ListboxBottom" dimension="Height" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
@@ -1637,8 +1637,8 @@
         </NamedArea>
         <NamedArea name="ItemRenderingAreaHVScroll">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="ListboxLeft" dimension="Width" /></Dim>
-                <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="ListboxTop" dimension="Height" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="ListboxLeft" dimension="Width" /></Dim>
+                <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="ListboxTop" dimension="Height" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
@@ -1655,7 +1655,7 @@
                 </Dim>
             </Area>
         </NamedArea>
-        <Child  type="TaharezLook/HorizontalScrollbar" nameSuffix="__auto_hscrollbar__">
+        <Child  type="LoveLook/HorizontalScrollbar" nameSuffix="__auto_hscrollbar__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
@@ -1664,7 +1664,7 @@
             </Area>
             <VertAlignment type="BottomAligned" />
         </Child>
-        <Child  type="TaharezLook/VerticalScrollbar" nameSuffix="__auto_vscrollbar__">
+        <Child  type="LoveLook/VerticalScrollbar" nameSuffix="__auto_vscrollbar__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
@@ -1681,15 +1681,15 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="TopLeftCorner" imageset="TaharezLook" image="ListboxTopLeft" />
-                <Image type="TopRightCorner" imageset="TaharezLook" image="ListboxTopRight" />
-                <Image type="BottomLeftCorner" imageset="TaharezLook" image="ListboxBottomLeft" />
-                <Image type="BottomRightCorner" imageset="TaharezLook" image="ListboxBottomRight" />
-                <Image type="LeftEdge" imageset="TaharezLook" image="ListboxLeft" />
-                <Image type="RightEdge" imageset="TaharezLook" image="ListboxRight" />
-                <Image type="TopEdge" imageset="TaharezLook" image="ListboxTop" />
-                <Image type="BottomEdge" imageset="TaharezLook" image="ListboxBottom" />
-                <Image type="Background" imageset="TaharezLook" image="ListboxBackdrop" />
+                <Image type="TopLeftCorner" imageset="LoveLook" image="ListboxTopLeft" />
+                <Image type="TopRightCorner" imageset="LoveLook" image="ListboxTopRight" />
+                <Image type="BottomLeftCorner" imageset="LoveLook" image="ListboxBottomLeft" />
+                <Image type="BottomRightCorner" imageset="LoveLook" image="ListboxBottomRight" />
+                <Image type="LeftEdge" imageset="LoveLook" image="ListboxLeft" />
+                <Image type="RightEdge" imageset="LoveLook" image="ListboxRight" />
+                <Image type="TopEdge" imageset="LoveLook" image="ListboxTop" />
+                <Image type="BottomEdge" imageset="LoveLook" image="ListboxBottom" />
+                <Image type="Background" imageset="LoveLook" image="ListboxBackdrop" />
             </FrameComponent>
         </ImagerySection>
         <StateImagery name="Enabled">
@@ -1708,25 +1708,25 @@
     
     <!--
     ***************************************************
-        TaharezLook/ComboDropList
+        LoveLook/ComboDropList
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/ComboDropList">
+    <WidgetLook name="LoveLook/ComboDropList">
         <NamedArea name="ItemRenderingArea">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="ComboboxListLeft" dimension="Width" /></Dim>
-                <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="ComboboxListTop" dimension="Height" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="ComboboxListLeft" dimension="Width" /></Dim>
+                <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="ComboboxListTop" dimension="Height" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="ComboboxListRight" dimension="Width" />
+                            <ImageDim imageset="LoveLook" image="ComboboxListRight" dimension="Width" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
                 <Dim type="BottomEdge" >
                     <UnifiedDim scale="1" type="BottomEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="ComboboxListBottom" dimension="Height" />
+                            <ImageDim imageset="LoveLook" image="ComboboxListBottom" dimension="Height" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
@@ -1734,12 +1734,12 @@
         </NamedArea>
         <NamedArea name="ItemRenderingAreaHScroll">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="ComboboxListLeft" dimension="Width" /></Dim>
-                <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="ComboboxListTop" dimension="Height" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="ComboboxListLeft" dimension="Width" /></Dim>
+                <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="ComboboxListTop" dimension="Height" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="ComboboxListRight" dimension="Width" />
+                            <ImageDim imageset="LoveLook" image="ComboboxListRight" dimension="Width" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
@@ -1754,8 +1754,8 @@
         </NamedArea>
         <NamedArea name="ItemRenderingAreaVScroll">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="ComboboxListLeft" dimension="Width" /></Dim>
-                <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="ComboboxListTop" dimension="Height" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="ComboboxListLeft" dimension="Width" /></Dim>
+                <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="ComboboxListTop" dimension="Height" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
@@ -1766,7 +1766,7 @@
                 <Dim type="BottomEdge" >
                     <UnifiedDim scale="1" type="BottomEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="ComboboxListBottom" dimension="Height" />
+                            <ImageDim imageset="LoveLook" image="ComboboxListBottom" dimension="Height" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
@@ -1774,8 +1774,8 @@
         </NamedArea>
         <NamedArea name="ItemRenderingAreaHVScroll">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="ComboboxListLeft" dimension="Width" /></Dim>
-                <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="ComboboxListTop" dimension="Height" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="ComboboxListLeft" dimension="Width" /></Dim>
+                <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="ComboboxListTop" dimension="Height" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
@@ -1792,7 +1792,7 @@
                 </Dim>
             </Area>
         </NamedArea>
-        <Child  type="TaharezLook/HorizontalScrollbar" nameSuffix="__auto_hscrollbar__">
+        <Child  type="LoveLook/HorizontalScrollbar" nameSuffix="__auto_hscrollbar__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
@@ -1801,7 +1801,7 @@
             </Area>
             <VertAlignment type="BottomAligned" />
         </Child>
-        <Child  type="TaharezLook/VerticalScrollbar" nameSuffix="__auto_vscrollbar__">
+        <Child  type="LoveLook/VerticalScrollbar" nameSuffix="__auto_vscrollbar__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
@@ -1818,15 +1818,15 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="TopLeftCorner" imageset="TaharezLook" image="ComboboxListTopLeft" />
-                <Image type="TopRightCorner" imageset="TaharezLook" image="ComboboxListTopRight" />
-                <Image type="BottomLeftCorner" imageset="TaharezLook" image="ComboboxListBottomLeft" />
-                <Image type="BottomRightCorner" imageset="TaharezLook" image="ComboboxListBottomRight" />
-                <Image type="LeftEdge" imageset="TaharezLook" image="ComboboxListLeft" />
-                <Image type="RightEdge" imageset="TaharezLook" image="ComboboxListRight" />
-                <Image type="TopEdge" imageset="TaharezLook" image="ComboboxListTop" />
-                <Image type="BottomEdge" imageset="TaharezLook" image="ComboboxListBottom" />
-                <Image type="Background" imageset="TaharezLook" image="ComboboxListBackdrop" />
+                <Image type="TopLeftCorner" imageset="LoveLook" image="ComboboxListTopLeft" />
+                <Image type="TopRightCorner" imageset="LoveLook" image="ComboboxListTopRight" />
+                <Image type="BottomLeftCorner" imageset="LoveLook" image="ComboboxListBottomLeft" />
+                <Image type="BottomRightCorner" imageset="LoveLook" image="ComboboxListBottomRight" />
+                <Image type="LeftEdge" imageset="LoveLook" image="ComboboxListLeft" />
+                <Image type="RightEdge" imageset="LoveLook" image="ComboboxListRight" />
+                <Image type="TopEdge" imageset="LoveLook" image="ComboboxListTop" />
+                <Image type="BottomEdge" imageset="LoveLook" image="ComboboxListBottom" />
+                <Image type="Background" imageset="LoveLook" image="ComboboxListBackdrop" />
             </FrameComponent>
         </ImagerySection>
         <StateImagery name="Enabled">
@@ -1845,15 +1845,15 @@
     
     <!--
     ***************************************************
-        TaharezLook/ComboEditbox
+        LoveLook/ComboEditbox
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/ComboEditbox">
+    <WidgetLook name="LoveLook/ComboEditbox">
         <PropertyDefinition name="NormalTextColour" initialValue="FFFFFFFF" redrawOnWrite="true" />
         <PropertyDefinition name="SelectedTextColour" initialValue="FF000000" redrawOnWrite="true" />
         <PropertyDefinition name="ActiveSelectionColour" initialValue="FF607FFF" redrawOnWrite="true" />
         <PropertyDefinition name="InactiveSelectionColour" initialValue="FF808080" redrawOnWrite="true" />
-        <Property name="MouseCursorImage" value="set:TaharezLook image:MouseTextBar" />
+        <Property name="MouseCursorImage" value="set:LoveLook image:MouseTextBar" />
         <NamedArea name="TextArea">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="5" /></Dim>
@@ -1870,8 +1870,8 @@
                     <Dim type="Width" ><UnifiedDim scale="1.0" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1.0" type="Height" /></Dim>
                 </Area>
-                <Image type="LeftEdge" imageset="TaharezLook" image="ComboboxEditLeft" />
-                <Image type="Background" imageset="TaharezLook" image="ComboboxEditMiddle" />
+                <Image type="LeftEdge" imageset="LoveLook" image="ComboboxEditLeft" />
+                <Image type="Background" imageset="LoveLook" image="ComboboxEditMiddle" />
             </FrameComponent>
         </ImagerySection>
         <ImagerySection name="selection">
@@ -1882,7 +1882,7 @@
                     <Dim type="RightEdge" ><UnifiedDim scale="1.0" type="RightEdge" /></Dim>
                     <Dim type="BottomEdge" ><UnifiedDim scale="1.0" type="BottomEdge" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="TextSelectionBrush" />
+                <Image imageset="LoveLook" image="TextSelectionBrush" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Stretched" />
             </ImageryComponent>
@@ -1892,10 +1892,10 @@
                 <Area>
                     <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                     <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
-                    <Dim type="Width" ><ImageDim imageset="TaharezLook" image="EditBoxCarat" dimension="Width" /></Dim>
+                    <Dim type="Width" ><ImageDim imageset="LoveLook" image="EditBoxCarat" dimension="Width" /></Dim>
                     <Dim type="BottomEdge" ><UnifiedDim scale="1.0" type="BottomEdge" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="EditBoxCarat" />
+                <Image imageset="LoveLook" image="EditBoxCarat" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Stretched" />
             </ImageryComponent>
@@ -1935,15 +1935,15 @@
     
     <!--
     ***************************************************
-        TaharezLook/Combobox
+        LoveLook/Combobox
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/Combobox">
+    <WidgetLook name="LoveLook/Combobox">
         <PropertyLinkDefinition name="NormalEditTextColour" widget="__auto_editbox__" targetProperty="NormalTextColour" initialValue="FFFFFFFF" />
         <PropertyLinkDefinition name="SelectedEditTextColour" widget="__auto_editbox__" targetProperty="SelectedTextColour" initialValue="FF000000" />
         <PropertyLinkDefinition name="ActiveEditSelectionColour" widget="__auto_editbox__" targetProperty="ActiveSelectionColour" initialValue="FF6060FF" />
         <PropertyLinkDefinition name="InactiveEditSelectionColour" widget="__auto_editbox__" targetProperty="InactiveSelectionColour" initialValue="FF808080" />
-        <Child  type="TaharezLook/ComboEditbox" nameSuffix="__auto_editbox__">
+        <Child  type="LoveLook/ComboEditbox" nameSuffix="__auto_editbox__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
@@ -1967,7 +1967,7 @@
                 </Dim>
             </Area>
         </Child>
-        <Child  type="TaharezLook/ComboDropList" nameSuffix="__auto_droplist__">
+        <Child  type="LoveLook/ComboDropList" nameSuffix="__auto_droplist__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><WidgetDim widget="__auto_editbox__" dimension="BottomEdge" /></Dim>
@@ -1975,7 +1975,7 @@
                 <Dim type="BottomEdge" ><UnifiedDim scale="1" type="BottomEdge" /></Dim>
             </Area>
         </Child>
-        <Child  type="TaharezLook/ImageButton" nameSuffix="__auto_button__">
+        <Child  type="LoveLook/ImageButton" nameSuffix="__auto_button__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
@@ -1983,9 +1983,9 @@
                 <Dim type="Height" ><WidgetDim widget="__auto_editbox__" dimension="Height" /></Dim>
             </Area>
             <HorzAlignment type="RightAligned" />
-            <Property name="NormalImage" value="set:TaharezLook image:ComboboxListButtonNormal" />
-            <Property name="HoverImage" value="set:TaharezLook image:ComboboxListButtonHover" />
-            <Property name="PushedImage" value="set:TaharezLook image:ComboboxListButtonNormal" />
+            <Property name="NormalImage" value="set:LoveLook image:ComboboxListButtonNormal" />
+            <Property name="HoverImage" value="set:LoveLook image:ComboboxListButtonHover" />
+            <Property name="PushedImage" value="set:LoveLook image:ComboboxListButtonNormal" />
         </Child>
         <StateImagery name="Enabled" />
         <StateImagery name="Disabled" />
@@ -1993,47 +1993,47 @@
     
     <!--
     ***************************************************
-        TaharezLook/Spinner
+        LoveLook/Spinner
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/Spinner">
-        <Child  type="TaharezLook/Editbox" nameSuffix="__auto_editbox__">
+    <WidgetLook name="LoveLook/Spinner">
+        <Child  type="LoveLook/Editbox" nameSuffix="__auto_editbox__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="VertScrollUpNormal" dimension="Width" />
+                            <ImageDim imageset="LoveLook" image="VertScrollUpNormal" dimension="Width" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
                 <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
             </Area>
         </Child>
-        <Child  type="TaharezLook/ImageButton" nameSuffix="__auto_incbtn__">
+        <Child  type="LoveLook/ImageButton" nameSuffix="__auto_incbtn__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
-                <Dim type="Width" ><ImageDim imageset="TaharezLook" image="VertScrollUpNormal" dimension="Width" /></Dim>
+                <Dim type="Width" ><ImageDim imageset="LoveLook" image="VertScrollUpNormal" dimension="Width" /></Dim>
                 <Dim type="Height" ><UnifiedDim scale="0.5" type="Height" /></Dim>
             </Area>
             <HorzAlignment type="RightAligned" />
-            <Property name="NormalImage" value="set:TaharezLook image:VertScrollUpNormal" />
-            <Property name="HoverImage" value="set:TaharezLook image:VertScrollUpHover" />
-            <Property name="PushedImage" value="set:TaharezLook image:VertScrollUpNormal" />
+            <Property name="NormalImage" value="set:LoveLook image:VertScrollUpNormal" />
+            <Property name="HoverImage" value="set:LoveLook image:VertScrollUpHover" />
+            <Property name="PushedImage" value="set:LoveLook image:VertScrollUpNormal" />
         </Child>
-        <Child  type="TaharezLook/ImageButton" nameSuffix="__auto_decbtn__">
+        <Child  type="LoveLook/ImageButton" nameSuffix="__auto_decbtn__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><UnifiedDim scale="0.5" type="TopEdge" /></Dim>
-                <Dim type="Width" ><ImageDim imageset="TaharezLook" image="VertScrollUpNormal" dimension="Width" /></Dim>
+                <Dim type="Width" ><ImageDim imageset="LoveLook" image="VertScrollUpNormal" dimension="Width" /></Dim>
                 <Dim type="Height" ><UnifiedDim scale="0.5" type="Height" /></Dim>
             </Area>
             <HorzAlignment type="RightAligned" />
-            <Property name="NormalImage" value="set:TaharezLook image:VertScrollDownNormal" />
-            <Property name="HoverImage" value="set:TaharezLook image:VertScrollDownHover" />
-            <Property name="PushedImage" value="set:TaharezLook image:VertScrollDownNormal" />
+            <Property name="NormalImage" value="set:LoveLook image:VertScrollDownNormal" />
+            <Property name="HoverImage" value="set:LoveLook image:VertScrollDownHover" />
+            <Property name="PushedImage" value="set:LoveLook image:VertScrollDownNormal" />
         </Child>
         <StateImagery name="Enabled" />
         <StateImagery name="Disabled" />
@@ -2041,11 +2041,11 @@
     
     <!--
     ***************************************************
-        TaharezLook/StaticShared
+        LoveLook/StaticShared
         (Shared imagery components for static widgets)
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/StaticShared">
+    <WidgetLook name="LoveLook/StaticShared">
         <ImagerySection name="frame">
             <FrameComponent>
                 <Area>
@@ -2054,38 +2054,38 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="TopLeftCorner" imageset="TaharezLook" image="StaticTopLeft" />
-                <Image type="TopRightCorner" imageset="TaharezLook" image="StaticTopRight" />
-                <Image type="BottomLeftCorner" imageset="TaharezLook" image="StaticBottomLeft" />
-                <Image type="BottomRightCorner" imageset="TaharezLook" image="StaticBottomRight" />
-                <Image type="LeftEdge" imageset="TaharezLook" image="StaticLeft" />
-                <Image type="RightEdge" imageset="TaharezLook" image="StaticRight" />
-                <Image type="TopEdge" imageset="TaharezLook" image="StaticTop" />
-                <Image type="BottomEdge" imageset="TaharezLook" image="StaticBottom" />
+                <Image type="TopLeftCorner" imageset="LoveLook" image="StaticTopLeft" />
+                <Image type="TopRightCorner" imageset="LoveLook" image="StaticTopRight" />
+                <Image type="BottomLeftCorner" imageset="LoveLook" image="StaticBottomLeft" />
+                <Image type="BottomRightCorner" imageset="LoveLook" image="StaticBottomRight" />
+                <Image type="LeftEdge" imageset="LoveLook" image="StaticLeft" />
+                <Image type="RightEdge" imageset="LoveLook" image="StaticRight" />
+                <Image type="TopEdge" imageset="LoveLook" image="StaticTop" />
+                <Image type="BottomEdge" imageset="LoveLook" image="StaticBottom" />
                 <ColourRectProperty name="FrameColours" />
             </FrameComponent>
         </ImagerySection>
         <ImagerySection name="background">
             <ImageryComponent>
                 <Area>
-                    <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="StaticLeft" dimension="Width" /></Dim>
-                    <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="StaticTop" dimension="Height" /></Dim>
+                    <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="StaticLeft" dimension="Width" /></Dim>
+                    <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="StaticTop" dimension="Height" /></Dim>
                     <Dim type="RightEdge" >
                         <UnifiedDim scale="1" type="RightEdge">
                             <DimOperator op="Subtract">
-                                <ImageDim imageset="TaharezLook" image="StaticRight" dimension="Width" />
+                                <ImageDim imageset="LoveLook" image="StaticRight" dimension="Width" />
                             </DimOperator>
                         </UnifiedDim>
                     </Dim>
                     <Dim type="BottomEdge" >
                         <UnifiedDim scale="1" type="BottomEdge">
                             <DimOperator op="Subtract">
-                                <ImageDim imageset="TaharezLook" image="StaticBottom" dimension="Height" />
+                                <ImageDim imageset="LoveLook" image="StaticBottom" dimension="Height" />
                             </DimOperator>
                         </UnifiedDim>
                     </Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="StaticBackdrop" />
+                <Image imageset="LoveLook" image="StaticBackdrop" />
                 <!--<ColourRectProperty name="BackgroundColours" />-->
                 <Colours topLeft="FFFFFFFF" topRight="FFFFFFFF" bottomLeft="FFFFFFFF" bottomRight="FFFFFFFF" />
                 <VertFormat type="Stretched" />
@@ -2100,7 +2100,7 @@
                     <Dim type="RightEdge"><UnifiedDim scale="1" type="RightEdge" /></Dim>
                     <Dim type="BottomEdge"><UnifiedDim scale="1" type="BottomEdge" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="StaticBackdrop" />
+                <Image imageset="LoveLook" image="StaticBackdrop" />
                 <!--<ColourRectProperty name="BackgroundColours" />-->
                 <Colours topLeft="FFFFFFFF" topRight="FFFFFFFF" bottomLeft="FFFFFFFF" bottomRight="FFFFFFFF" />
                 <VertFormat type="Stretched" />
@@ -2111,10 +2111,10 @@
     
     <!--
     ***************************************************
-        TaharezLook/StaticImage
+        LoveLook/StaticImage
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/StaticImage">
+    <WidgetLook name="LoveLook/StaticImage">
 		<PropertyDefinition name="ImageColours" initialValue="tl:FFFFFFFF tr:FFFFFFFF bl:FFFFFFFF br:FFFFFFFF" redrawOnWrite="true" />
 		<PropertyDefinition name="FrameColours" initialValue="tl:FFFFFFFF tr:FFFFFFFF bl:FFFFFFFF br:FFFFFFFF" redrawOnWrite="true" />
 		<PropertyDefinition name="BackgroundColours" initialValue="tl:FFFFFFFF tr:FFFFFFFF bl:FFFFFFFF br:FFFFFFFF" redrawOnWrite="true" />
@@ -2125,19 +2125,19 @@
         <ImagerySection name="image_withframe">
             <ImageryComponent>
                 <Area>
-					<Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="StaticLeft" dimension="Width" /></Dim>
-					<Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="StaticTop" dimension="Height" /></Dim>
+					<Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="StaticLeft" dimension="Width" /></Dim>
+					<Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="StaticTop" dimension="Height" /></Dim>
 					<Dim type="RightEdge" >
 						<UnifiedDim scale="1" type="RightEdge">
 							<DimOperator op="Subtract">
-								<ImageDim imageset="TaharezLook" image="StaticRight" dimension="Width" />
+								<ImageDim imageset="LoveLook" image="StaticRight" dimension="Width" />
 							</DimOperator>
 						</UnifiedDim>
 					</Dim>
 					<Dim type="BottomEdge" >
 						<UnifiedDim scale="1" type="BottomEdge">
 							<DimOperator op="Subtract">
-								<ImageDim imageset="TaharezLook" image="StaticBottom" dimension="Height" />
+								<ImageDim imageset="LoveLook" image="StaticBottom" dimension="Height" />
 							</DimOperator>
 						</UnifiedDim>
 					</Dim>
@@ -2166,32 +2166,32 @@
         <StateImagery name="Disabled" />
         <StateImagery name="EnabledFrame">
             <Layer>
-                <Section look="TaharezLook/StaticShared" section="frame" />
+                <Section look="LoveLook/StaticShared" section="frame" />
             </Layer>
         </StateImagery>
         <StateImagery name="DisabledFrame">
             <Layer>
-                <Section look="TaharezLook/StaticShared" section="frame" />
+                <Section look="LoveLook/StaticShared" section="frame" />
             </Layer>
         </StateImagery>
         <StateImagery name="WithFrameEnabledBackground">
             <Layer>
-                <Section look="TaharezLook/StaticShared" section="background" />
+                <Section look="LoveLook/StaticShared" section="background" />
             </Layer>
         </StateImagery>
         <StateImagery name="WithFrameDisabledBackground">
             <Layer>
-                <Section look="TaharezLook/StaticShared" section="background" />
+                <Section look="LoveLook/StaticShared" section="background" />
             </Layer>
         </StateImagery>
         <StateImagery name="NoFrameEnabledBackground">
             <Layer>
-                <Section look="TaharezLook/StaticShared" section="background_noframe" />
+                <Section look="LoveLook/StaticShared" section="background_noframe" />
             </Layer>
         </StateImagery>
         <StateImagery name="NoFrameDisabledBackground">
             <Layer>
-                <Section look="TaharezLook/StaticShared" section="background_noframe" />
+                <Section look="LoveLook/StaticShared" section="background_noframe" />
             </Layer>
         </StateImagery>
         <StateImagery name="WithFrameImage">
@@ -2208,29 +2208,29 @@
     
     <!--
     ***************************************************
-        TaharezLook/StaticText
+        LoveLook/StaticText
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/StaticText">
+    <WidgetLook name="LoveLook/StaticText">
 		<PropertyDefinition name="FrameColours" initialValue="tl:FFFFFFFF tr:FFFFFFFF bl:FFFFFFFF br:FFFFFFFF" redrawOnWrite="true" />
 		<PropertyDefinition name="BackgroundColours" initialValue="tl:FFFFFFFF tr:FFFFFFFF bl:FFFFFFFF br:FFFFFFFF" redrawOnWrite="true" />
         <Property name="FrameEnabled" value="True" />
         <Property name="BackgroundEnabled" value="True" />
         <NamedArea name="WithFrameTextRenderArea">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="StaticLeft" dimension="Width" /></Dim>
-                <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="StaticTop" dimension="Height" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="StaticLeft" dimension="Width" /></Dim>
+                <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="StaticTop" dimension="Height" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="StaticRight" dimension="Width" />
+                            <ImageDim imageset="LoveLook" image="StaticRight" dimension="Width" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
                 <Dim type="BottomEdge" >
                     <UnifiedDim scale="1" type="BottomEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="StaticBottom" dimension="Height" />
+                            <ImageDim imageset="LoveLook" image="StaticBottom" dimension="Height" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
@@ -2238,12 +2238,12 @@
         </NamedArea>
         <NamedArea name="WithFrameTextRenderAreaHScroll">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="StaticLeft" dimension="Width" /></Dim>
-                <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="StaticTop" dimension="Height" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="StaticLeft" dimension="Width" /></Dim>
+                <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="StaticTop" dimension="Height" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="StaticRight" dimension="Width" />
+                            <ImageDim imageset="LoveLook" image="StaticRight" dimension="Width" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
@@ -2258,8 +2258,8 @@
         </NamedArea>
         <NamedArea name="WithFrameTextRenderAreaVScroll">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="StaticLeft" dimension="Width" /></Dim>
-                <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="StaticTop" dimension="Height" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="StaticLeft" dimension="Width" /></Dim>
+                <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="StaticTop" dimension="Height" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
@@ -2270,7 +2270,7 @@
                 <Dim type="BottomEdge" >
                     <UnifiedDim scale="1" type="BottomEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="StaticBottom" dimension="Height" />
+                            <ImageDim imageset="LoveLook" image="StaticBottom" dimension="Height" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
@@ -2278,8 +2278,8 @@
         </NamedArea>
         <NamedArea name="WithFrameTextRenderAreaHVScroll">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="StaticLeft" dimension="Width" /></Dim>
-                <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="StaticTop" dimension="Height" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="StaticLeft" dimension="Width" /></Dim>
+                <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="StaticTop" dimension="Height" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
@@ -2352,7 +2352,7 @@
                 </Dim>
             </Area>
         </NamedArea>
-        <Child  type="TaharezLook/HorizontalScrollbar" nameSuffix="__auto_hscrollbar__">
+        <Child  type="LoveLook/HorizontalScrollbar" nameSuffix="__auto_hscrollbar__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
@@ -2361,7 +2361,7 @@
             </Area>
             <VertAlignment type="BottomAligned" />
         </Child>
-        <Child  type="TaharezLook/VerticalScrollbar" nameSuffix="__auto_vscrollbar__">
+        <Child  type="LoveLook/VerticalScrollbar" nameSuffix="__auto_vscrollbar__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
@@ -2374,44 +2374,44 @@
         <StateImagery name="Disabled" />
         <StateImagery name="EnabledFrame">
             <Layer>
-                <Section look="TaharezLook/StaticShared" section="frame" />
+                <Section look="LoveLook/StaticShared" section="frame" />
             </Layer>
         </StateImagery>
         <StateImagery name="DisabledFrame">
             <Layer>
-                <Section look="TaharezLook/StaticShared" section="frame" />
+                <Section look="LoveLook/StaticShared" section="frame" />
             </Layer>
         </StateImagery>
         <StateImagery name="WithFrameEnabledBackground">
             <Layer>
-                <Section look="TaharezLook/StaticShared" section="background" />
+                <Section look="LoveLook/StaticShared" section="background" />
             </Layer>
         </StateImagery>
         <StateImagery name="WithFrameDisabledBackground">
             <Layer>
-                <Section look="TaharezLook/StaticShared" section="background" />
+                <Section look="LoveLook/StaticShared" section="background" />
             </Layer>
         </StateImagery>
         <StateImagery name="NoFrameEnabledBackground">
             <Layer>
-                <Section look="TaharezLook/StaticShared" section="background_noframe" />
+                <Section look="LoveLook/StaticShared" section="background_noframe" />
             </Layer>
         </StateImagery>
         <StateImagery name="NoFrameDisabledBackground">
             <Layer>
-                <Section look="TaharezLook/StaticShared" section="background_noframe" />
+                <Section look="LoveLook/StaticShared" section="background_noframe" />
             </Layer>
         </StateImagery>
     </WidgetLook>
     
     <!--
     ***************************************************
-        TaharezLook/ListHeaderSegment
+        LoveLook/ListHeaderSegment
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/ListHeaderSegment">
-        <Property name="SizingCursorImage" value="set:TaharezLook image:MouseEsWeCursor" />
-        <Property name="MovingCursorImage" value="set:TaharezLook image:MouseMoveCursor" />
+    <WidgetLook name="LoveLook/ListHeaderSegment">
+        <Property name="SizingCursorImage" value="set:LoveLook image:MouseEsWeCursor" />
+        <Property name="MovingCursorImage" value="set:LoveLook image:MouseMoveCursor" />
         <ImagerySection name="segment_normal">
             <Colours topLeft="FFDDDDDD" topRight="FFDDDDDD" bottomLeft="FFDDDDDD" bottomRight="FFDDDDDD" />
             <ImageryComponent>
@@ -2421,13 +2421,13 @@
                     <Dim type="RightEdge" >
                         <UnifiedDim scale="1" type="RightEdge">
                             <DimOperator op="Subtract">
-                                <ImageDim imageset="TaharezLook" image="HeaderBarSplitterNormal" dimension="Width" />
+                                <ImageDim imageset="LoveLook" image="HeaderBarSplitterNormal" dimension="Width" />
                             </DimOperator>
                         </UnifiedDim>
                     </Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="HeaderBarBackdropNormal" />
+                <Image imageset="LoveLook" image="HeaderBarBackdropNormal" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Stretched" />
             </ImageryComponent>
@@ -2440,13 +2440,13 @@
                     <Dim type="RightEdge" >
                         <UnifiedDim scale="1" type="RightEdge">
                             <DimOperator op="Subtract">
-                                <ImageDim imageset="TaharezLook" image="HeaderBarSplitterNormal" dimension="Width" />
+                                <ImageDim imageset="LoveLook" image="HeaderBarSplitterNormal" dimension="Width" />
                             </DimOperator>
                         </UnifiedDim>
                     </Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="HeaderBarBackdropHover" />
+                <Image imageset="LoveLook" image="HeaderBarBackdropHover" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Stretched" />
             </ImageryComponent>
@@ -2459,7 +2459,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="HeaderBarSplitterNormal" />
+                <Image imageset="LoveLook" image="HeaderBarSplitterNormal" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="RightAligned" />
             </ImageryComponent>
@@ -2472,7 +2472,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="HeaderBarSplitterHover" />
+                <Image imageset="LoveLook" image="HeaderBarSplitterHover" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="RightAligned" />
             </ImageryComponent>
@@ -2482,10 +2482,10 @@
                 <Area>
                     <Dim type="LeftEdge" ><AbsoluteDim value="3" /></Dim>
                     <Dim type="TopEdge" ><AbsoluteDim value="3" /></Dim>
-                    <Dim type="Width" ><ImageDim imageset="TaharezLook" image="HeaderBarSortUp" dimension="Width" /></Dim>
-                    <Dim type="Height" ><ImageDim imageset="TaharezLook" image="HeaderBarSortUp" dimension="Height" /></Dim>
+                    <Dim type="Width" ><ImageDim imageset="LoveLook" image="HeaderBarSortUp" dimension="Width" /></Dim>
+                    <Dim type="Height" ><ImageDim imageset="LoveLook" image="HeaderBarSortUp" dimension="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="HeaderBarSortUp" />
+                <Image imageset="LoveLook" image="HeaderBarSortUp" />
             </ImageryComponent>
         </ImagerySection>
         <ImagerySection name="descend_icon">
@@ -2493,17 +2493,17 @@
                 <Area>
                     <Dim type="LeftEdge" ><AbsoluteDim value="3" /></Dim>
                     <Dim type="TopEdge" ><AbsoluteDim value="3" /></Dim>
-                    <Dim type="Width" ><ImageDim imageset="TaharezLook" image="HeaderBarSortDown" dimension="Width" /></Dim>
-                    <Dim type="Height" ><ImageDim imageset="TaharezLook" image="HeaderBarSortDown" dimension="Height" /></Dim>
+                    <Dim type="Width" ><ImageDim imageset="LoveLook" image="HeaderBarSortDown" dimension="Width" /></Dim>
+                    <Dim type="Height" ><ImageDim imageset="LoveLook" image="HeaderBarSortDown" dimension="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="HeaderBarSortDown" />
+                <Image imageset="LoveLook" image="HeaderBarSortDown" />
             </ImageryComponent>
         </ImagerySection>
         <ImagerySection name="label">
             <TextComponent>
                 <Area>
                     <Dim type="LeftEdge" >
-                        <ImageDim imageset="TaharezLook" image="HeaderBarSortUp" dimension="Width">
+                        <ImageDim imageset="LoveLook" image="HeaderBarSortUp" dimension="Width">
                             <DimOperator op="Add">
                                 <AbsoluteDim value="5" />
                             </DimOperator>
@@ -2591,36 +2591,36 @@
     
     <!--
     ***************************************************
-        TaharezLook/ListHeader
+        LoveLook/ListHeader
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/ListHeader">
-        <Property name="SegmentWidgetType" value="TaharezLook/ListHeaderSegment" />
+    <WidgetLook name="LoveLook/ListHeader">
+        <Property name="SegmentWidgetType" value="LoveLook/ListHeaderSegment" />
         <StateImagery name="Enabled" />
         <StateImagery name="Disabled" />
     </WidgetLook>
     
     <!--
     ***************************************************
-        TaharezLook/MultiColumnList
+        LoveLook/MultiColumnList
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/MultiColumnList">
+    <WidgetLook name="LoveLook/MultiColumnList">
         <NamedArea name="ItemRenderingArea">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="MultiListLeft" dimension="Width" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="MultiListLeft" dimension="Width" /></Dim>
                 <Dim type="TopEdge" ><WidgetDim widget="__auto_listheader__" dimension="BottomEdge" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="MultiListRight" dimension="Width" />
+                            <ImageDim imageset="LoveLook" image="MultiListRight" dimension="Width" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
                 <Dim type="BottomEdge" >
                     <UnifiedDim scale="1" type="BottomEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="MultiListBottom" dimension="Height" />
+                            <ImageDim imageset="LoveLook" image="MultiListBottom" dimension="Height" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
@@ -2628,12 +2628,12 @@
         </NamedArea>
         <NamedArea name="ItemRenderingAreaHScroll">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="MultiListLeft" dimension="Width" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="MultiListLeft" dimension="Width" /></Dim>
                 <Dim type="TopEdge" ><WidgetDim widget="__auto_listheader__" dimension="BottomEdge" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="MultiListRight" dimension="Width" />
+                            <ImageDim imageset="LoveLook" image="MultiListRight" dimension="Width" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
@@ -2648,7 +2648,7 @@
         </NamedArea>
         <NamedArea name="ItemRenderingAreaVScroll">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="MultiListLeft" dimension="Width" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="MultiListLeft" dimension="Width" /></Dim>
                 <Dim type="TopEdge" ><WidgetDim widget="__auto_listheader__" dimension="BottomEdge" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
@@ -2660,7 +2660,7 @@
                 <Dim type="BottomEdge" >
                     <UnifiedDim scale="1" type="BottomEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="MultiListBottom" dimension="Height" />
+                            <ImageDim imageset="LoveLook" image="MultiListBottom" dimension="Height" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
@@ -2668,7 +2668,7 @@
         </NamedArea>
         <NamedArea name="ItemRenderingAreaHVScroll">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="MultiListLeft" dimension="Width" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="MultiListLeft" dimension="Width" /></Dim>
                 <Dim type="TopEdge" ><WidgetDim widget="__auto_listheader__" dimension="BottomEdge" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
@@ -2686,7 +2686,7 @@
                 </Dim>
             </Area>
         </NamedArea>
-        <Child  type="TaharezLook/ListHeader" nameSuffix="__auto_listheader__">
+        <Child  type="LoveLook/ListHeader" nameSuffix="__auto_listheader__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="2" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="2" /></Dim>
@@ -2700,7 +2700,7 @@
                 </Dim>
             </Area>
         </Child>
-        <Child  type="TaharezLook/HorizontalScrollbar" nameSuffix="__auto_hscrollbar__">
+        <Child  type="LoveLook/HorizontalScrollbar" nameSuffix="__auto_hscrollbar__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
@@ -2709,7 +2709,7 @@
             </Area>
             <VertAlignment type="BottomAligned" />
         </Child>
-        <Child  type="TaharezLook/VerticalScrollbar" nameSuffix="__auto_vscrollbar__">
+        <Child  type="LoveLook/VerticalScrollbar" nameSuffix="__auto_vscrollbar__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><WidgetDim widget="__auto_listheader__" dimension="BottomEdge" /></Dim>
@@ -2726,15 +2726,15 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="TopLeftCorner" imageset="TaharezLook" image="MultiListTopLeft" />
-                <Image type="TopRightCorner" imageset="TaharezLook" image="MultiListTopRight" />
-                <Image type="BottomLeftCorner" imageset="TaharezLook" image="MultiListBottomLeft" />
-                <Image type="BottomRightCorner" imageset="TaharezLook" image="MultiListBottomRight" />
-                <Image type="LeftEdge" imageset="TaharezLook" image="MultiListLeft" />
-                <Image type="RightEdge" imageset="TaharezLook" image="MultiListRight" />
-                <Image type="TopEdge" imageset="TaharezLook" image="MultiListTop" />
-                <Image type="BottomEdge" imageset="TaharezLook" image="MultiListBottom" />
-                <Image type="Background" imageset="TaharezLook" image="MultiListBackdrop" />
+                <Image type="TopLeftCorner" imageset="LoveLook" image="MultiListTopLeft" />
+                <Image type="TopRightCorner" imageset="LoveLook" image="MultiListTopRight" />
+                <Image type="BottomLeftCorner" imageset="LoveLook" image="MultiListBottomLeft" />
+                <Image type="BottomRightCorner" imageset="LoveLook" image="MultiListBottomRight" />
+                <Image type="LeftEdge" imageset="LoveLook" image="MultiListLeft" />
+                <Image type="RightEdge" imageset="LoveLook" image="MultiListRight" />
+                <Image type="TopEdge" imageset="LoveLook" image="MultiListTop" />
+                <Image type="BottomEdge" imageset="LoveLook" image="MultiListBottom" />
+                <Image type="Background" imageset="LoveLook" image="MultiListBackdrop" />
             </FrameComponent>
         </ImagerySection>
         <StateImagery name="Enabled">
@@ -2753,31 +2753,31 @@
     
     <!--
     ***************************************************
-        TaharezLook/MultiLineEditbox
+        LoveLook/MultiLineEditbox
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/MultiLineEditbox">
+    <WidgetLook name="LoveLook/MultiLineEditbox">
         <PropertyDefinition name="NormalTextColour" initialValue="FFFFFFFF" redrawOnWrite="true" />
         <PropertyDefinition name="SelectedTextColour" initialValue="FF000000" redrawOnWrite="true" />
         <PropertyDefinition name="ActiveSelectionColour" initialValue="FF607FFF" redrawOnWrite="true" />
         <PropertyDefinition name="InactiveSelectionColour" initialValue="FF808080" redrawOnWrite="true" />
-        <Property name="MouseCursorImage" value="set:TaharezLook image:MouseTextBar" />
-        <Property name="SelectionBrushImage" value="set:TaharezLook image:MultiLineEditboxSelectionBrush" />
+        <Property name="MouseCursorImage" value="set:LoveLook image:MouseTextBar" />
+        <Property name="SelectionBrushImage" value="set:LoveLook image:MultiLineEditboxSelectionBrush" />
         <NamedArea name="TextArea">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="MultiLineEditboxLeft" dimension="Width" /></Dim>
-                <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="MultiLineEditboxTop" dimension="Height" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="MultiLineEditboxLeft" dimension="Width" /></Dim>
+                <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="MultiLineEditboxTop" dimension="Height" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="MultiLineEditboxRight" dimension="Width" />
+                            <ImageDim imageset="LoveLook" image="MultiLineEditboxRight" dimension="Width" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
                 <Dim type="BottomEdge" >
                     <UnifiedDim scale="1" type="BottomEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="MultiLineEditboxBottom" dimension="Height" />
+                            <ImageDim imageset="LoveLook" image="MultiLineEditboxBottom" dimension="Height" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
@@ -2785,12 +2785,12 @@
         </NamedArea>
         <NamedArea name="TextAreaHScroll">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="MultiLineEditboxLeft" dimension="Width" /></Dim>
-                <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="MultiLineEditboxTop" dimension="Height" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="MultiLineEditboxLeft" dimension="Width" /></Dim>
+                <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="MultiLineEditboxTop" dimension="Height" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="MultiLineEditboxRight" dimension="Width" />
+                            <ImageDim imageset="LoveLook" image="MultiLineEditboxRight" dimension="Width" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
@@ -2805,8 +2805,8 @@
         </NamedArea>
         <NamedArea name="TextAreaVScroll">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="MultiLineEditboxLeft" dimension="Width" /></Dim>
-                <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="MultiLineEditboxTop" dimension="Height" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="MultiLineEditboxLeft" dimension="Width" /></Dim>
+                <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="MultiLineEditboxTop" dimension="Height" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
@@ -2817,7 +2817,7 @@
                 <Dim type="BottomEdge" >
                     <UnifiedDim scale="1" type="BottomEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="MultiLineEditboxBottom" dimension="Height" />
+                            <ImageDim imageset="LoveLook" image="MultiLineEditboxBottom" dimension="Height" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
@@ -2825,8 +2825,8 @@
         </NamedArea>
         <NamedArea name="TextAreaHVScroll">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="MultiLineEditboxLeft" dimension="Width" /></Dim>
-                <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="MultiLineEditboxTop" dimension="Height" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="MultiLineEditboxLeft" dimension="Width" /></Dim>
+                <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="MultiLineEditboxTop" dimension="Height" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
@@ -2843,7 +2843,7 @@
                 </Dim>
             </Area>
         </NamedArea>
-        <Child  type="TaharezLook/HorizontalScrollbar" nameSuffix="__auto_hscrollbar__">
+        <Child  type="LoveLook/HorizontalScrollbar" nameSuffix="__auto_hscrollbar__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
@@ -2852,7 +2852,7 @@
             </Area>
             <VertAlignment type="BottomAligned" />
         </Child>
-        <Child  type="TaharezLook/VerticalScrollbar" nameSuffix="__auto_vscrollbar__">
+        <Child  type="LoveLook/VerticalScrollbar" nameSuffix="__auto_vscrollbar__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
@@ -2869,15 +2869,15 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="TopLeftCorner" imageset="TaharezLook" image="MultiLineEditboxTopLeft" />
-                <Image type="TopRightCorner" imageset="TaharezLook" image="MultiLineEditboxTopRight" />
-                <Image type="BottomLeftCorner" imageset="TaharezLook" image="MultiLineEditboxBottomLeft" />
-                <Image type="BottomRightCorner" imageset="TaharezLook" image="MultiLineEditboxBottomRight" />
-                <Image type="LeftEdge" imageset="TaharezLook" image="MultiLineEditboxLeft" />
-                <Image type="RightEdge" imageset="TaharezLook" image="MultiLineEditboxRight" />
-                <Image type="TopEdge" imageset="TaharezLook" image="MultiLineEditboxTop" />
-                <Image type="BottomEdge" imageset="TaharezLook" image="MultiLineEditboxBottom" />
-                <Image type="Background" imageset="TaharezLook" image="MultiLineEditboxBackdrop" />
+                <Image type="TopLeftCorner" imageset="LoveLook" image="MultiLineEditboxTopLeft" />
+                <Image type="TopRightCorner" imageset="LoveLook" image="MultiLineEditboxTopRight" />
+                <Image type="BottomLeftCorner" imageset="LoveLook" image="MultiLineEditboxBottomLeft" />
+                <Image type="BottomRightCorner" imageset="LoveLook" image="MultiLineEditboxBottomRight" />
+                <Image type="LeftEdge" imageset="LoveLook" image="MultiLineEditboxLeft" />
+                <Image type="RightEdge" imageset="LoveLook" image="MultiLineEditboxRight" />
+                <Image type="TopEdge" imageset="LoveLook" image="MultiLineEditboxTop" />
+                <Image type="BottomEdge" imageset="LoveLook" image="MultiLineEditboxBottom" />
+                <Image type="Background" imageset="LoveLook" image="MultiLineEditboxBackdrop" />
             </FrameComponent>
         </ImagerySection>
         <ImagerySection name="Carat">
@@ -2885,10 +2885,10 @@
                 <Area>
                     <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                     <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
-                    <Dim type="Width" ><ImageDim imageset="TaharezLook" image="EditBoxCarat" dimension="Width" /></Dim>
+                    <Dim type="Width" ><ImageDim imageset="LoveLook" image="EditBoxCarat" dimension="Width" /></Dim>
                     <Dim type="BottomEdge" ><UnifiedDim scale="1.0" type="BottomEdge" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="EditBoxCarat" />
+                <Image imageset="LoveLook" image="EditBoxCarat" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Stretched" />
             </ImageryComponent>
@@ -2914,25 +2914,25 @@
     
     <!--
     ***************************************************
-        TaharezLook/Tooltip
+        LoveLook/Tooltip
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/Tooltip">
+    <WidgetLook name="LoveLook/Tooltip">
         <NamedArea name="TextArea">
             <Area>
-                <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="TooltipLeftEdge" dimension="Width" /></Dim>
-                <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="TooltipTopEdge" dimension="Height" /></Dim>
+                <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="TooltipLeftEdge" dimension="Width" /></Dim>
+                <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="TooltipTopEdge" dimension="Height" /></Dim>
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="TooltipRightEdge" dimension="Width" />
+                            <ImageDim imageset="LoveLook" image="TooltipRightEdge" dimension="Width" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
                 <Dim type="BottomEdge" >
                     <UnifiedDim scale="1" type="BottomEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="TooltipBottomEdge" dimension="Height" />
+                            <ImageDim imageset="LoveLook" image="TooltipBottomEdge" dimension="Height" />
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
@@ -2946,33 +2946,33 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="TopLeftCorner" imageset="TaharezLook" image="TooltipTopLeft" />
-                <Image type="TopRightCorner" imageset="TaharezLook" image="TooltipTopRight" />
-                <Image type="BottomLeftCorner" imageset="TaharezLook" image="TooltipBottomLeft" />
-                <Image type="BottomRightCorner" imageset="TaharezLook" image="TooltipBottomRight" />
-                <Image type="LeftEdge" imageset="TaharezLook" image="TooltipLeftEdge" />
-                <Image type="RightEdge" imageset="TaharezLook" image="TooltipRightEdge" />
-                <Image type="TopEdge" imageset="TaharezLook" image="TooltipTopEdge" />
-                <Image type="BottomEdge" imageset="TaharezLook" image="TooltipBottomEdge" />
-                <Image type="Background" imageset="TaharezLook" image="TooltipMiddle" />
+                <Image type="TopLeftCorner" imageset="LoveLook" image="TooltipTopLeft" />
+                <Image type="TopRightCorner" imageset="LoveLook" image="TooltipTopRight" />
+                <Image type="BottomLeftCorner" imageset="LoveLook" image="TooltipBottomLeft" />
+                <Image type="BottomRightCorner" imageset="LoveLook" image="TooltipBottomRight" />
+                <Image type="LeftEdge" imageset="LoveLook" image="TooltipLeftEdge" />
+                <Image type="RightEdge" imageset="LoveLook" image="TooltipRightEdge" />
+                <Image type="TopEdge" imageset="LoveLook" image="TooltipTopEdge" />
+                <Image type="BottomEdge" imageset="LoveLook" image="TooltipBottomEdge" />
+                <Image type="Background" imageset="LoveLook" image="TooltipMiddle" />
             </FrameComponent>
         </ImagerySection>
         <ImagerySection name="label">
             <TextComponent>
                 <Area>
-                    <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="TooltipLeftEdge" dimension="Width" /></Dim>
-                    <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="TooltipTopEdge" dimension="Height" /></Dim>
+                    <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="TooltipLeftEdge" dimension="Width" /></Dim>
+                    <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="TooltipTopEdge" dimension="Height" /></Dim>
                     <Dim type="RightEdge" >
                         <UnifiedDim scale="1" type="RightEdge">
                             <DimOperator op="Subtract">
-                                <ImageDim imageset="TaharezLook" image="TooltipRightEdge" dimension="Width" />
+                                <ImageDim imageset="LoveLook" image="TooltipRightEdge" dimension="Width" />
                             </DimOperator>
                         </UnifiedDim>
                     </Dim>
                     <Dim type="BottomEdge" >
                         <UnifiedDim scale="1" type="BottomEdge">
                             <DimOperator op="Subtract">
-                                <ImageDim imageset="TaharezLook" image="TooltipBottomEdge" dimension="Height" />
+                                <ImageDim imageset="LoveLook" image="TooltipBottomEdge" dimension="Height" />
                             </DimOperator>
                         </UnifiedDim>
                     </Dim>
@@ -2998,10 +2998,10 @@
     
     <!--
     ***************************************************
-        TaharezLook/ScrollablePane
+        LoveLook/ScrollablePane
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/ScrollablePane">
+    <WidgetLook name="LoveLook/ScrollablePane">
         <NamedArea name="ViewableArea">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
@@ -3058,7 +3058,7 @@
                 </Dim>
             </Area>
         </NamedArea>
-        <Child  type="TaharezLook/HorizontalScrollbar" nameSuffix="__auto_hscrollbar__">
+        <Child  type="LoveLook/HorizontalScrollbar" nameSuffix="__auto_hscrollbar__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
@@ -3067,7 +3067,7 @@
             </Area>
             <VertAlignment type="BottomAligned" />
         </Child>
-        <Child  type="TaharezLook/VerticalScrollbar" nameSuffix="__auto_vscrollbar__">
+        <Child  type="LoveLook/VerticalScrollbar" nameSuffix="__auto_vscrollbar__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
@@ -3082,10 +3082,10 @@
     
     <!--
     ***************************************************
-        TaharezLook/TabButton
+        LoveLook/TabButton
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/TabButton">
+    <WidgetLook name="LoveLook/TabButton">
         <PropertyDefinition name="NormalTextColour" initialValue="FFC0C0C0" redrawOnWrite="true" />
         <PropertyDefinition name="HoverTextColour" initialValue="FFE0E0E0" redrawOnWrite="true" />
         <PropertyDefinition name="PushedTextColour" initialValue="FFFFFFFF" redrawOnWrite="true" />
@@ -3111,15 +3111,15 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="TopLeftCorner" imageset="TaharezLook" image="TabButtonUpperLeftNormal" />
-                <Image type="TopRightCorner" imageset="TaharezLook" image="TabButtonUpperRightNormal" />
-                <Image type="BottomLeftCorner" imageset="TaharezLook" image="TabButtonLowerLeftNormal" />
-                <Image type="BottomRightCorner" imageset="TaharezLook" image="TabButtonLowerRight2Normal" />
-                <Image type="LeftEdge" imageset="TaharezLook" image="TabButtonLeftNormal" />
-                <Image type="RightEdge" imageset="TaharezLook" image="TabButtonRightNormal" />
-                <Image type="TopEdge" imageset="TaharezLook" image="TabButtonUpperNormal" />
-                <Image type="BottomEdge" imageset="TaharezLook" image="TabButtonLowerNormal" />
-                <Image type="Background" imageset="TaharezLook" image="TabButtonMiddleNormal" />
+                <Image type="TopLeftCorner" imageset="LoveLook" image="TabButtonUpperLeftNormal" />
+                <Image type="TopRightCorner" imageset="LoveLook" image="TabButtonUpperRightNormal" />
+                <Image type="BottomLeftCorner" imageset="LoveLook" image="TabButtonLowerLeftNormal" />
+                <Image type="BottomRightCorner" imageset="LoveLook" image="TabButtonLowerRight2Normal" />
+                <Image type="LeftEdge" imageset="LoveLook" image="TabButtonLeftNormal" />
+                <Image type="RightEdge" imageset="LoveLook" image="TabButtonRightNormal" />
+                <Image type="TopEdge" imageset="LoveLook" image="TabButtonUpperNormal" />
+                <Image type="BottomEdge" imageset="LoveLook" image="TabButtonLowerNormal" />
+                <Image type="Background" imageset="LoveLook" image="TabButtonMiddleNormal" />
             </FrameComponent>
         </ImagerySection>
         <ImagerySection name="bot_normal">
@@ -3130,15 +3130,15 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="TopLeftCorner" imageset="TaharezLook" image="TabButtonUpperLeft2Normal" />
-                <Image type="TopRightCorner" imageset="TaharezLook" image="TabButtonUpperRightNormal" />
-                <Image type="BottomLeftCorner" imageset="TaharezLook" image="TabButtonLowerLeftNormal" />
-                <Image type="BottomRightCorner" imageset="TaharezLook" image="TabButtonLowerRightNormal" />
-                <Image type="LeftEdge" imageset="TaharezLook" image="TabButtonLeftNormal" />
-                <Image type="RightEdge" imageset="TaharezLook" image="TabButtonRightNormal" />
-                <Image type="TopEdge" imageset="TaharezLook" image="TabButtonUpperNormal" />
-                <Image type="BottomEdge" imageset="TaharezLook" image="TabButtonLowerNormal" />
-                <Image type="Background" imageset="TaharezLook" image="TabButtonMiddleNormal" />
+                <Image type="TopLeftCorner" imageset="LoveLook" image="TabButtonUpperLeft2Normal" />
+                <Image type="TopRightCorner" imageset="LoveLook" image="TabButtonUpperRightNormal" />
+                <Image type="BottomLeftCorner" imageset="LoveLook" image="TabButtonLowerLeftNormal" />
+                <Image type="BottomRightCorner" imageset="LoveLook" image="TabButtonLowerRightNormal" />
+                <Image type="LeftEdge" imageset="LoveLook" image="TabButtonLeftNormal" />
+                <Image type="RightEdge" imageset="LoveLook" image="TabButtonRightNormal" />
+                <Image type="TopEdge" imageset="LoveLook" image="TabButtonUpperNormal" />
+                <Image type="BottomEdge" imageset="LoveLook" image="TabButtonLowerNormal" />
+                <Image type="Background" imageset="LoveLook" image="TabButtonMiddleNormal" />
             </FrameComponent>
         </ImagerySection>
         <ImagerySection name="top_hover">
@@ -3149,15 +3149,15 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="TopLeftCorner" imageset="TaharezLook" image="TabButtonUpperLeftNormal" />
-                <Image type="TopRightCorner" imageset="TaharezLook" image="TabButtonUpperRightNormal" />
-                <Image type="BottomLeftCorner" imageset="TaharezLook" image="TabButtonLowerLeftNormal" />
-                <Image type="BottomRightCorner" imageset="TaharezLook" image="TabButtonLowerRight2Normal" />
-                <Image type="LeftEdge" imageset="TaharezLook" image="TabButtonLeftNormal" />
-                <Image type="RightEdge" imageset="TaharezLook" image="TabButtonRightNormal" />
-                <Image type="TopEdge" imageset="TaharezLook" image="TabButtonUpperNormal" />
-                <Image type="BottomEdge" imageset="TaharezLook" image="TabButtonLowerNormal" />
-                <Image type="Background" imageset="TaharezLook" image="TabButtonMiddleNormal" />
+                <Image type="TopLeftCorner" imageset="LoveLook" image="TabButtonUpperLeftNormal" />
+                <Image type="TopRightCorner" imageset="LoveLook" image="TabButtonUpperRightNormal" />
+                <Image type="BottomLeftCorner" imageset="LoveLook" image="TabButtonLowerLeftNormal" />
+                <Image type="BottomRightCorner" imageset="LoveLook" image="TabButtonLowerRight2Normal" />
+                <Image type="LeftEdge" imageset="LoveLook" image="TabButtonLeftNormal" />
+                <Image type="RightEdge" imageset="LoveLook" image="TabButtonRightNormal" />
+                <Image type="TopEdge" imageset="LoveLook" image="TabButtonUpperNormal" />
+                <Image type="BottomEdge" imageset="LoveLook" image="TabButtonLowerNormal" />
+                <Image type="Background" imageset="LoveLook" image="TabButtonMiddleNormal" />
             </FrameComponent>
         </ImagerySection>
         <ImagerySection name="bot_hover">
@@ -3168,15 +3168,15 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="TopLeftCorner" imageset="TaharezLook" image="TabButtonUpperLeft2Normal" />
-                <Image type="TopRightCorner" imageset="TaharezLook" image="TabButtonUpperRightNormal" />
-                <Image type="BottomLeftCorner" imageset="TaharezLook" image="TabButtonLowerLeftNormal" />
-                <Image type="BottomRightCorner" imageset="TaharezLook" image="TabButtonLowerRightNormal" />
-                <Image type="LeftEdge" imageset="TaharezLook" image="TabButtonLeftNormal" />
-                <Image type="RightEdge" imageset="TaharezLook" image="TabButtonRightNormal" />
-                <Image type="TopEdge" imageset="TaharezLook" image="TabButtonUpperNormal" />
-                <Image type="BottomEdge" imageset="TaharezLook" image="TabButtonLowerNormal" />
-                <Image type="Background" imageset="TaharezLook" image="TabButtonMiddleNormal" />
+                <Image type="TopLeftCorner" imageset="LoveLook" image="TabButtonUpperLeft2Normal" />
+                <Image type="TopRightCorner" imageset="LoveLook" image="TabButtonUpperRightNormal" />
+                <Image type="BottomLeftCorner" imageset="LoveLook" image="TabButtonLowerLeftNormal" />
+                <Image type="BottomRightCorner" imageset="LoveLook" image="TabButtonLowerRightNormal" />
+                <Image type="LeftEdge" imageset="LoveLook" image="TabButtonLeftNormal" />
+                <Image type="RightEdge" imageset="LoveLook" image="TabButtonRightNormal" />
+                <Image type="TopEdge" imageset="LoveLook" image="TabButtonUpperNormal" />
+                <Image type="BottomEdge" imageset="LoveLook" image="TabButtonLowerNormal" />
+                <Image type="Background" imageset="LoveLook" image="TabButtonMiddleNormal" />
             </FrameComponent>
         </ImagerySection>
         <ImagerySection name="top_selected">
@@ -3187,12 +3187,12 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="TopLeftCorner" imageset="TaharezLook" image="TabButtonUpperLeftSelected" />
-                <Image type="TopEdge" imageset="TaharezLook" image="TabButtonUpperSelected" />
-                <Image type="TopRightCorner" imageset="TaharezLook" image="TabButtonUpperRightSelected" />
-                <Image type="LeftEdge" imageset="TaharezLook" image="TabButtonLeftSelected" />
-                <Image type="Background" imageset="TaharezLook" image="TabButtonMiddleSelected" />
-                <Image type="RightEdge" imageset="TaharezLook" image="TabButtonRightSelected" />
+                <Image type="TopLeftCorner" imageset="LoveLook" image="TabButtonUpperLeftSelected" />
+                <Image type="TopEdge" imageset="LoveLook" image="TabButtonUpperSelected" />
+                <Image type="TopRightCorner" imageset="LoveLook" image="TabButtonUpperRightSelected" />
+                <Image type="LeftEdge" imageset="LoveLook" image="TabButtonLeftSelected" />
+                <Image type="Background" imageset="LoveLook" image="TabButtonMiddleSelected" />
+                <Image type="RightEdge" imageset="LoveLook" image="TabButtonRightSelected" />
             </FrameComponent>
         </ImagerySection>
         <ImagerySection name="bot_selected">
@@ -3203,12 +3203,12 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="LeftEdge" imageset="TaharezLook" image="TabButtonLeftSelected" />
-                <Image type="Background" imageset="TaharezLook" image="TabButtonMiddleSelected" />
-                <Image type="RightEdge" imageset="TaharezLook" image="TabButtonRightSelected" />
-                <Image type="BottomLeftCorner" imageset="TaharezLook" image="TabButtonLowerLeftNormal" />
-                <Image type="BottomEdge" imageset="TaharezLook" image="TabButtonLowerNormal" />
-                <Image type="BottomRightCorner" imageset="TaharezLook" image="TabButtonLowerRightNormal" />
+                <Image type="LeftEdge" imageset="LoveLook" image="TabButtonLeftSelected" />
+                <Image type="Background" imageset="LoveLook" image="TabButtonMiddleSelected" />
+                <Image type="RightEdge" imageset="LoveLook" image="TabButtonRightSelected" />
+                <Image type="BottomLeftCorner" imageset="LoveLook" image="TabButtonLowerLeftNormal" />
+                <Image type="BottomEdge" imageset="LoveLook" image="TabButtonLowerNormal" />
+                <Image type="BottomRightCorner" imageset="LoveLook" image="TabButtonLowerRightNormal" />
             </FrameComponent>
         </ImagerySection>
         <StateImagery name="TopNormal">
@@ -3299,10 +3299,10 @@
     
     <!--
     ***************************************************
-        TaharezLook/TabContentPane
+        LoveLook/TabContentPane
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/TabContentPane">
+    <WidgetLook name="LoveLook/TabContentPane">
         <PropertyDefinition name="EnableTop" initialValue="0" redrawOnWrite="true" layoutOnwrite="true" />
         <PropertyDefinition name="EnableBottom" initialValue="0" redrawOnWrite="true" layoutOnwrite="true" />
         <ImagerySection name="normal">
@@ -3312,22 +3312,22 @@
                     <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="BottomEdge" >
-                        <ImageDim imageset="TaharezLook" image="TabContentPaneUpperLeft" dimension="Height">
+                        <ImageDim imageset="LoveLook" image="TabContentPaneUpperLeft" dimension="Height">
                             <DimOperator op="Multiply">
                                 <PropertyDim name="EnableTop" />
                             </DimOperator>
                         </ImageDim>
                     </Dim>
                 </Area>
-                <Image type="TopLeftCorner" imageset="TaharezLook" image="TabContentPaneUpperLeft" />
-                <Image type="TopEdge" imageset="TaharezLook" image="TabContentPaneUpper" />
-                <Image type="TopRightCorner" imageset="TaharezLook" image="TabContentPaneUpperRight" />
+                <Image type="TopLeftCorner" imageset="LoveLook" image="TabContentPaneUpperLeft" />
+                <Image type="TopEdge" imageset="LoveLook" image="TabContentPaneUpper" />
+                <Image type="TopRightCorner" imageset="LoveLook" image="TabContentPaneUpperRight" />
             </FrameComponent>
             <FrameComponent>
                 <Area>
                     <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                     <Dim type="TopEdge" >
-                        <ImageDim imageset="TaharezLook" image="TabContentPaneUpperLeft" dimension="Height">
+                        <ImageDim imageset="LoveLook" image="TabContentPaneUpperLeft" dimension="Height">
                             <DimOperator op="Multiply">
                                 <PropertyDim name="EnableTop" />
                             </DimOperator>
@@ -3337,7 +3337,7 @@
                     <Dim type="BottomEdge" >
                         <UnifiedDim scale="1" type="Height">
                             <DimOperator op="Subtract">
-                                <ImageDim imageset="TaharezLook" image="TabContentPaneLowerLeft" dimension="Height">
+                                <ImageDim imageset="LoveLook" image="TabContentPaneLowerLeft" dimension="Height">
                                     <DimOperator op="Multiply">
                                         <PropertyDim name="EnableBottom" />
                                     </DimOperator>
@@ -3346,9 +3346,9 @@
                         </UnifiedDim>
                     </Dim>
                 </Area>
-                <Image type="LeftEdge" imageset="TaharezLook" image="TabContentPaneLeft" />
-                <Image type="Background" imageset="TaharezLook" image="TabContentPaneMiddle" />
-                <Image type="RightEdge" imageset="TaharezLook" image="TabContentPaneRight" />
+                <Image type="LeftEdge" imageset="LoveLook" image="TabContentPaneLeft" />
+                <Image type="Background" imageset="LoveLook" image="TabContentPaneMiddle" />
+                <Image type="RightEdge" imageset="LoveLook" image="TabContentPaneRight" />
             </FrameComponent>
             <FrameComponent>
                 <Area>
@@ -3356,7 +3356,7 @@
                     <Dim type="TopEdge" >
                         <UnifiedDim scale="1" type="Height">
                             <DimOperator op="Subtract">
-                                <ImageDim imageset="TaharezLook" image="TabContentPaneLowerLeft" dimension="Height">
+                                <ImageDim imageset="LoveLook" image="TabContentPaneLowerLeft" dimension="Height">
                                     <DimOperator op="Multiply">
                                         <PropertyDim name="EnableBottom" />
                                     </DimOperator>
@@ -3367,9 +3367,9 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="BottomEdge" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="BottomLeftCorner" imageset="TaharezLook" image="TabContentPaneLowerLeft" />
-                <Image type="BottomEdge" imageset="TaharezLook" image="TabContentPaneLower" />
-                <Image type="BottomRightCorner" imageset="TaharezLook" image="TabContentPaneLowerRight" />
+                <Image type="BottomLeftCorner" imageset="LoveLook" image="TabContentPaneLowerLeft" />
+                <Image type="BottomEdge" imageset="LoveLook" image="TabContentPaneLower" />
+                <Image type="BottomRightCorner" imageset="LoveLook" image="TabContentPaneLowerRight" />
             </FrameComponent>
         </ImagerySection>
         <StateImagery name="Enabled">
@@ -3388,10 +3388,10 @@
     
     <!--
     ***************************************************
-        TaharezLook/TabButtonPane
+        LoveLook/TabButtonPane
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/TabButtonPane">
+    <WidgetLook name="LoveLook/TabButtonPane">
         <PropertyDefinition name="EnableTop" initialValue="1" redrawOnWrite="true" layoutOnwrite="true" />
         <PropertyDefinition name="EnableBottom" initialValue="1" redrawOnWrite="true" layoutOnwrite="true" />
         <ImagerySection name="normal">
@@ -3401,20 +3401,20 @@
                     <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="BottomEdge" >
-                        <ImageDim imageset="TaharezLook" image="TabHorizontalFiller" dimension="Height">
+                        <ImageDim imageset="LoveLook" image="TabHorizontalFiller" dimension="Height">
                             <DimOperator op="Multiply">
                                 <PropertyDim name="EnableTop" />
                             </DimOperator>
                         </ImageDim>
                     </Dim>
                 </Area>
-                <Image type="TopEdge" imageset="TaharezLook" image="TabHorizontalFiller" />
+                <Image type="TopEdge" imageset="LoveLook" image="TabHorizontalFiller" />
             </FrameComponent>
             <FrameComponent>
                 <Area>
                     <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                     <Dim type="TopEdge" >
-                        <ImageDim imageset="TaharezLook" image="TabHorizontalFiller" dimension="Height">
+                        <ImageDim imageset="LoveLook" image="TabHorizontalFiller" dimension="Height">
                             <DimOperator op="Multiply">
                                 <PropertyDim name="EnableTop" />
                             </DimOperator>
@@ -3424,7 +3424,7 @@
                     <Dim type="BottomEdge" >
                         <UnifiedDim scale="1" type="Height">
                             <DimOperator op="Subtract">
-                                <ImageDim imageset="TaharezLook" image="TabHorizontalFiller" dimension="Height">
+                                <ImageDim imageset="LoveLook" image="TabHorizontalFiller" dimension="Height">
                                     <DimOperator op="Multiply">
                                         <PropertyDim name="EnableBottom" />
                                     </DimOperator>
@@ -3440,7 +3440,7 @@
                     <Dim type="TopEdge" >
                         <UnifiedDim scale="1" type="Height">
                             <DimOperator op="Subtract">
-                                <ImageDim imageset="TaharezLook" image="TabHorizontalFiller" dimension="Height">
+                                <ImageDim imageset="LoveLook" image="TabHorizontalFiller" dimension="Height">
                                     <DimOperator op="Multiply">
                                         <PropertyDim name="EnableBottom" />
                                     </DimOperator>
@@ -3451,7 +3451,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="BottomEdge" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="BottomEdge" imageset="TaharezLook" image="TabHorizontalFiller" />
+                <Image type="BottomEdge" imageset="LoveLook" image="TabHorizontalFiller" />
             </FrameComponent>
         </ImagerySection>
         <StateImagery name="Enabled">
@@ -3470,13 +3470,13 @@
     
     <!--
     ***************************************************
-        TaharezLook/TabControl
+        LoveLook/TabControl
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/TabControl">
-        <Property name="TabButtonType" value="TaharezLook/TabButton" />
+    <WidgetLook name="LoveLook/TabControl">
+        <Property name="TabButtonType" value="LoveLook/TabButton" />
         <Property name="TabTextPadding" value="{0,6}" />
-        <Child type="TaharezLook/TabContentPane" nameSuffix="__auto_TabPane__">
+        <Child type="LoveLook/TabContentPane" nameSuffix="__auto_TabPane__">
             <Area>
                 <Dim type="LeftEdge"><AbsoluteDim value="0" /></Dim>
                 <Dim type="RightEdge"><UnifiedDim scale="1" type="Width" /></Dim>
@@ -3496,7 +3496,7 @@
                 </Dim>
             </Area>
         </Child>
-        <Child  type="TaharezLook/TabButtonPane" nameSuffix="__auto_TabPane__Buttons">
+        <Child  type="LoveLook/TabButtonPane" nameSuffix="__auto_TabPane__Buttons">
             <Area>
                 <Dim type="LeftEdge"><AbsoluteDim value="0" /></Dim>
                 <Dim type="RightEdge"><UnifiedDim scale="1" type="Width" /></Dim>
@@ -3514,7 +3514,7 @@
                 <Dim type="Height"><PropertyDim name="TabHeight" type="Height" /></Dim>
             </Area>
         </Child>
-        <Child type="TaharezLook/SystemButton" nameSuffix="__auto_TabPane__ScrollLeft">
+        <Child type="LoveLook/SystemButton" nameSuffix="__auto_TabPane__ScrollLeft">
             <Area>
                 <Dim type="LeftEdge"><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge">
@@ -3523,9 +3523,9 @@
                 <Dim type="Width">
                     <WidgetDim widget="__auto_TabPane__Buttons" dimension="Height">
                         <DimOperator op="Multiply">
-                            <ImageDim imageset="TaharezLook" image="TabButtonScrollLeftNormal" dimension="Width">
+                            <ImageDim imageset="LoveLook" image="TabButtonScrollLeftNormal" dimension="Width">
                                 <DimOperator op="Divide">
-                                    <ImageDim imageset="TaharezLook" image="TabButtonScrollLeftNormal" dimension="Height" />
+                                    <ImageDim imageset="LoveLook" image="TabButtonScrollLeftNormal" dimension="Height" />
                                 </DimOperator>
                             </ImageDim>
                         </DimOperator>
@@ -3536,18 +3536,18 @@
                 </Dim>
             </Area>
             <Property name="AlwaysOnTop" value="True" />
-            <Property name="NormalImage" value="set:TaharezLook image:TabButtonScrollLeftNormal" />
-            <Property name="HoverImage" value="set:TaharezLook image:TabButtonScrollLeftHover" />
-            <Property name="PushedImage" value="set:TaharezLook image:TabButtonScrollLeftHover" />
+            <Property name="NormalImage" value="set:LoveLook image:TabButtonScrollLeftNormal" />
+            <Property name="HoverImage" value="set:LoveLook image:TabButtonScrollLeftHover" />
+            <Property name="PushedImage" value="set:LoveLook image:TabButtonScrollLeftHover" />
         </Child>
-        <Child type="TaharezLook/SystemButton" nameSuffix="__auto_TabPane__ScrollRight">
+        <Child type="LoveLook/SystemButton" nameSuffix="__auto_TabPane__ScrollRight">
             <Area>
                 <Dim type="Width">
                     <WidgetDim widget="__auto_TabPane__Buttons" dimension="Height">
                         <DimOperator op="Multiply">
-                            <ImageDim imageset="TaharezLook" image="TabButtonScrollRightNormal" dimension="Width">
+                            <ImageDim imageset="LoveLook" image="TabButtonScrollRightNormal" dimension="Width">
                                 <DimOperator op="Divide">
-                                    <ImageDim imageset="TaharezLook" image="TabButtonScrollRightNormal" dimension="Height" />
+                                    <ImageDim imageset="LoveLook" image="TabButtonScrollRightNormal" dimension="Height" />
                                 </DimOperator>
                             </ImageDim>
                         </DimOperator>
@@ -3568,9 +3568,9 @@
                 </Dim>
             </Area>
             <Property name="AlwaysOnTop" value="True" />
-            <Property name="NormalImage" value="set:TaharezLook image:TabButtonScrollRightNormal" />
-            <Property name="HoverImage" value="set:TaharezLook image:TabButtonScrollRightHover" />
-            <Property name="PushedImage" value="set:TaharezLook image:TabButtonScrollRightHover" />
+            <Property name="NormalImage" value="set:LoveLook image:TabButtonScrollRightNormal" />
+            <Property name="HoverImage" value="set:LoveLook image:TabButtonScrollRightHover" />
+            <Property name="PushedImage" value="set:LoveLook image:TabButtonScrollRightHover" />
         </Child>
         <StateImagery name="Enabled" />
         <StateImagery name="Disabled" />
@@ -3578,10 +3578,10 @@
     
     <!--
     ***************************************************
-        TaharezLook/MenuItem
+        LoveLook/MenuItem
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/MenuItem">
+    <WidgetLook name="LoveLook/MenuItem">
         <PropertyDefinition name="NormalTextColour" initialValue="FFFFFFFF" redrawOnWrite="true" />
         <PropertyDefinition name="DisabledTextColour" initialValue="FF7F7F7F" redrawOnWrite="true" />
         <PropertyDefinition name="HoverColour" initialValue="FFFFFFFF" redrawOnWrite="true" />
@@ -3595,9 +3595,9 @@
                 <Dim type="Width">
                     <FontDim type="HorzExtent">
                         <DimOperator op="Add">
-                            <ImageDim imageset="TaharezLook" image="MenuLeft" dimension="Width">
+                            <ImageDim imageset="LoveLook" image="MenuLeft" dimension="Width">
                                 <DimOperator op="Add">
-                                    <ImageDim imageset="TaharezLook" image="MenuRight" dimension="Width" />
+                                    <ImageDim imageset="LoveLook" image="MenuRight" dimension="Width" />
                                 </DimOperator>
                             </ImageDim>
                         </DimOperator>
@@ -3606,9 +3606,9 @@
                 <Dim type="Height">
                     <FontDim type="LineSpacing">
                         <DimOperator op="Add">
-                            <ImageDim imageset="TaharezLook" image="MenuTop" dimension="Height">
+                            <ImageDim imageset="LoveLook" image="MenuTop" dimension="Height">
                                 <DimOperator op="Add">
-                                    <ImageDim imageset="TaharezLook" image="MenuBottom" dimension="Height" />
+                                    <ImageDim imageset="LoveLook" image="MenuBottom" dimension="Height" />
                                 </DimOperator>
                             </ImageDim>
                         </DimOperator>
@@ -3623,11 +3623,11 @@
                 <Dim type="Width">
                     <FontDim type="HorzExtent">
                         <DimOperator op="Add">
-                            <ImageDim imageset="TaharezLook" image="MenuLeft" dimension="Width">
+                            <ImageDim imageset="LoveLook" image="MenuLeft" dimension="Width">
                                 <DimOperator op="Add">
-                                    <ImageDim imageset="TaharezLook" image="MenuRight" dimension="Width">
+                                    <ImageDim imageset="LoveLook" image="MenuRight" dimension="Width">
                                         <DimOperator op="Add">
-                                            <ImageDim imageset="TaharezLook" image="PopupMenuArrowLeft" dimension="Width">
+                                            <ImageDim imageset="LoveLook" image="PopupMenuArrowLeft" dimension="Width">
                                                 <DimOperator op="Multiply">
                                                     <AbsoluteDim value="3" />
                                                 </DimOperator>
@@ -3642,9 +3642,9 @@
                 <Dim type="Height">
                     <FontDim type="LineSpacing">
                         <DimOperator op="Add">
-                            <ImageDim imageset="TaharezLook" image="MenuTop" dimension="Height">
+                            <ImageDim imageset="LoveLook" image="MenuTop" dimension="Height">
                                 <DimOperator op="Add">
-                                    <ImageDim imageset="TaharezLook" image="MenuBottom" dimension="Height" />
+                                    <ImageDim imageset="LoveLook" image="MenuBottom" dimension="Height" />
                                 </DimOperator>
                             </ImageDim>
                         </DimOperator>
@@ -3655,19 +3655,19 @@
         <ImagerySection name="label">
             <TextComponent>
                 <Area>
-                    <Dim type="LeftEdge" ><ImageDim imageset="TaharezLook" image="MenuLeft" dimension="Width" /></Dim>
-                    <Dim type="TopEdge" ><ImageDim imageset="TaharezLook" image="MenuTop" dimension="Height" /></Dim>
+                    <Dim type="LeftEdge" ><ImageDim imageset="LoveLook" image="MenuLeft" dimension="Width" /></Dim>
+                    <Dim type="TopEdge" ><ImageDim imageset="LoveLook" image="MenuTop" dimension="Height" /></Dim>
                     <Dim type="RightEdge" >
                         <UnifiedDim scale="1" type="RightEdge">
                             <DimOperator op="Subtract">
-                                <ImageDim imageset="TaharezLook" image="MenuRight" dimension="Width" />
+                                <ImageDim imageset="LoveLook" image="MenuRight" dimension="Width" />
                             </DimOperator>
                         </UnifiedDim>
                     </Dim>
                     <Dim type="BottomEdge" >
                         <UnifiedDim scale="1" type="BottomEdge">
                             <DimOperator op="Subtract">
-                                <ImageDim imageset="TaharezLook" image="MenuBottom" dimension="Height" />
+                                <ImageDim imageset="LoveLook" image="MenuBottom" dimension="Height" />
                             </DimOperator>
                         </UnifiedDim>
                     </Dim>
@@ -3684,15 +3684,15 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="TopLeftCorner" imageset="TaharezLook" image="MenuTopLeft" />
-                <Image type="TopRightCorner" imageset="TaharezLook" image="MenuTopRight" />
-                <Image type="BottomLeftCorner" imageset="TaharezLook" image="MenuBottomLeft" />
-                <Image type="BottomRightCorner" imageset="TaharezLook" image="MenuBottomRight" />
-                <Image type="LeftEdge" imageset="TaharezLook" image="MenuLeft" />
-                <Image type="RightEdge" imageset="TaharezLook" image="MenuRight" />
-                <Image type="TopEdge" imageset="TaharezLook" image="MenuTop" />
-                <Image type="BottomEdge" imageset="TaharezLook" image="MenuBottom" />
-                <Image type="Background" imageset="TaharezLook" image="MenuMiddle" />
+                <Image type="TopLeftCorner" imageset="LoveLook" image="MenuTopLeft" />
+                <Image type="TopRightCorner" imageset="LoveLook" image="MenuTopRight" />
+                <Image type="BottomLeftCorner" imageset="LoveLook" image="MenuBottomLeft" />
+                <Image type="BottomRightCorner" imageset="LoveLook" image="MenuBottomRight" />
+                <Image type="LeftEdge" imageset="LoveLook" image="MenuLeft" />
+                <Image type="RightEdge" imageset="LoveLook" image="MenuRight" />
+                <Image type="TopEdge" imageset="LoveLook" image="MenuTop" />
+                <Image type="BottomEdge" imageset="LoveLook" image="MenuBottom" />
+                <Image type="Background" imageset="LoveLook" image="MenuMiddle" />
             </FrameComponent>
         </ImagerySection>
         <ImagerySection name="popup_arrow_right">
@@ -3703,13 +3703,13 @@
                     <Dim type="Width" >
                         <UnifiedDim scale="1" type="Width">
                             <DimOperator op="Subtract">
-                                <ImageDim imageset="TaharezLook" image="PopupMenuArrowRight" dimension="Width" />
+                                <ImageDim imageset="LoveLook" image="PopupMenuArrowRight" dimension="Width" />
                             </DimOperator>
                         </UnifiedDim>
                     </Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="PopupMenuArrowRight" />
+                <Image imageset="LoveLook" image="PopupMenuArrowRight" />
                 <VertFormat type="CentreAligned" />
                 <HorzFormat type="RightAligned" />
             </ImageryComponent>
@@ -3722,13 +3722,13 @@
                     <Dim type="Width" >
                         <UnifiedDim scale="1" type="Width">
                             <DimOperator op="Subtract">
-                                <ImageDim imageset="TaharezLook" image="PopupMenuArrowLeft" dimension="Width" />
+                                <ImageDim imageset="LoveLook" image="PopupMenuArrowLeft" dimension="Width" />
                             </DimOperator>
                         </UnifiedDim>
                     </Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="PopupMenuArrowLeft" />
+                <Image imageset="LoveLook" image="PopupMenuArrowLeft" />
                 <VertFormat type="CentreAligned" />
                 <HorzFormat type="RightAligned" />
             </ImageryComponent>
@@ -3821,23 +3821,23 @@
     
     <!--
     ***************************************************
-        TaharezLook/PopupMenu
+        LoveLook/PopupMenu
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/PopupMenu">
+    <WidgetLook name="LoveLook/PopupMenu">
         <PropertyDefinition name="BackgroundColours" initialValue="tl:FFFFFFFF tr:FFFFFFFF bl:FFFFFFFF br:FFFFFFFF" redrawOnWrite="true" />
         <PropertyDefinition name="BorderWidth" initialValue="0" layoutOnWrite="true" />
         <NamedArea name="ItemRenderArea">
             <Area>
                 <Dim type="LeftEdge" >
-                    <ImageDim imageset="TaharezLook" image="PopupMenuFrameLeft" dimension="Width">
+                    <ImageDim imageset="LoveLook" image="PopupMenuFrameLeft" dimension="Width">
                         <DimOperator op="Add">
                             <PropertyDim name="BorderWidth" />
                         </DimOperator>
                     </ImageDim>
                 </Dim>
                 <Dim type="TopEdge" >
-                    <ImageDim imageset="TaharezLook" image="PopupMenuFrameTop" dimension="Height">
+                    <ImageDim imageset="LoveLook" image="PopupMenuFrameTop" dimension="Height">
                         <DimOperator op="Add">
                             <PropertyDim name="BorderWidth" />
                         </DimOperator>
@@ -3846,7 +3846,7 @@
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="PopupMenuFrameRight" dimension="Width">
+                            <ImageDim imageset="LoveLook" image="PopupMenuFrameRight" dimension="Width">
                                 <DimOperator op="Add">
                                     <PropertyDim name="BorderWidth" />
                                 </DimOperator>
@@ -3857,7 +3857,7 @@
                 <Dim type="BottomEdge" >
                     <UnifiedDim scale="1" type="BottomEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="PopupMenuFrameBottom" dimension="Height">
+                            <ImageDim imageset="LoveLook" image="PopupMenuFrameBottom" dimension="Height">
                                 <DimOperator op="Add">
                                     <PropertyDim name="BorderWidth" />
                                 </DimOperator>
@@ -3875,15 +3875,15 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="TopLeftCorner" imageset="TaharezLook" image="PopupMenuFrameTopLeft" />
-                <Image type="TopRightCorner" imageset="TaharezLook" image="PopupMenuFrameTopRight" />
-                <Image type="BottomLeftCorner" imageset="TaharezLook" image="PopupMenuFrameBottomLeft" />
-                <Image type="BottomRightCorner" imageset="TaharezLook" image="PopupMenuFrameBottomRight" />
-                <Image type="LeftEdge" imageset="TaharezLook" image="PopupMenuFrameLeft" />
-                <Image type="RightEdge" imageset="TaharezLook" image="PopupMenuFrameRight" />
-                <Image type="TopEdge" imageset="TaharezLook" image="PopupMenuFrameTop" />
-                <Image type="BottomEdge" imageset="TaharezLook" image="PopupMenuFrameBottom" />
-                <Image type="Background" imageset="TaharezLook" image="PopupMenuMiddle" />
+                <Image type="TopLeftCorner" imageset="LoveLook" image="PopupMenuFrameTopLeft" />
+                <Image type="TopRightCorner" imageset="LoveLook" image="PopupMenuFrameTopRight" />
+                <Image type="BottomLeftCorner" imageset="LoveLook" image="PopupMenuFrameBottomLeft" />
+                <Image type="BottomRightCorner" imageset="LoveLook" image="PopupMenuFrameBottomRight" />
+                <Image type="LeftEdge" imageset="LoveLook" image="PopupMenuFrameLeft" />
+                <Image type="RightEdge" imageset="LoveLook" image="PopupMenuFrameRight" />
+                <Image type="TopEdge" imageset="LoveLook" image="PopupMenuFrameTop" />
+                <Image type="BottomEdge" imageset="LoveLook" image="PopupMenuFrameBottom" />
+                <Image type="Background" imageset="LoveLook" image="PopupMenuMiddle" />
             </FrameComponent>
         </ImagerySection>
         <StateImagery name="Enabled">
@@ -3905,23 +3905,23 @@
     
     <!--
     ***************************************************
-        TaharezLook/Menubar
+        LoveLook/Menubar
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/Menubar">
+    <WidgetLook name="LoveLook/Menubar">
         <PropertyDefinition name="BackgroundColours" initialValue="tl:FFFFFFFF tr:FFFFFFFF bl:FFFFFFFF br:FFFFFFFF" redrawOnWrite="true" />
         <PropertyDefinition name="BorderWidth" initialValue="5" layoutOnWrite="true" />
         <NamedArea name="ItemRenderArea">
             <Area>
                 <Dim type="LeftEdge" >
-                    <ImageDim imageset="TaharezLook" image="PopupMenuFrameLeft" dimension="Width">
+                    <ImageDim imageset="LoveLook" image="PopupMenuFrameLeft" dimension="Width">
                         <DimOperator op="Add">
                             <PropertyDim name="BorderWidth" />
                         </DimOperator>
                     </ImageDim>
                 </Dim>
                 <Dim type="TopEdge" >
-                    <ImageDim imageset="TaharezLook" image="PopupMenuFrameTop" dimension="Height">
+                    <ImageDim imageset="LoveLook" image="PopupMenuFrameTop" dimension="Height">
                         <DimOperator op="Add">
                             <PropertyDim name="BorderWidth" />
                         </DimOperator>
@@ -3930,7 +3930,7 @@
                 <Dim type="RightEdge" >
                     <UnifiedDim scale="1" type="RightEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="PopupMenuFrameRight" dimension="Width">
+                            <ImageDim imageset="LoveLook" image="PopupMenuFrameRight" dimension="Width">
                                 <DimOperator op="Add">
                                     <PropertyDim name="BorderWidth" />
                                 </DimOperator>
@@ -3941,7 +3941,7 @@
                 <Dim type="BottomEdge" >
                     <UnifiedDim scale="1" type="BottomEdge">
                         <DimOperator op="Subtract">
-                            <ImageDim imageset="TaharezLook" image="PopupMenuFrameBottom" dimension="Height">
+                            <ImageDim imageset="LoveLook" image="PopupMenuFrameBottom" dimension="Height">
                                 <DimOperator op="Add">
                                     <PropertyDim name="BorderWidth" />
                                 </DimOperator>
@@ -3959,15 +3959,15 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="TopLeftCorner" imageset="TaharezLook" image="PopupMenuFrameTopLeft" />
-                <Image type="TopRightCorner" imageset="TaharezLook" image="PopupMenuFrameTopRight" />
-                <Image type="BottomLeftCorner" imageset="TaharezLook" image="PopupMenuFrameBottomLeft" />
-                <Image type="BottomRightCorner" imageset="TaharezLook" image="PopupMenuFrameBottomRight" />
-                <Image type="LeftEdge" imageset="TaharezLook" image="PopupMenuFrameLeft" />
-                <Image type="RightEdge" imageset="TaharezLook" image="PopupMenuFrameRight" />
-                <Image type="TopEdge" imageset="TaharezLook" image="PopupMenuFrameTop" />
-                <Image type="BottomEdge" imageset="TaharezLook" image="PopupMenuFrameBottom" />
-                <Image type="Background" imageset="TaharezLook" image="PopupMenuMiddle" />
+                <Image type="TopLeftCorner" imageset="LoveLook" image="PopupMenuFrameTopLeft" />
+                <Image type="TopRightCorner" imageset="LoveLook" image="PopupMenuFrameTopRight" />
+                <Image type="BottomLeftCorner" imageset="LoveLook" image="PopupMenuFrameBottomLeft" />
+                <Image type="BottomRightCorner" imageset="LoveLook" image="PopupMenuFrameBottomRight" />
+                <Image type="LeftEdge" imageset="LoveLook" image="PopupMenuFrameLeft" />
+                <Image type="RightEdge" imageset="LoveLook" image="PopupMenuFrameRight" />
+                <Image type="TopEdge" imageset="LoveLook" image="PopupMenuFrameTop" />
+                <Image type="BottomEdge" imageset="LoveLook" image="PopupMenuFrameBottom" />
+                <Image type="Background" imageset="LoveLook" image="PopupMenuMiddle" />
             </FrameComponent>
         </ImagerySection>
         <StateImagery name="Enabled">
@@ -3988,10 +3988,10 @@
     
     <!--
     ***************************************************
-        TaharezLook/LargeVerticalScrollbarThumb
+        LoveLook/LargeVerticalScrollbarThumb
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/LargeVerticalScrollbarThumb">
+    <WidgetLook name="LoveLook/LargeVerticalScrollbarThumb">
         <Property name="VertFree" value="True" />
         <ImagerySection name="normal">
             <ImageryComponent>
@@ -4001,7 +4001,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1.0" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1.0" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="VertScrollThumbNormal" />
+                <Image imageset="LoveLook" image="VertScrollThumbNormal" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Stretched" />
             </ImageryComponent>
@@ -4014,7 +4014,7 @@
                     <Dim type="Width" ><UnifiedDim scale="1.0" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1.0" type="Height" /></Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="VertScrollThumbHover" />
+                <Image imageset="LoveLook" image="VertScrollThumbHover" />
                 <VertFormat type="Stretched" />
                 <HorzFormat type="Stretched" />
             </ImageryComponent>
@@ -4045,10 +4045,10 @@
     
     <!--
     ***************************************************
-        TaharezLook/LargeVerticalScrollbar
+        LoveLook/LargeVerticalScrollbar
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/LargeVerticalScrollbar">
+    <WidgetLook name="LoveLook/LargeVerticalScrollbar">
         <Property name="VerticalScrollbar" value="True" />
         <NamedArea name="ThumbTrackArea">
             <Area>
@@ -4056,7 +4056,7 @@
                 <Dim type="TopEdge" >
                     <WidgetDim widget="__auto_decbtn__" dimension="Height">
                         <DimOperator op="Add">
-                            <ImageDim imageset="TaharezLook" image="VertScrollTop" dimension="Height">
+                            <ImageDim imageset="LoveLook" image="VertScrollTop" dimension="Height">
                                 <DimOperator op="Multiply">
                                     <AbsoluteDim value="0.5" />
                                 </DimOperator>
@@ -4070,7 +4070,7 @@
                         <DimOperator op="Subtract">
                             <WidgetDim widget="__auto_decbtn__" dimension="Height">
                                 <DimOperator op="Add">
-                                    <ImageDim imageset="TaharezLook" image="VertScrollTop" dimension="Height">
+                                    <ImageDim imageset="LoveLook" image="VertScrollTop" dimension="Height">
                                         <DimOperator op="Multiply">
                                             <AbsoluteDim value="0.5" />
                                         </DimOperator>
@@ -4082,13 +4082,13 @@
                 </Dim>
             </Area>
         </NamedArea>
-        <Child  type="TaharezLook/ImageButton" nameSuffix="__auto_incbtn__">
+        <Child  type="LoveLook/ImageButton" nameSuffix="__auto_incbtn__">
             <Area>
                 <Dim type="LeftEdge" ><UnifiedDim scale="0.25" type="LeftEdge" /></Dim>
                 <Dim type="TopEdge" >
                     <AbsoluteDim value="-1">
                         <DimOperator op="Multiply">
-                            <ImageDim imageset="TaharezLook" image="VertScrollTop" dimension="Height">
+                            <ImageDim imageset="LoveLook" image="VertScrollTop" dimension="Height">
                                 <DimOperator op="Multiply">
                                     <AbsoluteDim value="0.5" />
                                 </DimOperator>
@@ -4100,9 +4100,9 @@
                 <Dim type="Height" >
                     <UnifiedDim scale="0.6" type="Width">
                         <DimOperator op="Multiply">
-                            <ImageDim imageset="TaharezLook" image="VertScrollUpNormal" dimension="Width">
+                            <ImageDim imageset="LoveLook" image="VertScrollUpNormal" dimension="Width">
                                 <DimOperator op="Divide">
-                                    <ImageDim imageset="TaharezLook" image="VertScrollUpNormal" dimension="Height"/>
+                                    <ImageDim imageset="LoveLook" image="VertScrollUpNormal" dimension="Height"/>
                                 </DimOperator>
                             </ImageDim>
                         </DimOperator>
@@ -4110,15 +4110,15 @@
                 </Dim>
             </Area>
             <VertAlignment type="BottomAligned" />
-            <Property name="NormalImage" value="set:TaharezLook image:VertScrollDownNormal" />
-            <Property name="HoverImage" value="set:TaharezLook image:VertScrollDownHover" />
-            <Property name="PushedImage" value="set:TaharezLook image:VertScrollDownNormal" />
+            <Property name="NormalImage" value="set:LoveLook image:VertScrollDownNormal" />
+            <Property name="HoverImage" value="set:LoveLook image:VertScrollDownHover" />
+            <Property name="PushedImage" value="set:LoveLook image:VertScrollDownNormal" />
         </Child>
-        <Child  type="TaharezLook/ImageButton" nameSuffix="__auto_decbtn__">
+        <Child  type="LoveLook/ImageButton" nameSuffix="__auto_decbtn__">
             <Area>
                 <Dim type="LeftEdge" ><UnifiedDim scale="0.25" type="LeftEdge" /></Dim>
                 <Dim type="TopEdge">
-                    <ImageDim imageset="TaharezLook" image="VertScrollTop" dimension="Height">
+                    <ImageDim imageset="LoveLook" image="VertScrollTop" dimension="Height">
                         <DimOperator op="Multiply">
                             <AbsoluteDim value="0.5" />
                         </DimOperator>
@@ -4128,20 +4128,20 @@
                 <Dim type="Height" >
                     <UnifiedDim scale="0.6" type="Width">
                         <DimOperator op="Multiply">
-                            <ImageDim imageset="TaharezLook" image="VertScrollUpNormal" dimension="Width">
+                            <ImageDim imageset="LoveLook" image="VertScrollUpNormal" dimension="Width">
                                 <DimOperator op="Divide">
-                                    <ImageDim imageset="TaharezLook" image="VertScrollUpNormal" dimension="Height"/>
+                                    <ImageDim imageset="LoveLook" image="VertScrollUpNormal" dimension="Height"/>
                                 </DimOperator>
                             </ImageDim>
                         </DimOperator>
                     </UnifiedDim>
                 </Dim>
             </Area>
-            <Property name="NormalImage" value="set:TaharezLook image:VertScrollUpNormal" />
-            <Property name="HoverImage" value="set:TaharezLook image:VertScrollUpHover" />
-            <Property name="PushedImage" value="set:TaharezLook image:VertScrollUpNormal" />
+            <Property name="NormalImage" value="set:LoveLook image:VertScrollUpNormal" />
+            <Property name="HoverImage" value="set:LoveLook image:VertScrollUpHover" />
+            <Property name="PushedImage" value="set:LoveLook image:VertScrollUpNormal" />
         </Child>
-        <Child  type="TaharezLook/LargeVerticalScrollbarThumb" nameSuffix="__auto_thumb__">
+        <Child  type="LoveLook/LargeVerticalScrollbarThumb" nameSuffix="__auto_thumb__">
             <Area>
                 <Dim type="LeftEdge" ><AbsoluteDim value="0" /></Dim>
                 <Dim type="TopEdge" ><AbsoluteDim value="0" /></Dim>
@@ -4149,9 +4149,9 @@
                 <Dim type="Height" >
                     <UnifiedDim scale="0.4" type="Width">
                         <DimOperator op="Multiply">
-                            <ImageDim imageset="TaharezLook" image="VertScrollThumbNormal" dimension="Height">
+                            <ImageDim imageset="LoveLook" image="VertScrollThumbNormal" dimension="Height">
                                 <DimOperator op="Divide">
-                                    <ImageDim imageset="TaharezLook" image="VertScrollThumbNormal" dimension="Width"/>
+                                    <ImageDim imageset="LoveLook" image="VertScrollThumbNormal" dimension="Width"/>
                                 </DimOperator>
                             </ImageDim>
                         </DimOperator>
@@ -4167,9 +4167,9 @@
                     <Dim type="Width" ><UnifiedDim scale="1" type="Width" /></Dim>
                     <Dim type="Height" ><UnifiedDim scale="1" type="Height" /></Dim>
                 </Area>
-                <Image type="TopEdge" imageset="TaharezLook" image="VertScrollTop" />
-                <Image type="BottomEdge" imageset="TaharezLook" image="VertScrollBottom" />
-                <Image type="Background" imageset="TaharezLook" image="VertScrollMiddle" />
+                <Image type="TopEdge" imageset="LoveLook" image="VertScrollTop" />
+                <Image type="BottomEdge" imageset="LoveLook" image="VertScrollBottom" />
+                <Image type="Background" imageset="LoveLook" image="VertScrollMiddle" />
             </FrameComponent>
             <ImageryComponent>
                 <Area>
@@ -4177,7 +4177,7 @@
                     <Dim type="TopEdge" >
                         <WidgetDim widget="__auto_decbtn__" dimension="Height">
                             <DimOperator op="Add">
-                                <ImageDim imageset="TaharezLook" image="VertScrollTop" dimension="Height">
+                                <ImageDim imageset="LoveLook" image="VertScrollTop" dimension="Height">
                                     <DimOperator op="Multiply">
                                         <AbsoluteDim value="0.5" />
                                     </DimOperator>
@@ -4191,7 +4191,7 @@
                             <DimOperator op="Subtract">
                                 <WidgetDim widget="__auto_decbtn__" dimension="Height">
                                     <DimOperator op="Add">
-                                        <ImageDim imageset="TaharezLook" image="VertScrollTop" dimension="Height">
+                                        <ImageDim imageset="LoveLook" image="VertScrollTop" dimension="Height">
                                             <DimOperator op="Multiply">
                                                 <AbsoluteDim value="0.5" />
                                             </DimOperator>
@@ -4202,7 +4202,7 @@
                         </UnifiedDim>
                     </Dim>
                 </Area>
-                <Image imageset="TaharezLook" image="VertScrollBarSegment" />
+                <Image imageset="LoveLook" image="VertScrollBarSegment" />
                 <VertFormat type="Tiled" />
             </ImageryComponent>
         </ImagerySection>
@@ -4222,10 +4222,10 @@
 
     <!--
     ***************************************************
-        TaharezLook/ImageButton
+        LoveLook/ImageButton
     ***************************************************
     -->
-    <WidgetLook name="TaharezLook/ImageButton">
+    <WidgetLook name="LoveLook/ImageButton">
         <PropertyDefinition name="NormalImage" initialValue="" redrawOnWrite="true" />
         <PropertyDefinition name="HoverImage" initialValue="" redrawOnWrite="true" />
         <PropertyDefinition name="PushedImage" initialValue="" redrawOnWrite="true" />
