@@ -28,15 +28,14 @@
 #include "OgreApplication.h"
 #endif
 
+
 class Lab
 {
 public:
-	Lab();
 	virtual ~Lab();
 
 	static Lab& getSingleton();
 
-	void create();
 	void setSimulation(Simulation* simulation){mSimulation = simulation;}
 	Simulation* getSimulation(){return mSimulation;}
 	void setSeedIndex(unsigned int index);
@@ -55,12 +54,13 @@ public:
 	static Orbit<Lab>::NumberGlobalType mNumberGlobals[];
 
         Lab(lua_State* luaState);
-        int create(lua_State* luaState);
 	int setSimulation(lua_State* luaState);
 	int setSeedIndex(lua_State* luaState);
 
 private:
-	static Lab* mLove;
+	Lab();
+
+	static Lab mLab;
 	Simulation* mSimulation;
 	bool mStop;
 	

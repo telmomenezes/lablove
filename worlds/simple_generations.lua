@@ -19,14 +19,13 @@ viewAngle = 100.0
 
 ----------------------------------------------
 
-loveLab = Lab()
-loveLab:create()
-loveLab:setSeedIndex(1)
+lab = getLab()
+lab:setSeedIndex(0)
 
 sim = SimSimple2D()
 sim:setWorldDimensions(worldWidth, worldHeight, viewRange * 2)
 
-loveLab:setSimulation(sim)
+lab:setSimulation(sim)
 animat = AnimatSimple2D(10, 25)
 
 animat:setSize(10.0)

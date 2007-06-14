@@ -39,6 +39,13 @@ extern "C"
 #include "lualib.h"
 }
 
+int getLab(lua_State* luaState)
+{
+	Lab* obj = &Lab::getSingleton();
+	Orbit<Lab>::push(luaState, obj, false);
+	return 1;
+}
+
 // TODO: Replace OGRE_PLATFORM with something more generic.
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)
@@ -65,6 +72,8 @@ int main(int argc, char *argv[])
 	Orbit<GridbrainComponent>::orbitRegister(luaState);
 	Orbit<GridbrainComponentSet>::orbitRegister(luaState);
 	Orbit<MoleculeRGB>::orbitRegister(luaState);
+
+	lua_register(luaState, "getLab", getLab);
 
 	char* scriptFile = "default.lua";
 	if (argc == 2)

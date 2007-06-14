@@ -21,7 +21,7 @@
 #include "functions.h"
 #include "random.h"
 
-Lab* Lab::mLove = NULL;
+Lab Lab::mLab;
 
 Lab::Lab()
 {
@@ -50,14 +50,9 @@ Lab::~Lab()
 #endif
 }
 
-void Lab::create()
-{
-	mLove = this;
-}
-
 Lab& Lab::getSingleton()
 {	
-	return *mLove;
+	return mLab;
 }
 
 void Lab::setSeedIndex(unsigned int index)
@@ -106,19 +101,12 @@ void Lab::cycle()
 const char Lab::mClassName[] = "Lab";
 
 Orbit<Lab>::MethodType Lab::mMethods[] = {
-        {"create", &Lab::create},
 	{"setSimulation", &Lab::setSimulation},
         {"setSeedIndex", &Lab::setSeedIndex},
         {0,0}
 };
 
 Orbit<Lab>::NumberGlobalType Lab::mNumberGlobals[] = {{0,0}};
-
-int Lab::create(lua_State* luaState)
-{
-        create();
-        return 0;
-}
 
 int Lab::setSimulation(lua_State* luaState)
 {

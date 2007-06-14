@@ -13,7 +13,7 @@ extern "C"
 
 template <typename T> class Orbit
 {
-	typedef struct {T *pT;} userdataType;
+	typedef struct {T* pT;} userdataType;
 
 public:
 	typedef int (T::*mfp)(lua_State* luaState);
@@ -176,6 +176,8 @@ public:
 		if(!ud) luaL_typerror(luaState, narg, T::mClassName);
 		return (void*)ud->pT;  // pointer to T object
 	}
+
+	
 
 private:
 	Orbit();  // hide default constructor

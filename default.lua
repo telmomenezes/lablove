@@ -27,14 +27,13 @@ initialConnections = 10
 
 ----------------------------------------------
 
-loveLab = Lab()
-loveLab:create()
-loveLab:setSeedIndex(0)
+lab = getLab()
+lab:setSeedIndex(0)
 
 sim = SimSimple2D()
 sim:setWorldDimensions(worldWidth, worldHeight, viewRange * 2)
 
-loveLab:setSimulation(sim)
+lab:setSimulation(sim)
 animat = AnimatSimple2D(initialConnections, 25)
 
 animat:setSize(10.0)
