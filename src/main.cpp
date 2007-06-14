@@ -66,7 +66,6 @@ int main(int argc, char *argv[])
 	Orbit<GridbrainComponentSet>::orbitRegister(luaState);
 	Orbit<MoleculeRGB>::orbitRegister(luaState);
 
-
 	char* scriptFile = "default.lua";
 	if (argc == 2)
 	{
