@@ -66,6 +66,8 @@ class OgreApplication : public FrameListener, public WindowEventListener,
 			public KeyListener, public MouseListener, public InputHandler
 {
 public:
+	enum UIMode {GUI, CAMERA, CONTROL};
+
 	OgreApplication();
 	virtual ~OgreApplication();
 
@@ -97,13 +99,13 @@ public:
 protected:
 	bool configure();
 	void chooseSceneManager();
-	void destroyScene(){} 
 	void setupResources();
 	void initFrameListener();
 	void updateStats();
 	void updateCamera();
+	void updateMode();
 
-	Root *mRoot;
+	Root* mRoot;
 	Camera* mCamera;
 	SceneManager* mSceneMgr;
 	RenderWindow* mWindow;
@@ -142,6 +144,8 @@ protected:
 	QuickGUI::GUIManager* mGUIManager;
 	QuickGUI::Sheet* mSheet;
 	QuickGUI::Label* mModeLabel;
+
+	UIMode mMode;
 };
 
 #endif

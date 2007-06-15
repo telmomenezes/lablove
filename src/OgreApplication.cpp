@@ -26,7 +26,7 @@ using namespace Ogre;
 
 OgreApplication::OgreApplication()
 {
-	mRoot = 0;
+	mRoot = NULL;
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
 	mResourcePath = macBundlePath() + "/Contents/Resources/";
 #else
@@ -47,24 +47,35 @@ OgreApplication::OgreApplication()
 	mMoveCameraDown = false;
 	mMoveCameraFront = false;
 	mMoveCameraBack = false;
+
+	mGUIManager = NULL;
+	mSheet = NULL;
+	mMode = GUI;
 }
 
 OgreApplication::~OgreApplication()
 {
+	if (mGUIManager != NULL)
+	{
+		delete mGUIManager;
+		mGUIManager = NULL;
+	}
+
 	//Remove ourself as a Window listener
 	WindowEventUtilities::removeWindowEventListener(mWindow, this);
 	windowClosed(mWindow);
 
-	if (mRoot)
+	// Doing this causes a seg fault...
+	/*if (mRoot)
 	{
 		delete mRoot;
-	}
+		mRoot = NULL;
+	}*/
 }
 
 void OgreApplication::start()
 {
 	mRoot->startRendering();
-	destroyScene();
 }
 
 bool OgreApplication::init()
@@ -128,7 +139,7 @@ bool OgreApplication::init()
 	mSheet->setDefaultTextColor(Ogre::ColourValue(0.2, 0.2, 0.2));
 	mSheet->setDefaultFont("BlueHighway");
 	mModeLabel = mSheet->createLabel(Ogre::Vector4(0.78, 0.95, 0.2, 0.03));
-	mModeLabel->setText("Free Camera");
+	updateMode();
 
 	return true;
 }
@@ -380,6 +391,14 @@ bool OgreApplication::keyPressed(const KeyEvent &arg)
 		}
 		iterHandler++;
 	}
+
+	if (mMode != CAMERA)
+	{
+		mGUIManager->injectKeyDown(static_cast<QuickGUI::KeyCode>(arg.key));
+                mGUIManager->injectChar(arg.text);
+		return true;
+	}
+
 	return false;
 }
 
@@ -394,6 +413,13 @@ bool OgreApplication::keyReleased(const KeyEvent &arg)
 		}
 		iterHandler++;
 	}
+
+	if (mMode != CAMERA)
+	{
+		mGUIManager->injectKeyUp(static_cast<QuickGUI::KeyCode>(arg.key));
+		return true;
+	}
+
 	return false;
 }
 
@@ -408,52 +434,111 @@ bool OgreApplication::mouseMoved(const MouseEvent &arg)
 		}
 		iterHandler++;
 	}
+
+	if (mMode != CAMERA)
+	{
+		mGUIManager->injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
+		return true;
+	}
+
 	return false;
 }
 
 bool OgreApplication::mousePressed(const MouseEvent &arg, MouseButtonID id)
 {
+	list<InputHandler*>::iterator iterHandler = mHandlersList.begin();
+	while (iterHandler != mHandlersList.end())
+	{
+		if ((*iterHandler)->onMouseButtonDown(id, arg.state.X.rel, arg.state.Y.rel))
+		{
+			return true;
+		}
+		iterHandler++;
+	}
+
+	if (mMode != CAMERA)
+	{
+		mGUIManager->injectMouseButtonDown(static_cast<QuickGUI::MouseButtonID>(id));
+		return true;
+	}
 	return false;
 }
 
 bool OgreApplication::mouseReleased(const MouseEvent &arg, MouseButtonID id)
 {
+	list<InputHandler*>::iterator iterHandler = mHandlersList.begin();
+	while (iterHandler != mHandlersList.end())
+	{
+		if ((*iterHandler)->onMouseButtonUp(id, arg.state.X.rel, arg.state.Y.rel))
+		{
+			return true;
+		}
+		iterHandler++;
+	}
+
+	if (mMode != CAMERA)
+	{
+		mGUIManager->injectMouseButtonUp(static_cast<QuickGUI::MouseButtonID>(id));
+		return true;
+	}
 	return false;
 }
 
 bool OgreApplication::onKeyDown(int key)
 {
+	if (mMode == CAMERA)
+	{
+		switch (key)
+		{
+		case KC_A:
+			mMoveCameraLeft = true;
+			return true;
+		case KC_D:
+			mMoveCameraRight = true;
+			return true;
+		case KC_UP:
+		case KC_W:
+			mMoveCameraFront = true;
+			return true;
+		case KC_DOWN:
+		case KC_S:
+			mMoveCameraBack = true;
+			return true;
+		case KC_PGUP:
+			mMoveCameraUp = true;
+			return true;
+		case KC_PGDOWN:
+			mMoveCameraDown = true;
+			return true;
+		case KC_RIGHT:
+			mMoveCameraRight = true;
+			return true;
+		case KC_LEFT:
+			mMoveCameraLeft = true;
+			return true;
+		}
+	}
+
 	switch (key)
 	{
-	case KC_A:
-		mMoveCameraLeft = true;
-		return true;
-	case KC_D:
-		mMoveCameraRight = true;
-		return true;
-	case KC_UP:
-	case KC_W:
-		mMoveCameraFront = true;
-		return true;
-	case KC_DOWN:
-	case KC_S:
-		mMoveCameraBack = true;
-		return true;
-	case KC_PGUP:
-		mMoveCameraUp = true;
-		return true;
-	case KC_PGDOWN:
-		mMoveCameraDown = true;
-		return true;
-	case KC_RIGHT:
-		mMoveCameraRight = true;
-		return true;
-	case KC_LEFT:
-		mMoveCameraLeft = true;
-		return true;
 	case KC_ESCAPE:
 	case KC_Q:
 		mStop = true;
+		return true;
+	case KC_TAB:
+		switch(mMode)
+		{
+		case GUI:
+			mMode = CAMERA;
+			break;
+		case CAMERA:
+			mMode = CONTROL;
+			break;
+		case CONTROL:
+			mMode = GUI;
+			break;
+		}
+		updateMode();
 		return true;
 	default:
 		return false;
@@ -464,36 +549,37 @@ bool OgreApplication::onKeyDown(int key)
 
 bool OgreApplication::onKeyUp(int key)
 {
-	switch (key)
+	if (mMode == CAMERA)
 	{
-	case KC_A:
-		mMoveCameraLeft = false;
-		return true;
-	case KC_D:
-		mMoveCameraRight = false;
-		return true;
-	case KC_UP:
-	case KC_W:
-		mMoveCameraFront = false;
-		return true;
-	case KC_DOWN:
-	case KC_S:
-		mMoveCameraBack = false;
-		return true;
-	case KC_PGUP:
-		mMoveCameraUp = false;
-		return true;
-	case KC_PGDOWN:
-		mMoveCameraDown = false;
-		return true;
-	case KC_RIGHT:
-		mMoveCameraRight = false;
-		return true;
-	case KC_LEFT:
-		mMoveCameraLeft = false;
-		return true;
-	default:
-		return false;
+		switch (key)
+		{
+		case KC_A:
+			mMoveCameraLeft = false;
+			return true;
+		case KC_D:
+			mMoveCameraRight = false;
+			return true;
+		case KC_UP:
+		case KC_W:
+			mMoveCameraFront = false;
+			return true;
+		case KC_DOWN:
+		case KC_S:
+			mMoveCameraBack = false;
+			return true;
+		case KC_PGUP:
+			mMoveCameraUp = false;
+			return true;
+		case KC_PGDOWN:
+			mMoveCameraDown = false;
+			return true;
+		case KC_RIGHT:
+			mMoveCameraRight = false;
+			return true;
+		case KC_LEFT:
+			mMoveCameraLeft = false;
+			return true;
+		}
 	}
 
 	return false;
@@ -508,11 +594,16 @@ bool OgreApplication::onMouseMove(int x, int y)
 
 		return true;
 	}*/
-	
-	mRotX = Degree(-x * 0.13);
-	mRotY = Degree(-y * 0.13);
 
-	return true;
+	if (mMode == CAMERA)
+	{
+		mRotX = Degree(-x * 0.13);
+		mRotY = Degree(-y * 0.13);
+
+		return true;
+	}
+
+	return false;
 }
 
 void OgreApplication::addInputHandler(InputHandler* handler)
@@ -523,5 +614,24 @@ void OgreApplication::addInputHandler(InputHandler* handler)
 void OgreApplication::removeInputHandler()
 {
 	mHandlersList.pop_front();
+}
+
+void OgreApplication::updateMode()
+{
+	switch(mMode)
+	{
+	case GUI:
+		mGUIManager->getMouseCursor()->show();
+		mModeLabel->setText("GUI");
+		break;
+	case CAMERA:
+		mGUIManager->getMouseCursor()->hide();
+		mModeLabel->setText("Camera");
+		break;
+	case CONTROL:
+		mGUIManager->getMouseCursor()->show();
+		mModeLabel->setText("Control");
+		break;
+	}
 }
 
