@@ -33,6 +33,8 @@
 #include <list>
 using namespace std;
 
+#include "QuickGUI/QuickGUI.h"
+
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
 #include <CoreFoundation/CoreFoundation.h>
 
@@ -136,6 +138,10 @@ protected:
 	bool mMoveCameraDown;
 	bool mMoveCameraFront;
 	bool mMoveCameraBack;
+
+	QuickGUI::GUIManager* mGUIManager;
+	QuickGUI::Sheet* mSheet;
+	QuickGUI::Label* mModeLabel;
 };
 
 #endif

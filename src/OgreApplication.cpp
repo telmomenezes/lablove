@@ -121,6 +121,15 @@ bool OgreApplication::init()
 
 	addInputHandler(this);
 
+	// Create GUI
+	mGUIManager = new QuickGUI::GUIManager(mWindow->getWidth(), mWindow->getHeight());
+	mGUIManager->createMouseCursor(Ogre::Vector2(0.05, 0.05));
+	mSheet = mGUIManager->getDefaultSheet();
+	mSheet->setDefaultTextColor(Ogre::ColourValue(0.2, 0.2, 0.2));
+	mSheet->setDefaultFont("BlueHighway");
+	mModeLabel = mSheet->createLabel(Ogre::Vector4(0.78, 0.95, 0.2, 0.03));
+	mModeLabel->setText("Free Camera");
+
 	return true;
 }
 

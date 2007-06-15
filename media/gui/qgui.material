@@ -1,0 +1,815 @@
+material qgui.pointer 
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				tex_address_mode clamp
+				texture qgui.pointer.png
+			}
+		}
+	}
+}
+
+material qgui.window
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.window.png
+			}
+		}
+	}
+}
+
+material qgui.window.border.top
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.window.border.top.png
+			}
+		}
+	}
+}
+
+
+material qgui.window.border.bottom
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.window.border.bottom.png
+			}
+		}
+	}
+}
+
+material qgui.window.border.left
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.window.border.left.png
+			}
+		}
+	}
+}
+
+material qgui.window.border.right
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.window.border.right.png
+			}
+		}
+	}
+}
+
+material qgui.window.titlebar
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.window.titlebar.png
+			}
+		}
+	}
+}
+
+material qgui.window.titlebar.button
+{
+	technique
+	{
+		pass
+		{
+			
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.window.titlebar.button.png
+			}
+		}
+	}
+}
+
+material qgui.window.titlebar.button.over
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.window.titlebar.button.over.png
+			}
+		}
+	}
+}
+
+material qgui.window.titlebar.button.down
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.window.titlebar.button.over.png
+			}
+		}
+	}
+}
+
+material qgui.textbox
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.textbox.png
+			}
+		}
+	}
+}
+
+material qgui.textbox.border
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.textbox.border.png
+			}
+		}
+	}
+}
+
+material qgui.label
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.label.png
+			}
+		}
+	}
+}
+
+material qgui.menu
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.menu.png
+			}
+		}
+	}
+}
+
+material qgui.button
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.button.png
+			}
+		}
+	}
+}
+
+material qgui.button.over
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.button.over.png
+			}
+		}
+	}
+}
+
+material qgui.button.down
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.button.down.png
+			}
+		}
+	}
+}
+
+material qgui.checked
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.checked.png
+			}
+		}
+	}
+}
+
+material qgui.checked.over
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.checked.over.png
+			}
+		}
+	}
+}
+
+material qgui.checked.down
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.checked.down.png
+			}
+		}
+	}
+}
+
+material qgui.unchecked
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.unchecked.png
+			}
+		}
+	}
+}
+
+material qgui.unchecked.over
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.unchecked.over.png
+			}
+		}
+	}
+}
+
+material qgui.unchecked.down
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.unchecked.down.png
+			}
+		}
+	}
+}
+
+material qgui.combobox
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.combobox.png
+			}
+		}
+	}
+}
+
+material qgui.combobox.over
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.combobox.over.png
+			}
+		}
+	}
+}
+
+material qgui.combobox.down
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.combobox.down.png
+			}
+		}
+	}
+}
+
+material qgui.combobox.button
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.combobox.button.png
+			}
+		}
+	}
+}
+
+
+material qgui.combobox.button.over
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.combobox.button.over.png
+			}
+		}
+	}
+}
+
+
+material qgui.combobox.button.down
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.combobox.button.down.png
+			}
+		}
+	}
+}
+
+
+material qgui.combobox.list
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.combobox.list.png
+			}
+		}
+	}
+}
+
+material qgui.list
+{
+	technique
+	{
+		pass
+		{
+			
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.list.png
+			}
+		}
+	}
+}
+
+material qgui.list.highlight
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.list.highlight.png
+			}
+		}
+	}
+}
+
+material qgui.menulist.button
+{
+	technique
+	{
+		pass
+		{
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture transparent.png
+			}
+		}
+	}
+}
+
+material qgui.menulist.button.over
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.menulist.button.over.png
+			}
+		}
+	}
+}
+
+material qgui.menulist.list
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.menulist.list.png
+			}
+		}
+	}
+}
+
+material qgui.menulist.list.border.bottom
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.menulist.list.border.bottom.png
+			}
+		}
+	}
+}
+
+material qgui.menulist.list.border.left
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.menulist.list.border.left.png
+			}
+		}
+	}
+}
+
+material qgui.menulist.list.border.right
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.menulist.list.border.right.png
+			}
+		}
+	}
+}
+
+material qgui.progressbar
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.progressbar.png
+			}
+		}
+	}
+}
+
+material qgui.progressbar.bar
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.progressbar.bar.png
+			}
+		}
+	}
+}
+
+material qgui.textcursor
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.textcursor.png
+			}
+		}
+	}
+}
+
+material qgui.image
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.logo.jpg
+			}
+		}
+	}
+}
+
+material qgui.image.border.bottom
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				tex_address_mode clamp
+				texture qgui.image.border.bottom.png
+			}
+		}
+	}
+}
+
+material qgui.image.border.right
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				tex_address_mode clamp
+				texture qgui.image.border.right.png
+			}
+		}
+	}
+}
+
+material qgui.panel
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 1 1
+			diffuse 1 1 1
+			specular 1 1 1 30
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture qgui.panel.png
+			}
+		}
+	}
+}
