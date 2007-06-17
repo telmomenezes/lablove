@@ -45,6 +45,7 @@ ObjectSimple2D::ObjectSimple2D()
 	mMetabolism = 0.0f;
 #if defined(__LABLOVE_WITH_GRAPHICS)
 	mNode = NULL;
+	mMaterial.setNull();
 #endif
 }
 
@@ -72,6 +73,7 @@ ObjectSimple2D::ObjectSimple2D(ObjectSimple2D* obj) : SimulationObject(obj)
 	mColor = MoleculeRGB(obj->mColor);
 #if defined(__LABLOVE_WITH_GRAPHICS)
 	mNode = NULL;
+	mMaterial.setNull();
 #endif
 }
 
@@ -86,6 +88,11 @@ ObjectSimple2D::~ObjectSimple2D()
 		MovableObject* obj = mNode->detachObject(nodeName);
 		sceneMgr->getRootSceneNode()->removeAndDestroyChild(nodeName);
 		delete obj;
+	}
+	if (!mMaterial.isNull())
+	{
+		MaterialManager::getSingleton().remove(mMaterial->getName());
+		mMaterial.setNull();
 	}
 #endif
 }
@@ -224,6 +231,15 @@ void ObjectSimple2D::setAgeRange(unsigned long lowAgeLimit, unsigned long highAg
 {
 	mLowAgeLimit = lowAgeLimit;
 	mHighAgeLimit = highAgeLimit;
+}
+
+void ObjectSimple2D::setColor(MoleculeRGB* color)
+{
+	mColor = MoleculeRGB(color);
+	if (!mMaterial.isNull())
+	{
+		mMaterial->setAmbient(mColor.mRed, mColor.mGreen, mColor.mBlue);
+	}
 }
 
 int ObjectSimple2D::setSize(lua_State* luaState)

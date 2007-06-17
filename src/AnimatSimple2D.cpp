@@ -23,6 +23,7 @@
 #include "math.h"
 #include "functions.h"
 #include "defines.h"
+#include "random.h"
 
 AnimatSimple2D::AnimatSimple2D()
 {
@@ -180,11 +181,19 @@ void AnimatSimple2D::createGraphics()
 	sprintf(nodeName, "loveobj%d", mID);
 	Entity* animEntity = sceneMgr->createEntity(nodeName, "animat");
 	mNode = sceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
-	//animEntity->setMaterialName("Examples/Flare");
 	mNode->attachObject(animEntity);
 	mNode->setPosition(mX, 0, mY);
 	mNode->yaw(Radian(mRot));
 	mNode->scale(mSize, mSize, mSize);
+
+	char materialName[255];
+	sprintf(materialName, "animatmat%d", mID);
+	
+	MaterialPtr mMaterial = MaterialManager::getSingleton().create(
+		materialName,
+		ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+	mMaterial->setAmbient(mColor.mRed, mColor.mGreen, mColor.mBlue);
+	animEntity->setMaterialName(materialName);
 }
 #endif
 

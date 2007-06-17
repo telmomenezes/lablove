@@ -56,7 +56,7 @@ public:
 	void setAgeRange(unsigned long lowAgeLimit, unsigned long highAgeLimit);
 	void setMetabolism(float metabolism){mMetabolism = metabolism;}
 
-	void setColor(MoleculeRGB* color){mColor = MoleculeRGB(color);}
+	void setColor(MoleculeRGB* color);
 	MoleculeRGB* getColor(){return &mColor;}
 
         int setSize(lua_State* luaState);
@@ -85,6 +85,7 @@ protected:
 	MoleculeRGB mColor;
 #if defined(__LABLOVE_WITH_GRAPHICS)
 	SceneNode* mNode;
+	MaterialPtr mMaterial;
 #endif
 };
 #endif

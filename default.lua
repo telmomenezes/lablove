@@ -45,7 +45,7 @@ animat:setMetabolism(metabolism)
 animat:setGoCost(goCost)
 animat:setRotateCost(rotateCost)
 
-animatColor = MoleculeRGB(1.0, 0.0, 0.0)
+animatColor = MoleculeRGB(1.0, 0.3, 0.1)
 animat:setColor(animatColor)
 
 perSet = GridbrainComponentSet()
@@ -104,7 +104,7 @@ plant = PlantSimple2D()
 plant:setSize(5.0)
 plant:setInitialEnergy(1.0)
 
-plantColor = MoleculeRGB(0.0, 1.0, 0.0)
+plantColor = MoleculeRGB(0.1, 0.9, 0.3)
 plant:setColor(plantColor)
 
 popDyn = PopDynFixedSpecies()

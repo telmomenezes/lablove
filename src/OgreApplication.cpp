@@ -123,7 +123,7 @@ bool OgreApplication::init()
 	ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
 	// Create the light
-	mSceneMgr->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
+	mSceneMgr->setAmbientLight(ColourValue(1.0, 1.0, 1.0));
 
 	Light* l = mSceneMgr->createLight("MainLight");
 	l->setPosition(20, 80, 50);

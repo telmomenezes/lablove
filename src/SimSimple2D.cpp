@@ -55,7 +55,7 @@ void SimSimple2D::init()
 	MaterialPtr material = MaterialManager::getSingleton().create(
 		"animatDefaultMaterial",
 		ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-	material->setAmbient(1.0, 0.1, 0.1);	
+	material->setAmbient(1.0, 0.1, 0.1);
 
 
 	ManualObject* obj = new Ogre::ManualObject("MeshDecal");
