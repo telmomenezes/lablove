@@ -25,8 +25,6 @@
 #include <list>
 using namespace std;
 
-#include "Orbit.h"
-
 class PopDynGenerations : public PopulationDynamics
 {
 public:

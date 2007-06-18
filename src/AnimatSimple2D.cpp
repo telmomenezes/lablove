@@ -183,7 +183,7 @@ void AnimatSimple2D::createGraphics()
 	mNode = sceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
 	mNode->attachObject(animEntity);
 	mNode->setPosition(mX, 0, mY);
-	mNode->yaw(Radian(mRot));
+	setRot(mRot);
 	mNode->scale(mSize, mSize, mSize);
 
 	char materialName[255];
@@ -207,10 +207,16 @@ void AnimatSimple2D::setRot(float rot)
 void AnimatSimple2D::onCycle()
 {
 	ObjectSimple2D::onCycle();
-	perceptionStep();
-	computationStep();
+	if (!mHuman)
+	{
+		perceptionStep();
+		computationStep();
+	}
 	actionStep();
-	endCycle();
+	if (!mHuman)
+	{
+		endCycle();
+	}
 }
 
 void AnimatSimple2D::computationStep()
@@ -571,6 +577,8 @@ void AnimatSimple2D::mutate()
 const char AnimatSimple2D::mClassName[] = "AnimatSimple2D";
 
 Orbit<AnimatSimple2D>::MethodType AnimatSimple2D::mMethods[] = {
+	{"setPos", &ObjectSimple2D::setPos},
+	{"setRot", &ObjectSimple2D::setRot},
 	{"setSize", &ObjectSimple2D::setSize},
 	{"setColor", &ObjectSimple2D::setColor},
 	{"setInitialEnergy", &SimulationObject::setInitialEnergy},

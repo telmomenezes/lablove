@@ -188,14 +188,13 @@ void ObjectSimple2D::setSize(float size)
 
 void ObjectSimple2D::setRot(float rot)
 {
+	mRot = normalizeAngle(rot);
 #if defined(__LABLOVE_WITH_GRAPHICS)
 	if (mNode != NULL)
 	{
-		mNode->yaw(Radian(mRot - rot));
+		mNode->setOrientation(Quaternion(Radian(mRot), Vector3(0.0, -1.0, 0.0)));
 	}
 #endif
-
-	mRot = normalizeAngle(rot);
 }
 
 void ObjectSimple2D::placeRandom()
@@ -242,10 +241,25 @@ void ObjectSimple2D::setColor(MoleculeRGB* color)
 	}
 }
 
+int ObjectSimple2D::setPos(lua_State* luaState)
+{
+        float x = luaL_checknumber(luaState, 1);
+	float y = luaL_checknumber(luaState, 2);
+        setPos(x, y);
+        return 0;
+}
+
 int ObjectSimple2D::setSize(lua_State* luaState)
 {
         int size = luaL_checkint(luaState, 1);
         setSize(size);
+        return 0;
+}
+
+int ObjectSimple2D::setRot(lua_State* luaState)
+{
+        float rot = luaL_checknumber(luaState, 1);
+        setRot(rot);
         return 0;
 }
 

@@ -35,6 +35,7 @@ SimulationObject::SimulationObject()
 	mEnergy = 0;
 	mInitialEnergy = 0;
 	mCreationTime = Lab::getSingleton().getSimulation()->time();
+	mHuman = false;
 }
 
 SimulationObject::SimulationObject(SimulationObject* obj)
@@ -48,6 +49,7 @@ SimulationObject::SimulationObject(SimulationObject* obj)
 	mInitialEnergy = obj->mInitialEnergy;
         mSpeciesID = obj->mSpeciesID;
 	mCreationTime = Lab::getSingleton().getSimulation()->time();
+	mHuman = false;
 }
 
 SimulationObject::~SimulationObject()

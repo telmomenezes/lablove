@@ -64,6 +64,7 @@ public:
 
 	int setInitialEnergy(lua_State* luaState);
 
+	bool mHuman;
 	bool mDeleted;
 
 protected:

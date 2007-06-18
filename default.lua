@@ -113,3 +113,22 @@ sim:setPopulationDynamics(popDyn)
 popDyn:addStaticSpecies(plant, numberOfPlants)
 popDyn:addEvolvingSpecies(animat, numberOfAnimats)
 
+human = AnimatSimple2D(initialConnections, 25)
+
+human:setPos(worldWidth / 2, worldHeight / 2)
+human:setRot(0.0)
+human:setSize(10.0)
+human:setViewRange(viewRange)
+human:setViewAngle(viewAngle)
+human:setAgeRange(lowAgeLimit, highAgeLimit)
+human:setInitialEnergy(1.0)
+human:setMetabolism(metabolism)
+human:setGoCost(goCost)
+human:setRotateCost(rotateCost)
+
+humanColor = MoleculeRGB(0.0, 0.0, 1.0)
+human:setColor(humanColor)
+human:setRot(1.00)
+
+popDyn:setHuman(human)
+

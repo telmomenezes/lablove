@@ -59,7 +59,9 @@ public:
 	void setColor(MoleculeRGB* color);
 	MoleculeRGB* getColor(){return &mColor;}
 
+        int setPos(lua_State* luaState);
         int setSize(lua_State* luaState);
+        int setRot(lua_State* luaState);
 	int setAgeRange(lua_State* luaState);
 	int setMetabolism(lua_State* luaState);
 	int setColor(lua_State* luaState);

@@ -24,6 +24,7 @@
 #include "functions.h"
 #include "PopulationDynamics.h"
 #include "defines.h"
+#include "AnimatSimple2D.h"
 
 SimSimple2D::SimSimple2D()
 {
@@ -67,16 +68,16 @@ void SimSimple2D::init()
 	obj->begin("animatDefaultMaterial", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
 	float a = 0;
-	float x = sinf(a);
-	float z = cosf(a);
-	obj->position(Ogre::Vector3(x, 0, z));
-	a = Math::PI - 0.5f;
-	x = sinf(a);
-	z = cosf(a);
+	float x = cosf(a);
+	float z = sinf(a);
 	obj->position(Ogre::Vector3(x, 0, z));
 	a = Math::PI + 0.5f;
-	x = sinf(a);
-	z = cosf(a);
+	x = cosf(a);
+	z = sinf(a);
+	obj->position(Ogre::Vector3(x, 0, z));
+	a = Math::PI - 0.5f;
+	x = cosf(a);
+	z = sinf(a);
 	obj->position(Ogre::Vector3(x, 0, z));
 
 	obj->index(0);
@@ -220,32 +221,34 @@ void SimSimple2D::drawBeforeObjects()
 
 bool SimSimple2D::onKeyDown(int key)
 {
+	if (Lab::getSingleton().getOgreApplication()->getMode() != OgreApplication::CONTROL)
+	{
+		return false;
+	}
+
+	AnimatSimple2D* human = (AnimatSimple2D*)(mPopulationDynamics->getHuman());
+
+	if (human == NULL)
+	{
+		return false;
+	}
+
 	switch (key)
 	{
-	/*case SDLK_LEFT:
-		if (m_human)
-		{
-			m_human->setTurnLeft(true);
-		}
+	case KC_UP:
+		human->mActionGo = true;
 		return true;
-	case SDLK_RIGHT:
-		if (m_human)
-		{
-			m_human->setTurnRight(true);
-		}
+	case KC_RIGHT:
+		human->mActionRotate = true;
+		human->mActionRotateParam = 1.0f;
 		return true;
-	case SDLK_UP:
-		if (m_human)
-		{
-			m_human->setGo(true);
-		}
+	case KC_LEFT:
+		human->mActionRotate = true;
+		human->mActionRotateParam = -1.0;
 		return true;
-	case SDLK_e:
-		if (m_human)
-		{
-			m_human->setEat(true);
-		}
-		return true;*/
+	case KC_E:
+		human->mActionEat = true;
+		return true;
 	default:
 		return false;
 	}
@@ -255,39 +258,43 @@ bool SimSimple2D::onKeyUp(int key)
 {
 	switch (key)
 	{
-	/*case SDLK_LEFT:
-		if (m_human)
-		{
-			m_human->setTurnLeft(false);
-		}
-		return true;
-	case SDLK_RIGHT:
-		if (m_human)
-		{
-			m_human->setTurnRight(false);
-		}
-		return true;
-	case SDLK_UP:
-		if (m_human)
-		{
-			m_human->setGo(false);
-		}
-		return true;
-	case SDLK_e:
-		if (m_human)
-		{
-			m_human->setEat(false);
-		}
-		return true;*/
-
-	/*
-	case SDLK_g:
+	/*case KC_G:
 		setShowGrid(!getShowGrid());
 		return true;
-	case SDLK_v:
+	case KC_V:
 		setShowViewRange(!getShowViewRange());
 		return true;
 	*/
+	default:
+		break;
+	}
+
+	if (Lab::getSingleton().getOgreApplication()->getMode() != OgreApplication::CONTROL)
+	{
+		return false;
+	}
+
+	AnimatSimple2D* human = (AnimatSimple2D*)(mPopulationDynamics->getHuman());
+
+	if (human == NULL)
+	{
+		return false;
+	}
+
+	switch (key)
+	{
+	case KC_UP:
+		human->mActionGo = false;
+		return true;
+	case KC_RIGHT:
+		human->mActionRotate = false;
+		return true;
+	case KC_LEFT:
+		human->mActionRotate = false;
+		return true;
+	case KC_E:
+		human->mActionEat = false;
+		return true;
 	default:
 		return false;
 	}

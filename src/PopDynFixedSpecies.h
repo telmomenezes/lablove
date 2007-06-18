@@ -26,8 +26,6 @@
 #include <vector>
 using namespace std;
 
-#include "Orbit.h"
-
 class PopDynFixedSpecies : public PopulationDynamics
 {
 public:

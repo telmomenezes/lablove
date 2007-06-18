@@ -79,6 +79,8 @@ void PlantSimple2D::createGraphics()
 const char PlantSimple2D::mClassName[] = "PlantSimple2D";
 
 Orbit<PlantSimple2D>::MethodType PlantSimple2D::mMethods[] = {
+	{"setPos", &ObjectSimple2D::setPos},
+	{"setRot", &ObjectSimple2D::setRot},
 	{"setSize", &ObjectSimple2D::setSize},
 	{"setColor", &ObjectSimple2D::setColor},
 	{"setInitialEnergy", &SimulationObject::setInitialEnergy},

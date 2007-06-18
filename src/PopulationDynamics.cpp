@@ -18,12 +18,38 @@
  */
 
 #include "PopulationDynamics.h"
+#include "Lab.h"
 
 PopulationDynamics::PopulationDynamics()
 {
+	mHuman = NULL;
 }
 
 PopulationDynamics::~PopulationDynamics()
 {	
+}
+
+void PopulationDynamics::init()
+{
+#ifdef __LABLOVE_WITH_GRAPHICS
+	if (mHuman != NULL)
+	{
+		mHuman->createGraphics();
+	}
+#endif
+	Lab::getSingleton().getSimulation()->addObject(mHuman);
+}
+
+void PopulationDynamics::setHuman(SimulationObject* human)
+{
+	mHuman = human;
+	mHuman->mHuman = true;
+}
+
+int PopulationDynamics::setHuman(lua_State* luaState)
+{
+	SimulationObject* obj = (SimulationObject*)Orbit<Lab>::pointer(luaState, 1);
+        setHuman(obj);
+        return 0;
 }
 

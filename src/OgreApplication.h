@@ -96,6 +96,8 @@ public:
 	void addInputHandler(InputHandler* handler);
 	void removeInputHandler();
 
+	UIMode getMode(){return mMode;}
+
 protected:
 	bool configure();
 	void chooseSceneManager();

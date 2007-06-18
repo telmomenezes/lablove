@@ -22,15 +22,25 @@
 
 #include "SimulationObject.h"
 
+#include "Orbit.h"
+
 class PopulationDynamics
 {
 public:
 	PopulationDynamics();
 	virtual ~PopulationDynamics();
 
-	virtual void init() = 0;
+	virtual void init();
 	virtual void onCycle() = 0;
 	virtual void onOrganismDeath(SimulationObject* org) = 0;
+
+	void setHuman(SimulationObject* human);
+	SimulationObject* getHuman(){return mHuman;}
+
+        int setHuman(lua_State* luaState);
+
+protected:
+	SimulationObject* mHuman;
 };
 #endif
 

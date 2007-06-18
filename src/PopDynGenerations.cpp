@@ -57,6 +57,8 @@ void PopDynGenerations::addEvolvingSpecies(SimulationObject* org, long populatio
 
 void PopDynGenerations::init()
 {
+	PopulationDynamics::init();
+
 	list<SimulationObject*>::iterator iterSpecies = mStaticSpecies.begin();
 	list<long>::iterator iterPop = mStaticSpeciesPopulations.begin();
 	list<list<SimulationObject*>*>::iterator iterSpeciesOrgList = mStaticSpeciesOrganismLists.begin();
@@ -221,6 +223,7 @@ void PopDynGenerations::onOrganismDeath(SimulationObject* org)
 const char PopDynGenerations::mClassName[] = "PopDynGenerations";
 
 Orbit<PopDynGenerations>::MethodType PopDynGenerations::mMethods[] = {
+	{"setHuman", &PopulationDynamics::setHuman},
         {"addStaticSpecies", &PopDynGenerations::addStaticSpecies},
         {"addEvolvingSpecies", &PopDynGenerations::addEvolvingSpecies},
 	{"setGenerationTime", &PopDynGenerations::setGenerationTime},
