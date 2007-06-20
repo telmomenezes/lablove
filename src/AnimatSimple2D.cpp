@@ -129,7 +129,7 @@ void AnimatSimple2D::initRandom()
 	{
 		mGridbrain->addRandomConnection();
 	}
-	//initTest();
+	initTest();
 }
 
 void AnimatSimple2D::initTest()
@@ -300,9 +300,13 @@ void AnimatSimple2D::onCycle()
 		computationStep();
 	}
 	actionStep();
+
+	mNearestFood = NULL;
 	if (!mHuman)
 	{
-		endCycle();
+		mActionGo = false;
+		mActionRotate = false;
+		mActionEat = false;
 	}
 }
 
@@ -353,15 +357,6 @@ void AnimatSimple2D::computationStep()
 			}
 		}
 	}
-}
-
-void AnimatSimple2D::endCycle()
-{
-	mNearestFood = NULL;
-
-	mActionGo = false;
-	mActionRotate = false;
-	mActionEat = false;
 }
 
 void AnimatSimple2D::perceptionStep()
@@ -568,7 +563,6 @@ void AnimatSimple2D::actionStep()
 
 void AnimatSimple2D::onScanObject(SimulationObject* obj, bool visible, bool contact, float angle, float distance)
 {
-	//printf("x");fflush(stdout);
 	if (mHuman)
 	{
 		return;

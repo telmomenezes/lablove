@@ -1,5 +1,5 @@
 numberOfPlants = 100
-numberOfAnimats = 100
+numberOfAnimats = 10
 
 worldWidth = 1000
 worldHeight = 1000

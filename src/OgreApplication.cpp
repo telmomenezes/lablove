@@ -604,14 +604,6 @@ bool OgreApplication::onKeyUp(int key)
 
 bool OgreApplication::onMouseMove(int x, int y)
 {
-	/*if (button pressed)
-	{
-		mTranslateVector.x += ms.X.rel * 0.13;
-		mTranslateVector.y -= ms.Y.rel * 0.13;
-
-		return true;
-	}*/
-
 	if (mMode == CAMERA)
 	{
 		mRotX = Degree(-x * 0.13);

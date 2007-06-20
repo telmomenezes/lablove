@@ -86,7 +86,6 @@ public:
 protected:
 	virtual void onScanObject(SimulationObject* obj, bool visible, bool contact, float angle, float distance);
 	void scanCell(int cellX, int cellY);
-	virtual void endCycle();
 
 	Gridbrain* mGridbrain;
 
