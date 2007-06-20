@@ -30,10 +30,13 @@
 #define OIS_DYNAMIC_LIB
 #include <OIS/OIS.h>
 
-#include <list>
-using namespace std;
-
 #include "QuickGUI/QuickGUI.h"
+
+#include <list>
+
+using namespace std;
+using namespace Ogre;
+using namespace OIS;
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
 #include <CoreFoundation/CoreFoundation.h>
@@ -58,9 +61,6 @@ std::string macBundlePath()
 	return std::string(path);
 }
 #endif
-
-using namespace Ogre;
-using namespace OIS;
 
 class OgreApplication : public FrameListener, public WindowEventListener,
 			public KeyListener, public MouseListener, public InputHandler

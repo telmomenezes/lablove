@@ -36,6 +36,8 @@ public:
 	void initTest();
 #if defined(__LABLOVE_WITH_GRAPHICS)
 	void createGraphics();
+	void createViewMesh();
+	virtual void setShowViewRange(bool show);
 #endif
 
 	void setAlphaObjectsGrid(Grid* grid);
@@ -104,6 +106,10 @@ protected:
 
 	SimulationObject* mNearestFood;
 	float mDistanceToNearestFood;
+
+#if defined(__LABLOVE_WITH_GRAPHICS)
+	SceneNode* mViewNode;
+#endif
 };
 #endif
 

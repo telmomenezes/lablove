@@ -46,6 +46,7 @@ ObjectSimple2D::ObjectSimple2D()
 #if defined(__LABLOVE_WITH_GRAPHICS)
 	mNode = NULL;
 	mMaterial.setNull();
+	mZ = randomUniformProbability() / 100.0f;
 #endif
 }
 
@@ -74,6 +75,7 @@ ObjectSimple2D::ObjectSimple2D(ObjectSimple2D* obj) : SimulationObject(obj)
 #if defined(__LABLOVE_WITH_GRAPHICS)
 	mNode = NULL;
 	mMaterial.setNull();
+	mZ = randomUniformProbability() / 100.0f;
 #endif
 }
 
@@ -169,7 +171,7 @@ void ObjectSimple2D::setPos(float x, float y)
 #if defined(__LABLOVE_WITH_GRAPHICS)
 	if (mNode != NULL)
 	{
-		mNode->setPosition(mX, 0, mY);
+		mNode->setPosition(mX, mZ, mY);
 	}
 #endif
 }

@@ -91,6 +91,13 @@ void SimSimple2D::init()
 
 	delete obj;
 
+	// Create view range material
+	material = MaterialManager::getSingleton().create(
+		"viewRangeMaterial",
+		ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+	material->setAmbient(0.5, 0.5, 0.5);
+	material->setSceneBlending(SBT_TRANSPARENT_COLOUR);
+
 	// Create plant mesh
 	material = MaterialManager::getSingleton().create(
 		"plantDefaultMaterial",
@@ -183,6 +190,18 @@ SimulationObject* SimSimple2D::getObjectByScreenPos(int x, int y)
 	return NULL;
 }
 
+void SimSimple2D::setShowViewRange(bool show)
+{
+	mShowViewRange = show;
+
+	list<SimulationObject*>::iterator iterObj;
+	for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
+	{
+		ObjectSimple2D* obj = (ObjectSimple2D*)(*iterObj);
+		obj->setShowViewRange(mShowViewRange);
+	}
+}
+
 #ifdef __LABLOVE_WITH_GRAPHICS
 /*
 void SimSimple2D::drawBeforeObjects()
@@ -260,11 +279,10 @@ bool SimSimple2D::onKeyUp(int key)
 	{
 	/*case KC_G:
 		setShowGrid(!getShowGrid());
-		return true;
+		return true;*/
 	case KC_V:
 		setShowViewRange(!getShowViewRange());
 		return true;
-	*/
 	default:
 		break;
 	}

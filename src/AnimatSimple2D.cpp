@@ -46,6 +46,10 @@ AnimatSimple2D::AnimatSimple2D()
 
 	mGoCost = 0.0f;
 	mRotateCost = 0.0f;
+
+#if defined(__LABLOVE_WITH_GRAPHICS)
+	mViewNode = NULL;
+#endif
 }
 
 AnimatSimple2D::AnimatSimple2D(lua_State* luaState)
@@ -74,6 +78,9 @@ AnimatSimple2D::AnimatSimple2D(lua_State* luaState)
 
 	mGoCost = 0.0f;
 	mRotateCost = 0.0f;
+#if defined(__LABLOVE_WITH_GRAPHICS)
+	mViewNode = NULL;
+#endif
 }
 
 AnimatSimple2D::AnimatSimple2D(AnimatSimple2D* anim, bool full) : ObjectSimple2D(anim)
@@ -97,6 +104,9 @@ AnimatSimple2D::AnimatSimple2D(AnimatSimple2D* anim, bool full) : ObjectSimple2D
 
 	mGoCost = anim->mGoCost;
 	mRotateCost = anim->mRotateCost;
+#if defined(__LABLOVE_WITH_GRAPHICS)
+	mViewNode = NULL;
+#endif
 }
 
 void AnimatSimple2D::setAlphaObjectsGrid(Grid* grid)
@@ -182,9 +192,9 @@ void AnimatSimple2D::createGraphics()
 	Entity* animEntity = sceneMgr->createEntity(nodeName, "animat");
 	mNode = sceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
 	mNode->attachObject(animEntity);
-	mNode->setPosition(mX, 0, mY);
+	setPos(mX, mY);
 	setRot(mRot);
-	mNode->scale(mSize, mSize, mSize);
+	mNode->scale(mSize, 1, mSize);
 
 	char materialName[255];
 	sprintf(materialName, "animatmat%d", mID);
@@ -194,6 +204,83 @@ void AnimatSimple2D::createGraphics()
 		ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 	mMaterial->setAmbient(mColor.mRed, mColor.mGreen, mColor.mBlue);
 	animEntity->setMaterialName(materialName);
+
+	SimSimple2D* sim = (SimSimple2D*)Lab::getSingleton().getSimulation();
+	if (sim->getShowViewRange())
+	{
+		setShowViewRange(true);
+	}
+}
+
+void AnimatSimple2D::createViewMesh()
+{
+	ManualObject* obj = new Ogre::ManualObject("MeshDecal");
+	obj->begin("viewRangeMaterial", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+
+	float startAngle =  -mViewAngle / 2.0f;
+	float endAngle = mViewAngle / 2.0f;
+	
+	obj->position(Ogre::Vector3(0, 0, 0));
+	float angle = startAngle;
+	unsigned int vertexCount = 2;
+	while (angle < endAngle)
+	{
+		vertexCount++;
+		obj->position(Ogre::Vector3(cosf(angle),
+						0,
+						sinf(angle)));
+		angle += 0.2f;
+	}
+	obj->position(Ogre::Vector3(cosf(endAngle),
+						0,
+						sinf(endAngle)));
+
+	for (unsigned int i = 2; i < vertexCount; i++)
+	{
+		obj->index(i);
+		obj->index(i - 1);
+		obj->index(0);
+	}
+
+	obj->end();
+
+	char viewRangeName[255];
+	sprintf(viewRangeName, "viewrange%d", mID);
+	MeshPtr mViewMesh = obj->convertToMesh(viewRangeName);
+	mViewMesh->load();
+
+	delete obj;
+}
+
+void AnimatSimple2D::setShowViewRange(bool show)
+{
+
+	if (show)
+	{
+		if (mViewNode)
+		{
+			mViewNode->setVisible(true);
+		}
+		else
+		{
+			SceneManager* sceneMgr = Lab::getSingleton().getOgreApplication()->getSceneManager();
+			createViewMesh();
+			char viewRangeName[255];
+			sprintf(viewRangeName, "viewrange%d", mID);
+			Entity* viewRangeEntity = sceneMgr->createEntity(viewRangeName, viewRangeName);
+			mViewNode = mNode->createChildSceneNode(viewRangeName);
+			mViewNode->attachObject(viewRangeEntity);
+			mViewNode->setPosition(0, -0.02, 0);
+			mViewNode->setScale(mViewRange / mSize, 1, mViewRange / mSize);
+		}
+	}
+	else
+	{
+		if (mViewNode)
+		{
+			mViewNode->setVisible(false);
+		}
+	}
 }
 #endif
 
@@ -207,9 +294,9 @@ void AnimatSimple2D::setRot(float rot)
 void AnimatSimple2D::onCycle()
 {
 	ObjectSimple2D::onCycle();
+	perceptionStep();
 	if (!mHuman)
 	{
-		perceptionStep();
 		computationStep();
 	}
 	actionStep();
@@ -481,6 +568,12 @@ void AnimatSimple2D::actionStep()
 
 void AnimatSimple2D::onScanObject(SimulationObject* obj, bool visible, bool contact, float angle, float distance)
 {
+	//printf("x");fflush(stdout);
+	if (mHuman)
+	{
+		return;
+	}
+
 	float normalizedValue;
 
 	if (mCurrentInputDepth >= mMaxInputDepth)
@@ -636,61 +729,6 @@ int AnimatSimple2D::setRotateCost(lua_State* luaState)
 	setRotateCost(cost);
 	return 0;
 }
-
-/*
-void AnimatSimple2D::draw()
-{
-	SimSimple2D* sim = (SimSimple2D*)(Lab::getSingleton().getSimulation());
-
-	float x = mX - sim->getViewX();
-	float y = mY - sim->getViewY();
-
-	if (sim->getShowViewRange())
-	{
-		float x = mX - sim->getViewX();
-		float y = mY - sim->getViewY();
-
-		float startAngle = mRot - (mViewAngle / 2.0f);
-		float endAngle = mRot + (mViewAngle / 2.0f);
-
-		glColor4ub(DEF_S2D_ANIMAT_VIEW_R,
-			DEF_S2D_ANIMAT_VIEW_G,
-			DEF_S2D_ANIMAT_VIEW_B,
-			DEF_S2D_ANIMAT_VIEW_A);
-		glBegin(GL_POLYGON);
-		glVertex2f(x, y);
-
-		float angle = startAngle;
-		while (angle < endAngle)
-		{
-			glVertex2f(x + (cosf(angle) * mViewRange), y + (sinf(angle) * mViewRange));
-			angle += 0.2f;
-		}
-		glVertex2f(x + (cosf(endAngle) * mViewRange), y + (sinf(endAngle) * mViewRange));
-
-		glEnd();
-	}
-
-	float a1 = mRot;
-	float a2 = mRot + (M_PI * 0.8f);
-	float a3 = mRot + (M_PI * 1.2f);
-	float p1x = x + (cosf(a1) * mSize);
-	float p1y = y + (sinf(a1) * mSize);
-	float p2x = x + (cosf(a2) * mSize);
-	float p2y = y + (sinf(a2) * mSize);
-	float p3x = x + (cosf(a3) * mSize);
-	float p3y = y + (sinf(a3) * mSize);
-
-	glColor3f(mColor.mRed,
-			mColor.mGreen,
-			mColor.mBlue);
-	glBegin(GL_POLYGON);
-	glVertex2f(p1x, p1y);
-	glVertex2f(p2x, p2y);
-	glVertex2f(p3x, p3y);
-	glEnd();
-}
-*/
 
 /*void AnimatSimple2D::draw_brain()
 {

@@ -65,6 +65,7 @@ public:
 	int setAgeRange(lua_State* luaState);
 	int setMetabolism(lua_State* luaState);
 	int setColor(lua_State* luaState);
+	virtual void setShowViewRange(bool show){}
 
 	float mX;
 	float mY;
@@ -88,6 +89,7 @@ protected:
 #if defined(__LABLOVE_WITH_GRAPHICS)
 	SceneNode* mNode;
 	MaterialPtr mMaterial;
+	float mZ;
 #endif
 };
 #endif

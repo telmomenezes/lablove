@@ -58,7 +58,7 @@ public:
 	float getCellSide(){return mCellSide;}
 	ObjectSimple2D** getCellGrid(){return mCellGrid;}
 	void setShowGrid(bool show){mShowGrid = show;}
-	void setShowViewRange(bool show){mShowViewRange = show;}
+	void setShowViewRange(bool show);
 	bool getShowGrid(){return mShowGrid;}
 	bool getShowViewRange(){return mShowViewRange;}
 	unsigned int getWorldCellWidth(){return mWorldCellWidth;}

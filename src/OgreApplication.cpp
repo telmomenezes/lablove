@@ -55,6 +55,20 @@ OgreApplication::OgreApplication()
 
 OgreApplication::~OgreApplication()
 {
+	if (mInputManager)
+	{
+		mInputManager->destroyInputObject(mKeyboard);
+                mInputManager->destroyInputObject(mMouse);
+
+		if (mJoy)
+		{
+			mInputManager->destroyInputObject(mJoy);
+		}
+
+                InputManager::destroyInputSystem(mInputManager);
+		mInputManager = NULL;
+        }
+
 	if (mGUIManager != NULL)
 	{
 		delete mGUIManager;
@@ -65,12 +79,11 @@ OgreApplication::~OgreApplication()
 	WindowEventUtilities::removeWindowEventListener(mWindow, this);
 	windowClosed(mWindow);
 
-	// Doing this causes a seg fault...
-	/*if (mRoot)
+	if (mRoot)
 	{
 		delete mRoot;
 		mRoot = NULL;
-	}*/
+	}
 }
 
 void OgreApplication::start()
@@ -213,6 +226,10 @@ void OgreApplication::initFrameListener()
 	mWindow->getCustomAttribute("WINDOW", &windowHnd);
 	windowHndStr << windowHnd;
 	pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
+
+	// If we don't do this, keyrepeat is disabled on linux on crashes
+	// TODO: check if this affects other OSs
+	pl.insert(std::make_pair(std::string("XAutoRepeatOn"), std::string("true")));
 
 	mInputManager = InputManager::createInputSystem(pl);
 
