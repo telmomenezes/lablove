@@ -1,4 +1,4 @@
-numberOfPlants = 20
+numberOfPlants = 100
 numberOfAnimats = 100
 generationTime = 500
 

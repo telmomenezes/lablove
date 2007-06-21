@@ -37,7 +37,10 @@ void PopulationDynamics::init()
 		mHuman->createGraphics();
 	}
 #endif
-	Lab::getSingleton().getSimulation()->addObject(mHuman);
+	if (mHuman)
+	{
+		Lab::getSingleton().getSimulation()->addObject(mHuman);
+	}
 }
 
 void PopulationDynamics::setHuman(SimulationObject* human)

@@ -72,6 +72,7 @@ void PopDynGenerations::init()
 			SimulationObject* org = (*iterSpecies)->clone();
 			org->initRandom();
 			org->placeRandom();
+			org->setEnergy(org->getInitialEnergy());
 #ifdef __LABLOVE_WITH_GRAPHICS
 			org->createGraphics();
 #endif
@@ -96,6 +97,7 @@ void PopDynGenerations::init()
 			SimulationObject* org = (*iterSpecies)->clone(false);
 			org->initRandom();
 			org->placeRandom();
+			org->setEnergy(org->getInitialEnergy());
 #ifdef __LABLOVE_WITH_GRAPHICS
 			org->createGraphics();
 #endif
@@ -170,7 +172,7 @@ void PopDynGenerations::onCycle()
 
 				// Clone best and add to simulation
 				newOrganism = bestOrganism->clone();
-				newOrganism->setEnergy(0.0f);
+				newOrganism->setEnergy(newOrganism->getInitialEnergy());
 				newOrganism->placeRandom();
 #ifdef __LABLOVE_WITH_GRAPHICS
 				newOrganism->createGraphics();
@@ -210,6 +212,7 @@ void PopDynGenerations::onOrganismDeath(SimulationObject* org)
 
 			SimulationObject* org = (*iterSpecies)->clone();
 			org->placeRandom();
+			org->setEnergy(org->getInitialEnergy());
 #ifdef __LABLOVE_WITH_GRAPHICS
 			org->createGraphics();
 #endif
