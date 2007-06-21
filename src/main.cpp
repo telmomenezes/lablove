@@ -27,11 +27,13 @@
 #include "GridbrainComponent.h"
 #include "GridbrainComponentSet.h"
 #include "MoleculeRGB.h"
-// TODO: Replace OGRE_PLATFORM with something more generic
+
+#if defined(__LABLOVE_WITH_GRAPHICS)
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include "windows.h"
+#endif
 #endif
 
 extern "C"
@@ -46,9 +48,12 @@ int getLab(lua_State* luaState)
 	return 1;
 }
 
-// TODO: Replace OGRE_PLATFORM with something more generic.
+#if defined(__LABLOVE_WITH_GRAPHICS)
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)
+#else
+int main(int argc, char *argv[])
+#endif
 #else
 int main(int argc, char *argv[])
 #endif

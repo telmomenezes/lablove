@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include "functions.h"
 #include "random.h"
+#include <math.h>
 
 ObjectSimple2D::ObjectSimple2D()
 {
@@ -237,10 +238,12 @@ void ObjectSimple2D::setAgeRange(unsigned long lowAgeLimit, unsigned long highAg
 void ObjectSimple2D::setColor(MoleculeRGB* color)
 {
 	mColor = MoleculeRGB(color);
+#if defined(__LABLOVE_WITH_GRAPHICS)
 	if (!mMaterial.isNull())
 	{
 		mMaterial->setAmbient(mColor.mRed, mColor.mGreen, mColor.mBlue);
 	}
+#endif
 }
 
 int ObjectSimple2D::setPos(lua_State* luaState)

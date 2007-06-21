@@ -129,7 +129,7 @@ void AnimatSimple2D::initRandom()
 	{
 		mGridbrain->addRandomConnection();
 	}
-	initTest();
+	//initTest();
 }
 
 void AnimatSimple2D::initTest()

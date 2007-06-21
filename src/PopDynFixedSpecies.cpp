@@ -70,6 +70,7 @@ void PopDynFixedSpecies::init()
 		{
 			SimulationObject* org = (*iterSpecies)->clone();
 			org->initRandom();
+			org->setEnergy(org->getInitialEnergy());
 			org->placeRandom();
 #ifdef __LABLOVE_WITH_GRAPHICS
 			org->createGraphics();
