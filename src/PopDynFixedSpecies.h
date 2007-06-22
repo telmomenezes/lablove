@@ -28,6 +28,17 @@ using namespace std;
 
 class PopDynFixedSpecies : public PopulationDynamics
 {
+
+typedef struct
+{
+	SimulationObject* mBaseOrganism;
+	vector<SimulationObject*> mOrganismVector;
+	long mPopulation;
+	unsigned int mDeathCount;
+	float mTotalFitness;
+	float mBestFitness;
+} SpeciesData;
+
 public:
 	static unsigned int CURRENT_SPECIES_ID;
 
@@ -37,27 +48,17 @@ public:
 	virtual void onCycle();
 	virtual void onOrganismDeath(SimulationObject* org);
 
-	void addStaticSpecies(SimulationObject* org, long population);
-	void addEvolvingSpecies(SimulationObject* org, long population);
+	void addSpecies(SimulationObject* org, long population);
 
 	static const char mClassName[];
         static Orbit<PopDynFixedSpecies>::MethodType mMethods[];
 	static Orbit<PopDynFixedSpecies>::NumberGlobalType mNumberGlobals[];
 
         PopDynFixedSpecies(lua_State* luaState);
-        int addStaticSpecies(lua_State* luaState);
-        int addEvolvingSpecies(lua_State* luaState);
+        int addSpecies(lua_State* luaState);
 
 protected:
-	list<SimulationObject*> mStaticSpecies;
-	list<SimulationObject*> mEvolvingSpecies;
-	list<vector<SimulationObject*>*> mStaticSpeciesOrganismVecs;
-	list<vector<SimulationObject*>*> mEvolvingSpeciesOrganismVecs;
-	list<long> mStaticSpeciesPopulations;
-	list<long> mEvolvingSpeciesPopulations;
-	vector<unsigned int> mEvolvingSpeciesDeathCount;
-	vector<float> mEvolvingSpeciesFitness;
-	vector<float> mEvolvingSpeciesBestFitness;
+	list<SpeciesData> mSpecies;
 };
 #endif
 

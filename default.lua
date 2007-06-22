@@ -110,8 +110,8 @@ plant:setColor(plantColor)
 popDyn = PopDynFixedSpecies()
 sim:setPopulationDynamics(popDyn)
 
-popDyn:addStaticSpecies(plant, numberOfPlants)
-popDyn:addEvolvingSpecies(animat, numberOfAnimats)
+popDyn:addSpecies(animat, numberOfAnimats)
+popDyn:addSpecies(plant, numberOfPlants)
 
 human = AnimatSimple2D(initialConnections, 25)
 

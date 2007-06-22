@@ -48,12 +48,8 @@ int getLab(lua_State* luaState)
 	return 1;
 }
 
-#if defined(__LABLOVE_WITH_GRAPHICS)
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+#if defined(__LABLOVE_WITH_GRAPHICS) && (OGRE_PLATFORM == OGRE_PLATFORM_WIN32)
 INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)
-#else
-int main(int argc, char *argv[])
-#endif
 #else
 int main(int argc, char *argv[])
 #endif

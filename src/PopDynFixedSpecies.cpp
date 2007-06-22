@@ -33,42 +33,33 @@ PopDynFixedSpecies::~PopDynFixedSpecies()
 {
 }
 
-void PopDynFixedSpecies::addStaticSpecies(SimulationObject* org, long population)
+void PopDynFixedSpecies::addSpecies(SimulationObject* org, long population)
 {
 	org->setSpeciesID(++CURRENT_SPECIES_ID);
-	mStaticSpecies.push_back(org);
-	mStaticSpeciesPopulations.push_back(population);
-	vector<SimulationObject*>* orgVec = new vector<SimulationObject*>();
-	mStaticSpeciesOrganismVecs.push_back(orgVec);
-}
 
-void PopDynFixedSpecies::addEvolvingSpecies(SimulationObject* org, long population)
-{
-	org->setSpeciesID(++CURRENT_SPECIES_ID);
-	mEvolvingSpecies.push_back(org);
-	mEvolvingSpeciesPopulations.push_back(population);
-	vector<SimulationObject*>* orgVec = new vector<SimulationObject*>();
-	mEvolvingSpeciesOrganismVecs.push_back(orgVec);
-	mEvolvingSpeciesDeathCount.push_back(0);
-	mEvolvingSpeciesFitness.push_back(0);
-	mEvolvingSpeciesBestFitness.push_back(-9999999.9);
+	SpeciesData species;
+	species.mBaseOrganism = org;
+	species.mPopulation = population;
+	species.mDeathCount = 0;
+	species.mTotalFitness = 0;
+	species.mBestFitness = -9999999.9;
+
+	mSpecies.push_back(species);
 }
 
 void PopDynFixedSpecies::init()
 {
 	PopulationDynamics::init();
 
-	list<SimulationObject*>::iterator iterSpecies = mStaticSpecies.begin();
-	list<long>::iterator iterPop = mStaticSpeciesPopulations.begin();
-	list<vector<SimulationObject*>*>::iterator iterSpeciesOrgVec = mStaticSpeciesOrganismVecs.begin();
-
-	while (iterSpecies != mStaticSpecies.end())
+	for (list<SpeciesData>::iterator iterSpecies = mSpecies.begin();
+		iterSpecies != mSpecies.end();
+		iterSpecies++)
 	{
-		(*iterSpecies)->initRandom();
+		(*iterSpecies).mBaseOrganism->initRandom();
 
-		for (unsigned int i = 0; i < (*iterPop); i++)
+		for (unsigned int i = 0; i < (*iterSpecies).mPopulation; i++)
 		{
-			SimulationObject* org = (*iterSpecies)->clone();
+			SimulationObject* org = (*iterSpecies).mBaseOrganism->clone();
 			org->initRandom();
 			org->setEnergy(org->getInitialEnergy());
 			org->placeRandom();
@@ -76,37 +67,8 @@ void PopDynFixedSpecies::init()
 			org->createGraphics();
 #endif
 			Lab::getSingleton().getSimulation()->addObject(org);
-			(*iterSpeciesOrgVec)->push_back(org);
+			(*iterSpecies).mOrganismVector.push_back(org);
 		}
-
-		iterSpecies++;
-		iterPop++;
-		iterSpeciesOrgVec++;
-	}
-
-	iterSpecies = mEvolvingSpecies.begin();
-	iterPop = mEvolvingSpeciesPopulations.begin();
-	iterSpeciesOrgVec = mEvolvingSpeciesOrganismVecs.begin();
-	while (iterSpecies != mEvolvingSpecies.end())
-	{
-		(*iterSpecies)->initRandom();
-
-		for (unsigned int i = 0; i < (*iterPop); i++)
-		{
-			SimulationObject* org = (*iterSpecies)->clone(false);
-			org->initRandom();
-			org->setEnergy(org->getInitialEnergy());
-			org->placeRandom();
-#ifdef __LABLOVE_WITH_GRAPHICS
-			org->createGraphics();
-#endif
-			Lab::getSingleton().getSimulation()->addObject(org);
-			(*iterSpeciesOrgVec)->push_back(org);
-		}
-
-		iterSpecies++;
-		iterPop++;
-		iterSpeciesOrgVec++;
 	}
 }
 
@@ -115,14 +77,18 @@ void PopDynFixedSpecies::onCycle()
 	if ((Lab::getSingleton().getSimulation()->time() % 1000) == 0)
 	{
 		printf("%d", Lab::getSingleton().getSimulation()->time());
-		for (unsigned int i = 0; i < mEvolvingSpeciesFitness.size(); i++)
+		for (list<SpeciesData>::iterator iterSpecies = mSpecies.begin();
+			iterSpecies != mSpecies.end();
+			iterSpecies++)
 		{
 			printf(", %f, %f",
-				mEvolvingSpeciesFitness[i] / mEvolvingSpeciesDeathCount[i],
-				mEvolvingSpeciesBestFitness[i]);
-			mEvolvingSpeciesDeathCount[i] = 0;
-			mEvolvingSpeciesFitness[i] = 0;
-			mEvolvingSpeciesBestFitness[i] = -9999999.9;
+				(*iterSpecies).mTotalFitness / (*iterSpecies).mDeathCount,
+				(*iterSpecies).mBestFitness);
+			(*iterSpecies).mDeathCount = 0;
+
+			(*iterSpecies).mDeathCount = 0;
+			(*iterSpecies).mTotalFitness = 0;
+			(*iterSpecies).mBestFitness = -9999999.9;
 		}
 		printf("\n");
 	}
@@ -130,40 +96,19 @@ void PopDynFixedSpecies::onCycle()
 
 void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
 {
-	list<SimulationObject*>::iterator iterSpecies = mStaticSpecies.begin();
-	while (iterSpecies != mStaticSpecies.end())
-	{
-		if (org->getSpeciesID() == (*iterSpecies)->getSpeciesID())
-		{
-			Lab::getSingleton().getSimulation()->removeObject(org);
-
-			SimulationObject* org = (*iterSpecies)->clone();
-			org->setEnergy(org->getInitialEnergy());
-			org->placeRandom();
-#ifdef __LABLOVE_WITH_GRAPHICS
-			org->createGraphics();
-#endif
-			Lab::getSingleton().getSimulation()->addObject(org);
-			return;
-		}
-
-		iterSpecies++;
-	}
-
-	iterSpecies = mEvolvingSpecies.begin();
-	list<long>::iterator iterPop = mEvolvingSpeciesPopulations.begin();
-	list<vector<SimulationObject*>*>::iterator iterSpeciesOrgVec = mEvolvingSpeciesOrganismVecs.begin();
 	unsigned int speciesPos = 0;
-	while (iterSpecies != mEvolvingSpecies.end())
+	for (list<SpeciesData>::iterator iterSpecies = mSpecies.begin();
+		iterSpecies != mSpecies.end();
+		iterSpecies++)
 	{
-		if (org->getSpeciesID() == (*iterSpecies)->getSpeciesID())
+		if (org->getSpeciesID() == (*iterSpecies).mBaseOrganism->getSpeciesID())
 		{
 			vector<SimulationObject*>::iterator iterOrg;
 
 			int orgPos = -1;
 			int curPos = 0;
-			for (iterOrg = (*iterSpeciesOrgVec)->begin();
-				(iterOrg != (*iterSpeciesOrgVec)->end()) && orgPos < 0;
+			for (iterOrg = (*iterSpecies).mOrganismVector.begin();
+				(iterOrg != (*iterSpecies).mOrganismVector.end()) && orgPos < 0;
 				iterOrg++)
 			{
 				if ((*iterOrg) == org)
@@ -181,9 +126,9 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
 
 			for (unsigned int tournmentStep = 0; tournmentStep < 2; tournmentStep++)
 			{
-				unsigned int organismNumber = randomUniformInt(0, (*iterPop) - 1);
+				unsigned int organismNumber = randomUniformInt(0, (*iterSpecies).mPopulation - 1);
 
-				iterOrg = (*iterSpeciesOrgVec)->begin();
+				iterOrg = (*iterSpecies).mOrganismVector.begin();
 				for (unsigned int i = 0; i < organismNumber; i++)
 				{
 					iterOrg++;
@@ -209,26 +154,21 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
 			newOrganism->mutate();
 
 			// Update statistics
-			mEvolvingSpeciesDeathCount[speciesPos] += 1;
+			(*iterSpecies).mDeathCount += 1;
 			float fitness = org->getEnergy();
-			mEvolvingSpeciesFitness[speciesPos] += fitness;
+			(*iterSpecies).mTotalFitness += fitness;
 
-			if (fitness > mEvolvingSpeciesBestFitness[speciesPos])
+			if (fitness > (*iterSpecies).mBestFitness)
 			{
-				mEvolvingSpeciesBestFitness[speciesPos] = fitness;
+				(*iterSpecies).mBestFitness = fitness;
 			}
 			
 			// Remove
-			(*(*iterSpeciesOrgVec))[orgPos] = newOrganism;
+			(*iterSpecies).mOrganismVector[orgPos] = newOrganism;
 			Lab::getSingleton().getSimulation()->removeObject(org);
 
 			return;
 		}
-
-		iterSpecies++;
-		iterPop++;
-		iterSpeciesOrgVec++;
-		speciesPos++;
 	}
 }
 
@@ -236,8 +176,7 @@ const char PopDynFixedSpecies::mClassName[] = "PopDynFixedSpecies";
 
 Orbit<PopDynFixedSpecies>::MethodType PopDynFixedSpecies::mMethods[] = {
 	{"setHuman", &PopulationDynamics::setHuman},
-        {"addStaticSpecies", &PopDynFixedSpecies::addStaticSpecies},
-        {"addEvolvingSpecies", &PopDynFixedSpecies::addEvolvingSpecies},
+        {"addSpecies", &PopDynFixedSpecies::addSpecies},
         {0,0}
 };
 
@@ -247,19 +186,11 @@ PopDynFixedSpecies::PopDynFixedSpecies(lua_State* luaState)
 {
 }
 
-int PopDynFixedSpecies::addStaticSpecies(lua_State* luaState)
+int PopDynFixedSpecies::addSpecies(lua_State* luaState)
 {
         SimulationObject* obj = (SimulationObject*)Orbit<PopDynFixedSpecies>::pointer(luaState, 1);
         int population = luaL_checkint(luaState, 2);
-        addStaticSpecies(obj, population);
-        return 0;
-}
-
-int PopDynFixedSpecies::addEvolvingSpecies(lua_State* luaState)
-{
-        SimulationObject* obj = (SimulationObject*)Orbit<PopDynFixedSpecies>::pointer(luaState, 1);
-        int population = luaL_checkint(luaState, 2);
-        addEvolvingSpecies(obj, population);
+        addSpecies(obj, population);
         return 0;
 }
 
