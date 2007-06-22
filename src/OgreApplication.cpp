@@ -20,8 +20,6 @@
 #include "OgreApplication.h"
 #include "Lab.h"
 
-#include <CEGUI/elements/CEGUIPushButton.h>
-
 using namespace Ogre;
 
 OgreApplication::OgreApplication()
