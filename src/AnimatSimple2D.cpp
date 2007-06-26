@@ -581,7 +581,6 @@ void AnimatSimple2D::onScanObject(SimulationObject* obj, bool visible, bool cont
 	for (unsigned int perceptionNumber = 0; perceptionNumber < perceptionsCount; perceptionNumber++)
 	{
 		unsigned int perceptionType = grid->getPerceptionType(perceptionNumber);
-		unsigned int perceptionMolecule = grid->getPerceptionMolecule(perceptionNumber);
 
 		switch (perceptionType)
 		{

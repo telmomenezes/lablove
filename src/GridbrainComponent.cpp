@@ -31,6 +31,24 @@ GridbrainComponent::~GridbrainComponent()
 {
 }
 
+void GridbrainComponent::clear(bool clearConnections)
+{
+	mInput = 0;
+	mOutput = 0;
+	mRecurrentInput = 0;
+	mState = 0;
+	mForwardFlag = false;
+	mRecurrentFlag = false;
+	mPerceptionPosition = 0;
+	mActionPosition = 0;
+
+	if (clearConnections)
+	{
+		mConnectionsCount = 0;
+		mFirstConnection = NULL;
+	}
+}
+
 const char GridbrainComponent::mClassName[] = "GridbrainComponent";
 
 Orbit<GridbrainComponent>::MethodType GridbrainComponent::mMethods[] = {{0,0}};

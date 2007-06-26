@@ -86,6 +86,23 @@ Grid::Grid(Grid* grid)
 	}
 }
 
+Grid::Grid(lua_State* luaState)
+{
+	mCreatedByScript = true;
+
+	mType = 0;
+	mWidth = 0;
+	mHeight = 0;
+	mNumber = 0;
+	mSize = 0;
+	mOffset = 0;
+	mInputMatrix = NULL;
+	mOutputVector = NULL;
+	mInputDepth = 0;
+	mPerceptionsCount = 0;
+	mActionsCount = 0;
+}
+
 Grid::~Grid()
 {
 	if (mInputMatrix != NULL)
@@ -160,7 +177,7 @@ unsigned int Grid::addPerception(GridbrainComponent* per)
 	{
 		GridbrainComponent* curPer = mPerceptionsVec[i];
 
-		if ((curPer->mParameter == per->mParameter) && (curPer->mMolecule == per->mMolecule))
+		if (curPer->mParameter == per->mParameter)
 		{
 			return i;
 		}
@@ -202,12 +219,6 @@ unsigned int Grid::getPerceptionType(unsigned int number)
 {
 	GridbrainComponent* comp = mPerceptionsVec[number];
 	return (unsigned int)comp->mParameter;
-}
-
-unsigned int Grid::getPerceptionMolecule(unsigned int number)
-{
-	GridbrainComponent* comp = mPerceptionsVec[number];
-	return (unsigned int)comp->mMolecule;
 }
 
 float Grid::getOutput(unsigned int number)
@@ -257,23 +268,6 @@ Orbit<Grid>::MethodType Grid::mMethods[] = {
 };
 
 Orbit<Grid>::NumberGlobalType Grid::mNumberGlobals[] = {{0,0}};
-
-Grid::Grid(lua_State* luaState)
-{
-	mCreatedByScript = true;
-
-	mType = 0;
-	mWidth = 0;
-	mHeight = 0;
-	mNumber = 0;
-	mSize = 0;
-	mOffset = 0;
-	mInputMatrix = NULL;
-	mOutputVector = NULL;
-	mInputDepth = 0;
-	mPerceptionsCount = 0;
-	mActionsCount = 0;
-}
 
 int Grid::addComponentSet(lua_State* luaState)
 {

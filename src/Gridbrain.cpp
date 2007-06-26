@@ -86,16 +86,7 @@ Gridbrain* Gridbrain::clone(bool full)
 
 		for (unsigned int index = 0; index < mNumberOfComponents; index++)
 		{
-			gb->mComponents[index].mInput = 0;
-			gb->mComponents[index].mOutput = 0;
-			gb->mComponents[index].mState = 0;
-			gb->mComponents[index].mPerceptionPosition = 0;
-			gb->mComponents[index].mActionPosition = 0;
-			gb->mComponents[index].mConnectionsCount = 0;
-			gb->mComponents[index].mRecurrentInput = 0;
-			gb->mComponents[index].mForwardFlag = false;
-			gb->mComponents[index].mRecurrentFlag = false;
-			gb->mComponents[index].mFirstConnection = NULL;
+			gb->mComponents[index].clear();
 			gb->mComponents[index].mType = mComponents[index].mType;
 			gb->mComponents[index].mParameter = mComponents[index].mParameter;
 			gb->mComponents[index].mOffset = mComponents[index].mOffset;
@@ -103,7 +94,6 @@ Gridbrain* Gridbrain::clone(bool full)
 			gb->mComponents[index].mColumn = mComponents[index].mColumn;
 			gb->mComponents[index].mRow = mComponents[index].mRow;
 			gb->mComponents[index].mGrid = mComponents[index].mGrid;
-			gb->mComponents[index].mMolecule = mComponents[index].mMolecule;
 		}
 
 		for (unsigned int index = 0; index < mNumberOfComponents; index++)
@@ -172,16 +162,7 @@ void Gridbrain::init()
 				y++)
 			{
 				GridbrainComponent* comp = grid->getRandomComponent(pos);
-				mComponents[pos].mInput = 0;
-				mComponents[pos].mOutput = 0;
-				mComponents[pos].mRecurrentInput = 0;
-				mComponents[pos].mConnectionsCount = 0;
-				mComponents[pos].mFirstConnection = NULL;
-				mComponents[pos].mState = 0;
-				mComponents[pos].mForwardFlag = false;
-				mComponents[pos].mRecurrentFlag = false;
-				mComponents[pos].mPerceptionPosition = 0;
-				mComponents[pos].mActionPosition = 0;
+				mComponents[pos].clear();
 				mComponents[pos].mType = comp->mType;
 				mComponents[pos].mParameter = comp->mParameter;
 				mComponents[pos].mOffset = pos;
@@ -189,7 +170,6 @@ void Gridbrain::init()
 				mComponents[pos].mColumn = grid->getColumnCode(x);
 				mComponents[pos].mRow = grid->getRowCode(y);
 				mComponents[pos].mGrid = i;
-				mComponents[pos].mMolecule = random() % 5;
 
 				pos++;
 			}
@@ -259,16 +239,7 @@ void Gridbrain::setComponent(unsigned int x,
 
 	unsigned int pos = (x * grid->getHeight()) + y + grid->getOffset();
 
-	mComponents[pos].mInput = 0;
-	mComponents[pos].mOutput = 0;
-	mComponents[pos].mRecurrentInput = 0;
-	mComponents[pos].mConnectionsCount = 0;
-	mComponents[pos].mFirstConnection = NULL;
-	mComponents[pos].mState = 0;
-	mComponents[pos].mForwardFlag = false;
-	mComponents[pos].mRecurrentFlag = false;
-	mComponents[pos].mPerceptionPosition = 0;
-	mComponents[pos].mActionPosition = 0;
+	mComponents[pos].clear();
 	mComponents[pos].mType = type;
 	mComponents[pos].mParameter = parameter;
 	mComponents[pos].mAggregator = isAggregator(type);
@@ -824,18 +795,10 @@ void Gridbrain::mutateChangeComponent()
 
 	GridbrainComponent* comp = grid->getRandomComponent(pos);
 
-	mComponents[pos].mInput = 0;
-	mComponents[pos].mOutput = 0;
-	mComponents[pos].mRecurrentInput = 0;
-	mComponents[pos].mState = 0;
-	mComponents[pos].mForwardFlag = false;
-	mComponents[pos].mRecurrentFlag = false;
-	mComponents[pos].mPerceptionPosition = 0;
-	mComponents[pos].mActionPosition = 0;
+	mComponents[pos].clear(false);
 	mComponents[pos].mType = comp->mType;
 	mComponents[pos].mParameter = comp->mParameter;
 	mComponents[pos].mAggregator = isAggregator(comp->mType);
-	mComponents[pos].mMolecule = random() % 5;
 
 	initGridInputOutput(grid);
 }

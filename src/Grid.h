@@ -60,7 +60,6 @@ public:
 	void initOutputVector();
 	float* getOutputVector(){return mOutputVector;}
 	unsigned int getPerceptionType(unsigned int number);
-	unsigned int getPerceptionMolecule(unsigned int number);
 	void setInputDepth(unsigned int inputDepth){mInputDepth = inputDepth;}
 	unsigned int getInputDepth(){return mInputDepth;}
 	unsigned int getMaxInputDepth(){return mMaxInputDepth;}

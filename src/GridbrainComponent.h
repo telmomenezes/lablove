@@ -33,6 +33,8 @@ public:
 	GridbrainComponent();
 	virtual ~GridbrainComponent();
 
+	void clear(bool clearConnections=true);
+
 	static const char mClassName[];
         static Orbit<GridbrainComponent>::MethodType mMethods[];
 	static Orbit<GridbrainComponent>::NumberGlobalType mNumberGlobals[];
@@ -53,7 +55,6 @@ public:
 	unsigned int mOffset;
 	unsigned int mPerceptionPosition;
 	unsigned int mActionPosition;
-	unsigned int mMolecule;
 
 	unsigned long mColumn;
 	unsigned long mRow;
