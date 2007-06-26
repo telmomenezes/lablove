@@ -21,10 +21,40 @@
 
 GridbrainComponent::GridbrainComponent()
 {
+	mInput = 0;
+	mOutput = 0;
+	mRecurrentInput = 0;
+	mState = 0;
+	mForwardFlag = false;
+	mRecurrentFlag = false;
+	mPerceptionPosition = 0;
+	mActionPosition = 0;
+	mType = NUL;
+	mParameter = 0.0f;
+	mOffset = 0;
+	mAggregator = false;
+	mColumn = 0;
+	mRow = 0;
+	mGrid = 0;
 }
 
 GridbrainComponent::GridbrainComponent(lua_State* luaState)
 {
+	mInput = 0;
+	mOutput = 0;
+	mRecurrentInput = 0;
+	mState = 0;
+	mForwardFlag = false;
+	mRecurrentFlag = false;
+	mPerceptionPosition = 0;
+	mActionPosition = 0;
+	mType = NUL;
+	mParameter = 0.0f;
+	mOffset = 0;
+	mAggregator = false;
+	mColumn = 0;
+	mRow = 0;
+	mGrid = 0;
 }
 
 GridbrainComponent::~GridbrainComponent()
@@ -47,6 +77,26 @@ void GridbrainComponent::clear(bool clearConnections)
 		mConnectionsCount = 0;
 		mFirstConnection = NULL;
 	}
+}
+
+void GridbrainComponent::copy(GridbrainComponent* comp)
+{
+	clear();
+
+	mType = comp->mType;
+	mParameter = comp->mParameter;
+	mOffset = comp->mOffset;
+	mAggregator = comp->mAggregator;
+	mColumn = comp->mColumn;
+	mRow = comp->mRow;
+	mGrid = comp->mGrid;
+
+}
+
+bool GridbrainComponent::isAggregator()
+{
+	return ((mType == GridbrainComponent::AGG )
+		|| (mType == GridbrainComponent::MAX));
 }
 
 const char GridbrainComponent::mClassName[] = "GridbrainComponent";

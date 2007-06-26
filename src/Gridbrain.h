@@ -40,8 +40,6 @@ public:
 	void addGrid(Grid* grid);
 	void init();
 
-	bool isAggregator(int type);
-
 	void setComponent(unsigned int x,
 				unsigned int y,
 				unsigned int gridNumber,

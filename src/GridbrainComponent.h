@@ -34,6 +34,9 @@ public:
 	virtual ~GridbrainComponent();
 
 	void clear(bool clearConnections=true);
+	void copy(GridbrainComponent* comp);
+
+	bool isAggregator();
 
 	static const char mClassName[];
         static Orbit<GridbrainComponent>::MethodType mMethods[];

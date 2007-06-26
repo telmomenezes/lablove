@@ -86,14 +86,7 @@ Gridbrain* Gridbrain::clone(bool full)
 
 		for (unsigned int index = 0; index < mNumberOfComponents; index++)
 		{
-			gb->mComponents[index].clear();
-			gb->mComponents[index].mType = mComponents[index].mType;
-			gb->mComponents[index].mParameter = mComponents[index].mParameter;
-			gb->mComponents[index].mOffset = mComponents[index].mOffset;
-			gb->mComponents[index].mAggregator = mComponents[index].mAggregator;
-			gb->mComponents[index].mColumn = mComponents[index].mColumn;
-			gb->mComponents[index].mRow = mComponents[index].mRow;
-			gb->mComponents[index].mGrid = mComponents[index].mGrid;
+			gb->mComponents[index].copy(&mComponents[index]);
 		}
 
 		for (unsigned int index = 0; index < mNumberOfComponents; index++)
@@ -162,11 +155,9 @@ void Gridbrain::init()
 				y++)
 			{
 				GridbrainComponent* comp = grid->getRandomComponent(pos);
-				mComponents[pos].clear();
-				mComponents[pos].mType = comp->mType;
-				mComponents[pos].mParameter = comp->mParameter;
+				mComponents[pos].copy(comp);
+
 				mComponents[pos].mOffset = pos;
-				mComponents[pos].mAggregator = isAggregator(comp->mType);
 				mComponents[pos].mColumn = grid->getColumnCode(x);
 				mComponents[pos].mRow = grid->getRowCode(y);
 				mComponents[pos].mGrid = i;
@@ -224,11 +215,6 @@ void Gridbrain::initGridInputOutput(Grid* grid)
 	}
 }
 
-bool Gridbrain::isAggregator(int type)
-{
-	return ((type == GridbrainComponent::AGG ) || (type == GridbrainComponent::MAX));
-}
-
 void Gridbrain::setComponent(unsigned int x,
 				unsigned int y,
 				unsigned int gridNumber,
@@ -242,9 +228,9 @@ void Gridbrain::setComponent(unsigned int x,
 	mComponents[pos].clear();
 	mComponents[pos].mType = type;
 	mComponents[pos].mParameter = parameter;
-	mComponents[pos].mAggregator = isAggregator(type);
 	mComponents[pos].mColumn = grid->getColumnCode(x);
 	mComponents[pos].mRow = grid->getRowCode(y);
+	mComponents[pos].mAggregator = mComponents[pos].isAggregator();
 }
 
 void Gridbrain::addConnection(unsigned int xOrig,
@@ -798,7 +784,7 @@ void Gridbrain::mutateChangeComponent()
 	mComponents[pos].clear(false);
 	mComponents[pos].mType = comp->mType;
 	mComponents[pos].mParameter = comp->mParameter;
-	mComponents[pos].mAggregator = isAggregator(comp->mType);
+	mComponents[pos].mAggregator = comp->isAggregator();
 
 	initGridInputOutput(grid);
 }
