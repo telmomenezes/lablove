@@ -55,22 +55,22 @@ SimulationObject* PlantSimple2D::clone(bool full)
 #if defined(__LABLOVE_WITH_GRAPHICS)
 void PlantSimple2D::createGraphics()
 {
-	SceneManager* sceneMgr = Lab::getSingleton().getOgreApplication()->getSceneManager();
+	Ogre::SceneManager* sceneMgr = Lab::getSingleton().getOgreApplication()->getSceneManager();
 	char nodeName[255];
 	sprintf(nodeName, "loveobj%d", mID);
-	Entity* plantEntity = sceneMgr->createEntity(nodeName, "plant");
+	Ogre::Entity* plantEntity = sceneMgr->createEntity(nodeName, "plant");
 	mNode = sceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
 	mNode->attachObject(plantEntity);
 	mNode->setPosition(mX, 0, mY);
-	mNode->yaw(Radian(mRot));
+	mNode->yaw(Ogre::Radian(mRot));
 	mNode->scale(mSize, mSize, mSize);
 
 	char materialName[255];
 	sprintf(materialName, "plantmat%d", mID);
 	
-	MaterialPtr mMaterial = MaterialManager::getSingleton().create(
+	Ogre::MaterialPtr mMaterial = Ogre::MaterialManager::getSingleton().create(
 		materialName,
-		ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 	mMaterial->setAmbient(mColor.mRed, mColor.mGreen, mColor.mBlue);
 	plantEntity->setMaterialName(materialName);
 }

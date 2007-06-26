@@ -28,7 +28,6 @@
 #include "GridbrainComponentSet.h"
 
 #include <vector>
-using namespace std;
 
 class Gridbrain
 {
@@ -85,7 +84,7 @@ protected:
 	void initGridInputOutput(Grid* grid);
 	void calcConnectionCounts();
 
-	vector<Grid*> mGridsVec;
+	std::vector<Grid*> mGridsVec;
 
         GridbrainComponent* mComponents;
 	unsigned int mMaxInputDepth;

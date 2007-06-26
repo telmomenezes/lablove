@@ -19,7 +19,7 @@
 
 #include "Chemistry.h"
 
-Chemistry::Chemistry(string name, Molecule* refMolecule)
+Chemistry::Chemistry(std::string name, Molecule* refMolecule)
 {
 	mName = name;
 	mReferenceMolecule = refMolecule;
@@ -30,13 +30,13 @@ Chemistry::Chemistry(lua_State* luaState)
 	const char* name = luaL_checkstring(luaState, 1);
 	Molecule* molecule = (Molecule*)Orbit<Chemistry>::pointer(luaState, 2);
 
-	mName = string(name);
+	mName = std::string(name);
 	mReferenceMolecule = molecule;
 }
 
 Chemistry::~Chemistry()
 {
-	vector<Molecule*>::iterator iterMolecule;
+	std::vector<Molecule*>::iterator iterMolecule;
 
 	for (iterMolecule = mMoleculeVec.begin();
 		iterMolecule != mMoleculeVec.end();
@@ -52,7 +52,7 @@ Chemistry* Chemistry::clone()
 {
 	Chemistry* mt = new Chemistry(mName, mReferenceMolecule->clone());
 
-	vector<Molecule*>::iterator iterMolecule;
+	std::vector<Molecule*>::iterator iterMolecule;
 
 	for (iterMolecule = mMoleculeVec.begin();
 		iterMolecule != mMoleculeVec.end();

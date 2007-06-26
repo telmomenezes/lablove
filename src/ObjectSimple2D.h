@@ -27,7 +27,6 @@
 
 #if defined(__LABLOVE_WITH_GRAPHICS)
 #include "Ogre.h"
-using namespace Ogre;
 #endif
 
 class ObjectSimple2D : public SimulationObject
@@ -87,8 +86,8 @@ protected:
 	float mMetabolism;
 	MoleculeRGB mColor;
 #if defined(__LABLOVE_WITH_GRAPHICS)
-	SceneNode* mNode;
-	MaterialPtr mMaterial;
+	Ogre::SceneNode* mNode;
+	Ogre::MaterialPtr mMaterial;
 	float mZ;
 #endif
 };

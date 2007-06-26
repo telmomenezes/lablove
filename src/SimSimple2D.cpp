@@ -53,15 +53,15 @@ void SimSimple2D::init()
 {
 #ifdef __LABLOVE_WITH_GRAPHICS
 	// Create Animat Mesh
-	MaterialPtr material = MaterialManager::getSingleton().create(
+	Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create(
 		"animatDefaultMaterial",
-		ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 	material->setAmbient(1.0, 0.1, 0.1);
 
 
-	ManualObject* obj = new Ogre::ManualObject("MeshDecal");
+	Ogre::ManualObject* obj = new Ogre::ManualObject("MeshDecal");
 
-	float deltaAngle = Math::PI / 1.5f;
+	float deltaAngle = Ogre::Math::PI / 1.5f;
 	
 	obj->estimateVertexCount(3);
 	obj->estimateIndexCount(3);
@@ -71,11 +71,11 @@ void SimSimple2D::init()
 	float x = cosf(a);
 	float z = sinf(a);
 	obj->position(Ogre::Vector3(x, 0, z));
-	a = Math::PI + 0.5f;
+	a = Ogre::Math::PI + 0.5f;
 	x = cosf(a);
 	z = sinf(a);
 	obj->position(Ogre::Vector3(x, 0, z));
-	a = Math::PI - 0.5f;
+	a = Ogre::Math::PI - 0.5f;
 	x = cosf(a);
 	z = sinf(a);
 	obj->position(Ogre::Vector3(x, 0, z));
@@ -86,22 +86,22 @@ void SimSimple2D::init()
 
 	obj->end();
 
-	MeshPtr mesh = obj->convertToMesh("animat");
+	Ogre::MeshPtr mesh = obj->convertToMesh("animat");
 	mesh->load();
 
 	delete obj;
 
 	// Create view range material
-	material = MaterialManager::getSingleton().create(
+	material = Ogre::MaterialManager::getSingleton().create(
 		"viewRangeMaterial",
-		ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 	material->setAmbient(0.5, 0.5, 0.5);
-	material->setSceneBlending(SBT_TRANSPARENT_COLOUR);
+	material->setSceneBlending(Ogre::SBT_TRANSPARENT_COLOUR);
 
 	// Create plant mesh
-	material = MaterialManager::getSingleton().create(
+	material = Ogre::MaterialManager::getSingleton().create(
 		"plantDefaultMaterial",
-		ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 	material->setAmbient(0.1, 1.0, 0.1);
 
 	obj = new Ogre::ManualObject("MeshDecal");
@@ -130,9 +130,9 @@ void SimSimple2D::init()
 	delete obj;
 
 	// Adjust camera position
-	Camera* camera = Lab::getSingleton().getOgreApplication()->getCamera();
-	camera->setPosition(Vector3(mWorldWidth / 2, 200, 0));
-	camera->lookAt(Vector3(mWorldWidth / 2, 0, mWorldLength / 3));
+	Ogre::Camera* camera = Lab::getSingleton().getOgreApplication()->getCamera();
+	camera->setPosition(Ogre::Vector3(mWorldWidth / 2, 200, 0));
+	camera->lookAt(Ogre::Vector3(mWorldWidth / 2, 0, mWorldLength / 3));
 #endif
 
 	Simulation::init();
@@ -194,7 +194,7 @@ void SimSimple2D::setShowViewRange(bool show)
 {
 	mShowViewRange = show;
 
-	list<SimulationObject*>::iterator iterObj;
+	std::list<SimulationObject*>::iterator iterObj;
 	for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
 	{
 		ObjectSimple2D* obj = (ObjectSimple2D*)(*iterObj);
@@ -254,18 +254,18 @@ bool SimSimple2D::onKeyDown(int key)
 
 	switch (key)
 	{
-	case KC_UP:
+	case OIS::KC_UP:
 		human->mActionGo = true;
 		return true;
-	case KC_RIGHT:
+	case OIS::KC_RIGHT:
 		human->mActionRotate = true;
 		human->mActionRotateParam = 1.0f;
 		return true;
-	case KC_LEFT:
+	case OIS::KC_LEFT:
 		human->mActionRotate = true;
 		human->mActionRotateParam = -1.0;
 		return true;
-	case KC_E:
+	case OIS::KC_E:
 		human->mActionEat = true;
 		return true;
 	default:
@@ -277,10 +277,10 @@ bool SimSimple2D::onKeyUp(int key)
 {
 	switch (key)
 	{
-	/*case KC_G:
+	/*case OIS::KC_G:
 		setShowGrid(!getShowGrid());
 		return true;*/
-	case KC_V:
+	case OIS::KC_V:
 		setShowViewRange(!getShowViewRange());
 		return true;
 	default:
@@ -301,16 +301,16 @@ bool SimSimple2D::onKeyUp(int key)
 
 	switch (key)
 	{
-	case KC_UP:
+	case OIS::KC_UP:
 		human->mActionGo = false;
 		return true;
-	case KC_RIGHT:
+	case OIS::KC_RIGHT:
 		human->mActionRotate = false;
 		return true;
-	case KC_LEFT:
+	case OIS::KC_LEFT:
 		human->mActionRotate = false;
 		return true;
-	case KC_E:
+	case OIS::KC_E:
 		human->mActionEat = false;
 		return true;
 	default:

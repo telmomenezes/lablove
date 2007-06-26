@@ -4,7 +4,7 @@ OPTION(GRAPHICS "Build the project with graphical visualization" ON)
 
 # TODO: look for or inplement a FindOgre.cmake module
 IF(GRAPHICS)
-	INCLUDE_DIRECTORIES("/usr/include/OGRE/" "/usr/include/CEGUI")
+	INCLUDE_DIRECTORIES("/usr/include/OGRE/")
 	#INCLUDE(${CMAKE_ROOT}/Modules/FindOgre.cmake)
 	#INCLUDE_DIRECTORIES(${OGRE_INCLUDE_DIR})
 ENDIF(GRAPHICS)

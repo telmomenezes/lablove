@@ -25,7 +25,6 @@
 #include "PopulationDynamics.h"
 
 #include <list>
-using namespace std;
 
 #include "Orbit.h"
 

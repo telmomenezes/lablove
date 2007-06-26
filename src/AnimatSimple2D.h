@@ -107,7 +107,7 @@ protected:
 	float mDistanceToNearestFood;
 
 #if defined(__LABLOVE_WITH_GRAPHICS)
-	SceneNode* mViewNode;
+	Ogre::SceneNode* mViewNode;
 #endif
 };
 #endif

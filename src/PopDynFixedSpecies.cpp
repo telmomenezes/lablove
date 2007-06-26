@@ -51,7 +51,7 @@ void PopDynFixedSpecies::init()
 {
 	PopulationDynamics::init();
 
-	for (list<SpeciesData>::iterator iterSpecies = mSpecies.begin();
+	for (std::list<SpeciesData>::iterator iterSpecies = mSpecies.begin();
 		iterSpecies != mSpecies.end();
 		iterSpecies++)
 	{
@@ -77,7 +77,7 @@ void PopDynFixedSpecies::onCycle()
 	if ((Lab::getSingleton().getSimulation()->time() % 1000) == 0)
 	{
 		printf("%d", Lab::getSingleton().getSimulation()->time());
-		for (list<SpeciesData>::iterator iterSpecies = mSpecies.begin();
+		for (std::list<SpeciesData>::iterator iterSpecies = mSpecies.begin();
 			iterSpecies != mSpecies.end();
 			iterSpecies++)
 		{
@@ -97,13 +97,13 @@ void PopDynFixedSpecies::onCycle()
 void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
 {
 	unsigned int speciesPos = 0;
-	for (list<SpeciesData>::iterator iterSpecies = mSpecies.begin();
+	for (std::list<SpeciesData>::iterator iterSpecies = mSpecies.begin();
 		iterSpecies != mSpecies.end();
 		iterSpecies++)
 	{
 		if (org->getSpeciesID() == (*iterSpecies).mBaseOrganism->getSpeciesID())
 		{
-			vector<SimulationObject*>::iterator iterOrg;
+			std::vector<SimulationObject*>::iterator iterOrg;
 
 			int orgPos = -1;
 			int curPos = 0;

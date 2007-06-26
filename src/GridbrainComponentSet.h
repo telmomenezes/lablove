@@ -25,8 +25,6 @@
 
 #include "Orbit.h"
 
-using namespace std;
-
 class GridbrainComponentSet
 {
 public:
@@ -44,7 +42,7 @@ public:
         GridbrainComponentSet(lua_State* luaState);
         int addComponent(lua_State* luaState);
 
-	vector<GridbrainComponent*> mComponentVec;
+	std::vector<GridbrainComponent*> mComponentVec;
 	unsigned int mSize;
 };
 #endif

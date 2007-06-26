@@ -186,10 +186,10 @@ SimulationObject* AnimatSimple2D::clone(bool full)
 #if defined(__LABLOVE_WITH_GRAPHICS)
 void AnimatSimple2D::createGraphics()
 {
-	SceneManager* sceneMgr = Lab::getSingleton().getOgreApplication()->getSceneManager();
+	Ogre::SceneManager* sceneMgr = Lab::getSingleton().getOgreApplication()->getSceneManager();
 	char nodeName[255];
 	sprintf(nodeName, "loveobj%d", mID);
-	Entity* animEntity = sceneMgr->createEntity(nodeName, "animat");
+	Ogre::Entity* animEntity = sceneMgr->createEntity(nodeName, "animat");
 	mNode = sceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
 	mNode->attachObject(animEntity);
 	setPos(mX, mY);
@@ -199,9 +199,9 @@ void AnimatSimple2D::createGraphics()
 	char materialName[255];
 	sprintf(materialName, "animatmat%d", mID);
 	
-	MaterialPtr mMaterial = MaterialManager::getSingleton().create(
+	Ogre::MaterialPtr mMaterial = Ogre::MaterialManager::getSingleton().create(
 		materialName,
-		ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 	mMaterial->setAmbient(mColor.mRed, mColor.mGreen, mColor.mBlue);
 	animEntity->setMaterialName(materialName);
 
@@ -214,7 +214,7 @@ void AnimatSimple2D::createGraphics()
 
 void AnimatSimple2D::createViewMesh()
 {
-	ManualObject* obj = new Ogre::ManualObject("MeshDecal");
+	Ogre::ManualObject* obj = new Ogre::ManualObject("MeshDecal");
 	obj->begin("viewRangeMaterial", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
 	float startAngle =  -mViewAngle / 2.0f;
@@ -246,7 +246,7 @@ void AnimatSimple2D::createViewMesh()
 
 	char viewRangeName[255];
 	sprintf(viewRangeName, "viewrange%d", mID);
-	MeshPtr mViewMesh = obj->convertToMesh(viewRangeName);
+	Ogre::MeshPtr mViewMesh = obj->convertToMesh(viewRangeName);
 	mViewMesh->load();
 
 	delete obj;
@@ -263,11 +263,11 @@ void AnimatSimple2D::setShowViewRange(bool show)
 		}
 		else
 		{
-			SceneManager* sceneMgr = Lab::getSingleton().getOgreApplication()->getSceneManager();
+			Ogre::SceneManager* sceneMgr = Lab::getSingleton().getOgreApplication()->getSceneManager();
 			createViewMesh();
 			char viewRangeName[255];
 			sprintf(viewRangeName, "viewrange%d", mID);
-			Entity* viewRangeEntity = sceneMgr->createEntity(viewRangeName, viewRangeName);
+			Ogre::Entity* viewRangeEntity = sceneMgr->createEntity(viewRangeName, viewRangeName);
 			mViewNode = mNode->createChildSceneNode(viewRangeName);
 			mViewNode->attachObject(viewRangeEntity);
 			mViewNode->setPosition(0, -0.02, 0);

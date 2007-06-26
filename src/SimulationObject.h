@@ -25,8 +25,6 @@
 
 #include <map>
 
-using namespace std;
-
 class SimulationObject
 {
 public:
@@ -74,7 +72,7 @@ protected:
 	float mEnergy;
 	float mInitialEnergy;
 	unsigned long mCreationTime;
-	map<string, Chemistry*> mChemistriesMap;
+	std::map<std::string, Chemistry*> mChemistriesMap;
 };
 #endif
 

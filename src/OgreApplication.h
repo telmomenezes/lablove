@@ -34,10 +34,6 @@
 
 #include <list>
 
-using namespace std;
-using namespace Ogre;
-using namespace OIS;
-
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
 #include <CoreFoundation/CoreFoundation.h>
 
@@ -62,8 +58,11 @@ std::string macBundlePath()
 }
 #endif
 
-class OgreApplication : public FrameListener, public WindowEventListener,
-			public KeyListener, public MouseListener, public InputHandler
+class OgreApplication : public Ogre::FrameListener,
+			public Ogre::WindowEventListener,
+			public OIS::KeyListener,
+			public OIS::MouseListener,
+			public InputHandler
 {
 public:
 	enum UIMode {GUI, CAMERA, CONTROL};
@@ -74,20 +73,20 @@ public:
 	bool init();
 	void start();
 
-	SceneManager* getSceneManager(){return mSceneMgr;}
-	Camera* getCamera(){return mCamera;}
+	Ogre::SceneManager* getSceneManager(){return mSceneMgr;}
+	Ogre::Camera* getCamera(){return mCamera;}
 
-	virtual void windowResized(RenderWindow* rw);
-	virtual void windowClosed(RenderWindow* rw);
+	virtual void windowResized(Ogre::RenderWindow* rw);
+	virtual void windowClosed(Ogre::RenderWindow* rw);
 
-	bool frameStarted(const FrameEvent& evt);
-	bool frameEnded(const FrameEvent& evt);
+	bool frameStarted(const Ogre::FrameEvent& evt);
+	bool frameEnded(const Ogre::FrameEvent& evt);
 
-	virtual bool keyPressed(const KeyEvent &arg);
-	virtual bool keyReleased(const KeyEvent &arg);
-	virtual bool mouseMoved(const MouseEvent &arg);
-	virtual bool mousePressed(const MouseEvent &arg, MouseButtonID id);
-	virtual bool mouseReleased(const MouseEvent &arg, MouseButtonID id);
+	virtual bool keyPressed(const OIS::KeyEvent &arg);
+	virtual bool keyReleased(const OIS::KeyEvent &arg);
+	virtual bool mouseMoved(const OIS::MouseEvent &arg);
+	virtual bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
+	virtual bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 
 	virtual bool onKeyDown(int key);
 	virtual bool onKeyUp(int key);
@@ -107,34 +106,34 @@ protected:
 	void updateCamera();
 	void updateMode();
 
-	Root* mRoot;
-	Camera* mCamera;
-	SceneManager* mSceneMgr;
-	RenderWindow* mWindow;
+	Ogre::Root* mRoot;
+	Ogre::Camera* mCamera;
+	Ogre::SceneManager* mSceneMgr;
+	Ogre::RenderWindow* mWindow;
 	Ogre::String mResourcePath;
 
 	bool mStop;
 
 	int mSceneDetailIndex;
-	Overlay* mDebugOverlay;
+	Ogre::Overlay* mDebugOverlay;
 
 	//OIS Input devices
-	InputManager* mInputManager;
-	Mouse* mMouse;
-	Keyboard* mKeyboard;
-	JoyStick* mJoy;
+	OIS::InputManager* mInputManager;
+	OIS::Mouse* mMouse;
+	OIS::Keyboard* mKeyboard;
+	OIS::JoyStick* mJoy;
 
-	list<InputHandler*> mHandlersList;
+	std::list<InputHandler*> mHandlersList;
 
 	// Camera control
-	Vector3 mTranslateVector;
+	Ogre::Vector3 mTranslateVector;
 	unsigned int mNumScreenShots;
 	float mMoveScale;
-	Degree mRotScale;
-	Radian mRotX;
-	Radian mRotY;
-	Real mMoveSpeed;
-	Degree mRotateSpeed;
+	Ogre::Degree mRotScale;
+	Ogre::Radian mRotX;
+	Ogre::Radian mRotY;
+	Ogre::Real mMoveSpeed;
+	Ogre::Degree mRotateSpeed;
 
 	bool mMoveCameraLeft;
 	bool mMoveCameraRight;

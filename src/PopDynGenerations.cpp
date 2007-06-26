@@ -42,7 +42,7 @@ void PopDynGenerations::addStaticSpecies(SimulationObject* org, long population)
 	org->setSpeciesID(++CURRENT_SPECIES_ID);
 	mStaticSpecies.push_back(org);
 	mStaticSpeciesPopulations.push_back(population);
-	list<SimulationObject*>* orgList = new list<SimulationObject*>();
+	std::list<SimulationObject*>* orgList = new std::list<SimulationObject*>();
 	mStaticSpeciesOrganismLists.push_back(orgList);
 }
 
@@ -51,7 +51,7 @@ void PopDynGenerations::addEvolvingSpecies(SimulationObject* org, long populatio
 	org->setSpeciesID(++CURRENT_SPECIES_ID);
 	mEvolvingSpecies.push_back(org);
 	mEvolvingSpeciesPopulations.push_back(population);
-	list<SimulationObject*>* orgList = new list<SimulationObject*>();
+	std::list<SimulationObject*>* orgList = new std::list<SimulationObject*>();
 	mEvolvingSpeciesOrganismLists.push_back(orgList);
 }
 
@@ -59,9 +59,9 @@ void PopDynGenerations::init()
 {
 	PopulationDynamics::init();
 
-	list<SimulationObject*>::iterator iterSpecies = mStaticSpecies.begin();
-	list<long>::iterator iterPop = mStaticSpeciesPopulations.begin();
-	list<list<SimulationObject*>*>::iterator iterSpeciesOrgList = mStaticSpeciesOrganismLists.begin();
+	std::list<SimulationObject*>::iterator iterSpecies = mStaticSpecies.begin();
+	std::list<long>::iterator iterPop = mStaticSpeciesPopulations.begin();
+	std::list<std::list<SimulationObject*>*>::iterator iterSpeciesOrgList = mStaticSpeciesOrganismLists.begin();
 
 	while (iterSpecies != mStaticSpecies.end())
 	{
@@ -116,15 +116,16 @@ void PopDynGenerations::onCycle()
 	if (((Lab::getSingleton().getSimulation()->time() % mGenerationTime) == 0)
 		&& (Lab::getSingleton().getSimulation()->time() != 0))
 	{
-		list<SimulationObject*>::iterator iterSpecies = mEvolvingSpecies.begin();
-		list<long>::iterator iterPop = mEvolvingSpeciesPopulations.begin();
-		list<list<SimulationObject*>*>::iterator iterSpeciesOrgList = mEvolvingSpeciesOrganismLists.begin();
+		std::list<SimulationObject*>::iterator iterSpecies = mEvolvingSpecies.begin();
+		std::list<long>::iterator iterPop = mEvolvingSpeciesPopulations.begin();
+		std::list<std::list<SimulationObject*>*>::iterator iterSpeciesOrgList
+			= mEvolvingSpeciesOrganismLists.begin();
 		while (iterSpecies != mEvolvingSpecies.end())
 		{
 			double bestFitness = -9999999999.0f;
 			double totalEnergy = 0.0f;
 
-			list<SimulationObject*>::iterator iterOrg;
+			std::list<SimulationObject*>::iterator iterOrg;
 			for (iterOrg = (*iterSpeciesOrgList)->begin();
 				iterOrg != (*iterSpeciesOrgList)->end();
 				++iterOrg)
@@ -203,7 +204,7 @@ void PopDynGenerations::onCycle()
 
 void PopDynGenerations::onOrganismDeath(SimulationObject* org)
 {
-	list<SimulationObject*>::iterator iterSpecies = mStaticSpecies.begin();
+	std::list<SimulationObject*>::iterator iterSpecies = mStaticSpecies.begin();
 	while (iterSpecies != mStaticSpecies.end())
 	{
 		if (org->getSpeciesID() == (*iterSpecies)->getSpeciesID())

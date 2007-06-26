@@ -26,12 +26,10 @@
 #include <vector>
 #include <string>
 
-using namespace std;
-
 class Chemistry
 {
 public:
-	Chemistry(string name, Molecule* refMolecule);
+	Chemistry(std::string name, Molecule* refMolecule);
 	virtual ~Chemistry();
 	Chemistry* clone();
 
@@ -46,9 +44,9 @@ public:
         Chemistry(lua_State* luaState);
 
 protected:
-	string mName;
+	std::string mName;
 	Molecule* mReferenceMolecule;
-	vector<Molecule*> mMoleculeVec;
+	std::vector<Molecule*> mMoleculeVec;
 };
 #endif
 

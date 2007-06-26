@@ -25,7 +25,6 @@
 #include "InputHandler.h"
 
 #include <list>
-using namespace std;
 
 #include "Orbit.h"
 
@@ -51,8 +50,8 @@ public:
 	int setPopulationDynamics(lua_State* luaState);
 
 protected:
-	list<SimulationObject*> mObjects;
-	list<SimulationObject*> mObjectsToKill;
+	std::list<SimulationObject*> mObjects;
+	std::list<SimulationObject*> mObjectsToKill;
 
 	unsigned long mSimulationTime;
 	SimulationObject* mSelectedObject;

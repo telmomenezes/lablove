@@ -96,24 +96,24 @@ protected:
 	unsigned int mHeight;
 	unsigned int mSize;
 	unsigned int mOffset;
-	list<GridbrainComponentSet*> mComponentSet;
-	list<int> mComponentSetEndColumn;
+	std::list<GridbrainComponentSet*> mComponentSet;
+	std::list<int> mComponentSetEndColumn;
 
-	vector<unsigned long> mRowsVec;
-	vector<unsigned long> mColumnsVec;
-	map<unsigned long, unsigned int> mRowsMap;
-	map<unsigned long, unsigned int> mColumnsMap;
+	std::vector<unsigned long> mRowsVec;
+	std::vector<unsigned long> mColumnsVec;
+	std::map<unsigned long, unsigned int> mRowsMap;
+	std::map<unsigned long, unsigned int> mColumnsMap;
 
 	float* mInputMatrix;
 	float* mOutputVector;
 	unsigned int mMaxInputDepth;
 	unsigned int mInputDepth;
-	vector<GridbrainComponent*> mPerceptionsVec;
-	vector<GridbrainComponent*> mActionsVec;
+	std::vector<GridbrainComponent*> mPerceptionsVec;
+	std::vector<GridbrainComponent*> mActionsVec;
 	unsigned int mPerceptionsCount;
 	unsigned int mActionsCount;
 
-	vector<unsigned int> mColumnsConnectionsCountVec;
+	std::vector<unsigned int> mColumnsConnectionsCountVec;
 };
 #endif
 

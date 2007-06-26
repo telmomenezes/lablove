@@ -85,16 +85,16 @@ ObjectSimple2D::~ObjectSimple2D()
 #if defined(__LABLOVE_WITH_GRAPHICS)
 	if (mNode != NULL)
 	{
-		SceneManager* sceneMgr = Lab::getSingleton().getOgreApplication()->getSceneManager();
+		Ogre::SceneManager* sceneMgr = Lab::getSingleton().getOgreApplication()->getSceneManager();
 		char nodeName[255];
 		sprintf(nodeName, "loveobj%d", mID);
-		MovableObject* obj = mNode->detachObject(nodeName);
+		Ogre::MovableObject* obj = mNode->detachObject(nodeName);
 		sceneMgr->getRootSceneNode()->removeAndDestroyChild(nodeName);
 		delete obj;
 	}
 	if (!mMaterial.isNull())
 	{
-		MaterialManager::getSingleton().remove(mMaterial->getName());
+		Ogre::MaterialManager::getSingleton().remove(mMaterial->getName());
 		mMaterial.setNull();
 	}
 #endif
@@ -195,7 +195,8 @@ void ObjectSimple2D::setRot(float rot)
 #if defined(__LABLOVE_WITH_GRAPHICS)
 	if (mNode != NULL)
 	{
-		mNode->setOrientation(Quaternion(Radian(mRot), Vector3(0.0, -1.0, 0.0)));
+		mNode->setOrientation(Ogre::Quaternion(Ogre::Radian(mRot),
+						Ogre::Vector3(0.0, -1.0, 0.0)));
 	}
 #endif
 }

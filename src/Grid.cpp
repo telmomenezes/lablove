@@ -55,7 +55,7 @@ Grid::Grid(Grid* grid)
 	mInputMatrix = NULL;
 	mOutputVector = NULL;
 
-	list<GridbrainComponentSet*>::iterator iterSet;
+	std::list<GridbrainComponentSet*>::iterator iterSet;
 	for (iterSet = grid->mComponentSet.begin();
 		iterSet != grid->mComponentSet.end();
 		iterSet++)
@@ -63,7 +63,7 @@ Grid::Grid(Grid* grid)
 		mComponentSet.push_back(*iterSet);
 	}
 
-	list<int>::iterator iterEndColumn;
+	std::list<int>::iterator iterEndColumn;
 	for (iterEndColumn = grid->mComponentSetEndColumn.begin();
 		iterEndColumn != grid->mComponentSetEndColumn.end();
 		iterEndColumn++)
@@ -129,8 +129,8 @@ GridbrainComponent* Grid::getRandomComponent(unsigned int pos)
 {
 	unsigned int column = getXByOffset(pos);
 
-	list<GridbrainComponentSet*>::iterator iterSet = mComponentSet.begin();
-	list<int>::iterator iterEndColumn = mComponentSetEndColumn.begin();
+	std::list<GridbrainComponentSet*>::iterator iterSet = mComponentSet.begin();
+	std::list<int>::iterator iterEndColumn = mComponentSetEndColumn.begin();
 
 	while (iterSet != mComponentSet.end())
 	{

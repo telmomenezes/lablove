@@ -24,7 +24,6 @@
 
 #include <list>
 #include <vector>
-using namespace std;
 
 class PopDynFixedSpecies : public PopulationDynamics
 {
@@ -32,7 +31,7 @@ class PopDynFixedSpecies : public PopulationDynamics
 typedef struct
 {
 	SimulationObject* mBaseOrganism;
-	vector<SimulationObject*> mOrganismVector;
+	std::vector<SimulationObject*> mOrganismVector;
 	long mPopulation;
 	unsigned int mDeathCount;
 	float mTotalFitness;
@@ -58,7 +57,7 @@ public:
         int addSpecies(lua_State* luaState);
 
 protected:
-	list<SpeciesData> mSpecies;
+	std::list<SpeciesData> mSpecies;
 };
 #endif
 

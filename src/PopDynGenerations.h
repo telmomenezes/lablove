@@ -23,7 +23,6 @@
 #include "PopulationDynamics.h"
 
 #include <list>
-using namespace std;
 
 class PopDynGenerations : public PopulationDynamics
 {
@@ -51,12 +50,12 @@ public:
 
 protected:
 
-	list<SimulationObject*> mStaticSpecies;
-	list<SimulationObject*> mEvolvingSpecies;
-	list<list<SimulationObject*>*> mStaticSpeciesOrganismLists;
-	list<list<SimulationObject*>*> mEvolvingSpeciesOrganismLists;
-	list<long> mStaticSpeciesPopulations;
-	list<long> mEvolvingSpeciesPopulations;
+	std::list<SimulationObject*> mStaticSpecies;
+	std::list<SimulationObject*> mEvolvingSpecies;
+	std::list<std::list<SimulationObject*>*> mStaticSpeciesOrganismLists;
+	std::list<std::list<SimulationObject*>*> mEvolvingSpeciesOrganismLists;
+	std::list<long> mStaticSpeciesPopulations;
+	std::list<long> mEvolvingSpeciesPopulations;
 
 	unsigned int mGenerationTime;
 	unsigned long mGeneration;

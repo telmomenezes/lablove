@@ -32,7 +32,7 @@ Simulation::Simulation()
 
 Simulation::~Simulation()
 {
-	list<SimulationObject*>::iterator iterObj;
+	std::list<SimulationObject*>::iterator iterObj;
 	for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
 	{
 		delete *iterObj;
@@ -61,7 +61,7 @@ void Simulation::removeObject(SimulationObject* object)
 	}
 
 	bool stop = false;
-	list<SimulationObject*>::iterator iterObj;
+	std::list<SimulationObject*>::iterator iterObj;
 	for (iterObj = mObjects.begin(); (iterObj != mObjects.end()) && !stop; ++iterObj)
 	{
 		if((*iterObj) == object)
@@ -75,7 +75,7 @@ void Simulation::removeObject(SimulationObject* object)
 
 void Simulation::cycle()
 {
-	list<SimulationObject*>::iterator iterObj;
+	std::list<SimulationObject*>::iterator iterObj;
 
 	for (iterObj = mObjectsToKill.begin();
 		iterObj != mObjectsToKill.end();

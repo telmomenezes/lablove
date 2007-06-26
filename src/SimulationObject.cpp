@@ -54,7 +54,7 @@ SimulationObject::SimulationObject(SimulationObject* obj)
 
 SimulationObject::~SimulationObject()
 {
-	map<string, Chemistry*>::iterator iterChems;
+	std::map<std::string, Chemistry*>::iterator iterChems;
 
 	for (iterChems = mChemistriesMap.begin();
 		iterChems != mChemistriesMap.end();

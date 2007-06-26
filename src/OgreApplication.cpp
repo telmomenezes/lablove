@@ -20,8 +20,6 @@
 #include "OgreApplication.h"
 #include "Lab.h"
 
-using namespace Ogre;
-
 OgreApplication::OgreApplication()
 {
 	mRoot = NULL;
@@ -32,7 +30,7 @@ OgreApplication::OgreApplication()
 #endif
 	mStop = false;
 
-	mTranslateVector = Vector3::ZERO;
+	mTranslateVector = Ogre::Vector3::ZERO;
 	mNumScreenShots = 0;
 	mMoveScale = 0.0f;
 	mRotScale = 0.0f;
@@ -63,7 +61,7 @@ OgreApplication::~OgreApplication()
 			mInputManager->destroyInputObject(mJoy);
 		}
 
-                InputManager::destroyInputSystem(mInputManager);
+                OIS::InputManager::destroyInputSystem(mInputManager);
 		mInputManager = NULL;
         }
 
@@ -74,7 +72,7 @@ OgreApplication::~OgreApplication()
 	}
 
 	//Remove ourself as a Window listener
-	WindowEventUtilities::removeWindowEventListener(mWindow, this);
+	Ogre::WindowEventUtilities::removeWindowEventListener(mWindow, this);
 	windowClosed(mWindow);
 
 	if (mRoot)
@@ -91,13 +89,13 @@ void OgreApplication::start()
 
 bool OgreApplication::init()
 {
-	String pluginsPath;
+	Ogre::String pluginsPath;
 	// only use plugins.cfg if not static
 #ifndef OGRE_STATIC_LIB
 	pluginsPath = mResourcePath + "plugins.cfg";
 #endif
 		
-	mRoot = new Root(pluginsPath, 
+	mRoot = new Ogre::Root(pluginsPath, 
 				mResourcePath + "ogre.cfg",
 				mResourcePath + "Ogre.log");
 
@@ -111,32 +109,32 @@ bool OgreApplication::init()
 	}
 
 	// Create the SceneManager, in this case a generic one
-	mSceneMgr = mRoot->createSceneManager(ST_GENERIC, "OgreSMInstance");
+	mSceneMgr = mRoot->createSceneManager(Ogre::ST_GENERIC, "OgreSMInstance");
 
 	mCamera = mSceneMgr->createCamera("PlayerCam");
 
-	mCamera->setPosition(Vector3(0, 0, 500));
-	mCamera->lookAt(Vector3(0, 0, -300));
+	mCamera->setPosition(Ogre::Vector3(0, 0, 500));
+	mCamera->lookAt(Ogre::Vector3(0, 0, -300));
 	mCamera->setNearClipDistance(5);
 
 	// Create one viewport, entire window
-	Viewport* vp = mWindow->addViewport(mCamera);
-	vp->setBackgroundColour(ColourValue(1.0, 1.0, 1.0));
+	Ogre::Viewport* vp = mWindow->addViewport(mCamera);
+	vp->setBackgroundColour(Ogre::ColourValue(1.0, 1.0, 1.0));
 
 	// Alter the camera aspect ratio to match the viewport
 	mCamera->setAspectRatio(
-		Real(vp->getActualWidth()) / Real(vp->getActualHeight()));
+		Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
 
 	// Set default mipmap level (NB some APIs ignore this)
-	TextureManager::getSingleton().setDefaultNumMipmaps(5);
+	Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
 
 	// Load resources
-	ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
 	// Create the light
-	mSceneMgr->setAmbientLight(ColourValue(1.0, 1.0, 1.0));
+	mSceneMgr->setAmbientLight(Ogre::ColourValue(1.0, 1.0, 1.0));
 
-	Light* l = mSceneMgr->createLight("MainLight");
+	Ogre::Light* l = mSceneMgr->createLight("MainLight");
 	l->setPosition(20, 80, 50);
 
 	initFrameListener();
@@ -176,18 +174,21 @@ bool OgreApplication::configure()
 void OgreApplication::setupResources()
 {
 	// Load resource paths from config file
-	ConfigFile cf;
+	Ogre::ConfigFile cf;
 	cf.load(mResourcePath + "resources.cfg");
 
 	// Go through all sections & settings in the file
-	ConfigFile::SectionIterator seci = cf.getSectionIterator();
+	Ogre::ConfigFile::SectionIterator seci = cf.getSectionIterator();
 
-	String secName, typeName, archName;
+	Ogre::String secName;
+	Ogre::String typeName;
+	Ogre::String archName;
+
 	while (seci.hasMoreElements())
 	{
 		secName = seci.peekNextKey();
-		ConfigFile::SettingsMultiMap *settings = seci.getNext();
-		ConfigFile::SettingsMultiMap::iterator i;
+		Ogre::ConfigFile::SettingsMultiMap *settings = seci.getNext();
+		Ogre::ConfigFile::SettingsMultiMap::iterator i;
 
 		for (i = settings->begin(); i != settings->end(); ++i)
 		{
@@ -199,7 +200,7 @@ void OgreApplication::setupResources()
 				typeName,
 				secName);
 #else
-			ResourceGroupManager::getSingleton().addResourceLocation(
+			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
 				archName,
 				typeName,
 				secName);
@@ -214,10 +215,10 @@ void OgreApplication::initFrameListener()
 	mMouse = 0;
 	mKeyboard = 0;
 	mJoy = 0;
-	mDebugOverlay = OverlayManager::getSingleton().getByName("Core/DebugOverlay");
+	mDebugOverlay = Ogre::OverlayManager::getSingleton().getByName("Core/DebugOverlay");
 
-	LogManager::getSingletonPtr()->logMessage("*** Initializing OIS ***");
-	ParamList pl;
+	Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing OIS ***");
+	OIS::ParamList pl;
 	size_t windowHnd = 0;
 	std::ostringstream windowHndStr;
 
@@ -229,16 +230,16 @@ void OgreApplication::initFrameListener()
 	// TODO: check if this affects other OSs
 	pl.insert(std::make_pair(std::string("XAutoRepeatOn"), std::string("true")));
 
-	mInputManager = InputManager::createInputSystem(pl);
+	mInputManager = OIS::InputManager::createInputSystem(pl);
 
 	//Create all devices (We only catch joystick exceptions here, as, most people have Key/Mouse)
-	mKeyboard = static_cast<Keyboard*>(mInputManager->createInputObject(OISKeyboard, true));
+	mKeyboard = static_cast<OIS::Keyboard*>(mInputManager->createInputObject(OIS::OISKeyboard, true));
 	mKeyboard->setEventCallback(this);
-	mMouse = static_cast<Mouse*>(mInputManager->createInputObject(OISMouse, true));
+	mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject(OIS::OISMouse, true));
 	mMouse->setEventCallback(this);
 	try
 	{
-		mJoy = static_cast<JoyStick*>(mInputManager->createInputObject(OISJoyStick, true));
+		mJoy = static_cast<OIS::JoyStick*>(mInputManager->createInputObject(OIS::OISJoyStick, true));
 	}
 	catch(...)
 	{
@@ -251,56 +252,60 @@ void OgreApplication::initFrameListener()
 	mDebugOverlay->show();
 
 	//Register as a Window listener
-	WindowEventUtilities::addWindowEventListener(mWindow, this);
+	Ogre::WindowEventUtilities::addWindowEventListener(mWindow, this);
 
 	mRoot->addFrameListener(this);
 }
 
 void OgreApplication::updateStats()
 {
-	static String currFps = "Current FPS: ";
-	static String avgFps = "Average FPS: ";
-	static String bestFps = "Best FPS: ";
-	static String worstFps = "Worst FPS: ";
-	static String tris = "Triangle Count: ";
-	static String batches = "Batch Count: ";
+	static Ogre::String currFps = "Current FPS: ";
+	static Ogre::String avgFps = "Average FPS: ";
+	static Ogre::String bestFps = "Best FPS: ";
+	static Ogre::String worstFps = "Worst FPS: ";
+	static Ogre::String tris = "Triangle Count: ";
+	static Ogre::String batches = "Batch Count: ";
 
 	// update stats when necessary
 	try {
-		OverlayElement* guiAvg = OverlayManager::getSingleton().getOverlayElement("Core/AverageFps");
-		OverlayElement* guiCurr = OverlayManager::getSingleton().getOverlayElement("Core/CurrFps");
-		OverlayElement* guiBest = OverlayManager::getSingleton().getOverlayElement("Core/BestFps");
-		OverlayElement* guiWorst = OverlayManager::getSingleton().getOverlayElement("Core/WorstFps");
+		Ogre::OverlayElement* guiAvg = Ogre::OverlayManager::getSingleton().getOverlayElement("Core/AverageFps");
+		Ogre::OverlayElement* guiCurr = Ogre::OverlayManager::getSingleton().getOverlayElement("Core/CurrFps");
+		Ogre::OverlayElement* guiBest = Ogre::OverlayManager::getSingleton().getOverlayElement("Core/BestFps");
+		Ogre::OverlayElement* guiWorst = Ogre::OverlayManager::getSingleton().getOverlayElement("Core/WorstFps");
 
-		const RenderTarget::FrameStats& stats = mWindow->getStatistics();
-		guiAvg->setCaption(avgFps + StringConverter::toString(stats.avgFPS));
-		guiCurr->setCaption(currFps + StringConverter::toString(stats.lastFPS));
-		guiBest->setCaption(bestFps + StringConverter::toString(stats.bestFPS)
-			+" "+StringConverter::toString(stats.bestFrameTime)+" ms");
-		guiWorst->setCaption(worstFps + StringConverter::toString(stats.worstFPS)
-			+" "+StringConverter::toString(stats.worstFrameTime)+" ms");
+		const Ogre::RenderTarget::FrameStats& stats = mWindow->getStatistics();
+		guiAvg->setCaption(avgFps + Ogre::StringConverter::toString(stats.avgFPS));
+		guiCurr->setCaption(currFps + Ogre::StringConverter::toString(stats.lastFPS));
+		guiBest->setCaption(bestFps + Ogre::StringConverter::toString(stats.bestFPS)
+			+ " " + Ogre::StringConverter::toString(stats.bestFrameTime) + " ms");
+		guiWorst->setCaption(worstFps + Ogre::StringConverter::toString(stats.worstFPS)
+			+ " " + Ogre::StringConverter::toString(stats.worstFrameTime) + " ms");
 
-		OverlayElement* guiTris = OverlayManager::getSingleton().getOverlayElement("Core/NumTris");
-		guiTris->setCaption(tris + StringConverter::toString(stats.triangleCount));
+		Ogre::OverlayElement* guiTris = Ogre::OverlayManager::getSingleton().getOverlayElement("Core/NumTris");
+		guiTris->setCaption(tris + Ogre::StringConverter::toString(stats.triangleCount));
 
-		OverlayElement* guiBatches = OverlayManager::getSingleton().getOverlayElement("Core/NumBatches");
-		guiBatches->setCaption(batches + StringConverter::toString(stats.batchCount));
+		Ogre::OverlayElement* guiBatches = Ogre::OverlayManager::getSingleton().getOverlayElement("Core/NumBatches");
+		guiBatches->setCaption(batches + Ogre::StringConverter::toString(stats.batchCount));
 	}
 	catch(...) { /* ignore */ }
 }
 
-void OgreApplication::windowResized(RenderWindow* rw)
+void OgreApplication::windowResized(Ogre::RenderWindow* rw)
 {
-	unsigned int width, height, depth;
-	int left, top;
+	unsigned int width;
+	unsigned int height;
+	unsigned int depth;
+	int left;
+	int top;
+
 	rw->getMetrics(width, height, depth, left, top);
 
-	const MouseState &ms = mMouse->getMouseState();
+	const OIS::MouseState &ms = mMouse->getMouseState();
 	ms.width = width;
 	ms.height = height;
 }
 
-void OgreApplication::windowClosed(RenderWindow* rw)
+void OgreApplication::windowClosed(Ogre::RenderWindow* rw)
 {
 	//Only close for window that created OIS (the main window in these demos)
 	if (rw == mWindow)
@@ -311,13 +316,13 @@ void OgreApplication::windowClosed(RenderWindow* rw)
 			mInputManager->destroyInputObject(mKeyboard);
 			mInputManager->destroyInputObject(mJoy);
 
-			InputManager::destroyInputSystem(mInputManager);
+			OIS::InputManager::destroyInputSystem(mInputManager);
 			mInputManager = 0;
 		}
 	}
 }
 
-bool OgreApplication::frameStarted(const FrameEvent& evt)
+bool OgreApplication::frameStarted(const Ogre::FrameEvent& evt)
 {
 	if (mStop)
 	{
@@ -357,7 +362,7 @@ bool OgreApplication::frameStarted(const FrameEvent& evt)
 	return true;
 }
 
-bool OgreApplication::frameEnded(const FrameEvent& evt)
+bool OgreApplication::frameEnded(const Ogre::FrameEvent& evt)
 {
 	updateStats();
 	return true;
@@ -395,9 +400,9 @@ void OgreApplication::updateCamera()
 	mCamera->moveRelative(mTranslateVector);
 }
 
-bool OgreApplication::keyPressed(const KeyEvent &arg)
+bool OgreApplication::keyPressed(const OIS::KeyEvent &arg)
 {
-	list<InputHandler*>::iterator iterHandler = mHandlersList.begin();
+	std::list<InputHandler*>::iterator iterHandler = mHandlersList.begin();
 	while (iterHandler != mHandlersList.end())
 	{
 		if ((*iterHandler)->onKeyDown(arg.key))
@@ -417,9 +422,9 @@ bool OgreApplication::keyPressed(const KeyEvent &arg)
 	return false;
 }
 
-bool OgreApplication::keyReleased(const KeyEvent &arg)
+bool OgreApplication::keyReleased(const OIS::KeyEvent &arg)
 {
-	list<InputHandler*>::iterator iterHandler = mHandlersList.begin();
+	std::list<InputHandler*>::iterator iterHandler = mHandlersList.begin();
 	while (iterHandler != mHandlersList.end())
 	{
 		if ((*iterHandler)->onKeyUp(arg.key))
@@ -438,9 +443,9 @@ bool OgreApplication::keyReleased(const KeyEvent &arg)
 	return false;
 }
 
-bool OgreApplication::mouseMoved(const MouseEvent &arg)
+bool OgreApplication::mouseMoved(const OIS::MouseEvent &arg)
 {
-	list<InputHandler*>::iterator iterHandler = mHandlersList.begin();
+	std::list<InputHandler*>::iterator iterHandler = mHandlersList.begin();
 	while (iterHandler != mHandlersList.end())
 	{
 		if ((*iterHandler)->onMouseMove(arg.state.X.rel, arg.state.Y.rel))
@@ -459,9 +464,9 @@ bool OgreApplication::mouseMoved(const MouseEvent &arg)
 	return false;
 }
 
-bool OgreApplication::mousePressed(const MouseEvent &arg, MouseButtonID id)
+bool OgreApplication::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
-	list<InputHandler*>::iterator iterHandler = mHandlersList.begin();
+	std::list<InputHandler*>::iterator iterHandler = mHandlersList.begin();
 	while (iterHandler != mHandlersList.end())
 	{
 		if ((*iterHandler)->onMouseButtonDown(id, arg.state.X.rel, arg.state.Y.rel))
@@ -479,9 +484,9 @@ bool OgreApplication::mousePressed(const MouseEvent &arg, MouseButtonID id)
 	return false;
 }
 
-bool OgreApplication::mouseReleased(const MouseEvent &arg, MouseButtonID id)
+bool OgreApplication::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
-	list<InputHandler*>::iterator iterHandler = mHandlersList.begin();
+	std::list<InputHandler*>::iterator iterHandler = mHandlersList.begin();
 	while (iterHandler != mHandlersList.end())
 	{
 		if ((*iterHandler)->onMouseButtonUp(id, arg.state.X.rel, arg.state.Y.rel))
@@ -505,30 +510,30 @@ bool OgreApplication::onKeyDown(int key)
 	{
 		switch (key)
 		{
-		case KC_A:
+		case OIS::KC_A:
 			mMoveCameraLeft = true;
 			return true;
-		case KC_D:
+		case OIS::KC_D:
 			mMoveCameraRight = true;
 			return true;
-		case KC_UP:
-		case KC_W:
+		case OIS::KC_UP:
+		case OIS::KC_W:
 			mMoveCameraFront = true;
 			return true;
-		case KC_DOWN:
-		case KC_S:
+		case OIS::KC_DOWN:
+		case OIS::KC_S:
 			mMoveCameraBack = true;
 			return true;
-		case KC_PGUP:
+		case OIS::KC_PGUP:
 			mMoveCameraUp = true;
 			return true;
-		case KC_PGDOWN:
+		case OIS::KC_PGDOWN:
 			mMoveCameraDown = true;
 			return true;
-		case KC_RIGHT:
+		case OIS::KC_RIGHT:
 			mMoveCameraRight = true;
 			return true;
-		case KC_LEFT:
+		case OIS::KC_LEFT:
 			mMoveCameraLeft = true;
 			return true;
 		}
@@ -536,11 +541,11 @@ bool OgreApplication::onKeyDown(int key)
 
 	switch (key)
 	{
-	case KC_ESCAPE:
-	case KC_Q:
+	case OIS::KC_ESCAPE:
+	case OIS::KC_Q:
 		mStop = true;
 		return true;
-	case KC_TAB:
+	case OIS::KC_TAB:
 		switch(mMode)
 		{
 		case GUI:
@@ -568,30 +573,30 @@ bool OgreApplication::onKeyUp(int key)
 	{
 		switch (key)
 		{
-		case KC_A:
+		case OIS::KC_A:
 			mMoveCameraLeft = false;
 			return true;
-		case KC_D:
+		case OIS::KC_D:
 			mMoveCameraRight = false;
 			return true;
-		case KC_UP:
-		case KC_W:
+		case OIS::KC_UP:
+		case OIS::KC_W:
 			mMoveCameraFront = false;
 			return true;
-		case KC_DOWN:
-		case KC_S:
+		case OIS::KC_DOWN:
+		case OIS::KC_S:
 			mMoveCameraBack = false;
 			return true;
-		case KC_PGUP:
+		case OIS::KC_PGUP:
 			mMoveCameraUp = false;
 			return true;
-		case KC_PGDOWN:
+		case OIS::KC_PGDOWN:
 			mMoveCameraDown = false;
 			return true;
-		case KC_RIGHT:
+		case OIS::KC_RIGHT:
 			mMoveCameraRight = false;
 			return true;
-		case KC_LEFT:
+		case OIS::KC_LEFT:
 			mMoveCameraLeft = false;
 			return true;
 		}
@@ -604,8 +609,8 @@ bool OgreApplication::onMouseMove(int x, int y)
 {
 	if (mMode == CAMERA)
 	{
-		mRotX = Degree(-x * 0.13);
-		mRotY = Degree(-y * 0.13);
+		mRotX = Ogre::Degree(-x * 0.13);
+		mRotY = Ogre::Degree(-y * 0.13);
 
 		return true;
 	}
