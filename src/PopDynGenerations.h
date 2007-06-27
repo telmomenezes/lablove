@@ -29,7 +29,7 @@ class PopDynGenerations : public PopulationDynamics
 public:
 	static unsigned int CURRENT_SPECIES_ID;
 
-	PopDynGenerations();
+        PopDynGenerations(lua_State* luaState=NULL);
 	virtual ~PopDynGenerations();
 	virtual void init();
 	virtual void onCycle();
@@ -43,7 +43,6 @@ public:
         static Orbit<PopDynGenerations>::MethodType mMethods[];
 	static Orbit<PopDynGenerations>::NumberGlobalType mNumberGlobals[];
 
-        PopDynGenerations(lua_State* luaState);
         int addStaticSpecies(lua_State* luaState);
         int addEvolvingSpecies(lua_State* luaState);
 	int setGenerationTime(lua_State* luaState);

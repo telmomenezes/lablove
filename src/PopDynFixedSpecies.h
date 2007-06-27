@@ -41,7 +41,7 @@ typedef struct
 public:
 	static unsigned int CURRENT_SPECIES_ID;
 
-	PopDynFixedSpecies();
+        PopDynFixedSpecies(lua_State* luaState=NULL);
 	virtual ~PopDynFixedSpecies();
 	virtual void init();
 	virtual void onCycle();
@@ -53,7 +53,6 @@ public:
         static Orbit<PopDynFixedSpecies>::MethodType mMethods[];
 	static Orbit<PopDynFixedSpecies>::NumberGlobalType mNumberGlobals[];
 
-        PopDynFixedSpecies(lua_State* luaState);
         int addSpecies(lua_State* luaState);
 
 protected:

@@ -43,7 +43,8 @@ public:
 			ACTION_ROTATE,
 			ACTION_EAT};
 
-	SimSimple2D();
+
+        SimSimple2D(lua_State* luaState=NULL);
 	virtual ~SimSimple2D();
 
 	virtual void init();
@@ -76,7 +77,6 @@ public:
         static Orbit<SimSimple2D>::MethodType mMethods[];
 	static Orbit<SimSimple2D>::NumberGlobalType mNumberGlobals[];
 
-        SimSimple2D(lua_State* luaState);
         int setWorldDimensions(lua_State* luaState);
 
 private:

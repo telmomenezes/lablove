@@ -28,7 +28,7 @@
 class GridbrainComponentSet
 {
 public:
-	GridbrainComponentSet();
+        GridbrainComponentSet(lua_State* luaState=NULL);
 	virtual ~GridbrainComponentSet();
 
 	void addComponent(GridbrainComponent* component);
@@ -39,7 +39,6 @@ public:
         static Orbit<GridbrainComponentSet>::MethodType mMethods[];
 	static Orbit<GridbrainComponentSet>::NumberGlobalType mNumberGlobals[];
 
-        GridbrainComponentSet(lua_State* luaState);
         int addComponent(lua_State* luaState);
 
 	std::vector<GridbrainComponent*> mComponentVec;

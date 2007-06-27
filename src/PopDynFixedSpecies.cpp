@@ -25,7 +25,7 @@
 
 unsigned int PopDynFixedSpecies::CURRENT_SPECIES_ID = 0;
 
-PopDynFixedSpecies::PopDynFixedSpecies()
+PopDynFixedSpecies::PopDynFixedSpecies(lua_State* luaState)
 {
 }
 
@@ -181,10 +181,6 @@ Orbit<PopDynFixedSpecies>::MethodType PopDynFixedSpecies::mMethods[] = {
 };
 
 Orbit<PopDynFixedSpecies>::NumberGlobalType PopDynFixedSpecies::mNumberGlobals[] = {{0,0}};
-
-PopDynFixedSpecies::PopDynFixedSpecies(lua_State* luaState)
-{
-}
 
 int PopDynFixedSpecies::addSpecies(lua_State* luaState)
 {

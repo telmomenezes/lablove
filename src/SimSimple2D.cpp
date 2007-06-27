@@ -26,13 +26,6 @@
 #include "defines.h"
 #include "AnimatSimple2D.h"
 
-SimSimple2D::SimSimple2D()
-{
-	mShowGrid = false;
-	mShowViewRange = false;
-	mCellGrid = NULL;
-}
-
 SimSimple2D::SimSimple2D(lua_State* luaState)
 {
 	mShowGrid = false;

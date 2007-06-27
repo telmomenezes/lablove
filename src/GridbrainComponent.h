@@ -30,7 +30,7 @@ class GridbrainComponent
 public:
 	enum Type {NUL, PER, STA, ACT, THR, AGG, MAX, MUL, NOT};
 
-	GridbrainComponent();
+        GridbrainComponent(lua_State* luaState=NULL);
 	virtual ~GridbrainComponent();
 
 	void clear(bool clearConnections=true);
@@ -42,7 +42,6 @@ public:
         static Orbit<GridbrainComponent>::MethodType mMethods[];
 	static Orbit<GridbrainComponent>::NumberGlobalType mNumberGlobals[];
 
-        GridbrainComponent(lua_State* luaState);
 
 	Type mType;
 	float mInput;

@@ -22,11 +22,20 @@
 #include <math.h>
 #include <stdlib.h>
 
-MoleculeRGB::MoleculeRGB()
+MoleculeRGB::MoleculeRGB(lua_State* luaState)
 {
-	mRed = 0.0f;
-	mGreen = 0.0f;
-	mBlue = 0.0f;
+	if (luaState != NULL)
+	{
+        	mRed = luaL_checknumber(luaState, 1);
+        	mGreen = luaL_checknumber(luaState, 2);
+        	mBlue = luaL_checknumber(luaState, 3);
+	}
+	else
+	{
+		mRed = 0.0f;
+		mGreen = 0.0f;
+		mBlue = 0.0f;
+	}
 }
 
 MoleculeRGB::MoleculeRGB(float r, float g, float b)
@@ -123,11 +132,4 @@ Orbit<MoleculeRGB>::MethodType MoleculeRGB::mMethods[] = {
 };
 
 Orbit<MoleculeRGB>::NumberGlobalType MoleculeRGB::mNumberGlobals[] = {{0,0}};
-
-MoleculeRGB::MoleculeRGB(lua_State* luaState)
-{
-        mRed = luaL_checknumber(luaState, 1);
-        mGreen = luaL_checknumber(luaState, 2);
-        mBlue = luaL_checknumber(luaState, 3);
-}
 

@@ -29,6 +29,7 @@
 class Chemistry
 {
 public:
+        Chemistry(lua_State* luaState);
 	Chemistry(std::string name, Molecule* refMolecule);
 	virtual ~Chemistry();
 	Chemistry* clone();
@@ -41,7 +42,6 @@ public:
         static Orbit<Chemistry>::MethodType mMethods[];
 	static Orbit<Chemistry>::NumberGlobalType mNumberGlobals[];
 
-        Chemistry(lua_State* luaState);
 
 protected:
 	std::string mName;

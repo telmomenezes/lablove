@@ -28,7 +28,7 @@
 class AnimatSimple2D : public ObjectSimple2D
 {
 public:
-	AnimatSimple2D();
+        AnimatSimple2D(lua_State* luaState=NULL);
 	AnimatSimple2D(AnimatSimple2D* anim, bool full=true);
 	virtual ~AnimatSimple2D();
 	virtual SimulationObject* clone(bool full=true);
@@ -75,7 +75,6 @@ public:
         static Orbit<AnimatSimple2D>::MethodType mMethods[];
 	static Orbit<AnimatSimple2D>::NumberGlobalType mNumberGlobals[];
 
-        AnimatSimple2D(lua_State* luaState);
         int setViewRange(lua_State* luaState);
 	int setViewAngle(lua_State* luaState);
 	int setAlphaObjectsGrid(lua_State* luaState);

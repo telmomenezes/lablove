@@ -25,38 +25,8 @@
 #include "defines.h"
 #include "random.h"
 
-AnimatSimple2D::AnimatSimple2D()
-{
-	mMaxInputDepth = 0;
-	mGridbrain = NULL;
-	mCurrentInputDepth = 0;
-	mInitialConnections = 0;
-
-	mViewRange = 0.0f;
-	mViewAngle = 0.0f;
-	mHalfViewAngle = 0.0f;
-	mLowLimitViewAngle = 0.0f;
-	mHighLimitViewAngle = 0.0f;
-	mNearestFood = NULL;
-	mDistanceToNearestFood = 0.0f;
-
-	mActionGo = false;
-	mActionRotate = false;
-	mActionEat = false;
-
-	mGoCost = 0.0f;
-	mRotateCost = 0.0f;
-
-#if defined(__LABLOVE_WITH_GRAPHICS)
-	mViewNode = NULL;
-#endif
-}
-
 AnimatSimple2D::AnimatSimple2D(lua_State* luaState)
 {
-	unsigned int initialConnections = luaL_checkint(luaState, 1);
-	unsigned int maxInputDepth = luaL_checkint(luaState, 2);
-
 	mViewRange = 0.0f;
 	mViewAngle = 0.0f;
 	mHalfViewAngle = 0.0f;
@@ -68,16 +38,26 @@ AnimatSimple2D::AnimatSimple2D(lua_State* luaState)
 	mActionGo = false;
 	mActionRotate = false;
 	mActionEat = false;
-
-	mMaxInputDepth = maxInputDepth;
-	mInitialConnections = initialConnections;
-
-	mGridbrain = new Gridbrain();
-	mGridbrain->setMaxInputDepth(mMaxInputDepth);
+	
 	mCurrentInputDepth = 0;
 
 	mGoCost = 0.0f;
 	mRotateCost = 0.0f;
+
+	if (luaState != NULL)
+	{
+		mInitialConnections = luaL_checkint(luaState, 1);
+		mMaxInputDepth = luaL_checkint(luaState, 2);
+		mGridbrain = new Gridbrain();
+		mGridbrain->setMaxInputDepth(mMaxInputDepth);
+	}
+	else
+	{
+		mInitialConnections = 0;
+		mMaxInputDepth = 0;
+		mGridbrain = NULL;
+	}
+
 #if defined(__LABLOVE_WITH_GRAPHICS)
 	mViewNode = NULL;
 #endif
@@ -107,6 +87,15 @@ AnimatSimple2D::AnimatSimple2D(AnimatSimple2D* anim, bool full) : ObjectSimple2D
 #if defined(__LABLOVE_WITH_GRAPHICS)
 	mViewNode = NULL;
 #endif
+}
+
+AnimatSimple2D::~AnimatSimple2D()
+{	
+	if (mGridbrain != NULL)
+	{
+		delete mGridbrain;
+		mGridbrain = NULL;
+	}
 }
 
 void AnimatSimple2D::setAlphaObjectsGrid(Grid* grid)
@@ -167,15 +156,6 @@ void AnimatSimple2D::initTest()
 	mGridbrain->addConnection(0, 2, 1, 1, 2, 1, 1.0f);
 
 	mGridbrain->initGridsInputOutput();
-}
-
-AnimatSimple2D::~AnimatSimple2D()
-{	
-	if (mGridbrain != NULL)
-	{
-		delete mGridbrain;
-		mGridbrain = NULL;
-	}
 }
 
 SimulationObject* AnimatSimple2D::clone(bool full)

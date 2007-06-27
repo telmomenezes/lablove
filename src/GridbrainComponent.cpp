@@ -19,42 +19,9 @@
 
 #include "GridbrainComponent.h"
 
-GridbrainComponent::GridbrainComponent()
-{
-	mInput = 0;
-	mOutput = 0;
-	mRecurrentInput = 0;
-	mState = 0;
-	mForwardFlag = false;
-	mRecurrentFlag = false;
-	mPerceptionPosition = 0;
-	mActionPosition = 0;
-	mType = NUL;
-	mParameter = 0.0f;
-	mOffset = 0;
-	mAggregator = false;
-	mColumn = 0;
-	mRow = 0;
-	mGrid = 0;
-}
-
 GridbrainComponent::GridbrainComponent(lua_State* luaState)
 {
-	mInput = 0;
-	mOutput = 0;
-	mRecurrentInput = 0;
-	mState = 0;
-	mForwardFlag = false;
-	mRecurrentFlag = false;
-	mPerceptionPosition = 0;
-	mActionPosition = 0;
-	mType = NUL;
-	mParameter = 0.0f;
-	mOffset = 0;
-	mAggregator = false;
-	mColumn = 0;
-	mRow = 0;
-	mGrid = 0;
+	clear();
 }
 
 GridbrainComponent::~GridbrainComponent()

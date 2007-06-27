@@ -6,11 +6,10 @@
 
 #include "GridbrainComponentSet.h"
 
-GridbrainComponentSet::GridbrainComponentSet()
+GridbrainComponentSet::GridbrainComponentSet(lua_State* luaState)
 {
 	mSize = 0;
 }
-
 
 GridbrainComponentSet::~GridbrainComponentSet()
 {
@@ -48,11 +47,6 @@ Orbit<GridbrainComponentSet>::MethodType GridbrainComponentSet::mMethods[] = {
 };
 
 Orbit<GridbrainComponentSet>::NumberGlobalType GridbrainComponentSet::mNumberGlobals[] = {{0,0}};
-
-GridbrainComponentSet::GridbrainComponentSet(lua_State* luaState)
-{
-	mSize = 0;
-}
 
 int GridbrainComponentSet::addComponent(lua_State* luaState)
 {

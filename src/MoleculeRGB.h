@@ -27,7 +27,7 @@
 class MoleculeRGB : public Molecule
 {
 public:
-	MoleculeRGB();
+        MoleculeRGB(lua_State* luaState=NULL);
 	MoleculeRGB(float r, float g, float b);
 	MoleculeRGB(MoleculeRGB* mol);
 	virtual ~MoleculeRGB();
@@ -40,8 +40,6 @@ public:
 	static const char mClassName[];
         static Orbit<MoleculeRGB>::MethodType mMethods[];
 	static Orbit<MoleculeRGB>::NumberGlobalType mNumberGlobals[];
-
-        MoleculeRGB(lua_State* luaState);
 
 	float mRed;
 	float mGreen;

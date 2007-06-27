@@ -23,16 +23,6 @@
 #include "defines.h"
 #include "SimSimple2D.h"
 
-PlantSimple2D::PlantSimple2D()
-{
-	mNextCellList = NULL;
-	mPrevCellList = NULL;
-
-	mCellX = -1;
-	mCellY = -1;
-	mCellPos = -1;
-}
-
 PlantSimple2D::PlantSimple2D(lua_State* luaState)
 {
 	mNextCellList = NULL;
@@ -115,3 +105,4 @@ void PlantSimple2D::draw()
 	glEnd();
 }
 */
+

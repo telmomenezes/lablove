@@ -34,6 +34,7 @@ public:
 	static const int ALPHA;
 	static const int BETA;
 
+        Grid(lua_State* luaState);
 	Grid(int type, unsigned int width, unsigned int height);
 	Grid(Grid* grid);
 	virtual ~Grid();
@@ -80,7 +81,6 @@ public:
         static Orbit<Grid>::MethodType mMethods[];
 	static Orbit<Grid>::NumberGlobalType mNumberGlobals[];
 
-        Grid(lua_State* luaState);
         int addComponentSet(lua_State* luaState);
 	int setWidth(lua_State* luaState);
 	int setHeight(lua_State* luaState);

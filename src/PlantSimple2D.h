@@ -27,7 +27,7 @@
 class PlantSimple2D : public ObjectSimple2D
 {
 public:
-	PlantSimple2D();
+        PlantSimple2D(lua_State* luaState=NULL);
 	PlantSimple2D(PlantSimple2D* plant) : ObjectSimple2D(plant){}
 	virtual ~PlantSimple2D();
 	virtual SimulationObject* clone(bool full=true);
@@ -41,8 +41,6 @@ public:
 	static const char mClassName[];
         static Orbit<PlantSimple2D>::MethodType mMethods[];
 	static Orbit<PlantSimple2D>::NumberGlobalType mNumberGlobals[];
-
-        PlantSimple2D(lua_State* luaState);
 };
 #endif
 

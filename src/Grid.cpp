@@ -25,6 +25,23 @@ const int Grid::BETA = 1;
 unsigned int Grid::CURRENT_COLUMN_ID = 0;
 unsigned int Grid::CURRENT_ROW_ID = 0;
 
+Grid::Grid(lua_State* luaState)
+{
+	mCreatedByScript = true;
+
+	mType = 0;
+	mWidth = 0;
+	mHeight = 0;
+	mNumber = 0;
+	mSize = 0;
+	mOffset = 0;
+	mInputMatrix = NULL;
+	mOutputVector = NULL;
+	mInputDepth = 0;
+	mPerceptionsCount = 0;
+	mActionsCount = 0;
+}
+
 Grid::Grid(int type, unsigned int width, unsigned int height)
 {
 	mType = type;
@@ -39,7 +56,6 @@ Grid::Grid(int type, unsigned int width, unsigned int height)
 	mPerceptionsCount = 0;
 	mActionsCount = 0;
 }
-
 
 Grid::Grid(Grid* grid)
 {
@@ -86,22 +102,7 @@ Grid::Grid(Grid* grid)
 	}
 }
 
-Grid::Grid(lua_State* luaState)
-{
-	mCreatedByScript = true;
 
-	mType = 0;
-	mWidth = 0;
-	mHeight = 0;
-	mNumber = 0;
-	mSize = 0;
-	mOffset = 0;
-	mInputMatrix = NULL;
-	mOutputVector = NULL;
-	mInputDepth = 0;
-	mPerceptionsCount = 0;
-	mActionsCount = 0;
-}
 
 Grid::~Grid()
 {

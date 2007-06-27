@@ -25,7 +25,7 @@
 
 unsigned int PopDynGenerations::CURRENT_SPECIES_ID = 0;
 
-PopDynGenerations::PopDynGenerations()
+PopDynGenerations::PopDynGenerations(lua_State* luaState)
 {
 	mGenerationTime = 0;
 	mGeneration = 0;
@@ -235,12 +235,6 @@ Orbit<PopDynGenerations>::MethodType PopDynGenerations::mMethods[] = {
 };
 
 Orbit<PopDynGenerations>::NumberGlobalType PopDynGenerations::mNumberGlobals[] = {{0,0}};
-
-PopDynGenerations::PopDynGenerations(lua_State* luaState)
-{
-	mGenerationTime = 0;
-	mGeneration = 0;
-}
 
 int PopDynGenerations::addStaticSpecies(lua_State* luaState)
 {
