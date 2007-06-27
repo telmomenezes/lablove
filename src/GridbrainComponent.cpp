@@ -30,6 +30,8 @@ GridbrainComponent::~GridbrainComponent()
 
 void GridbrainComponent::clear(bool clearConnections)
 {
+	mType = NUL;
+	mSubType = -1;
 	mInput = 0;
 	mOutput = 0;
 	mRecurrentInput = 0;
@@ -39,6 +41,18 @@ void GridbrainComponent::clear(bool clearConnections)
 	mPerceptionPosition = 0;
 	mActionPosition = 0;
 
+	mParameter = 0.0f;
+	mOffset = 0;
+	mAggregator = false;
+	mColumn = 0;
+	mRow = 0;
+	mGrid = 0;
+
+	mOrigChemTable = -1;
+	mOrigMoleculeIndex = -1;
+	mTargetChemTable = -1;
+	mTargetMoleculeIndex = -1;
+
 	if (clearConnections)
 	{
 		mConnectionsCount = 0;
@@ -46,17 +60,23 @@ void GridbrainComponent::clear(bool clearConnections)
 	}
 }
 
-void GridbrainComponent::copy(GridbrainComponent* comp)
+void GridbrainComponent::copy(GridbrainComponent* comp, bool clearConnections)
 {
-	clear();
+	clear(clearConnections);
 
 	mType = comp->mType;
+	mSubType = comp->mSubType;
 	mParameter = comp->mParameter;
 	mOffset = comp->mOffset;
 	mAggregator = comp->mAggregator;
 	mColumn = comp->mColumn;
 	mRow = comp->mRow;
 	mGrid = comp->mGrid;
+
+	mOrigChemTable = comp->mOrigChemTable;
+	mOrigMoleculeIndex = comp->mOrigMoleculeIndex;
+	mTargetChemTable = comp->mTargetChemTable;
+	mTargetMoleculeIndex = comp->mTargetMoleculeIndex;
 
 }
 

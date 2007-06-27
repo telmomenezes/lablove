@@ -781,10 +781,7 @@ void Gridbrain::mutateChangeComponent()
 
 	GridbrainComponent* comp = grid->getRandomComponent(pos);
 
-	mComponents[pos].clear(false);
-	mComponents[pos].mType = comp->mType;
-	mComponents[pos].mParameter = comp->mParameter;
-	mComponents[pos].mAggregator = comp->isAggregator();
+	mComponents[pos].copy(comp, false);
 
 	initGridInputOutput(grid);
 }

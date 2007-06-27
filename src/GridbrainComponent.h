@@ -34,7 +34,7 @@ public:
 	virtual ~GridbrainComponent();
 
 	void clear(bool clearConnections=true);
-	void copy(GridbrainComponent* comp);
+	void copy(GridbrainComponent* comp, bool clearConnections=true);
 
 	bool isAggregator();
 
@@ -44,6 +44,7 @@ public:
 
 
 	Type mType;
+	int mSubType;
 	float mInput;
 	float mOutput;
 	float mRecurrentInput;
@@ -61,6 +62,11 @@ public:
 	unsigned long mColumn;
 	unsigned long mRow;
 	unsigned int mGrid;
+
+	int mOrigChemTable;
+	int mOrigMoleculeIndex;
+	int mTargetChemTable;
+	int mTargetMoleculeIndex;
 };
 
 #endif

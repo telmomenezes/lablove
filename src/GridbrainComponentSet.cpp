@@ -31,11 +31,22 @@ GridbrainComponent* GridbrainComponentSet::getRandom()
 	return mComponentVec[random() % mSize];
 }
 
-void GridbrainComponentSet::addComponent(GridbrainComponent::Type type, float parameter)
+void GridbrainComponentSet::addComponent(GridbrainComponent::Type type,
+						int subType,
+						float parameter,
+						int origChemTable,
+						int origMoleculeIndex,
+						int targetChemTable,
+						int targetMoleculeIndex)
 {
 	GridbrainComponent* comp = new GridbrainComponent();
 	comp->mType = type;
+	comp->mSubType = subType;
 	comp->mParameter = parameter;
+	comp->mOrigChemTable = origChemTable;
+	comp->mOrigMoleculeIndex = origMoleculeIndex;
+	comp->mTargetChemTable = targetChemTable;
+	comp->mTargetMoleculeIndex = targetMoleculeIndex;
 	addComponent(comp);
 }
 
@@ -51,8 +62,20 @@ Orbit<GridbrainComponentSet>::NumberGlobalType GridbrainComponentSet::mNumberGlo
 int GridbrainComponentSet::addComponent(lua_State* luaState)
 {
 	int type = luaL_checkint(luaState, 1);
-        int parameter = luaL_checkint(luaState, 2);
-        addComponent((GridbrainComponent::Type)type, (float)parameter);
+	int subType = luaL_optint(luaState, 2, -1);
+	float parameter = luaL_optnumber(luaState, 3, 0.0f);
+	int origChemTable = luaL_optint(luaState, 4, -1);
+	int origMoleculeIndex = luaL_optint(luaState, 5, -1);
+	int targetChemTable = luaL_optint(luaState, 6, -1);
+	int targetMoleculeIndex = luaL_optint(luaState, 7, -1);
+
+        addComponent((GridbrainComponent::Type)type,
+			subType,
+			parameter,
+			origChemTable,
+			origMoleculeIndex,
+			targetChemTable,
+			targetMoleculeIndex);
         return 0;
 }
 

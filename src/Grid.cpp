@@ -178,7 +178,11 @@ unsigned int Grid::addPerception(GridbrainComponent* per)
 	{
 		GridbrainComponent* curPer = mPerceptionsVec[i];
 
-		if (curPer->mParameter == per->mParameter)
+		if ((curPer->mSubType == per->mSubType)
+			&& (curPer->mOrigChemTable == per->mOrigChemTable)
+			&& (curPer->mOrigMoleculeIndex == per->mOrigMoleculeIndex)
+			&& (curPer->mTargetChemTable == per->mTargetChemTable)
+			&& (curPer->mTargetMoleculeIndex == per->mTargetMoleculeIndex))
 		{
 			return i;
 		}
@@ -216,10 +220,10 @@ void Grid::initOutputVector()
 	}
 }
 
-unsigned int Grid::getPerceptionType(unsigned int number)
+int Grid::getPerceptionType(unsigned int number)
 {
 	GridbrainComponent* comp = mPerceptionsVec[number];
-	return (unsigned int)comp->mParameter;
+	return comp->mSubType;
 }
 
 float Grid::getOutput(unsigned int number)
@@ -227,10 +231,10 @@ float Grid::getOutput(unsigned int number)
 	return mOutputVector[number];
 }
 
-unsigned int Grid::getActionType(unsigned int number)
+int Grid::getActionType(unsigned int number)
 {
 	GridbrainComponent* comp = mActionsVec[number];
-	return (unsigned int)comp->mParameter;
+	return comp->mSubType;
 }
 
 void Grid::removeInputOutput()

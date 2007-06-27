@@ -32,7 +32,13 @@ public:
 	virtual ~GridbrainComponentSet();
 
 	void addComponent(GridbrainComponent* component);
-	void addComponent(GridbrainComponent::Type type, float parameter);
+	void addComponent(GridbrainComponent::Type type,
+				int subType=-1,
+				float parameter=0.0f,
+				int origChemTable=-1,
+				int origMoleculeIndex=-1,
+				int targetChemTable=-1,
+				int targetMoleculeIndex=-1);
 	GridbrainComponent* getRandom();
 
 	static const char mClassName[];
