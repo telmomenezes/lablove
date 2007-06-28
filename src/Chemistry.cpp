@@ -19,70 +19,76 @@
 
 #include "Chemistry.h"
 
-Chemistry::Chemistry(std::string name, Molecule* refMolecule)
+Chemistry::Chemistry(Molecule* refMolecule)
 {
-	mName = name;
 	mReferenceMolecule = refMolecule;
 }
 
 Chemistry::Chemistry(lua_State* luaState)
 {
-	const char* name = luaL_checkstring(luaState, 1);
-	Molecule* molecule = (Molecule*)Orbit<Chemistry>::pointer(luaState, 2);
+	Molecule* molecule = (Molecule*)Orbit<Chemistry>::pointer(luaState, 1);
 
-	mName = std::string(name);
 	mReferenceMolecule = molecule;
+}
+
+Chemistry::Chemistry(Chemistry* chem)
+{
+	mReferenceMolecule = chem->mReferenceMolecule->clone();
+
+	std::vector<Molecule*>::iterator iterMolecule;
+
+	for (iterMolecule = chem->mMolecules.begin();
+		iterMolecule != chem->mMolecules.end();
+		iterMolecule++)
+	{
+		mMolecules.push_back((*iterMolecule)->clone());
+	}
 }
 
 Chemistry::~Chemistry()
 {
 	std::vector<Molecule*>::iterator iterMolecule;
 
-	for (iterMolecule = mMoleculeVec.begin();
-		iterMolecule != mMoleculeVec.end();
+	for (iterMolecule = mMolecules.begin();
+		iterMolecule != mMolecules.end();
 		iterMolecule++)
 	{
 		delete (*iterMolecule);
 	}
 
-	mMoleculeVec.clear();
-}
-
-Chemistry* Chemistry::clone()
-{
-	Chemistry* mt = new Chemistry(mName, mReferenceMolecule->clone());
-
-	std::vector<Molecule*>::iterator iterMolecule;
-
-	for (iterMolecule = mMoleculeVec.begin();
-		iterMolecule != mMoleculeVec.end();
-		iterMolecule++)
-	{
-		mt->mMoleculeVec.push_back((*iterMolecule)->clone());
-	}
-
-	return mt;
+	mMolecules.clear();
 }
 
 Molecule* Chemistry::getMolecule(unsigned int index)
 {
-	return mMoleculeVec[index];
+	return mMolecules[index];
 }
 
-void Chemistry::addMolecule(Molecule* mol)
+unsigned int Chemistry::addMolecule(Molecule* mol)
 {
-	mMoleculeVec.push_back(mol);
+	unsigned int pos = mMolecules.size();
+	mMolecules.push_back(mol);
+	return pos;
 }
 
 void Chemistry::mutate()
 {
-	unsigned int index = random() % mMoleculeVec.size();
-	mMoleculeVec[index]->mutate();
+	unsigned int index = random() % mMolecules.size();
+	mMolecules[index]->mutate();
+}
+
+int Chemistry::addMolecule(lua_State* luaState)
+{
+	Molecule* mol = (Molecule*)Orbit<Chemistry>::pointer(luaState, 1);
+	unsigned int index = addMolecule(mol);
+	lua_pushnumber(luaState, index);
+	return 1;
 }
 
 const char Chemistry::mClassName[] = "Chemistry";
 
 Orbit<Chemistry>::MethodType Chemistry::mMethods[] = {
+	{"addMolecule", &Chemistry::addMolecule},
         {0,0}
 };
 

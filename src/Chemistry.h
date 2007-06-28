@@ -24,19 +24,20 @@
 #include "Orbit.h"
 
 #include <vector>
-#include <string>
 
 class Chemistry
 {
 public:
         Chemistry(lua_State* luaState);
-	Chemistry(std::string name, Molecule* refMolecule);
+	Chemistry(Molecule* refMolecule);
+        Chemistry(Chemistry* chem);
 	virtual ~Chemistry();
-	Chemistry* clone();
 
 	Molecule* getMolecule(unsigned int index);
-	void addMolecule(Molecule* mol);
+	unsigned int addMolecule(Molecule* mol);
 	void mutate();
+
+	int addMolecule(lua_State* luaState);
 
 	static const char mClassName[];
         static Orbit<Chemistry>::MethodType mMethods[];
@@ -44,9 +45,8 @@ public:
 
 
 protected:
-	std::string mName;
 	Molecule* mReferenceMolecule;
-	std::vector<Molecule*> mMoleculeVec;
+	std::vector<Molecule*> mMolecules;
 };
 #endif
 

@@ -86,6 +86,28 @@ bool GridbrainComponent::isAggregator()
 		|| (mType == GridbrainComponent::MAX));
 }
 
+float GridbrainComponent::computeBinding(SimulationObject* sourceObj,
+				SimulationObject* targetObj)
+{
+	Chemistry* sourceChem = sourceObj->getChemistry(mOrigChemTable);
+	Chemistry* targetChem = targetObj->getChemistry(mTargetChemTable);
+
+	if (!targetChem)
+	{
+		return 0.0f;
+	}
+
+	Molecule* sourceMol = sourceChem->getMolecule(mOrigMoleculeIndex);
+	Molecule* targetMol = targetChem->getMolecule(mTargetMoleculeIndex);
+
+	if (!targetMol)
+	{
+		return 0.0f;
+	}
+
+	return (sourceMol->bind(targetMol));
+}
+
 const char GridbrainComponent::mClassName[] = "GridbrainComponent";
 
 Orbit<GridbrainComponent>::MethodType GridbrainComponent::mMethods[] = {{0,0}};

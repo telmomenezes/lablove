@@ -60,14 +60,14 @@ public:
 	float* getInputMatrix(){return mInputMatrix;}
 	void initOutputVector();
 	float* getOutputVector(){return mOutputVector;}
-	int getPerceptionType(unsigned int number);
+	GridbrainComponent* getPerception(unsigned int number);
+	GridbrainComponent* getAction(unsigned int number);
 	void setInputDepth(unsigned int inputDepth){mInputDepth = inputDepth;}
 	unsigned int getInputDepth(){return mInputDepth;}
 	unsigned int getMaxInputDepth(){return mMaxInputDepth;}
 	unsigned int getPerceptionsCount(){return mPerceptionsCount;}
 	unsigned int getActionsCount(){return mActionsCount;}
 	float getOutput(unsigned int number);
-	int getActionType(unsigned int number);
 	unsigned long getRowCode(unsigned int pos){return mRowsVec[pos];}
 	unsigned long getColumnCode(unsigned int pos){return mColumnsVec[pos];}
 	unsigned int getXByCode(unsigned long code){return mColumnsMap[code];}

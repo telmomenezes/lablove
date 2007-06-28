@@ -34,6 +34,7 @@ sim = SimSimple2D()
 sim:setWorldDimensions(worldWidth, worldHeight, viewRange * 2)
 
 lab:setSimulation(sim)
+
 animat = AnimatSimple2D(initialConnections, 25)
 
 animat:setSize(10.0)
@@ -48,8 +49,13 @@ animat:setRotateCost(rotateCost)
 animatColor = MoleculeRGB(1.0, 0.3, 0.1)
 animat:setColor(animatColor)
 
+chem = Chemistry(animatColor)
+colorMolIndex = chem:addMolecule(animatColor)
+colorChemCode = 0
+animat:addChemistry(chem, colorChemCode)
+
 perSet = GridbrainComponentSet()
-perSet:addComponent(GridbrainComponent.PER, SimSimple2D.PERCEPTION_COLOR)
+perSet:addComponent(GridbrainComponent.PER, -1, 0, colorChemCode, colorMolIndex, colorChemCode, colorMolIndex)
 perSet:addComponent(GridbrainComponent.PER, SimSimple2D.PERCEPTION_POSITION)
 perSet:addComponent(GridbrainComponent.PER, SimSimple2D.PERCEPTION_PROXIMITY)
 perSet:addComponent(GridbrainComponent.PER, SimSimple2D.PERCEPTION_IN_CONTACT)

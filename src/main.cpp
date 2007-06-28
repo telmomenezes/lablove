@@ -26,6 +26,7 @@
 #include "Grid.h"
 #include "GridbrainComponent.h"
 #include "GridbrainComponentSet.h"
+#include "Chemistry.h"
 #include "MoleculeRGB.h"
 
 #if defined(__LABLOVE_WITH_GRAPHICS)
@@ -72,6 +73,7 @@ int main(int argc, char *argv[])
 	Orbit<Grid>::orbitRegister(luaState);
 	Orbit<GridbrainComponent>::orbitRegister(luaState);
 	Orbit<GridbrainComponentSet>::orbitRegister(luaState);
+	Orbit<Chemistry>::orbitRegister(luaState);
 	Orbit<MoleculeRGB>::orbitRegister(luaState);
 
 	lua_register(luaState, "getLab", getLab);

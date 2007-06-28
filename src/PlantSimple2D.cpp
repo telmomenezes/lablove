@@ -69,11 +69,12 @@ void PlantSimple2D::createGraphics()
 const char PlantSimple2D::mClassName[] = "PlantSimple2D";
 
 Orbit<PlantSimple2D>::MethodType PlantSimple2D::mMethods[] = {
+	{"setInitialEnergy", &SimulationObject::setInitialEnergy},
+	{"addChemistry", &SimulationObject::addChemistry},
 	{"setPos", &ObjectSimple2D::setPos},
 	{"setRot", &ObjectSimple2D::setRot},
 	{"setSize", &ObjectSimple2D::setSize},
 	{"setColor", &ObjectSimple2D::setColor},
-	{"setInitialEnergy", &SimulationObject::setInitialEnergy},
 	{"setAgeRange", &ObjectSimple2D::setAgeRange},
 	{"setMetabolism", &ObjectSimple2D::setMetabolism},
         {0,0}

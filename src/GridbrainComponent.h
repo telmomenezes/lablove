@@ -21,7 +21,7 @@
 #define _INCLUDE_GRIDBRAIN_COMPONENT_H
 
 #include "GridbrainConnection.h"
-
+#include "SimulationObject.h"
 #include "Orbit.h"
 
 
@@ -37,6 +37,9 @@ public:
 	void copy(GridbrainComponent* comp, bool clearConnections=true);
 
 	bool isAggregator();
+
+	float computeBinding(SimulationObject* sourceObj,
+				SimulationObject* targetObj);
 
 	static const char mClassName[];
         static Orbit<GridbrainComponent>::MethodType mMethods[];

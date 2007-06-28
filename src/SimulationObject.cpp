@@ -50,20 +50,42 @@ SimulationObject::SimulationObject(SimulationObject* obj)
         mSpeciesID = obj->mSpeciesID;
 	mCreationTime = Lab::getSingleton().getSimulation()->time();
 	mHuman = false;
+
+	std::map<unsigned int, Chemistry*>::iterator iterChems;
+	for (iterChems = obj->mChemistries.begin();
+		iterChems != obj->mChemistries.end();
+		iterChems++)
+	{
+		mChemistries[(*iterChems).first] = new Chemistry((*iterChems).second);
+	}
 }
 
 SimulationObject::~SimulationObject()
 {
-	std::map<std::string, Chemistry*>::iterator iterChems;
+	std::map<unsigned int, Chemistry*>::iterator iterChems;
 
-	for (iterChems = mChemistriesMap.begin();
-		iterChems != mChemistriesMap.end();
+	for (iterChems = mChemistries.begin();
+		iterChems != mChemistries.end();
 		iterChems++)
 	{
 		delete (*iterChems).second;
 	}
 
-	mChemistriesMap.clear();
+	mChemistries.clear();
+}
+
+void SimulationObject::addChemistry(Chemistry* chem, unsigned int code)
+{
+	mChemistries[code] = chem;
+}
+
+Chemistry* SimulationObject::getChemistry(unsigned int code)
+{
+	if (mChemistries.count(code) == 0)
+	{
+		return NULL;
+	}
+	return mChemistries[code];
 }
 
 int SimulationObject::setInitialEnergy(lua_State* luaState)
@@ -71,5 +93,13 @@ int SimulationObject::setInitialEnergy(lua_State* luaState)
         float energy = luaL_checknumber(luaState, 1);
         setInitialEnergy(energy);
         return 0;
+}
+
+int SimulationObject::addChemistry(lua_State* luaState)
+{
+	Chemistry* chem = (Chemistry*)Orbit<Lab>::pointer(luaState, 1);
+	unsigned int code = luaL_checkint(luaState, 2);
+	addChemistry(chem, code);
+	return 0;
 }
 

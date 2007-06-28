@@ -125,7 +125,7 @@ void AnimatSimple2D::initTest()
 {
 	mGridbrain->setComponent(0, 0, 0, GridbrainComponent::PER, (float)SimSimple2D::PERCEPTION_POSITION);
 	mGridbrain->setComponent(0, 1, 0, GridbrainComponent::PER, (float)SimSimple2D::PERCEPTION_PROXIMITY);
-	mGridbrain->setComponent(0, 2, 0, GridbrainComponent::PER, (float)SimSimple2D::PERCEPTION_COLOR);
+	//mGridbrain->setComponent(0, 2, 0, GridbrainComponent::PER, (float)SimSimple2D::PERCEPTION_COLOR);
 	mGridbrain->setComponent(1, 0, 0, GridbrainComponent::THR, 0);
 	mGridbrain->setComponent(1, 1, 0, GridbrainComponent::MAX, 0);
 	mGridbrain->setComponent(2, 0, 0, GridbrainComponent::MUL, 0);
@@ -316,7 +316,7 @@ void AnimatSimple2D::computationStep()
 	for (unsigned int number = 0; number < actionsCount; number++)
 	{
 		float output = grid->getOutput(number);
-		unsigned int actionType = grid->getActionType(number);
+		unsigned int actionType = grid->getAction(number)->mSubType;
 
 		if (output != 0.0f)
 		{
@@ -560,16 +560,10 @@ void AnimatSimple2D::onScanObject(SimulationObject* obj, bool visible, bool cont
 	unsigned int perceptionsCount = grid->getPerceptionsCount();
 	for (unsigned int perceptionNumber = 0; perceptionNumber < perceptionsCount; perceptionNumber++)
 	{
-		unsigned int perceptionType = grid->getPerceptionType(perceptionNumber);
+		GridbrainComponent* perception = grid->getPerception(perceptionNumber);
 
-		switch (perceptionType)
+		switch (perception->mSubType)
 		{
-			case SimSimple2D::PERCEPTION_COLOR:
-				/*grid->setInput(perceptionNumber,
-						mCurrentInputDepth,
-						((ObjectSimple2D*)obj)->getColor()->bind(mColorMoleculeTable->getMolecule(perceptionMolecule)));*/
-				break;
-
 			case SimSimple2D::PERCEPTION_IN_CONTACT:
 				if (contact)
 				{
@@ -595,6 +589,14 @@ void AnimatSimple2D::onScanObject(SimulationObject* obj, bool visible, bool cont
 				if (visible)
 				{
 					normalizedValue = 1.0f - (distance / mViewRange);
+				}
+				grid->setInput(perceptionNumber, mCurrentInputDepth, normalizedValue);
+				break;
+			default:
+				normalizedValue = 0.0f;
+				if (visible)
+				{
+					normalizedValue = perception->computeBinding(this, obj);
 				}
 				grid->setInput(perceptionNumber, mCurrentInputDepth, normalizedValue);
 				break;
@@ -643,11 +645,12 @@ void AnimatSimple2D::mutate()
 const char AnimatSimple2D::mClassName[] = "AnimatSimple2D";
 
 Orbit<AnimatSimple2D>::MethodType AnimatSimple2D::mMethods[] = {
+	{"setInitialEnergy", &SimulationObject::setInitialEnergy},
+	{"addChemistry", &SimulationObject::addChemistry},
 	{"setPos", &ObjectSimple2D::setPos},
 	{"setRot", &ObjectSimple2D::setRot},
 	{"setSize", &ObjectSimple2D::setSize},
 	{"setColor", &ObjectSimple2D::setColor},
-	{"setInitialEnergy", &SimulationObject::setInitialEnergy},
         {"setViewRange", &AnimatSimple2D::setViewRange},
 	{"setViewAngle", &AnimatSimple2D::setViewAngle},
 	{"setAlphaObjectsGrid", &AnimatSimple2D::setAlphaObjectsGrid},

@@ -60,7 +60,11 @@ public:
 
 	virtual void placeRandom()=0;
 
+	void addChemistry(Chemistry* chem, unsigned int code);
+	Chemistry* getChemistry(unsigned int pos);
+
 	int setInitialEnergy(lua_State* luaState);
+	int addChemistry(lua_State* luaState);
 
 	bool mHuman;
 	bool mDeleted;
@@ -72,7 +76,7 @@ protected:
 	float mEnergy;
 	float mInitialEnergy;
 	unsigned long mCreationTime;
-	std::map<std::string, Chemistry*> mChemistriesMap;
+	std::map<unsigned int, Chemistry*> mChemistries;
 };
 #endif
 

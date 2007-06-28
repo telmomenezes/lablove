@@ -220,21 +220,19 @@ void Grid::initOutputVector()
 	}
 }
 
-int Grid::getPerceptionType(unsigned int number)
+GridbrainComponent* Grid::getPerception(unsigned int number)
 {
-	GridbrainComponent* comp = mPerceptionsVec[number];
-	return comp->mSubType;
+	return mPerceptionsVec[number];
+}
+
+GridbrainComponent* Grid::getAction(unsigned int number)
+{
+	return mActionsVec[number];
 }
 
 float Grid::getOutput(unsigned int number)
 {
 	return mOutputVector[number];
-}
-
-int Grid::getActionType(unsigned int number)
-{
-	GridbrainComponent* comp = mActionsVec[number];
-	return comp->mSubType;
 }
 
 void Grid::removeInputOutput()

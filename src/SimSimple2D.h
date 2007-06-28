@@ -33,7 +33,6 @@ class SimSimple2D : public Simulation
 public:
 
 	enum Perception {PERCEPTION_NULL,
-				PERCEPTION_COLOR,
 				PERCEPTION_POSITION,
 				PERCEPTION_PROXIMITY,
 				PERCEPTION_IN_CONTACT};
