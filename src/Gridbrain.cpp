@@ -34,6 +34,7 @@ Gridbrain::Gridbrain()
 	mFirstBetaIndex = 0;
 	mTotalPossibleConnections = 0;
 	mBetaComponentsCount = 0;
+	mGridsCount = 0;
 }
 
 Gridbrain::~Gridbrain()

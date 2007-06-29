@@ -1,6 +1,7 @@
 PROJECT(lablove)
 
 OPTION(GRAPHICS "Build the project with graphical visualization" ON)
+OPTION(DEBUG "Debug settings" OFF)
 
 # TODO: look for or inplement a FindOgre.cmake module
 IF(GRAPHICS)
@@ -11,7 +12,11 @@ ENDIF(GRAPHICS)
 
 #SET(CMAKE_VERBOSE_MAKEFILE "ON")
 
-SET(CMAKE_CXX_FLAGS "-Wno-deprecated -O3")
+IF(DEBUG)
+	SET(CMAKE_CXX_FLAGS "-Wno-deprecated -g")
+ELSE(DEBUG)
+	SET(CMAKE_CXX_FLAGS "-Wno-deprecated -O3")
+ENDIF(DEBUG)
 
 ADD_SUBDIRECTORY(src)
 
