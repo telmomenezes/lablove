@@ -58,7 +58,7 @@ void PlantSimple2D::createGraphics()
 	char materialName[255];
 	sprintf(materialName, "plantmat%d", mID);
 	
-	Ogre::MaterialPtr mMaterial = Ogre::MaterialManager::getSingleton().create(
+	mMaterial = Ogre::MaterialManager::getSingleton().create(
 		materialName,
 		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 	mMaterial->setAmbient(mColor.mRed, mColor.mGreen, mColor.mBlue);
