@@ -21,6 +21,7 @@
 #define __INCLUDE_POPDYN_FIXED_SPECIES_H
 
 #include "PopulationDynamics.h"
+#include "Statistics.h"
 
 #include <list>
 #include <vector>
@@ -32,10 +33,8 @@ typedef struct
 {
 	SimulationObject* mBaseOrganism;
 	std::vector<SimulationObject*> mOrganismVector;
+	std::list<Statistics*> mStatistics;
 	long mPopulation;
-	unsigned int mDeathCount;
-	float mTotalFitness;
-	float mBestFitness;
 } SpeciesData;
 
 public:
@@ -47,16 +46,18 @@ public:
 	virtual void onCycle();
 	virtual void onOrganismDeath(SimulationObject* org);
 
-	void addSpecies(SimulationObject* org, long population);
+	unsigned int addSpecies(SimulationObject* org, long population);
+	void addSpeciesStatistics(unsigned int speciesIndex, Statistics* stats);
 
 	static const char mClassName[];
         static Orbit<PopDynFixedSpecies>::MethodType mMethods[];
 	static Orbit<PopDynFixedSpecies>::NumberGlobalType mNumberGlobals[];
 
         int addSpecies(lua_State* luaState);
+        int addSpeciesStatistics(lua_State* luaState);
 
 protected:
-	std::list<SpeciesData> mSpecies;
+	std::vector<SpeciesData> mSpecies;
 };
 #endif
 

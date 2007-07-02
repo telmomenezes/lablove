@@ -41,7 +41,8 @@ SET(SOURCE_FILES
 	src/random.cpp
 	src/Molecule.cpp
 	src/MoleculeRGB.cpp
-	src/Chemistry.cpp)
+	src/Chemistry.cpp
+	src/Statistics.cpp)
 
 IF(GRAPHICS)
 	ADD_DEFINITIONS(-D__LABLOVE_WITH_GRAPHICS)

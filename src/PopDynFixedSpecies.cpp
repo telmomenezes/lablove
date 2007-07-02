@@ -33,25 +33,29 @@ PopDynFixedSpecies::~PopDynFixedSpecies()
 {
 }
 
-void PopDynFixedSpecies::addSpecies(SimulationObject* org, long population)
+unsigned int PopDynFixedSpecies::addSpecies(SimulationObject* org, long population)
 {
 	org->setSpeciesID(++CURRENT_SPECIES_ID);
 
 	SpeciesData species;
 	species.mBaseOrganism = org;
 	species.mPopulation = population;
-	species.mDeathCount = 0;
-	species.mTotalFitness = 0;
-	species.mBestFitness = -9999999.9;
 
 	mSpecies.push_back(species);
+
+	return mSpecies.size() - 1;
+}
+
+void PopDynFixedSpecies::addSpeciesStatistics(unsigned int speciesIndex, Statistics* stats)
+{
+	mSpecies[speciesIndex].mStatistics.push_back(stats);
 }
 
 void PopDynFixedSpecies::init()
 {
 	PopulationDynamics::init();
 
-	for (std::list<SpeciesData>::iterator iterSpecies = mSpecies.begin();
+	for (std::vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
 		iterSpecies != mSpecies.end();
 		iterSpecies++)
 	{
@@ -76,33 +80,38 @@ void PopDynFixedSpecies::onCycle()
 {
 	if ((Lab::getSingleton().getSimulation()->time() % 1000) == 0)
 	{
-		printf("%d", Lab::getSingleton().getSimulation()->time());
-		for (std::list<SpeciesData>::iterator iterSpecies = mSpecies.begin();
+		for (std::vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
 			iterSpecies != mSpecies.end();
 			iterSpecies++)
 		{
-			printf(", %f, %f",
-				(*iterSpecies).mTotalFitness / (*iterSpecies).mDeathCount,
-				(*iterSpecies).mBestFitness);
-			(*iterSpecies).mDeathCount = 0;
-
-			(*iterSpecies).mDeathCount = 0;
-			(*iterSpecies).mTotalFitness = 0;
-			(*iterSpecies).mBestFitness = -9999999.9;
+			// Dump statistics
+			for (std::list<Statistics*>::iterator iterStats = (*iterSpecies).mStatistics.begin();
+				iterStats != (*iterSpecies).mStatistics.end();
+				iterStats++)
+			{
+				(*iterStats)->dump();
+			}
 		}
-		printf("\n");
 	}
 }
 
 void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
 {
 	unsigned int speciesPos = 0;
-	for (std::list<SpeciesData>::iterator iterSpecies = mSpecies.begin();
+	for (std::vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
 		iterSpecies != mSpecies.end();
 		iterSpecies++)
 	{
 		if (org->getSpeciesID() == (*iterSpecies).mBaseOrganism->getSpeciesID())
 		{
+			// Update statistics
+			for (std::list<Statistics*>::iterator iterStats = (*iterSpecies).mStatistics.begin();
+				iterStats != (*iterSpecies).mStatistics.end();
+				iterStats++)
+			{
+				(*iterStats)->process(org);
+			}
+
 			std::vector<SimulationObject*>::iterator iterOrg;
 
 			int orgPos = -1;
@@ -153,16 +162,6 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
 			// Mutate
 			newOrganism->mutate();
 
-			// Update statistics
-			(*iterSpecies).mDeathCount += 1;
-			float fitness = org->getEnergy();
-			(*iterSpecies).mTotalFitness += fitness;
-
-			if (fitness > (*iterSpecies).mBestFitness)
-			{
-				(*iterSpecies).mBestFitness = fitness;
-			}
-			
 			// Remove
 			(*iterSpecies).mOrganismVector[orgPos] = newOrganism;
 			Lab::getSingleton().getSimulation()->removeObject(org);
@@ -177,6 +176,7 @@ const char PopDynFixedSpecies::mClassName[] = "PopDynFixedSpecies";
 Orbit<PopDynFixedSpecies>::MethodType PopDynFixedSpecies::mMethods[] = {
 	{"setHuman", &PopulationDynamics::setHuman},
         {"addSpecies", &PopDynFixedSpecies::addSpecies},
+        {"addSpeciesStatistics", &PopDynFixedSpecies::addSpeciesStatistics},
         {0,0}
 };
 
@@ -186,7 +186,16 @@ int PopDynFixedSpecies::addSpecies(lua_State* luaState)
 {
         SimulationObject* obj = (SimulationObject*)Orbit<PopDynFixedSpecies>::pointer(luaState, 1);
         int population = luaL_checkint(luaState, 2);
-        addSpecies(obj, population);
+        unsigned int index = addSpecies(obj, population);
+	lua_pushinteger(luaState, index);
+        return 1;
+}
+
+int PopDynFixedSpecies::addSpeciesStatistics(lua_State* luaState)
+{
+        unsigned int speciesIndex = luaL_checkint(luaState, 1);
+        Statistics* stats = (Statistics*)Orbit<PopDynFixedSpecies>::pointer(luaState, 2);
+        addSpeciesStatistics(speciesIndex, stats);
         return 0;
 }
 
