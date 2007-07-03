@@ -642,6 +642,25 @@ void AnimatSimple2D::mutate()
 	}
 }
 
+float AnimatSimple2D::getFieldValue(std::string fieldName)
+{
+	if (fieldName == "connections")
+	{
+		if (mGridbrain)
+		{
+			return ((float)(mGridbrain->getConnectionsCount()));
+		}
+		else
+		{
+			return 0.0f;
+		}
+	}
+	else
+	{
+		return ObjectSimple2D::getFieldValue(fieldName);
+	}
+}
+
 const char AnimatSimple2D::mClassName[] = "AnimatSimple2D";
 
 Orbit<AnimatSimple2D>::MethodType AnimatSimple2D::mMethods[] = {

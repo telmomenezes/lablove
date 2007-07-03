@@ -82,6 +82,8 @@ public:
 	int setGoCost(lua_State* luaState);
 	int setRotateCost(lua_State* luaState);
 
+	virtual float getFieldValue(std::string fieldName);
+
 protected:
 	virtual void onScanObject(SimulationObject* obj, bool visible, bool contact, float angle, float distance);
 	void scanCell(int cellX, int cellY);

@@ -73,6 +73,8 @@ public:
 
 	void initGridsInputOutput();
 
+	unsigned int getConnectionsCount(){return mConnectionsCount;}
+
 	void mutateAddConnection();
 	void mutateRemoveConnection();
 	void mutateChangeConnectionWeight();

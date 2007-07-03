@@ -30,11 +30,26 @@ StatMedAvgMinMax::~StatMedAvgMinMax()
 
 void StatMedAvgMinMax::init()
 {
-	for (unsigned int i = 0; i < mFields.size(); i++)
+	fprintf(mFile, "sim_time");
+
+	for (std::list<std::string>::iterator iterField = mFields.begin();
+		iterField != mFields.end();
+		iterField++)
 	{
 		std::list<float> valueList;
 		mValueLists.push_back(valueList);
+		fprintf(mFile, ",%s", (*iterField).c_str());
+		fprintf(mFile, "_med", (*iterField).c_str());
+		fprintf(mFile, ",%s", (*iterField).c_str());
+		fprintf(mFile, "_avg", (*iterField).c_str());
+		fprintf(mFile, ",%s", (*iterField).c_str());
+		fprintf(mFile, "_min", (*iterField).c_str());
+		fprintf(mFile, ",%s", (*iterField).c_str());
+		fprintf(mFile, "_max", (*iterField).c_str());
 	}
+
+	fprintf(mFile, "\n");
+	fflush(mFile);
 }
 
 void StatMedAvgMinMax::process(SimulationObject* obj)
@@ -59,18 +74,32 @@ void StatMedAvgMinMax::dump()
 		iterValueList != mValueLists.end();
 		iterValueList++)
 	{
+		(*iterValueList).sort();
+
+		float med = 0.0f;
 		float max = 0.0f;
 		float min = 0.0f;
 		float sum = 0.0f;
-		float count = 0.0f;
+		int count = (*iterValueList).size();
 		bool firstVal = true;
+
+		int medianIndex1 = count / 2;
+		int medianIndex2 = medianIndex1;
+		if ((count % 2) == 0)
+		{
+			medianIndex2--;
+		}
+
+		float medianValue1 = 0.0f;
+		float medianValue2 = 0.0f;
+
+		int index = 0;	
 
 		for (std::list<float>::iterator iterValue = (*iterValueList).begin();
 			iterValue != (*iterValueList).end();
 			iterValue++)
 		{
 			float value = (*iterValue);
-			
 
 			if (firstVal)
 			{
@@ -89,19 +118,31 @@ void StatMedAvgMinMax::dump()
 					min = value;
 				}
 
-				sum += value;
-				count += 1.0f;
 			}
+
+			sum += value;
+
+			if (index == medianIndex1)
+			{
+				medianValue1 = value;
+			}
+			if (index == medianIndex2)
+			{
+				medianValue2 = value;
+			}
+			index++;
 		}
 
 		float avg = 0.0f;
 
-		if (count != 0.0f)
+		if (count != 0)
 		{
-			avg = sum / count;
+			avg = sum / ((float)count);
 		}
 
-		fprintf(mFile, ",%f,%f,%f", avg, min, max);
+		med = (medianValue1 + medianValue2) / 2.0f;
+
+		fprintf(mFile, ",%f,%f,%f,%f", med, avg, min, max);
 	}
 	fprintf(mFile, "\n");
 	fflush(mFile);
