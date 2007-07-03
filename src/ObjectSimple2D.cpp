@@ -247,6 +247,18 @@ void ObjectSimple2D::setColor(MoleculeRGB* color)
 #endif
 }
 
+float ObjectSimple2D::getFieldValue(std::string fieldName)
+{
+	if (fieldName == "energy")
+	{
+		return mEnergy;
+	}
+	else
+	{
+		return SimulationObject::getFieldValue(fieldName);
+	}
+}
+
 int ObjectSimple2D::setPos(lua_State* luaState)
 {
         float x = luaL_checknumber(luaState, 1);

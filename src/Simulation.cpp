@@ -85,13 +85,13 @@ void Simulation::cycle()
 	}
 	mObjectsToKill.clear();
 
-	mPopulationDynamics->onCycle();
-
 	for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
 	{
 		SimulationObject* obj = *iterObj;
 		obj->onCycle();
 	}
+
+	mPopulationDynamics->onCycle();
 
 	mSimulationTime++;
 }

@@ -21,15 +21,38 @@
 
 Statistics::Statistics()
 {
+	mFile = stdout;
 }
 
 Statistics::~Statistics()
 {
+	fclose(mFile);
 }
 
 
 void Statistics::addField(std::string fieldName)
 {
 	mFields.push_back(fieldName);
+}
+
+void Statistics::setFile(std::string filePath)
+{
+	mFile = fopen(filePath.c_str(), "w");
+}
+
+int Statistics::addField(lua_State* luaState)
+{
+        std::string fieldName = luaL_checkstring(luaState, 1);
+        addField(fieldName);
+
+        return 0;
+}
+
+int Statistics::setFile(lua_State* luaState)
+{
+        std::string filePath = luaL_checkstring(luaState, 1);
+	setFile(filePath);
+
+	return 0;
 }
 

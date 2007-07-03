@@ -116,7 +116,7 @@ plant:setColor(plantColor)
 popDyn = PopDynFixedSpecies()
 sim:setPopulationDynamics(popDyn)
 
-popDyn:addSpecies(animat, numberOfAnimats)
+animatSpeciesIndex = popDyn:addSpecies(animat, numberOfAnimats)
 popDyn:addSpecies(plant, numberOfPlants)
 
 human = AnimatSimple2D(initialConnections, 25)
@@ -137,4 +137,9 @@ human:setColor(humanColor)
 human:setRot(1.00)
 
 popDyn:setHuman(human)
+
+stats = StatMedAvgMinMax()
+--stats:setFile("energy.csv")
+stats:addField("energy")
+popDyn:addSpeciesStatistics(animatSpeciesIndex, stats)
 

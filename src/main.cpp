@@ -28,6 +28,7 @@
 #include "GridbrainComponentSet.h"
 #include "Chemistry.h"
 #include "MoleculeRGB.h"
+#include "StatMedAvgMinMax.h"
 
 #if defined(__LABLOVE_WITH_GRAPHICS)
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
@@ -75,6 +76,7 @@ int main(int argc, char *argv[])
 	Orbit<GridbrainComponentSet>::orbitRegister(luaState);
 	Orbit<Chemistry>::orbitRegister(luaState);
 	Orbit<MoleculeRGB>::orbitRegister(luaState);
+	Orbit<StatMedAvgMinMax>::orbitRegister(luaState);
 
 	lua_register(luaState, "getLab", getLab);
 

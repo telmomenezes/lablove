@@ -91,7 +91,11 @@ plant:setInitialEnergy(1.0)
 popDyn = PopDynGenerations()
 sim:setPopulationDynamics(popDyn)
 
-popDyn:addStaticSpecies(plant, numberOfPlants)
-popDyn:addEvolvingSpecies(animat, numberOfAnimats)
+popDyn:addSpecies(plant, numberOfPlants, true)
+animatSpeciesIndex = popDyn:addSpecies(animat, numberOfAnimats, false)
 popDyn:setGenerationTime(generationTime)
 
+stats = StatMedAvgMinMax()
+--stats:setFile("energy.csv")
+stats:addField("energy")
+popDyn:addSpeciesStatistics(animatSpeciesIndex, stats)

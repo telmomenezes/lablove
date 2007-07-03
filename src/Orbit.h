@@ -11,6 +11,8 @@ extern "C"
 #include "lauxlib.h"
 }
 
+#define luaL_checkbool(L,i)	(lua_isboolean(L,i) ? lua_toboolean(L,i) : luaL_checkint(L,i))
+
 template <typename T> class Orbit
 {
 	typedef struct {T* pT;} userdataType;

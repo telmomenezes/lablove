@@ -21,11 +21,21 @@
 #define __INCLUDE_POPDYN_GENERATIONS_H
 
 #include "PopulationDynamics.h"
-
+#include "Statistics.h"
 #include <list>
 
 class PopDynGenerations : public PopulationDynamics
 {
+
+typedef struct
+{
+	SimulationObject* mBaseOrganism;
+	std::list<SimulationObject*> mOrganismList;
+	std::list<Statistics*> mStatistics;
+	long mPopulation;
+	bool mStatic;
+} SpeciesData;
+
 public:
 	static unsigned int CURRENT_SPECIES_ID;
 
@@ -35,26 +45,21 @@ public:
 	virtual void onCycle();
 	virtual void onOrganismDeath(SimulationObject* org);
 
-	void addStaticSpecies(SimulationObject* org, long population);
-	void addEvolvingSpecies(SimulationObject* org, long population);
+	unsigned int addSpecies(SimulationObject* org, long population, bool isStatic);
+	void addSpeciesStatistics(unsigned int speciesIndex, Statistics* stats);
 	void setGenerationTime(unsigned int time){mGenerationTime = time;}
 
 	static const char mClassName[];
         static Orbit<PopDynGenerations>::MethodType mMethods[];
 	static Orbit<PopDynGenerations>::NumberGlobalType mNumberGlobals[];
 
-        int addStaticSpecies(lua_State* luaState);
-        int addEvolvingSpecies(lua_State* luaState);
+        int addSpecies(lua_State* luaState);
+        int addSpeciesStatistics(lua_State* luaState);
 	int setGenerationTime(lua_State* luaState);
 
 protected:
 
-	std::list<SimulationObject*> mStaticSpecies;
-	std::list<SimulationObject*> mEvolvingSpecies;
-	std::list<std::list<SimulationObject*>*> mStaticSpeciesOrganismLists;
-	std::list<std::list<SimulationObject*>*> mEvolvingSpeciesOrganismLists;
-	std::list<long> mStaticSpeciesPopulations;
-	std::list<long> mEvolvingSpeciesPopulations;
+	std::vector<SpeciesData> mSpecies;
 
 	unsigned int mGenerationTime;
 	unsigned long mGeneration;

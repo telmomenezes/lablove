@@ -48,6 +48,7 @@ unsigned int PopDynFixedSpecies::addSpecies(SimulationObject* org, long populati
 
 void PopDynFixedSpecies::addSpeciesStatistics(unsigned int speciesIndex, Statistics* stats)
 {
+	stats->init();
 	mSpecies[speciesIndex].mStatistics.push_back(stats);
 }
 

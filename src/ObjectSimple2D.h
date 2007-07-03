@@ -66,6 +66,8 @@ public:
 	int setColor(lua_State* luaState);
 	virtual void setShowViewRange(bool show){}
 
+	virtual float getFieldValue(std::string fieldName);
+
 	float mX;
 	float mY;
 	float mSize;

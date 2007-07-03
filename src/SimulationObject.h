@@ -24,6 +24,7 @@
 #include "Orbit.h"
 
 #include <map>
+#include <string>
 
 class SimulationObject
 {
@@ -65,6 +66,8 @@ public:
 
 	int setInitialEnergy(lua_State* luaState);
 	int addChemistry(lua_State* luaState);
+
+	virtual float getFieldValue(std::string fieldName){return 0.0f;}
 
 	bool mHuman;
 	bool mDeleted;

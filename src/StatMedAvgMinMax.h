@@ -17,36 +17,31 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_STATISTICS_H)
-#define __INCLUDE_STATISTICS_H
+#if !defined(__INCLUDE_STATMEDAVGMINMAX_H)
+#define __INCLUDE_STATMEDAVGMINMAX_H
 
-#include "SimulationObject.h"
-#include <string>
+#include "Statistics.h"
 #include <list>
 
 #include "Orbit.h"
 
-#include <stdio.h>
-
-class Statistics
+class StatMedAvgMinMax : public Statistics
 {
 public:
-	Statistics();
-	virtual ~Statistics();
+        StatMedAvgMinMax(lua_State* luaState=NULL);
+	virtual ~StatMedAvgMinMax();
 
-	virtual void init(){}
+	virtual void init();
 
-	void addField(std::string fieldName);
-	void setFile(std::string filePath);
-	virtual void process(SimulationObject* obj)=0;
-	virtual void dump()=0;
+	virtual void process(SimulationObject* obj);
+	virtual void dump();
 
-	int addField(lua_State* luaState);
-	int setFile(lua_State* luaState);
+	static const char mClassName[];
+        static Orbit<StatMedAvgMinMax>::MethodType mMethods[];
+	static Orbit<StatMedAvgMinMax>::NumberGlobalType mNumberGlobals[];
 
 protected:
-	std::list<std::string> mFields;
-	FILE* mFile;
+	std::list<std::list<float> > mValueLists;
 };
 #endif
 
