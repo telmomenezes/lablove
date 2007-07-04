@@ -43,7 +43,8 @@ SET(SOURCE_FILES
 	src/MoleculeRGB.cpp
 	src/Chemistry.cpp
 	src/Statistics.cpp
-	src/StatMedAvgMinMax.cpp)
+	src/StatMedAvgMinMax.cpp
+	src/StatTime.cpp)
 
 IF(GRAPHICS)
 	ADD_DEFINITIONS(-D__LABLOVE_WITH_GRAPHICS)
@@ -80,3 +81,10 @@ IF(GRAPHICS)
 	TARGET_LINK_LIBRARIES(lablove OgreMain OIS Cg freeimage z m dl)
 ENDIF(GRAPHICS)
 
+IF(UNIX)
+	ADD_DEFINITIONS(-D__UNIX)
+ENDIF(UNIX)
+
+IF(WIN32)
+	ADD_DEFINITIONS(-D__WIN32)
+ENDIF(WIN32)

@@ -21,7 +21,6 @@
 #define __INCLUDE_LAB_H
 
 #include "Simulation.h"
-
 #include "Orbit.h"
 
 #ifdef __LABLOVE_WITH_GRAPHICS
@@ -44,6 +43,8 @@ public:
 	void cycle();
 	void addInputHandler(InputHandler* handler);
 	void removeInputHandler();
+
+	double realTime();
 
 #ifdef __LABLOVE_WITH_GRAPHICS
 	OgreApplication* getOgreApplication(){return mOgreApp;}

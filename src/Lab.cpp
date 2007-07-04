@@ -21,12 +21,27 @@
 #include "functions.h"
 #include "random.h"
 
+#if defined(__UNIX)
+#include <sys/time.h>
+#endif
+
+#if defined(__WIN32)
+#include <windows.h>
+#include <time.h>
+#if !defined( __GNUC__)
+#define EPOCHFILETIME (116444736000000000i64)
+#else
+#define EPOCHFILETIME (116444736000000000LL)
+#endif
+#endif
+
+
 Lab Lab::mLab;
 
 Lab::Lab()
 {
 	mStop = false;
-#ifdef __LABLOVE_WITH_GRAPHICS
+#if defined(__LABLOVE_WITH_GRAPHICS)
 	mOgreApp = NULL;
 #endif
 }
@@ -34,14 +49,14 @@ Lab::Lab()
 Lab::Lab(lua_State* luaState)
 {
 	mStop = false;
-#ifdef __LABLOVE_WITH_GRAPHICS
+#if defined (__LABLOVE_WITH_GRAPHICS)
 	mOgreApp = NULL;
 #endif
 }
 
 Lab::~Lab()
 {
-#ifdef __LABLOVE_WITH_GRAPHICS
+#if defined (__LABLOVE_WITH_GRAPHICS)
 	if (mOgreApp != NULL)
 	{
 		delete mOgreApp;
@@ -62,7 +77,7 @@ void Lab::setSeedIndex(unsigned int index)
 
 void Lab::run()
 {
-#ifdef __LABLOVE_WITH_GRAPHICS
+#if defined (__LABLOVE_WITH_GRAPHICS)
 	mOgreApp = new OgreApplication();
 
 	try
@@ -97,6 +112,36 @@ void Lab::cycle()
 {
 	mSimulation->cycle();
 }
+
+#if defined(__UNIX)
+double Lab::realTime()
+{
+	timeval time;
+	gettimeofday(&time, NULL);
+
+	double seconds = (double)time.tv_sec;
+	seconds += ((double)time.tv_usec) / 1000000.0f;
+	return seconds;
+}
+#endif
+
+#if defined(__WIN32)
+double Lab::realTime()
+{
+	FILETIME ft;
+	LARGE_INTEGER li;
+	__int64 t;
+	static int tzflag;
+
+	GetSystemTimeAsFileTime(&ft);
+        li.LowPart  = ft.dwLowDateTime;
+        li.HighPart = ft.dwHighDateTime;
+        t  = li.QuadPart;
+        t -= EPOCHFILETIME;
+        t /= 10;
+        return ((double)t) / 1000000.0f;
+}
+#endif
 
 const char Lab::mClassName[] = "Lab";
 

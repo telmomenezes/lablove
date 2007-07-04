@@ -96,6 +96,8 @@ animatSpeciesIndex = popDyn:addSpecies(animat, numberOfAnimats, false)
 popDyn:setGenerationTime(generationTime)
 
 stats = StatMedAvgMinMax()
---stats:setFile("energy.csv")
+stats:setFile("default.csv")
 stats:addField("energy")
+stats:addField("connections")
 popDyn:addSpeciesStatistics(animatSpeciesIndex, stats)
+

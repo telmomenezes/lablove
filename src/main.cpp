@@ -29,6 +29,7 @@
 #include "Chemistry.h"
 #include "MoleculeRGB.h"
 #include "StatMedAvgMinMax.h"
+#include "StatTime.h"
 
 #if defined(__LABLOVE_WITH_GRAPHICS)
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
@@ -77,6 +78,7 @@ int main(int argc, char *argv[])
 	Orbit<Chemistry>::orbitRegister(luaState);
 	Orbit<MoleculeRGB>::orbitRegister(luaState);
 	Orbit<StatMedAvgMinMax>::orbitRegister(luaState);
+	Orbit<StatTime>::orbitRegister(luaState);
 
 	lua_register(luaState, "getLab", getLab);
 
