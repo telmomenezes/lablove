@@ -133,6 +133,8 @@ void StatMedAvgMinMax::dump()
 			index++;
 		}
 
+		(*iterValueList).clear();
+
 		float avg = 0.0f;
 
 		if (count != 0)
