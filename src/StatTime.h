@@ -39,6 +39,10 @@ public:
 	static const char mClassName[];
         static Orbit<StatTime>::MethodType mMethods[];
 	static Orbit<StatTime>::NumberGlobalType mNumberGlobals[];
+
+protected:
+	unsigned long mLastSimTime;
+	double mLastRealTime;
 };
 #endif
 

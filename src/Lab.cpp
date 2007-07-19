@@ -35,7 +35,6 @@
 #endif
 #endif
 
-
 Lab Lab::mLab;
 
 Lab::Lab()

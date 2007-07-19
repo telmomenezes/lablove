@@ -144,3 +144,7 @@ stats:addField("energy")
 stats:addField("connections")
 popDyn:addSpeciesStatistics(animatSpeciesIndex, stats)
 
+statTime = StatTime()
+statTime:setFile("time.csv")
+popDyn:addStatistics(statTime)
+

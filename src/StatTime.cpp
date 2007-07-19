@@ -22,6 +22,8 @@
 
 StatTime::StatTime(lua_State* luaState)
 {
+	mLastSimTime = 0;
+	mLastRealTime = 0;
 }
 
 StatTime::~StatTime()
@@ -36,9 +38,21 @@ void StatTime::init()
 
 void StatTime::dump()
 {
-	fprintf(mFile, "%d,%f",
-		Lab::getSingleton().getSimulation()->time(),
-		Lab::getSingleton().realTime());
+	double cps = 0.0f;
+	unsigned long simTime =  Lab::getSingleton().getSimulation()->time();
+	double realTime = Lab::getSingleton().realTime();
+
+	if (simTime != 0)
+	{
+		unsigned long deltaSim = simTime - mLastSimTime;
+		double deltaReal = realTime - mLastRealTime;
+		cps = ((double)deltaSim) / deltaReal;
+	}
+
+	mLastSimTime = simTime;
+	mLastRealTime = realTime;
+
+	fprintf(mFile, "%d,%f,%f", simTime, realTime, cps);
 
 	fprintf(mFile, "\n");
 	fflush(mFile);

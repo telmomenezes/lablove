@@ -82,6 +82,8 @@ void PopDynGenerations::init()
 
 void PopDynGenerations::onCycle()
 {
+	PopulationDynamics::onCycle();
+
 	if (((Lab::getSingleton().getSimulation()->time() % mGenerationTime) == 0)
 		&& (Lab::getSingleton().getSimulation()->time() != 0))
 	{
@@ -172,6 +174,8 @@ void PopDynGenerations::onCycle()
 
 void PopDynGenerations::onOrganismDeath(SimulationObject* org)
 {
+	PopulationDynamics::onOrganismDeath(org);
+
 	std::vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
 	while (iterSpecies != mSpecies.end())
 	{
@@ -203,6 +207,8 @@ const char PopDynGenerations::mClassName[] = "PopDynGenerations";
 
 Orbit<PopDynGenerations>::MethodType PopDynGenerations::mMethods[] = {
 	{"setHuman", &PopulationDynamics::setHuman},
+	{"addStatistics", &PopulationDynamics::addStatistics},
+	{"addStatisticsTimeInterval", &PopulationDynamics::addStatistics},
         {"addSpecies", &PopDynGenerations::addSpecies},
         {"addSpeciesStatistics", &PopDynGenerations::addSpeciesStatistics},
 	{"setGenerationTime", &PopDynGenerations::setGenerationTime},

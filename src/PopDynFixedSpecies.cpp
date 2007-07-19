@@ -79,7 +79,9 @@ void PopDynFixedSpecies::init()
 
 void PopDynFixedSpecies::onCycle()
 {
-	if ((Lab::getSingleton().getSimulation()->time() % 1000) == 0)
+	PopulationDynamics::onCycle();
+
+	if ((Lab::getSingleton().getSimulation()->time() % mStatisticsTimeInterval) == 0)
 	{
 		for (std::vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
 			iterSpecies != mSpecies.end();
@@ -98,6 +100,8 @@ void PopDynFixedSpecies::onCycle()
 
 void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
 {
+	PopulationDynamics::onOrganismDeath(org);
+
 	unsigned int speciesPos = 0;
 	for (std::vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
 		iterSpecies != mSpecies.end();
@@ -176,9 +180,11 @@ const char PopDynFixedSpecies::mClassName[] = "PopDynFixedSpecies";
 
 Orbit<PopDynFixedSpecies>::MethodType PopDynFixedSpecies::mMethods[] = {
 	{"setHuman", &PopulationDynamics::setHuman},
-        {"addSpecies", &PopDynFixedSpecies::addSpecies},
-        {"addSpeciesStatistics", &PopDynFixedSpecies::addSpeciesStatistics},
-        {0,0}
+	{"addStatistics", &PopulationDynamics::addStatistics},
+	{"addStatisticsTimeInterval", &PopulationDynamics::addStatistics},
+	{"addSpecies", &PopDynFixedSpecies::addSpecies},
+	{"addSpeciesStatistics", &PopDynFixedSpecies::addSpeciesStatistics},
+	{0,0}
 };
 
 Orbit<PopDynFixedSpecies>::NumberGlobalType PopDynFixedSpecies::mNumberGlobals[] = {{0,0}};
