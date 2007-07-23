@@ -5,9 +5,9 @@ OPTION(DEBUG "Debug settings" OFF)
 
 # TODO: look for or inplement a FindOgre.cmake module
 IF(GRAPHICS)
-	INCLUDE_DIRECTORIES("/usr/include/OGRE/")
-	#INCLUDE(${CMAKE_ROOT}/Modules/FindOgre.cmake)
-	#INCLUDE_DIRECTORIES(${OGRE_INCLUDE_DIR})
+	INCLUDE(${CMAKE_ROOT}/Modules/FindSDL.cmake)
+	INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIR})
+	ADD_DEFINITIONS(-D__LAYER_SDLOPENGL)
 ENDIF(GRAPHICS)
 
 #SET(CMAKE_VERBOSE_MAKEFILE "ON")
@@ -48,29 +48,10 @@ SET(SOURCE_FILES
 
 IF(GRAPHICS)
 	ADD_DEFINITIONS(-D__LABLOVE_WITH_GRAPHICS)
-	SET(SOURCE_FILES ${SOURCE_FILES} src/OgreApplication.cpp)
 	SET(SOURCE_FILES ${SOURCE_FILES}
-		src/QuickGUI/QuickGUIButton.cpp
-		src/QuickGUI/QuickGUIMenu.cpp
-		src/QuickGUI/QuickGUITextBox.cpp
-		src/QuickGUI/QuickGUIComboBox.cpp
-		src/QuickGUI/QuickGUIMenuList.cpp
-		src/QuickGUI/QuickGUITextCursor.cpp
-		src/QuickGUI/QuickGUIEventArgs.cpp
-		src/QuickGUI/QuickGUIMouseCursor.cpp
-		src/QuickGUI/QuickGUITitleBar.cpp
-		src/QuickGUI/QuickGUIImage.cpp
-		src/QuickGUI/QuickGUINStateButton.cpp
-		src/QuickGUI/QuickGUIWidget.cpp
-		src/QuickGUI/QuickGUILabel.cpp
-		src/QuickGUI/QuickGUIPanel.cpp
-		src/QuickGUI/QuickGUIWindow.cpp
-		src/QuickGUI/QuickGUIList.cpp
-		src/QuickGUI/QuickGUIProgressBar.cpp
-		src/QuickGUI/QuickGUIListItem.cpp
-		src/QuickGUI/QuickGUISheet.cpp
-		src/QuickGUI/QuickGUIManager.cpp
-		src/QuickGUI/QuickGUIText.cpp)
+		src/layer/ScreenManager.cpp
+		src/layer/Screen.cpp
+		src/layer/ScreenSDLOpenGL.cpp)
 ENDIF(GRAPHICS)
 
 ADD_EXECUTABLE(lablove ${SOURCE_FILES})
@@ -78,7 +59,7 @@ ADD_EXECUTABLE(lablove ${SOURCE_FILES})
 TARGET_LINK_LIBRARIES(lablove lua dl)
 
 IF(GRAPHICS)
-	TARGET_LINK_LIBRARIES(lablove OgreMain OIS Cg freeimage z m dl)
+	TARGET_LINK_LIBRARIES(lablove SDL GL GLU)
 ENDIF(GRAPHICS)
 
 IF(UNIX)
