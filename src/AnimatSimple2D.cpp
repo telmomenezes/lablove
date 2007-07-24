@@ -57,10 +57,6 @@ AnimatSimple2D::AnimatSimple2D(lua_State* luaState)
 		mMaxInputDepth = 0;
 		mGridbrain = NULL;
 	}
-
-#if defined(__LABLOVE_WITH_GRAPHICS)
-	mViewNode = NULL;
-#endif
 }
 
 AnimatSimple2D::AnimatSimple2D(AnimatSimple2D* anim, bool full) : ObjectSimple2D(anim)
@@ -84,9 +80,6 @@ AnimatSimple2D::AnimatSimple2D(AnimatSimple2D* anim, bool full) : ObjectSimple2D
 
 	mGoCost = anim->mGoCost;
 	mRotateCost = anim->mRotateCost;
-#if defined(__LABLOVE_WITH_GRAPHICS)
-	mViewNode = NULL;
-#endif
 }
 
 AnimatSimple2D::~AnimatSimple2D()
@@ -163,106 +156,27 @@ SimulationObject* AnimatSimple2D::clone(bool full)
 	return new AnimatSimple2D(this, full);
 }
 
-#if defined(__LABLOVE_WITH_GRAPHICS)
-void AnimatSimple2D::createGraphics()
+void AnimatSimple2D::draw()
 {
-	Ogre::SceneManager* sceneMgr = Lab::getSingleton().getOgreApplication()->getSceneManager();
-	char nodeName[255];
-	sprintf(nodeName, "loveobj%d", mID);
-	Ogre::Entity* animEntity = sceneMgr->createEntity(nodeName, "animat");
-	mNode = sceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
-	mNode->attachObject(animEntity);
-	setPos(mX, mY);
-	setRot(mRot);
-	mNode->scale(mSize, 1, mSize);
-
-	char materialName[255];
-	sprintf(materialName, "animatmat%d", mID);
-	
-	mMaterial = Ogre::MaterialManager::getSingleton().create(
-		materialName,
-		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-	mMaterial->setAmbient(mColor.mRed, mColor.mGreen, mColor.mBlue);
-	animEntity->setMaterialName(materialName);
-
-	SimSimple2D* sim = (SimSimple2D*)Lab::getSingleton().getSimulation();
-	if (sim->getShowViewRange())
+	if (((SimSimple2D*)(Lab::getSingleton().getSimulation()))->getShowViewRange())
 	{
-		setShowViewRange(true);
+		Lab::getSingleton().getScreen()->setColor(0.6, 0.6, 0.6, 0.5);
+		Lab::getSingleton().getScreen()->drawFilledCircle(mX, mY, mViewRange, mLowLimitViewAngle, mHighLimitViewAngle);
 	}
+
+	float a1 = mRot;
+	float a2 = mRot + (M_PI * 0.8f);
+	float a3 = mRot + (M_PI * 1.2f);
+	float x1 = mX + (cosf(a1) * mSize);
+	float y1 = mY + (sinf(a1) * mSize);
+	float x2 = mX + (cosf(a2) * mSize);
+	float y2 = mY + (sinf(a2) * mSize);
+	float x3 = mX + (cosf(a3) * mSize);
+	float y3 = mY + (sinf(a3) * mSize);
+
+	Lab::getSingleton().getScreen()->setColor(mColor.mRed, mColor.mGreen, mColor.mBlue);
+	Lab::getSingleton().getScreen()->drawFilledTriangle(x1, y1, x2, y2, x3, y3);
 }
-
-void AnimatSimple2D::createViewMesh()
-{
-	Ogre::ManualObject* obj = new Ogre::ManualObject("MeshDecal");
-	obj->begin("viewRangeMaterial", Ogre::RenderOperation::OT_TRIANGLE_LIST);
-
-	float startAngle =  -mViewAngle / 2.0f;
-	float endAngle = mViewAngle / 2.0f;
-	
-	obj->position(Ogre::Vector3(0, 0, 0));
-	float angle = startAngle;
-	unsigned int vertexCount = 2;
-	while (angle < endAngle)
-	{
-		vertexCount++;
-		obj->position(Ogre::Vector3(cosf(angle),
-						0,
-						sinf(angle)));
-		angle += 0.2f;
-	}
-	obj->position(Ogre::Vector3(cosf(endAngle),
-						0,
-						sinf(endAngle)));
-
-	for (unsigned int i = 2; i < vertexCount; i++)
-	{
-		obj->index(i);
-		obj->index(i - 1);
-		obj->index(0);
-	}
-
-	obj->end();
-
-	char viewRangeName[255];
-	sprintf(viewRangeName, "viewrange%d", mID);
-	Ogre::MeshPtr mViewMesh = obj->convertToMesh(viewRangeName);
-	mViewMesh->load();
-
-	delete obj;
-}
-
-void AnimatSimple2D::setShowViewRange(bool show)
-{
-
-	if (show)
-	{
-		if (mViewNode)
-		{
-			mViewNode->setVisible(true);
-		}
-		else
-		{
-			Ogre::SceneManager* sceneMgr = Lab::getSingleton().getOgreApplication()->getSceneManager();
-			createViewMesh();
-			char viewRangeName[255];
-			sprintf(viewRangeName, "viewrange%d", mID);
-			Ogre::Entity* viewRangeEntity = sceneMgr->createEntity(viewRangeName, viewRangeName);
-			mViewNode = mNode->createChildSceneNode(viewRangeName);
-			mViewNode->attachObject(viewRangeEntity);
-			mViewNode->setPosition(0, -0.02, 0);
-			mViewNode->setScale(mViewRange / mSize, 1, mViewRange / mSize);
-		}
-	}
-	else
-	{
-		if (mViewNode)
-		{
-			mViewNode->setVisible(false);
-		}
-	}
-}
-#endif
 
 void AnimatSimple2D::setRot(float rot)
 {

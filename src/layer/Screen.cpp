@@ -24,10 +24,25 @@ namespace layer
 
 Screen::Screen()
 {
+	mWidth = 0;
+	mHeight = 0;
 }
 
 Screen::~Screen()
 {
+}
+
+bool Screen::init(int width,
+		int height,
+		int colorDepth,
+		bool fullScreen,
+		bool resizable,
+		bool windowDecorations)
+{
+	mWidth = width;
+	mHeight = height;
+
+	return true;
 }
 
 }

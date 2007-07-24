@@ -20,11 +20,13 @@
 #include "SimSimple2D.h"
 #include "Lab.h"
 #include "ObjectSimple2D.h"
-#include <math.h>
 #include "functions.h"
 #include "PopulationDynamics.h"
 #include "defines.h"
 #include "AnimatSimple2D.h"
+#include "SDL.h"
+
+#include <math.h>
 
 SimSimple2D::SimSimple2D(lua_State* luaState)
 {
@@ -40,95 +42,6 @@ SimSimple2D::~SimSimple2D()
 		free(mCellGrid);
 		mCellGrid = NULL;
 	}
-}
-
-void SimSimple2D::init()
-{
-#ifdef __LABLOVE_WITH_GRAPHICS
-	// Create Animat Mesh
-	Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create(
-		"animatDefaultMaterial",
-		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-	material->setAmbient(1.0, 0.1, 0.1);
-
-
-	Ogre::ManualObject* obj = new Ogre::ManualObject("MeshDecal");
-
-	float deltaAngle = Ogre::Math::PI / 1.5f;
-	
-	obj->estimateVertexCount(3);
-	obj->estimateIndexCount(3);
-	obj->begin("animatDefaultMaterial", Ogre::RenderOperation::OT_TRIANGLE_LIST);
-
-	float a = 0;
-	float x = cosf(a);
-	float z = sinf(a);
-	obj->position(Ogre::Vector3(x, 0, z));
-	a = Ogre::Math::PI + 0.5f;
-	x = cosf(a);
-	z = sinf(a);
-	obj->position(Ogre::Vector3(x, 0, z));
-	a = Ogre::Math::PI - 0.5f;
-	x = cosf(a);
-	z = sinf(a);
-	obj->position(Ogre::Vector3(x, 0, z));
-
-	obj->index(0);
-	obj->index(1);
-	obj->index(2);
-
-	obj->end();
-
-	Ogre::MeshPtr mesh = obj->convertToMesh("animat");
-	mesh->load();
-
-	delete obj;
-
-	// Create view range material
-	material = Ogre::MaterialManager::getSingleton().create(
-		"viewRangeMaterial",
-		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-	material->setAmbient(0.5, 0.5, 0.5);
-	material->setSceneBlending(Ogre::SBT_TRANSPARENT_COLOUR);
-
-	// Create plant mesh
-	material = Ogre::MaterialManager::getSingleton().create(
-		"plantDefaultMaterial",
-		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-	material->setAmbient(0.1, 1.0, 0.1);
-
-	obj = new Ogre::ManualObject("MeshDecal");
-
-	obj->estimateVertexCount(4);
-	obj->estimateIndexCount(6);
-	obj->begin("plantDefaultMaterial", Ogre::RenderOperation::OT_TRIANGLE_LIST);
- 
-	obj->position(Ogre::Vector3(-0.5, 0, 0.5));
-	obj->position(Ogre::Vector3(-0.5, 0, -0.5));
-	obj->position(Ogre::Vector3(0.5, 0, -0.5));
-	obj->position(Ogre::Vector3(0.5, 0, 0.5));
-
-	obj->index(0);
-	obj->index(3);
-	obj->index(2);
-	obj->index(2);
-	obj->index(1);
-	obj->index(0);
-
-	obj->end();
-
-	mesh = obj->convertToMesh("plant");
-	mesh->load();
-
-	delete obj;
-
-	// Adjust camera position
-	Ogre::Camera* camera = Lab::getSingleton().getOgreApplication()->getCamera();
-	camera->setPosition(Ogre::Vector3(mWorldWidth / 2, 200, 0));
-	camera->lookAt(Ogre::Vector3(mWorldWidth / 2, 0, mWorldLength / 3));
-#endif
-
-	Simulation::init();
 }
 
 void SimSimple2D::setWorldDimensions(float worldWidth,
@@ -183,61 +96,44 @@ SimulationObject* SimSimple2D::getObjectByScreenPos(int x, int y)
 	return NULL;
 }
 
-void SimSimple2D::setShowViewRange(bool show)
-{
-	mShowViewRange = show;
-
-	std::list<SimulationObject*>::iterator iterObj;
-	for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
-	{
-		ObjectSimple2D* obj = (ObjectSimple2D*)(*iterObj);
-		obj->setShowViewRange(mShowViewRange);
-	}
-}
-
-#ifdef __LABLOVE_WITH_GRAPHICS
-/*
 void SimSimple2D::drawBeforeObjects()
 {
 	if (mShowGrid)
 	{
 		unsigned int cellSide = (unsigned int)mCellSide;
 
-		glColor3ub(DEF_S2D_GRID_COLOR_R,
-			DEF_S2D_GRID_COLOR_G,
-			DEF_S2D_GRID_COLOR_B);
-		glBegin(GL_LINES);
+		int mViewX = 0;
+		int mViewY = 0;
+
+		Lab::getSingleton().getScreen()->setColor(0.7, 0.7, 0.7);
 
 		unsigned int division = cellSide - (mViewX % cellSide);
-		while (division < Lab::getSingleton().getScreenWidth())
+		while (division < Lab::getSingleton().getScreen()->getWidth())
 		{
-			glVertex2f(division, 0);
-			glVertex2f(division, Lab::getSingleton().getScreenHeight());
+			Lab::getSingleton().getScreen()->drawLine(division,
+									0,
+									division,
+									Lab::getSingleton().getScreen()->getHeight());
 
 			division += cellSide;
 		}
 
 		division = cellSide - (mViewY % cellSide);
-		while (division < Lab::getSingleton().getScreenHeight())
+		while (division < Lab::getSingleton().getScreen()->getHeight())
 		{
-			glVertex2f(0, division);
-			glVertex2f(Lab::getSingleton().getScreenWidth(), division);
+			Lab::getSingleton().getScreen()->drawLine(0,
+									division,
+									Lab::getSingleton().getScreen()->getWidth(),
+									division);
 
 			division += cellSide;
 		}
-
-		glEnd();
 	}
 }
-*/
 
+#ifdef __LABLOVE_WITH_GRAPHICS
 bool SimSimple2D::onKeyDown(int key)
 {
-	if (Lab::getSingleton().getOgreApplication()->getMode() != OgreApplication::CONTROL)
-	{
-		return false;
-	}
-
 	AnimatSimple2D* human = (AnimatSimple2D*)(mPopulationDynamics->getHuman());
 
 	if (human == NULL)
@@ -247,18 +143,18 @@ bool SimSimple2D::onKeyDown(int key)
 
 	switch (key)
 	{
-	case OIS::KC_UP:
+	case SDLK_UP:
 		human->mActionGo = true;
 		return true;
-	case OIS::KC_RIGHT:
+	case SDLK_RIGHT:
 		human->mActionRotate = true;
 		human->mActionRotateParam = 1.0f;
 		return true;
-	case OIS::KC_LEFT:
+	case SDLK_LEFT:
 		human->mActionRotate = true;
 		human->mActionRotateParam = -1.0;
 		return true;
-	case OIS::KC_E:
+	case SDLK_e:
 		human->mActionEat = true;
 		return true;
 	default:
@@ -270,19 +166,14 @@ bool SimSimple2D::onKeyUp(int key)
 {
 	switch (key)
 	{
-	/*case OIS::KC_G:
+	case SDLK_g:
 		setShowGrid(!getShowGrid());
-		return true;*/
-	case OIS::KC_V:
+		return true;
+	case SDLK_v:
 		setShowViewRange(!getShowViewRange());
 		return true;
 	default:
 		break;
-	}
-
-	if (Lab::getSingleton().getOgreApplication()->getMode() != OgreApplication::CONTROL)
-	{
-		return false;
 	}
 
 	AnimatSimple2D* human = (AnimatSimple2D*)(mPopulationDynamics->getHuman());
@@ -294,16 +185,16 @@ bool SimSimple2D::onKeyUp(int key)
 
 	switch (key)
 	{
-	case OIS::KC_UP:
+	case SDLK_UP:
 		human->mActionGo = false;
 		return true;
-	case OIS::KC_RIGHT:
+	case SDLK_RIGHT:
 		human->mActionRotate = false;
 		return true;
-	case OIS::KC_LEFT:
+	case SDLK_LEFT:
 		human->mActionRotate = false;
 		return true;
-	case OIS::KC_E:
+	case SDLK_e:
 		human->mActionEat = false;
 		return true;
 	default:

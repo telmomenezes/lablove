@@ -46,7 +46,7 @@ public:
         SimSimple2D(lua_State* luaState=NULL);
 	virtual ~SimSimple2D();
 
-	virtual void init();
+	virtual void drawBeforeObjects();
 
 	void setWorldDimensions(float worldWidth,
 			float worldLength,
@@ -57,7 +57,7 @@ public:
 	float getCellSide(){return mCellSide;}
 	ObjectSimple2D** getCellGrid(){return mCellGrid;}
 	void setShowGrid(bool show){mShowGrid = show;}
-	void setShowViewRange(bool show);
+	void setShowViewRange(bool show){mShowViewRange = show;}
 	bool getShowGrid(){return mShowGrid;}
 	bool getShowViewRange(){return mShowViewRange;}
 	unsigned int getWorldCellWidth(){return mWorldCellWidth;}
@@ -79,9 +79,6 @@ public:
         int setWorldDimensions(lua_State* luaState);
 
 private:
-#ifdef __LABLOVE_WITH_GRAPHICS
-	//virtual void drawBeforeObjects();
-#endif
 
 	float mWorldWidth;
 	float mWorldLength;

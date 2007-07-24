@@ -22,13 +22,12 @@
 
 #include "Simulation.h"
 #include "Orbit.h"
+#include "InputHandler.h"
+#include "layer/layer.h"
 
-#ifdef __LABLOVE_WITH_GRAPHICS
-#include "OgreApplication.h"
-#endif
+#include <list>
 
-
-class Lab
+class Lab : public InputHandler
 {
 public:
 	virtual ~Lab();
@@ -43,12 +42,13 @@ public:
 	void cycle();
 	void addInputHandler(InputHandler* handler);
 	void removeInputHandler();
+	void processEvents();
+
+	virtual bool onKeyDown(int keycode);
 
 	double realTime();
 
-#ifdef __LABLOVE_WITH_GRAPHICS
-	OgreApplication* getOgreApplication(){return mOgreApp;}
-#endif
+	layer::Screen* getScreen(){return mScreen;}
 
 	static const char mClassName[];
         static Orbit<Lab>::MethodType mMethods[];
@@ -65,9 +65,9 @@ private:
 	Simulation* mSimulation;
 	bool mStop;
 	
-#ifdef __LABLOVE_WITH_GRAPHICS
-	OgreApplication* mOgreApp;
-#endif
+	layer::Screen* mScreen;
+
+	std::list<InputHandler*> mHandlers;
 };
 #endif
 

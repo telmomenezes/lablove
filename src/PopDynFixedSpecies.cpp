@@ -68,9 +68,6 @@ void PopDynFixedSpecies::init()
 			org->initRandom();
 			org->setEnergy(org->getInitialEnergy());
 			org->placeRandom();
-#ifdef __LABLOVE_WITH_GRAPHICS
-			org->createGraphics();
-#endif
 			Lab::getSingleton().getSimulation()->addObject(org);
 			(*iterSpecies).mOrganismVector.push_back(org);
 		}
@@ -159,9 +156,6 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
 			newOrganism = bestOrganism->clone();
 			newOrganism->setEnergy(newOrganism->getInitialEnergy());
 			newOrganism->placeRandom();
-#ifdef __LABLOVE_WITH_GRAPHICS
-			newOrganism->createGraphics();
-#endif
 			Lab::getSingleton().getSimulation()->addObject(newOrganism);
 
 			// Mutate

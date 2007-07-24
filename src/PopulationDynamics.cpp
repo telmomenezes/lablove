@@ -32,12 +32,6 @@ PopulationDynamics::~PopulationDynamics()
 
 void PopulationDynamics::init()
 {
-#ifdef __LABLOVE_WITH_GRAPHICS
-	if (mHuman != NULL)
-	{
-		mHuman->createGraphics();
-	}
-#endif
 	if (mHuman)
 	{
 		Lab::getSingleton().getSimulation()->addObject(mHuman);

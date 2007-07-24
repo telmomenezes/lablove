@@ -36,14 +36,12 @@ public:
 	virtual ~SimulationObject();
 
 	virtual SimulationObject* clone(bool full=true) = 0;
-#ifdef __LABLOVE_WITH_GRAPHICS
-	virtual void createGraphics(){}
-#endif
 	virtual void initRandom(){}
 
 	unsigned long getID(){return mID;}
 
 	virtual void onCycle(){}
+	virtual void draw(){}
 	virtual bool isFood(){return false;}
 	void setSelected(bool selected){mSelected = selected;}
 	bool isSelected(){return mSelected;}

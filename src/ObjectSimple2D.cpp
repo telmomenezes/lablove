@@ -20,9 +20,10 @@
 #include "ObjectSimple2D.h"
 #include "Lab.h"
 #include "SimSimple2D.h"
-#include <stdlib.h>
 #include "functions.h"
 #include "random.h"
+
+#include <stdlib.h>
 #include <math.h>
 
 ObjectSimple2D::ObjectSimple2D()
@@ -44,11 +45,6 @@ ObjectSimple2D::ObjectSimple2D()
 	mLowAgeLimit = 0;
 	mHighAgeLimit = 0;
 	mMetabolism = 0.0f;
-#if defined(__LABLOVE_WITH_GRAPHICS)
-	mNode = NULL;
-	mMaterial.setNull();
-	mZ = randomUniformProbability() / 100.0f;
-#endif
 }
 
 ObjectSimple2D::ObjectSimple2D(ObjectSimple2D* obj) : SimulationObject(obj)
@@ -73,31 +69,10 @@ ObjectSimple2D::ObjectSimple2D(ObjectSimple2D* obj) : SimulationObject(obj)
 	mRot = 0.0f;
 
 	mColor = MoleculeRGB(obj->mColor);
-#if defined(__LABLOVE_WITH_GRAPHICS)
-	mNode = NULL;
-	mMaterial.setNull();
-	mZ = randomUniformProbability() / 100.0f;
-#endif
 }
 
 ObjectSimple2D::~ObjectSimple2D()
 {
-#if defined(__LABLOVE_WITH_GRAPHICS)
-	if (mNode != NULL)
-	{
-		Ogre::SceneManager* sceneMgr = Lab::getSingleton().getOgreApplication()->getSceneManager();
-		char nodeName[255];
-		sprintf(nodeName, "loveobj%d", mID);
-		Ogre::MovableObject* obj = mNode->detachObject(nodeName);
-		sceneMgr->getRootSceneNode()->removeAndDestroyChild(nodeName);
-		delete obj;
-	}
-	if (!mMaterial.isNull())
-	{
-		Ogre::MaterialManager::getSingleton().remove(mMaterial->getName());
-		mMaterial.setNull();
-	}
-#endif
 }
 
 void ObjectSimple2D::setPos(float x, float y)
@@ -168,37 +143,17 @@ void ObjectSimple2D::setPos(float x, float y)
 
 	mX = x;
 	mY = y;
-
-#if defined(__LABLOVE_WITH_GRAPHICS)
-	if (mNode != NULL)
-	{
-		mNode->setPosition(mX, mZ, mY);
-	}
-#endif
 }
 
 void ObjectSimple2D::setSize(float size)
 {
 	mSize = size;
 	mSizeSquared = mSize * mSize;
-#if defined(__LABLOVE_WITH_GRAPHICS)
-	if (mNode != NULL)
-	{
-		mNode->scale(size, size, size);
-	}
-#endif
 }
 
 void ObjectSimple2D::setRot(float rot)
 {
 	mRot = normalizeAngle(rot);
-#if defined(__LABLOVE_WITH_GRAPHICS)
-	if (mNode != NULL)
-	{
-		mNode->setOrientation(Ogre::Quaternion(Ogre::Radian(mRot),
-						Ogre::Vector3(0.0, -1.0, 0.0)));
-	}
-#endif
 }
 
 void ObjectSimple2D::placeRandom()
@@ -239,12 +194,6 @@ void ObjectSimple2D::setAgeRange(unsigned long lowAgeLimit, unsigned long highAg
 void ObjectSimple2D::setColor(MoleculeRGB* color)
 {
 	mColor = MoleculeRGB(color);
-#if defined(__LABLOVE_WITH_GRAPHICS)
-	if (!mMaterial.isNull())
-	{
-		mMaterial->setAmbient(mColor.mRed, mColor.mGreen, mColor.mBlue);
-	}
-#endif
 }
 
 float ObjectSimple2D::getFieldValue(std::string fieldName)

@@ -32,9 +32,7 @@ public:
 	virtual ~PlantSimple2D();
 	virtual SimulationObject* clone(bool full=true);
 
-#if defined(__LABLOVE_WITH_GRAPHICS)
-	void createGraphics();
-#endif
+	virtual void draw();
 
 	virtual bool isFood(){return true;}
 

@@ -36,6 +36,8 @@ public:
 
 	virtual void init();
 
+	virtual void drawBeforeObjects(){}
+
 	virtual void addObject(SimulationObject* object);
 	virtual void removeObject(SimulationObject* object);
 	void cycle();

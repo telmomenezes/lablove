@@ -42,29 +42,11 @@ SimulationObject* PlantSimple2D::clone(bool full)
 	return new PlantSimple2D(this);
 }
 
-#if defined(__LABLOVE_WITH_GRAPHICS)
-void PlantSimple2D::createGraphics()
+void PlantSimple2D::draw()
 {
-	Ogre::SceneManager* sceneMgr = Lab::getSingleton().getOgreApplication()->getSceneManager();
-	char nodeName[255];
-	sprintf(nodeName, "loveobj%d", mID);
-	Ogre::Entity* plantEntity = sceneMgr->createEntity(nodeName, "plant");
-	mNode = sceneMgr->getRootSceneNode()->createChildSceneNode(nodeName);
-	mNode->attachObject(plantEntity);
-	mNode->setPosition(mX, 0, mY);
-	mNode->yaw(Ogre::Radian(mRot));
-	mNode->scale(mSize, mSize, mSize);
-
-	char materialName[255];
-	sprintf(materialName, "plantmat%d", mID);
-	
-	mMaterial = Ogre::MaterialManager::getSingleton().create(
-		materialName,
-		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-	mMaterial->setAmbient(mColor.mRed, mColor.mGreen, mColor.mBlue);
-	plantEntity->setMaterialName(materialName);
+	Lab::getSingleton().getScreen()->setColor(mColor.mRed, mColor.mGreen, mColor.mBlue);
+	Lab::getSingleton().getScreen()->drawFilledSquare(mX, mY, mSize, mRot);
 }
-#endif
 
 const char PlantSimple2D::mClassName[] = "PlantSimple2D";
 
@@ -81,29 +63,4 @@ Orbit<PlantSimple2D>::MethodType PlantSimple2D::mMethods[] = {
 };
 
 Orbit<PlantSimple2D>::NumberGlobalType PlantSimple2D::mNumberGlobals[] = {{0,0}};
-
-/*	
-void PlantSimple2D::draw()
-{
-	SimSimple2D* sim = (SimSimple2D*)(Lab::getSingleton().getSimulation());
-
-	float x = (int)mX - (int)sim->getViewX();
-	float y = (int)mY - (int)sim->getViewY();
-
-	float p1x = x - mSize;
-	float p2x = x + mSize;
-	float p1y = y - mSize;
-	float p2y = y + mSize;
-
-	glColor3f(mColor.mRed,
-			mColor.mGreen,
-			mColor.mBlue);
-	glBegin(GL_POLYGON);
-	glVertex2f(p1x, p1y);
-	glVertex2f(p2x, p1y);
-	glVertex2f(p2x, p2y);
-	glVertex2f(p1x, p2y);
-	glEnd();
-}
-*/
 

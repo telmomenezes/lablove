@@ -25,10 +25,6 @@
 
 #include "Orbit.h"
 
-#if defined(__LABLOVE_WITH_GRAPHICS)
-#include "Ogre.h"
-#endif
-
 class ObjectSimple2D : public SimulationObject
 {
 public:
@@ -64,7 +60,6 @@ public:
 	int setAgeRange(lua_State* luaState);
 	int setMetabolism(lua_State* luaState);
 	int setColor(lua_State* luaState);
-	virtual void setShowViewRange(bool show){}
 
 	virtual float getFieldValue(std::string fieldName);
 
@@ -87,11 +82,6 @@ protected:
 	unsigned long mMaxAge;
 	float mMetabolism;
 	MoleculeRGB mColor;
-#if defined(__LABLOVE_WITH_GRAPHICS)
-	Ogre::SceneNode* mNode;
-	Ogre::MaterialPtr mMaterial;
-	float mZ;
-#endif
 };
 #endif
 

@@ -21,6 +21,10 @@
 #include "functions.h"
 #include "random.h"
 
+#if defined(__LABLOVE_WITH_GRAPHICS)
+#include "SDL.h"
+#endif
+
 #if defined(__UNIX)
 #include <sys/time.h>
 #endif
@@ -40,28 +44,22 @@ Lab Lab::mLab;
 Lab::Lab()
 {
 	mStop = false;
-#if defined(__LABLOVE_WITH_GRAPHICS)
-	mOgreApp = NULL;
-#endif
+	mScreen = NULL;
 }
 
 Lab::Lab(lua_State* luaState)
 {
 	mStop = false;
-#if defined (__LABLOVE_WITH_GRAPHICS)
-	mOgreApp = NULL;
-#endif
+	mScreen = NULL;
 }
 
 Lab::~Lab()
 {
-#if defined (__LABLOVE_WITH_GRAPHICS)
-	if (mOgreApp != NULL)
+	if (mScreen != NULL)
 	{
-		delete mOgreApp;
-		mOgreApp = NULL;
+		delete mScreen;
+		mScreen = NULL;
 	}
-#endif
 }
 
 Lab& Lab::getSingleton()
@@ -76,40 +74,92 @@ void Lab::setSeedIndex(unsigned int index)
 
 void Lab::run()
 {
-#if defined (__LABLOVE_WITH_GRAPHICS)
-	mOgreApp = new OgreApplication();
+	addInputHandler(this);
+	addInputHandler(mSimulation);
 
-	try
-	{
-		mOgreApp->init();
-		mSimulation->init();
-		mOgreApp->start();
-	}
-	catch (Ogre::Exception& e)
-	{
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-		MessageBox(NULL,
-			e.getFullDescription().c_str(),
-			"An exception has occured!",
-			MB_OK | MB_ICONERROR | MB_TASKMODAL);
-#else
-		std::cerr << "An exception has occured: " <<
-			e.getFullDescription().c_str() << std::endl;
-#endif
-	}
-#else
+	mScreen = layer::ScreenManager::getSingleton().createScreen(layer::SDLOpenGL, 800, 600);
+	mScreen->setCaption("LabLOVE");
+	mScreen->setBackgroundColor(1.0f, 1.0f, 1.0f);
+
 	mSimulation->init();
 
 	while (running())
 	{
 		cycle();
 	}
-#endif
 }
 
 void Lab::cycle()
 {
 	mSimulation->cycle();
+#if defined(__LABLOVE_WITH_GRAPHICS)
+	processEvents();
+#endif
+}
+
+void Lab::processEvents()
+{
+#if defined(__LABLOVE_WITH_GRAPHICS)
+	SDL_Event event;
+
+	while (SDL_PollEvent(&event))
+	{
+		std::list<InputHandler*>::iterator iterHandler = mHandlers.begin();
+                bool handled = false;
+                while ((!handled) && (iterHandler != mHandlers.end()))
+                {
+                        switch (event.type)
+                        {
+				case SDL_KEYDOWN:
+					handled = (*iterHandler)->onKeyDown(event.key.keysym.sym);
+					break;
+				case SDL_KEYUP:
+					handled = (*iterHandler)->onKeyUp(event.key.keysym.sym);
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					handled = (*iterHandler)->onMouseButtonDown(event.button.button, 
+											event.button.x,
+											mScreen->getHeight() - event.button.y);
+					break;
+				case SDL_MOUSEBUTTONUP:
+					handled = (*iterHandler)->onMouseButtonUp(event.button.button,
+											event.button.x,
+											mScreen->getHeight() - event.button.y);
+					break;
+				case SDL_MOUSEMOTION:
+					handled = (*iterHandler)->onMouseMove(event.button.x,
+										mScreen->getHeight() - event.button.y);
+					break;
+				default:
+					break;
+			}
+
+			iterHandler++;
+		}
+	}
+#endif
+}
+
+void Lab::addInputHandler(InputHandler* handler) 
+{
+        mHandlers.push_back(handler);
+}
+
+void Lab::removeInputHandler()
+{
+        mHandlers.pop_front();
+}
+
+bool Lab::onKeyDown(int keycode)
+{
+	switch (keycode)
+	{
+		case SDLK_ESCAPE:
+			mStop = true;
+			return true;
+		default:
+			return false;
+	}
 }
 
 #if defined(__UNIX)

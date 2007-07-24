@@ -32,7 +32,7 @@
 #include "StatTime.h"
 
 #if defined(__LABLOVE_WITH_GRAPHICS)
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+#if defined(__WIN32)
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include "windows.h"
@@ -51,7 +51,7 @@ int getLab(lua_State* luaState)
 	return 1;
 }
 
-#if defined(__LABLOVE_WITH_GRAPHICS) && (OGRE_PLATFORM == OGRE_PLATFORM_WIN32)
+#if defined(__LABLOVE_WITH_GRAPHICS) && defined(__WIN32)
 INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)
 #else
 int main(int argc, char *argv[])

@@ -34,11 +34,6 @@ public:
 	virtual SimulationObject* clone(bool full=true);
 	virtual void initRandom();
 	void initTest();
-#if defined(__LABLOVE_WITH_GRAPHICS)
-	void createGraphics();
-	void createViewMesh();
-	virtual void setShowViewRange(bool show);
-#endif
 
 	void setAlphaObjectsGrid(Grid* grid);
 	void setBetaGrid(Grid* grid);
@@ -48,6 +43,7 @@ public:
 	virtual void actionStep();
 	virtual void onCycle();
 	virtual void computationStep();
+	virtual void draw();
 
 	//virtual AnimatSimple2D* crossover(Animat* other_parent);
 	virtual void mutate();
@@ -106,10 +102,6 @@ protected:
 
 	SimulationObject* mNearestFood;
 	float mDistanceToNearestFood;
-
-#if defined(__LABLOVE_WITH_GRAPHICS)
-	Ogre::SceneNode* mViewNode;
-#endif
 };
 #endif
 

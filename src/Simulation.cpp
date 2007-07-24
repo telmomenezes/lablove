@@ -19,9 +19,10 @@
 
 #include "Simulation.h"
 #include "Lab.h"
-#include <math.h>
 #include "functions.h"
 #include "PopulationDynamics.h"
+
+#include <math.h>
 
 Simulation::Simulation()
 {
@@ -43,9 +44,6 @@ Simulation::~Simulation()
 void Simulation::init()
 {
 	mPopulationDynamics->init();
-#if defined(__LABLOVE_WITH_GRAPHICS)
-	Lab::getSingleton().getOgreApplication()->addInputHandler(this);
-#endif
 }
 
 void Simulation::addObject(SimulationObject* object)
@@ -92,6 +90,15 @@ void Simulation::cycle()
 	}
 
 	mPopulationDynamics->onCycle();
+
+	Lab::getSingleton().getScreen()->beginFrame();
+	drawBeforeObjects();
+	for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
+	{
+		SimulationObject* obj = *iterObj;
+		obj->draw();
+	}
+	Lab::getSingleton().getScreen()->endFrame();
 
 	mSimulationTime++;
 }

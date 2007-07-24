@@ -21,6 +21,7 @@
 #define __INCLUDE_LAYER_SCREEN_SDLOPENGL_H
 
 #include "Screen.h"
+#include <math.h>
 
 namespace layer
 {
@@ -37,6 +38,46 @@ public:
 		bool fullScreen=false,
 		bool resizable=false,
 		bool windowDecorations=true);
+
+	virtual void setCaption(std::string caption);
+
+	virtual void beginFrame();
+	virtual void endFrame();
+
+	virtual void setColor(float red,
+				float green,
+				float blue,
+				float alpha=1.0f);
+	virtual void setBackgroundColor(float red,
+				float green,
+				float blue);
+
+	virtual void setPointSize(float size);
+	virtual void setLineWidth(float width);
+
+	virtual void drawPoint(float x, float y);
+	virtual void drawLine(float x1, float y1, float x2, float y2);
+	virtual void drawTriangle(float x1,
+					float y1,
+					float x2,
+					float y2,
+					float x3,
+					float y3);
+	virtual void drawFilledTriangle(float x1,
+					float y1,
+					float x2,
+					float y2,
+					float x3,
+					float y3);
+	virtual void drawFilledSquare(float x,
+					float y,
+					float rad,
+					float rot=0.0f);
+	virtual void drawFilledCircle(float x,
+					float y,
+					float rad,
+					float beginAngle=0.0f,
+					float endAngle=M_PI);
 };
 
 }
