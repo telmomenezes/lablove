@@ -160,8 +160,16 @@ void AnimatSimple2D::draw()
 {
 	if (((SimSimple2D*)(Lab::getSingleton().getSimulation()))->getShowViewRange())
 	{
+		float beginAngle = mLowLimitViewAngle;
+		float endAngle = mHighLimitViewAngle;
+
+		if (beginAngle > endAngle)
+		{
+			endAngle += M_PI * 2.0f;
+		}
+
 		Lab::getSingleton().getScreen()->setColor(0.6, 0.6, 0.6, 0.5);
-		Lab::getSingleton().getScreen()->drawFilledCircle(mX, mY, mViewRange, mLowLimitViewAngle, mHighLimitViewAngle);
+		Lab::getSingleton().getScreen()->drawFilledCircle(mX, mY, mViewRange, beginAngle, endAngle);
 	}
 
 	float a1 = mRot;
@@ -175,7 +183,9 @@ void AnimatSimple2D::draw()
 	float y3 = mY + (sinf(a3) * mSize);
 
 	Lab::getSingleton().getScreen()->setColor(mColor.mRed, mColor.mGreen, mColor.mBlue);
+	Lab::getSingleton().getScreen()->setLineWidth(2.0f);
 	Lab::getSingleton().getScreen()->drawFilledTriangle(x1, y1, x2, y2, x3, y3);
+	Lab::getSingleton().getScreen()->drawTriangle(x1, y1, x2, y2, x3, y3);
 }
 
 void AnimatSimple2D::setRot(float rot)

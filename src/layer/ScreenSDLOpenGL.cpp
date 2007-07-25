@@ -92,6 +92,11 @@ bool ScreenSDLOpenGL::init(int width,
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	glEnable(GL_LINE_SMOOTH);
+	glEnable(GL_POINT_SMOOTH);
+	glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
+	glHint(GL_POINT_SMOOTH_HINT, GL_DONT_CARE);
+
 	return true;
 }
 
