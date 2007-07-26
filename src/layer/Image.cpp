@@ -32,5 +32,17 @@ Image::~Image()
 {
 }
 
+int Image::nextPowerOfTwo(int value)
+{
+	int result = 1;
+
+	while (result < value)
+	{
+		result *= 2;
+	}
+
+	return result;
+}
+
 }
 

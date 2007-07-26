@@ -36,6 +36,8 @@ public:
 	virtual void draw(float x, float y)=0;
 
 protected:
+	int nextPowerOfTwo(int value);
+
 	int mWidth;
 	int mHeight;
 };

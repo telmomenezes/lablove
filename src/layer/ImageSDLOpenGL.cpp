@@ -110,11 +110,10 @@ bool ImageSDLOpenGL::loadPNG(std::string filePath)
 
 	mWidth = width;
 	mHeight = height;
+
+	mTextureWidth = nextPowerOfTwo(mWidth);
+	mTextureHeight = nextPowerOfTwo(mHeight);
    
-   	if (colorType & PNG_COLOR_MASK_ALPHA)
-	{
-		png_set_strip_alpha(pngPtr);
-	}
 	if (bitDepth > 8)
 	{
 		png_set_strip_16(pngPtr);
@@ -128,8 +127,27 @@ bool ImageSDLOpenGL::loadPNG(std::string filePath)
 	{
 		png_set_palette_to_rgb(pngPtr);
 	}
-   
+
    	png_read_update_info(pngPtr, infoPtr);
+	png_get_IHDR(pngPtr,
+			infoPtr,
+			&width,
+			&height,
+			&bitDepth,
+			&colorType,
+			NULL,
+			NULL,
+			NULL);
+
+	unsigned int bpp = 3;
+	GLint internalTextureFormat = GL_RGB;
+	GLenum textureFormat = GL_RGB;
+	if (colorType == PNG_COLOR_TYPE_RGB_ALPHA)
+	{
+		bpp = 4;
+		internalTextureFormat = GL_RGBA;
+		textureFormat = GL_RGBA;
+	}
 
 	rowbytes = png_get_rowbytes(pngPtr, infoPtr);
 
@@ -159,13 +177,15 @@ bool ImageSDLOpenGL::loadPNG(std::string filePath)
 	png_destroy_read_struct(&pngPtr, &infoPtr, NULL);
 	fclose(infile);
 
-	unsigned char* newImage = (unsigned char*)malloc(512 * 512 * 4);
+	
+
+	unsigned char* textureData = (unsigned char*)malloc(mTextureWidth * mTextureHeight * bpp);
 
 	for (unsigned int y = 0; y < height; y++)
 	{
 		for (unsigned int x = 0; x < rowbytes; x++)
 		{
-			newImage[(512 * 3 * y) + x] = imageData[(rowbytes * y) + x];
+			textureData[(mTextureWidth * bpp * y) + x] = imageData[(rowbytes * y) + x];
 		}
 	}
 
@@ -179,41 +199,45 @@ bool ImageSDLOpenGL::loadPNG(std::string filePath)
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glTexImage2D(GL_TEXTURE_2D,
 			0,
-			GL_RGB,
-			512,
-			256,
+			internalTextureFormat,
+			mTextureWidth,
+			mTextureHeight,
 			0,
-			GL_RGB,
+			textureFormat,
 			GL_UNSIGNED_BYTE,
-			newImage);
+			textureData);
 
 	delete imageData;
-	delete newImage;
+	delete textureData;
 
 	return true;
 }
 
 void ImageSDLOpenGL::draw(float x, float y)
 {
+	float origX1 = 0.0f;
+	float origY1 = 0.0f;
+	float origX2 = ((float)mWidth) / ((float)mTextureWidth);
+	float origY2 = ((float)mHeight) / ((float)mTextureHeight);
+
 	float x2 = x + mWidth;
 	float y2 = y + mHeight;
 
 	glBindTexture(GL_TEXTURE_2D, mTexture);
 	glEnable(GL_TEXTURE_2D);
-	glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
 
 	glBegin(GL_QUADS);
 
-	glTexCoord2f(0.0f, 0.0f);
+	glTexCoord2f(origX1, origY1);
 	glVertex3f(x, y, 0.0f);
 
-	glTexCoord2f(1.0f, 0.0f);
+	glTexCoord2f(origX2, origY1);
 	glVertex3f(x2, y, 0.0f);
 
-	glTexCoord2f(1.0f, 1.0f);
+	glTexCoord2f(origX2, origY2);
 	glVertex3f(x2, y2, 0.0f);
 
-	glTexCoord2f(0.0f, 1.0f);
+	glTexCoord2f(origX1, origY2);
 	glVertex3f(x, y2, 0.0f);
 
 	glEnd();

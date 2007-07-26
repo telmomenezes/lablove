@@ -100,7 +100,10 @@ void Simulation::cycle()
 		SimulationObject* obj = *iterObj;
 		obj->draw();
 	}
+
+	Lab::getSingleton().getScreen()->setColor(1.0f, 1.0f, 1.0f, 0.7f);
 	mLogo->draw(10, 10);
+
 	Lab::getSingleton().getScreen()->endFrame();
 
 	mSimulationTime++;

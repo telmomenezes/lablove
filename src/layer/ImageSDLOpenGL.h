@@ -40,6 +40,9 @@ public:
 
 protected:
 	GLuint mTexture;
+
+	int mTextureWidth;
+	int mTextureHeight;
 };
 
 }
