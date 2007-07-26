@@ -17,8 +17,32 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "types.h"
-#include "ScreenManager.h"
-#include "Screen.h"
+#if !defined(__INCLUDE_LAYER_IMAGE_SDL_OPENGL_H)
+#define __INCLUDE_LAYER_IMAGE_SDL_OPENGL_H
+
 #include "Image.h"
+
+#include "SDL.h"
+#include "SDL_opengl.h"
+
+namespace layer
+{
+
+class ImageSDLOpenGL : public Image
+{
+public:
+	ImageSDLOpenGL();
+	virtual ~ImageSDLOpenGL();
+
+	virtual bool loadPNG(std::string filePath);
+
+	virtual void draw(float x, float y);
+
+protected:
+	GLuint mTexture;
+};
+
+}
+
+#endif
 

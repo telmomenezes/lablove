@@ -20,6 +20,7 @@
 #if defined(__LAYER_SDLOPENGL)
 
 #include "ScreenSDLOpenGL.h"
+#include "ImageSDLOpenGL.h"
 
 #include "SDL.h"
 #include "SDL_opengl.h" 
@@ -234,6 +235,19 @@ void ScreenSDLOpenGL::drawFilledCircle(float x,
 	}
 
 	glEnd();
+}
+
+Image* ScreenSDLOpenGL::loadPNG(std::string filePath)
+{
+	ImageSDLOpenGL* image = new ImageSDLOpenGL();
+
+	if (!image->loadPNG(filePath))
+	{
+		delete image;
+		return NULL;
+	}
+
+	return image;
 }
 
 }

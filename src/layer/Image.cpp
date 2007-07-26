@@ -17,8 +17,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "types.h"
-#include "ScreenManager.h"
-#include "Screen.h"
 #include "Image.h"
+
+namespace layer
+{
+
+Image::Image()
+{
+	mWidth = 0;
+	mHeight = 0;
+}
+
+Image::~Image()
+{
+}
+
+}
 

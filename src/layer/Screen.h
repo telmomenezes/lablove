@@ -20,6 +20,8 @@
 #if !defined(__INCLUDE_LAYER_SCREEN_H)
 #define __INCLUDE_LAYER_SCREEN_H
 
+#include "Image.h"
+
 #include <math.h>
 #include <string>
 
@@ -81,6 +83,8 @@ public:
 					float rad,
 					float beginAngle=0.0f,
 					float endAngle=M_PI)=0;
+
+	virtual Image* loadPNG(std::string filePath)=0;
 
 protected:
 	int mWidth;

@@ -24,9 +24,10 @@
 #include "PopulationDynamics.h"
 #include "InputHandler.h"
 
-#include <list>
-
 #include "Orbit.h"
+#include "layer/layer.h"
+
+#include <list>
 
 class Simulation : public InputHandler
 {
@@ -58,6 +59,8 @@ protected:
 	unsigned long mSimulationTime;
 	SimulationObject* mSelectedObject;
 	PopulationDynamics* mPopulationDynamics;
+
+	layer::Image* mLogo;
 };
 #endif
 

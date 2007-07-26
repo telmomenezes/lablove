@@ -44,6 +44,8 @@ Simulation::~Simulation()
 void Simulation::init()
 {
 	mPopulationDynamics->init();
+
+	mLogo = Lab::getSingleton().getScreen()->loadPNG("lablove.png");
 }
 
 void Simulation::addObject(SimulationObject* object)
@@ -98,6 +100,7 @@ void Simulation::cycle()
 		SimulationObject* obj = *iterObj;
 		obj->draw();
 	}
+	mLogo->draw(10, 10);
 	Lab::getSingleton().getScreen()->endFrame();
 
 	mSimulationTime++;

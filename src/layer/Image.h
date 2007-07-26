@@ -17,8 +17,30 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "types.h"
-#include "ScreenManager.h"
-#include "Screen.h"
-#include "Image.h"
+#if !defined(__INCLUDE_LAYER_IMAGE_H)
+#define __INCLUDE_LAYER_IMAGE_H
+
+#include <string>
+
+namespace layer
+{
+
+class Image
+{
+public:
+	Image();
+	virtual ~Image();
+
+	virtual bool loadPNG(std::string filePath)=0;
+
+	virtual void draw(float x, float y)=0;
+
+protected:
+	int mWidth;
+	int mHeight;
+};
+
+}
+
+#endif
 

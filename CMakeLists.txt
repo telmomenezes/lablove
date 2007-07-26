@@ -51,7 +51,9 @@ IF(GRAPHICS)
 	SET(SOURCE_FILES ${SOURCE_FILES}
 		src/layer/ScreenManager.cpp
 		src/layer/Screen.cpp
-		src/layer/ScreenSDLOpenGL.cpp)
+		src/layer/ScreenSDLOpenGL.cpp
+		src/layer/Image.cpp
+		src/layer/ImageSDLOpenGL.cpp)
 ENDIF(GRAPHICS)
 
 ADD_EXECUTABLE(lablove ${SOURCE_FILES})
@@ -59,7 +61,7 @@ ADD_EXECUTABLE(lablove ${SOURCE_FILES})
 TARGET_LINK_LIBRARIES(lablove lua dl)
 
 IF(GRAPHICS)
-	TARGET_LINK_LIBRARIES(lablove SDL GL GLU)
+	TARGET_LINK_LIBRARIES(lablove SDL GL GLU png)
 ENDIF(GRAPHICS)
 
 IF(UNIX)

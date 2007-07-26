@@ -78,6 +78,8 @@ public:
 					float rad,
 					float beginAngle=0.0f,
 					float endAngle=M_PI);
+
+	virtual Image* loadPNG(std::string filePath);
 };
 
 }
