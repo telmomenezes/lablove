@@ -168,8 +168,8 @@ void AnimatSimple2D::draw()
 			endAngle += M_PI * 2.0f;
 		}
 
-		Lab::getSingleton().getScreen()->setColor(0.6, 0.6, 0.6, 0.5);
-		Lab::getSingleton().getScreen()->drawFilledCircle(mX, mY, mViewRange, beginAngle, endAngle);
+		Lab::getSingleton().getRootLayer()->setColor(150, 150, 150, 100);
+		Lab::getSingleton().getRootLayer()->fillCircle(mX, mY, mViewRange, beginAngle, endAngle);
 	}
 
 	float a1 = mRot;
@@ -182,10 +182,10 @@ void AnimatSimple2D::draw()
 	float x3 = mX + (cosf(a3) * mSize);
 	float y3 = mY + (sinf(a3) * mSize);
 
-	Lab::getSingleton().getScreen()->setColor(mColor.mRed, mColor.mGreen, mColor.mBlue);
-	Lab::getSingleton().getScreen()->setLineWidth(2.0f);
-	Lab::getSingleton().getScreen()->drawFilledTriangle(x1, y1, x2, y2, x3, y3);
-	Lab::getSingleton().getScreen()->drawTriangle(x1, y1, x2, y2, x3, y3);
+	Lab::getSingleton().getRootLayer()->setColor(mColor.mRed, mColor.mGreen, mColor.mBlue);
+	Lab::getSingleton().getRootLayer()->setLineWidth(2.0f);
+	Lab::getSingleton().getRootLayer()->fillTriangle(x1, y1, x2, y2, x3, y3);
+	Lab::getSingleton().getRootLayer()->drawTriangle(x1, y1, x2, y2, x3, y3);
 }
 
 void AnimatSimple2D::setRot(float rot)

@@ -45,7 +45,7 @@ void Simulation::init()
 {
 	mPopulationDynamics->init();
 
-	mLogo = Lab::getSingleton().getScreen()->loadPNG("lablove.png");
+	mLogo = Lab::getSingleton().getWindow()->createPNGLayer("lablove.png");
 }
 
 void Simulation::addObject(SimulationObject* object)
@@ -93,7 +93,6 @@ void Simulation::cycle()
 
 	mPopulationDynamics->onCycle();
 
-	Lab::getSingleton().getScreen()->beginFrame();
 	drawBeforeObjects();
 	for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
 	{
@@ -101,10 +100,10 @@ void Simulation::cycle()
 		obj->draw();
 	}
 
-	Lab::getSingleton().getScreen()->setColor(1.0f, 1.0f, 1.0f, 0.7f);
-	mLogo->draw(10, 10);
+	Lab::getSingleton().getRootLayer()->setColor(255, 255, 255, 200);
+	Lab::getSingleton().getRootLayer()->drawLayer(mLogo, 10, 10);
 
-	Lab::getSingleton().getScreen()->endFrame();
+	Lab::getSingleton().getWindow()->update();
 
 	mSimulationTime++;
 }

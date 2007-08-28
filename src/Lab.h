@@ -23,7 +23,8 @@
 #include "Simulation.h"
 #include "Orbit.h"
 #include "InputHandler.h"
-#include "layer/layer.h"
+
+#include "pyc.h"
 
 #include <list>
 
@@ -44,11 +45,13 @@ public:
 	void removeInputHandler();
 	void processEvents();
 
-	virtual bool onKeyDown(int keycode);
+	virtual bool onKeyDown(pyc::KeyCode keycode);
 
 	double realTime();
 
-	layer::Screen* getScreen(){return mScreen;}
+	pyc::Pycasso* getPycass(){return &mPycasso;}
+	pyc::Window* getWindow(){return mWindow;}
+	pyc::Layer* getRootLayer(){return mRootLayer;}
 
 	static const char mClassName[];
         static Orbit<Lab>::MethodType mMethods[];
@@ -65,7 +68,10 @@ private:
 	Simulation* mSimulation;
 	bool mStop;
 	
-	layer::Screen* mScreen;
+	pyc::Pycasso mPycasso;
+	pyc::EventQ* mEventQ;
+	pyc::Window* mWindow;
+	pyc::Layer* mRootLayer;
 
 	std::list<InputHandler*> mHandlers;
 };

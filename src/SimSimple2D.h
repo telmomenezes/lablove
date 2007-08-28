@@ -24,6 +24,8 @@
 #include "ObjectSimple2D.h"
 #include "PopulationDynamics.h"
 
+#include "pyc.h"
+
 #include <list>
 
 #include "Orbit.h"
@@ -65,12 +67,10 @@ public:
 	
 	SimulationObject* getObjectByScreenPos(int x, int y);
 
-#ifdef __LABLOVE_WITH_GRAPHICS
-	virtual bool onKeyDown(int keycode);
-	virtual bool onKeyUp(int keycode);
-	virtual bool onMouseButtonDown(int button, int x, int y);
-	virtual bool onMouseButtonUp(int button, int x, int y);
-#endif
+	virtual bool onKeyDown(pyc::KeyCode keycode);
+	virtual bool onKeyUp(pyc::KeyCode keycode);
+	virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y);
+	virtual bool onMouseButtonUp(pyc::MouseButton button, int x, int y);
 
 	static const char mClassName[];
         static Orbit<SimSimple2D>::MethodType mMethods[];

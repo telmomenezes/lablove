@@ -24,7 +24,6 @@
 #include "PopulationDynamics.h"
 #include "defines.h"
 #include "AnimatSimple2D.h"
-#include "SDL.h"
 
 #include <math.h>
 
@@ -105,25 +104,25 @@ void SimSimple2D::drawBeforeObjects()
 		int mViewX = 0;
 		int mViewY = 0;
 
-		Lab::getSingleton().getScreen()->setColor(0.7, 0.7, 0.7);
+		Lab::getSingleton().getRootLayer()->setColor(200, 200, 200);
 
 		unsigned int division = cellSide - (mViewX % cellSide);
-		while (division < Lab::getSingleton().getScreen()->getWidth())
+		while (division < Lab::getSingleton().getRootLayer()->getWidth())
 		{
-			Lab::getSingleton().getScreen()->drawLine(division,
+			Lab::getSingleton().getRootLayer()->drawLine(division,
 									0,
 									division,
-									Lab::getSingleton().getScreen()->getHeight());
+									Lab::getSingleton().getRootLayer()->getHeight());
 
 			division += cellSide;
 		}
 
 		division = cellSide - (mViewY % cellSide);
-		while (division < Lab::getSingleton().getScreen()->getHeight())
+		while (division < Lab::getSingleton().getRootLayer()->getHeight())
 		{
-			Lab::getSingleton().getScreen()->drawLine(0,
+			Lab::getSingleton().getRootLayer()->drawLine(0,
 									division,
-									Lab::getSingleton().getScreen()->getWidth(),
+									Lab::getSingleton().getRootLayer()->getWidth(),
 									division);
 
 			division += cellSide;
@@ -131,8 +130,7 @@ void SimSimple2D::drawBeforeObjects()
 	}
 }
 
-#ifdef __LABLOVE_WITH_GRAPHICS
-bool SimSimple2D::onKeyDown(int key)
+bool SimSimple2D::onKeyDown(pyc::KeyCode key)
 {
 	AnimatSimple2D* human = (AnimatSimple2D*)(mPopulationDynamics->getHuman());
 
@@ -143,18 +141,18 @@ bool SimSimple2D::onKeyDown(int key)
 
 	switch (key)
 	{
-	case SDLK_UP:
+	case pyc::KEY_UP:
 		human->mActionGo = true;
 		return true;
-	case SDLK_RIGHT:
+	case pyc::KEY_RIGHT:
 		human->mActionRotate = true;
 		human->mActionRotateParam = 1.0f;
 		return true;
-	case SDLK_LEFT:
+	case pyc::KEY_LEFT:
 		human->mActionRotate = true;
 		human->mActionRotateParam = -1.0;
 		return true;
-	case SDLK_e:
+	case pyc::KEY_E:
 		human->mActionEat = true;
 		return true;
 	default:
@@ -162,14 +160,14 @@ bool SimSimple2D::onKeyDown(int key)
 	}
 }
 
-bool SimSimple2D::onKeyUp(int key)
+bool SimSimple2D::onKeyUp(pyc::KeyCode key)
 {
 	switch (key)
 	{
-	case SDLK_g:
+	case pyc::KEY_G:
 		setShowGrid(!getShowGrid());
 		return true;
-	case SDLK_v:
+	case pyc::KEY_V:
 		setShowViewRange(!getShowViewRange());
 		return true;
 	default:
@@ -185,16 +183,16 @@ bool SimSimple2D::onKeyUp(int key)
 
 	switch (key)
 	{
-	case SDLK_UP:
+	case pyc::KEY_UP:
 		human->mActionGo = false;
 		return true;
-	case SDLK_RIGHT:
+	case pyc::KEY_RIGHT:
 		human->mActionRotate = false;
 		return true;
-	case SDLK_LEFT:
+	case pyc::KEY_LEFT:
 		human->mActionRotate = false;
 		return true;
-	case SDLK_e:
+	case pyc::KEY_E:
 		human->mActionEat = false;
 		return true;
 	default:
@@ -202,16 +200,15 @@ bool SimSimple2D::onKeyUp(int key)
 	}
 }
 
-bool SimSimple2D::onMouseButtonDown(int button, int x, int y)
+bool SimSimple2D::onMouseButtonDown(pyc::MouseButton button, int x, int y)
 {
 	return false;
 }
 
-bool SimSimple2D::onMouseButtonUp(int button, int x, int y)
+bool SimSimple2D::onMouseButtonUp(pyc::MouseButton button, int x, int y)
 {
 	return false;
 }
-#endif
 
 const char SimSimple2D::mClassName[] = "SimSimple2D";
 

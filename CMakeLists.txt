@@ -1,14 +1,9 @@
 PROJECT(lablove)
 
-OPTION(GRAPHICS "Build the project with graphical visualization" ON)
 OPTION(DEBUG "Debug settings" OFF)
 
-# TODO: look for or inplement a FindOgre.cmake module
-IF(GRAPHICS)
-	INCLUDE(${CMAKE_ROOT}/Modules/FindSDL.cmake)
-	INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIR})
-	ADD_DEFINITIONS(-D__LAYER_SDLOPENGL)
-ENDIF(GRAPHICS)
+# TODO: Create a cmake script to find the correct directory for pycasso
+INCLUDE_DIRECTORIES("/usr/include/pycasso")
 
 #SET(CMAKE_VERBOSE_MAKEFILE "ON")
 
@@ -46,23 +41,9 @@ SET(SOURCE_FILES
 	src/StatMedAvgMinMax.cpp
 	src/StatTime.cpp)
 
-IF(GRAPHICS)
-	ADD_DEFINITIONS(-D__LABLOVE_WITH_GRAPHICS)
-	SET(SOURCE_FILES ${SOURCE_FILES}
-		src/layer/ScreenManager.cpp
-		src/layer/Screen.cpp
-		src/layer/ScreenSDLOpenGL.cpp
-		src/layer/Image.cpp
-		src/layer/ImageSDLOpenGL.cpp)
-ENDIF(GRAPHICS)
-
 ADD_EXECUTABLE(lablove ${SOURCE_FILES})
 
-TARGET_LINK_LIBRARIES(lablove lua dl)
-
-IF(GRAPHICS)
-	TARGET_LINK_LIBRARIES(lablove SDL GL GLU png)
-ENDIF(GRAPHICS)
+TARGET_LINK_LIBRARIES(lablove pycasso lua dl)
 
 IF(UNIX)
 	ADD_DEFINITIONS(-D__UNIX)

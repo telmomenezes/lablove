@@ -20,13 +20,15 @@
 #if !defined(__INCLUDE_INPUT_HANDLER_H)
 #define __INCLUDE_INPUT_HANDLER_H
 
+#include "pyc.h"
+
 class InputHandler
 {
 public:
-	virtual bool onKeyDown(int keycode){return false;}
-	virtual bool onKeyUp(int keycode){return false;}
-	virtual bool onMouseButtonDown(int button, int x, int y){return false;}
-	virtual bool onMouseButtonUp(int button, int x, int y){return false;}
+	virtual bool onKeyDown(pyc::KeyCode keycode){return false;}
+	virtual bool onKeyUp(pyc::KeyCode keycode){return false;}
+	virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y){return false;}
+	virtual bool onMouseButtonUp(pyc::MouseButton button, int x, int y){return false;}
 	virtual bool onMouseMove(int x, int y){return false;}
 };
 #endif

@@ -44,8 +44,8 @@ SimulationObject* PlantSimple2D::clone(bool full)
 
 void PlantSimple2D::draw()
 {
-	Lab::getSingleton().getScreen()->setColor(mColor.mRed, mColor.mGreen, mColor.mBlue);
-	Lab::getSingleton().getScreen()->drawFilledSquare(mX, mY, mSize, mRot);
+	Lab::getSingleton().getRootLayer()->setColor(mColor.mRed, mColor.mGreen, mColor.mBlue);
+	Lab::getSingleton().getRootLayer()->fillSquare(mX, mY, mSize, mRot);
 }
 
 const char PlantSimple2D::mClassName[] = "PlantSimple2D";

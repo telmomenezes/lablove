@@ -24,8 +24,9 @@
 #include "PopulationDynamics.h"
 #include "InputHandler.h"
 
+#include "pyc.h"
+
 #include "Orbit.h"
-#include "layer/layer.h"
 
 #include <list>
 
@@ -60,7 +61,7 @@ protected:
 	SimulationObject* mSelectedObject;
 	PopulationDynamics* mPopulationDynamics;
 
-	layer::Image* mLogo;
+	pyc::Layer* mLogo;
 };
 #endif
 

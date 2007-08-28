@@ -21,10 +21,6 @@
 #include "functions.h"
 #include "random.h"
 
-#if defined(__LABLOVE_WITH_GRAPHICS)
-#include "SDL.h"
-#endif
-
 #if defined(__UNIX)
 #include <sys/time.h>
 #endif
@@ -44,22 +40,21 @@ Lab Lab::mLab;
 Lab::Lab()
 {
 	mStop = false;
-	mScreen = NULL;
+	mWindow = NULL;
+	mRootLayer = NULL;
+	mEventQ = NULL;
 }
 
 Lab::Lab(lua_State* luaState)
 {
 	mStop = false;
-	mScreen = NULL;
+	mWindow = NULL;
+	mRootLayer = NULL;
+	mEventQ = NULL;
 }
 
 Lab::~Lab()
 {
-	if (mScreen != NULL)
-	{
-		delete mScreen;
-		mScreen = NULL;
-	}
 }
 
 Lab& Lab::getSingleton()
@@ -77,9 +72,11 @@ void Lab::run()
 	addInputHandler(this);
 	addInputHandler(mSimulation);
 
-	mScreen = layer::ScreenManager::getSingleton().createScreen(layer::SDLOpenGL, 800, 600);
-	mScreen->setCaption("LabLOVE");
-	mScreen->setBackgroundColor(1.0f, 1.0f, 1.0f);
+	mWindow = mPycasso.createWindow(800, 600);
+	mEventQ = mPycasso.createEventQ();
+	mRootLayer = mWindow->getRootLayer();
+
+	mWindow->setTitle("LabLOVE");
 
 	mSimulation->init();
 
@@ -92,43 +89,38 @@ void Lab::run()
 void Lab::cycle()
 {
 	mSimulation->cycle();
-#if defined(__LABLOVE_WITH_GRAPHICS)
 	processEvents();
-#endif
 }
 
 void Lab::processEvents()
 {
-#if defined(__LABLOVE_WITH_GRAPHICS)
-	SDL_Event event;
-
-	while (SDL_PollEvent(&event))
+	while (mEventQ->next())
 	{
 		std::list<InputHandler*>::iterator iterHandler = mHandlers.begin();
                 bool handled = false;
                 while ((!handled) && (iterHandler != mHandlers.end()))
                 {
-                        switch (event.type)
+                        switch (mEventQ->getType())
                         {
-				case SDL_KEYDOWN:
-					handled = (*iterHandler)->onKeyDown(event.key.keysym.sym);
+				case pyc::EVENT_KEY_DOWN:
+					handled = (*iterHandler)->onKeyDown(mEventQ->getKeyCode());
 					break;
-				case SDL_KEYUP:
-					handled = (*iterHandler)->onKeyUp(event.key.keysym.sym);
+				case pyc::EVENT_KEY_UP:
+					handled = (*iterHandler)->onKeyUp(mEventQ->getKeyCode());
 					break;
-				case SDL_MOUSEBUTTONDOWN:
-					handled = (*iterHandler)->onMouseButtonDown(event.button.button, 
-											event.button.x,
-											mScreen->getHeight() - event.button.y);
+				case pyc::EVENT_MOUSE_BUTTON_DOWN:
+					handled = (*iterHandler)->onMouseButtonDown(mEventQ->getMouseButton(),
+											mEventQ->getMousePosX(),
+											mEventQ->getMousePosY());
 					break;
-				case SDL_MOUSEBUTTONUP:
-					handled = (*iterHandler)->onMouseButtonUp(event.button.button,
-											event.button.x,
-											mScreen->getHeight() - event.button.y);
+				case pyc::EVENT_MOUSE_BUTTON_UP:
+					handled = (*iterHandler)->onMouseButtonUp(mEventQ->getMouseButton(),
+											mEventQ->getMousePosX(),
+											mEventQ->getMousePosY());
 					break;
-				case SDL_MOUSEMOTION:
-					handled = (*iterHandler)->onMouseMove(event.button.x,
-										mScreen->getHeight() - event.button.y);
+				case pyc::EVENT_MOUSE_MOTION:
+					handled = (*iterHandler)->onMouseMove(mEventQ->getMousePosX(),
+										mEventQ->getMousePosY());
 					break;
 				default:
 					break;
@@ -137,7 +129,6 @@ void Lab::processEvents()
 			iterHandler++;
 		}
 	}
-#endif
 }
 
 void Lab::addInputHandler(InputHandler* handler) 
@@ -150,11 +141,11 @@ void Lab::removeInputHandler()
         mHandlers.pop_front();
 }
 
-bool Lab::onKeyDown(int keycode)
+bool Lab::onKeyDown(pyc::KeyCode keycode)
 {
 	switch (keycode)
 	{
-		case SDLK_ESCAPE:
+		case pyc::KEY_ESCAPE:
 			mStop = true;
 			return true;
 		default:
