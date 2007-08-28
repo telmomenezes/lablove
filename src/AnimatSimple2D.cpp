@@ -665,7 +665,7 @@ int AnimatSimple2D::setRotateCost(lua_State* luaState)
 	{
 		for (unsigned int x = 0; x < width; x++)
 		{
-			SDL_Surface* screen = Love::get_instance().get_screen();
+			Layer* root = Love::getInstance().getRootLayer();
 			int start_x = (x * component_width * 2) + component_width;
 			int start_y = (y * component_height * 2) + component_height;
 			int end_x = start_x + component_width;
