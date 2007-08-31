@@ -66,10 +66,10 @@ public:
 	unsigned long mRow;
 	unsigned int mGrid;
 
-	int mOrigChemTable;
-	int mOrigMoleculeIndex;
-	int mTargetChemTable;
-	int mTargetMoleculeIndex;
+	int mOrigSymTable;
+	int mOrigSymIndex;
+	int mTargetSymTable;
+	int mTargetSymIndex;
 };
 
 #endif

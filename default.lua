@@ -46,16 +46,16 @@ animat:setMetabolism(metabolism)
 animat:setGoCost(goCost)
 animat:setRotateCost(rotateCost)
 
-animatColor = MoleculeRGB(1.0, 0.3, 0.1)
+animatColor = SymbolRGB(1.0, 0.3, 0.1)
 animat:setColor(animatColor)
 
-chem = Chemistry(animatColor)
-colorMolIndex = chem:addMolecule(animatColor)
-colorChemCode = 0
-animat:addChemistry(chem, colorChemCode)
+symTable = SymbolTable(animatColor)
+colorSymIndex = symTable:addSymbol(animatColor)
+colorTableCode = 0
+animat:addSymbolTable(symTable, colorTableCode)
 
 perSet = GridbrainComponentSet()
-perSet:addComponent(GridbrainComponent.PER, -1, 0, colorChemCode, colorMolIndex, colorChemCode, colorMolIndex)
+perSet:addComponent(GridbrainComponent.PER, -1, 0, colorTableCode, colorSymIndex, colorTableCode, colorSymIndex)
 perSet:addComponent(GridbrainComponent.PER, SimSimple2D.PERCEPTION_POSITION)
 perSet:addComponent(GridbrainComponent.PER, SimSimple2D.PERCEPTION_PROXIMITY)
 perSet:addComponent(GridbrainComponent.PER, SimSimple2D.PERCEPTION_IN_CONTACT)
@@ -110,7 +110,7 @@ plant = PlantSimple2D()
 plant:setSize(5.0)
 plant:setInitialEnergy(1.0)
 
-plantColor = MoleculeRGB(0.1, 0.9, 0.3)
+plantColor = SymbolRGB(0.1, 0.9, 0.3)
 plant:setColor(plantColor)
 
 popDyn = PopDynFixedSpecies()
@@ -132,7 +132,7 @@ human:setMetabolism(metabolism)
 human:setGoCost(goCost)
 human:setRotateCost(rotateCost)
 
-humanColor = MoleculeRGB(0.0, 0.0, 1.0)
+humanColor = SymbolRGB(0.0, 0.0, 1.0)
 human:setColor(humanColor)
 human:setRot(1.00)
 

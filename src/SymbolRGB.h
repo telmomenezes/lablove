@@ -17,20 +17,33 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_MOLECULE_H)
-#define __INCLUDE_MOLECULE_H
+#if !defined(__INCLUDE_SYMBOL_RGB_H)
+#define __INCLUDE_SYMBOL_RGB_H
 
-class Molecule
+#include "Symbol.h"
+
+#include "Orbit.h"
+
+class SymbolRGB : public Symbol
 {
 public:
-	Molecule();
-	virtual ~Molecule();
+        SymbolRGB(lua_State* luaState=NULL);
+	SymbolRGB(float r, float g, float b);
+	SymbolRGB(SymbolRGB* mol);
+	virtual ~SymbolRGB();
+	virtual Symbol* clone();
 
-	virtual Molecule* clone() = 0;
+	virtual float bind(Symbol* sym);
+	virtual void initRandom();
+	virtual void mutate();
 
-	virtual float bind(Molecule* mol) = 0;
-	virtual void initRandom() = 0;
-	virtual void mutate() = 0;
+	static const char mClassName[];
+        static Orbit<SymbolRGB>::MethodType mMethods[];
+	static Orbit<SymbolRGB>::NumberGlobalType mNumberGlobals[];
+
+	float mRed;
+	float mGreen;
+	float mBlue;
 };
 #endif
 

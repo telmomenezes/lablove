@@ -17,33 +17,36 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_MOLECULE_RGB_H)
-#define __INCLUDE_MOLECULE_RGB_H
+#if !defined(__INCLUDE_SYMBOL_TABLE_H)
+#define __INCLUDE_SYMBOL_TABLE_H
 
-#include "Molecule.h"
-
+#include "Symbol.h"
 #include "Orbit.h"
 
-class MoleculeRGB : public Molecule
+#include <vector>
+
+class SymbolTable
 {
 public:
-        MoleculeRGB(lua_State* luaState=NULL);
-	MoleculeRGB(float r, float g, float b);
-	MoleculeRGB(MoleculeRGB* mol);
-	virtual ~MoleculeRGB();
-	virtual Molecule* clone();
+        SymbolTable(lua_State* luaState);
+	SymbolTable(Symbol* refSymbol);
+        SymbolTable(SymbolTable* table);
+	virtual ~SymbolTable();
 
-	virtual float bind(Molecule* mol);
-	virtual void initRandom();
-	virtual void mutate();
+	Symbol* getSymbol(unsigned int index);
+	unsigned int addSymbol(Symbol* sym);
+	void mutate();
+
+	int addSymbol(lua_State* luaState);
 
 	static const char mClassName[];
-        static Orbit<MoleculeRGB>::MethodType mMethods[];
-	static Orbit<MoleculeRGB>::NumberGlobalType mNumberGlobals[];
+        static Orbit<SymbolTable>::MethodType mMethods[];
+	static Orbit<SymbolTable>::NumberGlobalType mNumberGlobals[];
 
-	float mRed;
-	float mGreen;
-	float mBlue;
+
+protected:
+	Symbol* mReferenceSymbol;
+	std::vector<Symbol*> mSymbols;
 };
 #endif
 

@@ -21,7 +21,7 @@
 #define __INCLUDE_OBJECT_SIMPLE_2D_H
 
 #include "SimulationObject.h"
-#include "MoleculeRGB.h"
+#include "SymbolRGB.h"
 
 #include "Orbit.h"
 
@@ -51,8 +51,8 @@ public:
 	void setAgeRange(unsigned long lowAgeLimit, unsigned long highAgeLimit);
 	void setMetabolism(float metabolism){mMetabolism = metabolism;}
 
-	void setColor(MoleculeRGB* color);
-	MoleculeRGB* getColor(){return &mColor;}
+	void setColor(SymbolRGB* color);
+	SymbolRGB* getColor(){return &mColor;}
 
         int setPos(lua_State* luaState);
         int setSize(lua_State* luaState);
@@ -81,7 +81,7 @@ protected:
 	unsigned long mHighAgeLimit;
 	unsigned long mMaxAge;
 	float mMetabolism;
-	MoleculeRGB mColor;
+	SymbolRGB mColor;
 };
 #endif
 

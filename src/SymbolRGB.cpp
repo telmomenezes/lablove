@@ -17,12 +17,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "MoleculeRGB.h"
+#include "SymbolRGB.h"
 #include "random.h"
 #include <math.h>
 #include <stdlib.h>
 
-MoleculeRGB::MoleculeRGB(lua_State* luaState)
+SymbolRGB::SymbolRGB(lua_State* luaState)
 {
 	if (luaState != NULL)
 	{
@@ -38,51 +38,51 @@ MoleculeRGB::MoleculeRGB(lua_State* luaState)
 	}
 }
 
-MoleculeRGB::MoleculeRGB(float r, float g, float b)
+SymbolRGB::SymbolRGB(float r, float g, float b)
 {
 	mRed = r;
 	mGreen = g;
 	mBlue = b;
 }
 
-MoleculeRGB::MoleculeRGB(MoleculeRGB* mol)
+SymbolRGB::SymbolRGB(SymbolRGB* mol)
 {
 	mRed = mol->mRed;
 	mGreen = mol->mGreen;
 	mBlue = mol->mBlue;
 }
 
-MoleculeRGB::~MoleculeRGB()
+SymbolRGB::~SymbolRGB()
 {	
 }
 
-Molecule* MoleculeRGB::clone()
+Symbol* SymbolRGB::clone()
 {
-	return new MoleculeRGB(this);
+	return new SymbolRGB(this);
 }
 
-float MoleculeRGB::bind(Molecule* mol)
+float SymbolRGB::bind(Symbol* sym)
 {
 	// TODO: check type
-	MoleculeRGB* molRGB = (MoleculeRGB*)mol;
+	SymbolRGB* symRGB = (SymbolRGB*)sym;
 
 	double distance = 0.0f;
-	distance += fabsf(mRed - molRGB->mRed);
-	distance += fabsf(mGreen - molRGB->mGreen);
-	distance += fabsf(mBlue - molRGB->mBlue);
+	distance += fabsf(mRed - symRGB->mRed);
+	distance += fabsf(mGreen - symRGB->mGreen);
+	distance += fabsf(mBlue - symRGB->mBlue);
 
 	distance = distance / 3.0f;
 	return distance;
 }
 
-void MoleculeRGB::initRandom()
+void SymbolRGB::initRandom()
 {
 	mRed = randomUniformFloat(0.0f, 1.0f);
 	mGreen = randomUniformFloat(0.0f, 1.0f);
 	mBlue = randomUniformFloat(0.0f, 1.0f);
 }
 
-void MoleculeRGB::mutate()
+void SymbolRGB::mutate()
 {
 	float delta = randomUniformFloat(-1.0f, 1.0f);
 	unsigned int selector = random() % 3;
@@ -125,11 +125,11 @@ void MoleculeRGB::mutate()
 	}
 }
 
-const char MoleculeRGB::mClassName[] = "MoleculeRGB";
+const char SymbolRGB::mClassName[] = "SymbolRGB";
 
-Orbit<MoleculeRGB>::MethodType MoleculeRGB::mMethods[] = {
+Orbit<SymbolRGB>::MethodType SymbolRGB::mMethods[] = {
         {0,0}
 };
 
-Orbit<MoleculeRGB>::NumberGlobalType MoleculeRGB::mNumberGlobals[] = {{0,0}};
+Orbit<SymbolRGB>::NumberGlobalType SymbolRGB::mNumberGlobals[] = {{0,0}};
 

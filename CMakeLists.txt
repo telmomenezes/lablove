@@ -34,9 +34,9 @@ SET(SOURCE_FILES
 	src/PopDynGenerations.cpp
 	src/PopDynFixedSpecies.cpp
 	src/random.cpp
-	src/Molecule.cpp
-	src/MoleculeRGB.cpp
-	src/Chemistry.cpp
+	src/Symbol.cpp
+	src/SymbolRGB.cpp
+	src/SymbolTable.cpp
 	src/Statistics.cpp
 	src/StatMedAvgMinMax.cpp
 	src/StatTime.cpp)

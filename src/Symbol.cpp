@@ -17,13 +17,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "Molecule.h"
+#include "Symbol.h"
 
-Molecule::Molecule()
+Symbol::Symbol()
 {
 }
 
-Molecule::~Molecule()
+Symbol::~Symbol()
 {	
 }
 

@@ -52,7 +52,7 @@ const char PlantSimple2D::mClassName[] = "PlantSimple2D";
 
 Orbit<PlantSimple2D>::MethodType PlantSimple2D::mMethods[] = {
 	{"setInitialEnergy", &SimulationObject::setInitialEnergy},
-	{"addChemistry", &SimulationObject::addChemistry},
+	{"addSymbolTable", &SimulationObject::addSymbolTable},
 	{"setPos", &ObjectSimple2D::setPos},
 	{"setRot", &ObjectSimple2D::setRot},
 	{"setSize", &ObjectSimple2D::setSize},

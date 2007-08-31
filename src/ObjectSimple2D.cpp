@@ -68,7 +68,7 @@ ObjectSimple2D::ObjectSimple2D(ObjectSimple2D* obj) : SimulationObject(obj)
 	mY = -1.0f;
 	mRot = 0.0f;
 
-	mColor = MoleculeRGB(obj->mColor);
+	mColor = SymbolRGB(obj->mColor);
 }
 
 ObjectSimple2D::~ObjectSimple2D()
@@ -191,9 +191,9 @@ void ObjectSimple2D::setAgeRange(unsigned long lowAgeLimit, unsigned long highAg
 	mHighAgeLimit = highAgeLimit;
 }
 
-void ObjectSimple2D::setColor(MoleculeRGB* color)
+void ObjectSimple2D::setColor(SymbolRGB* color)
 {
-	mColor = MoleculeRGB(color);
+	mColor = SymbolRGB(color);
 }
 
 float ObjectSimple2D::getFieldValue(std::string fieldName)
@@ -247,7 +247,7 @@ int ObjectSimple2D::setMetabolism(lua_State* luaState)
 
 int ObjectSimple2D::setColor(lua_State* luaState)
 {
-	MoleculeRGB* color = (MoleculeRGB*)Orbit<Lab>::pointer(luaState, 1);
+	SymbolRGB* color = (SymbolRGB*)Orbit<Lab>::pointer(luaState, 1);
         setColor(color);
         return 0;
 }

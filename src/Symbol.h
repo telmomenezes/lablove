@@ -17,36 +17,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_CHEMISTRY_H)
-#define __INCLUDE_CHEMISTRY_H
+#if !defined(__INCLUDE_SYMBOL_H)
+#define __INCLUDE_SYMBOL_H
 
-#include "Molecule.h"
-#include "Orbit.h"
-
-#include <vector>
-
-class Chemistry
+class Symbol
 {
 public:
-        Chemistry(lua_State* luaState);
-	Chemistry(Molecule* refMolecule);
-        Chemistry(Chemistry* chem);
-	virtual ~Chemistry();
+	Symbol();
+	virtual ~Symbol();
 
-	Molecule* getMolecule(unsigned int index);
-	unsigned int addMolecule(Molecule* mol);
-	void mutate();
+	virtual Symbol* clone() = 0;
 
-	int addMolecule(lua_State* luaState);
-
-	static const char mClassName[];
-        static Orbit<Chemistry>::MethodType mMethods[];
-	static Orbit<Chemistry>::NumberGlobalType mNumberGlobals[];
-
-
-protected:
-	Molecule* mReferenceMolecule;
-	std::vector<Molecule*> mMolecules;
+	virtual float bind(Symbol* sym) = 0;
+	virtual void initRandom() = 0;
+	virtual void mutate() = 0;
 };
 #endif
 

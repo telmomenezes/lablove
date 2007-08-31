@@ -589,7 +589,7 @@ const char AnimatSimple2D::mClassName[] = "AnimatSimple2D";
 
 Orbit<AnimatSimple2D>::MethodType AnimatSimple2D::mMethods[] = {
 	{"setInitialEnergy", &SimulationObject::setInitialEnergy},
-	{"addChemistry", &SimulationObject::addChemistry},
+	{"addSymbolTable", &SimulationObject::addSymbolTable},
 	{"setPos", &ObjectSimple2D::setPos},
 	{"setRot", &ObjectSimple2D::setRot},
 	{"setSize", &ObjectSimple2D::setSize},

@@ -20,7 +20,7 @@
 #if !defined(__INCLUDE_SIMULATION_OBJECT_H)
 #define __INCLUDE_SIMULATION_OBJECT_H
 
-#include "Chemistry.h"
+#include "SymbolTable.h"
 #include "Orbit.h"
 
 #include <map>
@@ -59,11 +59,11 @@ public:
 
 	virtual void placeRandom()=0;
 
-	void addChemistry(Chemistry* chem, unsigned int code);
-	Chemistry* getChemistry(unsigned int pos);
+	void addSymbolTable(SymbolTable* table, unsigned int code);
+	SymbolTable* getSymbolTable(unsigned int pos);
 
 	int setInitialEnergy(lua_State* luaState);
-	int addChemistry(lua_State* luaState);
+	int addSymbolTable(lua_State* luaState);
 
 	virtual float getFieldValue(std::string fieldName){return 0.0f;}
 
@@ -77,7 +77,7 @@ protected:
 	float mEnergy;
 	float mInitialEnergy;
 	unsigned long mCreationTime;
-	std::map<unsigned int, Chemistry*> mChemistries;
+	std::map<unsigned int, SymbolTable*> mSymbolTables;
 };
 #endif
 

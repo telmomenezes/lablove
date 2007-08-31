@@ -48,10 +48,10 @@ void GridbrainComponent::clear(bool clearConnections)
 	mRow = 0;
 	mGrid = 0;
 
-	mOrigChemTable = -1;
-	mOrigMoleculeIndex = -1;
-	mTargetChemTable = -1;
-	mTargetMoleculeIndex = -1;
+	mOrigSymTable = -1;
+	mOrigSymIndex = -1;
+	mTargetSymTable = -1;
+	mTargetSymIndex = -1;
 
 	if (clearConnections)
 	{
@@ -73,10 +73,10 @@ void GridbrainComponent::copy(GridbrainComponent* comp, bool clearConnections)
 	mRow = comp->mRow;
 	mGrid = comp->mGrid;
 
-	mOrigChemTable = comp->mOrigChemTable;
-	mOrigMoleculeIndex = comp->mOrigMoleculeIndex;
-	mTargetChemTable = comp->mTargetChemTable;
-	mTargetMoleculeIndex = comp->mTargetMoleculeIndex;
+	mOrigSymTable = comp->mOrigSymTable;
+	mOrigSymIndex = comp->mOrigSymIndex;
+	mTargetSymTable = comp->mTargetSymTable;
+	mTargetSymIndex = comp->mTargetSymIndex;
 
 }
 
@@ -89,16 +89,16 @@ bool GridbrainComponent::isAggregator()
 float GridbrainComponent::computeBinding(SimulationObject* sourceObj,
 				SimulationObject* targetObj)
 {
-	Chemistry* sourceChem = sourceObj->getChemistry(mOrigChemTable);
-	Chemistry* targetChem = targetObj->getChemistry(mTargetChemTable);
+	SymbolTable* sourceTable = sourceObj->getSymbolTable(mOrigSymTable);
+	SymbolTable* targetTable = targetObj->getSymbolTable(mTargetSymTable);
 
-	if (!targetChem)
+	if (!targetTable)
 	{
 		return 0.0f;
 	}
 
-	Molecule* sourceMol = sourceChem->getMolecule(mOrigMoleculeIndex);
-	Molecule* targetMol = targetChem->getMolecule(mTargetMoleculeIndex);
+	Symbol* sourceMol = sourceTable->getSymbol(mOrigSymIndex);
+	Symbol* targetMol = targetTable->getSymbol(mTargetSymIndex);
 
 	if (!targetMol)
 	{

@@ -51,41 +51,41 @@ SimulationObject::SimulationObject(SimulationObject* obj)
 	mCreationTime = Lab::getSingleton().getSimulation()->time();
 	mHuman = false;
 
-	std::map<unsigned int, Chemistry*>::iterator iterChems;
-	for (iterChems = obj->mChemistries.begin();
-		iterChems != obj->mChemistries.end();
-		iterChems++)
+	std::map<unsigned int, SymbolTable*>::iterator iterTables;
+	for (iterTables = obj->mSymbolTables.begin();
+		iterTables != obj->mSymbolTables.end();
+		iterTables++)
 	{
-		mChemistries[(*iterChems).first] = new Chemistry((*iterChems).second);
+		mSymbolTables[(*iterTables).first] = new SymbolTable((*iterTables).second);
 	}
 }
 
 SimulationObject::~SimulationObject()
 {
-	std::map<unsigned int, Chemistry*>::iterator iterChems;
+	std::map<unsigned int, SymbolTable*>::iterator iterTables;
 
-	for (iterChems = mChemistries.begin();
-		iterChems != mChemistries.end();
-		iterChems++)
+	for (iterTables = mSymbolTables.begin();
+		iterTables != mSymbolTables.end();
+		iterTables++)
 	{
-		delete (*iterChems).second;
+		delete (*iterTables).second;
 	}
 
-	mChemistries.clear();
+	mSymbolTables.clear();
 }
 
-void SimulationObject::addChemistry(Chemistry* chem, unsigned int code)
+void SimulationObject::addSymbolTable(SymbolTable* table, unsigned int code)
 {
-	mChemistries[code] = chem;
+	mSymbolTables[code] = table;
 }
 
-Chemistry* SimulationObject::getChemistry(unsigned int code)
+SymbolTable* SimulationObject::getSymbolTable(unsigned int code)
 {
-	if (mChemistries.count(code) == 0)
+	if (mSymbolTables.count(code) == 0)
 	{
 		return NULL;
 	}
-	return mChemistries[code];
+	return mSymbolTables[code];
 }
 
 int SimulationObject::setInitialEnergy(lua_State* luaState)
@@ -95,11 +95,11 @@ int SimulationObject::setInitialEnergy(lua_State* luaState)
         return 0;
 }
 
-int SimulationObject::addChemistry(lua_State* luaState)
+int SimulationObject::addSymbolTable(lua_State* luaState)
 {
-	Chemistry* chem = (Chemistry*)Orbit<Lab>::pointer(luaState, 1);
+	SymbolTable* table = (SymbolTable*)Orbit<Lab>::pointer(luaState, 1);
 	unsigned int code = luaL_checkint(luaState, 2);
-	addChemistry(chem, code);
+	addSymbolTable(table, code);
 	return 0;
 }
 

@@ -179,10 +179,10 @@ unsigned int Grid::addPerception(GridbrainComponent* per)
 		GridbrainComponent* curPer = mPerceptionsVec[i];
 
 		if ((curPer->mSubType == per->mSubType)
-			&& (curPer->mOrigChemTable == per->mOrigChemTable)
-			&& (curPer->mOrigMoleculeIndex == per->mOrigMoleculeIndex)
-			&& (curPer->mTargetChemTable == per->mTargetChemTable)
-			&& (curPer->mTargetMoleculeIndex == per->mTargetMoleculeIndex))
+			&& (curPer->mOrigSymTable == per->mOrigSymTable)
+			&& (curPer->mOrigSymIndex == per->mOrigSymIndex)
+			&& (curPer->mTargetSymTable == per->mTargetSymTable)
+			&& (curPer->mTargetSymIndex == per->mTargetSymIndex))
 		{
 			return i;
 		}
