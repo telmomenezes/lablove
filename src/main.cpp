@@ -18,7 +18,7 @@
  */
 
 #include "Lab.h"
-#include "SimSimple2D.h"
+#include "SimSimple.h"
 #include "PlantSimple2D.h"
 #include "AnimatSimple2D.h"
 #include "PopDynGenerations.h"
@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
 	luaopen_debug(luaState);
 	
 	Orbit<Lab>::orbitRegister(luaState);
-	Orbit<SimSimple2D>::orbitRegister(luaState);
+	Orbit<SimSimple>::orbitRegister(luaState);
 	Orbit<PlantSimple2D>::orbitRegister(luaState);
 	Orbit<AnimatSimple2D>::orbitRegister(luaState);
 	Orbit<PopDynGenerations>::orbitRegister(luaState);

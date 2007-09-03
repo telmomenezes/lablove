@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "SimSimple2D.h"
+#include "SimSimple.h"
 #include "Lab.h"
 #include "ObjectSimple2D.h"
 #include "functions.h"
@@ -27,14 +27,14 @@
 
 #include <math.h>
 
-SimSimple2D::SimSimple2D(lua_State* luaState)
+SimSimple::SimSimple(lua_State* luaState)
 {
 	mShowGrid = false;
 	mShowViewRange = false;
 	mCellGrid = NULL;
 }
 
-SimSimple2D::~SimSimple2D()
+SimSimple::~SimSimple()
 {
 	if (mCellGrid != NULL)
 	{
@@ -43,7 +43,7 @@ SimSimple2D::~SimSimple2D()
 	}
 }
 
-void SimSimple2D::setWorldDimensions(float worldWidth,
+void SimSimple::setWorldDimensions(float worldWidth,
 			float worldLength,
 			float cellSide)
 {
@@ -64,7 +64,7 @@ void SimSimple2D::setWorldDimensions(float worldWidth,
 	
 }
 
-void SimSimple2D::removeObject(SimulationObject* object)
+void SimSimple::removeObject(SimulationObject* object)
 {
 	ObjectSimple2D* obj = (ObjectSimple2D*)object;
 
@@ -90,12 +90,12 @@ void SimSimple2D::removeObject(SimulationObject* object)
 	Simulation::removeObject(object);
 }
 
-SimulationObject* SimSimple2D::getObjectByScreenPos(int x, int y)
+SimulationObject* SimSimple::getObjectByScreenPos(int x, int y)
 {
 	return NULL;
 }
 
-void SimSimple2D::drawBeforeObjects()
+void SimSimple::drawBeforeObjects()
 {
 	if (mShowGrid)
 	{
@@ -130,7 +130,7 @@ void SimSimple2D::drawBeforeObjects()
 	}
 }
 
-bool SimSimple2D::onKeyDown(pyc::KeyCode key)
+bool SimSimple::onKeyDown(pyc::KeyCode key)
 {
 	AnimatSimple2D* human = (AnimatSimple2D*)(mPopulationDynamics->getHuman());
 
@@ -160,7 +160,7 @@ bool SimSimple2D::onKeyDown(pyc::KeyCode key)
 	}
 }
 
-bool SimSimple2D::onKeyUp(pyc::KeyCode key)
+bool SimSimple::onKeyUp(pyc::KeyCode key)
 {
 	switch (key)
 	{
@@ -200,25 +200,25 @@ bool SimSimple2D::onKeyUp(pyc::KeyCode key)
 	}
 }
 
-bool SimSimple2D::onMouseButtonDown(pyc::MouseButton button, int x, int y)
+bool SimSimple::onMouseButtonDown(pyc::MouseButton button, int x, int y)
 {
 	return false;
 }
 
-bool SimSimple2D::onMouseButtonUp(pyc::MouseButton button, int x, int y)
+bool SimSimple::onMouseButtonUp(pyc::MouseButton button, int x, int y)
 {
 	return false;
 }
 
-const char SimSimple2D::mClassName[] = "SimSimple2D";
+const char SimSimple::mClassName[] = "SimSimple";
 
-Orbit<SimSimple2D>::MethodType SimSimple2D::mMethods[] = {
+Orbit<SimSimple>::MethodType SimSimple::mMethods[] = {
 	{"setPopulationDynamics", &Simulation::setPopulationDynamics},
-        {"setWorldDimensions", &SimSimple2D::setWorldDimensions},
+        {"setWorldDimensions", &SimSimple::setWorldDimensions},
         {0,0}
 };
 
-Orbit<SimSimple2D>::NumberGlobalType SimSimple2D::mNumberGlobals[] = {
+Orbit<SimSimple>::NumberGlobalType SimSimple::mNumberGlobals[] = {
 	{"PERCEPTION_NULL", PERCEPTION_NULL},
 	{"PERCEPTION_POSITION", PERCEPTION_POSITION},
 	{"PERCEPTION_PROXIMITY", PERCEPTION_PROXIMITY},
@@ -230,7 +230,7 @@ Orbit<SimSimple2D>::NumberGlobalType SimSimple2D::mNumberGlobals[] = {
 	{0,0}
 };
 
-int SimSimple2D::setWorldDimensions(lua_State* luaState)
+int SimSimple::setWorldDimensions(lua_State* luaState)
 {
         int width = luaL_checkint(luaState, 1);
         int height = luaL_checkint(luaState, 2);

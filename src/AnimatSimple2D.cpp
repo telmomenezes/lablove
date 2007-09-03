@@ -19,7 +19,7 @@
 
 #include "AnimatSimple2D.h"
 #include "Lab.h"
-#include "SimSimple2D.h"
+#include "SimSimple.h"
 #include "math.h"
 #include "functions.h"
 #include "defines.h"
@@ -116,9 +116,9 @@ void AnimatSimple2D::initRandom()
 
 void AnimatSimple2D::initTest()
 {
-	mGridbrain->setComponent(0, 0, 0, GridbrainComponent::PER, (float)SimSimple2D::PERCEPTION_POSITION);
-	mGridbrain->setComponent(0, 1, 0, GridbrainComponent::PER, (float)SimSimple2D::PERCEPTION_PROXIMITY);
-	//mGridbrain->setComponent(0, 2, 0, GridbrainComponent::PER, (float)SimSimple2D::PERCEPTION_COLOR);
+	mGridbrain->setComponent(0, 0, 0, GridbrainComponent::PER, (float)SimSimple::PERCEPTION_POSITION);
+	mGridbrain->setComponent(0, 1, 0, GridbrainComponent::PER, (float)SimSimple::PERCEPTION_PROXIMITY);
+	//mGridbrain->setComponent(0, 2, 0, GridbrainComponent::PER, (float)SimSimple::PERCEPTION_COLOR);
 	mGridbrain->setComponent(1, 0, 0, GridbrainComponent::THR, 0);
 	mGridbrain->setComponent(1, 1, 0, GridbrainComponent::MAX, 0);
 	mGridbrain->setComponent(2, 0, 0, GridbrainComponent::MUL, 0);
@@ -127,9 +127,9 @@ void AnimatSimple2D::initTest()
 
 	mGridbrain->setComponent(0, 0, 1, GridbrainComponent::NOT, 0);
 	mGridbrain->setComponent(0, 2, 1, GridbrainComponent::NOT, 0);
-	mGridbrain->setComponent(1, 0, 1, GridbrainComponent::ACT, (float)SimSimple2D::ACTION_ROTATE);
-	mGridbrain->setComponent(1, 1, 1, GridbrainComponent::ACT, (float)SimSimple2D::ACTION_GO);
-	mGridbrain->setComponent(1, 2, 1, GridbrainComponent::ACT, (float)SimSimple2D::ACTION_EAT);
+	mGridbrain->setComponent(1, 0, 1, GridbrainComponent::ACT, (float)SimSimple::ACTION_ROTATE);
+	mGridbrain->setComponent(1, 1, 1, GridbrainComponent::ACT, (float)SimSimple::ACTION_GO);
+	mGridbrain->setComponent(1, 2, 1, GridbrainComponent::ACT, (float)SimSimple::ACTION_EAT);
 
 	mGridbrain->addConnection(0, 0, 0, 1, 0, 0, 1.0f);
 	mGridbrain->addConnection(0, 1, 0, 1, 1, 0, 0.1f);
@@ -158,7 +158,7 @@ SimulationObject* AnimatSimple2D::clone(bool full)
 
 void AnimatSimple2D::draw()
 {
-	if (((SimSimple2D*)(Lab::getSingleton().getSimulation()))->getShowViewRange())
+	if (((SimSimple*)(Lab::getSingleton().getSimulation()))->getShowViewRange())
 	{
 		float beginAngle = mLowLimitViewAngle;
 		float endAngle = mHighLimitViewAngle;
@@ -246,15 +246,15 @@ void AnimatSimple2D::computationStep()
 		{
 			switch (actionType)
 			{
-				case SimSimple2D::ACTION_GO:
+				case SimSimple::ACTION_GO:
 					mActionGo = true;
 					mActionGoParam += output;
 					break;
-				case SimSimple2D::ACTION_ROTATE:
+				case SimSimple::ACTION_ROTATE:
 					mActionRotate = true;
 					mActionRotateParam += output;
 					break;
-				case SimSimple2D::ACTION_EAT:
+				case SimSimple::ACTION_EAT:
 					mActionEat = true;
 					mActionEatParam += output;
 					break;
@@ -266,7 +266,7 @@ void AnimatSimple2D::computationStep()
 void AnimatSimple2D::perceptionStep()
 {
 	// Determine cells to analyse
-	unsigned int cellSide = (unsigned int)(((SimSimple2D*)(Lab::getSingleton().getSimulation()))->getCellSide());
+	unsigned int cellSide = (unsigned int)(((SimSimple*)(Lab::getSingleton().getSimulation()))->getCellSide());
 	int x = (int)mX;
 	int y = (int)mY;
 	int cellPosX = x % cellSide;
@@ -289,7 +289,7 @@ void AnimatSimple2D::perceptionStep()
 	{
 		left = true;
 	}
-	if ((cellX < (((SimSimple2D*)(Lab::getSingleton().getSimulation()))->getWorldCellWidth() - 1))
+	if ((cellX < (((SimSimple*)(Lab::getSingleton().getSimulation()))->getWorldCellWidth() - 1))
 		&& (rightLimit >= cellSide))
 	{
 		right = true;
@@ -298,7 +298,7 @@ void AnimatSimple2D::perceptionStep()
 	{
 		top = true;
 	}
-	if ((cellY < (((SimSimple2D*)(Lab::getSingleton().getSimulation()))->getWorldCellLength() - 1))
+	if ((cellY < (((SimSimple*)(Lab::getSingleton().getSimulation()))->getWorldCellLength() - 1))
 		&& (bottomLimit >= cellSide))
 	{
 		bottom = true;
@@ -343,8 +343,8 @@ void AnimatSimple2D::perceptionStep()
 void AnimatSimple2D::scanCell(int cellX, int cellY)
 {
 	ObjectSimple2D* obj = (ObjectSimple2D*)
-		((SimSimple2D*)(Lab::getSingleton().getSimulation()))->getCellGrid()[
-		(cellY * ((SimSimple2D*)(Lab::getSingleton().getSimulation()))->getWorldCellWidth()) + cellX];
+		((SimSimple*)(Lab::getSingleton().getSimulation()))->getCellGrid()[
+		(cellY * ((SimSimple*)(Lab::getSingleton().getSimulation()))->getWorldCellWidth()) + cellX];
 
 	while (obj)
 	{
@@ -488,7 +488,7 @@ void AnimatSimple2D::onScanObject(SimulationObject* obj, bool visible, bool cont
 
 		switch (perception->mSubType)
 		{
-			case SimSimple2D::PERCEPTION_IN_CONTACT:
+			case SimSimple::PERCEPTION_IN_CONTACT:
 				if (contact)
 				{
 					grid->setInput(perceptionNumber, mCurrentInputDepth, 1.0f);
@@ -499,7 +499,7 @@ void AnimatSimple2D::onScanObject(SimulationObject* obj, bool visible, bool cont
 				}
 				break;
 
-			case SimSimple2D::PERCEPTION_POSITION:
+			case SimSimple::PERCEPTION_POSITION:
 				normalizedValue = 0.0f;
 				if (visible)
 				{
@@ -508,7 +508,7 @@ void AnimatSimple2D::onScanObject(SimulationObject* obj, bool visible, bool cont
 				grid->setInput(perceptionNumber, mCurrentInputDepth, normalizedValue);
 				break;
 
-			case SimSimple2D::PERCEPTION_PROXIMITY:
+			case SimSimple::PERCEPTION_PROXIMITY:
 				normalizedValue = 0.0f;
 				if (visible)
 				{

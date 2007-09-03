@@ -22,7 +22,7 @@ viewAngle = 100.0
 lab = getLab()
 lab:setSeedIndex(0)
 
-sim = SimSimple2D()
+sim = SimSimple()
 sim:setWorldDimensions(worldWidth, worldHeight, viewRange * 2)
 
 lab:setSimulation(sim)
@@ -33,10 +33,10 @@ animat:setViewRange(viewRange)
 animat:setViewAngle(viewAngle)
 
 perSet = GridbrainComponentSet()
-perSet:addComponent(GridbrainComponent.PER, SimSimple2D.PERCEPTION_COLOR)
-perSet:addComponent(GridbrainComponent.PER, SimSimple2D.PERCEPTION_POSITION)
-perSet:addComponent(GridbrainComponent.PER, SimSimple2D.PERCEPTION_PROXIMITY)
-perSet:addComponent(GridbrainComponent.PER, SimSimple2D.PERCEPTION_IN_CONTACT)
+perSet:addComponent(GridbrainComponent.PER, SimSimple.PERCEPTION_COLOR)
+perSet:addComponent(GridbrainComponent.PER, SimSimple.PERCEPTION_POSITION)
+perSet:addComponent(GridbrainComponent.PER, SimSimple.PERCEPTION_PROXIMITY)
+perSet:addComponent(GridbrainComponent.PER, SimSimple.PERCEPTION_IN_CONTACT)
 
 alphaSet = GridbrainComponentSet()
 if THR then
@@ -61,9 +61,9 @@ grid:addComponentSet(alphaSet, -1)
 animat:setAlphaObjectsGrid(grid);
 
 actSet = GridbrainComponentSet()
-actSet:addComponent(GridbrainComponent.ACT, SimSimple2D.ACTION_GO)
-actSet:addComponent(GridbrainComponent.ACT, SimSimple2D.ACTION_ROTATE)
-actSet:addComponent(GridbrainComponent.ACT, SimSimple2D.ACTION_EAT)
+actSet:addComponent(GridbrainComponent.ACT, SimSimple.ACTION_GO)
+actSet:addComponent(GridbrainComponent.ACT, SimSimple.ACTION_ROTATE)
+actSet:addComponent(GridbrainComponent.ACT, SimSimple.ACTION_EAT)
 
 betaSet = GridbrainComponentSet()
 if THR then

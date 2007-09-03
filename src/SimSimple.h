@@ -17,8 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_SIM_SIMPLE_2D_H)
-#define __INCLUDE_SIM_SIMPLE_2D_H
+#if !defined(__INCLUDE_SIM_SIMPLE_H)
+#define __INCLUDE_SIM_SIMPLE_H
 
 #include "Simulation.h"
 #include "ObjectSimple2D.h"
@@ -30,7 +30,7 @@
 
 #include "Orbit.h"
 
-class SimSimple2D : public Simulation
+class SimSimple : public Simulation
 {
 public:
 
@@ -45,8 +45,8 @@ public:
 			ACTION_EAT};
 
 
-        SimSimple2D(lua_State* luaState=NULL);
-	virtual ~SimSimple2D();
+        SimSimple(lua_State* luaState=NULL);
+	virtual ~SimSimple();
 
 	virtual void drawBeforeObjects();
 
@@ -73,8 +73,8 @@ public:
 	virtual bool onMouseButtonUp(pyc::MouseButton button, int x, int y);
 
 	static const char mClassName[];
-        static Orbit<SimSimple2D>::MethodType mMethods[];
-	static Orbit<SimSimple2D>::NumberGlobalType mNumberGlobals[];
+        static Orbit<SimSimple>::MethodType mMethods[];
+	static Orbit<SimSimple>::NumberGlobalType mNumberGlobals[];
 
         int setWorldDimensions(lua_State* luaState);
 

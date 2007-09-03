@@ -19,7 +19,7 @@ SET(SOURCE_FILES
 	src/main.cpp
 	src/Lab.cpp
 	src/Simulation.cpp
-	src/SimSimple2D.cpp
+	src/SimSimple.cpp
 	src/ScriptableObject.cpp
 	src/SimulationObject.cpp
 	src/ObjectSimple2D.cpp

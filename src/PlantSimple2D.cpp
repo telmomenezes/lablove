@@ -21,7 +21,7 @@
 #include "Lab.h"
 #include "math.h"
 #include "defines.h"
-#include "SimSimple2D.h"
+#include "SimSimple.h"
 
 PlantSimple2D::PlantSimple2D(lua_State* luaState)
 {

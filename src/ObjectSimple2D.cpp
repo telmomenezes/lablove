@@ -19,7 +19,7 @@
 
 #include "ObjectSimple2D.h"
 #include "Lab.h"
-#include "SimSimple2D.h"
+#include "SimSimple.h"
 #include "functions.h"
 #include "random.h"
 
@@ -77,7 +77,7 @@ ObjectSimple2D::~ObjectSimple2D()
 
 void ObjectSimple2D::setPos(float x, float y)
 {
-	SimSimple2D* sim = (SimSimple2D*)(Lab::getSingleton().getSimulation());
+	SimSimple* sim = (SimSimple*)(Lab::getSingleton().getSimulation());
 
 	if ((x < 0)
 		|| (y < 0)
@@ -158,7 +158,7 @@ void ObjectSimple2D::setRot(float rot)
 
 void ObjectSimple2D::placeRandom()
 {
-	SimSimple2D* sim = (SimSimple2D*)Lab::getSingleton().getSimulation();
+	SimSimple* sim = (SimSimple*)Lab::getSingleton().getSimulation();
 
 	unsigned int worldWidth = (unsigned int)sim->getWorldWidth();
 	unsigned int worldLength = (unsigned int)sim->getWorldLength();
