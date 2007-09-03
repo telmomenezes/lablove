@@ -28,7 +28,7 @@ class SymbolRGB : public Symbol
 {
 public:
         SymbolRGB(lua_State* luaState=NULL);
-	SymbolRGB(float r, float g, float b);
+	SymbolRGB(int r, int g, int b);
 	SymbolRGB(SymbolRGB* mol);
 	virtual ~SymbolRGB();
 	virtual Symbol* clone();
@@ -41,9 +41,9 @@ public:
         static Orbit<SymbolRGB>::MethodType mMethods[];
 	static Orbit<SymbolRGB>::NumberGlobalType mNumberGlobals[];
 
-	float mRed;
-	float mGreen;
-	float mBlue;
+	int mRed;
+	int mGreen;
+	int mBlue;
 };
 #endif
 

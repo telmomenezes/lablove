@@ -26,19 +26,19 @@ SymbolRGB::SymbolRGB(lua_State* luaState)
 {
 	if (luaState != NULL)
 	{
-        	mRed = luaL_checknumber(luaState, 1);
-        	mGreen = luaL_checknumber(luaState, 2);
-        	mBlue = luaL_checknumber(luaState, 3);
+        	mRed = luaL_checkint(luaState, 1);
+        	mGreen = luaL_checkint(luaState, 2);
+        	mBlue = luaL_checkint(luaState, 3);
 	}
 	else
 	{
-		mRed = 0.0f;
-		mGreen = 0.0f;
-		mBlue = 0.0f;
+		mRed = 0;
+		mGreen = 0;
+		mBlue = 0;
 	}
 }
 
-SymbolRGB::SymbolRGB(float r, float g, float b)
+SymbolRGB::SymbolRGB(int r, int g, int b)
 {
 	mRed = r;
 	mGreen = g;
@@ -67,9 +67,9 @@ float SymbolRGB::bind(Symbol* sym)
 	SymbolRGB* symRGB = (SymbolRGB*)sym;
 
 	double distance = 0.0f;
-	distance += fabsf(mRed - symRGB->mRed);
-	distance += fabsf(mGreen - symRGB->mGreen);
-	distance += fabsf(mBlue - symRGB->mBlue);
+	distance += fabsf(((float)(mRed - symRGB->mRed)) / 255.0f);
+	distance += fabsf(((float)(mGreen - symRGB->mGreen)) / 255.0f);
+	distance += fabsf(((float)(mBlue - symRGB->mBlue)) / 255.0f);
 
 	distance = distance / 3.0f;
 	return distance;
@@ -77,49 +77,49 @@ float SymbolRGB::bind(Symbol* sym)
 
 void SymbolRGB::initRandom()
 {
-	mRed = randomUniformFloat(0.0f, 1.0f);
-	mGreen = randomUniformFloat(0.0f, 1.0f);
-	mBlue = randomUniformFloat(0.0f, 1.0f);
+	mRed = random() % 256;
+	mGreen = random() % 256;
+	mBlue = random() % 256;
 }
 
 void SymbolRGB::mutate()
 {
-	float delta = randomUniformFloat(-1.0f, 1.0f);
+	int delta = random() % 255;
 	unsigned int selector = random() % 3;
 
 	switch (selector)
 	{
 	case 0:
 		mRed += delta;
-		if (mRed > 1.0f)
+		if (mRed > 255)
 		{
-			mRed = 1.0f;
+			mRed = 255;
 		}
-		else if (mRed < 0.0f)
+		else if (mRed < 0)
 		{
-			mRed = 0.0f;
+			mRed = 0;
 		}
 		break;
 	case 1:
 		mGreen += delta;
-		if (mGreen > 1.0f)
+		if (mGreen > 255)
 		{
-			mGreen = 1.0f;
+			mGreen = 255;
 		}
-		else if (mGreen < 0.0f)
+		else if (mGreen < 0)
 		{
-			mGreen = 0.0f;
+			mGreen = 0;
 		}
 		break;
 	case 2:
 		mBlue += delta;
-		if (mBlue > 1.0f)
+		if (mBlue > 255)
 		{
-			mBlue = 1.0f;
+			mBlue = 255;
 		}
-		else if (mBlue < 0.0f)
+		else if (mBlue < 0)
 		{
-			mBlue = 0.0f;
+			mBlue = 0;
 		}
 		break;
 	}

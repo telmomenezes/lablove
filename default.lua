@@ -46,7 +46,7 @@ animat:setMetabolism(metabolism)
 animat:setGoCost(goCost)
 animat:setRotateCost(rotateCost)
 
-animatColor = SymbolRGB(1.0, 0.3, 0.1)
+animatColor = SymbolRGB(255, 50, 255)
 animat:setColor(animatColor)
 
 symTable = SymbolTable(animatColor)
@@ -110,7 +110,7 @@ plant = PlantSimple2D()
 plant:setSize(5.0)
 plant:setInitialEnergy(1.0)
 
-plantColor = SymbolRGB(0.1, 0.9, 0.3)
+plantColor = SymbolRGB(10, 250, 50)
 plant:setColor(plantColor)
 
 popDyn = PopDynFixedSpecies()
@@ -132,7 +132,7 @@ human:setMetabolism(metabolism)
 human:setGoCost(goCost)
 human:setRotateCost(rotateCost)
 
-humanColor = SymbolRGB(0.0, 0.0, 1.0)
+humanColor = SymbolRGB(0, 0, 200)
 human:setColor(humanColor)
 human:setRot(1.00)
 
