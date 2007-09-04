@@ -19,8 +19,8 @@
 
 #include "Lab.h"
 #include "SimSimple.h"
-#include "PlantSimple2D.h"
-#include "AnimatSimple2D.h"
+#include "Plant.h"
+#include "AgentGB.h"
 #include "PopDynGenerations.h"
 #include "PopDynFixedSpecies.h"
 #include "Grid.h"
@@ -68,8 +68,8 @@ int main(int argc, char *argv[])
 	
 	Orbit<Lab>::orbitRegister(luaState);
 	Orbit<SimSimple>::orbitRegister(luaState);
-	Orbit<PlantSimple2D>::orbitRegister(luaState);
-	Orbit<AnimatSimple2D>::orbitRegister(luaState);
+	Orbit<Plant>::orbitRegister(luaState);
+	Orbit<AgentGB>::orbitRegister(luaState);
 	Orbit<PopDynGenerations>::orbitRegister(luaState);
 	Orbit<PopDynFixedSpecies>::orbitRegister(luaState);
 	Orbit<Grid>::orbitRegister(luaState);

@@ -26,7 +26,7 @@ sim = SimSimple()
 sim:setWorldDimensions(worldWidth, worldHeight, viewRange * 2)
 
 lab:setSimulation(sim)
-animat = AnimatSimple2D(10, 25)
+animat = AgentGB(10, 25)
 
 animat:setSize(10.0)
 animat:setViewRange(viewRange)
@@ -84,7 +84,7 @@ grid2:addComponentSet(actSet, -1)
 
 animat:setBetaGrid(grid2)
 
-plant = PlantSimple2D()
+plant = Plant()
 plant:setSize(5.0)
 plant:setInitialEnergy(1.0)
 

@@ -17,13 +17,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "PlantSimple2D.h"
+#include "Plant.h"
 #include "Lab.h"
 #include "math.h"
 #include "defines.h"
 #include "SimSimple.h"
 
-PlantSimple2D::PlantSimple2D(lua_State* luaState)
+Plant::Plant(lua_State* luaState)
 {
 	mNextCellList = NULL;
 	mPrevCellList = NULL;
@@ -33,34 +33,34 @@ PlantSimple2D::PlantSimple2D(lua_State* luaState)
 	mCellPos = -1;
 }
 
-PlantSimple2D::~PlantSimple2D()
+Plant::~Plant()
 {	
 }
 
-SimulationObject* PlantSimple2D::clone(bool full)
+SimulationObject* Plant::clone(bool full)
 {
-	return new PlantSimple2D(this);
+	return new Plant(this);
 }
 
-void PlantSimple2D::draw()
+void Plant::draw()
 {
 	Lab::getSingleton().getRootLayer()->setColor(mColor.mRed, mColor.mGreen, mColor.mBlue);
 	Lab::getSingleton().getRootLayer()->fillSquare(mX, mY, mSize, mRot);
 }
 
-const char PlantSimple2D::mClassName[] = "PlantSimple2D";
+const char Plant::mClassName[] = "Plant";
 
-Orbit<PlantSimple2D>::MethodType PlantSimple2D::mMethods[] = {
+Orbit<Plant>::MethodType Plant::mMethods[] = {
 	{"setInitialEnergy", &SimulationObject::setInitialEnergy},
 	{"addSymbolTable", &SimulationObject::addSymbolTable},
-	{"setPos", &ObjectSimple2D::setPos},
-	{"setRot", &ObjectSimple2D::setRot},
-	{"setSize", &ObjectSimple2D::setSize},
-	{"setColor", &ObjectSimple2D::setColor},
-	{"setAgeRange", &ObjectSimple2D::setAgeRange},
-	{"setMetabolism", &ObjectSimple2D::setMetabolism},
+	{"setPos", &SimulationObject::setPos},
+	{"setRot", &SimulationObject::setRot},
+	{"setSize", &SimulationObject::setSize},
+	{"setColor", &SimulationObject::setColor},
+	{"setAgeRange", &SimulationObject::setAgeRange},
+	{"setMetabolism", &SimulationObject::setMetabolism},
         {0,0}
 };
 
-Orbit<PlantSimple2D>::NumberGlobalType PlantSimple2D::mNumberGlobals[] = {{0,0}};
+Orbit<Plant>::NumberGlobalType Plant::mNumberGlobals[] = {{0,0}};
 

@@ -37,6 +37,17 @@ public:
 	virtual ~Simulation();
 
 	virtual void init();
+	
+	void setWorldDimensions(float worldWidth,
+			float worldLength,
+			float cellSide);
+
+	float getWorldWidth(){return mWorldWidth;}
+	float getWorldLength(){return mWorldLength;}
+	float getCellSide(){return mCellSide;}
+	unsigned int getWorldCellWidth(){return mWorldCellWidth;}
+	unsigned int getWorldCellLength(){return mWorldCellLength;}
+	SimulationObject** getCellGrid(){return mCellGrid;}
 
 	virtual void drawBeforeObjects(){}
 
@@ -52,8 +63,18 @@ public:
 	unsigned long time(){return mSimulationTime;}
 
 	int setPopulationDynamics(lua_State* luaState);
+        int setWorldDimensions(lua_State* luaState);
 
 protected:
+	float mWorldWidth;
+	float mWorldLength;
+
+	float mCellSide;
+	unsigned int mWorldCellWidth;
+	unsigned int mWorldCellLength;
+
+	SimulationObject** mCellGrid;
+
 	std::list<SimulationObject*> mObjects;
 	std::list<SimulationObject*> mObjectsToKill;
 

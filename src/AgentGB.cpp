@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "AnimatSimple2D.h"
+#include "AgentGB.h"
 #include "Lab.h"
 #include "SimSimple.h"
 #include "math.h"
@@ -25,7 +25,7 @@
 #include "defines.h"
 #include "random.h"
 
-AnimatSimple2D::AnimatSimple2D(lua_State* luaState)
+AgentGB::AgentGB(lua_State* luaState)
 {
 	mViewRange = 0.0f;
 	mViewAngle = 0.0f;
@@ -59,7 +59,7 @@ AnimatSimple2D::AnimatSimple2D(lua_State* luaState)
 	}
 }
 
-AnimatSimple2D::AnimatSimple2D(AnimatSimple2D* anim, bool full) : ObjectSimple2D(anim)
+AgentGB::AgentGB(AgentGB* anim, bool full) : SimulationObject(anim)
 {
 	mMaxInputDepth = anim->mMaxInputDepth;
 	mInitialConnections = anim->mInitialConnections;
@@ -82,7 +82,7 @@ AnimatSimple2D::AnimatSimple2D(AnimatSimple2D* anim, bool full) : ObjectSimple2D
 	mRotateCost = anim->mRotateCost;
 }
 
-AnimatSimple2D::~AnimatSimple2D()
+AgentGB::~AgentGB()
 {	
 	if (mGridbrain != NULL)
 	{
@@ -91,19 +91,19 @@ AnimatSimple2D::~AnimatSimple2D()
 	}
 }
 
-void AnimatSimple2D::setAlphaObjectsGrid(Grid* grid)
+void AgentGB::setAlphaObjectsGrid(Grid* grid)
 {
 	grid->setType(Grid::ALPHA);
 	mGridbrain->addGrid(grid);
 }
 
-void AnimatSimple2D::setBetaGrid(Grid* grid)
+void AgentGB::setBetaGrid(Grid* grid)
 {
 	grid->setType(Grid::BETA);
 	mGridbrain->addGrid(grid);
 }
 
-void AnimatSimple2D::initRandom()
+void AgentGB::initRandom()
 {
 	mGridbrain->init();
 
@@ -114,7 +114,7 @@ void AnimatSimple2D::initRandom()
 	//initTest();
 }
 
-void AnimatSimple2D::initTest()
+void AgentGB::initTest()
 {
 	mGridbrain->setComponent(0, 0, 0, GridbrainComponent::PER, (float)SimSimple::PERCEPTION_POSITION);
 	mGridbrain->setComponent(0, 1, 0, GridbrainComponent::PER, (float)SimSimple::PERCEPTION_PROXIMITY);
@@ -151,12 +151,12 @@ void AnimatSimple2D::initTest()
 	mGridbrain->initGridsInputOutput();
 }
 
-SimulationObject* AnimatSimple2D::clone(bool full)
+SimulationObject* AgentGB::clone(bool full)
 {
-	return new AnimatSimple2D(this, full);
+	return new AgentGB(this, full);
 }
 
-void AnimatSimple2D::draw()
+void AgentGB::draw()
 {
 	if (((SimSimple*)(Lab::getSingleton().getSimulation()))->getShowViewRange())
 	{
@@ -188,16 +188,16 @@ void AnimatSimple2D::draw()
 	Lab::getSingleton().getRootLayer()->drawTriangle(x1, y1, x2, y2, x3, y3);
 }
 
-void AnimatSimple2D::setRot(float rot)
+void AgentGB::setRot(float rot)
 {
-	ObjectSimple2D::setRot(rot);
+	SimulationObject::setRot(rot);
 	mLowLimitViewAngle = normalizeAngle(mRot - mHalfViewAngle);
 	mHighLimitViewAngle = normalizeAngle(mRot + mHalfViewAngle);
 }
 
-void AnimatSimple2D::onCycle()
+void AgentGB::onCycle()
 {
-	ObjectSimple2D::onCycle();
+	SimulationObject::onCycle();
 	perceptionStep();
 	if (!mHuman)
 	{
@@ -214,7 +214,7 @@ void AnimatSimple2D::onCycle()
 	}
 }
 
-void AnimatSimple2D::computationStep()
+void AgentGB::computationStep()
 {
 	Grid* grid = mGridbrain->getGrid(0);
 	grid->setInputDepth(mCurrentInputDepth);
@@ -263,7 +263,7 @@ void AnimatSimple2D::computationStep()
 	}
 }
 
-void AnimatSimple2D::perceptionStep()
+void AgentGB::perceptionStep()
 {
 	// Determine cells to analyse
 	unsigned int cellSide = (unsigned int)(((SimSimple*)(Lab::getSingleton().getSimulation()))->getCellSide());
@@ -340,9 +340,9 @@ void AnimatSimple2D::perceptionStep()
 	}
 }
 
-void AnimatSimple2D::scanCell(int cellX, int cellY)
+void AgentGB::scanCell(int cellX, int cellY)
 {
-	ObjectSimple2D* obj = (ObjectSimple2D*)
+	SimulationObject* obj = (SimulationObject*)
 		((SimSimple*)(Lab::getSingleton().getSimulation()))->getCellGrid()[
 		(cellY * ((SimSimple*)(Lab::getSingleton().getSimulation()))->getWorldCellWidth()) + cellX];
 
@@ -402,17 +402,17 @@ void AnimatSimple2D::scanCell(int cellX, int cellY)
 			}
 		}
 
-		obj = ((ObjectSimple2D*)obj)->mNextCellList;
+		obj = ((SimulationObject*)obj)->mNextCellList;
 	}
 }
 
-void AnimatSimple2D::setViewAngle(float angle)
+void AgentGB::setViewAngle(float angle)
 {
 	mViewAngle = (angle * M_PI) / 180.0f;
 	mHalfViewAngle = mViewAngle / 2.0f;
 }
 
-void AnimatSimple2D::goFront(float distance)
+void AgentGB::goFront(float distance)
 {
 	// TODO: check if move is possible
 
@@ -422,18 +422,18 @@ void AnimatSimple2D::goFront(float distance)
 	setPos(newX, newY);
 }
 
-void AnimatSimple2D::rotate(float angle)
+void AgentGB::rotate(float angle)
 {
 	mEnergy -= mRotateCost * angle;
 	setRot(getRot() - angle);
 }
 
-void AnimatSimple2D::setViewRange(float range)
+void AgentGB::setViewRange(float range)
 {
 	mViewRange = range;
 }
 
-void AnimatSimple2D::eat()
+void AgentGB::eat()
 {
 	if (mNearestFood)
 	{
@@ -442,7 +442,7 @@ void AnimatSimple2D::eat()
 	}
 }
 
-void AnimatSimple2D::actionStep()
+void AgentGB::actionStep()
 {
 	if (mActionGo)
 	{
@@ -465,7 +465,7 @@ void AnimatSimple2D::actionStep()
 	}
 }
 
-void AnimatSimple2D::onScanObject(SimulationObject* obj, bool visible, bool contact, float angle, float distance)
+void AgentGB::onScanObject(SimulationObject* obj, bool visible, bool contact, float angle, float distance)
 {
 	if (mHuman)
 	{
@@ -530,7 +530,7 @@ void AnimatSimple2D::onScanObject(SimulationObject* obj, bool visible, bool cont
 	mCurrentInputDepth++;
 }
 
-/*AnimatSimple2D* AnimatSimple2D::crossover(AnimatSimple2D* otherParent)
+/*AgentGB* AgentGB::crossover(AgentGB* otherParent)
 {
 	// TODO: check for incompatibilities, like gridbrain dimensions?
 
@@ -542,7 +542,7 @@ void AnimatSimple2D::onScanObject(SimulationObject* obj, bool visible, bool cont
 }
 */
 
-void AnimatSimple2D::mutate()
+void AgentGB::mutate()
 {
 	unsigned type = rand() % 4;
 
@@ -566,7 +566,7 @@ void AnimatSimple2D::mutate()
 	}
 }
 
-float AnimatSimple2D::getFieldValue(std::string fieldName)
+float AgentGB::getFieldValue(std::string fieldName)
 {
 	if (fieldName == "connections")
 	{
@@ -581,75 +581,75 @@ float AnimatSimple2D::getFieldValue(std::string fieldName)
 	}
 	else
 	{
-		return ObjectSimple2D::getFieldValue(fieldName);
+		return SimulationObject::getFieldValue(fieldName);
 	}
 }
 
-const char AnimatSimple2D::mClassName[] = "AnimatSimple2D";
+const char AgentGB::mClassName[] = "AgentGB";
 
-Orbit<AnimatSimple2D>::MethodType AnimatSimple2D::mMethods[] = {
+Orbit<AgentGB>::MethodType AgentGB::mMethods[] = {
 	{"setInitialEnergy", &SimulationObject::setInitialEnergy},
 	{"addSymbolTable", &SimulationObject::addSymbolTable},
-	{"setPos", &ObjectSimple2D::setPos},
-	{"setRot", &ObjectSimple2D::setRot},
-	{"setSize", &ObjectSimple2D::setSize},
-	{"setColor", &ObjectSimple2D::setColor},
-        {"setViewRange", &AnimatSimple2D::setViewRange},
-	{"setViewAngle", &AnimatSimple2D::setViewAngle},
-	{"setAlphaObjectsGrid", &AnimatSimple2D::setAlphaObjectsGrid},
-	{"setBetaGrid", &AnimatSimple2D::setBetaGrid},
-	{"setAgeRange", &ObjectSimple2D::setAgeRange},
-	{"setMetabolism", &ObjectSimple2D::setMetabolism},
-	{"setGoCost", &AnimatSimple2D::setGoCost},
-	{"setRotateCost", &AnimatSimple2D::setRotateCost},
+	{"setPos", &SimulationObject::setPos},
+	{"setRot", &SimulationObject::setRot},
+	{"setSize", &SimulationObject::setSize},
+	{"setColor", &SimulationObject::setColor},
+        {"setViewRange", &AgentGB::setViewRange},
+	{"setViewAngle", &AgentGB::setViewAngle},
+	{"setAlphaObjectsGrid", &AgentGB::setAlphaObjectsGrid},
+	{"setBetaGrid", &AgentGB::setBetaGrid},
+	{"setAgeRange", &SimulationObject::setAgeRange},
+	{"setMetabolism", &SimulationObject::setMetabolism},
+	{"setGoCost", &AgentGB::setGoCost},
+	{"setRotateCost", &AgentGB::setRotateCost},
         {0,0}
 };
 
-Orbit<AnimatSimple2D>::NumberGlobalType AnimatSimple2D::mNumberGlobals[] = {{0,0}};
+Orbit<AgentGB>::NumberGlobalType AgentGB::mNumberGlobals[] = {{0,0}};
 
-int AnimatSimple2D::setViewRange(lua_State* luaState)
+int AgentGB::setViewRange(lua_State* luaState)
 {
         int viewRange = luaL_checkint(luaState, 1);
         setViewRange(viewRange);
         return 0;
 }
 
-int AnimatSimple2D::setViewAngle(lua_State* luaState)
+int AgentGB::setViewAngle(lua_State* luaState)
 {
         int viewAngle = luaL_checkint(luaState, 1);
         setViewAngle(viewAngle);
         return 0;
 }
 
-int AnimatSimple2D::setAlphaObjectsGrid(lua_State* luaState)
+int AgentGB::setAlphaObjectsGrid(lua_State* luaState)
 {
-	Grid* grid = (Grid*)Orbit<AnimatSimple2D>::pointer(luaState, 1);
+	Grid* grid = (Grid*)Orbit<AgentGB>::pointer(luaState, 1);
 	setAlphaObjectsGrid(grid);
 	return 0;
 }
 
-int AnimatSimple2D::setBetaGrid(lua_State* luaState)
+int AgentGB::setBetaGrid(lua_State* luaState)
 {
-	Grid* grid = (Grid*)Orbit<AnimatSimple2D>::pointer(luaState, 1);
+	Grid* grid = (Grid*)Orbit<AgentGB>::pointer(luaState, 1);
 	setBetaGrid(grid);
 	return 0;
 }
 
-int AnimatSimple2D::setGoCost(lua_State* luaState)
+int AgentGB::setGoCost(lua_State* luaState)
 {
         float cost = luaL_checknumber(luaState, 1);
 	setGoCost(cost);
 	return 0;
 }
 
-int AnimatSimple2D::setRotateCost(lua_State* luaState)
+int AgentGB::setRotateCost(lua_State* luaState)
 {
 	float cost = luaL_checknumber(luaState, 1);
 	setRotateCost(cost);
 	return 0;
 }
 
-/*void AnimatSimple2D::draw_brain()
+/*void AgentGB::draw_brain()
 {
 	unsigned int height = _gridbrain->get_height();
 	unsigned int alpha = _gridbrain->get_alpha();

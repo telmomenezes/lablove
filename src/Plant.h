@@ -17,19 +17,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_PLANT_SIMPLE_2D_H)
-#define __INCLUDE_PLANT_SIMPLE_2D_H
+#if !defined(__INCLUDE_PLANT_H)
+#define __INCLUDE_PLANT_H
 
-#include "ObjectSimple2D.h"
+#include "SimulationObject.h"
 
 #include "Orbit.h"
 
-class PlantSimple2D : public ObjectSimple2D
+class Plant : public SimulationObject
 {
 public:
-        PlantSimple2D(lua_State* luaState=NULL);
-	PlantSimple2D(PlantSimple2D* plant) : ObjectSimple2D(plant){}
-	virtual ~PlantSimple2D();
+        Plant(lua_State* luaState=NULL);
+	Plant(Plant* plant) : SimulationObject(plant){}
+	virtual ~Plant();
 	virtual SimulationObject* clone(bool full=true);
 
 	virtual void draw();
@@ -37,8 +37,8 @@ public:
 	virtual bool isFood(){return true;}
 
 	static const char mClassName[];
-        static Orbit<PlantSimple2D>::MethodType mMethods[];
-	static Orbit<PlantSimple2D>::NumberGlobalType mNumberGlobals[];
+        static Orbit<Plant>::MethodType mMethods[];
+	static Orbit<Plant>::NumberGlobalType mNumberGlobals[];
 };
 #endif
 

@@ -21,6 +21,7 @@
 #include "Lab.h"
 #include <stdlib.h>
 #include "functions.h"
+#include "random.h"
 
 unsigned long SimulationObject::CURRENT_ID = 0;
 
@@ -36,6 +37,24 @@ SimulationObject::SimulationObject()
 	mInitialEnergy = 0;
 	mCreationTime = Lab::getSingleton().getSimulation()->time();
 	mHuman = false;
+
+	mX = -1.0f;
+	mY = -1.0f;
+	mSize = 1.0f;
+	mSizeSquared = 1.0f;
+	mRot = 0.0f;
+
+	mNextCellList = NULL;
+	mPrevCellList = NULL;
+
+	mCellX = -1;
+	mCellY = -1;
+	mCellPos = -1;
+
+	mMaxAge = 0;
+	mLowAgeLimit = 0;
+	mHighAgeLimit = 0;
+	mMetabolism = 0.0f;
 }
 
 SimulationObject::SimulationObject(SimulationObject* obj)
@@ -58,6 +77,27 @@ SimulationObject::SimulationObject(SimulationObject* obj)
 	{
 		mSymbolTables[(*iterTables).first] = new SymbolTable((*iterTables).second);
 	}
+
+	mSize = obj->mSize;
+	mSizeSquared = obj->mSizeSquared;
+	mLowAgeLimit = obj->mLowAgeLimit;
+	mHighAgeLimit = obj->mHighAgeLimit;
+	
+	if (mHighAgeLimit > 0)
+	{
+		mMaxAge = randomUniformInt(mLowAgeLimit, mHighAgeLimit);
+	}
+	else
+	{
+		mMaxAge = 0;
+	}
+	mMetabolism = obj->mMetabolism;
+
+	mX = -1.0f;
+	mY = -1.0f;
+	mRot = 0.0f;
+
+	mColor = SymbolRGB(obj->mColor);
 }
 
 SimulationObject::~SimulationObject()
@@ -101,5 +141,182 @@ int SimulationObject::addSymbolTable(lua_State* luaState)
 	unsigned int code = luaL_checkint(luaState, 2);
 	addSymbolTable(table, code);
 	return 0;
+}
+
+void SimulationObject::setPos(float x, float y)
+{
+	Simulation* sim = Lab::getSingleton().getSimulation();
+
+	if ((x < 0)
+		|| (y < 0)
+		|| (x >= sim->getWorldWidth())
+		|| (y >= sim->getWorldLength()))
+	{
+		return;
+	}
+
+	unsigned int cellSide = (unsigned int)(sim->getCellSide());
+	unsigned int targetCellX = ((unsigned int)x) / cellSide;
+	unsigned int targetCellY = ((unsigned int)y) / cellSide;
+	SimulationObject** objGrid = sim->getCellGrid();
+	unsigned int worldCellWidth = sim->getWorldCellWidth();
+	unsigned int targetCellPos = (targetCellY * worldCellWidth) + targetCellX;
+	SimulationObject* targetCell = objGrid[targetCellPos];
+
+	if (mX >= 0)
+	{
+		if ((mCellX != targetCellX) || (mCellY != targetCellY))
+		{
+			// Remove from origin cell
+			if (mNextCellList != NULL)
+			{
+				mNextCellList->mPrevCellList = mPrevCellList;
+			}
+			if (mPrevCellList == NULL)
+			{
+				objGrid[mCellPos] = mNextCellList;
+			}
+			else
+			{
+				mPrevCellList->mNextCellList = mNextCellList;
+			}
+
+			// Insert in new target cell
+			mNextCellList = targetCell;
+			mPrevCellList = NULL;
+			if (targetCell != NULL)
+			{
+				targetCell->mPrevCellList = this;
+			}
+			objGrid[targetCellPos] = this;
+			mCellX = targetCellX;
+			mCellY = targetCellY;
+			mCellPos = targetCellPos;
+		}
+	}
+	else
+	{
+		// Insert in target cell
+		mNextCellList = targetCell;
+		mPrevCellList = NULL;
+		if (targetCell != NULL)
+		{
+			targetCell->mPrevCellList = this;
+		}
+		objGrid[targetCellPos] = this;
+		mCellX = targetCellX;
+		mCellY = targetCellY;
+		mCellPos = targetCellPos;
+	}
+
+	mX = x;
+	mY = y;
+}
+
+void SimulationObject::setSize(float size)
+{
+	mSize = size;
+	mSizeSquared = mSize * mSize;
+}
+
+void SimulationObject::setRot(float rot)
+{
+	mRot = normalizeAngle(rot);
+}
+
+void SimulationObject::placeRandom()
+{
+	Simulation* sim = Lab::getSingleton().getSimulation();
+
+	unsigned int worldWidth = (unsigned int)sim->getWorldWidth();
+	unsigned int worldLength = (unsigned int)sim->getWorldLength();
+
+	setPos(rand() % worldWidth, rand() % worldLength);
+	setRot(randomUniformProbability() * M_PI * 2);
+}
+
+void SimulationObject::onCycle()
+{
+	mEnergy -= mMetabolism;
+
+	if (mEnergy < 0)
+	{
+		Lab::getSingleton().getSimulation()->killOrganism(this);
+	}
+
+	if (mMaxAge > 0)
+	{
+		if (Lab::getSingleton().getSimulation()->time() - mCreationTime >= mMaxAge)
+		{
+			Lab::getSingleton().getSimulation()->killOrganism(this);
+		}
+	}
+}
+
+void SimulationObject::setAgeRange(unsigned long lowAgeLimit, unsigned long highAgeLimit)
+{
+	mLowAgeLimit = lowAgeLimit;
+	mHighAgeLimit = highAgeLimit;
+}
+
+void SimulationObject::setColor(SymbolRGB* color)
+{
+	mColor = SymbolRGB(color);
+}
+
+float SimulationObject::getFieldValue(std::string fieldName)
+{
+	if (fieldName == "energy")
+	{
+		return mEnergy;
+	}
+	else
+	{
+		return SimulationObject::getFieldValue(fieldName);
+	}
+}
+
+int SimulationObject::setPos(lua_State* luaState)
+{
+        float x = luaL_checknumber(luaState, 1);
+	float y = luaL_checknumber(luaState, 2);
+        setPos(x, y);
+        return 0;
+}
+
+int SimulationObject::setSize(lua_State* luaState)
+{
+        int size = luaL_checkint(luaState, 1);
+        setSize(size);
+        return 0;
+}
+
+int SimulationObject::setRot(lua_State* luaState)
+{
+        float rot = luaL_checknumber(luaState, 1);
+        setRot(rot);
+        return 0;
+}
+
+int SimulationObject::setAgeRange(lua_State* luaState)
+{
+        int lowAgeLimit = luaL_checkint(luaState, 1);
+        int highAgeLimit = luaL_checkint(luaState, 2);
+        setAgeRange(lowAgeLimit, highAgeLimit);
+        return 0;
+}
+
+int SimulationObject::setMetabolism(lua_State* luaState)
+{
+        float metabolism = luaL_checknumber(luaState, 1);
+        setMetabolism(metabolism);
+        return 0;
+}
+
+int SimulationObject::setColor(lua_State* luaState)
+{
+	SymbolRGB* color = (SymbolRGB*)Orbit<Lab>::pointer(luaState, 1);
+        setColor(color);
+        return 0;
 }
 

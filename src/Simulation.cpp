@@ -29,6 +29,7 @@ Simulation::Simulation()
 	mSimulationTime = 0;
 	mSelectedObject = NULL;
 	mPopulationDynamics = NULL;
+	mCellGrid = NULL;
 }
 
 Simulation::~Simulation()
@@ -39,6 +40,12 @@ Simulation::~Simulation()
 		delete *iterObj;
 	}
         mObjects.clear();
+
+	if (mCellGrid != NULL)
+	{
+		free(mCellGrid);
+		mCellGrid = NULL;
+	}
 }
 
 void Simulation::init()
@@ -46,6 +53,27 @@ void Simulation::init()
 	mPopulationDynamics->init();
 
 	mLogo = Lab::getSingleton().getWindow()->createPNGLayer("lablove.png");
+}
+
+void Simulation::setWorldDimensions(float worldWidth,
+			float worldLength,
+			float cellSide)
+{
+	mWorldWidth = worldWidth;
+	mWorldLength = worldLength;
+	mCellSide = cellSide;
+	mWorldCellWidth = (unsigned int)(ceilf(mWorldWidth / mCellSide));
+	mWorldCellLength = (unsigned int)(ceilf(mWorldLength / mCellSide));
+
+	unsigned int gridSize = mWorldCellWidth * mWorldCellLength;
+	mCellGrid = (SimulationObject**)malloc(sizeof(SimulationObject*) * gridSize);
+
+	for (unsigned int i = 0; i < gridSize; i++)
+	{
+		mCellGrid[i] = NULL;
+	}
+
+	
 }
 
 void Simulation::addObject(SimulationObject* object)
@@ -137,6 +165,15 @@ int Simulation::setPopulationDynamics(lua_State *luaState)
 {
         PopulationDynamics* popDyn = (PopulationDynamics*)Orbit<Lab>::pointer(luaState, 1);
         setPopulationDynamics(popDyn);
+        return 0;
+}
+
+int Simulation::setWorldDimensions(lua_State* luaState)
+{
+        int width = luaL_checkint(luaState, 1);
+        int height = luaL_checkint(luaState, 2);
+        int cellSide = luaL_checkint(luaState, 3);
+        setWorldDimensions(width, height, cellSide);
         return 0;
 }
 

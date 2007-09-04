@@ -35,7 +35,7 @@ sim:setWorldDimensions(worldWidth, worldHeight, viewRange * 2)
 
 lab:setSimulation(sim)
 
-animat = AnimatSimple2D(initialConnections, 25)
+animat = AgentGB(initialConnections, 25)
 
 animat:setSize(10.0)
 animat:setViewRange(viewRange)
@@ -106,7 +106,7 @@ grid2:addComponentSet(actSet, -1)
 
 animat:setBetaGrid(grid2)
 
-plant = PlantSimple2D()
+plant = Plant()
 plant:setSize(5.0)
 plant:setInitialEnergy(1.0)
 
@@ -119,7 +119,7 @@ sim:setPopulationDynamics(popDyn)
 animatSpeciesIndex = popDyn:addSpecies(animat, numberOfAnimats)
 popDyn:addSpecies(plant, numberOfPlants)
 
-human = AnimatSimple2D(initialConnections, 25)
+human = AgentGB(initialConnections, 25)
 
 human:setPos(worldWidth / 2, worldHeight / 2)
 human:setRot(0.0)

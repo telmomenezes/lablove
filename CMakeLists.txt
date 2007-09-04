@@ -22,9 +22,8 @@ SET(SOURCE_FILES
 	src/SimSimple.cpp
 	src/ScriptableObject.cpp
 	src/SimulationObject.cpp
-	src/ObjectSimple2D.cpp
-	src/PlantSimple2D.cpp
-	src/AnimatSimple2D.cpp
+	src/Plant.cpp
+	src/AgentGB.cpp
 	src/functions.cpp
 	src/Gridbrain.cpp
 	src/Grid.cpp

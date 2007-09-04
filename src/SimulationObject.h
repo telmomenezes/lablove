@@ -22,6 +22,7 @@
 
 #include "SymbolTable.h"
 #include "Orbit.h"
+#include "SymbolRGB.h"
 
 #include <map>
 #include <string>
@@ -40,11 +41,22 @@ public:
 
 	unsigned long getID(){return mID;}
 
-	virtual void onCycle(){}
+	virtual void onCycle();
 	virtual void draw(){}
 	virtual bool isFood(){return false;}
 	void setSelected(bool selected){mSelected = selected;}
 	bool isSelected(){return mSelected;}
+
+	virtual void setPos(float x, float y);
+	virtual void setSize(float size);
+	virtual void setRot(float rot);
+	float getX(){return mX;}
+	float getY(){return mY;}
+	float getSize(){return mSize;}
+	float getRot(){return mRot;}
+	int getCellX(){return mCellX;}
+	int getCellY(){return mCellY;}
+	int getCellPos(){return mCellPos;}
 
         unsigned int getSpeciesID(){return mSpeciesID;}
 	void setSpeciesID(unsigned int id){mSpeciesID = id;}
@@ -57,18 +69,43 @@ public:
 	virtual SimulationObject* crossover(SimulationObject* otherParent){return this;}
 	virtual void mutate(){}
 
-	virtual void placeRandom()=0;
+	virtual void placeRandom();
+
+	void setAgeRange(unsigned long lowAgeLimit, unsigned long highAgeLimit);
+	void setMetabolism(float metabolism){mMetabolism = metabolism;}
+
+	void setColor(SymbolRGB* color);
+	SymbolRGB* getColor(){return &mColor;}
 
 	void addSymbolTable(SymbolTable* table, unsigned int code);
 	SymbolTable* getSymbolTable(unsigned int pos);
 
 	int setInitialEnergy(lua_State* luaState);
 	int addSymbolTable(lua_State* luaState);
+	int setPos(lua_State* luaState);
+        int setSize(lua_State* luaState);
+        int setRot(lua_State* luaState);
+	int setAgeRange(lua_State* luaState);
+	int setMetabolism(lua_State* luaState);
+	int setColor(lua_State* luaState);
 
-	virtual float getFieldValue(std::string fieldName){return 0.0f;}
+	virtual float getFieldValue(std::string fieldName);
 
 	bool mHuman;
 	bool mDeleted;
+
+	float mX;
+	float mY;
+	float mSize;
+	float mSizeSquared;
+	float mRot;
+
+	SimulationObject* mNextCellList;
+	SimulationObject* mPrevCellList;
+
+	int mCellX;
+	int mCellY;
+	int mCellPos;
 
 protected:
 	unsigned long mID;
@@ -78,6 +115,12 @@ protected:
 	float mInitialEnergy;
 	unsigned long mCreationTime;
 	std::map<unsigned int, SymbolTable*> mSymbolTables;
+
+	unsigned long mLowAgeLimit;
+	unsigned long mHighAgeLimit;
+	unsigned long mMaxAge;
+	float mMetabolism;
+	SymbolRGB mColor;
 };
 #endif
 

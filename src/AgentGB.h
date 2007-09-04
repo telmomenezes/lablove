@@ -17,20 +17,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_ANIMAT_SIMPLE_2D_H)
-#define __INCLUDE_ANIMAT_SIMPLE_2D_H
+#if !defined(__INCLUDE_AGENT_GB_H)
+#define __INCLUDE_AGENT_GB_H
 
-#include "ObjectSimple2D.h"
+#include "SimulationObject.h"
 #include "Gridbrain.h"
 
 #include "Orbit.h"
 
-class AnimatSimple2D : public ObjectSimple2D
+class AgentGB : public SimulationObject
 {
 public:
-        AnimatSimple2D(lua_State* luaState=NULL);
-	AnimatSimple2D(AnimatSimple2D* anim, bool full=true);
-	virtual ~AnimatSimple2D();
+        AgentGB(lua_State* luaState=NULL);
+	AgentGB(AgentGB* anim, bool full=true);
+	virtual ~AgentGB();
 	virtual SimulationObject* clone(bool full=true);
 	virtual void initRandom();
 	void initTest();
@@ -45,7 +45,7 @@ public:
 	virtual void computationStep();
 	virtual void draw();
 
-	//virtual AnimatSimple2D* crossover(Animat* other_parent);
+	//virtual AgentGB* crossover(Animat* other_parent);
 	virtual void mutate();
 
 	void setViewRange(float range);
@@ -68,8 +68,8 @@ public:
 	float mActionEatParam;
 
 	static const char mClassName[];
-        static Orbit<AnimatSimple2D>::MethodType mMethods[];
-	static Orbit<AnimatSimple2D>::NumberGlobalType mNumberGlobals[];
+        static Orbit<AgentGB>::MethodType mMethods[];
+	static Orbit<AgentGB>::NumberGlobalType mNumberGlobals[];
 
         int setViewRange(lua_State* luaState);
 	int setViewAngle(lua_State* luaState);

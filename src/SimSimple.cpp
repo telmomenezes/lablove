@@ -19,11 +19,13 @@
 
 #include "SimSimple.h"
 #include "Lab.h"
-#include "ObjectSimple2D.h"
+#include "SimulationObject.h"
 #include "functions.h"
 #include "PopulationDynamics.h"
 #include "defines.h"
-#include "AnimatSimple2D.h"
+
+// TODO: remove this dependency
+#include "AgentGB.h"
 
 #include <math.h>
 
@@ -31,42 +33,15 @@ SimSimple::SimSimple(lua_State* luaState)
 {
 	mShowGrid = false;
 	mShowViewRange = false;
-	mCellGrid = NULL;
 }
 
 SimSimple::~SimSimple()
 {
-	if (mCellGrid != NULL)
-	{
-		free(mCellGrid);
-		mCellGrid = NULL;
-	}
-}
-
-void SimSimple::setWorldDimensions(float worldWidth,
-			float worldLength,
-			float cellSide)
-{
-	mWorldWidth = worldWidth;
-	mWorldLength = worldLength;
-	mCellSide = cellSide;
-	mWorldCellWidth = (unsigned int)(ceilf(mWorldWidth / mCellSide));
-	mWorldCellLength = (unsigned int)(ceilf(mWorldLength / mCellSide));
-
-	unsigned int gridSize = mWorldCellWidth * mWorldCellLength;
-	mCellGrid = (ObjectSimple2D**)malloc(sizeof(ObjectSimple2D*) * gridSize);
-
-	for (unsigned int i = 0; i < gridSize; i++)
-	{
-		mCellGrid[i] = NULL;
-	}
-
-	
 }
 
 void SimSimple::removeObject(SimulationObject* object)
 {
-	ObjectSimple2D* obj = (ObjectSimple2D*)object;
+	SimulationObject* obj = (SimulationObject*)object;
 
 	if (obj->mNextCellList != NULL)
 	{
@@ -132,7 +107,7 @@ void SimSimple::drawBeforeObjects()
 
 bool SimSimple::onKeyDown(pyc::KeyCode key)
 {
-	AnimatSimple2D* human = (AnimatSimple2D*)(mPopulationDynamics->getHuman());
+	AgentGB* human = (AgentGB*)(mPopulationDynamics->getHuman());
 
 	if (human == NULL)
 	{
@@ -174,7 +149,7 @@ bool SimSimple::onKeyUp(pyc::KeyCode key)
 		break;
 	}
 
-	AnimatSimple2D* human = (AnimatSimple2D*)(mPopulationDynamics->getHuman());
+	AgentGB* human = (AgentGB*)(mPopulationDynamics->getHuman());
 
 	if (human == NULL)
 	{
@@ -214,7 +189,7 @@ const char SimSimple::mClassName[] = "SimSimple";
 
 Orbit<SimSimple>::MethodType SimSimple::mMethods[] = {
 	{"setPopulationDynamics", &Simulation::setPopulationDynamics},
-        {"setWorldDimensions", &SimSimple::setWorldDimensions},
+        {"setWorldDimensions", &Simulation::setWorldDimensions},
         {0,0}
 };
 
@@ -229,13 +204,4 @@ Orbit<SimSimple>::NumberGlobalType SimSimple::mNumberGlobals[] = {
 	{"ACTION_EAT", ACTION_EAT},
 	{0,0}
 };
-
-int SimSimple::setWorldDimensions(lua_State* luaState)
-{
-        int width = luaL_checkint(luaState, 1);
-        int height = luaL_checkint(luaState, 2);
-        int cellSide = luaL_checkint(luaState, 3);
-        setWorldDimensions(width, height, cellSide);
-        return 0;
-}
 

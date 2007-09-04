@@ -21,7 +21,7 @@
 #define __INCLUDE_SIM_SIMPLE_H
 
 #include "Simulation.h"
-#include "ObjectSimple2D.h"
+#include "SimulationObject.h"
 #include "PopulationDynamics.h"
 
 #include "pyc.h"
@@ -50,20 +50,12 @@ public:
 
 	virtual void drawBeforeObjects();
 
-	void setWorldDimensions(float worldWidth,
-			float worldLength,
-			float cellSide);
 	virtual void removeObject(SimulationObject* object);
-	float getWorldWidth(){return mWorldWidth;}
-	float getWorldLength(){return mWorldLength;}
-	float getCellSide(){return mCellSide;}
-	ObjectSimple2D** getCellGrid(){return mCellGrid;}
+	
 	void setShowGrid(bool show){mShowGrid = show;}
 	void setShowViewRange(bool show){mShowViewRange = show;}
 	bool getShowGrid(){return mShowGrid;}
 	bool getShowViewRange(){return mShowViewRange;}
-	unsigned int getWorldCellWidth(){return mWorldCellWidth;}
-	unsigned int getWorldCellLength(){return mWorldCellLength;}
 	
 	SimulationObject* getObjectByScreenPos(int x, int y);
 
@@ -76,17 +68,7 @@ public:
         static Orbit<SimSimple>::MethodType mMethods[];
 	static Orbit<SimSimple>::NumberGlobalType mNumberGlobals[];
 
-        int setWorldDimensions(lua_State* luaState);
-
 private:
-
-	float mWorldWidth;
-	float mWorldLength;
-
-	float mCellSide;
-	unsigned int mWorldCellWidth;
-	unsigned int mWorldCellLength;
-	ObjectSimple2D** mCellGrid;
 	bool mShowGrid;
 	bool mShowViewRange;
 };
