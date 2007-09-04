@@ -45,6 +45,7 @@ animat:setInitialEnergy(1.0)
 animat:setMetabolism(metabolism)
 animat:setGoCost(goCost)
 animat:setRotateCost(rotateCost)
+animat:setGraphic(GraphicTriangle())
 
 animatColor = SymbolRGB(255, 50, 255)
 animat:setColor(animatColor)
@@ -113,6 +114,8 @@ plant:setInitialEnergy(1.0)
 plantColor = SymbolRGB(10, 250, 50)
 plant:setColor(plantColor)
 
+plant:setGraphic(GraphicSquare())
+
 popDyn = PopDynFixedSpecies()
 sim:setPopulationDynamics(popDyn)
 
@@ -135,6 +138,8 @@ human:setRotateCost(rotateCost)
 humanColor = SymbolRGB(0, 0, 200)
 human:setColor(humanColor)
 human:setRot(1.00)
+
+human:setGraphic(GraphicTriangle())
 
 popDyn:setHuman(human)
 

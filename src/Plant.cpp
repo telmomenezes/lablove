@@ -23,7 +23,7 @@
 #include "defines.h"
 #include "SimSimple.h"
 
-Plant::Plant(lua_State* luaState)
+Plant::Plant(lua_State* luaState) : SimulationObject()
 {
 	mNextCellList = NULL;
 	mPrevCellList = NULL;
@@ -42,12 +42,6 @@ SimulationObject* Plant::clone(bool full)
 	return new Plant(this);
 }
 
-void Plant::draw()
-{
-	Lab::getSingleton().getRootLayer()->setColor(mColor.mRed, mColor.mGreen, mColor.mBlue);
-	Lab::getSingleton().getRootLayer()->fillSquare(mX, mY, mSize, mRot);
-}
-
 const char Plant::mClassName[] = "Plant";
 
 Orbit<Plant>::MethodType Plant::mMethods[] = {
@@ -59,6 +53,7 @@ Orbit<Plant>::MethodType Plant::mMethods[] = {
 	{"setColor", &SimulationObject::setColor},
 	{"setAgeRange", &SimulationObject::setAgeRange},
 	{"setMetabolism", &SimulationObject::setMetabolism},
+	{"setGraphic", &SimulationObject::setGraphic},
         {0,0}
 };
 

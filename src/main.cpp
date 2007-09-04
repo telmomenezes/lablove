@@ -30,6 +30,8 @@
 #include "SymbolRGB.h"
 #include "StatMedAvgMinMax.h"
 #include "StatTime.h"
+#include "GraphicTriangle.h"
+#include "GraphicSquare.h"
 
 #if defined(__LABLOVE_WITH_GRAPHICS)
 #if defined(__WIN32)
@@ -79,6 +81,8 @@ int main(int argc, char *argv[])
 	Orbit<SymbolRGB>::orbitRegister(luaState);
 	Orbit<StatMedAvgMinMax>::orbitRegister(luaState);
 	Orbit<StatTime>::orbitRegister(luaState);
+	Orbit<GraphicTriangle>::orbitRegister(luaState);
+	Orbit<GraphicSquare>::orbitRegister(luaState);
 
 	lua_register(luaState, "getLab", getLab);
 

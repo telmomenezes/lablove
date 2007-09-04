@@ -43,7 +43,6 @@ public:
 	virtual void actionStep();
 	virtual void onCycle();
 	virtual void computationStep();
-	virtual void draw();
 
 	//virtual AgentGB* crossover(Animat* other_parent);
 	virtual void mutate();

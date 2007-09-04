@@ -38,7 +38,10 @@ SET(SOURCE_FILES
 	src/SymbolTable.cpp
 	src/Statistics.cpp
 	src/StatMedAvgMinMax.cpp
-	src/StatTime.cpp)
+	src/StatTime.cpp
+	src/Graphic.cpp
+	src/GraphicTriangle.cpp
+	src/GraphicSquare.cpp)
 
 ADD_EXECUTABLE(lablove ${SOURCE_FILES})
 

@@ -25,7 +25,7 @@
 #include "defines.h"
 #include "random.h"
 
-AgentGB::AgentGB(lua_State* luaState)
+AgentGB::AgentGB(lua_State* luaState) : SimulationObject()
 {
 	mViewRange = 0.0f;
 	mViewAngle = 0.0f;
@@ -154,38 +154,6 @@ void AgentGB::initTest()
 SimulationObject* AgentGB::clone(bool full)
 {
 	return new AgentGB(this, full);
-}
-
-void AgentGB::draw()
-{
-	if (((SimSimple*)(Lab::getSingleton().getSimulation()))->getShowViewRange())
-	{
-		float beginAngle = mLowLimitViewAngle;
-		float endAngle = mHighLimitViewAngle;
-
-		if (beginAngle > endAngle)
-		{
-			endAngle += M_PI * 2.0f;
-		}
-
-		Lab::getSingleton().getRootLayer()->setColor(150, 150, 150, 100);
-		Lab::getSingleton().getRootLayer()->fillCircle(mX, mY, mViewRange, beginAngle, endAngle);
-	}
-
-	float a1 = mRot;
-	float a2 = mRot + (M_PI * 0.8f);
-	float a3 = mRot + (M_PI * 1.2f);
-	float x1 = mX + (cosf(a1) * mSize);
-	float y1 = mY + (sinf(a1) * mSize);
-	float x2 = mX + (cosf(a2) * mSize);
-	float y2 = mY + (sinf(a2) * mSize);
-	float x3 = mX + (cosf(a3) * mSize);
-	float y3 = mY + (sinf(a3) * mSize);
-
-	Lab::getSingleton().getRootLayer()->setColor(mColor.mRed, mColor.mGreen, mColor.mBlue);
-	Lab::getSingleton().getRootLayer()->setLineWidth(2.0f);
-	Lab::getSingleton().getRootLayer()->fillTriangle(x1, y1, x2, y2, x3, y3);
-	Lab::getSingleton().getRootLayer()->drawTriangle(x1, y1, x2, y2, x3, y3);
 }
 
 void AgentGB::setRot(float rot)
@@ -594,6 +562,7 @@ Orbit<AgentGB>::MethodType AgentGB::mMethods[] = {
 	{"setRot", &SimulationObject::setRot},
 	{"setSize", &SimulationObject::setSize},
 	{"setColor", &SimulationObject::setColor},
+	{"setGraphic", &SimulationObject::setGraphic},
         {"setViewRange", &AgentGB::setViewRange},
 	{"setViewAngle", &AgentGB::setViewAngle},
 	{"setAlphaObjectsGrid", &AgentGB::setAlphaObjectsGrid},

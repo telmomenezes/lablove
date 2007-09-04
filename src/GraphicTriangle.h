@@ -17,26 +17,32 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_PLANT_H)
-#define __INCLUDE_PLANT_H
+#if !defined(__INCLUDE_GRAPHIC_TRIANGLE_H)
+#define __INCLUDE_GRAPHIC_TRIANGLE_H
 
-#include "SimulationObject.h"
-
+#include "Graphic.h"
 #include "Orbit.h"
 
-class Plant : public SimulationObject
+class GraphicTriangle : public Graphic
 {
 public:
-        Plant(lua_State* luaState=NULL);
-	Plant(Plant* plant) : SimulationObject(plant){}
-	virtual ~Plant();
-	virtual SimulationObject* clone(bool full=true);
+        GraphicTriangle(lua_State* luaState=NULL);
+	virtual ~GraphicTriangle();
+	
+	virtual Graphic* createSameType();
 
-	virtual bool isFood(){return true;}
+	virtual void init(void* obj);
+	virtual void draw();
 
 	static const char mClassName[];
-        static Orbit<Plant>::MethodType mMethods[];
-	static Orbit<Plant>::NumberGlobalType mNumberGlobals[];
+        static Orbit<GraphicTriangle>::MethodType mMethods[];
+	static Orbit<GraphicTriangle>::NumberGlobalType mNumberGlobals[];
+
+protected:
+	float mSize;
+	int mRed;
+	int mGreen;
+	int mBlue;
 };
 #endif
 

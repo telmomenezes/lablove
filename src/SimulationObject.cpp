@@ -55,6 +55,8 @@ SimulationObject::SimulationObject()
 	mLowAgeLimit = 0;
 	mHighAgeLimit = 0;
 	mMetabolism = 0.0f;
+
+	mGraphic = NULL;
 }
 
 SimulationObject::SimulationObject(SimulationObject* obj)
@@ -98,6 +100,16 @@ SimulationObject::SimulationObject(SimulationObject* obj)
 	mRot = 0.0f;
 
 	mColor = SymbolRGB(obj->mColor);
+
+	if (obj->mGraphic != NULL)
+	{
+		mGraphic= obj->mGraphic->createSameType();
+		mGraphic->init(this);
+	}
+	else
+	{
+		mGraphic = NULL;
+	}
 }
 
 SimulationObject::~SimulationObject()
@@ -112,6 +124,12 @@ SimulationObject::~SimulationObject()
 	}
 
 	mSymbolTables.clear();
+
+	if (mGraphic != NULL)
+	{
+		delete mGraphic;
+		mGraphic = NULL;
+	}
 }
 
 void SimulationObject::addSymbolTable(SymbolTable* table, unsigned int code)
@@ -253,6 +271,14 @@ void SimulationObject::onCycle()
 	}
 }
 
+void SimulationObject::draw()
+{
+	if (mGraphic != NULL)
+	{
+		mGraphic->draw();
+	}
+}
+
 void SimulationObject::setAgeRange(unsigned long lowAgeLimit, unsigned long highAgeLimit)
 {
 	mLowAgeLimit = lowAgeLimit;
@@ -274,6 +300,12 @@ float SimulationObject::getFieldValue(std::string fieldName)
 	{
 		return SimulationObject::getFieldValue(fieldName);
 	}
+}
+
+void SimulationObject::setGraphic(Graphic* graph)
+{
+	mGraphic = graph;
+	mGraphic->init(this);
 }
 
 int SimulationObject::setPos(lua_State* luaState)
@@ -317,6 +349,13 @@ int SimulationObject::setColor(lua_State* luaState)
 {
 	SymbolRGB* color = (SymbolRGB*)Orbit<Lab>::pointer(luaState, 1);
         setColor(color);
+        return 0;
+}
+
+int SimulationObject::setGraphic(lua_State* luaState)
+{
+	Graphic* graph = (Graphic*)Orbit<Lab>::pointer(luaState, 1);
+        setGraphic(graph);
         return 0;
 }
 

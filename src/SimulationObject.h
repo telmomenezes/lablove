@@ -21,8 +21,10 @@
 #define __INCLUDE_SIMULATION_OBJECT_H
 
 #include "SymbolTable.h"
-#include "Orbit.h"
+#include "Graphic.h"
 #include "SymbolRGB.h"
+
+#include "Orbit.h"
 
 #include <map>
 #include <string>
@@ -42,7 +44,7 @@ public:
 	unsigned long getID(){return mID;}
 
 	virtual void onCycle();
-	virtual void draw(){}
+	void draw();
 	virtual bool isFood(){return false;}
 	void setSelected(bool selected){mSelected = selected;}
 	bool isSelected(){return mSelected;}
@@ -80,6 +82,8 @@ public:
 	void addSymbolTable(SymbolTable* table, unsigned int code);
 	SymbolTable* getSymbolTable(unsigned int pos);
 
+	void setGraphic(Graphic* graph);
+
 	int setInitialEnergy(lua_State* luaState);
 	int addSymbolTable(lua_State* luaState);
 	int setPos(lua_State* luaState);
@@ -88,6 +92,7 @@ public:
 	int setAgeRange(lua_State* luaState);
 	int setMetabolism(lua_State* luaState);
 	int setColor(lua_State* luaState);
+	int setGraphic(lua_State* luaState);
 
 	virtual float getFieldValue(std::string fieldName);
 
@@ -121,6 +126,8 @@ protected:
 	unsigned long mMaxAge;
 	float mMetabolism;
 	SymbolRGB mColor;
+
+	Graphic* mGraphic;
 };
 #endif
 
