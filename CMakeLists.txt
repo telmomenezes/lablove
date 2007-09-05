@@ -23,7 +23,7 @@ SET(SOURCE_FILES
 	src/ScriptableObject.cpp
 	src/SimulationObject.cpp
 	src/Plant.cpp
-	src/AgentGB.cpp
+	src/Agent.cpp
 	src/functions.cpp
 	src/Gridbrain.cpp
 	src/Grid.cpp

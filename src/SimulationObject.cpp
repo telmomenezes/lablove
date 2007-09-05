@@ -57,6 +57,8 @@ SimulationObject::SimulationObject()
 	mMetabolism = 0.0f;
 
 	mGraphic = NULL;
+
+	mType = TYPE_OBJECT;
 }
 
 SimulationObject::SimulationObject(SimulationObject* obj)
@@ -110,6 +112,8 @@ SimulationObject::SimulationObject(SimulationObject* obj)
 	{
 		mGraphic = NULL;
 	}
+
+	mType = obj->mType;
 }
 
 SimulationObject::~SimulationObject()

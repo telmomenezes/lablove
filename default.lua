@@ -1,5 +1,5 @@
 numberOfPlants = 100
-numberOfAnimats = 100
+numberOfAgents = 100
 
 worldWidth = 1000
 worldHeight = 1000
@@ -32,19 +32,19 @@ lab:setSeedIndex(0)
 
 sim = SimSimple()
 sim:setWorldDimensions(worldWidth, worldHeight, viewRange * 2)
+sim:setViewRange(viewRange)
+sim:setViewAngle(viewAngle)
+sim:setGoCost(goCost)
+sim:setRotateCost(rotateCost)
 
 lab:setSimulation(sim)
 
-animat = AgentGB(initialConnections, 25)
-
+animat = Agent(initialConnections, 25)
 animat:setSize(10.0)
-animat:setViewRange(viewRange)
-animat:setViewAngle(viewAngle)
 animat:setAgeRange(lowAgeLimit, highAgeLimit)
 animat:setInitialEnergy(1.0)
 animat:setMetabolism(metabolism)
-animat:setGoCost(goCost)
-animat:setRotateCost(rotateCost)
+
 animat:setGraphic(GraphicTriangle())
 
 animatColor = SymbolRGB(255, 50, 255)
@@ -119,21 +119,16 @@ plant:setGraphic(GraphicSquare())
 popDyn = PopDynFixedSpecies()
 sim:setPopulationDynamics(popDyn)
 
-animatSpeciesIndex = popDyn:addSpecies(animat, numberOfAnimats)
+animatSpeciesIndex = popDyn:addSpecies(animat, numberOfAgents)
 popDyn:addSpecies(plant, numberOfPlants)
 
-human = AgentGB(initialConnections, 25)
+human = Agent(initialConnections, 25)
 
 human:setPos(worldWidth / 2, worldHeight / 2)
 human:setRot(0.0)
 human:setSize(10.0)
-human:setViewRange(viewRange)
-human:setViewAngle(viewAngle)
-human:setAgeRange(lowAgeLimit, highAgeLimit)
 human:setInitialEnergy(1.0)
 human:setMetabolism(metabolism)
-human:setGoCost(goCost)
-human:setRotateCost(rotateCost)
 
 humanColor = SymbolRGB(0, 0, 200)
 human:setColor(humanColor)
@@ -141,7 +136,7 @@ human:setRot(1.00)
 
 human:setGraphic(GraphicTriangle())
 
-popDyn:setHuman(human)
+--popDyn:setHuman(human)
 
 stats = StatMedAvgMinMax()
 --stats:setFile("energy.csv")

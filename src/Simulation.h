@@ -53,7 +53,10 @@ public:
 
 	virtual void addObject(SimulationObject* object);
 	virtual void removeObject(SimulationObject* object);
+
 	void cycle();
+	virtual void processObjects()=0;
+
 	virtual SimulationObject* getObjectByScreenPos(int x, int y)=0;
 	void setSelectedObject(SimulationObject* object);
 	SimulationObject* getSelectedObject(){return mSelectedObject;}

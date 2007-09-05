@@ -32,6 +32,10 @@
 class SimulationObject
 {
 public:
+	enum Type {TYPE_OBJECT,
+			TYPE_PLANT,
+			TYPE_AGENT};
+
 	static unsigned long CURRENT_ID;
 
 	SimulationObject();
@@ -112,11 +116,14 @@ public:
 	int mCellY;
 	int mCellPos;
 
+	Type mType;
+
+	float mEnergy;
+
 protected:
 	unsigned long mID;
 	bool mSelected;
         unsigned int mSpeciesID;
-	float mEnergy;
 	float mInitialEnergy;
 	unsigned long mCreationTime;
 	std::map<unsigned int, SymbolTable*> mSymbolTables;

@@ -46,20 +46,6 @@ void GraphicTriangle::init(void* obj)
 
 void GraphicTriangle::draw()
 {
-	/*if (((SimSimple*)(Lab::getSingleton().getSimulation()))->getShowViewRange())
-	{
-		float beginAngle = mLowLimitViewAngle;
-		float endAngle = mHighLimitViewAngle;
-
-		if (beginAngle > endAngle)
-		{
-			endAngle += M_PI * 2.0f;
-		}
-
-		Lab::getSingleton().getRootLayer()->setColor(150, 150, 150, 100);
-		Lab::getSingleton().getRootLayer()->fillCircle(mX, mY, mViewRange, beginAngle, endAngle);
-	}*/
-
 	SimulationObject* simObj = (SimulationObject*)mObject;
 
 	float rot = simObj->mRot;

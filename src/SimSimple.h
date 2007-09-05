@@ -23,6 +23,7 @@
 #include "Simulation.h"
 #include "SimulationObject.h"
 #include "PopulationDynamics.h"
+#include "Agent.h"
 
 #include "pyc.h"
 
@@ -48,9 +49,15 @@ public:
         SimSimple(lua_State* luaState=NULL);
 	virtual ~SimSimple();
 
+
+	virtual void processObjects();
+
 	virtual void drawBeforeObjects();
 
 	virtual void removeObject(SimulationObject* object);
+
+	void setGoCost(float cost){mGoCost = cost;}
+	void setRotateCost(float cost){mRotateCost = cost;}
 	
 	void setShowGrid(bool show){mShowGrid = show;}
 	void setShowViewRange(bool show){mShowViewRange = show;}
@@ -64,13 +71,47 @@ public:
 	virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y);
 	virtual bool onMouseButtonUp(pyc::MouseButton button, int x, int y);
 
+	void setViewRange(float range);
+	void setViewAngle(float angle);
+	float getViewRange(){return mViewRange;}
+	float getViewAngle(){return mViewAngle;}
+
 	static const char mClassName[];
         static Orbit<SimSimple>::MethodType mMethods[];
 	static Orbit<SimSimple>::NumberGlobalType mNumberGlobals[];
 
-private:
+	int setViewRange(lua_State* luaState);
+	int setViewAngle(lua_State* luaState);
+	int setGoCost(lua_State* luaState);
+	int setRotateCost(lua_State* luaState);
+
+protected:
+	void perceive(Agent* agent);
+	void act(Agent* agent);
+	void scanCell(Agent* agent, int cellX, int cellY);
+	virtual void onScanObject(Agent* orig,
+					SimulationObject* targ,
+					bool contact,
+					float angle,
+					float distance);
+	void goFront(Agent* agent, float distance);
+	void rotate(Agent* agent, float angle);
+	void eat(Agent* agent);
+
+	float mViewRange;
+	float mViewAngle;
+	float mHalfViewAngle;
+	float mLowLimitViewAngle;
+	float mHighLimitViewAngle;
+
 	bool mShowGrid;
 	bool mShowViewRange;
+
+	float mGoCost;
+	float mRotateCost;
+
+	SimulationObject* mTargetObject;
+	float mDistanceToTargetObject;
 };
 #endif
 

@@ -1,5 +1,5 @@
 numberOfPlants = 100
-numberOfAnimats = 100
+numberOfAgents = 100
 generationTime = 500
 
 worldWidth = 1000
@@ -24,13 +24,13 @@ lab:setSeedIndex(0)
 
 sim = SimSimple()
 sim:setWorldDimensions(worldWidth, worldHeight, viewRange * 2)
+sim:setViewRange(viewRange)
+sim:setViewAngle(viewAngle)
 
 lab:setSimulation(sim)
-animat = AgentGB(10, 25)
+animat = Agent(10, 25)
 
 animat:setSize(10.0)
-animat:setViewRange(viewRange)
-animat:setViewAngle(viewAngle)
 animat:setGraphic(GraphicTriangle())
 
 perSet = GridbrainComponentSet()
@@ -94,7 +94,7 @@ popDyn = PopDynGenerations()
 sim:setPopulationDynamics(popDyn)
 
 popDyn:addSpecies(plant, numberOfPlants, true)
-animatSpeciesIndex = popDyn:addSpecies(animat, numberOfAnimats, false)
+animatSpeciesIndex = popDyn:addSpecies(animat, numberOfAgents, false)
 popDyn:setGenerationTime(generationTime)
 
 stats = StatMedAvgMinMax()
