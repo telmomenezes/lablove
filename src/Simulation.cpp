@@ -83,6 +83,27 @@ void Simulation::addObject(SimulationObject* object)
 
 void Simulation::removeObject(SimulationObject* object)
 {
+	SimulationObject* obj = (SimulationObject*)object;
+
+	if (obj->mNextCellList != NULL)
+	{
+		obj->mNextCellList->mPrevCellList = obj->mPrevCellList;
+	}
+
+	if (obj->mPrevCellList == NULL)
+	{
+		int cellPos = obj->getCellPos();
+
+		if(cellPos >= 0)
+		{
+			mCellGrid[cellPos] = obj->mNextCellList;
+		}
+	}
+	else
+	{
+		obj->mPrevCellList->mNextCellList = obj->mNextCellList;
+	}
+
 	if (object->isSelected())
 	{
 		mSelectedObject = NULL;
@@ -99,6 +120,17 @@ void Simulation::removeObject(SimulationObject* object)
 			return;
 		}
 	}
+}
+
+SimulationObject* Simulation::getObjectByScreenPos(int x, int y)
+{
+	return NULL;
+}
+
+void Simulation::moveView(float x, float y)
+{
+	mViewX += x;
+	mViewY += y;
 }
 
 void Simulation::cycle()
@@ -121,7 +153,7 @@ void Simulation::cycle()
 	for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
 	{
 		SimulationObject* obj = *iterObj;
-		obj->draw();
+		obj->draw(mViewX, mViewY);
 	}
 
 	Lab::getSingleton().getRootLayer()->setColor(255, 255, 255, 200);

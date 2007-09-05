@@ -275,11 +275,11 @@ void SimulationObject::onCycle()
 	}
 }
 
-void SimulationObject::draw()
+void SimulationObject::draw(float x, float y)
 {
 	if (mGraphic != NULL)
 	{
-		mGraphic->draw();
+		mGraphic->draw(x, y);
 	}
 }
 

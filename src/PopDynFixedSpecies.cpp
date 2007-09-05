@@ -54,8 +54,6 @@ void PopDynFixedSpecies::addSpeciesStatistics(unsigned int speciesIndex, Statist
 
 void PopDynFixedSpecies::init()
 {
-	PopulationDynamics::init();
-
 	for (std::vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
 		iterSpecies != mSpecies.end();
 		iterSpecies++)
@@ -173,7 +171,6 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
 const char PopDynFixedSpecies::mClassName[] = "PopDynFixedSpecies";
 
 Orbit<PopDynFixedSpecies>::MethodType PopDynFixedSpecies::mMethods[] = {
-	{"setHuman", &PopulationDynamics::setHuman},
 	{"addStatistics", &PopulationDynamics::addStatistics},
 	{"addStatisticsTimeInterval", &PopulationDynamics::addStatistics},
 	{"addSpecies", &PopDynFixedSpecies::addSpecies},

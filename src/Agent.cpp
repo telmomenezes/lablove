@@ -233,10 +233,6 @@ int Agent::setBetaGrid(lua_State* luaState)
 	return 0;
 }
 
-void Agent::setPerceptions(int channel, float* values)
-{
-}
-
 /*void Agent::draw_brain()
 {
 	unsigned int height = _gridbrain->get_height();

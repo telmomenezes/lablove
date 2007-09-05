@@ -46,6 +46,9 @@ public:
 	void processEvents();
 
 	virtual bool onKeyDown(pyc::KeyCode keycode);
+	virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y);
+	virtual bool onMouseButtonUp(pyc::MouseButton button, int x, int y);
+	virtual bool onMouseMove(int x, int y);
 
 	double realTime();
 
@@ -74,6 +77,10 @@ private:
 	pyc::Layer* mRootLayer;
 
 	std::list<InputHandler*> mHandlers;
+
+	bool mDragging;
+	int mLastMouseX;
+	int mLastMouseY;
 };
 #endif
 

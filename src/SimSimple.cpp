@@ -20,8 +20,8 @@
 #include "SimSimple.h"
 #include "Lab.h"
 #include "SimulationObject.h"
-#include "functions.h"
 #include "PopulationDynamics.h"
+#include "functions.h"
 #include "defines.h"
 
 #include <math.h>
@@ -351,49 +351,18 @@ void SimSimple::eat(Agent* agent)
 	}
 }
 
-void SimSimple::removeObject(SimulationObject* object)
-{
-	SimulationObject* obj = (SimulationObject*)object;
-
-	if (obj->mNextCellList != NULL)
-	{
-		obj->mNextCellList->mPrevCellList = obj->mPrevCellList;
-	}
-
-	if (obj->mPrevCellList == NULL)
-	{
-		int cellPos = obj->getCellPos();
-
-		if(cellPos >= 0)
-		{
-			mCellGrid[cellPos] = obj->mNextCellList;
-		}
-	}
-	else
-	{
-		obj->mPrevCellList->mNextCellList = obj->mNextCellList;
-	}
-
-	Simulation::removeObject(object);
-}
-
-SimulationObject* SimSimple::getObjectByScreenPos(int x, int y)
-{
-	return NULL;
-}
-
 void SimSimple::drawBeforeObjects()
 {
 	if (mShowGrid)
 	{
 		unsigned int cellSide = (unsigned int)mCellSide;
 
-		int mViewX = 0;
-		int mViewY = 0;
+		int viewX = (int)mViewX;
+		int viewY = (int)mViewY;
 
 		Lab::getSingleton().getRootLayer()->setColor(200, 200, 200);
 
-		unsigned int division = cellSide - (mViewX % cellSide);
+		unsigned int division = cellSide - ((cellSide - viewX) % cellSide);
 		while (division < Lab::getSingleton().getRootLayer()->getWidth())
 		{
 			Lab::getSingleton().getRootLayer()->drawLine(division,
@@ -404,7 +373,7 @@ void SimSimple::drawBeforeObjects()
 			division += cellSide;
 		}
 
-		division = cellSide - (mViewY % cellSide);
+		division = cellSide - ((cellSide - viewY) % cellSide);
 		while (division < Lab::getSingleton().getRootLayer()->getHeight())
 		{
 			Lab::getSingleton().getRootLayer()->drawLine(0,
@@ -424,8 +393,8 @@ void SimSimple::drawBeforeObjects()
 		{
 			SimulationObject* obj = *iterObj;
 
-			float beginAngle = mLowLimitViewAngle;
-			float endAngle = mHighLimitViewAngle;
+			float beginAngle = normalizeAngle(obj->mRot - mHalfViewAngle);
+			float endAngle = normalizeAngle(obj->mRot + mHalfViewAngle);
 
 			if (beginAngle > endAngle)
 			{
@@ -433,8 +402,8 @@ void SimSimple::drawBeforeObjects()
 			}
 
 			Lab::getSingleton().getRootLayer()->setColor(150, 150, 150, 100);
-			Lab::getSingleton().getRootLayer()->fillCircle(obj->mX,
-									obj->mY,
+			Lab::getSingleton().getRootLayer()->fillCircle(obj->mX + mViewX,
+									obj->mY + mViewY,
 									mViewRange,
 									beginAngle,
 									endAngle);
@@ -445,13 +414,6 @@ void SimSimple::drawBeforeObjects()
 
 bool SimSimple::onKeyDown(pyc::KeyCode key)
 {
-	Agent* human = (Agent*)(mPopulationDynamics->getHuman());
-
-	if (human == NULL)
-	{
-		return false;
-	}
-
 	/*switch (key)
 	{
 	case pyc::KEY_UP:
@@ -485,13 +447,6 @@ bool SimSimple::onKeyUp(pyc::KeyCode key)
 		return true;
 	default:
 		break;
-	}
-
-	Agent* human = (Agent*)(mPopulationDynamics->getHuman());
-
-	if (human == NULL)
-	{
-		return false;
 	}
 
 	/*switch (key)

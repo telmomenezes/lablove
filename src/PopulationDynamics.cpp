@@ -22,20 +22,11 @@
 
 PopulationDynamics::PopulationDynamics()
 {
-	mHuman = NULL;
 	mStatisticsTimeInterval = 1000;
 }
 
 PopulationDynamics::~PopulationDynamics()
 {	
-}
-
-void PopulationDynamics::init()
-{
-	if (mHuman)
-	{
-		Lab::getSingleton().getSimulation()->addObject(mHuman);
-	}
 }
 
 void PopulationDynamics::onCycle()
@@ -63,23 +54,10 @@ void PopulationDynamics::onOrganismDeath(SimulationObject* org)
 	}
 }
 
-void PopulationDynamics::setHuman(SimulationObject* human)
-{
-	mHuman = human;
-	mHuman->mHuman = true;
-}
-
 void PopulationDynamics::addStatistics(Statistics* stats)
 {
 	stats->init();
 	mStatistics.push_back(stats);
-}
-
-int PopulationDynamics::setHuman(lua_State* luaState)
-{
-	SimulationObject* obj = (SimulationObject*)Orbit<Lab>::pointer(luaState, 1);
-        setHuman(obj);
-        return 0;
 }
 
 int PopulationDynamics::addStatistics(lua_State* luaState)

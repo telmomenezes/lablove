@@ -31,7 +31,7 @@ public:
 	virtual Graphic* createSameType()=0;
 
 	virtual void init(void* obj)=0;
-	virtual void draw()=0;
+	virtual void draw(float x, float y)=0;
 
 protected:
 	void* mObject;

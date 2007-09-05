@@ -44,15 +44,15 @@ void GraphicSquare::init(void* obj)
 	mBlue = simObj->getColor()->mBlue;
 }
 
-void GraphicSquare::draw()
+void GraphicSquare::draw(float x, float y)
 {
 	SimulationObject* simObj = (SimulationObject*)mObject;
 	float rot = simObj->mRot;
-	float x = simObj->mX;
-	float y = simObj->mY;
+	float centerX = simObj->mX + x;
+	float centerY = simObj->mY + y;
 
 	Lab::getSingleton().getRootLayer()->setColor(mRed, mGreen, mBlue);
-	Lab::getSingleton().getRootLayer()->fillSquare(x, y, mSize, rot);
+	Lab::getSingleton().getRootLayer()->fillSquare(centerX, centerY, mSize, rot);
 }
 
 const char GraphicSquare::mClassName[] = "GraphicSquare";

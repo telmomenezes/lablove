@@ -42,8 +42,6 @@ public:
 	//virtual Agent* crossover(Agent* other_parent);
 	virtual void mutate();
 
-	virtual void setPerceptions(int channel, float* values);
-
 	static const char mClassName[];
         static Orbit<Agent>::MethodType mMethods[];
 	static Orbit<Agent>::NumberGlobalType mNumberGlobals[];

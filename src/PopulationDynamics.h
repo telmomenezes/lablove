@@ -21,8 +21,8 @@
 #define __INCLUDE_POPULATION_DYNAMICS_H
 
 #include "SimulationObject.h"
-#include "Orbit.h"
 #include "Statistics.h"
+#include "Orbit.h"
 
 class PopulationDynamics
 {
@@ -30,21 +30,17 @@ public:
 	PopulationDynamics();
 	virtual ~PopulationDynamics();
 
-	virtual void init();
+	virtual void init()=0;
 	virtual void onCycle();
 	virtual void onOrganismDeath(SimulationObject* org);
 	void addStatistics(Statistics* stats);
 
-	void setHuman(SimulationObject* human);
-	SimulationObject* getHuman(){return mHuman;}
 	void setStatisticsTimeInterval(unsigned long interval){mStatisticsTimeInterval = interval;}
 
-        int setHuman(lua_State* luaState);
         int addStatistics(lua_State* luaState);
 	int setStatisticsTimeInterval(lua_State* luaState);
 
 protected:
-	SimulationObject* mHuman;
 	std::list<Statistics*> mStatistics;
 	unsigned long mStatisticsTimeInterval;
 };

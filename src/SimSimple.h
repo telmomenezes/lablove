@@ -54,8 +54,6 @@ public:
 
 	virtual void drawBeforeObjects();
 
-	virtual void removeObject(SimulationObject* object);
-
 	void setGoCost(float cost){mGoCost = cost;}
 	void setRotateCost(float cost){mRotateCost = cost;}
 	
@@ -64,8 +62,6 @@ public:
 	bool getShowGrid(){return mShowGrid;}
 	bool getShowViewRange(){return mShowViewRange;}
 	
-	SimulationObject* getObjectByScreenPos(int x, int y);
-
 	virtual bool onKeyDown(pyc::KeyCode keycode);
 	virtual bool onKeyUp(pyc::KeyCode keycode);
 	virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y);

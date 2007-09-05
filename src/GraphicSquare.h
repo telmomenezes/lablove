@@ -32,7 +32,7 @@ public:
 	virtual Graphic* createSameType();
 
 	virtual void init(void* obj);
-	virtual void draw();
+	virtual void draw(float x, float y);
 
 	static const char mClassName[];
         static Orbit<GraphicSquare>::MethodType mMethods[];

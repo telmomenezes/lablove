@@ -43,6 +43,9 @@ Lab::Lab()
 	mWindow = NULL;
 	mRootLayer = NULL;
 	mEventQ = NULL;
+	mDragging = false;
+	mLastMouseX = 0;
+	mLastMouseY = 0;
 }
 
 Lab::Lab(lua_State* luaState)
@@ -51,6 +54,9 @@ Lab::Lab(lua_State* luaState)
 	mWindow = NULL;
 	mRootLayer = NULL;
 	mEventQ = NULL;
+	mDragging = false;
+	mLastMouseX = 0;
+	mLastMouseY = 0;
 }
 
 Lab::~Lab()
@@ -151,6 +157,40 @@ bool Lab::onKeyDown(pyc::KeyCode keycode)
 		default:
 			return false;
 	}
+}
+
+bool Lab::onMouseButtonDown(pyc::MouseButton button, int x, int y)
+{
+	mDragging = true;
+	mLastMouseX = x;
+	mLastMouseY = y;
+	return false;
+}
+
+bool Lab::onMouseButtonUp(pyc::MouseButton button, int x, int y)
+{
+	mDragging = false;
+	return false;
+}
+
+bool Lab::onMouseMove(int x, int y)
+{
+	if (mDragging)
+	{
+		float deltaX = (float)(x - mLastMouseX);
+		float deltaY = (float)(y - mLastMouseY);
+		mLastMouseX = x;
+		mLastMouseY = y;
+
+		if (mSimulation)
+		{
+			mSimulation->moveView(deltaX, deltaY);
+		}
+
+		return true;
+	}
+
+	return false;
 }
 
 #if defined(__UNIX)

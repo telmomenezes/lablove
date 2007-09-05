@@ -57,11 +57,16 @@ public:
 	void cycle();
 	virtual void processObjects()=0;
 
-	virtual SimulationObject* getObjectByScreenPos(int x, int y)=0;
+	virtual SimulationObject* getObjectByScreenPos(int x, int y);
 	void setSelectedObject(SimulationObject* object);
 	SimulationObject* getSelectedObject(){return mSelectedObject;}
+	void moveView(float x, float y);
+	float getViewX(){return mViewX;}
+	float getViewY(){return mViewY;}
+
 	void setPopulationDynamics(PopulationDynamics* popDyn){mPopulationDynamics = popDyn;}
 	PopulationDynamics* getPopulationDynamics(){return mPopulationDynamics;}
+
 	virtual void killOrganism(SimulationObject* org);
 	unsigned long time(){return mSimulationTime;}
 
@@ -84,6 +89,9 @@ protected:
 	unsigned long mSimulationTime;
 	SimulationObject* mSelectedObject;
 	PopulationDynamics* mPopulationDynamics;
+
+	float mViewX;
+	float mViewY;
 
 	pyc::Layer* mLogo;
 };
