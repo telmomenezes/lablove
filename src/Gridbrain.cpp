@@ -185,33 +185,46 @@ void Gridbrain::initGridInputOutput(Grid* grid)
 	grid->removeInputOutput();
 	unsigned int pos = grid->getOffset();
 
-	for (unsigned int j = 0;
-		j < grid->getSize();
-		j++)
+	
+	if (grid->getType() == Grid::ALPHA)
 	{
-		if (grid->getType() == Grid::ALPHA)
+		list<InterfaceItem*>* interface = new list<InterfaceItem*>();
+		mInputInterfacesVector.push_back(interface);
+
+		for (unsigned int j = 0;
+			j < grid->getSize();
+			j++)
 		{
 			if (mComponents[pos].mType == GridbrainComponent::PER)
 			{
 				mComponents[pos].mPerceptionPosition = grid->addPerception(&mComponents[pos]);
+				InterfaceItem* item = new InterfaceItem();
+				item->mType = mComponents[pos].mSubType;
+				interface->push_back(item);
 			}
-		}
-		else
-		{
-			if (mComponents[pos].mType == GridbrainComponent::ACT)
-			{
-				mComponents[pos].mActionPosition = grid->addAction(&mComponents[pos]);
-			}
-		}
-		pos++;
-	}
 
-	if (grid->getType() == Grid::ALPHA)
-	{
+			pos++;
+		}
+
 		grid->initInputMatrix(mMaxInputDepth);
 	}
 	else
 	{
+		for (unsigned int j = 0;
+			j < grid->getSize();
+			j++)
+		{
+			if (mComponents[pos].mType == GridbrainComponent::ACT)
+			{
+				mComponents[pos].mActionPosition = grid->addAction(&mComponents[pos]);
+				InterfaceItem* item = new InterfaceItem();
+				item->mType = mComponents[pos].mSubType;
+				mOutputInterface.push_back(item);
+			}
+
+			pos++;
+		}
+
 		grid->initOutputVector();
 	}
 }
@@ -437,7 +450,7 @@ void Gridbrain::addRandomConnection()
 	addConnection(x1, y1, g1, x2, y2, g2, weight);
 }
 
-void Gridbrain::eval()
+void Gridbrain::cycle()
 {
 	GridbrainComponent* comp;
 	GridbrainConnection* conn;
@@ -692,6 +705,36 @@ void Gridbrain::eval()
 			}
 		}
 	}
+
+	// Reset input depths
+	for (unsigned int gridNumber = 0; gridNumber < mGridsCount; gridNumber++)
+	{
+		mGridsVec[gridNumber]->setInputDepth(0);
+	}
+}
+
+void Gridbrain::mutate()
+{
+	unsigned type = rand() % 4;
+
+	switch (type)
+	{
+	case 0:
+		mutateAddConnection();
+		break;
+	case 1:
+		mutateRemoveConnection();
+		break;
+	case 2:
+		mutateChangeConnectionWeight();
+		break;
+	case 3:
+		mutateChangeComponent();
+		break;
+	deafult:
+		// ASSERT ERROR?
+		break;
+	}
 }
 
 void Gridbrain::mutateAddConnection()
@@ -817,5 +860,15 @@ void Gridbrain::calcConnectionCounts()
 			mTotalPossibleConnections += possibleConnections;
 		}
 	}
+}
+
+float* Gridbrain::getInputBuffer(unsigned int channel)
+{
+	return mGridsVec[channel]->getInputBuffer();
+}
+
+float* Gridbrain::getOutputBuffer()
+{
+	return mGridsVec[mGridsCount - 1]->getOutputVector();
 }
 

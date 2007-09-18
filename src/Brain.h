@@ -17,36 +17,33 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_AGENT_H)
-#define __INCLUDE_AGENT_H
+#if !defined(__INCLUDE_BRAIN_H)
+#define __INCLUDE_BRAIN_H
 
-#include "SimulationObject.h"
-#include "Brain.h"
-#include "Orbit.h"
+#include "InterfaceItem.h"
 
-class Agent : public SimulationObject
+#include <list>
+#include <vector>
+
+using std::list;
+using std::vector;
+
+class Brain
 {
 public:
-        Agent(lua_State* luaState=NULL);
-	Agent(Agent* agent, bool full=true);
-	virtual ~Agent();
-	virtual SimulationObject* clone(bool full=true);
-	virtual void initRandom();
-	void initTest();
+	Brain();
+	virtual ~Brain();
 
-	virtual void compute();
-
-	//virtual Agent* crossover(Agent* other_parent);
-	virtual void mutate();
-
-	virtual float getFieldValue(std::string fieldName);
-
-	static const char mClassName[];
-        static Orbit<Agent>::MethodType mMethods[];
-	static Orbit<Agent>::NumberGlobalType mNumberGlobals[];
+	list<InterfaceItem*>* getInputInterface(unsigned int channel);
+	list<InterfaceItem*>* getOutputInterface();
+	virtual float* getInputBuffer(unsigned int channel)=0;
+	virtual float* getOutputBuffer()=0;
+	virtual void cycle()=0;
+	virtual void mutate()=0;
 
 protected:
-	Brain* mBrain;
+	vector<list<InterfaceItem*>*> mInputInterfacesVector;
+	list<InterfaceItem*> mOutputInterface;
 };
 #endif
 

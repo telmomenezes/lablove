@@ -17,36 +17,43 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_AGENT_H)
-#define __INCLUDE_AGENT_H
-
-#include "SimulationObject.h"
 #include "Brain.h"
-#include "Orbit.h"
 
-class Agent : public SimulationObject
+Brain::Brain()
 {
-public:
-        Agent(lua_State* luaState=NULL);
-	Agent(Agent* agent, bool full=true);
-	virtual ~Agent();
-	virtual SimulationObject* clone(bool full=true);
-	virtual void initRandom();
-	void initTest();
+}
 
-	virtual void compute();
+Brain::~Brain()
+{
+	for (vector<list<InterfaceItem*>*>::iterator iterInterface = mInputInterfacesVector.begin();
+		iterInterface != mInputInterfacesVector.end();
+		iterInterface++)
+	{
+		list<InterfaceItem*>* interface = (*iterInterface);
 
-	//virtual Agent* crossover(Agent* other_parent);
-	virtual void mutate();
+		for (list<InterfaceItem*>::iterator iterItem = interface->begin();
+			iterItem != interface->end();
+			iterItem++)
+		{
+			delete (*iterItem);
+		}
+	}
 
-	virtual float getFieldValue(std::string fieldName);
+	for (list<InterfaceItem*>::iterator iterItem = mOutputInterface.begin();
+			iterItem != mOutputInterface.end();
+			iterItem++)
+	{
+		delete (*iterItem);
+	}
+}
 
-	static const char mClassName[];
-        static Orbit<Agent>::MethodType mMethods[];
-	static Orbit<Agent>::NumberGlobalType mNumberGlobals[];
+list<InterfaceItem*>* Brain::getInputInterface(unsigned int channel)
+{
+	return mInputInterfacesVector[channel];
+}
 
-protected:
-	Brain* mBrain;
-};
-#endif
+list<InterfaceItem*>* Brain::getOutputInterface()
+{
+	return &mOutputInterface;
+}
 

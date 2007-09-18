@@ -76,6 +76,7 @@ public:
 	void removeInputOutput();
 	unsigned int getColConnCount(unsigned int col){return mColumnsConnectionsCountVec[col];}
 	void setColConnCount(unsigned int col, unsigned int count){mColumnsConnectionsCountVec[col] = count;}
+	float* getInputBuffer();
 
 	static const char mClassName[];
         static Orbit<Grid>::MethodType mMethods[];

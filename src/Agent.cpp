@@ -27,66 +27,25 @@
 
 Agent::Agent(lua_State* luaState) : SimulationObject()
 {
-	mCurrentInputDepth = 0;
-
-	if (luaState != NULL)
-	{
-		mInitialConnections = luaL_checkint(luaState, 1);
-		mMaxInputDepth = luaL_checkint(luaState, 2);
-		mGridbrain = new Gridbrain();
-		mGridbrain->setMaxInputDepth(mMaxInputDepth);
-	}
-	else
-	{
-		mInitialConnections = 0;
-		mMaxInputDepth = 0;
-		mGridbrain = NULL;
-	}
-
+	mGridbrain = NULL;
 	mType = TYPE_AGENT;
 }
 
 Agent::Agent(Agent* agent, bool full) : SimulationObject(agent)
 {
-	mMaxInputDepth = agent->mMaxInputDepth;
-	mInitialConnections = agent->mInitialConnections;
-	mGridbrain = agent->mGridbrain->clone(full);
-	mCurrentInputDepth = 0;
+	mBrain = agent->mBrain->clone(full);
 }
 
 Agent::~Agent()
 {	
-	if (mGridbrain != NULL)
+	if (mBrain != NULL)
 	{
-		delete mGridbrain;
-		mGridbrain = NULL;
+		delete mBrain;
+		mBrain = NULL;
 	}
 }
 
-void Agent::setAlphaObjectsGrid(Grid* grid)
-{
-	grid->setType(Grid::ALPHA);
-	mGridbrain->addGrid(grid);
-}
-
-void Agent::setBetaGrid(Grid* grid)
-{
-	grid->setType(Grid::BETA);
-	mGridbrain->addGrid(grid);
-}
-
-void Agent::initRandom()
-{
-	mGridbrain->init();
-
-	for (unsigned int i = 0; i < mInitialConnections; i++)
-	{
-		mGridbrain->addRandomConnection();
-	}
-	//initTest();
-}
-
-void Agent::initTest()
+/*void Agent::initTest()
 {
 	mGridbrain->setComponent(0, 0, 0, GridbrainComponent::PER, (float)SimSimple::PERCEPTION_POSITION);
 	mGridbrain->setComponent(0, 1, 0, GridbrainComponent::PER, (float)SimSimple::PERCEPTION_PROXIMITY);
@@ -121,7 +80,7 @@ void Agent::initTest()
 	mGridbrain->addConnection(0, 2, 1, 1, 2, 1, 1.0f);
 
 	mGridbrain->initGridsInputOutput();
-}
+}*/
 
 SimulationObject* Agent::clone(bool full)
 {
@@ -130,19 +89,12 @@ SimulationObject* Agent::clone(bool full)
 
 void Agent::compute()
 {
-	if (mGridbrain == NULL)
+	if (mBrain == NULL)
 	{
 		return;
 	}
-	// TODO: this needs to be more general
-	Grid* grid = mGridbrain->getGrid(0);
-	grid->setInputDepth(mCurrentInputDepth);
-	mCurrentInputDepth = 0;
 
-	// TODO: update states
-
-	// Eval gridbrain
-	mGridbrain->eval();
+	mBrain->cycle();
 }
 
 /*Agent* Agent::crossover(Agent* otherParent)
@@ -159,31 +111,15 @@ void Agent::compute()
 
 void Agent::mutate()
 {
-	unsigned type = rand() % 4;
-
-	switch (type)
+	if (mBrain != NULL)
 	{
-	case 0:
-		mGridbrain->mutateAddConnection();
-		break;
-	case 1:
-		mGridbrain->mutateRemoveConnection();
-		break;
-	case 2:
-		mGridbrain->mutateChangeConnectionWeight();
-		break;
-	case 3:
-		mGridbrain->mutateChangeComponent();
-		break;
-	deafult:
-		// ASSERT ERROR?
-		break;
+		mBrain->mutate();
 	}
 }
 
 float Agent::getFieldValue(std::string fieldName)
 {
-	if (fieldName == "connections")
+	/*if (fieldName == "connections")
 	{
 		if (mGridbrain)
 		{
@@ -195,9 +131,9 @@ float Agent::getFieldValue(std::string fieldName)
 		}
 	}
 	else
-	{
+	{*/
 		return SimulationObject::getFieldValue(fieldName);
-	}
+	//}
 }
 
 const char Agent::mClassName[] = "Agent";
@@ -210,28 +146,12 @@ Orbit<Agent>::MethodType Agent::mMethods[] = {
 	{"setSize", &SimulationObject::setSize},
 	{"setColor", &SimulationObject::setColor},
 	{"setGraphic", &SimulationObject::setGraphic},
-	{"setAlphaObjectsGrid", &Agent::setAlphaObjectsGrid},
-	{"setBetaGrid", &Agent::setBetaGrid},
 	{"setAgeRange", &SimulationObject::setAgeRange},
 	{"setMetabolism", &SimulationObject::setMetabolism},
         {0,0}
 };
 
 Orbit<Agent>::NumberGlobalType Agent::mNumberGlobals[] = {{0,0}};
-
-int Agent::setAlphaObjectsGrid(lua_State* luaState)
-{
-	Grid* grid = (Grid*)Orbit<Agent>::pointer(luaState, 1);
-	setAlphaObjectsGrid(grid);
-	return 0;
-}
-
-int Agent::setBetaGrid(lua_State* luaState)
-{
-	Grid* grid = (Grid*)Orbit<Agent>::pointer(luaState, 1);
-	setBetaGrid(grid);
-	return 0;
-}
 
 /*void Agent::draw_brain()
 {

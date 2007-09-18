@@ -292,3 +292,13 @@ int Grid::setHeight(lua_State* luaState)
 	return 0;
 }
 
+float* Grid::getInputBuffer()
+{
+	float* buffer = mInputMatrix + ((mInputDepth * mPerceptionsCount) * sizeof(float));
+	if (mInputDepth < (mMaxInputDepth - 1))
+	{
+		mInputDepth++;
+	}
+	return buffer;
+}
+

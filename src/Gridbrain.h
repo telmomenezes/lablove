@@ -22,6 +22,7 @@
 
 #include <stdio.h>
 
+#include "Brain.h"
 #include "Grid.h"
 #include "GridbrainComponent.h"
 #include "GridbrainConnection.h"
@@ -29,7 +30,7 @@
 
 #include <vector>
 
-class Gridbrain
+class Gridbrain : public Brain
 {
 public:
 	Gridbrain();
@@ -39,6 +40,9 @@ public:
 
 	void addGrid(Grid* grid);
 	void init();
+
+	virtual float* getInputBuffer(unsigned int channel);
+	virtual float* getOutputBuffer();
 
 	void setComponent(unsigned int x,
 				unsigned int y,
@@ -67,7 +71,7 @@ public:
 	void addRandomConnection();
 	void setMaxInputDepth(unsigned int maxInputDepth){mMaxInputDepth = maxInputDepth;}
 
-	void eval();
+	void cycle();
 	
 	Grid* getGrid(unsigned int number);
 
@@ -75,6 +79,7 @@ public:
 
 	unsigned int getConnectionsCount(){return mConnectionsCount;}
 
+	virtual void mutate();
 	void mutateAddConnection();
 	void mutateRemoveConnection();
 	void mutateChangeConnectionWeight();
