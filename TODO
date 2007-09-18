@@ -2,19 +2,16 @@
 # Todo list for the LOVE Simulation
 # 
 
-### Bugs
-
+- Create fast perception/action API
+- Spacial hashed collision detection
+- Make human control work again
+- OO mutation system
+- Variable speed
+- No graphics
+- Disable graphics in exe parameter
+- Complete symbol system
+- Select experiment number in exe paramenter
+- Choose screen size in exe parameter
+- Predator and prey predefined brains
+- Crossover operator for gridbrains
 - ...
-
-### Features
-
-- ...
-
-### Cleanup
-
-- ...
-
-### Future feature ideas
-
-- ...
-

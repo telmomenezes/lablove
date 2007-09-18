@@ -24,6 +24,7 @@ SET(SOURCE_FILES
 	src/SimulationObject.cpp
 	src/Plant.cpp
 	src/Agent.cpp
+	src/AgentGB.cpp
 	src/functions.cpp
 	src/Gridbrain.cpp
 	src/Grid.cpp

@@ -259,6 +259,7 @@ void SimSimple::onScanObject(Agent* orig,
 				normalizedValue = 1.0f - (distance / mViewRange);
 				grid->setInput(perceptionNumber, orig->mCurrentInputDepth, normalizedValue);
 				break;
+
 			default:
 				normalizedValue = perception->computeBinding(orig, targ);
 				grid->setInput(perceptionNumber, orig->mCurrentInputDepth, normalizedValue);
@@ -393,20 +394,23 @@ void SimSimple::drawBeforeObjects()
 		{
 			SimulationObject* obj = *iterObj;
 
-			float beginAngle = normalizeAngle(obj->mRot - mHalfViewAngle);
-			float endAngle = normalizeAngle(obj->mRot + mHalfViewAngle);
-
-			if (beginAngle > endAngle)
+			if (obj->mType == SimulationObject::TYPE_AGENT)
 			{
-				endAngle += M_PI * 2.0f;
-			}
+				float beginAngle = normalizeAngle(obj->mRot - mHalfViewAngle);
+				float endAngle = normalizeAngle(obj->mRot + mHalfViewAngle);
 
-			Lab::getSingleton().getRootLayer()->setColor(150, 150, 150, 100);
-			Lab::getSingleton().getRootLayer()->fillCircle(obj->mX + mViewX,
+				if (beginAngle > endAngle)
+				{
+					endAngle += M_PI * 2.0f;
+				}
+
+				Lab::getSingleton().getRootLayer()->setColor(150, 150, 150, 100);
+				Lab::getSingleton().getRootLayer()->fillCircle(obj->mX + mViewX,
 									obj->mY + mViewY,
 									mViewRange,
 									beginAngle,
 									endAngle);
+			}
 		}
 	}
 	
