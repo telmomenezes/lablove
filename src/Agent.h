@@ -28,9 +28,9 @@ class Agent : public SimulationObject
 {
 public:
     Agent(lua_State* luaState=NULL);
-    Agent(Agent* agent, bool full=true);
+    Agent(Agent* agent);
     virtual ~Agent();
-    virtual SimulationObject* clone(bool full=true);
+    virtual SimulationObject* clone();
 
     Brain* setBrain(Brain* brain);
     Brain* getBrain(){return mBrain;}

@@ -254,7 +254,7 @@ unsigned int Grid::getXByOffset(unsigned int offset)
 
 float* Grid::getInputBuffer()
 {
-    float* buffer = mInputMatrix + ((mInputDepth * mPerceptionsCount) * sizeof(float));
+    float* buffer = mInputMatrix + (mInputDepth * mPerceptionsCount);
     if (mInputDepth < (mMaxInputDepth - 1))
     {
         mInputDepth++;

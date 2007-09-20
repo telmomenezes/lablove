@@ -45,7 +45,7 @@ public:
     SimulationObject(SimulationObject* obj);
     virtual ~SimulationObject();
 
-    virtual SimulationObject* clone(bool full=true) = 0;
+    virtual SimulationObject* clone()=0;
     virtual void initRandom(){}
 
     unsigned long getID(){return mID;}

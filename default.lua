@@ -58,7 +58,7 @@ animat:addSymbolTable(symTable, colorTableCode)
 brain = Gridbrain()
 
 perSet = GridbrainComponentSet()
-perSet:addComponent(GridbrainComponent.PER, -1, 0, colorTableCode, colorSymIndex, colorTableCode, colorSymIndex)
+--perSet:addComponent(GridbrainComponent.PER, -1, 0, colorTableCode, colorSymIndex, colorTableCode, colorSymIndex)
 perSet:addComponent(GridbrainComponent.PER, SimSimple.PERCEPTION_POSITION)
 perSet:addComponent(GridbrainComponent.PER, SimSimple.PERCEPTION_PROXIMITY)
 perSet:addComponent(GridbrainComponent.PER, SimSimple.PERCEPTION_IN_CONTACT)

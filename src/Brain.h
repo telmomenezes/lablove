@@ -34,7 +34,8 @@ public:
     Brain();
     virtual ~Brain();
 
-    virtual Brain* clone(bool full=true)=0;
+    virtual Brain* clone()=0;
+
     virtual void init()=0;
 
     list<InterfaceItem*>* getInputInterface(unsigned int channel);

@@ -31,9 +31,9 @@ Agent::Agent(lua_State* luaState) : SimulationObject()
     mType = TYPE_AGENT;
 }
 
-Agent::Agent(Agent* agent, bool full) : SimulationObject(agent)
+Agent::Agent(Agent* agent) : SimulationObject(agent)
 {
-    mBrain = agent->mBrain->clone(full);
+    mBrain = agent->mBrain->clone();
 }
 
 Agent::~Agent()
@@ -80,9 +80,9 @@ Agent::~Agent()
     mGridbrain->addConnection(0, 2, 1, 1, 2, 1, 1.0f);
 }*/
 
-SimulationObject* Agent::clone(bool full)
+SimulationObject* Agent::clone()
 {
-    return new Agent(this, full);
+    return new Agent(this);
 }
 
 Brain* Agent::setBrain(Brain* brain)

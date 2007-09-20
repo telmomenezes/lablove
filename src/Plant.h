@@ -30,7 +30,7 @@ public:
     Plant(lua_State* luaState=NULL);
     Plant(Plant* plant) : SimulationObject(plant){}
     virtual ~Plant();
-    virtual SimulationObject* clone(bool full=true);
+    virtual SimulationObject* clone();
 
     virtual bool isFood(){return true;}
 

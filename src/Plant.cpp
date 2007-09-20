@@ -37,7 +37,7 @@ Plant::~Plant()
 {	
 }
 
-SimulationObject* Plant::clone(bool full)
+SimulationObject* Plant::clone()
 {
 	return new Plant(this);
 }

@@ -28,7 +28,8 @@ void GridbrainComponentSet::addComponent(GridbrainComponent* component)
 
 GridbrainComponent* GridbrainComponentSet::getRandom()
 {
-    return mComponentVec[random() % mSize];
+    unsigned int pos = random() % mSize;
+    return mComponentVec[pos];
 }
 
 void GridbrainComponentSet::addComponent(GridbrainComponent::Type type,
