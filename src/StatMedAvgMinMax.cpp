@@ -30,132 +30,132 @@ StatMedAvgMinMax::~StatMedAvgMinMax()
 
 void StatMedAvgMinMax::init()
 {
-	fprintf(mFile, "sim_time");
+    fprintf(mFile, "sim_time");
 
-	for (std::list<std::string>::iterator iterField = mFields.begin();
-		iterField != mFields.end();
-		iterField++)
-	{
-		std::list<float> valueList;
-		mValueLists.push_back(valueList);
-		fprintf(mFile, ",%s", (*iterField).c_str());
-		fprintf(mFile, "_med", (*iterField).c_str());
-		fprintf(mFile, ",%s", (*iterField).c_str());
-		fprintf(mFile, "_avg", (*iterField).c_str());
-		fprintf(mFile, ",%s", (*iterField).c_str());
-		fprintf(mFile, "_min", (*iterField).c_str());
-		fprintf(mFile, ",%s", (*iterField).c_str());
-		fprintf(mFile, "_max", (*iterField).c_str());
-	}
+    for (list<string>::iterator iterField = mFields.begin();
+        iterField != mFields.end();
+        iterField++)
+    {
+        list<float> valueList;
+        mValueLists.push_back(valueList);
+        fprintf(mFile, ",%s", (*iterField).c_str());
+        fprintf(mFile, "_med", (*iterField).c_str());
+        fprintf(mFile, ",%s", (*iterField).c_str());
+        fprintf(mFile, "_avg", (*iterField).c_str());
+        fprintf(mFile, ",%s", (*iterField).c_str());
+        fprintf(mFile, "_min", (*iterField).c_str());
+        fprintf(mFile, ",%s", (*iterField).c_str());
+        fprintf(mFile, "_max", (*iterField).c_str());
+    }
 
-	fprintf(mFile, "\n");
-	fflush(mFile);
+    fprintf(mFile, "\n");
+    fflush(mFile);
 }
 
 void StatMedAvgMinMax::process(SimulationObject* obj)
 {
-	std::list<std::list<float> >::iterator iterValueList = mValueLists.begin();
+    list<list<float> >::iterator iterValueList = mValueLists.begin();
 
-	for (std::list<std::string>::iterator iterField = mFields.begin();
-		iterField != mFields.end();
-		iterField++)
-	{
-		float value = obj->getFieldValue(*iterField);
-		(*iterValueList).push_back(value);
-		iterValueList++;
-	}
+    for (list<string>::iterator iterField = mFields.begin();
+        iterField != mFields.end();
+        iterField++)
+    {
+        float value = obj->getFieldValue(*iterField);
+        (*iterValueList).push_back(value);
+        iterValueList++;
+    }
 }
 
 void StatMedAvgMinMax::dump()
 {
-	fprintf(mFile, "%d", Lab::getSingleton().getSimulation()->time());
+    fprintf(mFile, "%d", Lab::getSingleton().getSimulation()->time());
 
-	for (std::list<std::list<float> >::iterator iterValueList = mValueLists.begin();
-		iterValueList != mValueLists.end();
-		iterValueList++)
-	{
-		(*iterValueList).sort();
+    for (list<list<float> >::iterator iterValueList = mValueLists.begin();
+        iterValueList != mValueLists.end();
+        iterValueList++)
+    {
+        (*iterValueList).sort();
 
-		float med = 0.0f;
-		float max = 0.0f;
-		float min = 0.0f;
-		float sum = 0.0f;
-		int count = (*iterValueList).size();
-		bool firstVal = true;
+        float med = 0.0f;
+        float max = 0.0f;
+        float min = 0.0f;
+        float sum = 0.0f;
+        int count = (*iterValueList).size();
+        bool firstVal = true;
 
-		int medianIndex1 = count / 2;
-		int medianIndex2 = medianIndex1;
-		if ((count % 2) == 0)
-		{
-			medianIndex2--;
-		}
+        int medianIndex1 = count / 2;
+        int medianIndex2 = medianIndex1;
+        if ((count % 2) == 0)
+        {
+            medianIndex2--;
+        }
 
-		float medianValue1 = 0.0f;
-		float medianValue2 = 0.0f;
+        float medianValue1 = 0.0f;
+        float medianValue2 = 0.0f;
 
-		int index = 0;	
+        int index = 0;  
 
-		for (std::list<float>::iterator iterValue = (*iterValueList).begin();
-			iterValue != (*iterValueList).end();
-			iterValue++)
-		{
-			float value = (*iterValue);
+        for (list<float>::iterator iterValue = (*iterValueList).begin();
+            iterValue != (*iterValueList).end();
+            iterValue++)
+        {
+            float value = (*iterValue);
 
-			if (firstVal)
-			{
-				max = value;
-				min = value;
-				firstVal = false;
-			}
-			else
-			{
-				if (value > max)
-				{
-					max = value;
-				}
-				else if (value < min)
-				{
-					min = value;
-				}
+            if (firstVal)
+            {
+                max = value;
+                min = value;
+                firstVal = false;
+            }
+            else
+            {
+                if (value > max)
+                {
+                    max = value;
+                }
+                else if (value < min)
+                {
+                    min = value;
+                }
 
-			}
+            }
 
-			sum += value;
+            sum += value;
 
-			if (index == medianIndex1)
-			{
-				medianValue1 = value;
-			}
-			if (index == medianIndex2)
-			{
-				medianValue2 = value;
-			}
-			index++;
-		}
+            if (index == medianIndex1)
+            {
+                medianValue1 = value;
+            }
+            if (index == medianIndex2)
+            {
+                medianValue2 = value;
+            }
+            index++;
+        }
 
-		(*iterValueList).clear();
+        (*iterValueList).clear();
 
-		float avg = 0.0f;
+        float avg = 0.0f;
 
-		if (count != 0)
-		{
-			avg = sum / ((float)count);
-		}
+        if (count != 0)
+        {
+            avg = sum / ((float)count);
+        }
 
-		med = (medianValue1 + medianValue2) / 2.0f;
+        med = (medianValue1 + medianValue2) / 2.0f;
 
-		fprintf(mFile, ",%f,%f,%f,%f", med, avg, min, max);
-	}
-	fprintf(mFile, "\n");
-	fflush(mFile);
+        fprintf(mFile, ",%f,%f,%f,%f", med, avg, min, max);
+    }
+    fprintf(mFile, "\n");
+    fflush(mFile);
 }
 
 const char StatMedAvgMinMax::mClassName[] = "StatMedAvgMinMax";
 
 Orbit<StatMedAvgMinMax>::MethodType StatMedAvgMinMax::mMethods[] = {
-	{"addField", &Statistics::addField},
-	{"setFile", &Statistics::setFile},
-        {0,0}
+    {"addField", &Statistics::addField},
+    {"setFile", &Statistics::setFile},
+    {0,0}
 };
 
 Orbit<StatMedAvgMinMax>::NumberGlobalType StatMedAvgMinMax::mNumberGlobals[] = {{0,0}};

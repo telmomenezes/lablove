@@ -25,35 +25,42 @@ Brain::Brain()
 
 Brain::~Brain()
 {
-	for (vector<list<InterfaceItem*>*>::iterator iterInterface = mInputInterfacesVector.begin();
-		iterInterface != mInputInterfacesVector.end();
-		iterInterface++)
-	{
-		list<InterfaceItem*>* interface = (*iterInterface);
+    return;
+    for (vector<list<InterfaceItem*>*>::iterator iterInterface = mInputInterfacesVector.begin();
+        iterInterface != mInputInterfacesVector.end();
+        iterInterface++)
+    {
+        list<InterfaceItem*>* interface = (*iterInterface);
 
-		for (list<InterfaceItem*>::iterator iterItem = interface->begin();
-			iterItem != interface->end();
-			iterItem++)
-		{
-			delete (*iterItem);
-		}
-	}
+        for (list<InterfaceItem*>::iterator iterItem = interface->begin();
+            iterItem != interface->end();
+            iterItem++)
+        {
+            delete (*iterItem);
+        }
 
-	for (list<InterfaceItem*>::iterator iterItem = mOutputInterface.begin();
-			iterItem != mOutputInterface.end();
-			iterItem++)
-	{
-		delete (*iterItem);
-	}
+        interface->clear();
+    }
+
+    mInputInterfacesVector.clear();
+
+    for (list<InterfaceItem*>::iterator iterItem = mOutputInterface.begin();
+            iterItem != mOutputInterface.end();
+            iterItem++)
+    {
+        delete (*iterItem);
+    }
+
+    mOutputInterface.clear();
 }
 
 list<InterfaceItem*>* Brain::getInputInterface(unsigned int channel)
 {
-	return mInputInterfacesVector[channel];
+    return mInputInterfacesVector[channel];
 }
 
 list<InterfaceItem*>* Brain::getOutputInterface()
 {
-	return &mOutputInterface;
+    return &mOutputInterface;
 }
 

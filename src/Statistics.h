@@ -21,32 +21,36 @@
 #define __INCLUDE_STATISTICS_H
 
 #include "SimulationObject.h"
-#include <string>
-#include <list>
 
 #include "Orbit.h"
 
 #include <stdio.h>
 
+#include <string>
+#include <list>
+
+using std::string;
+using std::list;
+
 class Statistics
 {
 public:
-	Statistics();
-	virtual ~Statistics();
+    Statistics();
+    virtual ~Statistics();
 
-	virtual void init(){}
+    virtual void init(){}
 
-	void addField(std::string fieldName);
-	void setFile(std::string filePath);
-	virtual void process(SimulationObject* obj)=0;
-	virtual void dump()=0;
+    void addField(string fieldName);
+    void setFile(string filePath);
+    virtual void process(SimulationObject* obj)=0;
+    virtual void dump()=0;
 
-	int addField(lua_State* luaState);
-	int setFile(lua_State* luaState);
+    int addField(lua_State* luaState);
+    int setFile(lua_State* luaState);
 
 protected:
-	std::list<std::string> mFields;
-	FILE* mFile;
+    list<string> mFields;
+    FILE* mFile;
 };
 #endif
 

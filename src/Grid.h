@@ -28,92 +28,99 @@
 #include <list>
 #include <map>
 
+using std::vector;
+using std::list;
+using std::map;
+
 class Grid : public ScriptableObject
 {
 public:
-	static const int ALPHA;
-	static const int BETA;
+    enum Type {ALPHA, BETA};
 
-        Grid(lua_State* luaState);
-	Grid(int type, unsigned int width, unsigned int height);
-	Grid(Grid* grid);
-	virtual ~Grid();
+    Grid(lua_State* luaState=NULL);
+    Grid(const Grid& grid);
+    virtual ~Grid();
 
-	void init();
-	void setType(int type){mType = type;}
-	void setNumber(unsigned int number){mNumber = number;}
-	void setWidth(unsigned int width){mWidth = width;}
-	void setHeight(unsigned int height){mHeight = height;}
-	void addComponentSet(GridbrainComponentSet* componentSet, int endColumn=-1);
-	void setOffset(unsigned int offset){mOffset = offset;}
-	int getType(){return mType;}
-	unsigned int getNumber(){return mNumber;}
-	unsigned int getWidth(){return mWidth;}
-	unsigned int getHeight(){return mHeight;}
-	unsigned int getSize(){return mSize;}
-	unsigned int getOffset(){return mOffset;}
-	GridbrainComponent* getRandomComponent(unsigned int pos);
-	void setInput(unsigned int number, unsigned int depth, float value);
-	unsigned int addPerception(GridbrainComponent* per);
-	unsigned int addAction(GridbrainComponent* act);
-	void initInputMatrix(unsigned int maxInputDepth);
-	float* getInputMatrix(){return mInputMatrix;}
-	void initOutputVector();
-	float* getOutputVector(){return mOutputVector;}
-	GridbrainComponent* getPerception(unsigned int number);
-	GridbrainComponent* getAction(unsigned int number);
-	void setInputDepth(unsigned int inputDepth){mInputDepth = inputDepth;}
-	unsigned int getInputDepth(){return mInputDepth;}
-	unsigned int getMaxInputDepth(){return mMaxInputDepth;}
-	unsigned int getPerceptionsCount(){return mPerceptionsCount;}
-	unsigned int getActionsCount(){return mActionsCount;}
-	float getOutput(unsigned int number);
-	unsigned long getRowCode(unsigned int pos){return mRowsVec[pos];}
-	unsigned long getColumnCode(unsigned int pos){return mColumnsVec[pos];}
-	unsigned int getXByCode(unsigned long code){return mColumnsMap[code];}
-	unsigned int getYByCode(unsigned long code){return mRowsMap[code];}
-	unsigned int getXByOffset(unsigned int offset);
-	void removeInputOutput();
-	unsigned int getColConnCount(unsigned int col){return mColumnsConnectionsCountVec[col];}
-	void setColConnCount(unsigned int col, unsigned int count){mColumnsConnectionsCountVec[col] = count;}
-	float* getInputBuffer();
+    void init(Type type, unsigned int width, unsigned int height);
 
-	static const char mClassName[];
-        static Orbit<Grid>::MethodType mMethods[];
-	static Orbit<Grid>::NumberGlobalType mNumberGlobals[];
+    int getType(){return mType;}
+    unsigned int getWidth(){return mWidth;}
+    unsigned int getHeight(){return mHeight;}
+    unsigned int getSize(){return mSize;}
 
-        int addComponentSet(lua_State* luaState);
-	int setWidth(lua_State* luaState);
-	int setHeight(lua_State* luaState);
+    void addComponentSet(GridbrainComponentSet* componentSet,
+                            int startColumn=-1,
+                            int endColumn=-1);
 
-	static unsigned int CURRENT_COLUMN_ID;
-	static unsigned int CURRENT_ROW_ID;
+    void setNumber(unsigned int number){mNumber = number;}
+    unsigned int getNumber(){return mNumber;}
+    
+    void setOffset(unsigned int offset){mOffset = offset;}
+    
+    unsigned int getOffset(){return mOffset;}
+    GridbrainComponent* getRandomComponent(unsigned int pos);
+    void setInput(unsigned int number, unsigned int depth, float value);
+    unsigned int addPerception(GridbrainComponent* per);
+    unsigned int addAction(GridbrainComponent* act);
+    void initInputMatrix(unsigned int maxInputDepth);
+    float* getInputMatrix(){return mInputMatrix;}
+    void initOutputVector();
+    float* getOutputVector(){return mOutputVector;}
+    GridbrainComponent* getPerception(unsigned int number);
+    GridbrainComponent* getAction(unsigned int number);
+    void setInputDepth(unsigned int inputDepth){mInputDepth = inputDepth;}
+    unsigned int getInputDepth(){return mInputDepth;}
+    unsigned int getMaxInputDepth(){return mMaxInputDepth;}
+    unsigned int getPerceptionsCount(){return mPerceptionsCount;}
+    unsigned int getActionsCount(){return mActionsCount;}
+    float getOutput(unsigned int number);
+    unsigned long getRowCode(unsigned int pos){return mRowsVec[pos];}
+    unsigned long getColumnCode(unsigned int pos){return mColumnsVec[pos];}
+    unsigned int getXByCode(unsigned long code){return mColumnsMap[code];}
+    unsigned int getYByCode(unsigned long code){return mRowsMap[code];}
+    unsigned int getXByOffset(unsigned int offset);
+    void removeInputOutput();
+    unsigned int getColConnCount(unsigned int col){return mColumnsConnectionsCountVec[col];}
+    void setColConnCount(unsigned int col, unsigned int count){mColumnsConnectionsCountVec[col] = count;}
+    float* getInputBuffer();
+
+    static const char mClassName[];
+    static Orbit<Grid>::MethodType mMethods[];
+    static Orbit<Grid>::NumberGlobalType mNumberGlobals[];
+
+    int addComponentSet(lua_State* luaState);
+    int init(lua_State* luaState);
+
+    static unsigned int CURRENT_COLUMN_ID;
+    static unsigned int CURRENT_ROW_ID;
 
 protected:
-	int mType;
-	unsigned int mNumber;
-	unsigned int mWidth;
-	unsigned int mHeight;
-	unsigned int mSize;
-	unsigned int mOffset;
-	std::list<GridbrainComponentSet*> mComponentSet;
-	std::list<int> mComponentSetEndColumn;
+    Type mType;
+    unsigned int mNumber;
+    unsigned int mWidth;
+    unsigned int mHeight;
+    unsigned int mSize;
+    unsigned int mOffset;
+    unsigned int mMaxInputDepth;
+    unsigned int mInputDepth;
+    unsigned int mPerceptionsCount;
+    unsigned int mActionsCount;
 
-	std::vector<unsigned long> mRowsVec;
-	std::vector<unsigned long> mColumnsVec;
-	std::map<unsigned long, unsigned int> mRowsMap;
-	std::map<unsigned long, unsigned int> mColumnsMap;
+    float* mInputMatrix;
+    float* mOutputVector;
 
-	float* mInputMatrix;
-	float* mOutputVector;
-	unsigned int mMaxInputDepth;
-	unsigned int mInputDepth;
-	std::vector<GridbrainComponent*> mPerceptionsVec;
-	std::vector<GridbrainComponent*> mActionsVec;
-	unsigned int mPerceptionsCount;
-	unsigned int mActionsCount;
+    list<GridbrainComponentSet*> mComponentSetsList;
+    vector<GridbrainComponentSet*> mComponentSetByColumn;
 
-	std::vector<unsigned int> mColumnsConnectionsCountVec;
+    vector<unsigned long> mRowsVec;
+    vector<unsigned long> mColumnsVec;
+    map<unsigned long, unsigned int> mRowsMap;
+    map<unsigned long, unsigned int> mColumnsMap;
+
+    vector<GridbrainComponent*> mPerceptionsVec;
+    vector<GridbrainComponent*> mActionsVec;
+
+    vector<unsigned int> mColumnsConnectionsCountVec;
 };
 #endif
 

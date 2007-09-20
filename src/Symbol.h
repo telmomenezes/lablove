@@ -23,14 +23,14 @@
 class Symbol
 {
 public:
-	Symbol();
-	virtual ~Symbol();
+    Symbol();
+    virtual ~Symbol();
 
-	virtual Symbol* clone() = 0;
+    virtual Symbol* clone() = 0;
 
-	virtual float bind(Symbol* sym) = 0;
-	virtual void initRandom() = 0;
-	virtual void mutate() = 0;
+    virtual float bind(Symbol* sym) = 0;
+    virtual void initRandom() = 0;
+    virtual void mutate() = 0;
 };
 #endif
 

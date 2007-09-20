@@ -41,16 +41,16 @@ perSet:addComponent(GridbrainComponent.PER, SimSimple.PERCEPTION_IN_CONTACT)
 
 alphaSet = GridbrainComponentSet()
 if THR then
-	alphaSet:addComponent(GridbrainComponent.THR, 0)
+    alphaSet:addComponent(GridbrainComponent.THR, 0)
 end
 if MAX then
-	alphaSet:addComponent(GridbrainComponent.MAX, 0)
+    alphaSet:addComponent(GridbrainComponent.MAX, 0)
 end
 if MUL then
-	alphaSet:addComponent(GridbrainComponent.MUL, 0)
+    alphaSet:addComponent(GridbrainComponent.MUL, 0)
 end
 if NOT then
-	alphaSet:addComponent(GridbrainComponent.NOT, 0)
+    alphaSet:addComponent(GridbrainComponent.NOT, 0)
 end
 
 grid = Grid()
@@ -68,15 +68,15 @@ actSet:addComponent(GridbrainComponent.ACT, SimSimple.ACTION_EAT)
 
 betaSet = GridbrainComponentSet()
 if THR then
-	betaSet:addComponent(GridbrainComponent.THR, 0)
+    betaSet:addComponent(GridbrainComponent.THR, 0)
 end
 if MAX then
-	betaSet:addComponent(GridbrainComponent.MUL, 0)
+    betaSet:addComponent(GridbrainComponent.MUL, 0)
 end
 if NOT then
-	betaSet:addComponent(GridbrainComponent.NOT, 0)
+    betaSet:addComponent(GridbrainComponent.NOT, 0)
 end
-	
+    
 grid2 = Grid()
 grid2:setWidth(gridBeta)
 grid2:setHeight(gridHeight)

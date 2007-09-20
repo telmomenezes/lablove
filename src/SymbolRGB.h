@@ -27,23 +27,23 @@
 class SymbolRGB : public Symbol
 {
 public:
-        SymbolRGB(lua_State* luaState=NULL);
-	SymbolRGB(int r, int g, int b);
-	SymbolRGB(SymbolRGB* mol);
-	virtual ~SymbolRGB();
-	virtual Symbol* clone();
+    SymbolRGB(lua_State* luaState=NULL);
+    SymbolRGB(int r, int g, int b);
+    SymbolRGB(SymbolRGB* mol);
+    virtual ~SymbolRGB();
+    virtual Symbol* clone();
 
-	virtual float bind(Symbol* sym);
-	virtual void initRandom();
-	virtual void mutate();
+    virtual float bind(Symbol* sym);
+    virtual void initRandom();
+    virtual void mutate();
 
-	static const char mClassName[];
-        static Orbit<SymbolRGB>::MethodType mMethods[];
-	static Orbit<SymbolRGB>::NumberGlobalType mNumberGlobals[];
+    static const char mClassName[];
+    static Orbit<SymbolRGB>::MethodType mMethods[];
+    static Orbit<SymbolRGB>::NumberGlobalType mNumberGlobals[];
 
-	int mRed;
-	int mGreen;
-	int mBlue;
+    int mRed;
+    int mGreen;
+    int mBlue;
 };
 #endif
 

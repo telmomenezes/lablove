@@ -22,8 +22,8 @@
 
 StatTime::StatTime(lua_State* luaState)
 {
-	mLastSimTime = 0;
-	mLastRealTime = 0;
+    mLastSimTime = 0;
+    mLastRealTime = 0;
 }
 
 StatTime::~StatTime()
@@ -32,38 +32,38 @@ StatTime::~StatTime()
 
 void StatTime::init()
 {
-	fprintf(mFile, "sim_time,real_time,cycles_per_second\n");
-	fflush(mFile);
+    fprintf(mFile, "sim_time,real_time,cycles_per_second\n");
+    fflush(mFile);
 }
 
 void StatTime::dump()
 {
-	double cps = 0.0f;
-	unsigned long simTime =  Lab::getSingleton().getSimulation()->time();
-	double realTime = Lab::getSingleton().realTime();
+    double cps = 0.0f;
+    unsigned long simTime =  Lab::getSingleton().getSimulation()->time();
+    double realTime = Lab::getSingleton().realTime();
 
-	if (simTime != 0)
-	{
-		unsigned long deltaSim = simTime - mLastSimTime;
-		double deltaReal = realTime - mLastRealTime;
-		cps = ((double)deltaSim) / deltaReal;
-	}
+    if (simTime != 0)
+    {
+        unsigned long deltaSim = simTime - mLastSimTime;
+        double deltaReal = realTime - mLastRealTime;
+        cps = ((double)deltaSim) / deltaReal;
+    }
 
-	mLastSimTime = simTime;
-	mLastRealTime = realTime;
+    mLastSimTime = simTime;
+    mLastRealTime = realTime;
 
-	fprintf(mFile, "%d,%f,%f", simTime, realTime, cps);
+    fprintf(mFile, "%d,%f,%f", simTime, realTime, cps);
 
-	fprintf(mFile, "\n");
-	fflush(mFile);
+    fprintf(mFile, "\n");
+    fflush(mFile);
 }
 
 const char StatTime::mClassName[] = "StatTime";
 
 Orbit<StatTime>::MethodType StatTime::mMethods[] = {
-	{"addField", &Statistics::addField},
-	{"setFile", &Statistics::setFile},
-        {0,0}
+    {"addField", &Statistics::addField},
+    {"setFile", &Statistics::setFile},
+    {0,0}
 };
 
 Orbit<StatTime>::NumberGlobalType StatTime::mNumberGlobals[] = {{0,0}};

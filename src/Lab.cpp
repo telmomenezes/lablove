@@ -39,24 +39,24 @@ Lab Lab::mLab;
 
 Lab::Lab()
 {
-	mStop = false;
-	mWindow = NULL;
-	mRootLayer = NULL;
-	mEventQ = NULL;
-	mDragging = false;
-	mLastMouseX = 0;
-	mLastMouseY = 0;
+    mStop = false;
+    mWindow = NULL;
+    mRootLayer = NULL;
+    mEventQ = NULL;
+    mDragging = false;
+    mLastMouseX = 0;
+    mLastMouseY = 0;
 }
 
 Lab::Lab(lua_State* luaState)
 {
-	mStop = false;
-	mWindow = NULL;
-	mRootLayer = NULL;
-	mEventQ = NULL;
-	mDragging = false;
-	mLastMouseX = 0;
-	mLastMouseY = 0;
+    mStop = false;
+    mWindow = NULL;
+    mRootLayer = NULL;
+    mEventQ = NULL;
+    mDragging = false;
+    mLastMouseX = 0;
+    mLastMouseY = 0;
 }
 
 Lab::~Lab()
@@ -64,77 +64,77 @@ Lab::~Lab()
 }
 
 Lab& Lab::getSingleton()
-{	
-	return mLab;
+{   
+    return mLab;
 }
 
 void Lab::setSeedIndex(unsigned int index)
 {
-	randomSeedIndex(index);
+    randomSeedIndex(index);
 }
 
 void Lab::run()
 {
-	addInputHandler(this);
-	addInputHandler(mSimulation);
+    addInputHandler(this);
+    addInputHandler(mSimulation);
 
-	mWindow = mPycasso.createWindow(800, 600);
-	mEventQ = mPycasso.createEventQ();
-	mRootLayer = mWindow->getRootLayer();
+    mWindow = mPycasso.createWindow(800, 600);
+    mEventQ = mPycasso.createEventQ();
+    mRootLayer = mWindow->getRootLayer();
 
-	mWindow->setTitle("LabLOVE");
+    mWindow->setTitle("LabLOVE");
 
-	mSimulation->init();
+    mSimulation->init();
 
-	while (running())
-	{
-		cycle();
-	}
+    while (running())
+    {
+        cycle();
+    }
 }
 
 void Lab::cycle()
 {
-	mSimulation->cycle();
-	processEvents();
+    mSimulation->cycle();
+    processEvents();
 }
 
 void Lab::processEvents()
 {
-	while (mEventQ->next())
-	{
-		std::list<InputHandler*>::iterator iterHandler = mHandlers.begin();
-                bool handled = false;
-                while ((!handled) && (iterHandler != mHandlers.end()))
-                {
-                        switch (mEventQ->getType())
-                        {
-				case pyc::EVENT_KEY_DOWN:
-					handled = (*iterHandler)->onKeyDown(mEventQ->getKeyCode());
-					break;
-				case pyc::EVENT_KEY_UP:
-					handled = (*iterHandler)->onKeyUp(mEventQ->getKeyCode());
-					break;
-				case pyc::EVENT_MOUSE_BUTTON_DOWN:
-					handled = (*iterHandler)->onMouseButtonDown(mEventQ->getMouseButton(),
-											mEventQ->getMousePosX(),
-											mEventQ->getMousePosY());
-					break;
-				case pyc::EVENT_MOUSE_BUTTON_UP:
-					handled = (*iterHandler)->onMouseButtonUp(mEventQ->getMouseButton(),
-											mEventQ->getMousePosX(),
-											mEventQ->getMousePosY());
-					break;
-				case pyc::EVENT_MOUSE_MOTION:
-					handled = (*iterHandler)->onMouseMove(mEventQ->getMousePosX(),
-										mEventQ->getMousePosY());
-					break;
-				default:
-					break;
-			}
+    while (mEventQ->next())
+    {
+        list<InputHandler*>::iterator iterHandler = mHandlers.begin();
+        bool handled = false;
+        while ((!handled) && (iterHandler != mHandlers.end()))
+        {
+            switch (mEventQ->getType())
+            {
+            case pyc::EVENT_KEY_DOWN:
+                handled = (*iterHandler)->onKeyDown(mEventQ->getKeyCode());
+                break;
+            case pyc::EVENT_KEY_UP:
+                handled = (*iterHandler)->onKeyUp(mEventQ->getKeyCode());
+                break;
+            case pyc::EVENT_MOUSE_BUTTON_DOWN:
+                handled = (*iterHandler)->onMouseButtonDown(mEventQ->getMouseButton(),
+                                        mEventQ->getMousePosX(),
+                                        mEventQ->getMousePosY());
+                break;
+            case pyc::EVENT_MOUSE_BUTTON_UP:
+                handled = (*iterHandler)->onMouseButtonUp(mEventQ->getMouseButton(),
+                                        mEventQ->getMousePosX(),
+                                        mEventQ->getMousePosY());
+                break;
+            case pyc::EVENT_MOUSE_MOTION:
+                handled = (*iterHandler)->onMouseMove(mEventQ->getMousePosX(),
+                                    mEventQ->getMousePosY());
+                break;
+            default:
+                break;
+            }
 
-			iterHandler++;
-		}
-	}
+            iterHandler++;
+        }
+    }
 }
 
 void Lab::addInputHandler(InputHandler* handler) 
@@ -149,71 +149,71 @@ void Lab::removeInputHandler()
 
 bool Lab::onKeyDown(pyc::KeyCode keycode)
 {
-	switch (keycode)
-	{
-		case pyc::KEY_ESCAPE:
-			mStop = true;
-			return true;
-		default:
-			return false;
-	}
+    switch (keycode)
+    {
+        case pyc::KEY_ESCAPE:
+            mStop = true;
+            return true;
+        default:
+            return false;
+    }
 }
 
 bool Lab::onMouseButtonDown(pyc::MouseButton button, int x, int y)
 {
-	mDragging = true;
-	mLastMouseX = x;
-	mLastMouseY = y;
-	return false;
+    mDragging = true;
+    mLastMouseX = x;
+    mLastMouseY = y;
+    return false;
 }
 
 bool Lab::onMouseButtonUp(pyc::MouseButton button, int x, int y)
 {
-	mDragging = false;
-	return false;
+    mDragging = false;
+    return false;
 }
 
 bool Lab::onMouseMove(int x, int y)
 {
-	if (mDragging)
-	{
-		float deltaX = (float)(x - mLastMouseX);
-		float deltaY = (float)(y - mLastMouseY);
-		mLastMouseX = x;
-		mLastMouseY = y;
+    if (mDragging)
+    {
+        float deltaX = (float)(x - mLastMouseX);
+        float deltaY = (float)(y - mLastMouseY);
+        mLastMouseX = x;
+        mLastMouseY = y;
 
-		if (mSimulation)
-		{
-			mSimulation->moveView(deltaX, deltaY);
-		}
+        if (mSimulation)
+        {
+            mSimulation->moveView(deltaX, deltaY);
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 #if defined(__UNIX)
 double Lab::realTime()
 {
-	timeval time;
-	gettimeofday(&time, NULL);
+    timeval time;
+    gettimeofday(&time, NULL);
 
-	double seconds = (double)time.tv_sec;
-	seconds += ((double)time.tv_usec) / 1000000.0f;
-	return seconds;
+    double seconds = (double)time.tv_sec;
+    seconds += ((double)time.tv_usec) / 1000000.0f;
+    return seconds;
 }
 #endif
 
 #if defined(__WIN32)
 double Lab::realTime()
 {
-	FILETIME ft;
-	LARGE_INTEGER li;
-	__int64 t;
-	static int tzflag;
+    FILETIME ft;
+    LARGE_INTEGER li;
+    __int64 t;
+    static int tzflag;
 
-	GetSystemTimeAsFileTime(&ft);
+    GetSystemTimeAsFileTime(&ft);
         li.LowPart  = ft.dwLowDateTime;
         li.HighPart = ft.dwHighDateTime;
         t  = li.QuadPart;
@@ -226,24 +226,24 @@ double Lab::realTime()
 const char Lab::mClassName[] = "Lab";
 
 Orbit<Lab>::MethodType Lab::mMethods[] = {
-	{"setSimulation", &Lab::setSimulation},
-        {"setSeedIndex", &Lab::setSeedIndex},
-        {0,0}
+    {"setSimulation", &Lab::setSimulation},
+    {"setSeedIndex", &Lab::setSeedIndex},
+    {0,0}
 };
 
 Orbit<Lab>::NumberGlobalType Lab::mNumberGlobals[] = {{0,0}};
 
 int Lab::setSimulation(lua_State* luaState)
 {
-        Simulation* sim = (Simulation*)Orbit<Lab>::pointer(luaState, 1);
-        setSimulation(sim);
-        return 0;
+    Simulation* sim = (Simulation*)Orbit<Lab>::pointer(luaState, 1);
+    setSimulation(sim);
+    return 0;
 }
 
 int Lab::setSeedIndex(lua_State* luaState)
 {
-        int index = luaL_checkint(luaState, 1);
-        setSeedIndex(index);
-        return 0;
+    int index = luaL_checkint(luaState, 1);
+    setSeedIndex(index);
+    return 0;
 }
 

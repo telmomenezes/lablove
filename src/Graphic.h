@@ -25,16 +25,16 @@
 class Graphic
 {
 public:
-        Graphic(lua_State* luaState=NULL);
-	virtual ~Graphic();
+    Graphic(lua_State* luaState=NULL);
+    virtual ~Graphic();
 
-	virtual Graphic* createSameType()=0;
+    virtual Graphic* createSameType()=0;
 
-	virtual void init(void* obj)=0;
-	virtual void draw(float x, float y)=0;
+    virtual void init(void* obj)=0;
+    virtual void draw(float x, float y)=0;
 
 protected:
-	void* mObject;
+    void* mObject;
 };
 #endif
 

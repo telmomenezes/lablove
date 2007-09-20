@@ -25,11 +25,11 @@
 class InterfaceItem
 {
 public:
-	InterfaceItem(){}
-	virtual ~InterfaceItem(){}
+    InterfaceItem(){}
+    virtual ~InterfaceItem(){}
 
-	int mType;
-	Symbol* mSymbol;
+    int mType;
+    Symbol* mSymbol;
 };
 #endif
 

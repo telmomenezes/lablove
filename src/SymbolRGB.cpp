@@ -24,112 +24,110 @@
 
 SymbolRGB::SymbolRGB(lua_State* luaState)
 {
-	if (luaState != NULL)
-	{
-        	mRed = luaL_checkint(luaState, 1);
-        	mGreen = luaL_checkint(luaState, 2);
-        	mBlue = luaL_checkint(luaState, 3);
-	}
-	else
-	{
-		mRed = 0;
-		mGreen = 0;
-		mBlue = 0;
-	}
+    if (luaState != NULL)
+    {
+        mRed = luaL_checkint(luaState, 1);
+        mGreen = luaL_checkint(luaState, 2);
+        mBlue = luaL_checkint(luaState, 3);
+    }
+    else
+    {
+        mRed = 0;
+        mGreen = 0;
+        mBlue = 0;
+    }
 }
 
 SymbolRGB::SymbolRGB(int r, int g, int b)
 {
-	mRed = r;
-	mGreen = g;
-	mBlue = b;
+    mRed = r;
+    mGreen = g;
+    mBlue = b;
 }
 
 SymbolRGB::SymbolRGB(SymbolRGB* mol)
 {
-	mRed = mol->mRed;
-	mGreen = mol->mGreen;
-	mBlue = mol->mBlue;
+    mRed = mol->mRed;
+    mGreen = mol->mGreen;
+    mBlue = mol->mBlue;
 }
 
 SymbolRGB::~SymbolRGB()
-{	
+{   
 }
 
 Symbol* SymbolRGB::clone()
 {
-	return new SymbolRGB(this);
+    return new SymbolRGB(this);
 }
 
 float SymbolRGB::bind(Symbol* sym)
 {
-	// TODO: check type
-	SymbolRGB* symRGB = (SymbolRGB*)sym;
+    // TODO: check type
+    SymbolRGB* symRGB = (SymbolRGB*)sym;
 
-	double distance = 0.0f;
-	distance += fabsf(((float)(mRed - symRGB->mRed)) / 255.0f);
-	distance += fabsf(((float)(mGreen - symRGB->mGreen)) / 255.0f);
-	distance += fabsf(((float)(mBlue - symRGB->mBlue)) / 255.0f);
+    double distance = 0.0f;
+    distance += fabsf(((float)(mRed - symRGB->mRed)) / 255.0f);
+    distance += fabsf(((float)(mGreen - symRGB->mGreen)) / 255.0f);
+    distance += fabsf(((float)(mBlue - symRGB->mBlue)) / 255.0f);
 
-	distance = distance / 3.0f;
-	return distance;
+    distance = distance / 3.0f;
+    return distance;
 }
 
 void SymbolRGB::initRandom()
 {
-	mRed = random() % 256;
-	mGreen = random() % 256;
-	mBlue = random() % 256;
+    mRed = random() % 256;
+    mGreen = random() % 256;
+    mBlue = random() % 256;
 }
 
 void SymbolRGB::mutate()
 {
-	int delta = random() % 255;
-	unsigned int selector = random() % 3;
+    int delta = random() % 255;
+    unsigned int selector = random() % 3;
 
-	switch (selector)
-	{
-	case 0:
-		mRed += delta;
-		if (mRed > 255)
-		{
-			mRed = 255;
-		}
-		else if (mRed < 0)
-		{
-			mRed = 0;
-		}
-		break;
-	case 1:
-		mGreen += delta;
-		if (mGreen > 255)
-		{
-			mGreen = 255;
-		}
-		else if (mGreen < 0)
-		{
-			mGreen = 0;
-		}
-		break;
-	case 2:
-		mBlue += delta;
-		if (mBlue > 255)
-		{
-			mBlue = 255;
-		}
-		else if (mBlue < 0)
-		{
-			mBlue = 0;
-		}
-		break;
-	}
+    switch (selector)
+    {
+    case 0:
+        mRed += delta;
+        if (mRed > 255)
+        {
+            mRed = 255;
+        }
+        else if (mRed < 0)
+        {
+            mRed = 0;
+        }
+        break;
+    case 1:
+        mGreen += delta;
+        if (mGreen > 255)
+        {
+            mGreen = 255;
+        }
+        else if (mGreen < 0)
+        {
+            mGreen = 0;
+        }
+        break;
+    case 2:
+        mBlue += delta;
+        if (mBlue > 255)
+        {
+            mBlue = 255;
+        }
+        else if (mBlue < 0)
+        {
+            mBlue = 0;
+        }
+        break;
+    }
 }
 
 const char SymbolRGB::mClassName[] = "SymbolRGB";
 
-Orbit<SymbolRGB>::MethodType SymbolRGB::mMethods[] = {
-        {0,0}
-};
+Orbit<SymbolRGB>::MethodType SymbolRGB::mMethods[] = {{0,0}};
 
 Orbit<SymbolRGB>::NumberGlobalType SymbolRGB::mNumberGlobals[] = {{0,0}};
 

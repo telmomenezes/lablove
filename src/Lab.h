@@ -27,60 +27,61 @@
 #include "pyc.h"
 
 #include <list>
+using std::list;
 
 class Lab : public InputHandler
 {
 public:
-	virtual ~Lab();
+    virtual ~Lab();
 
-	static Lab& getSingleton();
+    static Lab& getSingleton();
 
-	void setSimulation(Simulation* simulation){mSimulation = simulation;}
-	Simulation* getSimulation(){return mSimulation;}
-	void setSeedIndex(unsigned int index);
-	bool running(){return !mStop;}
-	void run();
-	void cycle();
-	void addInputHandler(InputHandler* handler);
-	void removeInputHandler();
-	void processEvents();
+    void setSimulation(Simulation* simulation){mSimulation = simulation;}
+    Simulation* getSimulation(){return mSimulation;}
+    void setSeedIndex(unsigned int index);
+    bool running(){return !mStop;}
+    void run();
+    void cycle();
+    void addInputHandler(InputHandler* handler);
+    void removeInputHandler();
+    void processEvents();
 
-	virtual bool onKeyDown(pyc::KeyCode keycode);
-	virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y);
-	virtual bool onMouseButtonUp(pyc::MouseButton button, int x, int y);
-	virtual bool onMouseMove(int x, int y);
+    virtual bool onKeyDown(pyc::KeyCode keycode);
+    virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y);
+    virtual bool onMouseButtonUp(pyc::MouseButton button, int x, int y);
+    virtual bool onMouseMove(int x, int y);
 
-	double realTime();
+    double realTime();
 
-	pyc::Pycasso* getPycass(){return &mPycasso;}
-	pyc::Window* getWindow(){return mWindow;}
-	pyc::Layer* getRootLayer(){return mRootLayer;}
+    pyc::Pycasso* getPycass(){return &mPycasso;}
+    pyc::Window* getWindow(){return mWindow;}
+    pyc::Layer* getRootLayer(){return mRootLayer;}
 
-	static const char mClassName[];
-        static Orbit<Lab>::MethodType mMethods[];
-	static Orbit<Lab>::NumberGlobalType mNumberGlobals[];
+    static const char mClassName[];
+    static Orbit<Lab>::MethodType mMethods[];
+    static Orbit<Lab>::NumberGlobalType mNumberGlobals[];
 
-        Lab(lua_State* luaState);
-	int setSimulation(lua_State* luaState);
-	int setSeedIndex(lua_State* luaState);
+    Lab(lua_State* luaState);
+    int setSimulation(lua_State* luaState);
+    int setSeedIndex(lua_State* luaState);
 
 private:
-	Lab();
+    Lab();
 
-	static Lab mLab;
-	Simulation* mSimulation;
-	bool mStop;
-	
-	pyc::Pycasso mPycasso;
-	pyc::EventQ* mEventQ;
-	pyc::Window* mWindow;
-	pyc::Layer* mRootLayer;
+    static Lab mLab;
+    Simulation* mSimulation;
+    bool mStop;
+    
+    pyc::Pycasso mPycasso;
+    pyc::EventQ* mEventQ;
+    pyc::Window* mWindow;
+    pyc::Layer* mRootLayer;
 
-	std::list<InputHandler*> mHandlers;
+    list<InputHandler*> mHandlers;
 
-	bool mDragging;
-	int mLastMouseX;
-	int mLastMouseY;
+    bool mDragging;
+    int mLastMouseX;
+    int mLastMouseY;
 };
 #endif
 

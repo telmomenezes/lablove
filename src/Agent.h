@@ -27,26 +27,29 @@
 class Agent : public SimulationObject
 {
 public:
-        Agent(lua_State* luaState=NULL);
-	Agent(Agent* agent, bool full=true);
-	virtual ~Agent();
-	virtual SimulationObject* clone(bool full=true);
-	virtual void initRandom();
-	void initTest();
+    Agent(lua_State* luaState=NULL);
+    Agent(Agent* agent, bool full=true);
+    virtual ~Agent();
+    virtual SimulationObject* clone(bool full=true);
 
-	virtual void compute();
+    Brain* setBrain(Brain* brain);
+    Brain* getBrain(){return mBrain;}
 
-	//virtual Agent* crossover(Agent* other_parent);
-	virtual void mutate();
+    virtual void compute();
 
-	virtual float getFieldValue(std::string fieldName);
+    //virtual Agent* crossover(Agent* other_parent);
+    virtual void mutate();
 
-	static const char mClassName[];
-        static Orbit<Agent>::MethodType mMethods[];
-	static Orbit<Agent>::NumberGlobalType mNumberGlobals[];
+    virtual float getFieldValue(std::string fieldName);
+
+    static const char mClassName[];
+    static Orbit<Agent>::MethodType mMethods[];
+    static Orbit<Agent>::NumberGlobalType mNumberGlobals[];
+
+    int setBrain(lua_State* luaState);
 
 protected:
-	Brain* mBrain;
+    Brain* mBrain;
 };
 #endif
 

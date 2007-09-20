@@ -21,7 +21,7 @@
 
 GridbrainComponent::GridbrainComponent(lua_State* luaState)
 {
-	clear();
+    clear();
 }
 
 GridbrainComponent::~GridbrainComponent()
@@ -30,82 +30,82 @@ GridbrainComponent::~GridbrainComponent()
 
 void GridbrainComponent::clear(bool clearConnections)
 {
-	mType = NUL;
-	mSubType = -1;
-	mInput = 0;
-	mOutput = 0;
-	mRecurrentInput = 0;
-	mState = 0;
-	mForwardFlag = false;
-	mRecurrentFlag = false;
-	mPerceptionPosition = 0;
-	mActionPosition = 0;
+    mType = NUL;
+    mSubType = -1;
+    mInput = 0;
+    mOutput = 0;
+    mRecurrentInput = 0;
+    mState = 0;
+    mForwardFlag = false;
+    mRecurrentFlag = false;
+    mPerceptionPosition = 0;
+    mActionPosition = 0;
 
-	mParameter = 0.0f;
-	mOffset = 0;
-	mAggregator = false;
-	mColumn = 0;
-	mRow = 0;
-	mGrid = 0;
+    mParameter = 0.0f;
+    mOffset = 0;
+    mAggregator = false;
+    mColumn = 0;
+    mRow = 0;
+    mGrid = 0;
 
-	mOrigSymTable = -1;
-	mOrigSymIndex = -1;
-	mTargetSymTable = -1;
-	mTargetSymIndex = -1;
+    mOrigSymTable = -1;
+    mOrigSymIndex = -1;
+    mTargetSymTable = -1;
+    mTargetSymIndex = -1;
 
-	if (clearConnections)
-	{
-		mConnectionsCount = 0;
-		mFirstConnection = NULL;
-	}
+    if (clearConnections)
+    {
+        mConnectionsCount = 0;
+        mFirstConnection = NULL;
+    }
 }
 
 void GridbrainComponent::copy(GridbrainComponent* comp, bool clearConnections)
 {
-	clear(clearConnections);
+    clear(clearConnections);
 
-	mType = comp->mType;
-	mSubType = comp->mSubType;
-	mParameter = comp->mParameter;
-	mOffset = comp->mOffset;
-	mAggregator = comp->mAggregator;
-	mColumn = comp->mColumn;
-	mRow = comp->mRow;
-	mGrid = comp->mGrid;
+    mType = comp->mType;
+    mSubType = comp->mSubType;
+    mParameter = comp->mParameter;
+    mOffset = comp->mOffset;
+    mAggregator = comp->mAggregator;
+    mColumn = comp->mColumn;
+    mRow = comp->mRow;
+    mGrid = comp->mGrid;
 
-	mOrigSymTable = comp->mOrigSymTable;
-	mOrigSymIndex = comp->mOrigSymIndex;
-	mTargetSymTable = comp->mTargetSymTable;
-	mTargetSymIndex = comp->mTargetSymIndex;
+    mOrigSymTable = comp->mOrigSymTable;
+    mOrigSymIndex = comp->mOrigSymIndex;
+    mTargetSymTable = comp->mTargetSymTable;
+    mTargetSymIndex = comp->mTargetSymIndex;
 
 }
 
 bool GridbrainComponent::isAggregator()
 {
-	return ((mType == GridbrainComponent::AGG )
-		|| (mType == GridbrainComponent::MAX));
+    return ((mType == GridbrainComponent::AGG )
+        || (mType == GridbrainComponent::MAX));
 }
 
 float GridbrainComponent::computeBinding(SimulationObject* sourceObj,
-				SimulationObject* targetObj)
+                SimulationObject* targetObj)
 {
-	SymbolTable* sourceTable = sourceObj->getSymbolTable(mOrigSymTable);
-	SymbolTable* targetTable = targetObj->getSymbolTable(mTargetSymTable);
+    SymbolTable* sourceTable = sourceObj->getSymbolTable(mOrigSymTable);
+    SymbolTable* targetTable = targetObj->getSymbolTable(mTargetSymTable);
 
-	if (!targetTable)
-	{
-		return 0.0f;
-	}
+    if (!targetTable)
+    {
+        return 0.0f;
+    }
 
-	Symbol* sourceMol = sourceTable->getSymbol(mOrigSymIndex);
-	Symbol* targetMol = targetTable->getSymbol(mTargetSymIndex);
+    Symbol* sourceMol = sourceTable->getSymbol(mOrigSymIndex);
+    Symbol* targetMol = targetTable->getSymbol(mTargetSymIndex);
 
-	if (!targetMol)
-	{
-		return 0.0f;
-	}
+    if (!targetMol)
+    {
+        return 0.0f;
+    }
 
-	return (sourceMol->bind(targetMol));
+    return (sourceMol->bind(targetMol));
 }
 
 const char GridbrainComponent::mClassName[] = "GridbrainComponent";
@@ -113,15 +113,15 @@ const char GridbrainComponent::mClassName[] = "GridbrainComponent";
 Orbit<GridbrainComponent>::MethodType GridbrainComponent::mMethods[] = {{0,0}};
 
 Orbit<GridbrainComponent>::NumberGlobalType GridbrainComponent::mNumberGlobals[] = {
-	{"NUL", NUL},
-	{"PER", PER},
-	{"STA", STA},
-	{"ACT", ACT},
-	{"THR", THR},
-	{"AGG", AGG},
-	{"MAX", MAX},
-	{"MUL", MUL},
-	{"NOT", NOT},
-	{0,0}
+    {"NUL", NUL},
+    {"PER", PER},
+    {"STA", STA},
+    {"ACT", ACT},
+    {"THR", THR},
+    {"AGG", AGG},
+    {"MAX", MAX},
+    {"MUL", MUL},
+    {"NOT", NOT},
+    {0,0}
 };
 

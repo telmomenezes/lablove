@@ -25,11 +25,11 @@
 class InputHandler
 {
 public:
-	virtual bool onKeyDown(pyc::KeyCode keycode){return false;}
-	virtual bool onKeyUp(pyc::KeyCode keycode){return false;}
-	virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y){return false;}
-	virtual bool onMouseButtonUp(pyc::MouseButton button, int x, int y){return false;}
-	virtual bool onMouseMove(int x, int y){return false;}
+    virtual bool onKeyDown(pyc::KeyCode keycode){return false;}
+    virtual bool onKeyUp(pyc::KeyCode keycode){return false;}
+    virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y){return false;}
+    virtual bool onMouseButtonUp(pyc::MouseButton button, int x, int y){return false;}
+    virtual bool onMouseMove(int x, int y){return false;}
 };
 #endif
 

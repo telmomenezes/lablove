@@ -26,23 +26,23 @@
 class GraphicSquare : public Graphic
 {
 public:
-        GraphicSquare(lua_State* luaState=NULL);
-	virtual ~GraphicSquare();
-	
-	virtual Graphic* createSameType();
+    GraphicSquare(lua_State* luaState=NULL);
+    virtual ~GraphicSquare();
+    
+    virtual Graphic* createSameType();
 
-	virtual void init(void* obj);
-	virtual void draw(float x, float y);
+    virtual void init(void* obj);
+    virtual void draw(float x, float y);
 
-	static const char mClassName[];
-        static Orbit<GraphicSquare>::MethodType mMethods[];
-	static Orbit<GraphicSquare>::NumberGlobalType mNumberGlobals[];
+    static const char mClassName[];
+    static Orbit<GraphicSquare>::MethodType mMethods[];
+    static Orbit<GraphicSquare>::NumberGlobalType mNumberGlobals[];
 
 protected:
-	float mSize;
-	int mRed;
-	int mGreen;
-	int mBlue;
+    float mSize;
+    int mRed;
+    int mGreen;
+    int mBlue;
 };
 #endif
 

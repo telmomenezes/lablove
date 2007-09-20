@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-Gridbrain::Gridbrain()
+Gridbrain::Gridbrain(lua_State* luaState)
 {
 	mMaxInputDepth = 50;
         mComponents = NULL;
@@ -60,7 +60,7 @@ Gridbrain::~Gridbrain()
 	mGridsCount = 0;
 }
 
-Gridbrain* Gridbrain::clone(bool full)
+Brain* Gridbrain::clone(bool full)
 {
 	Gridbrain* gb = new Gridbrain();
 
@@ -76,7 +76,7 @@ Gridbrain* Gridbrain::clone(bool full)
 	for (unsigned int i = 0; i < mGridsCount; i++)
 	{
 		Grid* grid = mGridsVec[i];
-		gb->mGridsVec.push_back(new Grid(grid));
+		gb->mGridsVec.push_back(new Grid(*grid));
 	}
 
 	if (full)
@@ -127,7 +127,6 @@ void Gridbrain::addGrid(Grid* grid)
 		mBetaComponentsCount = gridComponentCount;
 	}
 
-	grid->init();
 	mGridsVec.push_back(grid);
 }
 
@@ -180,7 +179,7 @@ void Gridbrain::initGridsInputOutput()
 	}
 }
 
-void Gridbrain::initGridInputOutput(Grid* grid)
+void Gridbrain::initGridInputOutput(Grid* grid, int gPos)
 {
 	grid->removeInputOutput();
 	unsigned int pos = grid->getOffset();
@@ -188,8 +187,24 @@ void Gridbrain::initGridInputOutput(Grid* grid)
 	
 	if (grid->getType() == Grid::ALPHA)
 	{
-		list<InterfaceItem*>* interface = new list<InterfaceItem*>();
-		mInputInterfacesVector.push_back(interface);
+		list<InterfaceItem*>* interface;
+
+		if (gPos >= 0)
+		{
+			interface = mInputInterfacesVector[gPos];
+			for (list<InterfaceItem*>::iterator iterItem = interface->begin();
+				iterItem != interface->end();
+				iterItem++)
+			{
+				delete (*iterItem);
+			}
+			interface->clear();
+		}
+		else
+		{
+			interface = new list<InterfaceItem*>();
+			mInputInterfacesVector.push_back(interface);
+		}
 
 		for (unsigned int j = 0;
 			j < grid->getSize();
@@ -210,6 +225,17 @@ void Gridbrain::initGridInputOutput(Grid* grid)
 	}
 	else
 	{
+		if (gPos >= 0)
+		{
+			for (list<InterfaceItem*>::iterator iterItem = mOutputInterface.begin();
+			iterItem != mOutputInterface.end();
+			iterItem++)
+			{
+				delete (*iterItem);
+			}
+			mOutputInterface.clear();
+		}
+
 		for (unsigned int j = 0;
 			j < grid->getSize();
 			j++)
@@ -821,13 +847,13 @@ void Gridbrain::mutateChangeComponent()
 {
 	unsigned int pos = randomUniformInt(0, mNumberOfComponents - 1);
 
-	Grid* grid = mGridsVec[mComponents[pos].mGrid];
+	unsigned int gridNumber = mComponents[pos].mGrid;
+	Grid* grid = mGridsVec[gridNumber];
 
 	GridbrainComponent* comp = grid->getRandomComponent(pos);
-
 	mComponents[pos].copy(comp, false);
 
-	initGridInputOutput(grid);
+	initGridInputOutput(grid, gridNumber);
 }
 
 Grid* Gridbrain::getGrid(unsigned int number)
@@ -870,5 +896,28 @@ float* Gridbrain::getInputBuffer(unsigned int channel)
 float* Gridbrain::getOutputBuffer()
 {
 	return mGridsVec[mGridsCount - 1]->getOutputVector();
+}
+
+const char Gridbrain::mClassName[] = "Gridbrain";
+
+Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
+	{"addGrid", &Gridbrain::addGrid},
+	{"addRandomConnection", &Gridbrain::addRandomConnection},
+        {0,0}
+};
+
+Orbit<Gridbrain>::NumberGlobalType Gridbrain::mNumberGlobals[] = {{0,0}};
+
+int Gridbrain::addGrid(lua_State* luaState)
+{
+        Grid* grid = (Grid*)(Orbit<Gridbrain>::pointer(luaState, 1));
+        addGrid(grid);
+        return 0;
+}
+
+int Gridbrain::addRandomConnection(lua_State* luaState)
+{
+        addRandomConnection();
+        return 0;
 }
 

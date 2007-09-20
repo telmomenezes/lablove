@@ -21,28 +21,27 @@
 #define __INCLUDE_STAT_TIME_H
 
 #include "Statistics.h"
-#include <list>
 
 #include "Orbit.h"
 
 class StatTime : public Statistics
 {
 public:
-        StatTime(lua_State* luaState=NULL);
-	virtual ~StatTime();
+    StatTime(lua_State* luaState=NULL);
+    virtual ~StatTime();
 
-	virtual void init();
+    virtual void init();
 
-	virtual void process(SimulationObject* obj){}
-	virtual void dump();
+    virtual void process(SimulationObject* obj){}
+    virtual void dump();
 
-	static const char mClassName[];
-        static Orbit<StatTime>::MethodType mMethods[];
-	static Orbit<StatTime>::NumberGlobalType mNumberGlobals[];
+    static const char mClassName[];
+    static Orbit<StatTime>::MethodType mMethods[];
+    static Orbit<StatTime>::NumberGlobalType mNumberGlobals[];
 
 protected:
-	unsigned long mLastSimTime;
-	double mLastRealTime;
+    unsigned long mLastSimTime;
+    double mLastRealTime;
 };
 #endif
 

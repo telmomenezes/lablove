@@ -31,19 +31,22 @@ using std::vector;
 class Brain
 {
 public:
-	Brain();
-	virtual ~Brain();
+    Brain();
+    virtual ~Brain();
 
-	list<InterfaceItem*>* getInputInterface(unsigned int channel);
-	list<InterfaceItem*>* getOutputInterface();
-	virtual float* getInputBuffer(unsigned int channel)=0;
-	virtual float* getOutputBuffer()=0;
-	virtual void cycle()=0;
-	virtual void mutate()=0;
+    virtual Brain* clone(bool full=true)=0;
+    virtual void init()=0;
+
+    list<InterfaceItem*>* getInputInterface(unsigned int channel);
+    list<InterfaceItem*>* getOutputInterface();
+    virtual float* getInputBuffer(unsigned int channel)=0;
+    virtual float* getOutputBuffer()=0;
+    virtual void cycle()=0;
+    virtual void mutate()=0;
 
 protected:
-	vector<list<InterfaceItem*>*> mInputInterfacesVector;
-	list<InterfaceItem*> mOutputInterface;
+    vector<list<InterfaceItem*>*> mInputInterfacesVector;
+    list<InterfaceItem*> mOutputInterface;
 };
 #endif
 

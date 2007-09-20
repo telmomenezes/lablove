@@ -26,23 +26,23 @@
 class GraphicTriangle : public Graphic
 {
 public:
-        GraphicTriangle(lua_State* luaState=NULL);
-	virtual ~GraphicTriangle();
-	
-	virtual Graphic* createSameType();
+    GraphicTriangle(lua_State* luaState=NULL);
+    virtual ~GraphicTriangle();
+    
+    virtual Graphic* createSameType();
 
-	virtual void init(void* obj);
-	virtual void draw(float x, float y);
+    virtual void init(void* obj);
+    virtual void draw(float x, float y);
 
-	static const char mClassName[];
-        static Orbit<GraphicTriangle>::MethodType mMethods[];
-	static Orbit<GraphicTriangle>::NumberGlobalType mNumberGlobals[];
+    static const char mClassName[];
+    static Orbit<GraphicTriangle>::MethodType mMethods[];
+    static Orbit<GraphicTriangle>::NumberGlobalType mNumberGlobals[];
 
 protected:
-	float mSize;
-	int mRed;
-	int mGreen;
-	int mBlue;
+    float mSize;
+    int mRed;
+    int mGreen;
+    int mBlue;
 };
 #endif
 

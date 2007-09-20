@@ -21,75 +21,75 @@
 
 SymbolTable::SymbolTable(Symbol* refSymbol)
 {
-	mReferenceSymbol = refSymbol;
+    mReferenceSymbol = refSymbol;
 }
 
 SymbolTable::SymbolTable(lua_State* luaState)
 {
-	Symbol* symbol = (Symbol*)Orbit<SymbolTable>::pointer(luaState, 1);
+    Symbol* symbol = (Symbol*)Orbit<SymbolTable>::pointer(luaState, 1);
 
-	mReferenceSymbol = symbol;
+    mReferenceSymbol = symbol;
 }
 
 SymbolTable::SymbolTable(SymbolTable* table)
 {
-	mReferenceSymbol = table->mReferenceSymbol->clone();
+    mReferenceSymbol = table->mReferenceSymbol->clone();
 
-	std::vector<Symbol*>::iterator iterSymbol;
+    vector<Symbol*>::iterator iterSymbol;
 
-	for (iterSymbol = table->mSymbols.begin();
-		iterSymbol != table->mSymbols.end();
-		iterSymbol++)
-	{
-		mSymbols.push_back((*iterSymbol)->clone());
-	}
+    for (iterSymbol = table->mSymbols.begin();
+        iterSymbol != table->mSymbols.end();
+        iterSymbol++)
+    {
+        mSymbols.push_back((*iterSymbol)->clone());
+    }
 }
 
 SymbolTable::~SymbolTable()
 {
-	std::vector<Symbol*>::iterator iterSymbol;
+    vector<Symbol*>::iterator iterSymbol;
 
-	for (iterSymbol = mSymbols.begin();
-		iterSymbol != mSymbols.end();
-		iterSymbol++)
-	{
-		delete (*iterSymbol);
-	}
+    for (iterSymbol = mSymbols.begin();
+        iterSymbol != mSymbols.end();
+        iterSymbol++)
+    {
+        delete (*iterSymbol);
+    }
 
-	mSymbols.clear();
+    mSymbols.clear();
 }
 
 Symbol* SymbolTable::getSymbol(unsigned int index)
 {
-	return mSymbols[index];
+    return mSymbols[index];
 }
 
 unsigned int SymbolTable::addSymbol(Symbol* sym)
 {
-	unsigned int pos = mSymbols.size();
-	mSymbols.push_back(sym);
-	return pos;
+    unsigned int pos = mSymbols.size();
+    mSymbols.push_back(sym);
+    return pos;
 }
 
 void SymbolTable::mutate()
 {
-	unsigned int index = random() % mSymbols.size();
-	mSymbols[index]->mutate();
+    unsigned int index = random() % mSymbols.size();
+    mSymbols[index]->mutate();
 }
 
 int SymbolTable::addSymbol(lua_State* luaState)
 {
-	Symbol* sym = (Symbol*)Orbit<SymbolTable>::pointer(luaState, 1);
-	unsigned int index = addSymbol(sym);
-	lua_pushnumber(luaState, index);
-	return 1;
+    Symbol* sym = (Symbol*)Orbit<SymbolTable>::pointer(luaState, 1);
+    unsigned int index = addSymbol(sym);
+    lua_pushnumber(luaState, index);
+    return 1;
 }
 
 const char SymbolTable::mClassName[] = "SymbolTable";
 
 Orbit<SymbolTable>::MethodType SymbolTable::mMethods[] = {
-	{"addSymbol", &SymbolTable::addSymbol},
-        {0,0}
+    {"addSymbol", &SymbolTable::addSymbol},
+    {0,0}
 };
 
 Orbit<SymbolTable>::NumberGlobalType SymbolTable::mNumberGlobals[] = {{0,0}};

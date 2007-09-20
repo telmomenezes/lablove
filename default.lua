@@ -39,7 +39,7 @@ sim:setRotateCost(rotateCost)
 
 lab:setSimulation(sim)
 
-animat = Agent(initialConnections, 25)
+animat = Agent()
 animat:setSize(10.0)
 animat:setAgeRange(lowAgeLimit, highAgeLimit)
 animat:setInitialEnergy(1.0)
@@ -55,6 +55,8 @@ colorSymIndex = symTable:addSymbol(animatColor)
 colorTableCode = 0
 animat:addSymbolTable(symTable, colorTableCode)
 
+brain = Gridbrain()
+
 perSet = GridbrainComponentSet()
 perSet:addComponent(GridbrainComponent.PER, -1, 0, colorTableCode, colorSymIndex, colorTableCode, colorSymIndex)
 perSet:addComponent(GridbrainComponent.PER, SimSimple.PERCEPTION_POSITION)
@@ -63,25 +65,24 @@ perSet:addComponent(GridbrainComponent.PER, SimSimple.PERCEPTION_IN_CONTACT)
 
 alphaSet = GridbrainComponentSet()
 if THR then
-	alphaSet:addComponent(GridbrainComponent.THR)
+    alphaSet:addComponent(GridbrainComponent.THR)
 end
 if MAX then
-	alphaSet:addComponent(GridbrainComponent.MAX)
+    alphaSet:addComponent(GridbrainComponent.MAX)
 end
 if MUL then
-	alphaSet:addComponent(GridbrainComponent.MUL)
+    alphaSet:addComponent(GridbrainComponent.MUL)
 end
 if NOT then
-	alphaSet:addComponent(GridbrainComponent.NOT)
+    alphaSet:addComponent(GridbrainComponent.NOT)
 end
 
 grid = Grid()
-grid:setWidth(gridAlpha)
-grid:setHeight(gridHeight)
-grid:addComponentSet(perSet, 0)
-grid:addComponentSet(alphaSet, -1)
+grid:init(Grid.ALPHA, gridAlpha, gridHeight)
+grid:addComponentSet(perSet, 0, 0)
+grid:addComponentSet(alphaSet, 1, gridAlpha - 1)
 
-animat:setAlphaObjectsGrid(grid);
+brain:addGrid(grid);
 
 actSet = GridbrainComponentSet()
 actSet:addComponent(GridbrainComponent.ACT, SimSimple.ACTION_GO)
@@ -90,22 +91,29 @@ actSet:addComponent(GridbrainComponent.ACT, SimSimple.ACTION_EAT)
 
 betaSet = GridbrainComponentSet()
 if THR then
-	betaSet:addComponent(GridbrainComponent.THR)
+    betaSet:addComponent(GridbrainComponent.THR)
 end
 if MAX then
-	betaSet:addComponent(GridbrainComponent.MUL)
+    betaSet:addComponent(GridbrainComponent.MUL)
 end
 if NOT then
-	betaSet:addComponent(GridbrainComponent.NOT)
+    betaSet:addComponent(GridbrainComponent.NOT)
 end
-	
+    
 grid2 = Grid()
-grid2:setWidth(gridBeta)
-grid2:setHeight(gridHeight)
-grid2:addComponentSet(betaSet, gridBeta - 2)
-grid2:addComponentSet(actSet, -1)
+grid2:init(Grid.BETA, gridBeta, gridHeight)
+grid2:addComponentSet(betaSet, 0, gridBeta - 2)
+grid2:addComponentSet(actSet, gridBeta - 1, gridBeta - 1)
 
-animat:setBetaGrid(grid2)
+brain:addGrid(grid2)
+
+animat:setBrain(brain)
+
+i = 0
+while i < initialConnections do
+    brain:addRandomConnection()
+    i = i + 1
+end
 
 plant = Plant()
 plant:setSize(5.0)
@@ -122,7 +130,7 @@ sim:setPopulationDynamics(popDyn)
 animatSpeciesIndex = popDyn:addSpecies(animat, numberOfAgents)
 popDyn:addSpecies(plant, numberOfPlants)
 
-human = Agent(initialConnections, 25)
+human = Agent()
 
 human:setPos(worldWidth / 2, worldHeight / 2)
 human:setRot(0.0)
@@ -142,9 +150,8 @@ stats = StatMedAvgMinMax()
 --stats:setFile("energy.csv")
 stats:addField("energy")
 stats:addField("connections")
-popDyn:addSpeciesStatistics(animatSpeciesIndex, stats)
+--popDyn:addSpeciesStatistics(animatSpeciesIndex, stats)
 
 statTime = StatTime()
 statTime:setFile("time.csv")
-popDyn:addStatistics(statTime)
-
+--popDyn:addStatistics(statTime)

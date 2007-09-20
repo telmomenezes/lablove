@@ -22,10 +22,10 @@
 
 Graphic::Graphic(lua_State* luaState)
 {
-	mObject = NULL;
+    mObject = NULL;
 }
 
 Graphic::~Graphic()
-{	
+{   
 }
 

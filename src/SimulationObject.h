@@ -29,112 +29,115 @@
 #include <map>
 #include <string>
 
+using std::map;
+using std::string;
+
 class SimulationObject
 {
 public:
-	enum Type {TYPE_OBJECT,
-			TYPE_PLANT,
-			TYPE_AGENT};
+    enum Type {TYPE_OBJECT,
+            TYPE_PLANT,
+            TYPE_AGENT};
 
-	static unsigned long CURRENT_ID;
+    static unsigned long CURRENT_ID;
 
-	SimulationObject();
-	SimulationObject(SimulationObject* obj);
-	virtual ~SimulationObject();
+    SimulationObject();
+    SimulationObject(SimulationObject* obj);
+    virtual ~SimulationObject();
 
-	virtual SimulationObject* clone(bool full=true) = 0;
-	virtual void initRandom(){}
+    virtual SimulationObject* clone(bool full=true) = 0;
+    virtual void initRandom(){}
 
-	unsigned long getID(){return mID;}
+    unsigned long getID(){return mID;}
 
-	virtual void onCycle();
-	void draw(float x, float y);
-	virtual bool isFood(){return false;}
-	void setSelected(bool selected){mSelected = selected;}
-	bool isSelected(){return mSelected;}
+    virtual void onCycle();
+    void draw(float x, float y);
+    virtual bool isFood(){return false;}
+    void setSelected(bool selected){mSelected = selected;}
+    bool isSelected(){return mSelected;}
 
-	virtual void setPos(float x, float y);
-	virtual void setSize(float size);
-	virtual void setRot(float rot);
-	float getX(){return mX;}
-	float getY(){return mY;}
-	float getSize(){return mSize;}
-	float getRot(){return mRot;}
-	int getCellX(){return mCellX;}
-	int getCellY(){return mCellY;}
-	int getCellPos(){return mCellPos;}
+    virtual void setPos(float x, float y);
+    virtual void setSize(float size);
+    virtual void setRot(float rot);
+    float getX(){return mX;}
+    float getY(){return mY;}
+    float getSize(){return mSize;}
+    float getRot(){return mRot;}
+    int getCellX(){return mCellX;}
+    int getCellY(){return mCellY;}
+    int getCellPos(){return mCellPos;}
 
-        unsigned int getSpeciesID(){return mSpeciesID;}
-	void setSpeciesID(unsigned int id){mSpeciesID = id;}
-	float getEnergy(){return mEnergy;}
-	float getInitialEnergy(){return mInitialEnergy;}
-	void deltaEnergy(double delta){mEnergy += delta;}
-	void setEnergy(float energy){mEnergy = energy;}
-	void setInitialEnergy(float energy){mInitialEnergy = energy;}
+    unsigned int getSpeciesID(){return mSpeciesID;}
+    void setSpeciesID(unsigned int id){mSpeciesID = id;}
+    float getEnergy(){return mEnergy;}
+    float getInitialEnergy(){return mInitialEnergy;}
+    void deltaEnergy(double delta){mEnergy += delta;}
+    void setEnergy(float energy){mEnergy = energy;}
+    void setInitialEnergy(float energy){mInitialEnergy = energy;}
 
-	virtual SimulationObject* crossover(SimulationObject* otherParent){return this;}
-	virtual void mutate(){}
+    virtual SimulationObject* crossover(SimulationObject* otherParent){return this;}
+    virtual void mutate(){}
 
-	virtual void placeRandom();
+    virtual void placeRandom();
 
-	void setAgeRange(unsigned long lowAgeLimit, unsigned long highAgeLimit);
-	void setMetabolism(float metabolism){mMetabolism = metabolism;}
+    void setAgeRange(unsigned long lowAgeLimit, unsigned long highAgeLimit);
+    void setMetabolism(float metabolism){mMetabolism = metabolism;}
 
-	void setColor(SymbolRGB* color);
-	SymbolRGB* getColor(){return &mColor;}
+    void setColor(SymbolRGB* color);
+    SymbolRGB* getColor(){return &mColor;}
 
-	void addSymbolTable(SymbolTable* table, unsigned int code);
-	SymbolTable* getSymbolTable(unsigned int pos);
+    void addSymbolTable(SymbolTable* table, unsigned int code);
+    SymbolTable* getSymbolTable(unsigned int pos);
 
-	void setGraphic(Graphic* graph);
+    void setGraphic(Graphic* graph);
 
-	int setInitialEnergy(lua_State* luaState);
-	int addSymbolTable(lua_State* luaState);
-	int setPos(lua_State* luaState);
-        int setSize(lua_State* luaState);
-        int setRot(lua_State* luaState);
-	int setAgeRange(lua_State* luaState);
-	int setMetabolism(lua_State* luaState);
-	int setColor(lua_State* luaState);
-	int setGraphic(lua_State* luaState);
+    int setInitialEnergy(lua_State* luaState);
+    int addSymbolTable(lua_State* luaState);
+    int setPos(lua_State* luaState);
+    int setSize(lua_State* luaState);
+    int setRot(lua_State* luaState);
+    int setAgeRange(lua_State* luaState);
+    int setMetabolism(lua_State* luaState);
+    int setColor(lua_State* luaState);
+    int setGraphic(lua_State* luaState);
 
-	virtual float getFieldValue(std::string fieldName);
+    virtual float getFieldValue(string fieldName);
 
-	bool mHuman;
-	bool mDeleted;
+    bool mHuman;
+    bool mDeleted;
 
-	float mX;
-	float mY;
-	float mSize;
-	float mSizeSquared;
-	float mRot;
+    float mX;
+    float mY;
+    float mSize;
+    float mSizeSquared;
+    float mRot;
 
-	SimulationObject* mNextCellList;
-	SimulationObject* mPrevCellList;
+    SimulationObject* mNextCellList;
+    SimulationObject* mPrevCellList;
 
-	int mCellX;
-	int mCellY;
-	int mCellPos;
+    int mCellX;
+    int mCellY;
+    int mCellPos;
 
-	Type mType;
+    Type mType;
 
-	float mEnergy;
+    float mEnergy;
 
 protected:
-	unsigned long mID;
-	bool mSelected;
-        unsigned int mSpeciesID;
-	float mInitialEnergy;
-	unsigned long mCreationTime;
-	std::map<unsigned int, SymbolTable*> mSymbolTables;
+    unsigned long mID;
+    bool mSelected;
+    unsigned int mSpeciesID;
+    float mInitialEnergy;
+    unsigned long mCreationTime;
+    map<unsigned int, SymbolTable*> mSymbolTables;
 
-	unsigned long mLowAgeLimit;
-	unsigned long mHighAgeLimit;
-	unsigned long mMaxAge;
-	float mMetabolism;
-	SymbolRGB mColor;
+    unsigned long mLowAgeLimit;
+    unsigned long mHighAgeLimit;
+    unsigned long mMaxAge;
+    float mMetabolism;
+    SymbolRGB mColor;
 
-	Graphic* mGraphic;
+    Graphic* mGraphic;
 };
 #endif
 

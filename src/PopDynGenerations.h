@@ -22,47 +22,52 @@
 
 #include "PopulationDynamics.h"
 #include "Statistics.h"
+
 #include <list>
+#include <vector>
+
+using std::list;
+using std::vector;
 
 class PopDynGenerations : public PopulationDynamics
 {
 
 typedef struct
 {
-	SimulationObject* mBaseOrganism;
-	std::list<SimulationObject*> mOrganismList;
-	std::list<Statistics*> mStatistics;
-	long mPopulation;
-	bool mStatic;
+    SimulationObject* mBaseOrganism;
+    list<SimulationObject*> mOrganismList;
+    list<Statistics*> mStatistics;
+    long mPopulation;
+    bool mStatic;
 } SpeciesData;
 
 public:
-	static unsigned int CURRENT_SPECIES_ID;
+    static unsigned int CURRENT_SPECIES_ID;
 
-        PopDynGenerations(lua_State* luaState=NULL);
-	virtual ~PopDynGenerations();
-	virtual void init();
-	virtual void onCycle();
-	virtual void onOrganismDeath(SimulationObject* org);
+    PopDynGenerations(lua_State* luaState=NULL);
+    virtual ~PopDynGenerations();
+    virtual void init();
+    virtual void onCycle();
+    virtual void onOrganismDeath(SimulationObject* org);
 
-	unsigned int addSpecies(SimulationObject* org, long population, bool isStatic);
-	void addSpeciesStatistics(unsigned int speciesIndex, Statistics* stats);
-	void setGenerationTime(unsigned int time){mGenerationTime = time;}
+    unsigned int addSpecies(SimulationObject* org, long population, bool isStatic);
+    void addSpeciesStatistics(unsigned int speciesIndex, Statistics* stats);
+    void setGenerationTime(unsigned int time){mGenerationTime = time;}
 
-	static const char mClassName[];
-        static Orbit<PopDynGenerations>::MethodType mMethods[];
-	static Orbit<PopDynGenerations>::NumberGlobalType mNumberGlobals[];
+    static const char mClassName[];
+    static Orbit<PopDynGenerations>::MethodType mMethods[];
+    static Orbit<PopDynGenerations>::NumberGlobalType mNumberGlobals[];
 
-        int addSpecies(lua_State* luaState);
-        int addSpeciesStatistics(lua_State* luaState);
-	int setGenerationTime(lua_State* luaState);
+    int addSpecies(lua_State* luaState);
+    int addSpeciesStatistics(lua_State* luaState);
+    int setGenerationTime(lua_State* luaState);
 
 protected:
 
-	std::vector<SpeciesData> mSpecies;
+    vector<SpeciesData> mSpecies;
 
-	unsigned int mGenerationTime;
-	unsigned long mGeneration;
+    unsigned int mGenerationTime;
+    unsigned long mGeneration;
 };
 #endif
 

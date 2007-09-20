@@ -28,48 +28,48 @@
 class GridbrainComponent
 {
 public:
-	enum Type {NUL, PER, STA, ACT, THR, AGG, MAX, MUL, NOT};
+    enum Type {NUL, PER, STA, ACT, THR, AGG, MAX, MUL, NOT};
 
-        GridbrainComponent(lua_State* luaState=NULL);
-	virtual ~GridbrainComponent();
+    GridbrainComponent(lua_State* luaState=NULL);
+    virtual ~GridbrainComponent();
 
-	void clear(bool clearConnections=true);
-	void copy(GridbrainComponent* comp, bool clearConnections=true);
+    void clear(bool clearConnections=true);
+    void copy(GridbrainComponent* comp, bool clearConnections=true);
 
-	bool isAggregator();
+    bool isAggregator();
 
-	float computeBinding(SimulationObject* sourceObj,
-				SimulationObject* targetObj);
+    float computeBinding(SimulationObject* sourceObj,
+                            SimulationObject* targetObj);
 
-	static const char mClassName[];
-        static Orbit<GridbrainComponent>::MethodType mMethods[];
-	static Orbit<GridbrainComponent>::NumberGlobalType mNumberGlobals[];
+    static const char mClassName[];
+    static Orbit<GridbrainComponent>::MethodType mMethods[];
+    static Orbit<GridbrainComponent>::NumberGlobalType mNumberGlobals[];
 
 
-	Type mType;
-	int mSubType;
-	float mInput;
-	float mOutput;
-	float mRecurrentInput;
-	unsigned int mConnectionsCount;
-	GridbrainConnection* mFirstConnection;
-	float mParameter;
-	float mState;
-	bool mAggregator;
-	bool mForwardFlag;
-	bool mRecurrentFlag;
-	unsigned int mOffset;
-	unsigned int mPerceptionPosition;
-	unsigned int mActionPosition;
+    Type mType;
+    int mSubType;
+    float mInput;
+    float mOutput;
+    float mRecurrentInput;
+    unsigned int mConnectionsCount;
+    GridbrainConnection* mFirstConnection;
+    float mParameter;
+    float mState;
+    bool mAggregator;
+    bool mForwardFlag;
+    bool mRecurrentFlag;
+    unsigned int mOffset;
+    unsigned int mPerceptionPosition;
+    unsigned int mActionPosition;
 
-	unsigned long mColumn;
-	unsigned long mRow;
-	unsigned int mGrid;
+    unsigned long mColumn;
+    unsigned long mRow;
+    unsigned int mGrid;
 
-	int mOrigSymTable;
-	int mOrigSymIndex;
-	int mTargetSymTable;
-	int mTargetSymIndex;
+    int mOrigSymTable;
+    int mOrigSymIndex;
+    int mTargetSymTable;
+    int mTargetSymIndex;
 };
 
 #endif

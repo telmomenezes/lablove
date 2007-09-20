@@ -22,55 +22,55 @@
 
 PopulationDynamics::PopulationDynamics()
 {
-	mStatisticsTimeInterval = 1000;
+    mStatisticsTimeInterval = 1000;
 }
 
 PopulationDynamics::~PopulationDynamics()
-{	
+{   
 }
 
 void PopulationDynamics::onCycle()
 {
-	// Dump statistics
-	if ((Lab::getSingleton().getSimulation()->time() % mStatisticsTimeInterval) == 0)
-	{
-		for (std::list<Statistics*>::iterator iterStats = mStatistics.begin();
-			iterStats != mStatistics.end();
-			iterStats++)
-		{
-			(*iterStats)->dump();
-		}
-	}
+    // Dump statistics
+    if ((Lab::getSingleton().getSimulation()->time() % mStatisticsTimeInterval) == 0)
+    {
+        for (list<Statistics*>::iterator iterStats = mStatistics.begin();
+            iterStats != mStatistics.end();
+            iterStats++)
+        {
+            (*iterStats)->dump();
+        }
+    }
 }
 
 void PopulationDynamics::onOrganismDeath(SimulationObject* org)
 {
-	// Update statistics
-	for (std::list<Statistics*>::iterator iterStats = mStatistics.begin();
-		iterStats != mStatistics.end();
-		iterStats++)
-	{
-		(*iterStats)->process(org);
-	}
+    // Update statistics
+    for (list<Statistics*>::iterator iterStats = mStatistics.begin();
+        iterStats != mStatistics.end();
+        iterStats++)
+    {
+        (*iterStats)->process(org);
+    }
 }
 
 void PopulationDynamics::addStatistics(Statistics* stats)
 {
-	stats->init();
-	mStatistics.push_back(stats);
+    stats->init();
+    mStatistics.push_back(stats);
 }
 
 int PopulationDynamics::addStatistics(lua_State* luaState)
 {
-        Statistics* stats = (Statistics*)Orbit<Lab>::pointer(luaState, 1);
-        addStatistics(stats);
-        return 0;
+    Statistics* stats = (Statistics*)Orbit<Lab>::pointer(luaState, 1);
+    addStatistics(stats);
+    return 0;
 }
 
 int PopulationDynamics::setStatisticsTimeInterval(lua_State* luaState)
 {
-	unsigned long interval = luaL_checkint(luaState, 1);
-        setStatisticsTimeInterval(interval);
-        return 0;
+    unsigned long interval = luaL_checkint(luaState, 1);
+    setStatisticsTimeInterval(interval);
+    return 0;
 }
 

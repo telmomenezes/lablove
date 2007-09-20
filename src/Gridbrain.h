@@ -33,73 +33,80 @@
 class Gridbrain : public Brain
 {
 public:
-	Gridbrain();
-	virtual ~Gridbrain();
+    Gridbrain(lua_State* luaState=NULL);
+    virtual ~Gridbrain();
 
-	Gridbrain* clone(bool full=true);
+    virtual Brain* clone(bool full=true);
 
-	void addGrid(Grid* grid);
-	void init();
+    void addGrid(Grid* grid);
+    virtual void init();
 
-	virtual float* getInputBuffer(unsigned int channel);
-	virtual float* getOutputBuffer();
+    virtual float* getInputBuffer(unsigned int channel);
+    virtual float* getOutputBuffer();
 
-	void setComponent(unsigned int x,
-				unsigned int y,
-				unsigned int gridNumber,
-				GridbrainComponent::Type type,
-				float parameter);
-	void addConnection(unsigned int xOrig,
-				unsigned int yOrig,
-				unsigned int gOrig,
-				unsigned int xTarg,
-				unsigned int yTarg,
-				unsigned int gTarg,
-				float weight);
-	bool connectionExists(unsigned int xOrig,
-				unsigned int yOrig,
-				unsigned int gOrig,
-				unsigned int xTarg,
-				unsigned int yTarg,
-				unsigned int gTarg);
-	void selectRandomConnection(unsigned int &x1,
-					unsigned int &y1,
-					unsigned int &g1,
-					unsigned int &x2,
-					unsigned int &y2,
-					unsigned int &g2);
-	void addRandomConnection();
-	void setMaxInputDepth(unsigned int maxInputDepth){mMaxInputDepth = maxInputDepth;}
+    void setComponent(unsigned int x,
+                unsigned int y,
+                unsigned int gridNumber,
+                GridbrainComponent::Type type,
+                float parameter);
+    void addConnection(unsigned int xOrig,
+                unsigned int yOrig,
+                unsigned int gOrig,
+                unsigned int xTarg,
+                unsigned int yTarg,
+                unsigned int gTarg,
+                float weight);
+    bool connectionExists(unsigned int xOrig,
+                unsigned int yOrig,
+                unsigned int gOrig,
+                unsigned int xTarg,
+                unsigned int yTarg,
+                unsigned int gTarg);
+    void selectRandomConnection(unsigned int &x1,
+                unsigned int &y1,
+                unsigned int &g1,
+                unsigned int &x2,
+                unsigned int &y2,
+                unsigned int &g2);
+    void addRandomConnection();
+    void setMaxInputDepth(unsigned int maxInputDepth){mMaxInputDepth = maxInputDepth;}
 
-	void cycle();
-	
-	Grid* getGrid(unsigned int number);
+    void cycle();
+    
+    Grid* getGrid(unsigned int number);
 
-	void initGridsInputOutput();
+    void initGridsInputOutput();
 
-	unsigned int getConnectionsCount(){return mConnectionsCount;}
+    unsigned int getConnectionsCount(){return mConnectionsCount;}
 
-	virtual void mutate();
-	void mutateAddConnection();
-	void mutateRemoveConnection();
-	void mutateChangeConnectionWeight();
-	void mutateChangeComponent();
+    virtual void mutate();
+    void mutateAddConnection();
+    void mutateRemoveConnection();
+    void mutateChangeConnectionWeight();
+    void mutateChangeComponent();
+
+    static const char mClassName[];
+    static Orbit<Gridbrain>::MethodType mMethods[];
+    static Orbit<Gridbrain>::NumberGlobalType mNumberGlobals[];
+
+    int addGrid(lua_State* luaState);
+    int addRandomConnection(lua_State* luaState);
 
 protected:
-	void initGridInputOutput(Grid* grid);
-	void calcConnectionCounts();
+    void initGridInputOutput(Grid* grid, int gPos=-1);
+    void calcConnectionCounts();
 
-	std::vector<Grid*> mGridsVec;
+    std::vector<Grid*> mGridsVec;
 
-        GridbrainComponent* mComponents;
-	unsigned int mMaxInputDepth;
-	unsigned int mNumberOfComponents;
-	GridbrainConnection* mConnections;
-	unsigned int mConnectionsCount;
-	unsigned int mGridsCount;
-	unsigned int mFirstBetaIndex;
-	unsigned int mTotalPossibleConnections;
-	unsigned int mBetaComponentsCount;
+    GridbrainComponent* mComponents;
+    unsigned int mMaxInputDepth;
+    unsigned int mNumberOfComponents;
+    GridbrainConnection* mConnections;
+    unsigned int mConnectionsCount;
+    unsigned int mGridsCount;
+    unsigned int mFirstBetaIndex;
+    unsigned int mTotalPossibleConnections;
+    unsigned int mBetaComponentsCount;
 };
 
 #endif

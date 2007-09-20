@@ -30,70 +30,72 @@
 
 #include <list>
 
+using std::list;
+
 class Simulation : public InputHandler
 {
 public:
-	Simulation();
-	virtual ~Simulation();
+    Simulation();
+    virtual ~Simulation();
 
-	virtual void init();
-	
-	void setWorldDimensions(float worldWidth,
-			float worldLength,
-			float cellSide);
+    virtual void init();
+    
+    void setWorldDimensions(float worldWidth,
+                            float worldLength,
+                            float cellSide);
 
-	float getWorldWidth(){return mWorldWidth;}
-	float getWorldLength(){return mWorldLength;}
-	float getCellSide(){return mCellSide;}
-	unsigned int getWorldCellWidth(){return mWorldCellWidth;}
-	unsigned int getWorldCellLength(){return mWorldCellLength;}
-	SimulationObject** getCellGrid(){return mCellGrid;}
+    float getWorldWidth(){return mWorldWidth;}
+    float getWorldLength(){return mWorldLength;}
+    float getCellSide(){return mCellSide;}
+    unsigned int getWorldCellWidth(){return mWorldCellWidth;}
+    unsigned int getWorldCellLength(){return mWorldCellLength;}
+    SimulationObject** getCellGrid(){return mCellGrid;}
 
-	virtual void drawBeforeObjects(){}
+    virtual void drawBeforeObjects(){}
 
-	virtual void addObject(SimulationObject* object);
-	virtual void removeObject(SimulationObject* object);
+    virtual void addObject(SimulationObject* object);
+    virtual void removeObject(SimulationObject* object);
 
-	void cycle();
-	virtual void processObjects()=0;
+    void cycle();
+    virtual void processObjects()=0;
 
-	virtual SimulationObject* getObjectByScreenPos(int x, int y);
-	void setSelectedObject(SimulationObject* object);
-	SimulationObject* getSelectedObject(){return mSelectedObject;}
-	void moveView(float x, float y);
-	float getViewX(){return mViewX;}
-	float getViewY(){return mViewY;}
+    virtual SimulationObject* getObjectByScreenPos(int x, int y);
+    void setSelectedObject(SimulationObject* object);
+    SimulationObject* getSelectedObject(){return mSelectedObject;}
+    void moveView(float x, float y);
+    float getViewX(){return mViewX;}
+    float getViewY(){return mViewY;}
 
-	void setPopulationDynamics(PopulationDynamics* popDyn){mPopulationDynamics = popDyn;}
-	PopulationDynamics* getPopulationDynamics(){return mPopulationDynamics;}
+    void setPopulationDynamics(PopulationDynamics* popDyn){mPopulationDynamics = popDyn;}
+    PopulationDynamics* getPopulationDynamics(){return mPopulationDynamics;}
 
-	virtual void killOrganism(SimulationObject* org);
-	unsigned long time(){return mSimulationTime;}
+    virtual void killOrganism(SimulationObject* org);
+    unsigned long time(){return mSimulationTime;}
 
-	int setPopulationDynamics(lua_State* luaState);
-        int setWorldDimensions(lua_State* luaState);
+    int setPopulationDynamics(lua_State* luaState);
+    int setWorldDimensions(lua_State* luaState);
 
 protected:
-	float mWorldWidth;
-	float mWorldLength;
+    float mWorldWidth;
+    float mWorldLength;
 
-	float mCellSide;
-	unsigned int mWorldCellWidth;
-	unsigned int mWorldCellLength;
+    float mCellSide;
+    unsigned int mWorldCellWidth;
+    unsigned int mWorldCellLength;
 
-	SimulationObject** mCellGrid;
+    SimulationObject** mCellGrid;
 
-	std::list<SimulationObject*> mObjects;
-	std::list<SimulationObject*> mObjectsToKill;
+    list<SimulationObject*> mObjects;
+    list<SimulationObject*> mObjectsToKill;
 
-	unsigned long mSimulationTime;
-	SimulationObject* mSelectedObject;
-	PopulationDynamics* mPopulationDynamics;
+    unsigned long mSimulationTime;
+    SimulationObject* mSelectedObject;
+    PopulationDynamics* mPopulationDynamics;
 
-	float mViewX;
-	float mViewY;
+    float mViewX;
+    float mViewY;
 
-	pyc::Layer* mLogo;
+    pyc::Layer* mLogo;
 };
 #endif
 

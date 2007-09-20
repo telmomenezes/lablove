@@ -23,10 +23,10 @@
 class ScriptableObject
 {
 public:
-	ScriptableObject();
-	virtual ~ScriptableObject();
+    ScriptableObject();
+    virtual ~ScriptableObject();
 
-	bool mCreatedByScript;
+    bool mCreatedByScript;
 };
 #endif
 

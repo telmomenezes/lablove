@@ -23,6 +23,7 @@
 #include "Agent.h"
 #include "PopDynGenerations.h"
 #include "PopDynFixedSpecies.h"
+#include "Gridbrain.h"
 #include "Grid.h"
 #include "GridbrainComponent.h"
 #include "GridbrainComponentSet.h"
@@ -48,9 +49,9 @@ extern "C"
 
 int getLab(lua_State* luaState)
 {
-	Lab* obj = &Lab::getSingleton();
-	Orbit<Lab>::push(luaState, obj, false);
-	return 1;
+    Lab* obj = &Lab::getSingleton();
+    Orbit<Lab>::push(luaState, obj, false);
+    return 1;
 }
 
 #if defined(__LABLOVE_WITH_GRAPHICS) && defined(__WIN32)
@@ -59,52 +60,53 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)
 int main(int argc, char *argv[])
 #endif
 {
-	lua_State* luaState = lua_open();
-	
-	luaopen_base(luaState);
-	luaopen_table(luaState);
-	//luaopen_io(L);
-	luaopen_string(luaState);
-	luaopen_math(luaState);
-	luaopen_debug(luaState);
-	
-	Orbit<Lab>::orbitRegister(luaState);
-	Orbit<SimSimple>::orbitRegister(luaState);
-	Orbit<Plant>::orbitRegister(luaState);
-	Orbit<Agent>::orbitRegister(luaState);
-	Orbit<PopDynGenerations>::orbitRegister(luaState);
-	Orbit<PopDynFixedSpecies>::orbitRegister(luaState);
-	Orbit<Grid>::orbitRegister(luaState);
-	Orbit<GridbrainComponent>::orbitRegister(luaState);
-	Orbit<GridbrainComponentSet>::orbitRegister(luaState);
-	Orbit<SymbolTable>::orbitRegister(luaState);
-	Orbit<SymbolRGB>::orbitRegister(luaState);
-	Orbit<StatMedAvgMinMax>::orbitRegister(luaState);
-	Orbit<StatTime>::orbitRegister(luaState);
-	Orbit<GraphicTriangle>::orbitRegister(luaState);
-	Orbit<GraphicSquare>::orbitRegister(luaState);
+    lua_State* luaState = lua_open();
+    
+    luaopen_base(luaState);
+    luaopen_table(luaState);
+    //luaopen_io(L);
+    luaopen_string(luaState);
+    luaopen_math(luaState);
+    luaopen_debug(luaState);
+    
+    Orbit<Lab>::orbitRegister(luaState);
+    Orbit<SimSimple>::orbitRegister(luaState);
+    Orbit<Plant>::orbitRegister(luaState);
+    Orbit<Agent>::orbitRegister(luaState);
+    Orbit<PopDynGenerations>::orbitRegister(luaState);
+    Orbit<PopDynFixedSpecies>::orbitRegister(luaState);
+    Orbit<Gridbrain>::orbitRegister(luaState);
+    Orbit<Grid>::orbitRegister(luaState);
+    Orbit<GridbrainComponent>::orbitRegister(luaState);
+    Orbit<GridbrainComponentSet>::orbitRegister(luaState);
+    Orbit<SymbolTable>::orbitRegister(luaState);
+    Orbit<SymbolRGB>::orbitRegister(luaState);
+    Orbit<StatMedAvgMinMax>::orbitRegister(luaState);
+    Orbit<StatTime>::orbitRegister(luaState);
+    Orbit<GraphicTriangle>::orbitRegister(luaState);
+    Orbit<GraphicSquare>::orbitRegister(luaState);
 
-	lua_register(luaState, "getLab", getLab);
+    lua_register(luaState, "getLab", getLab);
 
-	char* scriptFile = "default.lua";
-	if (argc == 2)
-	{
-		scriptFile = argv[1];
-	}
+    char* scriptFile = "default.lua";
+    if (argc == 2)
+    {
+        scriptFile = argv[1];
+    }
 
-	int error = luaL_loadfile(luaState, scriptFile) || lua_pcall (luaState, 0, 0, 0);
-	
-	if (error)
-	{
-		printf("%s\n", lua_tostring (luaState, -1));
-		lua_pop (luaState, 1);
-		return -1;
-	}
+    int error = luaL_loadfile(luaState, scriptFile) || lua_pcall (luaState, 0, 0, 0);
+    
+    if (error)
+    {
+        printf("%s\n", lua_tostring (luaState, -1));
+        lua_pop (luaState, 1);
+        return -1;
+    }
 
-	Lab::getSingleton().run();
+    Lab::getSingleton().run();
 
-	lua_close(luaState);
+    lua_close(luaState);
 
-	return 0;
+    return 0;
 }
 

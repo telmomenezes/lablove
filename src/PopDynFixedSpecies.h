@@ -26,38 +26,41 @@
 #include <list>
 #include <vector>
 
+using std::list;
+using std::vector;
+
 class PopDynFixedSpecies : public PopulationDynamics
 {
 
 typedef struct
 {
-	SimulationObject* mBaseOrganism;
-	std::vector<SimulationObject*> mOrganismVector;
-	std::list<Statistics*> mStatistics;
-	long mPopulation;
+    SimulationObject* mBaseOrganism;
+    vector<SimulationObject*> mOrganismVector;
+    list<Statistics*> mStatistics;
+    long mPopulation;
 } SpeciesData;
 
 public:
-	static unsigned int CURRENT_SPECIES_ID;
+    static unsigned int CURRENT_SPECIES_ID;
 
-        PopDynFixedSpecies(lua_State* luaState=NULL);
-	virtual ~PopDynFixedSpecies();
-	virtual void init();
-	virtual void onCycle();
-	virtual void onOrganismDeath(SimulationObject* org);
+    PopDynFixedSpecies(lua_State* luaState=NULL);
+    virtual ~PopDynFixedSpecies();
+    virtual void init();
+    virtual void onCycle();
+    virtual void onOrganismDeath(SimulationObject* org);
 
-	unsigned int addSpecies(SimulationObject* org, long population);
-	void addSpeciesStatistics(unsigned int speciesIndex, Statistics* stats);
+    unsigned int addSpecies(SimulationObject* org, long population);
+    void addSpeciesStatistics(unsigned int speciesIndex, Statistics* stats);
 
-	static const char mClassName[];
-        static Orbit<PopDynFixedSpecies>::MethodType mMethods[];
-	static Orbit<PopDynFixedSpecies>::NumberGlobalType mNumberGlobals[];
+    static const char mClassName[];
+    static Orbit<PopDynFixedSpecies>::MethodType mMethods[];
+    static Orbit<PopDynFixedSpecies>::NumberGlobalType mNumberGlobals[];
 
-        int addSpecies(lua_State* luaState);
-        int addSpeciesStatistics(lua_State* luaState);
+    int addSpecies(lua_State* luaState);
+    int addSpeciesStatistics(lua_State* luaState);
 
 protected:
-	std::vector<SpeciesData> mSpecies;
+    vector<SpeciesData> mSpecies;
 };
 #endif
 

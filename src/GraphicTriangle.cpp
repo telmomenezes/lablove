@@ -26,46 +26,46 @@ GraphicTriangle::GraphicTriangle(lua_State* luaState)
 }
 
 GraphicTriangle::~GraphicTriangle()
-{	
+{   
 }
 
 Graphic* GraphicTriangle::createSameType()
 {
-	return new GraphicTriangle();
+    return new GraphicTriangle();
 }
 
 void GraphicTriangle::init(void* obj)
 {
-	mObject = obj;
-	SimulationObject* simObj = (SimulationObject*)mObject;
-	mSize = simObj->mSize;
-	mRed = simObj->getColor()->mRed;
-	mGreen = simObj->getColor()->mGreen;
-	mBlue = simObj->getColor()->mBlue;
+    mObject = obj;
+    SimulationObject* simObj = (SimulationObject*)mObject;
+    mSize = simObj->mSize;
+    mRed = simObj->getColor()->mRed;
+    mGreen = simObj->getColor()->mGreen;
+    mBlue = simObj->getColor()->mBlue;
 }
 
 void GraphicTriangle::draw(float x, float y)
 {
-	SimulationObject* simObj = (SimulationObject*)mObject;
+    SimulationObject* simObj = (SimulationObject*)mObject;
 
-	float rot = simObj->mRot;
-	float centerX = simObj->mX + x;
-	float centerY = simObj->mY + y;
+    float rot = simObj->mRot;
+    float centerX = simObj->mX + x;
+    float centerY = simObj->mY + y;
 
-	float a1 = rot;
-	float a2 = rot + (M_PI * 0.8f);
-	float a3 = rot + (M_PI * 1.2f);
-	float x1 = centerX + (cosf(a1) * mSize);
-	float y1 = centerY + (sinf(a1) * mSize);
-	float x2 = centerX + (cosf(a2) * mSize);
-	float y2 = centerY + (sinf(a2) * mSize);
-	float x3 = centerX + (cosf(a3) * mSize);
-	float y3 = centerY + (sinf(a3) * mSize);
+    float a1 = rot;
+    float a2 = rot + (M_PI * 0.8f);
+    float a3 = rot + (M_PI * 1.2f);
+    float x1 = centerX + (cosf(a1) * mSize);
+    float y1 = centerY + (sinf(a1) * mSize);
+    float x2 = centerX + (cosf(a2) * mSize);
+    float y2 = centerY + (sinf(a2) * mSize);
+    float x3 = centerX + (cosf(a3) * mSize);
+    float y3 = centerY + (sinf(a3) * mSize);
 
-	Lab::getSingleton().getRootLayer()->setColor(mRed, mGreen, mBlue);
-	Lab::getSingleton().getRootLayer()->setLineWidth(2.0f);
-	Lab::getSingleton().getRootLayer()->fillTriangle(x1, y1, x2, y2, x3, y3);
-	Lab::getSingleton().getRootLayer()->drawTriangle(x1, y1, x2, y2, x3, y3);
+    Lab::getSingleton().getRootLayer()->setColor(mRed, mGreen, mBlue);
+    Lab::getSingleton().getRootLayer()->setLineWidth(2.0f);
+    Lab::getSingleton().getRootLayer()->fillTriangle(x1, y1, x2, y2, x3, y3);
+    Lab::getSingleton().getRootLayer()->drawTriangle(x1, y1, x2, y2, x3, y3);
 }
 
 const char GraphicTriangle::mClassName[] = "GraphicTriangle";

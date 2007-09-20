@@ -25,28 +25,30 @@
 
 #include <vector>
 
+using std::vector;
+
 class SymbolTable
 {
 public:
-        SymbolTable(lua_State* luaState);
-	SymbolTable(Symbol* refSymbol);
-        SymbolTable(SymbolTable* table);
-	virtual ~SymbolTable();
+    SymbolTable(lua_State* luaState);
+    SymbolTable(Symbol* refSymbol);
+    SymbolTable(SymbolTable* table);
+    virtual ~SymbolTable();
 
-	Symbol* getSymbol(unsigned int index);
-	unsigned int addSymbol(Symbol* sym);
-	void mutate();
+    Symbol* getSymbol(unsigned int index);
+    unsigned int addSymbol(Symbol* sym);
+    void mutate();
 
-	int addSymbol(lua_State* luaState);
+    int addSymbol(lua_State* luaState);
 
-	static const char mClassName[];
-        static Orbit<SymbolTable>::MethodType mMethods[];
-	static Orbit<SymbolTable>::NumberGlobalType mNumberGlobals[];
+    static const char mClassName[];
+    static Orbit<SymbolTable>::MethodType mMethods[];
+    static Orbit<SymbolTable>::NumberGlobalType mNumberGlobals[];
 
 
 protected:
-	Symbol* mReferenceSymbol;
-	std::vector<Symbol*> mSymbols;
+    Symbol* mReferenceSymbol;
+    vector<Symbol*> mSymbols;
 };
 #endif
 

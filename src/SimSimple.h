@@ -27,87 +27,85 @@
 
 #include "pyc.h"
 
-#include <list>
-
 #include "Orbit.h"
 
 class SimSimple : public Simulation
 {
 public:
 
-	enum Perception {PERCEPTION_NULL,
-				PERCEPTION_POSITION,
-				PERCEPTION_PROXIMITY,
-				PERCEPTION_IN_CONTACT};
+    enum Perception {PERCEPTION_NULL,
+                    PERCEPTION_POSITION,
+                    PERCEPTION_PROXIMITY,
+                    PERCEPTION_IN_CONTACT};
 
-	enum Action {ACTION_NULL,
-			ACTION_GO,
-			ACTION_ROTATE,
-			ACTION_EAT};
-
-
-        SimSimple(lua_State* luaState=NULL);
-	virtual ~SimSimple();
+    enum Action {ACTION_NULL,
+                ACTION_GO,
+                ACTION_ROTATE,
+                ACTION_EAT};
 
 
-	virtual void processObjects();
+    SimSimple(lua_State* luaState=NULL);
+    virtual ~SimSimple();
 
-	virtual void drawBeforeObjects();
 
-	void setGoCost(float cost){mGoCost = cost;}
-	void setRotateCost(float cost){mRotateCost = cost;}
-	
-	void setShowGrid(bool show){mShowGrid = show;}
-	void setShowViewRange(bool show){mShowViewRange = show;}
-	bool getShowGrid(){return mShowGrid;}
-	bool getShowViewRange(){return mShowViewRange;}
-	
-	virtual bool onKeyDown(pyc::KeyCode keycode);
-	virtual bool onKeyUp(pyc::KeyCode keycode);
-	virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y);
-	virtual bool onMouseButtonUp(pyc::MouseButton button, int x, int y);
+    virtual void processObjects();
 
-	void setViewRange(float range);
-	void setViewAngle(float angle);
-	float getViewRange(){return mViewRange;}
-	float getViewAngle(){return mViewAngle;}
+    virtual void drawBeforeObjects();
 
-	static const char mClassName[];
-        static Orbit<SimSimple>::MethodType mMethods[];
-	static Orbit<SimSimple>::NumberGlobalType mNumberGlobals[];
+    void setGoCost(float cost){mGoCost = cost;}
+    void setRotateCost(float cost){mRotateCost = cost;}
+    
+    void setShowGrid(bool show){mShowGrid = show;}
+    void setShowViewRange(bool show){mShowViewRange = show;}
+    bool getShowGrid(){return mShowGrid;}
+    bool getShowViewRange(){return mShowViewRange;}
+    
+    virtual bool onKeyDown(pyc::KeyCode keycode);
+    virtual bool onKeyUp(pyc::KeyCode keycode);
+    virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y);
+    virtual bool onMouseButtonUp(pyc::MouseButton button, int x, int y);
 
-	int setViewRange(lua_State* luaState);
-	int setViewAngle(lua_State* luaState);
-	int setGoCost(lua_State* luaState);
-	int setRotateCost(lua_State* luaState);
+    void setViewRange(float range);
+    void setViewAngle(float angle);
+    float getViewRange(){return mViewRange;}
+    float getViewAngle(){return mViewAngle;}
+
+    static const char mClassName[];
+    static Orbit<SimSimple>::MethodType mMethods[];
+    static Orbit<SimSimple>::NumberGlobalType mNumberGlobals[];
+
+    int setViewRange(lua_State* luaState);
+    int setViewAngle(lua_State* luaState);
+    int setGoCost(lua_State* luaState);
+    int setRotateCost(lua_State* luaState);
 
 protected:
-	void perceive(Agent* agent);
-	void act(Agent* agent);
-	void scanCell(Agent* agent, int cellX, int cellY);
-	virtual void onScanObject(Agent* orig,
-					SimulationObject* targ,
-					bool contact,
-					float angle,
-					float distance);
-	void goFront(Agent* agent, float distance);
-	void rotate(Agent* agent, float angle);
-	void eat(Agent* agent);
+    void perceive(Agent* agent);
+    void act(Agent* agent);
+    void scanCell(Agent* agent, int cellX, int cellY);
+    virtual void onScanObject(Agent* orig,
+                                SimulationObject* targ,
+                                bool contact,
+                                float angle,
+                                float distance);
+    void goFront(Agent* agent, float distance);
+    void rotate(Agent* agent, float angle);
+    void eat(Agent* agent);
 
-	float mViewRange;
-	float mViewAngle;
-	float mHalfViewAngle;
-	float mLowLimitViewAngle;
-	float mHighLimitViewAngle;
+    float mViewRange;
+    float mViewAngle;
+    float mHalfViewAngle;
+    float mLowLimitViewAngle;
+    float mHighLimitViewAngle;
 
-	bool mShowGrid;
-	bool mShowViewRange;
+    bool mShowGrid;
+    bool mShowViewRange;
 
-	float mGoCost;
-	float mRotateCost;
+    float mGoCost;
+    float mRotateCost;
 
-	SimulationObject* mTargetObject;
-	float mDistanceToTargetObject;
+    SimulationObject* mTargetObject;
+    float mDistanceToTargetObject;
 };
 #endif
 

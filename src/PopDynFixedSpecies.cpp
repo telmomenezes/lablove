@@ -35,165 +35,165 @@ PopDynFixedSpecies::~PopDynFixedSpecies()
 
 unsigned int PopDynFixedSpecies::addSpecies(SimulationObject* org, long population)
 {
-	org->setSpeciesID(++CURRENT_SPECIES_ID);
+    org->setSpeciesID(++CURRENT_SPECIES_ID);
 
-	SpeciesData species;
-	species.mBaseOrganism = org;
-	species.mPopulation = population;
+    SpeciesData species;
+    species.mBaseOrganism = org;
+    species.mPopulation = population;
 
-	mSpecies.push_back(species);
+    mSpecies.push_back(species);
 
-	return mSpecies.size() - 1;
+    return mSpecies.size() - 1;
 }
 
 void PopDynFixedSpecies::addSpeciesStatistics(unsigned int speciesIndex, Statistics* stats)
 {
-	stats->init();
-	mSpecies[speciesIndex].mStatistics.push_back(stats);
+    stats->init();
+    mSpecies[speciesIndex].mStatistics.push_back(stats);
 }
 
 void PopDynFixedSpecies::init()
 {
-	for (std::vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
-		iterSpecies != mSpecies.end();
-		iterSpecies++)
-	{
-		(*iterSpecies).mBaseOrganism->initRandom();
+    for (vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
+        iterSpecies != mSpecies.end();
+        iterSpecies++)
+    {
+        (*iterSpecies).mBaseOrganism->initRandom();
 
-		for (unsigned int i = 0; i < (*iterSpecies).mPopulation; i++)
-		{
-			SimulationObject* org = (*iterSpecies).mBaseOrganism->clone();
-			org->initRandom();
-			org->setEnergy(org->getInitialEnergy());
-			org->placeRandom();
-			Lab::getSingleton().getSimulation()->addObject(org);
-			(*iterSpecies).mOrganismVector.push_back(org);
-		}
-	}
+        for (unsigned int i = 0; i < (*iterSpecies).mPopulation; i++)
+        {
+            SimulationObject* org = (*iterSpecies).mBaseOrganism->clone();
+            org->initRandom();
+            org->setEnergy(org->getInitialEnergy());
+            org->placeRandom();
+            Lab::getSingleton().getSimulation()->addObject(org);
+            (*iterSpecies).mOrganismVector.push_back(org);
+        }
+    }
 }
 
 void PopDynFixedSpecies::onCycle()
 {
-	PopulationDynamics::onCycle();
+    PopulationDynamics::onCycle();
 
-	if ((Lab::getSingleton().getSimulation()->time() % mStatisticsTimeInterval) == 0)
-	{
-		for (std::vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
-			iterSpecies != mSpecies.end();
-			iterSpecies++)
-		{
-			// Dump statistics
-			for (std::list<Statistics*>::iterator iterStats = (*iterSpecies).mStatistics.begin();
-				iterStats != (*iterSpecies).mStatistics.end();
-				iterStats++)
-			{
-				(*iterStats)->dump();
-			}
-		}
-	}
+    if ((Lab::getSingleton().getSimulation()->time() % mStatisticsTimeInterval) == 0)
+    {
+        for (vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
+            iterSpecies != mSpecies.end();
+            iterSpecies++)
+        {
+            // Dump statistics
+            for (list<Statistics*>::iterator iterStats = (*iterSpecies).mStatistics.begin();
+                iterStats != (*iterSpecies).mStatistics.end();
+                iterStats++)
+            {
+                (*iterStats)->dump();
+            }
+        }
+    }
 }
 
 void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
 {
-	PopulationDynamics::onOrganismDeath(org);
+    PopulationDynamics::onOrganismDeath(org);
 
-	unsigned int speciesPos = 0;
-	for (std::vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
-		iterSpecies != mSpecies.end();
-		iterSpecies++)
-	{
-		if (org->getSpeciesID() == (*iterSpecies).mBaseOrganism->getSpeciesID())
-		{
-			// Update statistics
-			for (std::list<Statistics*>::iterator iterStats = (*iterSpecies).mStatistics.begin();
-				iterStats != (*iterSpecies).mStatistics.end();
-				iterStats++)
-			{
-				(*iterStats)->process(org);
-			}
+    unsigned int speciesPos = 0;
+    for (vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
+        iterSpecies != mSpecies.end();
+        iterSpecies++)
+    {
+        if (org->getSpeciesID() == (*iterSpecies).mBaseOrganism->getSpeciesID())
+        {
+            // Update statistics
+            for (list<Statistics*>::iterator iterStats = (*iterSpecies).mStatistics.begin();
+                iterStats != (*iterSpecies).mStatistics.end();
+                iterStats++)
+            {
+                (*iterStats)->process(org);
+            }
 
-			std::vector<SimulationObject*>::iterator iterOrg;
+            vector<SimulationObject*>::iterator iterOrg;
 
-			int orgPos = -1;
-			int curPos = 0;
-			for (iterOrg = (*iterSpecies).mOrganismVector.begin();
-				(iterOrg != (*iterSpecies).mOrganismVector.end()) && orgPos < 0;
-				iterOrg++)
-			{
-				if ((*iterOrg) == org)
-				{
-					orgPos = curPos;
-				}
-				curPos++;
-			}
+            int orgPos = -1;
+            int curPos = 0;
+            for (iterOrg = (*iterSpecies).mOrganismVector.begin();
+                (iterOrg != (*iterSpecies).mOrganismVector.end()) && orgPos < 0;
+                iterOrg++)
+            {
+                if ((*iterOrg) == org)
+                {
+                    orgPos = curPos;
+                }
+                curPos++;
+            }
 
-			SimulationObject* newOrganism = NULL;
+            SimulationObject* newOrganism = NULL;
 
-			// Tournment selection of 2
-			SimulationObject* bestOrganism = NULL;
-			float bestFitness = 0.0f;
+            // Tournment selection of 2
+            SimulationObject* bestOrganism = NULL;
+            float bestFitness = 0.0f;
 
-			for (unsigned int tournmentStep = 0; tournmentStep < 2; tournmentStep++)
-			{
-				unsigned int organismNumber = randomUniformInt(0, (*iterSpecies).mPopulation - 1);
+            for (unsigned int tournmentStep = 0; tournmentStep < 2; tournmentStep++)
+            {
+                unsigned int organismNumber = randomUniformInt(0, (*iterSpecies).mPopulation - 1);
 
-				iterOrg = (*iterSpecies).mOrganismVector.begin();
-				for (unsigned int i = 0; i < organismNumber; i++)
-				{
-					iterOrg++;
-				}
+                iterOrg = (*iterSpecies).mOrganismVector.begin();
+                for (unsigned int i = 0; i < organismNumber; i++)
+                {
+                    iterOrg++;
+                }
 
-				if ((tournmentStep == 0) || ((*iterOrg)->getEnergy() > bestFitness))
-				{
-					bestOrganism = (*iterOrg);
-					bestFitness = bestOrganism->getEnergy();
-				}
-			}
+                if ((tournmentStep == 0) || ((*iterOrg)->getEnergy() > bestFitness))
+                {
+                    bestOrganism = (*iterOrg);
+                    bestFitness = bestOrganism->getEnergy();
+                }
+            }
 
-			// Clone best and add to simulation
-			newOrganism = bestOrganism->clone();
-			newOrganism->setEnergy(newOrganism->getInitialEnergy());
-			newOrganism->placeRandom();
-			Lab::getSingleton().getSimulation()->addObject(newOrganism);
+            // Clone best and add to simulation
+            newOrganism = bestOrganism->clone();
+            newOrganism->setEnergy(newOrganism->getInitialEnergy());
+            newOrganism->placeRandom();
+            Lab::getSingleton().getSimulation()->addObject(newOrganism);
 
-			// Mutate
-			newOrganism->mutate();
+            // Mutate
+            newOrganism->mutate();
 
-			// Remove
-			(*iterSpecies).mOrganismVector[orgPos] = newOrganism;
-			Lab::getSingleton().getSimulation()->removeObject(org);
+            // Remove
+            (*iterSpecies).mOrganismVector[orgPos] = newOrganism;
+            Lab::getSingleton().getSimulation()->removeObject(org);
 
-			return;
-		}
-	}
+            return;
+        }
+    }
 }
 
 const char PopDynFixedSpecies::mClassName[] = "PopDynFixedSpecies";
 
 Orbit<PopDynFixedSpecies>::MethodType PopDynFixedSpecies::mMethods[] = {
-	{"addStatistics", &PopulationDynamics::addStatistics},
-	{"addStatisticsTimeInterval", &PopulationDynamics::addStatistics},
-	{"addSpecies", &PopDynFixedSpecies::addSpecies},
-	{"addSpeciesStatistics", &PopDynFixedSpecies::addSpeciesStatistics},
-	{0,0}
+    {"addStatistics", &PopulationDynamics::addStatistics},
+    {"addStatisticsTimeInterval", &PopulationDynamics::addStatistics},
+    {"addSpecies", &PopDynFixedSpecies::addSpecies},
+    {"addSpeciesStatistics", &PopDynFixedSpecies::addSpeciesStatistics},
+    {0,0}
 };
 
 Orbit<PopDynFixedSpecies>::NumberGlobalType PopDynFixedSpecies::mNumberGlobals[] = {{0,0}};
 
 int PopDynFixedSpecies::addSpecies(lua_State* luaState)
 {
-        SimulationObject* obj = (SimulationObject*)Orbit<PopDynFixedSpecies>::pointer(luaState, 1);
-        int population = luaL_checkint(luaState, 2);
-        unsigned int index = addSpecies(obj, population);
-	lua_pushinteger(luaState, index);
-        return 1;
+    SimulationObject* obj = (SimulationObject*)Orbit<PopDynFixedSpecies>::pointer(luaState, 1);
+    int population = luaL_checkint(luaState, 2);
+    unsigned int index = addSpecies(obj, population);
+    lua_pushinteger(luaState, index);
+    return 1;
 }
 
 int PopDynFixedSpecies::addSpeciesStatistics(lua_State* luaState)
 {
-        unsigned int speciesIndex = luaL_checkint(luaState, 1);
-        Statistics* stats = (Statistics*)Orbit<PopDynFixedSpecies>::pointer(luaState, 2);
-        addSpeciesStatistics(speciesIndex, stats);
-        return 0;
+    unsigned int speciesIndex = luaL_checkint(luaState, 1);
+    Statistics* stats = (Statistics*)Orbit<PopDynFixedSpecies>::pointer(luaState, 2);
+    addSpeciesStatistics(speciesIndex, stats);
+    return 0;
 }
 

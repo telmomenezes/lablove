@@ -26,182 +26,182 @@
 
 Simulation::Simulation()
 {
-	mSimulationTime = 0;
-	mSelectedObject = NULL;
-	mPopulationDynamics = NULL;
-	mCellGrid = NULL;
+    mSimulationTime = 0;
+    mSelectedObject = NULL;
+    mPopulationDynamics = NULL;
+    mCellGrid = NULL;
 }
 
 Simulation::~Simulation()
 {
-	std::list<SimulationObject*>::iterator iterObj;
-	for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
-	{
-		delete *iterObj;
-	}
-        mObjects.clear();
+    list<SimulationObject*>::iterator iterObj;
+    for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
+    {
+        delete *iterObj;
+    }
+    mObjects.clear();
 
-	if (mCellGrid != NULL)
-	{
-		free(mCellGrid);
-		mCellGrid = NULL;
-	}
+    if (mCellGrid != NULL)
+    {
+        free(mCellGrid);
+        mCellGrid = NULL;
+    }
 }
 
 void Simulation::init()
 {
-	mPopulationDynamics->init();
+    mPopulationDynamics->init();
 
-	mLogo = Lab::getSingleton().getWindow()->createPNGLayer("lablove.png");
+    mLogo = Lab::getSingleton().getWindow()->createPNGLayer("lablove.png");
 }
 
 void Simulation::setWorldDimensions(float worldWidth,
-			float worldLength,
-			float cellSide)
+                                    float worldLength,
+                                    float cellSide)
 {
-	mWorldWidth = worldWidth;
-	mWorldLength = worldLength;
-	mCellSide = cellSide;
-	mWorldCellWidth = (unsigned int)(ceilf(mWorldWidth / mCellSide));
-	mWorldCellLength = (unsigned int)(ceilf(mWorldLength / mCellSide));
+    mWorldWidth = worldWidth;
+    mWorldLength = worldLength;
+    mCellSide = cellSide;
+    mWorldCellWidth = (unsigned int)(ceilf(mWorldWidth / mCellSide));
+    mWorldCellLength = (unsigned int)(ceilf(mWorldLength / mCellSide));
 
-	unsigned int gridSize = mWorldCellWidth * mWorldCellLength;
-	mCellGrid = (SimulationObject**)malloc(sizeof(SimulationObject*) * gridSize);
+    unsigned int gridSize = mWorldCellWidth * mWorldCellLength;
+    mCellGrid = (SimulationObject**)malloc(sizeof(SimulationObject*) * gridSize);
 
-	for (unsigned int i = 0; i < gridSize; i++)
-	{
-		mCellGrid[i] = NULL;
-	}
+    for (unsigned int i = 0; i < gridSize; i++)
+    {
+        mCellGrid[i] = NULL;
+    }
 
-	
+    
 }
 
 void Simulation::addObject(SimulationObject* object)
 {
-	mObjects.push_back(object);
+    mObjects.push_back(object);
 }
 
 void Simulation::removeObject(SimulationObject* object)
 {
-	SimulationObject* obj = (SimulationObject*)object;
+    SimulationObject* obj = (SimulationObject*)object;
 
-	if (obj->mNextCellList != NULL)
-	{
-		obj->mNextCellList->mPrevCellList = obj->mPrevCellList;
-	}
+    if (obj->mNextCellList != NULL)
+    {
+        obj->mNextCellList->mPrevCellList = obj->mPrevCellList;
+    }
 
-	if (obj->mPrevCellList == NULL)
-	{
-		int cellPos = obj->getCellPos();
+    if (obj->mPrevCellList == NULL)
+    {
+        int cellPos = obj->getCellPos();
 
-		if(cellPos >= 0)
-		{
-			mCellGrid[cellPos] = obj->mNextCellList;
-		}
-	}
-	else
-	{
-		obj->mPrevCellList->mNextCellList = obj->mNextCellList;
-	}
+        if(cellPos >= 0)
+        {
+            mCellGrid[cellPos] = obj->mNextCellList;
+        }
+    }
+    else
+    {
+        obj->mPrevCellList->mNextCellList = obj->mNextCellList;
+    }
 
-	if (object->isSelected())
-	{
-		mSelectedObject = NULL;
-	}
+    if (object->isSelected())
+    {
+        mSelectedObject = NULL;
+    }
 
-	bool stop = false;
-	std::list<SimulationObject*>::iterator iterObj;
-	for (iterObj = mObjects.begin(); (iterObj != mObjects.end()) && !stop; ++iterObj)
-	{
-		if((*iterObj) == object)
-		{
-			mObjects.erase(iterObj);
-			delete object;
-			return;
-		}
-	}
+    bool stop = false;
+    list<SimulationObject*>::iterator iterObj;
+    for (iterObj = mObjects.begin(); (iterObj != mObjects.end()) && !stop; ++iterObj)
+    {
+        if((*iterObj) == object)
+        {
+            mObjects.erase(iterObj);
+            delete object;
+            return;
+        }
+    }
 }
 
 SimulationObject* Simulation::getObjectByScreenPos(int x, int y)
 {
-	return NULL;
+    return NULL;
 }
 
 void Simulation::moveView(float x, float y)
 {
-	mViewX += x;
-	mViewY += y;
+    mViewX += x;
+    mViewY += y;
 }
 
 void Simulation::cycle()
 {
-	std::list<SimulationObject*>::iterator iterObj;
+    list<SimulationObject*>::iterator iterObj;
 
-	for (iterObj = mObjectsToKill.begin();
-		iterObj != mObjectsToKill.end();
-		iterObj++)
-	{
-		mPopulationDynamics->onOrganismDeath(*iterObj);
-	}
-	mObjectsToKill.clear();
+    for (iterObj = mObjectsToKill.begin();
+        iterObj != mObjectsToKill.end();
+        iterObj++)
+    {
+        mPopulationDynamics->onOrganismDeath(*iterObj);
+    }
+    mObjectsToKill.clear();
 
-	processObjects();
+    processObjects();
 
-	mPopulationDynamics->onCycle();
+    mPopulationDynamics->onCycle();
 
-	drawBeforeObjects();
-	for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
-	{
-		SimulationObject* obj = *iterObj;
-		obj->draw(mViewX, mViewY);
-	}
+    drawBeforeObjects();
+    for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
+    {
+        SimulationObject* obj = *iterObj;
+        obj->draw(mViewX, mViewY);
+    }
 
-	Lab::getSingleton().getRootLayer()->setColor(255, 255, 255, 200);
-	Lab::getSingleton().getRootLayer()->drawLayer(mLogo, 10, 10);
+    Lab::getSingleton().getRootLayer()->setColor(255, 255, 255, 200);
+    Lab::getSingleton().getRootLayer()->drawLayer(mLogo, 10, 10);
 
-	Lab::getSingleton().getWindow()->update();
+    Lab::getSingleton().getWindow()->update();
 
-	mSimulationTime++;
+    mSimulationTime++;
 }
 
 void Simulation::setSelectedObject(SimulationObject* object)
 {
-	if (mSelectedObject != NULL)
-	{
-		mSelectedObject->setSelected(false);
-	}
-	mSelectedObject = object;
-	if (mSelectedObject != NULL)
-	{
-		mSelectedObject->setSelected(true);
-	}
+    if (mSelectedObject != NULL)
+    {
+        mSelectedObject->setSelected(false);
+    }
+    mSelectedObject = object;
+    if (mSelectedObject != NULL)
+    {
+        mSelectedObject->setSelected(true);
+    }
 }
 
 void Simulation::killOrganism(SimulationObject* org)
 {
-	if (org->mDeleted)
-	{
-		return;
-	}
+    if (org->mDeleted)
+    {
+        return;
+    }
 
-	org->mDeleted = true;
+    org->mDeleted = true;
 
-	mObjectsToKill.push_back(org);
+    mObjectsToKill.push_back(org);
 }
 
 int Simulation::setPopulationDynamics(lua_State *luaState)
 {
-        PopulationDynamics* popDyn = (PopulationDynamics*)Orbit<Lab>::pointer(luaState, 1);
-        setPopulationDynamics(popDyn);
-        return 0;
+    PopulationDynamics* popDyn = (PopulationDynamics*)Orbit<Lab>::pointer(luaState, 1);
+    setPopulationDynamics(popDyn);
+    return 0;
 }
 
 int Simulation::setWorldDimensions(lua_State* luaState)
 {
-        int width = luaL_checkint(luaState, 1);
-        int height = luaL_checkint(luaState, 2);
-        int cellSide = luaL_checkint(luaState, 3);
-        setWorldDimensions(width, height, cellSide);
-        return 0;
+    int width = luaL_checkint(luaState, 1);
+    int height = luaL_checkint(luaState, 2);
+    int cellSide = luaL_checkint(luaState, 3);
+    setWorldDimensions(width, height, cellSide);
+    return 0;
 }
 

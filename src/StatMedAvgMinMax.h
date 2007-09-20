@@ -21,27 +21,30 @@
 #define __INCLUDE_STATMEDAVGMINMAX_H
 
 #include "Statistics.h"
-#include <list>
 
 #include "Orbit.h"
+
+#include <list>
+
+using std::list;
 
 class StatMedAvgMinMax : public Statistics
 {
 public:
-        StatMedAvgMinMax(lua_State* luaState=NULL);
-	virtual ~StatMedAvgMinMax();
+    StatMedAvgMinMax(lua_State* luaState=NULL);
+    virtual ~StatMedAvgMinMax();
 
-	virtual void init();
+    virtual void init();
 
-	virtual void process(SimulationObject* obj);
-	virtual void dump();
+    virtual void process(SimulationObject* obj);
+    virtual void dump();
 
-	static const char mClassName[];
+    static const char mClassName[];
         static Orbit<StatMedAvgMinMax>::MethodType mMethods[];
-	static Orbit<StatMedAvgMinMax>::NumberGlobalType mNumberGlobals[];
+    static Orbit<StatMedAvgMinMax>::NumberGlobalType mNumberGlobals[];
 
 protected:
-	std::list<std::list<float> > mValueLists;
+    list<list<float> > mValueLists;
 };
 #endif
 

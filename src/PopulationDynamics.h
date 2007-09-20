@@ -24,25 +24,29 @@
 #include "Statistics.h"
 #include "Orbit.h"
 
+#include <list>
+
+using std::list;
+
 class PopulationDynamics
 {
 public:
-	PopulationDynamics();
-	virtual ~PopulationDynamics();
+    PopulationDynamics();
+    virtual ~PopulationDynamics();
 
-	virtual void init()=0;
-	virtual void onCycle();
-	virtual void onOrganismDeath(SimulationObject* org);
-	void addStatistics(Statistics* stats);
+    virtual void init()=0;
+    virtual void onCycle();
+    virtual void onOrganismDeath(SimulationObject* org);
+    void addStatistics(Statistics* stats);
 
-	void setStatisticsTimeInterval(unsigned long interval){mStatisticsTimeInterval = interval;}
+    void setStatisticsTimeInterval(unsigned long interval){mStatisticsTimeInterval = interval;}
 
-        int addStatistics(lua_State* luaState);
-	int setStatisticsTimeInterval(lua_State* luaState);
+    int addStatistics(lua_State* luaState);
+    int setStatisticsTimeInterval(lua_State* luaState);
 
 protected:
-	std::list<Statistics*> mStatistics;
-	unsigned long mStatisticsTimeInterval;
+    list<Statistics*> mStatistics;
+    unsigned long mStatisticsTimeInterval;
 };
 #endif
 

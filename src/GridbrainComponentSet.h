@@ -21,34 +21,36 @@
 #define __INCLUDE_GRIDBRAIN_COMPONENT_SET_H
 
 #include "GridbrainComponent.h"
+#include "Orbit.h"
+
 #include <vector>
 
-#include "Orbit.h"
+using std::vector;
 
 class GridbrainComponentSet
 {
 public:
-        GridbrainComponentSet(lua_State* luaState=NULL);
-	virtual ~GridbrainComponentSet();
+    GridbrainComponentSet(lua_State* luaState=NULL);
+    virtual ~GridbrainComponentSet();
 
-	void addComponent(GridbrainComponent* component);
-	void addComponent(GridbrainComponent::Type type,
-				int subType=-1,
-				float parameter=0.0f,
-				int origSymTable=-1,
-				int origSymIndex=-1,
-				int targetSymTable=-1,
-				int targetSymIndex=-1);
-	GridbrainComponent* getRandom();
+    void addComponent(GridbrainComponent* component);
+    void addComponent(GridbrainComponent::Type type,
+                int subType=-1,
+                float parameter=0.0f,
+                int origSymTable=-1,
+                int origSymIndex=-1,
+                int targetSymTable=-1,
+                int targetSymIndex=-1);
+    GridbrainComponent* getRandom();
 
-	static const char mClassName[];
-        static Orbit<GridbrainComponentSet>::MethodType mMethods[];
-	static Orbit<GridbrainComponentSet>::NumberGlobalType mNumberGlobals[];
+    static const char mClassName[];
+    static Orbit<GridbrainComponentSet>::MethodType mMethods[];
+    static Orbit<GridbrainComponentSet>::NumberGlobalType mNumberGlobals[];
 
-        int addComponent(lua_State* luaState);
+    int addComponent(lua_State* luaState);
 
-	std::vector<GridbrainComponent*> mComponentVec;
-	unsigned int mSize;
+    vector<GridbrainComponent*> mComponentVec;
+    unsigned int mSize;
 };
 #endif
 

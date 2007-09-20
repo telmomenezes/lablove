@@ -27,16 +27,16 @@
 class Plant : public SimulationObject
 {
 public:
-        Plant(lua_State* luaState=NULL);
-	Plant(Plant* plant) : SimulationObject(plant){}
-	virtual ~Plant();
-	virtual SimulationObject* clone(bool full=true);
+    Plant(lua_State* luaState=NULL);
+    Plant(Plant* plant) : SimulationObject(plant){}
+    virtual ~Plant();
+    virtual SimulationObject* clone(bool full=true);
 
-	virtual bool isFood(){return true;}
+    virtual bool isFood(){return true;}
 
-	static const char mClassName[];
-        static Orbit<Plant>::MethodType mMethods[];
-	static Orbit<Plant>::NumberGlobalType mNumberGlobals[];
+    static const char mClassName[];
+    static Orbit<Plant>::MethodType mMethods[];
+    static Orbit<Plant>::NumberGlobalType mNumberGlobals[];
 };
 #endif
 
