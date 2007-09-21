@@ -83,7 +83,11 @@ Brain* Gridbrain::clone()
 
     for (unsigned int index = 0; index < mNumberOfComponents; index++)
     {
-        gb->mComponents[index].copy(&mComponents[index]);
+        gb->mComponents[index].clearDefinitions();
+        gb->mComponents[index].clearPosition();
+        gb->mComponents[index].clearConnections();
+        gb->mComponents[index].copyDefinitions(&mComponents[index]);
+        gb->mComponents[index].copyPosition(&mComponents[index]);
     }
 
     for (unsigned int index = 0; index < mNumberOfComponents; index++)
@@ -131,7 +135,7 @@ void Gridbrain::init()
 
     calcConnectionCounts();
     
-        mComponents = (GridbrainComponent*)malloc(mNumberOfComponents * sizeof(GridbrainComponent));
+    mComponents = (GridbrainComponent*)malloc(mNumberOfComponents * sizeof(GridbrainComponent));
 
     // Init grids with random components
 
@@ -150,7 +154,7 @@ void Gridbrain::init()
                 y++)
             {
                 GridbrainComponent* comp = grid->getRandomComponent(pos);
-                mComponents[pos].copy(comp);
+                mComponents[pos].copyDefinitions(comp);
 
                 mComponents[pos].mOffset = pos;
                 mComponents[pos].mColumn = grid->getColumnCode(x);
@@ -260,7 +264,6 @@ void Gridbrain::setComponent(unsigned int x,
 
     unsigned int pos = (x * grid->getHeight()) + y + grid->getOffset();
 
-    mComponents[pos].clear();
     mComponents[pos].mType = type;
     mComponents[pos].mParameter = parameter;
     mComponents[pos].mColumn = grid->getColumnCode(x);
@@ -750,7 +753,7 @@ void Gridbrain::mutate()
         mutateChangeConnectionWeight();
         break;
     case 3:
-        //mutateChangeComponent();
+        mutateChangeComponent();
         break;
     deafult:
         // ASSERT ERROR?
@@ -846,7 +849,7 @@ void Gridbrain::mutateChangeComponent()
     Grid* grid = mGridsVec[gridNumber];
 
     GridbrainComponent* comp = grid->getRandomComponent(pos);
-    mComponents[pos].copy(comp, false);
+    mComponents[pos].copyDefinitions(comp);
 
     initGridInputOutput(grid, gridNumber);
 }

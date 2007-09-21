@@ -278,11 +278,11 @@ Orbit<Grid>::NumberGlobalType Grid::mNumberGlobals[] = {
 
 int Grid::addComponentSet(lua_State* luaState)
 {
-        GridbrainComponentSet* set = (GridbrainComponentSet*)Orbit<Grid>::pointer(luaState, 1);
-        int startColumn = luaL_optint(luaState, 2, -1);
-        int endColumn = luaL_optint(luaState, 3, -1);
-        addComponentSet(set, startColumn, endColumn);
-        return 0;
+    GridbrainComponentSet* set = (GridbrainComponentSet*)Orbit<Grid>::pointer(luaState, 1);
+    int startColumn = luaL_optint(luaState, 2, -1);
+    int endColumn = luaL_optint(luaState, 3, -1);
+    addComponentSet(set, startColumn, endColumn);
+    return 0;
 }
 
 int Grid::init(lua_State* luaState)

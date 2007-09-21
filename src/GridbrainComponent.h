@@ -33,8 +33,11 @@ public:
     GridbrainComponent(lua_State* luaState=NULL);
     virtual ~GridbrainComponent();
 
-    void clear(bool clearConnections=true);
-    void copy(GridbrainComponent* comp, bool clearConnections=true);
+    void clearDefinitions();
+    void clearPosition();
+    void clearConnections();
+    void copyDefinitions(GridbrainComponent* comp);
+    void copyPosition(GridbrainComponent* comp);
 
     bool isAggregator();
 

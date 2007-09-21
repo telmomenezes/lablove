@@ -21,14 +21,16 @@
 
 GridbrainComponent::GridbrainComponent(lua_State* luaState)
 {
-    clear();
+    clearDefinitions();
+    clearPosition();
+    clearConnections();
 }
 
 GridbrainComponent::~GridbrainComponent()
 {
 }
 
-void GridbrainComponent::clear(bool clearConnections)
+void GridbrainComponent::clearDefinitions()
 {
     mType = NUL;
     mSubType = -1;
@@ -42,42 +44,48 @@ void GridbrainComponent::clear(bool clearConnections)
     mActionPosition = 0;
 
     mParameter = 0.0f;
-    mOffset = 0;
     mAggregator = false;
-    mColumn = 0;
-    mRow = 0;
-    mGrid = 0;
 
     mOrigSymTable = -1;
     mOrigSymIndex = -1;
     mTargetSymTable = -1;
     mTargetSymIndex = -1;
-
-    if (clearConnections)
-    {
-        mConnectionsCount = 0;
-        mFirstConnection = NULL;
-    }
 }
 
-void GridbrainComponent::copy(GridbrainComponent* comp, bool clearConnections)
+void GridbrainComponent::clearPosition()
 {
-    clear(clearConnections);
+    mOffset = 0;
+    mColumn = 0;
+    mRow = 0;
+    mGrid = 0;
+}
 
+void GridbrainComponent::clearConnections()
+{
+    mConnectionsCount = 0;
+    mFirstConnection = NULL;
+}
+
+void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)
+{
     mType = comp->mType;
     mSubType = comp->mSubType;
     mParameter = comp->mParameter;
-    mOffset = comp->mOffset;
     mAggregator = comp->mAggregator;
-    mColumn = comp->mColumn;
-    mRow = comp->mRow;
-    mGrid = comp->mGrid;
 
     mOrigSymTable = comp->mOrigSymTable;
     mOrigSymIndex = comp->mOrigSymIndex;
     mTargetSymTable = comp->mTargetSymTable;
     mTargetSymIndex = comp->mTargetSymIndex;
 
+}
+
+void GridbrainComponent::copyPosition(GridbrainComponent* comp)
+{
+    mOffset = comp->mOffset;
+    mColumn = comp->mColumn;
+    mRow = comp->mRow;
+    mGrid = comp->mGrid;
 }
 
 bool GridbrainComponent::isAggregator()
