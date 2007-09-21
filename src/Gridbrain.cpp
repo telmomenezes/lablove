@@ -127,12 +127,12 @@ void Gridbrain::addGrid(Grid* grid)
     }
 
     mGridsVec.push_back(grid);
+
+    mGridsCount++;
 }
 
 void Gridbrain::init()
 {
-    mGridsCount = mGridsVec.size();
-
     calcConnectionCounts();
     
     mComponents = (GridbrainComponent*)malloc(mNumberOfComponents * sizeof(GridbrainComponent));
@@ -856,6 +856,11 @@ void Gridbrain::mutateChangeComponent()
 
 Grid* Gridbrain::getGrid(unsigned int number)
 {
+    if (mGridsCount <= number)
+    {
+        return NULL;
+    }
+
     return mGridsVec[number];
 }
 

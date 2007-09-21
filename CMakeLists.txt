@@ -87,6 +87,7 @@ SET(UNIT_TEST_FILES
         ${UNIT_TEST_FILES}
         src/tests/Main.cpp
         src/tests/TestGrid.cpp
+        src/tests/TestGridbrain.cpp
         src/tests/TestGridbrainComponentSet.cpp)
 
 INCLUDE_DIRECTORIES("src")
