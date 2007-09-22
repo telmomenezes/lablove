@@ -19,6 +19,8 @@
 
 #include "GridbrainComponent.h"
 
+GridbrainComponent GridbrainComponent::mNullComponent;
+
 GridbrainComponent::GridbrainComponent(lua_State* luaState)
 {
     clearDefinitions();

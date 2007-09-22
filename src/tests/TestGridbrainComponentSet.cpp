@@ -20,6 +20,13 @@
 #include "UnitTest++.h"
 #include "GridbrainComponentSet.h"
 
+TEST(GridbrainComponentSetGetRandomFromEmpty)
+{
+    GridbrainComponentSet set;
+    GridbrainComponent* comp = set.getRandom();
+    CHECK_EQUAL(comp->mType, GridbrainComponent::NUL);
+}
+
 struct GridbrainComponentSetFixture
 {
     GridbrainComponentSetFixture()

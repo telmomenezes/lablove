@@ -155,7 +155,16 @@ void Grid::addComponentSet(GridbrainComponentSet* componentSet,
 GridbrainComponent* Grid::getRandomComponent(unsigned int pos)
 {
     unsigned int column = getXByOffset(pos);
-    return mComponentSetByColumn[column]->getRandom();
+    GridbrainComponentSet* set = mComponentSetByColumn[column];
+
+    if (set)
+    {
+        return mComponentSetByColumn[column]->getRandom();
+    }
+    else
+    {
+        return GridbrainComponent::getNullComponent();
+    }
 }
 
 void Grid::setInput(unsigned int number, unsigned int depth, float value)

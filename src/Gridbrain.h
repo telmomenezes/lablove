@@ -44,11 +44,9 @@ public:
     virtual float* getInputBuffer(unsigned int channel);
     virtual float* getOutputBuffer();
 
-    void setComponent(unsigned int x,
+    GridbrainComponent* getComponent(unsigned int x,
                 unsigned int y,
-                unsigned int gridNumber,
-                GridbrainComponent::Type type,
-                float parameter);
+                unsigned int gridNumber);
     void addConnection(unsigned int xOrig,
                 unsigned int yOrig,
                 unsigned int gOrig,

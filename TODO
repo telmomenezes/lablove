@@ -2,7 +2,6 @@
 # Todo list for the LOVE Simulation
 # 
 
-- Create fast perception/action API
 - Spacial hashed collision detection
 - Make human control work again
 - OO mutation system

@@ -99,11 +99,18 @@ int main(int argc, char *argv[])
     if (error)
     {
         printf("%s\n", lua_tostring (luaState, -1));
-        lua_pop (luaState, 1);
+        lua_pop(luaState, 1);
         return -1;
     }
 
-    Lab::getSingleton().run();
+    try
+    {
+        Lab::getSingleton().run();
+    }
+    catch (string error)
+    {
+        printf("%s\n", error.c_str());
+    }
 
     lua_close(luaState);
 

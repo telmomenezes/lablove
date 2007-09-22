@@ -153,6 +153,7 @@ void Gridbrain::init()
                 y < grid->getHeight();
                 y++)
             {
+                mComponents[pos].clearConnections();
                 GridbrainComponent* comp = grid->getRandomComponent(pos);
                 mComponents[pos].copyDefinitions(comp);
 
@@ -254,21 +255,31 @@ void Gridbrain::initGridInputOutput(Grid* grid, int gPos)
     }
 }
 
-void Gridbrain::setComponent(unsigned int x,
+GridbrainComponent* Gridbrain::getComponent(unsigned int x,
                 unsigned int y,
-                unsigned int gridNumber,
-                GridbrainComponent::Type type,
-                float parameter)
+                unsigned int gridNumber)
 {
+    if (gridNumber >= mGridsCount)
+    {
+        string error = "Trying to get component from inexistent grid";
+        throw error;
+    }
+
     Grid* grid = mGridsVec[gridNumber];
 
-    unsigned int pos = (x * grid->getHeight()) + y + grid->getOffset();
+    if (x >= grid->getWidth())
+    {
+        string error = "Trying to get component from invalid grid position";
+        throw error;
+    }
+    if (y >= grid->getHeight())
+    {
+        string error = "Trying to get component from invalid grid position";
+        throw error;
+    }
 
-    mComponents[pos].mType = type;
-    mComponents[pos].mParameter = parameter;
-    mComponents[pos].mColumn = grid->getColumnCode(x);
-    mComponents[pos].mRow = grid->getRowCode(y);
-    mComponents[pos].mAggregator = mComponents[pos].isAggregator();
+    unsigned int pos = (x * grid->getHeight()) + y + grid->getOffset();
+    return &(mComponents[pos]);
 }
 
 void Gridbrain::addConnection(unsigned int xOrig,

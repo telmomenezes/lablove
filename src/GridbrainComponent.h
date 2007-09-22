@@ -33,6 +33,8 @@ public:
     GridbrainComponent(lua_State* luaState=NULL);
     virtual ~GridbrainComponent();
 
+    static GridbrainComponent* getNullComponent(){return &mNullComponent;}
+
     void clearDefinitions();
     void clearPosition();
     void clearConnections();
@@ -48,6 +50,7 @@ public:
     static Orbit<GridbrainComponent>::MethodType mMethods[];
     static Orbit<GridbrainComponent>::NumberGlobalType mNumberGlobals[];
 
+    static GridbrainComponent mNullComponent;
 
     Type mType;
     int mSubType;
