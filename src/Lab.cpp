@@ -80,7 +80,7 @@ void Lab::run()
 
     mWindow = mPycasso.createWindow(800, 600);
     mEventQ = mPycasso.createEventQ();
-    mRootLayer = mWindow->getRootLayer();
+    mRootLayer = mWindow->getRootLayer2D();
 
     mWindow->setTitle("LabLOVE");
 

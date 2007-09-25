@@ -55,7 +55,7 @@ public:
 
     pyc::Pycasso* getPycass(){return &mPycasso;}
     pyc::Window* getWindow(){return mWindow;}
-    pyc::Layer* getRootLayer(){return mRootLayer;}
+    pyc::Layer2D* getRootLayer(){return mRootLayer;}
 
     static const char mClassName[];
     static Orbit<Lab>::MethodType mMethods[];
@@ -75,7 +75,7 @@ private:
     pyc::Pycasso mPycasso;
     pyc::EventQ* mEventQ;
     pyc::Window* mWindow;
-    pyc::Layer* mRootLayer;
+    pyc::Layer2D* mRootLayer;
 
     list<InputHandler*> mHandlers;
 

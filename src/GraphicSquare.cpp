@@ -51,8 +51,10 @@ void GraphicSquare::draw(float x, float y)
 	float centerX = simObj->mX + x;
 	float centerY = simObj->mY + y;
 
+	Lab::getSingleton().getRootLayer()->setRotation(centerX, centerY, rot);
 	Lab::getSingleton().getRootLayer()->setColor(mRed, mGreen, mBlue);
-	Lab::getSingleton().getRootLayer()->fillSquare(centerX, centerY, mSize, rot);
+	Lab::getSingleton().getRootLayer()->fillSquare(centerX, centerY, mSize);
+	Lab::getSingleton().getRootLayer()->clearRotation();
 }
 
 const char GraphicSquare::mClassName[] = "GraphicSquare";
