@@ -18,7 +18,7 @@
  */
 
 #include "Lab.h"
-#include "SimSimple.h"
+#include "SimCont2D.h"
 #include "Plant.h"
 #include "Agent.h"
 #include "PopDynGenerations.h"
@@ -47,6 +47,8 @@ extern "C"
 #include "lualib.h"
 }
 
+#include <stdexcept>
+
 int getLab(lua_State* luaState)
 {
     Lab* obj = &Lab::getSingleton();
@@ -70,7 +72,7 @@ int main(int argc, char *argv[])
     luaopen_debug(luaState);
     
     Orbit<Lab>::orbitRegister(luaState);
-    Orbit<SimSimple>::orbitRegister(luaState);
+    Orbit<SimCont2D>::orbitRegister(luaState);
     Orbit<Plant>::orbitRegister(luaState);
     Orbit<Agent>::orbitRegister(luaState);
     Orbit<PopDynGenerations>::orbitRegister(luaState);
@@ -107,9 +109,11 @@ int main(int argc, char *argv[])
     {
         Lab::getSingleton().run();
     }
-    catch (string error)
+    catch (std::runtime_error error)
     {
-        printf("%s\n", error.c_str());
+        printf("%s\n", error.what());
+        lua_close(luaState);
+        return -1;
     }
 
     lua_close(luaState);

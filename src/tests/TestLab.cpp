@@ -17,36 +17,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_GRAPHIC_SQUARE_H)
-#define __INCLUDE_GRAPHIC_SQUARE_H
+#include "UnitTest++.h"
+#include "Lab.h"
 
-#include "Graphic.h"
-#include "Orbit.h"
+#include <stdexcept>
 
-#include "pyc.h"
-
-class GraphicSquare : public Graphic
+TEST(LabSingleton)
 {
-public:
-    GraphicSquare(lua_State* luaState=NULL);
-    virtual ~GraphicSquare();
-    
-    virtual Graphic* createSameType();
+    CHECK(Lab::getSingleton().getSimulation() == NULL);
+}
 
-    virtual void init(void* obj);
-    virtual void draw();
+TEST(LabThrowsExceptionIfRunWithoutSetSimulation)
+{
+    CHECK_THROW(Lab::getSingleton().run(), std::runtime_error);
+}
 
-    static const char mClassName[];
-    static Orbit<GraphicSquare>::MethodType mMethods[];
-    static Orbit<GraphicSquare>::NumberGlobalType mNumberGlobals[];
-
-protected:
-    float mSize;
-    int mRed;
-    int mGreen;
-    int mBlue;
-
-    pyc::Layer2D* mRootLayer2D;
-};
-#endif
+TEST(LabRealTime)
+{
+    double t1 = Lab::getSingleton().getRealTime();
+    CHECK(t1 > 0.0f);
+    double t2 = Lab::getSingleton().getRealTime();
+    CHECK(t2 > 0.0f);
+    CHECK(t2 > t1);
+}
 

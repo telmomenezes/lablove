@@ -19,7 +19,6 @@
 
 #include "Agent.h"
 #include "Lab.h"
-#include "SimSimple.h"
 #include "math.h"
 #include "functions.h"
 #include "defines.h"

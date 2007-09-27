@@ -23,6 +23,13 @@
 
 GraphicSquare::GraphicSquare(lua_State* luaState)
 {
+    mObject = NULL;
+	mSize = 0;
+	mRed = 0;
+	mGreen = 0;
+	mBlue = 0;
+
+    mRootLayer2D = NULL;
 }
 
 GraphicSquare::~GraphicSquare()
@@ -42,19 +49,21 @@ void GraphicSquare::init(void* obj)
 	mRed = simObj->getColor()->mRed;
 	mGreen = simObj->getColor()->mGreen;
 	mBlue = simObj->getColor()->mBlue;
+
+    mRootLayer2D = Lab::getSingleton().getRootLayer2D();
 }
 
-void GraphicSquare::draw(float x, float y)
+void GraphicSquare::draw()
 {
 	SimulationObject* simObj = (SimulationObject*)mObject;
 	float rot = simObj->mRot;
-	float centerX = simObj->mX + x;
-	float centerY = simObj->mY + y;
+	float centerX = simObj->mX;
+	float centerY = simObj->mY;
 
-	Lab::getSingleton().getRootLayer()->setRotation(centerX, centerY, rot);
-	Lab::getSingleton().getRootLayer()->setColor(mRed, mGreen, mBlue);
-	Lab::getSingleton().getRootLayer()->fillSquare(centerX, centerY, mSize);
-	Lab::getSingleton().getRootLayer()->clearRotation();
+	mRootLayer2D->setRotation(centerX, centerY, rot);
+	mRootLayer2D->setColor(mRed, mGreen, mBlue);
+	mRootLayer2D->fillSquare(centerX, centerY, mSize);
+	mRootLayer2D->clearRotation();
 }
 
 const char GraphicSquare::mClassName[] = "GraphicSquare";

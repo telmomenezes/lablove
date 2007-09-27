@@ -169,14 +169,6 @@ void SimulationObject::setPos(float x, float y)
 {
     Simulation* sim = Lab::getSingleton().getSimulation();
 
-    if ((x < 0)
-        || (y < 0)
-        || (x >= sim->getWorldWidth())
-        || (y >= sim->getWorldLength()))
-    {
-        return;
-    }
-
     unsigned int cellSide = (unsigned int)(sim->getCellSide());
     unsigned int targetCellX = ((unsigned int)x) / cellSide;
     unsigned int targetCellY = ((unsigned int)y) / cellSide;
@@ -275,11 +267,11 @@ void SimulationObject::onCycle()
     }
 }
 
-void SimulationObject::draw(float x, float y)
+void SimulationObject::draw()
 {
     if (mGraphic != NULL)
     {
-        mGraphic->draw(x, y);
+        mGraphic->draw();
     }
 }
 

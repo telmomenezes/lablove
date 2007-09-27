@@ -23,6 +23,8 @@
 #include "Graphic.h"
 #include "Orbit.h"
 
+#include "pyc.h"
+
 class GraphicTriangle : public Graphic
 {
 public:
@@ -32,7 +34,7 @@ public:
     virtual Graphic* createSameType();
 
     virtual void init(void* obj);
-    virtual void draw(float x, float y);
+    virtual void draw();
 
     static const char mClassName[];
     static Orbit<GraphicTriangle>::MethodType mMethods[];
@@ -43,6 +45,8 @@ protected:
     int mRed;
     int mGreen;
     int mBlue;
+
+    pyc::Layer2D* mRootLayer2D;
 };
 #endif
 

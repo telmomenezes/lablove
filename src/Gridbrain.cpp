@@ -23,6 +23,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdexcept>
 
 Gridbrain::Gridbrain(lua_State* luaState)
 {
@@ -261,21 +262,19 @@ GridbrainComponent* Gridbrain::getComponent(unsigned int x,
 {
     if (gridNumber >= mGridsCount)
     {
-        string error = "Trying to get component from inexistent grid";
-        throw error;
+
+        throw std::runtime_error("Trying to get component from inexistent grid");
     }
 
     Grid* grid = mGridsVec[gridNumber];
 
     if (x >= grid->getWidth())
     {
-        string error = "Trying to get component from invalid grid position";
-        throw error;
+        throw std::runtime_error("Trying to get component from invalid grid position");
     }
     if (y >= grid->getHeight())
     {
-        string error = "Trying to get component from invalid grid position";
-        throw error;
+        throw std::runtime_error("Trying to get component from invalid grid position");
     }
 
     unsigned int pos = (x * grid->getHeight()) + y + grid->getOffset();

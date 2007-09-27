@@ -51,7 +51,7 @@ public:
     unsigned long getID(){return mID;}
 
     virtual void onCycle();
-    void draw(float x, float y);
+    void draw();
     virtual bool isFood(){return false;}
     void setSelected(bool selected){mSelected = selected;}
     bool isSelected(){return mSelected;}

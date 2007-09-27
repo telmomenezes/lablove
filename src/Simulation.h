@@ -40,31 +40,18 @@ public:
 
     virtual void init();
     
-    void setWorldDimensions(float worldWidth,
-                            float worldLength,
-                            float cellSide);
-
-    float getWorldWidth(){return mWorldWidth;}
-    float getWorldLength(){return mWorldLength;}
-    float getCellSide(){return mCellSide;}
-    unsigned int getWorldCellWidth(){return mWorldCellWidth;}
-    unsigned int getWorldCellLength(){return mWorldCellLength;}
-    SimulationObject** getCellGrid(){return mCellGrid;}
-
     virtual void drawBeforeObjects(){}
 
     virtual void addObject(SimulationObject* object);
-    virtual void removeObject(SimulationObject* object);
+    virtual void removeObject(SimulationObject* obj);
 
     void cycle();
     virtual void processObjects()=0;
 
-    virtual SimulationObject* getObjectByScreenPos(int x, int y);
+    virtual SimulationObject* getObjectByScreenPos(int x, int y)=0;
+
     void setSelectedObject(SimulationObject* object);
     SimulationObject* getSelectedObject(){return mSelectedObject;}
-    void moveView(float x, float y);
-    float getViewX(){return mViewX;}
-    float getViewY(){return mViewY;}
 
     void setPopulationDynamics(PopulationDynamics* popDyn){mPopulationDynamics = popDyn;}
     PopulationDynamics* getPopulationDynamics(){return mPopulationDynamics;}
@@ -73,27 +60,14 @@ public:
     unsigned long time(){return mSimulationTime;}
 
     int setPopulationDynamics(lua_State* luaState);
-    int setWorldDimensions(lua_State* luaState);
 
 protected:
-    float mWorldWidth;
-    float mWorldLength;
-
-    float mCellSide;
-    unsigned int mWorldCellWidth;
-    unsigned int mWorldCellLength;
-
-    SimulationObject** mCellGrid;
-
     list<SimulationObject*> mObjects;
     list<SimulationObject*> mObjectsToKill;
 
     unsigned long mSimulationTime;
     SimulationObject* mSelectedObject;
     PopulationDynamics* mPopulationDynamics;
-
-    float mViewX;
-    float mViewY;
 
     pyc::Layer* mLogo;
 };

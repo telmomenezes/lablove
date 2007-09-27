@@ -41,21 +41,16 @@ public:
     void setSeedIndex(unsigned int index);
     bool running(){return !mStop;}
     void run();
-    void cycle();
     void addInputHandler(InputHandler* handler);
     void removeInputHandler();
-    void processEvents();
 
     virtual bool onKeyDown(pyc::KeyCode keycode);
-    virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y);
-    virtual bool onMouseButtonUp(pyc::MouseButton button, int x, int y);
-    virtual bool onMouseMove(int x, int y);
 
-    double realTime();
+    double getRealTime();
 
-    pyc::Pycasso* getPycass(){return &mPycasso;}
+    pyc::Pycasso* getPycasso(){return &mPycasso;}
     pyc::Window* getWindow(){return mWindow;}
-    pyc::Layer2D* getRootLayer(){return mRootLayer;}
+    pyc::Layer2D* getRootLayer2D(){return mRootLayer2D;}
 
     static const char mClassName[];
     static Orbit<Lab>::MethodType mMethods[];
@@ -67,6 +62,8 @@ public:
 
 private:
     Lab();
+    void cycle();
+    void processEvents();
 
     static Lab mLab;
     Simulation* mSimulation;
@@ -75,13 +72,9 @@ private:
     pyc::Pycasso mPycasso;
     pyc::EventQ* mEventQ;
     pyc::Window* mWindow;
-    pyc::Layer2D* mRootLayer;
+    pyc::Layer2D* mRootLayer2D;
 
     list<InputHandler*> mHandlers;
-
-    bool mDragging;
-    int mLastMouseX;
-    int mLastMouseY;
 };
 #endif
 

@@ -17,8 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_SIM_SIMPLE_H)
-#define __INCLUDE_SIM_SIMPLE_H
+#if !defined(__INCLUDE_SIM_CONT2D_H)
+#define __INCLUDE_SIM_CONT2D_H
 
 #include "Simulation.h"
 #include "SimulationObject.h"
@@ -29,7 +29,7 @@
 
 #include "Orbit.h"
 
-class SimSimple : public Simulation
+class SimCont2D : public Simulation
 {
 public:
 
@@ -44,13 +44,26 @@ public:
                 ACTION_EAT};
 
 
-    SimSimple(lua_State* luaState=NULL);
-    virtual ~SimSimple();
+    SimCont2D(lua_State* luaState=NULL);
+    virtual ~SimCont2D();
 
+    virtual void init();
+
+    void setWorldDimensions(float worldWidth,
+                            float worldLength,
+                            float cellSide);
+    float getWorldWidth(){return mWorldWidth;}
+    float getWorldLength(){return mWorldLength;}
+    float getCellSide(){return mCellSide;}
+    unsigned int getWorldCellWidth(){return mWorldCellWidth;}
+    unsigned int getWorldCellLength(){return mWorldCellLength;}
+    SimulationObject** getCellGrid(){return mCellGrid;}
 
     virtual void processObjects();
 
     virtual void drawBeforeObjects();
+
+    virtual void removeObject(SimulationObject* obj);
 
     void setGoCost(float cost){mGoCost = cost;}
     void setRotateCost(float cost){mRotateCost = cost;}
@@ -59,11 +72,18 @@ public:
     void setShowViewRange(bool show){mShowViewRange = show;}
     bool getShowGrid(){return mShowGrid;}
     bool getShowViewRange(){return mShowViewRange;}
+
+    void moveView(float x, float y);
+    float getViewX(){return mViewX;}
+    float getViewY(){return mViewY;}
+
+    virtual SimulationObject* getObjectByScreenPos(int x, int y)=0;
     
     virtual bool onKeyDown(pyc::KeyCode keycode);
     virtual bool onKeyUp(pyc::KeyCode keycode);
     virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y);
     virtual bool onMouseButtonUp(pyc::MouseButton button, int x, int y);
+    virtual bool onMouseMove(int x, int y);
 
     void setViewRange(float range);
     void setViewAngle(float angle);
@@ -71,9 +91,10 @@ public:
     float getViewAngle(){return mViewAngle;}
 
     static const char mClassName[];
-    static Orbit<SimSimple>::MethodType mMethods[];
-    static Orbit<SimSimple>::NumberGlobalType mNumberGlobals[];
+    static Orbit<SimCont2D>::MethodType mMethods[];
+    static Orbit<SimCont2D>::NumberGlobalType mNumberGlobals[];
 
+    int setWorldDimensions(lua_State* luaState);
     int setViewRange(lua_State* luaState);
     int setViewAngle(lua_State* luaState);
     int setGoCost(lua_State* luaState);
@@ -92,6 +113,18 @@ protected:
     void rotate(Agent* agent, float angle);
     void eat(Agent* agent);
 
+    float mWorldWidth;
+    float mWorldLength;
+
+    float mCellSide;
+    unsigned int mWorldCellWidth;
+    unsigned int mWorldCellLength;
+
+    SimulationObject** mCellGrid;
+
+    float mViewX;
+    float mViewY;
+
     float mViewRange;
     float mViewAngle;
     float mHalfViewAngle;
@@ -106,6 +139,12 @@ protected:
 
     SimulationObject* mTargetObject;
     float mDistanceToTargetObject;
+
+    bool mDragging;
+    int mLastMouseX;
+    int mLastMouseY;
+
+    pyc::Layer2D* mRootLayer2D;
 };
 #endif
 

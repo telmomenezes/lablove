@@ -21,7 +21,6 @@
 #include "Lab.h"
 #include "math.h"
 #include "defines.h"
-#include "SimSimple.h"
 
 Plant::Plant(lua_State* luaState) : SimulationObject()
 {

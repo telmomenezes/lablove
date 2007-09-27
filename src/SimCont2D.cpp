@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "SimSimple.h"
+#include "SimCont2D.h"
 #include "Lab.h"
 #include "SimulationObject.h"
 #include "PopulationDynamics.h"
@@ -29,8 +29,20 @@
 
 using std::list;
 
-SimSimple::SimSimple(lua_State* luaState)
+SimCont2D::SimCont2D(lua_State* luaState)
 {
+    mWorldWidth = 0.0f;
+    mWorldLength = 0.0f;
+
+    mCellSide = 0.0f;
+    mWorldCellWidth = 0;
+    mWorldCellLength = 0;
+
+    mViewX = 0.0f;
+    mViewY = 0.0f;
+
+    mCellGrid = NULL;
+
     mShowGrid = false;
     mShowViewRange = false;
     
@@ -42,13 +54,52 @@ SimSimple::SimSimple(lua_State* luaState)
 
     mGoCost = 0.0f;
     mRotateCost = 0.0f;
+
+    mTargetObject = NULL;
+    mDistanceToTargetObject = 0.0f;
+
+    mDragging = false;
+    mLastMouseX = 0;
+    mLastMouseY = 0;
+
+    mRootLayer2D = NULL;
 }
 
-SimSimple::~SimSimple()
+SimCont2D::~SimCont2D()
 {
+    if (mCellGrid != NULL)
+    {
+        free(mCellGrid);
+        mCellGrid = NULL;
+    }
 }
 
-void SimSimple::processObjects()
+void SimCont2D::init()
+{
+    Simulation::init();
+    mRootLayer2D = Lab::getSingleton().getRootLayer2D();
+}
+
+void SimCont2D::setWorldDimensions(float worldWidth,
+                                    float worldLength,
+                                    float cellSide)
+{
+    mWorldWidth = worldWidth;
+    mWorldLength = worldLength;
+    mCellSide = cellSide;
+    mWorldCellWidth = (unsigned int)(ceilf(mWorldWidth / mCellSide));
+    mWorldCellLength = (unsigned int)(ceilf(mWorldLength / mCellSide));
+
+    unsigned int gridSize = mWorldCellWidth * mWorldCellLength;
+    mCellGrid = (SimulationObject**)malloc(sizeof(SimulationObject*) * gridSize);
+
+    for (unsigned int i = 0; i < gridSize; i++)
+    {
+        mCellGrid[i] = NULL;
+    }
+}
+
+void SimCont2D::processObjects()
 {
     list<SimulationObject*>::iterator iterObj;
 
@@ -68,7 +119,7 @@ void SimSimple::processObjects()
     }
 }
 
-void SimSimple::perceive(Agent* agent)
+void SimCont2D::perceive(Agent* agent)
 {
     mTargetObject = NULL;
     mDistanceToTargetObject = 9999999999.9f;
@@ -151,7 +202,7 @@ void SimSimple::perceive(Agent* agent)
     }
 }
 
-void SimSimple::scanCell(Agent* agent, int cellX, int cellY)
+void SimCont2D::scanCell(Agent* agent, int cellX, int cellY)
 {
     SimulationObject* target = mCellGrid[(cellY * mWorldCellWidth) + cellX];
 
@@ -215,7 +266,7 @@ void SimSimple::scanCell(Agent* agent, int cellX, int cellY)
     }
 }
 
-void SimSimple::onScanObject(Agent* orig,
+void SimCont2D::onScanObject(Agent* orig,
                 SimulationObject* targ,
                 bool contact,
                 float angle,
@@ -271,7 +322,7 @@ void SimSimple::onScanObject(Agent* orig,
     }
 }
 
-void SimSimple::act(Agent* agent)
+void SimCont2D::act(Agent* agent)
 {
     bool actionGo = false;
     bool actionRotate = false;
@@ -334,22 +385,59 @@ void SimSimple::act(Agent* agent)
     }
 }
 
-void SimSimple::goFront(Agent* agent, float distance)
+void SimCont2D::removeObject(SimulationObject* obj)
 {
-    // TODO: check if move is possible
+    if (obj->mNextCellList != NULL)
+    {
+        obj->mNextCellList->mPrevCellList = obj->mPrevCellList;
+    }
+
+    if (obj->mPrevCellList == NULL)
+    {
+        int cellPos = obj->getCellPos();
+
+        if(cellPos >= 0)
+        {
+            mCellGrid[cellPos] = obj->mNextCellList;
+        }
+    }
+    else
+    {
+        obj->mPrevCellList->mNextCellList = obj->mNextCellList;
+    }
+
+    if (obj->isSelected())
+    {
+        mSelectedObject = NULL;
+    }
+
+    Simulation::removeObject(obj);
+}
+
+void SimCont2D::goFront(Agent* agent, float distance)
+{
     agent->mEnergy -= mGoCost * distance;
     float newX = agent->mX + (cosf(agent->mRot) * distance);
     float newY = agent->mY + (sinf(agent->mRot) * distance);
+
+    if ((newX < 0)
+        || (newY < 0)
+        || (newX >= mWorldWidth)
+        || (newY >= mWorldLength))
+    {
+        return;
+    }
+
     agent->setPos(newX, newY);
 }
 
-void SimSimple::rotate(Agent* agent, float angle)
+void SimCont2D::rotate(Agent* agent, float angle)
 {
     agent->mEnergy -= mRotateCost * angle;
     agent->setRot(agent->getRot() - angle);
 }
 
-void SimSimple::eat(Agent* agent)
+void SimCont2D::eat(Agent* agent)
 {
     if ((mTargetObject) && (mTargetObject->isFood()))
     {
@@ -358,7 +446,7 @@ void SimSimple::eat(Agent* agent)
     }
 }
 
-void SimSimple::drawBeforeObjects()
+void SimCont2D::drawBeforeObjects()
 {
     if (mShowGrid)
     {
@@ -367,25 +455,25 @@ void SimSimple::drawBeforeObjects()
         int viewX = (int)mViewX;
         int viewY = (int)mViewY;
 
-        Lab::getSingleton().getRootLayer()->setColor(200, 200, 200);
+        mRootLayer2D->setColor(200, 200, 200);
 
         unsigned int division = cellSide - ((cellSide - viewX) % cellSide);
-        while (division < Lab::getSingleton().getRootLayer()->getWidth())
+        while (division < mRootLayer2D->getWidth())
         {
-            Lab::getSingleton().getRootLayer()->drawLine(division,
+            mRootLayer2D->drawLine(division,
                                     0,
                                     division,
-                                    Lab::getSingleton().getRootLayer()->getHeight());
+                                    mRootLayer2D->getHeight());
 
             division += cellSide;
         }
 
         division = cellSide - ((cellSide - viewY) % cellSide);
-        while (division < Lab::getSingleton().getRootLayer()->getHeight())
+        while (division < mRootLayer2D->getHeight())
         {
-            Lab::getSingleton().getRootLayer()->drawLine(0,
+            mRootLayer2D->drawLine(0,
                                     division,
-                                    Lab::getSingleton().getRootLayer()->getWidth(),
+                                    mRootLayer2D->getWidth(),
                                     division);
 
             division += cellSide;
@@ -410,19 +498,30 @@ void SimSimple::drawBeforeObjects()
                     endAngle += M_PI * 2.0f;
                 }
 
-                Lab::getSingleton().getRootLayer()->setColor(150, 150, 150, 100);
-                Lab::getSingleton().getRootLayer()->fillCircle(obj->mX + mViewX,
-                                                                obj->mY + mViewY,
-                                                                mViewRange,
-                                                                beginAngle,
-                                                                endAngle);
+                mRootLayer2D->setColor(150, 150, 150, 100);
+                mRootLayer2D->fillCircle(obj->mX + mViewX,
+                                            obj->mY + mViewY,
+                                            mViewRange,
+                                            beginAngle,
+                                            endAngle);
             }
         }
     }
     
 }
 
-bool SimSimple::onKeyDown(pyc::KeyCode key)
+void SimCont2D::moveView(float x, float y)
+{
+    mViewX += x;
+    mViewY += y;
+}
+
+SimulationObject* Simulation::getObjectByScreenPos(int x, int y)
+{
+    return NULL;
+}
+
+bool SimCont2D::onKeyDown(pyc::KeyCode key)
 {
     /*switch (key)
     {
@@ -445,7 +544,7 @@ bool SimSimple::onKeyDown(pyc::KeyCode key)
     }*/
 }
 
-bool SimSimple::onKeyUp(pyc::KeyCode key)
+bool SimCont2D::onKeyUp(pyc::KeyCode key)
 {
     switch (key)
     {
@@ -478,40 +577,61 @@ bool SimSimple::onKeyUp(pyc::KeyCode key)
     }*/
 }
 
-bool SimSimple::onMouseButtonDown(pyc::MouseButton button, int x, int y)
+bool SimCont2D::onMouseButtonDown(pyc::MouseButton button, int x, int y)
 {
+    mDragging = true;
+    mLastMouseX = x;
+    mLastMouseY = y;
     return false;
 }
 
-bool SimSimple::onMouseButtonUp(pyc::MouseButton button, int x, int y)
+bool SimCont2D::onMouseButtonUp(pyc::MouseButton button, int x, int y)
 {
+    mDragging = false;
     return false;
 }
 
-void SimSimple::setViewAngle(float angle)
+bool SimCont2D::onMouseMove(int x, int y)
+{
+    if (mDragging)
+    {
+        float deltaX = (float)(x - mLastMouseX);
+        float deltaY = (float)(y - mLastMouseY);
+        mLastMouseX = x;
+        mLastMouseY = y;
+
+        moveView(deltaX, deltaY);
+
+        return true;
+    }
+
+    return false;
+}
+
+void SimCont2D::setViewAngle(float angle)
 {
     mViewAngle = (angle * M_PI) / 180.0f;
     mHalfViewAngle = mViewAngle / 2.0f;
 }
 
-void SimSimple::setViewRange(float range)
+void SimCont2D::setViewRange(float range)
 {
     mViewRange = range;
 }
 
-const char SimSimple::mClassName[] = "SimSimple";
+const char SimCont2D::mClassName[] = "SimCont2D";
 
-Orbit<SimSimple>::MethodType SimSimple::mMethods[] = {
+Orbit<SimCont2D>::MethodType SimCont2D::mMethods[] = {
     {"setPopulationDynamics", &Simulation::setPopulationDynamics},
-    {"setWorldDimensions", &Simulation::setWorldDimensions},
-    {"setViewRange", &SimSimple::setViewRange},
-    {"setViewAngle", &SimSimple::setViewAngle},
-    {"setGoCost", &SimSimple::setGoCost},
-    {"setRotateCost", &SimSimple::setRotateCost},
+    {"setWorldDimensions", &SimCont2D::setWorldDimensions},
+    {"setViewRange", &SimCont2D::setViewRange},
+    {"setViewAngle", &SimCont2D::setViewAngle},
+    {"setGoCost", &SimCont2D::setGoCost},
+    {"setRotateCost", &SimCont2D::setRotateCost},
     {0,0}
 };
 
-Orbit<SimSimple>::NumberGlobalType SimSimple::mNumberGlobals[] = {
+Orbit<SimCont2D>::NumberGlobalType SimCont2D::mNumberGlobals[] = {
     {"PERCEPTION_NULL", PERCEPTION_NULL},
     {"PERCEPTION_POSITION", PERCEPTION_POSITION},
     {"PERCEPTION_PROXIMITY", PERCEPTION_PROXIMITY},
@@ -523,28 +643,37 @@ Orbit<SimSimple>::NumberGlobalType SimSimple::mNumberGlobals[] = {
     {0,0}
 };
 
-int SimSimple::setViewRange(lua_State* luaState)
+int SimCont2D::setWorldDimensions(lua_State* luaState)
+{
+    int width = luaL_checkint(luaState, 1);
+    int height = luaL_checkint(luaState, 2);
+    int cellSide = luaL_checkint(luaState, 3);
+    setWorldDimensions(width, height, cellSide);
+    return 0;
+}
+
+int SimCont2D::setViewRange(lua_State* luaState)
 {
     int viewRange = luaL_checkint(luaState, 1);
     setViewRange(viewRange);
     return 0;
 }
 
-int SimSimple::setViewAngle(lua_State* luaState)
+int SimCont2D::setViewAngle(lua_State* luaState)
 {
     int viewAngle = luaL_checkint(luaState, 1);
     setViewAngle(viewAngle);
     return 0;
 }
 
-int SimSimple::setGoCost(lua_State* luaState)
+int SimCont2D::setGoCost(lua_State* luaState)
 {
     float cost = luaL_checknumber(luaState, 1);
     setGoCost(cost);
     return 0;
 }
 
-int SimSimple::setRotateCost(lua_State* luaState)
+int SimCont2D::setRotateCost(lua_State* luaState)
 {
     float cost = luaL_checknumber(luaState, 1);
     setRotateCost(cost);

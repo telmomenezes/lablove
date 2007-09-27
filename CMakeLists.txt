@@ -24,7 +24,7 @@ ENDIF(WIN32)
 SET(SOURCE_FILES
     src/Lab.cpp
     src/Simulation.cpp
-    src/SimSimple.cpp
+    src/SimCont2D.cpp
     src/ScriptableObject.cpp
     src/SimulationObject.cpp
     src/Plant.cpp
@@ -86,6 +86,7 @@ ENDIF(MINGW32)
 SET(UNIT_TEST_FILES
         ${UNIT_TEST_FILES}
         src/tests/Main.cpp
+        src/tests/TestLab.cpp
         src/tests/TestGrid.cpp
         src/tests/TestGridbrain.cpp
         src/tests/TestGridbrainComponentSet.cpp)

@@ -21,6 +21,8 @@
 #include "Gridbrain.h"
 #include "Grid.h"
 
+#include <stdexcept>
+
 TEST(CreateGridbrain)
 {
     Gridbrain gridbrain;
@@ -81,17 +83,17 @@ TEST_FIXTURE(GridbrainFixture, GridbrainGetComponent)
 
 TEST_FIXTURE(GridbrainFixture, GridbrainGetComponentFromInvalidGrid)
 {
-    CHECK_THROW(mGridbrain.getComponent(0, 0, 99999), string);
+    CHECK_THROW(mGridbrain.getComponent(0, 0, 99999), std::runtime_error);
 }
 
 TEST_FIXTURE(GridbrainFixture, GridbrainGetComponentFromInvalidXPosition)
 {
-    CHECK_THROW(mGridbrain.getComponent(99999, 0, 0), string);
+    CHECK_THROW(mGridbrain.getComponent(99999, 0, 0), std::runtime_error);
 }
 
 TEST_FIXTURE(GridbrainFixture, GridbrainGetComponentFromInvalidYPosition)
 {
-    CHECK_THROW(mGridbrain.getComponent(0, 99999, 0), string);
+    CHECK_THROW(mGridbrain.getComponent(0, 99999, 0), std::runtime_error);
 }
 
 TEST_FIXTURE(GridbrainFixture, GridbrainCycleOnEmptyGrid)

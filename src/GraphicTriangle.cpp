@@ -23,6 +23,13 @@
 
 GraphicTriangle::GraphicTriangle(lua_State* luaState)
 {
+    mObject = NULL;
+    mSize = 0;
+    mRed = 0;
+    mGreen = 0;
+    mBlue = 0;
+
+    mRootLayer2D = NULL;
 }
 
 GraphicTriangle::~GraphicTriangle()
@@ -42,15 +49,17 @@ void GraphicTriangle::init(void* obj)
     mRed = simObj->getColor()->mRed;
     mGreen = simObj->getColor()->mGreen;
     mBlue = simObj->getColor()->mBlue;
+
+    mRootLayer2D = Lab::getSingleton().getRootLayer2D();
 }
 
-void GraphicTriangle::draw(float x, float y)
+void GraphicTriangle::draw()
 {
     SimulationObject* simObj = (SimulationObject*)mObject;
 
     float rot = simObj->mRot;
-    float centerX = simObj->mX + x;
-    float centerY = simObj->mY + y;
+    float centerX = simObj->mX;
+    float centerY = simObj->mY;
 
     float a1 = rot;
     float a2 = rot + (M_PI * 0.8f);
@@ -62,10 +71,10 @@ void GraphicTriangle::draw(float x, float y)
     float x3 = centerX + (cosf(a3) * mSize);
     float y3 = centerY + (sinf(a3) * mSize);
 
-    Lab::getSingleton().getRootLayer()->setColor(mRed, mGreen, mBlue);
-    Lab::getSingleton().getRootLayer()->setLineWidth(2.0f);
-    Lab::getSingleton().getRootLayer()->fillTriangle(x1, y1, x2, y2, x3, y3);
-    Lab::getSingleton().getRootLayer()->drawTriangle(x1, y1, x2, y2, x3, y3);
+    mRootLayer2D->setColor(mRed, mGreen, mBlue);
+    mRootLayer2D->setLineWidth(2.0f);
+    mRootLayer2D->fillTriangle(x1, y1, x2, y2, x3, y3);
+    mRootLayer2D->drawTriangle(x1, y1, x2, y2, x3, y3);
 }
 
 const char GraphicTriangle::mClassName[] = "GraphicTriangle";

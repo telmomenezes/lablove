@@ -21,6 +21,8 @@
 #include "functions.h"
 #include "random.h"
 
+#include <stdexcept>
+
 #if defined(__UNIX)
 #include <sys/time.h>
 #endif
@@ -40,23 +42,23 @@ Lab Lab::mLab;
 Lab::Lab()
 {
     mStop = false;
+
     mWindow = NULL;
-    mRootLayer = NULL;
+    mRootLayer2D = NULL;
     mEventQ = NULL;
-    mDragging = false;
-    mLastMouseX = 0;
-    mLastMouseY = 0;
+
+    mSimulation = NULL;
 }
 
 Lab::Lab(lua_State* luaState)
 {
     mStop = false;
+
     mWindow = NULL;
-    mRootLayer = NULL;
+    mRootLayer2D = NULL;
     mEventQ = NULL;
-    mDragging = false;
-    mLastMouseX = 0;
-    mLastMouseY = 0;
+
+    mSimulation = NULL;
 }
 
 Lab::~Lab()
@@ -75,12 +77,17 @@ void Lab::setSeedIndex(unsigned int index)
 
 void Lab::run()
 {
+    if (mSimulation == NULL)
+    {
+        throw std::runtime_error("Trying to run() Lab without setting simulation");
+    }
+
     addInputHandler(this);
     addInputHandler(mSimulation);
 
     mWindow = mPycasso.createWindow(800, 600);
     mEventQ = mPycasso.createEventQ();
-    mRootLayer = mWindow->getRootLayer2D();
+    mRootLayer2D = mWindow->getRootLayer2D();
 
     mWindow->setTitle("LabLOVE");
 
@@ -159,42 +166,8 @@ bool Lab::onKeyDown(pyc::KeyCode keycode)
     }
 }
 
-bool Lab::onMouseButtonDown(pyc::MouseButton button, int x, int y)
-{
-    mDragging = true;
-    mLastMouseX = x;
-    mLastMouseY = y;
-    return false;
-}
-
-bool Lab::onMouseButtonUp(pyc::MouseButton button, int x, int y)
-{
-    mDragging = false;
-    return false;
-}
-
-bool Lab::onMouseMove(int x, int y)
-{
-    if (mDragging)
-    {
-        float deltaX = (float)(x - mLastMouseX);
-        float deltaY = (float)(y - mLastMouseY);
-        mLastMouseX = x;
-        mLastMouseY = y;
-
-        if (mSimulation)
-        {
-            mSimulation->moveView(deltaX, deltaY);
-        }
-
-        return true;
-    }
-
-    return false;
-}
-
 #if defined(__UNIX)
-double Lab::realTime()
+double Lab::getRealTime()
 {
     timeval time;
     gettimeofday(&time, NULL);
@@ -206,7 +179,7 @@ double Lab::realTime()
 #endif
 
 #if defined(__WIN32)
-double Lab::realTime()
+double Lab::getRealTime()
 {
     FILETIME ft;
     LARGE_INTEGER li;
