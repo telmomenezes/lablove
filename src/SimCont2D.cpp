@@ -69,6 +69,13 @@ SimCont2D::~SimCont2D()
 {
     if (mCellGrid != NULL)
     {
+        unsigned int gridSize = mWorldCellWidth * mWorldCellLength;
+
+        for (unsigned int i = 0; i < gridSize; i++)
+        {
+            delete mCellGrid[i];
+        }
+    
         free(mCellGrid);
         mCellGrid = NULL;
     }
@@ -91,12 +98,92 @@ void SimCont2D::setWorldDimensions(float worldWidth,
     mWorldCellLength = (unsigned int)(ceilf(mWorldLength / mCellSide));
 
     unsigned int gridSize = mWorldCellWidth * mWorldCellLength;
-    mCellGrid = (SimulationObject**)malloc(sizeof(SimulationObject*) * gridSize);
+    mCellGrid = (list<SimulationObject*>**)malloc(sizeof(list<SimulationObject*>*) * gridSize);
 
     for (unsigned int i = 0; i < gridSize; i++)
     {
-        mCellGrid[i] = NULL;
+        mCellGrid[i] = new list<SimulationObject*>();
     }
+}
+
+void SimCont2D::setPos(SimulationObject* obj, float x, float y)
+{
+    float origX = obj->mX;
+    float origY = obj->mY;
+    float size = obj->mSize;
+
+    int origX1 = ((int)(origX - size)) / mCellSide;
+    int origX2 = ((int)(origX + size)) / mCellSide;
+    int origY1 = ((int)(origY - size)) / mCellSide;
+    int origY2 = ((int)(origY + size)) / mCellSide;
+
+    int targX1 = ((int)(x - size)) / mCellSide;
+    int targX2 = ((int)(x + size)) / mCellSide;
+    int targY1 = ((int)(y - size)) / mCellSide;
+    int targY2 = ((int)(y + size)) / mCellSide;
+
+    obj->mX = x;
+    obj->mY = y;
+
+    // Remove from cells
+    for (int cellX = origX1; cellX <= origX2; cellX++)
+    {
+        for (int cellY = origY1; cellY <= origY2; cellY++)
+        {
+            if ((cellX < targX1) 
+                || (cellX > targX2)
+                || (cellY < targY1)
+                || (cellY > targY2))
+            {
+                list<SimulationObject*>* cellList = mCellGrid[(mCellWidth * cellX) + cellY];
+                cellList->remove(obj);
+            }
+        }
+    }
+
+    // Add to cells
+    for (int cellX = targX1; cellX <= targX2; cellX++)
+    {
+        for (int cellY = targY1; cellY <= targY2; cellY++)
+        {
+            if ((cellX < origX1) 
+                || (cellX > origX2)
+                || (cellY < origY1)
+                || (cellY > origY2))
+            {
+                list<SimulationObject*>* cellList = mCellGrid[(mCellWidth * cellX) + cellY];
+                cellList->push_back(obj);
+            }
+        }
+    }
+}
+
+void SimCont2D::setRot(SimulationObject* obj, float rot)
+{
+    obj->mRotZ = normalizeAngle(rot);
+}
+
+void SimCont2D::removeObject(SimulationObject* obj)
+{
+    float origX = obj->mX;
+    float origY = obj->mY;
+    float size = obj->mSize;
+    int origX1 = ((int)(origX - size)) / mCellSide;
+    int origX2 = ((int)(origX + size)) / mCellSide;
+    int origY1 = ((int)(origY - size)) / mCellSide;
+    int origY2 = ((int)(origY + size)) / mCellSide;
+
+    // Remove from cells
+    for (int cellX = origX1; cellX <= origX2; cellX++)
+    {
+        for (int cellY = origY1; cellY <= origY2; cellY++)
+        {
+            list<SimulationObject*>* cellList = mCellGrid[(mCellWidth * cellX) + cellY];
+            cellList->remove(obj);
+        }
+    }
+
+    Simulation::removeObject(obj);
 }
 
 void SimCont2D::processObjects()
@@ -124,8 +211,8 @@ void SimCont2D::perceive(Agent* agent)
     mTargetObject = NULL;
     mDistanceToTargetObject = 9999999999.9f;
 
-    mLowLimitViewAngle = normalizeAngle(agent->mRot - mHalfViewAngle);
-    mHighLimitViewAngle = normalizeAngle(agent->mRot + mHalfViewAngle);
+    mLowLimitViewAngle = normalizeAngle(agent->mRotZ - mHalfViewAngle);
+    mHighLimitViewAngle = normalizeAngle(agent->mRotZ + mHalfViewAngle);
 
     // Determine cells to analyse
     unsigned int cellSide = (unsigned int)mCellSide;
@@ -385,40 +472,11 @@ void SimCont2D::act(Agent* agent)
     }
 }
 
-void SimCont2D::removeObject(SimulationObject* obj)
-{
-    if (obj->mNextCellList != NULL)
-    {
-        obj->mNextCellList->mPrevCellList = obj->mPrevCellList;
-    }
-
-    if (obj->mPrevCellList == NULL)
-    {
-        int cellPos = obj->getCellPos();
-
-        if(cellPos >= 0)
-        {
-            mCellGrid[cellPos] = obj->mNextCellList;
-        }
-    }
-    else
-    {
-        obj->mPrevCellList->mNextCellList = obj->mNextCellList;
-    }
-
-    if (obj->isSelected())
-    {
-        mSelectedObject = NULL;
-    }
-
-    Simulation::removeObject(obj);
-}
-
 void SimCont2D::goFront(Agent* agent, float distance)
 {
     agent->mEnergy -= mGoCost * distance;
-    float newX = agent->mX + (cosf(agent->mRot) * distance);
-    float newY = agent->mY + (sinf(agent->mRot) * distance);
+    float newX = agent->mX + (cosf(agent->mRotZ) * distance);
+    float newY = agent->mY + (sinf(agent->mRotZ) * distance);
 
     if ((newX < 0)
         || (newY < 0)
@@ -428,13 +486,13 @@ void SimCont2D::goFront(Agent* agent, float distance)
         return;
     }
 
-    agent->setPos(newX, newY);
+    setPos(agent, newX, newY);
 }
 
 void SimCont2D::rotate(Agent* agent, float angle)
 {
     agent->mEnergy -= mRotateCost * angle;
-    agent->setRot(agent->getRot() - angle);
+    setRot(agent, agent->mRotZ - angle);
 }
 
 void SimCont2D::eat(Agent* agent)

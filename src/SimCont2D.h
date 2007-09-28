@@ -59,6 +59,9 @@ public:
     unsigned int getWorldCellLength(){return mWorldCellLength;}
     SimulationObject** getCellGrid(){return mCellGrid;}
 
+    void setPos(SimulationObject* obj, float x, float y);
+    void setRot(SimulationObject* obj, float rot);
+
     virtual void processObjects();
 
     virtual void drawBeforeObjects();
@@ -120,7 +123,7 @@ protected:
     unsigned int mWorldCellWidth;
     unsigned int mWorldCellLength;
 
-    SimulationObject** mCellGrid;
+    list<SimulationObject*>** mCellGrid;
 
     float mViewX;
     float mViewY;

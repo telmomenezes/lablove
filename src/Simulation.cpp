@@ -55,6 +55,11 @@ void Simulation::addObject(SimulationObject* object)
 
 void Simulation::removeObject(SimulationObject* obj)
 {
+    if (obj->isSelected())
+    {
+        mSelectedObject = NULL;
+    }
+
     bool stop = false;
     list<SimulationObject*>::iterator iterObj;
     for (iterObj = mObjects.begin(); (iterObj != mObjects.end()) && !stop; ++iterObj)

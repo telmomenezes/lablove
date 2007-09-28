@@ -38,18 +38,16 @@ SimulationObject::SimulationObject()
     mCreationTime = Lab::getSingleton().getSimulation()->time();
     mHuman = false;
 
-    mX = -1.0f;
-    mY = -1.0f;
+    mX = 0.0f;
+    mY = 0.0f;
+    mZ = 0.0f;
+
+    mRotX = 0.0f;
+    mRotY = 0.0f;
+    mRotZ = 0.0f;
+
     mSize = 1.0f;
     mSizeSquared = 1.0f;
-    mRot = 0.0f;
-
-    mNextCellList = NULL;
-    mPrevCellList = NULL;
-
-    mCellX = -1;
-    mCellY = -1;
-    mCellPos = -1;
 
     mMaxAge = 0;
     mLowAgeLimit = 0;
@@ -68,9 +66,9 @@ SimulationObject::SimulationObject(SimulationObject* obj)
     mDeleted = false;
     mSelected = false;
 
-        mEnergy = obj->mEnergy;
+    mEnergy = obj->mEnergy;
     mInitialEnergy = obj->mInitialEnergy;
-        mSpeciesID = obj->mSpeciesID;
+    mSpeciesID = obj->mSpeciesID;
     mCreationTime = Lab::getSingleton().getSimulation()->time();
     mHuman = false;
 
@@ -97,9 +95,13 @@ SimulationObject::SimulationObject(SimulationObject* obj)
     }
     mMetabolism = obj->mMetabolism;
 
-    mX = -1.0f;
-    mY = -1.0f;
-    mRot = 0.0f;
+    mX = 0.0f;
+    mY = 0.0f;
+    mZ = 0.0f;
+
+    mRotX = 0.0f;
+    mRotY = 0.0f;
+    mRotZ = 0.0f;
 
     mColor = SymbolRGB(obj->mColor);
 
@@ -165,77 +167,10 @@ int SimulationObject::addSymbolTable(lua_State* luaState)
     return 0;
 }
 
-void SimulationObject::setPos(float x, float y)
-{
-    Simulation* sim = Lab::getSingleton().getSimulation();
-
-    unsigned int cellSide = (unsigned int)(sim->getCellSide());
-    unsigned int targetCellX = ((unsigned int)x) / cellSide;
-    unsigned int targetCellY = ((unsigned int)y) / cellSide;
-    SimulationObject** objGrid = sim->getCellGrid();
-    unsigned int worldCellWidth = sim->getWorldCellWidth();
-    unsigned int targetCellPos = (targetCellY * worldCellWidth) + targetCellX;
-    SimulationObject* targetCell = objGrid[targetCellPos];
-
-    if (mX >= 0)
-    {
-        if ((mCellX != targetCellX) || (mCellY != targetCellY))
-        {
-            // Remove from origin cell
-            if (mNextCellList != NULL)
-            {
-                mNextCellList->mPrevCellList = mPrevCellList;
-            }
-            if (mPrevCellList == NULL)
-            {
-                objGrid[mCellPos] = mNextCellList;
-            }
-            else
-            {
-                mPrevCellList->mNextCellList = mNextCellList;
-            }
-
-            // Insert in new target cell
-            mNextCellList = targetCell;
-            mPrevCellList = NULL;
-            if (targetCell != NULL)
-            {
-                targetCell->mPrevCellList = this;
-            }
-            objGrid[targetCellPos] = this;
-            mCellX = targetCellX;
-            mCellY = targetCellY;
-            mCellPos = targetCellPos;
-        }
-    }
-    else
-    {
-        // Insert in target cell
-        mNextCellList = targetCell;
-        mPrevCellList = NULL;
-        if (targetCell != NULL)
-        {
-            targetCell->mPrevCellList = this;
-        }
-        objGrid[targetCellPos] = this;
-        mCellX = targetCellX;
-        mCellY = targetCellY;
-        mCellPos = targetCellPos;
-    }
-
-    mX = x;
-    mY = y;
-}
-
 void SimulationObject::setSize(float size)
 {
     mSize = size;
     mSizeSquared = mSize * mSize;
-}
-
-void SimulationObject::setRot(float rot)
-{
-    mRot = normalizeAngle(rot);
 }
 
 void SimulationObject::placeRandom()

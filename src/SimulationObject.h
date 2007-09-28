@@ -56,16 +56,8 @@ public:
     void setSelected(bool selected){mSelected = selected;}
     bool isSelected(){return mSelected;}
 
-    virtual void setPos(float x, float y);
     virtual void setSize(float size);
-    virtual void setRot(float rot);
-    float getX(){return mX;}
-    float getY(){return mY;}
     float getSize(){return mSize;}
-    float getRot(){return mRot;}
-    int getCellX(){return mCellX;}
-    int getCellY(){return mCellY;}
-    int getCellPos(){return mCellPos;}
 
     unsigned int getSpeciesID(){return mSpeciesID;}
     void setSpeciesID(unsigned int id){mSpeciesID = id;}
@@ -108,16 +100,14 @@ public:
 
     float mX;
     float mY;
+    float mZ;
+
+    float mRotX;
+    float mRotY;
+    float mRotZ;
+
     float mSize;
     float mSizeSquared;
-    float mRot;
-
-    SimulationObject* mNextCellList;
-    SimulationObject* mPrevCellList;
-
-    int mCellX;
-    int mCellY;
-    int mCellPos;
 
     Type mType;
 
