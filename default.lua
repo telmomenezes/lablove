@@ -132,15 +132,14 @@ popDyn:addSpecies(plant, numberOfPlants)
 
 human = Agent()
 
-human:setPos(worldWidth / 2, worldHeight / 2)
-human:setRot(0.0)
+--human:setPos(worldWidth / 2, worldHeight / 2)
+--human:setRot(0.0)
 human:setSize(10.0)
 human:setInitialEnergy(1.0)
 human:setMetabolism(metabolism)
 
 humanColor = SymbolRGB(0, 0, 200)
 human:setColor(humanColor)
-human:setRot(1.00)
 
 human:setGraphic(GraphicTriangle())
 
