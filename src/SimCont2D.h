@@ -82,7 +82,7 @@ public:
     float getViewX(){return mViewX;}
     float getViewY(){return mViewY;}
 
-    virtual SimulationObject* getObjectByScreenPos(int x, int y)=0;
+    virtual SimulationObject* getObjectByScreenPos(int x, int y);
     
     virtual bool onKeyDown(pyc::KeyCode keycode);
     virtual bool onKeyUp(pyc::KeyCode keycode);

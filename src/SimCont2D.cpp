@@ -584,7 +584,7 @@ void SimCont2D::moveView(float x, float y)
     mViewY += y;
 }
 
-SimulationObject* Simulation::getObjectByScreenPos(int x, int y)
+SimulationObject* SimCont2D::getObjectByScreenPos(int x, int y)
 {
     return NULL;
 }
