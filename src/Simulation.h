@@ -45,6 +45,8 @@ public:
     virtual void addObject(SimulationObject* object);
     virtual void removeObject(SimulationObject* obj);
 
+    virtual void placeRandom(SimulationObject* obj)=0;
+
     void cycle();
     virtual void processObjects()=0;
 
@@ -57,7 +59,7 @@ public:
     PopulationDynamics* getPopulationDynamics(){return mPopulationDynamics;}
 
     virtual void killOrganism(SimulationObject* org);
-    unsigned long time(){return mSimulationTime;}
+    unsigned long getTime(){return mSimulationTime;}
 
     int setPopulationDynamics(lua_State* luaState);
 

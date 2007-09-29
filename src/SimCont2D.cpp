@@ -23,6 +23,7 @@
 #include "PopulationDynamics.h"
 #include "functions.h"
 #include "defines.h"
+#include "random.h"
 
 #include <math.h>
 #include <list>
@@ -34,7 +35,7 @@ SimCont2D::SimCont2D(lua_State* luaState)
     mWorldWidth = 0.0f;
     mWorldLength = 0.0f;
 
-    mCellSide = 0.0f;
+    mCellSide = 0;
     mWorldCellWidth = 0;
     mWorldCellLength = 0;
 
@@ -63,6 +64,22 @@ SimCont2D::SimCont2D(lua_State* luaState)
     mLastMouseY = 0;
 
     mRootLayer2D = NULL;
+
+    mCellX1 = 0;
+    mCellX2 = 0;
+    mCellY1 = 0;
+    mCellY2 = 0;
+
+    mCurrentCellX = 0;
+    mCurrentCellY = 0;
+
+    mCurrentCellList = NULL;
+
+    mCollisionX = 0.0f;
+    mCollisionY = 0.0f;
+    mCollisionRadius = 0.0f;
+
+    mCollisionDetectionIteration = 0;
 }
 
 SimCont2D::~SimCont2D()
@@ -89,7 +106,7 @@ void SimCont2D::init()
 
 void SimCont2D::setWorldDimensions(float worldWidth,
                                     float worldLength,
-                                    float cellSide)
+                                    unsigned int cellSide)
 {
     mWorldWidth = worldWidth;
     mWorldLength = worldLength;
@@ -135,7 +152,7 @@ void SimCont2D::setPos(SimulationObject* obj, float x, float y)
                 || (cellY < targY1)
                 || (cellY > targY2))
             {
-                list<SimulationObject*>* cellList = mCellGrid[(mCellWidth * cellX) + cellY];
+                list<SimulationObject*>* cellList = mCellGrid[(mWorldCellWidth * cellY) + cellX];
                 cellList->remove(obj);
             }
         }
@@ -151,7 +168,7 @@ void SimCont2D::setPos(SimulationObject* obj, float x, float y)
                 || (cellY < origY1)
                 || (cellY > origY2))
             {
-                list<SimulationObject*>* cellList = mCellGrid[(mCellWidth * cellX) + cellY];
+                list<SimulationObject*>* cellList = mCellGrid[(mWorldCellWidth * cellY) + cellX];
                 cellList->push_back(obj);
             }
         }
@@ -178,12 +195,95 @@ void SimCont2D::removeObject(SimulationObject* obj)
     {
         for (int cellY = origY1; cellY <= origY2; cellY++)
         {
-            list<SimulationObject*>* cellList = mCellGrid[(mCellWidth * cellX) + cellY];
+            list<SimulationObject*>* cellList = mCellGrid[(mWorldCellWidth * cellY) + cellX];
             cellList->remove(obj);
         }
     }
 
     Simulation::removeObject(obj);
+}
+
+void SimCont2D::placeRandom(SimulationObject* obj)
+{
+    unsigned int worldWidth = (unsigned int)mWorldWidth;
+    unsigned int worldLength = (unsigned int)mWorldLength;
+
+    setPos(obj, rand() % worldWidth, rand() % worldLength);
+    setRot(obj, randomUniformProbability() * M_PI * 2);
+}
+
+void SimCont2D::startCollisionDetection(float x, float y, float rad)
+{
+    mCollisionX = x;
+    mCollisionY = y;
+    mCollisionRadius = rad;
+
+    mCellX1 = ((int)(x - rad)) / mCellSide;
+    mCellX2 = ((int)(x + rad)) / mCellSide;
+    mCellY1 = ((int)(y - rad)) / mCellSide;
+    mCellY2 = ((int)(y + rad)) / mCellSide;
+
+    mCurrentCellX = mCellX1;
+    mCurrentCellY = mCellY1;
+
+    mCurrentCellList = mCellGrid[(mWorldCellWidth * mCurrentCellY) + mCurrentCellX];
+    mCurrentCellListIterator = mCurrentCellList->begin();
+
+    mCollisionDetectionIteration++;
+}
+
+SimulationObject* SimCont2D::nextCollision(float& distance, float& angle)
+{
+    distance = 0.0f;
+    angle = 0.0f;
+
+    while (true)
+    {
+        while (mCurrentCellListIterator == mCurrentCellList->end())
+        {
+            if (mCurrentCellX >= mCellX2)
+            {
+                if (mCurrentCellY >= mCellY2)
+                {
+                    // No more objects found
+                    return NULL;
+                }
+                else
+                {
+                    mCurrentCellX == mCellX1;
+                    mCurrentCellY++;
+                }
+            }
+            else
+            {
+                mCurrentCellX++;
+            }
+
+            mCurrentCellList = mCellGrid[(mWorldCellWidth * mCurrentCellY) + mCurrentCellX];
+            mCurrentCellListIterator = mCurrentCellList->begin();
+        }
+
+        SimulationObject* obj = *mCurrentCellListIterator;
+
+        if (obj->mCollisionDetectionIteration != mCollisionDetectionIteration)
+        {
+            obj->mCollisionDetectionIteration = mCollisionDetectionIteration;
+
+            float dX = mCollisionX - obj->mX;
+            float dY = mCollisionY - obj->mY;
+            float dist = sqrtf((dX * dX) + (dY * dY));
+
+            if (dist <= mCollisionRadius)
+            {
+                distance = dist - obj->mSize;
+                angle = atan2f(-dY, -dX);
+                mCurrentCellListIterator++;
+                return obj;
+            }
+        }
+
+        mCurrentCellListIterator++;
+    }
 }
 
 void SimCont2D::processObjects()
@@ -214,150 +314,60 @@ void SimCont2D::perceive(Agent* agent)
     mLowLimitViewAngle = normalizeAngle(agent->mRotZ - mHalfViewAngle);
     mHighLimitViewAngle = normalizeAngle(agent->mRotZ + mHalfViewAngle);
 
-    // Determine cells to analyse
-    unsigned int cellSide = (unsigned int)mCellSide;
-    int x = (int)agent->mX;
-    int y = (int)agent->mY;
-    int cellPosX = x % cellSide;
-    int cellPosY = y % cellSide;
-    int range = (int)mViewRange;
-    int leftLimit = cellPosX - range; 
-    int rightLimit = cellPosX + range;
-    int topLimit = cellPosY - range;
-    int bottomLimit = cellPosY + range;
+    startCollisionDetection(agent->mX, agent->mY, mViewRange);
 
-    unsigned int cellX = ((unsigned int)x) / cellSide;
-    unsigned int cellY = ((unsigned int)y) / cellSide;
+    SimulationObject* target;
+    float distance;
+    float angle;
 
-    bool left = false;
-    bool right = false;
-    bool top = false;
-    bool bottom = false;
-
-    if ((cellX > 0) && (leftLimit < 0))
-    {
-        left = true;
-    }
-    if ((cellX < (mWorldCellWidth - 1))
-        && (rightLimit >= cellSide))
-    {
-        right = true;
-    }
-    if ((cellY > 0) && (topLimit < 0))
-    {
-        top = true;
-    }
-    if ((cellY < (mWorldCellLength - 1))
-        && (bottomLimit >= cellSide))
-    {
-        bottom = true;
-    }
-
-    // Check all objects in each cell
-    scanCell(agent, cellX, cellY);
-    if (left)
-    {
-        scanCell(agent, cellX - 1, cellY);
-    }
-    if (left && top)
-    {
-        scanCell(agent, cellX - 1, cellY - 1);
-    }
-    if (left && bottom)
-    {
-        scanCell(agent, cellX - 1, cellY + 1);
-    }
-    if (right)
-    {
-        scanCell(agent, cellX + 1, cellY);
-    }
-    if (right && top)
-    {
-        scanCell(agent, cellX + 1, cellY - 1);
-    }
-    if (right && bottom)
-    {
-        scanCell(agent, cellX + 1, cellY + 1);
-    }
-    if (top)
-    {
-        scanCell(agent, cellX, cellY - 1);
-    }
-    if (bottom)
-    {
-        scanCell(agent, cellX, cellY + 1);
-    }
-}
-
-void SimCont2D::scanCell(Agent* agent, int cellX, int cellY)
-{
-    SimulationObject* target = mCellGrid[(cellY * mWorldCellWidth) + cellX];
-
-    while (target)
+    while (target = nextCollision(distance, angle))
     {
         if (target != agent)
         {
             bool visible = false;
-            bool contact = false;
+            distance -= agent->mSize;
 
-            float dX = agent->mX - target->mX;
-            float dY = agent->mY - target->mY;
-            float distance = sqrtf((dX * dX) + (dY * dY));
-            float angle = 0.0f;
-
-            if (distance <= mViewRange)
+            if (mHighLimitViewAngle > mLowLimitViewAngle)
             {
-                angle = atan2f(-dY, -dX);
-
-                if (mHighLimitViewAngle > mLowLimitViewAngle)
+                if ((angle <= mHighLimitViewAngle) && (angle >= mLowLimitViewAngle))
                 {
-                    if ((angle <= mHighLimitViewAngle) && (angle >= mLowLimitViewAngle))
-                    {
-                        visible = true;
-                    }
-                }
-                else
-                {
-                    if ((angle <= mHighLimitViewAngle) || (angle >= mLowLimitViewAngle))
-                    {
-                        visible = true;
-                    }
-                }
-
-                if (distance <= agent->getSize() + target->getSize())
-                {
-                    contact = true;
+                    visible = true;
                 }
             }
-
-            if (contact)
+            else
             {
-                if ((mTargetObject == NULL) || (distance < mDistanceToTargetObject))
+                if ((angle <= mHighLimitViewAngle) || (angle >= mLowLimitViewAngle))
                 {
-                    mTargetObject = target;
-                    mDistanceToTargetObject = distance;
+                    visible = true;
                 }
             }
 
             if (visible)
             {
+                // Is in contact?
+                // TODO: use the nearest to angle 0 instead of the closest distance
+                if (distance <= 0)
+                {
+                    if ((mTargetObject == NULL) || (distance < mDistanceToTargetObject))
+                    {
+                        mTargetObject = target;
+                        mDistanceToTargetObject = distance;
+                    }
+                }
+
                 onScanObject(agent,
-                        target,
-                        contact,
-                        normalizeAngle(agent->mRot - angle),
-                        distance);
+                                target,
+                                distance,
+                                normalizeAngle(agent->mRotZ - angle));
             }
         }
-
-        target = target->mNextCellList;
     }
 }
 
 void SimCont2D::onScanObject(Agent* orig,
                 SimulationObject* targ,
-                bool contact,
-                float angle,
-                float distance)
+                float distance,
+                float angle)
 {
     if (orig->mHuman)
     {
@@ -379,7 +389,7 @@ void SimCont2D::onScanObject(Agent* orig,
         switch (type)
         {
             case PERCEPTION_IN_CONTACT:
-                if (contact)
+                if (distance <= 0.0f)
                 {
                     inBuffer[pos] = 1.0f;
                 }
@@ -548,8 +558,8 @@ void SimCont2D::drawBeforeObjects()
 
             if (obj->mType == SimulationObject::TYPE_AGENT)
             {
-                float beginAngle = normalizeAngle(obj->mRot - mHalfViewAngle);
-                float endAngle = normalizeAngle(obj->mRot + mHalfViewAngle);
+                float beginAngle = normalizeAngle(obj->mRotZ - mHalfViewAngle);
+                float endAngle = normalizeAngle(obj->mRotZ + mHalfViewAngle);
 
                 if (beginAngle > endAngle)
                 {
@@ -703,8 +713,8 @@ Orbit<SimCont2D>::NumberGlobalType SimCont2D::mNumberGlobals[] = {
 
 int SimCont2D::setWorldDimensions(lua_State* luaState)
 {
-    int width = luaL_checkint(luaState, 1);
-    int height = luaL_checkint(luaState, 2);
+    float width = luaL_checknumber(luaState, 1);
+    float height = luaL_checknumber(luaState, 2);
     int cellSide = luaL_checkint(luaState, 3);
     setWorldDimensions(width, height, cellSide);
     return 0;
@@ -712,14 +722,14 @@ int SimCont2D::setWorldDimensions(lua_State* luaState)
 
 int SimCont2D::setViewRange(lua_State* luaState)
 {
-    int viewRange = luaL_checkint(luaState, 1);
+    float viewRange = luaL_checknumber(luaState, 1);
     setViewRange(viewRange);
     return 0;
 }
 
 int SimCont2D::setViewAngle(lua_State* luaState)
 {
-    int viewAngle = luaL_checkint(luaState, 1);
+    float viewAngle = luaL_checknumber(luaState, 1);
     setViewAngle(viewAngle);
     return 0;
 }

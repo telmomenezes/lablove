@@ -35,7 +35,7 @@ SimulationObject::SimulationObject()
     mSpeciesID = 0;
     mEnergy = 0;
     mInitialEnergy = 0;
-    mCreationTime = Lab::getSingleton().getSimulation()->time();
+    mCreationTime = Lab::getSingleton().getSimulation()->getTime();
     mHuman = false;
 
     mX = 0.0f;
@@ -57,6 +57,8 @@ SimulationObject::SimulationObject()
     mGraphic = NULL;
 
     mType = TYPE_OBJECT;
+
+    mCollisionDetectionIteration = 0;
 }
 
 SimulationObject::SimulationObject(SimulationObject* obj)
@@ -69,7 +71,7 @@ SimulationObject::SimulationObject(SimulationObject* obj)
     mEnergy = obj->mEnergy;
     mInitialEnergy = obj->mInitialEnergy;
     mSpeciesID = obj->mSpeciesID;
-    mCreationTime = Lab::getSingleton().getSimulation()->time();
+    mCreationTime = Lab::getSingleton().getSimulation()->getTime();
     mHuman = false;
 
     map<unsigned int, SymbolTable*>::iterator iterTables;
@@ -116,6 +118,8 @@ SimulationObject::SimulationObject(SimulationObject* obj)
     }
 
     mType = obj->mType;
+
+    mCollisionDetectionIteration = 0;
 }
 
 SimulationObject::~SimulationObject()
@@ -173,17 +177,6 @@ void SimulationObject::setSize(float size)
     mSizeSquared = mSize * mSize;
 }
 
-void SimulationObject::placeRandom()
-{
-    Simulation* sim = Lab::getSingleton().getSimulation();
-
-    unsigned int worldWidth = (unsigned int)sim->getWorldWidth();
-    unsigned int worldLength = (unsigned int)sim->getWorldLength();
-
-    setPos(rand() % worldWidth, rand() % worldLength);
-    setRot(randomUniformProbability() * M_PI * 2);
-}
-
 void SimulationObject::onCycle()
 {
     mEnergy -= mMetabolism;
@@ -195,7 +188,7 @@ void SimulationObject::onCycle()
 
     if (mMaxAge > 0)
     {
-        if (Lab::getSingleton().getSimulation()->time() - mCreationTime >= mMaxAge)
+        if (Lab::getSingleton().getSimulation()->getTime() - mCreationTime >= mMaxAge)
         {
             Lab::getSingleton().getSimulation()->killOrganism(this);
         }
@@ -239,25 +232,10 @@ void SimulationObject::setGraphic(Graphic* graph)
     mGraphic->init(this);
 }
 
-int SimulationObject::setPos(lua_State* luaState)
-{
-    float x = luaL_checknumber(luaState, 1);
-    float y = luaL_checknumber(luaState, 2);
-    setPos(x, y);
-    return 0;
-}
-
 int SimulationObject::setSize(lua_State* luaState)
 {
     int size = luaL_checkint(luaState, 1);
     setSize(size);
-    return 0;
-}
-
-int SimulationObject::setRot(lua_State* luaState)
-{
-    float rot = luaL_checknumber(luaState, 1);
-    setRot(rot);
     return 0;
 }
 

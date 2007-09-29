@@ -65,8 +65,8 @@ void PopDynFixedSpecies::init()
             SimulationObject* org = (*iterSpecies).mBaseOrganism->clone();
             org->initRandom();
             org->setEnergy(org->getInitialEnergy());
-            org->placeRandom();
             Lab::getSingleton().getSimulation()->addObject(org);
+            Lab::getSingleton().getSimulation()->placeRandom(org);
             (*iterSpecies).mOrganismVector.push_back(org);
         }
     }
@@ -76,7 +76,7 @@ void PopDynFixedSpecies::onCycle()
 {
     PopulationDynamics::onCycle();
 
-    if ((Lab::getSingleton().getSimulation()->time() % mStatisticsTimeInterval) == 0)
+    if ((Lab::getSingleton().getSimulation()->getTime() % mStatisticsTimeInterval) == 0)
     {
         for (vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
             iterSpecies != mSpecies.end();
@@ -153,8 +153,8 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
             // Clone best and add to simulation
             newOrganism = bestOrganism->clone();
             newOrganism->setEnergy(newOrganism->getInitialEnergy());
-            newOrganism->placeRandom();
             Lab::getSingleton().getSimulation()->addObject(newOrganism);
+            Lab::getSingleton().getSimulation()->placeRandom(newOrganism);
 
             // Mutate
             newOrganism->mutate();

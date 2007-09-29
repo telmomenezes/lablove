@@ -51,16 +51,18 @@ public:
 
     void setWorldDimensions(float worldWidth,
                             float worldLength,
-                            float cellSide);
+                            unsigned int cellSide);
     float getWorldWidth(){return mWorldWidth;}
     float getWorldLength(){return mWorldLength;}
     float getCellSide(){return mCellSide;}
     unsigned int getWorldCellWidth(){return mWorldCellWidth;}
     unsigned int getWorldCellLength(){return mWorldCellLength;}
-    SimulationObject** getCellGrid(){return mCellGrid;}
+    list<SimulationObject*>** getCellGrid(){return mCellGrid;}
 
     void setPos(SimulationObject* obj, float x, float y);
     void setRot(SimulationObject* obj, float rot);
+
+    virtual void placeRandom(SimulationObject* obj);
 
     virtual void processObjects();
 
@@ -104,14 +106,15 @@ public:
     int setRotateCost(lua_State* luaState);
 
 protected:
+    void startCollisionDetection(float x, float y, float rad);
+    SimulationObject* nextCollision(float& distance, float& angle);
+
     void perceive(Agent* agent);
     void act(Agent* agent);
-    void scanCell(Agent* agent, int cellX, int cellY);
     virtual void onScanObject(Agent* orig,
                                 SimulationObject* targ,
-                                bool contact,
-                                float angle,
-                                float distance);
+                                float distance,
+                                float angle);
     void goFront(Agent* agent, float distance);
     void rotate(Agent* agent, float angle);
     void eat(Agent* agent);
@@ -119,7 +122,7 @@ protected:
     float mWorldWidth;
     float mWorldLength;
 
-    float mCellSide;
+    unsigned int mCellSide;
     unsigned int mWorldCellWidth;
     unsigned int mWorldCellLength;
 
@@ -148,6 +151,23 @@ protected:
     int mLastMouseY;
 
     pyc::Layer2D* mRootLayer2D;
+
+    int mCellX1;
+    int mCellX2;
+    int mCellY1;
+    int mCellY2;
+
+    int mCurrentCellX;
+    int mCurrentCellY;
+
+    float mCollisionX;
+    float mCollisionY;
+    float mCollisionRadius;
+
+    list<SimulationObject*>* mCurrentCellList;
+    list<SimulationObject*>::iterator mCurrentCellListIterator;
+
+    unsigned long mCollisionDetectionIteration;
 };
 #endif
 

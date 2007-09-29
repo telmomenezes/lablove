@@ -32,7 +32,7 @@ PopulationDynamics::~PopulationDynamics()
 void PopulationDynamics::onCycle()
 {
     // Dump statistics
-    if ((Lab::getSingleton().getSimulation()->time() % mStatisticsTimeInterval) == 0)
+    if ((Lab::getSingleton().getSimulation()->getTime() % mStatisticsTimeInterval) == 0)
     {
         for (list<Statistics*>::iterator iterStats = mStatistics.begin();
             iterStats != mStatistics.end();

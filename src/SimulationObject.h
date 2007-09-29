@@ -70,8 +70,6 @@ public:
     virtual SimulationObject* crossover(SimulationObject* otherParent){return this;}
     virtual void mutate(){}
 
-    virtual void placeRandom();
-
     void setAgeRange(unsigned long lowAgeLimit, unsigned long highAgeLimit);
     void setMetabolism(float metabolism){mMetabolism = metabolism;}
 
@@ -85,9 +83,7 @@ public:
 
     int setInitialEnergy(lua_State* luaState);
     int addSymbolTable(lua_State* luaState);
-    int setPos(lua_State* luaState);
     int setSize(lua_State* luaState);
-    int setRot(lua_State* luaState);
     int setAgeRange(lua_State* luaState);
     int setMetabolism(lua_State* luaState);
     int setColor(lua_State* luaState);
@@ -112,6 +108,8 @@ public:
     Type mType;
 
     float mEnergy;
+
+    unsigned long mCollisionDetectionIteration;
 
 protected:
     unsigned long mID;

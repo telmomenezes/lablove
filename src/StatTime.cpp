@@ -39,7 +39,7 @@ void StatTime::init()
 void StatTime::dump()
 {
     double cps = 0.0f;
-    unsigned long simTime =  Lab::getSingleton().getSimulation()->time();
+    unsigned long simTime =  Lab::getSingleton().getSimulation()->getTime();
     double realTime = Lab::getSingleton().getRealTime();
 
     if (simTime != 0)

@@ -68,8 +68,8 @@ void PopDynGenerations::init()
             SimulationObject* org = (*iterSpecies).mBaseOrganism->clone();
             org->initRandom();
             org->setEnergy(org->getInitialEnergy());
-            org->placeRandom();
             Lab::getSingleton().getSimulation()->addObject(org);
+            Lab::getSingleton().getSimulation()->placeRandom(org);
             (*iterSpecies).mOrganismList.push_back(org);
         }
     }
@@ -79,8 +79,8 @@ void PopDynGenerations::onCycle()
 {
     PopulationDynamics::onCycle();
 
-    if (((Lab::getSingleton().getSimulation()->time() % mGenerationTime) == 0)
-        && (Lab::getSingleton().getSimulation()->time() != 0))
+    if (((Lab::getSingleton().getSimulation()->getTime() % mGenerationTime) == 0)
+        && (Lab::getSingleton().getSimulation()->getTime() != 0))
     {
         for (vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
             iterSpecies != mSpecies.end();
@@ -122,8 +122,8 @@ void PopDynGenerations::onCycle()
                     // Clone best and add to simulation
                     newOrganism = bestOrganism->clone();
                     newOrganism->setEnergy(newOrganism->getInitialEnergy());
-                    newOrganism->placeRandom();
                     Lab::getSingleton().getSimulation()->addObject(newOrganism);
+                    Lab::getSingleton().getSimulation()->placeRandom(newOrganism);
 
                     // Mutate
                     newOrganism->mutate();
@@ -181,9 +181,9 @@ void PopDynGenerations::onOrganismDeath(SimulationObject* org)
             Lab::getSingleton().getSimulation()->removeObject(org);
 
             SimulationObject* org = (*iterSpecies).mBaseOrganism->clone();
-            org->placeRandom();
             org->setEnergy(org->getInitialEnergy());
             Lab::getSingleton().getSimulation()->addObject(org);
+            Lab::getSingleton().getSimulation()->placeRandom(org);
 
             return;
         }

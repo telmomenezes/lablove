@@ -144,8 +144,6 @@ const char Agent::mClassName[] = "Agent";
 Orbit<Agent>::MethodType Agent::mMethods[] = {
     {"setInitialEnergy", &SimulationObject::setInitialEnergy},
     {"addSymbolTable", &SimulationObject::addSymbolTable},
-    {"setPos", &SimulationObject::setPos},
-    {"setRot", &SimulationObject::setRot},
     {"setSize", &SimulationObject::setSize},
     {"setColor", &SimulationObject::setColor},
     {"setGraphic", &SimulationObject::setGraphic},

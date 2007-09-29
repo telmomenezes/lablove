@@ -68,7 +68,7 @@ void StatMedAvgMinMax::process(SimulationObject* obj)
 
 void StatMedAvgMinMax::dump()
 {
-    fprintf(mFile, "%d", Lab::getSingleton().getSimulation()->time());
+    fprintf(mFile, "%d", Lab::getSingleton().getSimulation()->getTime());
 
     for (list<list<float> >::iterator iterValueList = mValueLists.begin();
         iterValueList != mValueLists.end();

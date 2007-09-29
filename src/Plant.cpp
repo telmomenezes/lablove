@@ -24,12 +24,6 @@
 
 Plant::Plant(lua_State* luaState) : SimulationObject()
 {
-	mNextCellList = NULL;
-	mPrevCellList = NULL;
-
-	mCellX = -1;
-	mCellY = -1;
-	mCellPos = -1;
 }
 
 Plant::~Plant()
@@ -46,8 +40,6 @@ const char Plant::mClassName[] = "Plant";
 Orbit<Plant>::MethodType Plant::mMethods[] = {
 	{"setInitialEnergy", &SimulationObject::setInitialEnergy},
 	{"addSymbolTable", &SimulationObject::addSymbolTable},
-	{"setPos", &SimulationObject::setPos},
-	{"setRot", &SimulationObject::setRot},
 	{"setSize", &SimulationObject::setSize},
 	{"setColor", &SimulationObject::setColor},
 	{"setAgeRange", &SimulationObject::setAgeRange},

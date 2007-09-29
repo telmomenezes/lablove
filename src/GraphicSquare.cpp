@@ -56,7 +56,7 @@ void GraphicSquare::init(void* obj)
 void GraphicSquare::draw()
 {
 	SimulationObject* simObj = (SimulationObject*)mObject;
-	float rot = simObj->mRot;
+	float rot = simObj->mRotZ;
 	float centerX = simObj->mX;
 	float centerY = simObj->mY;
 
