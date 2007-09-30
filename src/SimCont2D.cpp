@@ -218,12 +218,33 @@ void SimCont2D::startCollisionDetection(float x, float y, float rad)
     mCollisionY = y;
     mCollisionRadius = rad;
 
-    mCellX1 = ((int)(x - rad)) / mCellSide;
-    mCellX2 = ((int)(x + rad)) / mCellSide;
-    mCellY1 = ((int)(y - rad)) / mCellSide;
-    mCellY2 = ((int)(y + rad)) / mCellSide;
+    float x1 = x - rad;
+    float x2 = x + rad;
+    float y1 = y - rad;
+    float y2 = y + rad;
 
-    mCurrentCellX = mCellX1;
+    if (x1 < 0)
+    {
+        x1 = 0;
+    }
+    if (y1 < 0)
+    {
+        y1 = 0;
+    }
+    if (x2 > mWorldWidth)
+    {
+        x2 = mWorldWidth;
+    }
+    if (y2 > mWorldLength)
+    {
+        y2 = mWorldLength;
+    }
+
+    mCellX1 = ((int)(x1)) / mCellSide;
+    mCellX2 = ((int)(x2)) / mCellSide;
+    mCellY1 = ((int)(y1)) / mCellSide;
+    mCellY2 = ((int)(y2)) / mCellSide;
+
     mCurrentCellY = mCellY1;
 
     mCurrentCellList = mCellGrid[(mWorldCellWidth * mCurrentCellY) + mCurrentCellX];
