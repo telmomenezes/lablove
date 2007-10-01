@@ -20,6 +20,7 @@
 #if !defined(__INCLUDE_POPULATION_DYNAMICS_H)
 #define __INCLUDE_POPULATION_DYNAMICS_H
 
+#include "PopulationManager.h"
 #include "SimulationObject.h"
 #include "Statistics.h"
 #include "Orbit.h"
@@ -34,8 +35,8 @@ public:
     PopulationDynamics();
     virtual ~PopulationDynamics();
 
-    virtual void init()=0;
-    virtual void onCycle();
+    virtual void init(PopulationManager* popManager);
+    virtual void onCycle(unsigned long time, double realTime);
     virtual void onOrganismDeath(SimulationObject* org);
     void addStatistics(Statistics* stats);
 
@@ -45,6 +46,7 @@ public:
     int setStatisticsTimeInterval(lua_State* luaState);
 
 protected:
+    PopulationManager* mPopManager;
     list<Statistics*> mStatistics;
     unsigned long mStatisticsTimeInterval;
 };

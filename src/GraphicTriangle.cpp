@@ -18,7 +18,6 @@
  */
 
 #include "GraphicTriangle.h"
-#include "Lab.h"
 #include "SimulationObject.h"
 
 GraphicTriangle::GraphicTriangle(lua_State* luaState)
@@ -28,8 +27,6 @@ GraphicTriangle::GraphicTriangle(lua_State* luaState)
     mRed = 0;
     mGreen = 0;
     mBlue = 0;
-
-    mRootLayer2D = NULL;
 }
 
 GraphicTriangle::~GraphicTriangle()
@@ -49,12 +46,12 @@ void GraphicTriangle::init(void* obj)
     mRed = simObj->getColor()->mRed;
     mGreen = simObj->getColor()->mGreen;
     mBlue = simObj->getColor()->mBlue;
-
-    mRootLayer2D = Lab::getSingleton().getRootLayer2D();
 }
 
-void GraphicTriangle::draw()
+void GraphicTriangle::draw(pyc::Layer* layer)
 {
+    pyc::Layer2D* layer2D = (pyc::Layer2D*)layer;
+
     SimulationObject* simObj = (SimulationObject*)mObject;
 
     float rot = simObj->mRotZ;
@@ -71,10 +68,10 @@ void GraphicTriangle::draw()
     float x3 = centerX + (cosf(a3) * mSize);
     float y3 = centerY + (sinf(a3) * mSize);
 
-    mRootLayer2D->setColor(mRed, mGreen, mBlue);
-    mRootLayer2D->setLineWidth(2.0f);
-    mRootLayer2D->fillTriangle(x1, y1, x2, y2, x3, y3);
-    mRootLayer2D->drawTriangle(x1, y1, x2, y2, x3, y3);
+    layer2D->setColor(mRed, mGreen, mBlue);
+    layer2D->setLineWidth(2.0f);
+    layer2D->fillTriangle(x1, y1, x2, y2, x3, y3);
+    layer2D->drawTriangle(x1, y1, x2, y2, x3, y3);
 }
 
 const char GraphicTriangle::mClassName[] = "GraphicTriangle";

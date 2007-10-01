@@ -43,7 +43,7 @@ public:
     void addField(string fieldName);
     void setFile(string filePath);
     virtual void process(SimulationObject* obj)=0;
-    virtual void dump()=0;
+    virtual void dump(unsigned long time, double realTime)=0;
 
     int addField(lua_State* luaState);
     int setFile(lua_State* luaState);

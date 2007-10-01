@@ -22,7 +22,7 @@ IF(WIN32)
 ENDIF(WIN32)
 
 SET(SOURCE_FILES
-    src/Lab.cpp
+    src/PopulationManager.cpp
     src/Simulation.cpp
     src/SimCont2D.cpp
     src/ScriptableObject.cpp
@@ -86,7 +86,8 @@ ENDIF(MINGW32)
 SET(UNIT_TEST_FILES
         ${UNIT_TEST_FILES}
         src/tests/Main.cpp
-        src/tests/TestLab.cpp
+        src/tests/TestSimulation.cpp
+        src/tests/TestSimCont2D.cpp
         src/tests/TestGrid.cpp
         src/tests/TestGridbrain.cpp
         src/tests/TestGridbrainComponentSet.cpp)

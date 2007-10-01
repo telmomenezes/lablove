@@ -18,52 +18,49 @@
  */
 
 #include "GraphicSquare.h"
-#include "Lab.h"
 #include "SimulationObject.h"
 
 GraphicSquare::GraphicSquare(lua_State* luaState)
 {
     mObject = NULL;
-	mSize = 0;
-	mRed = 0;
-	mGreen = 0;
-	mBlue = 0;
-
-    mRootLayer2D = NULL;
+    mSize = 0;
+    mRed = 0;
+    mGreen = 0;
+    mBlue = 0;
 }
 
 GraphicSquare::~GraphicSquare()
-{	
+{   
 }
 
 Graphic* GraphicSquare::createSameType()
 {
-	return new GraphicSquare();
+    return new GraphicSquare();
 }
 
 void GraphicSquare::init(void* obj)
 {
-	mObject = obj;
-	SimulationObject* simObj = (SimulationObject*)mObject;
-	mSize = simObj->mSize;
-	mRed = simObj->getColor()->mRed;
-	mGreen = simObj->getColor()->mGreen;
-	mBlue = simObj->getColor()->mBlue;
-
-    mRootLayer2D = Lab::getSingleton().getRootLayer2D();
+    mObject = obj;
+    SimulationObject* simObj = (SimulationObject*)mObject;
+    mSize = simObj->mSize;
+    mRed = simObj->getColor()->mRed;
+    mGreen = simObj->getColor()->mGreen;
+    mBlue = simObj->getColor()->mBlue;
 }
 
-void GraphicSquare::draw()
+void GraphicSquare::draw(pyc::Layer* layer)
 {
-	SimulationObject* simObj = (SimulationObject*)mObject;
-	float rot = simObj->mRotZ;
-	float centerX = simObj->mX;
-	float centerY = simObj->mY;
+    pyc::Layer2D* layer2D = (pyc::Layer2D*)layer;
 
-	mRootLayer2D->setRotation(centerX, centerY, rot);
-	mRootLayer2D->setColor(mRed, mGreen, mBlue);
-	mRootLayer2D->fillSquare(centerX, centerY, mSize);
-	mRootLayer2D->clearRotation();
+    SimulationObject* simObj = (SimulationObject*)mObject;
+    float rot = simObj->mRotZ;
+    float centerX = simObj->mX;
+    float centerY = simObj->mY;
+
+    layer2D->setRotation(centerX, centerY, rot);
+    layer2D->setColor(mRed, mGreen, mBlue);
+    layer2D->fillSquare(centerX, centerY, mSize);
+    layer2D->clearRotation();
 }
 
 const char GraphicSquare::mClassName[] = "GraphicSquare";

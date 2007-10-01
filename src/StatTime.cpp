@@ -18,7 +18,6 @@
  */
 
 #include "StatTime.h"
-#include "Lab.h"
 
 StatTime::StatTime(lua_State* luaState)
 {
@@ -36,23 +35,21 @@ void StatTime::init()
     fflush(mFile);
 }
 
-void StatTime::dump()
+void StatTime::dump(unsigned long time, double realTime)
 {
     double cps = 0.0f;
-    unsigned long simTime =  Lab::getSingleton().getSimulation()->getTime();
-    double realTime = Lab::getSingleton().getRealTime();
 
-    if (simTime != 0)
+    if (time != 0)
     {
-        unsigned long deltaSim = simTime - mLastSimTime;
+        unsigned long deltaSim = time - mLastSimTime;
         double deltaReal = realTime - mLastRealTime;
         cps = ((double)deltaSim) / deltaReal;
     }
 
-    mLastSimTime = simTime;
+    mLastSimTime = time;
     mLastRealTime = realTime;
 
-    fprintf(mFile, "%d,%f,%f", simTime, realTime, cps);
+    fprintf(mFile, "%d,%f,%f", time, realTime, cps);
 
     fprintf(mFile, "\n");
     fflush(mFile);

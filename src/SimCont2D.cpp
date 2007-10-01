@@ -18,7 +18,6 @@
  */
 
 #include "SimCont2D.h"
-#include "Lab.h"
 #include "SimulationObject.h"
 #include "PopulationDynamics.h"
 #include "functions.h"
@@ -96,12 +95,6 @@ SimCont2D::~SimCont2D()
         free(mCellGrid);
         mCellGrid = NULL;
     }
-}
-
-void SimCont2D::init()
-{
-    Simulation::init();
-    mRootLayer2D = Lab::getSingleton().getRootLayer2D();
 }
 
 void SimCont2D::setWorldDimensions(float worldWidth,
@@ -304,26 +297,6 @@ SimulationObject* SimCont2D::nextCollision(float& distance, float& angle)
         }
 
         mCurrentCellListIterator++;
-    }
-}
-
-void SimCont2D::processObjects()
-{
-    list<SimulationObject*>::iterator iterObj;
-
-    for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
-    {
-        SimulationObject* obj = *iterObj;
-
-        obj->onCycle();
-
-        if (obj->mType == SimulationObject::TYPE_AGENT)
-        {
-            Agent* agent = (Agent*)obj;
-            perceive(agent);
-            agent->compute();
-            act(agent);
-        }
     }
 }
 
@@ -531,7 +504,7 @@ void SimCont2D::eat(Agent* agent)
     if ((mTargetObject) && (mTargetObject->isFood()))
     {
         agent->deltaEnergy(mTargetObject->getEnergy());
-        Lab::getSingleton().getSimulation()->killOrganism(mTargetObject);
+        killOrganism(mTargetObject);
     }
 }
 
@@ -612,6 +585,11 @@ SimulationObject* SimCont2D::getObjectByScreenPos(int x, int y)
 
 bool SimCont2D::onKeyDown(pyc::KeyCode key)
 {
+    if (Simulation::onKeyDown(key))
+    {
+        return true;
+    }
+
     /*switch (key)
     {
     case pyc::KEY_UP:
@@ -712,6 +690,7 @@ const char SimCont2D::mClassName[] = "SimCont2D";
 
 Orbit<SimCont2D>::MethodType SimCont2D::mMethods[] = {
     {"setPopulationDynamics", &Simulation::setPopulationDynamics},
+    {"run", &Simulation::run},
     {"setWorldDimensions", &SimCont2D::setWorldDimensions},
     {"setViewRange", &SimCont2D::setViewRange},
     {"setViewAngle", &SimCont2D::setViewAngle},

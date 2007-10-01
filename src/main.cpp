@@ -17,8 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "Lab.h"
 #include "SimCont2D.h"
+#include "SimulationObject.h"
 #include "Plant.h"
 #include "Agent.h"
 #include "PopDynGenerations.h"
@@ -49,13 +49,6 @@ extern "C"
 
 #include <stdexcept>
 
-int getLab(lua_State* luaState)
-{
-    Lab* obj = &Lab::getSingleton();
-    Orbit<Lab>::push(luaState, obj, false);
-    return 1;
-}
-
 #if defined(__LABLOVE_WITH_GRAPHICS) && defined(__WIN32)
 INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)
 #else
@@ -71,8 +64,8 @@ int main(int argc, char *argv[])
     luaopen_math(luaState);
     luaopen_debug(luaState);
     
-    Orbit<Lab>::orbitRegister(luaState);
     Orbit<SimCont2D>::orbitRegister(luaState);
+    Orbit<SimulationObject>::orbitRegister(luaState);
     Orbit<Plant>::orbitRegister(luaState);
     Orbit<Agent>::orbitRegister(luaState);
     Orbit<PopDynGenerations>::orbitRegister(luaState);
@@ -88,8 +81,6 @@ int main(int argc, char *argv[])
     Orbit<GraphicTriangle>::orbitRegister(luaState);
     Orbit<GraphicSquare>::orbitRegister(luaState);
 
-    lua_register(luaState, "getLab", getLab);
-
     char* scriptFile = "default.lua";
     if (argc == 2)
     {
@@ -102,17 +93,6 @@ int main(int argc, char *argv[])
     {
         printf("%s\n", lua_tostring (luaState, -1));
         lua_pop(luaState, 1);
-        return -1;
-    }
-
-    try
-    {
-        Lab::getSingleton().run();
-    }
-    catch (std::runtime_error error)
-    {
-        printf("%s\n", error.what());
-        lua_close(luaState);
         return -1;
     }
 

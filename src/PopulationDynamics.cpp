@@ -18,7 +18,6 @@
  */
 
 #include "PopulationDynamics.h"
-#include "Lab.h"
 
 PopulationDynamics::PopulationDynamics()
 {
@@ -29,16 +28,21 @@ PopulationDynamics::~PopulationDynamics()
 {   
 }
 
-void PopulationDynamics::onCycle()
+void PopulationDynamics::init(PopulationManager* popManager)
+{
+    mPopManager = popManager;
+}
+
+void PopulationDynamics::onCycle(unsigned long time, double realTime)
 {
     // Dump statistics
-    if ((Lab::getSingleton().getSimulation()->getTime() % mStatisticsTimeInterval) == 0)
+    if ((time % mStatisticsTimeInterval) == 0)
     {
         for (list<Statistics*>::iterator iterStats = mStatistics.begin();
             iterStats != mStatistics.end();
             iterStats++)
         {
-            (*iterStats)->dump();
+            (*iterStats)->dump(time, realTime);
         }
     }
 }
@@ -62,7 +66,7 @@ void PopulationDynamics::addStatistics(Statistics* stats)
 
 int PopulationDynamics::addStatistics(lua_State* luaState)
 {
-    Statistics* stats = (Statistics*)Orbit<Lab>::pointer(luaState, 1);
+    Statistics* stats = (Statistics*)Orbit<SimulationObject>::pointer(luaState, 1);
     addStatistics(stats);
     return 0;
 }

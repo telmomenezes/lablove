@@ -20,9 +20,10 @@
 #if !defined(__INCLUDE_SIMULATION_H)
 #define __INCLUDE_SIMULATION_H
 
+#include "PopulationManager.h"
 #include "SimulationObject.h"
+#include "Agent.h"
 #include "PopulationDynamics.h"
-#include "InputHandler.h"
 
 #include "pyc.h"
 
@@ -32,45 +33,55 @@
 
 using std::list;
 
-class Simulation : public InputHandler
+class Simulation : public PopulationManager
 {
 public:
-    Simulation();
+    Simulation(lua_State* luaState=NULL);
     virtual ~Simulation();
 
     virtual void init();
     
     virtual void drawBeforeObjects(){}
 
-    virtual void addObject(SimulationObject* object);
-    virtual void removeObject(SimulationObject* obj);
-
-    virtual void placeRandom(SimulationObject* obj)=0;
-
+    void run();
     void cycle();
-    virtual void processObjects()=0;
 
-    virtual SimulationObject* getObjectByScreenPos(int x, int y)=0;
+    virtual void processObjects(){};
 
-    void setSelectedObject(SimulationObject* object);
-    SimulationObject* getSelectedObject(){return mSelectedObject;}
+    virtual void addObject(SimulationObject* object);
+
+    virtual SimulationObject* getObjectByScreenPos(int x, int y){return NULL;}
 
     void setPopulationDynamics(PopulationDynamics* popDyn){mPopulationDynamics = popDyn;}
     PopulationDynamics* getPopulationDynamics(){return mPopulationDynamics;}
 
-    virtual void killOrganism(SimulationObject* org);
     unsigned long getTime(){return mSimulationTime;}
+    double getRealTime();
+
+    void setSeedIndex(unsigned int index);
+
+    virtual bool onKeyDown(pyc::KeyCode keycode);
+    virtual bool onKeyUp(pyc::KeyCode keycode){return false;}
+    virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y){return false;}
+    virtual bool onMouseButtonUp(pyc::MouseButton button, int x, int y){return false;}
+    virtual bool onMouseMove(int x, int y){return false;}
 
     int setPopulationDynamics(lua_State* luaState);
+    int setSeedIndex(lua_State* luaState);
+    int run(lua_State* luaState);
 
 protected:
-    list<SimulationObject*> mObjects;
-    list<SimulationObject*> mObjectsToKill;
-
+    virtual void perceive(Agent* agent){}
+    virtual void act(Agent* agent){}
     unsigned long mSimulationTime;
-    SimulationObject* mSelectedObject;
     PopulationDynamics* mPopulationDynamics;
 
+    bool mStop;
+    
+    pyc::Pycasso mPycasso;
+    pyc::EventQ* mEventQ;
+    pyc::Window* mWindow;
+    pyc::Layer2D* mRootLayer2D;
     pyc::Layer* mLogo;
 };
 #endif

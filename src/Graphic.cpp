@@ -18,7 +18,6 @@
  */
 
 #include "Graphic.h"
-#include "Lab.h"
 
 Graphic::Graphic(lua_State* luaState)
 {

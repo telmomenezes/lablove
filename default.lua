@@ -27,17 +27,12 @@ initialConnections = 10
 
 ----------------------------------------------
 
-lab = getLab()
-lab:setSeedIndex(0)
-
 sim = SimCont2D()
 sim:setWorldDimensions(worldWidth, worldHeight, viewRange * 2)
 sim:setViewRange(viewRange)
 sim:setViewAngle(viewAngle)
 sim:setGoCost(goCost)
 sim:setRotateCost(rotateCost)
-
-lab:setSimulation(sim)
 
 animat = Agent()
 animat:setSize(10.0)
@@ -154,3 +149,5 @@ stats:addField("connections")
 statTime = StatTime()
 statTime:setFile("time.csv")
 --popDyn:addStatistics(statTime)
+
+sim:run()

@@ -34,7 +34,7 @@ public:
     virtual Graphic* createSameType();
 
     virtual void init(void* obj);
-    virtual void draw();
+    virtual void draw(pyc::Layer* layer);
 
     static const char mClassName[];
     static Orbit<GraphicSquare>::MethodType mMethods[];
@@ -45,8 +45,6 @@ protected:
     int mRed;
     int mGreen;
     int mBlue;
-
-    pyc::Layer2D* mRootLayer2D;
 };
 #endif
 

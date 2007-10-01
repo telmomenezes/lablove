@@ -18,7 +18,6 @@
  */
 
 #include "Agent.h"
-#include "Lab.h"
 #include "math.h"
 #include "functions.h"
 #include "defines.h"

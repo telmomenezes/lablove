@@ -18,7 +18,6 @@
  */
 
 #include "Plant.h"
-#include "Lab.h"
 #include "math.h"
 #include "defines.h"
 

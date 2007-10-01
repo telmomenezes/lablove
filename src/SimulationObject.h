@@ -26,6 +26,8 @@
 
 #include "Orbit.h"
 
+#include "pyc.h"
+
 #include <map>
 #include <string>
 
@@ -41,17 +43,16 @@ public:
 
     static unsigned long CURRENT_ID;
 
-    SimulationObject();
+    SimulationObject(lua_State* luaState=NULL);
     SimulationObject(SimulationObject* obj);
     virtual ~SimulationObject();
 
-    virtual SimulationObject* clone()=0;
+    virtual SimulationObject* clone();
     virtual void initRandom(){}
 
     unsigned long getID(){return mID;}
 
-    virtual void onCycle();
-    void draw();
+    void draw(pyc::Layer* layer);
     virtual bool isFood(){return false;}
     void setSelected(bool selected){mSelected = selected;}
     bool isSelected(){return mSelected;}
@@ -67,6 +68,9 @@ public:
     void setEnergy(float energy){mEnergy = energy;}
     void setInitialEnergy(float energy){mInitialEnergy = energy;}
 
+    unsigned long getCreationTime(){return mCreationTime;}
+    void setCreationTime(unsigned long time){mCreationTime = time;}
+
     virtual SimulationObject* crossover(SimulationObject* otherParent){return this;}
     virtual void mutate(){}
 
@@ -80,14 +84,6 @@ public:
     SymbolTable* getSymbolTable(unsigned int pos);
 
     void setGraphic(Graphic* graph);
-
-    int setInitialEnergy(lua_State* luaState);
-    int addSymbolTable(lua_State* luaState);
-    int setSize(lua_State* luaState);
-    int setAgeRange(lua_State* luaState);
-    int setMetabolism(lua_State* luaState);
-    int setColor(lua_State* luaState);
-    int setGraphic(lua_State* luaState);
 
     virtual float getFieldValue(string fieldName);
 
@@ -108,21 +104,33 @@ public:
     Type mType;
 
     float mEnergy;
+    unsigned long mMaxAge;
+    float mMetabolism;
+    unsigned long mCreationTime;
 
     unsigned long mCollisionDetectionIteration;
+
+    static const char mClassName[];
+    static Orbit<SimulationObject>::MethodType mMethods[];
+    static Orbit<SimulationObject>::NumberGlobalType mNumberGlobals[];
+
+    int setInitialEnergy(lua_State* luaState);
+    int addSymbolTable(lua_State* luaState);
+    int setSize(lua_State* luaState);
+    int setAgeRange(lua_State* luaState);
+    int setMetabolism(lua_State* luaState);
+    int setColor(lua_State* luaState);
+    int setGraphic(lua_State* luaState);
 
 protected:
     unsigned long mID;
     bool mSelected;
     unsigned int mSpeciesID;
     float mInitialEnergy;
-    unsigned long mCreationTime;
     map<unsigned int, SymbolTable*> mSymbolTables;
-
     unsigned long mLowAgeLimit;
     unsigned long mHighAgeLimit;
-    unsigned long mMaxAge;
-    float mMetabolism;
+    
     SymbolRGB mColor;
 
     Graphic* mGraphic;

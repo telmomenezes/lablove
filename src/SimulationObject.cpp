@@ -18,14 +18,13 @@
  */
 
 #include "SimulationObject.h"
-#include "Lab.h"
-#include <stdlib.h>
 #include "functions.h"
 #include "random.h"
+#include <stdlib.h>
 
 unsigned long SimulationObject::CURRENT_ID = 0;
 
-SimulationObject::SimulationObject()
+SimulationObject::SimulationObject(lua_State* luaState)
 {
     mID = CURRENT_ID++;
 
@@ -35,7 +34,7 @@ SimulationObject::SimulationObject()
     mSpeciesID = 0;
     mEnergy = 0;
     mInitialEnergy = 0;
-    mCreationTime = Lab::getSingleton().getSimulation()->getTime();
+    mCreationTime = 0;
     mHuman = false;
 
     mX = 0.0f;
@@ -71,7 +70,7 @@ SimulationObject::SimulationObject(SimulationObject* obj)
     mEnergy = obj->mEnergy;
     mInitialEnergy = obj->mInitialEnergy;
     mSpeciesID = obj->mSpeciesID;
-    mCreationTime = Lab::getSingleton().getSimulation()->getTime();
+    mCreationTime = 0;
     mHuman = false;
 
     map<unsigned int, SymbolTable*>::iterator iterTables;
@@ -142,6 +141,11 @@ SimulationObject::~SimulationObject()
     }
 }
 
+SimulationObject* SimulationObject::clone()
+{
+    return new SimulationObject(this);
+}
+
 void SimulationObject::addSymbolTable(SymbolTable* table, unsigned int code)
 {
     mSymbolTables[code] = table;
@@ -165,7 +169,7 @@ int SimulationObject::setInitialEnergy(lua_State* luaState)
 
 int SimulationObject::addSymbolTable(lua_State* luaState)
 {
-    SymbolTable* table = (SymbolTable*)Orbit<Lab>::pointer(luaState, 1);
+    SymbolTable* table = (SymbolTable*)Orbit<SimulationObject>::pointer(luaState, 1);
     unsigned int code = luaL_checkint(luaState, 2);
     addSymbolTable(table, code);
     return 0;
@@ -177,29 +181,11 @@ void SimulationObject::setSize(float size)
     mSizeSquared = mSize * mSize;
 }
 
-void SimulationObject::onCycle()
-{
-    mEnergy -= mMetabolism;
-
-    if (mEnergy < 0)
-    {
-        Lab::getSingleton().getSimulation()->killOrganism(this);
-    }
-
-    if (mMaxAge > 0)
-    {
-        if (Lab::getSingleton().getSimulation()->getTime() - mCreationTime >= mMaxAge)
-        {
-            Lab::getSingleton().getSimulation()->killOrganism(this);
-        }
-    }
-}
-
-void SimulationObject::draw()
+void SimulationObject::draw(pyc::Layer* layer)
 {
     if (mGraphic != NULL)
     {
-        mGraphic->draw();
+        mGraphic->draw(layer);
     }
 }
 
@@ -256,15 +242,30 @@ int SimulationObject::setMetabolism(lua_State* luaState)
 
 int SimulationObject::setColor(lua_State* luaState)
 {
-    SymbolRGB* color = (SymbolRGB*)Orbit<Lab>::pointer(luaState, 1);
+    SymbolRGB* color = (SymbolRGB*)Orbit<SimulationObject>::pointer(luaState, 1);
     setColor(color);
     return 0;
 }
 
 int SimulationObject::setGraphic(lua_State* luaState)
 {
-    Graphic* graph = (Graphic*)Orbit<Lab>::pointer(luaState, 1);
+    Graphic* graph = (Graphic*)Orbit<SimulationObject>::pointer(luaState, 1);
     setGraphic(graph);
     return 0;
 }
+
+const char SimulationObject::mClassName[] = "SimulationObject";
+
+Orbit<SimulationObject>::MethodType SimulationObject::mMethods[] = {
+	{"setInitialEnergy", &SimulationObject::setInitialEnergy},
+	{"addSymbolTable", &SimulationObject::addSymbolTable},
+	{"setSize", &SimulationObject::setSize},
+	{"setColor", &SimulationObject::setColor},
+	{"setAgeRange", &SimulationObject::setAgeRange},
+	{"setMetabolism", &SimulationObject::setMetabolism},
+	{"setGraphic", &SimulationObject::setGraphic},
+        {0,0}
+};
+
+Orbit<SimulationObject>::NumberGlobalType SimulationObject::mNumberGlobals[] = {{0,0}};
 

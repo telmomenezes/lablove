@@ -47,8 +47,6 @@ public:
     SimCont2D(lua_State* luaState=NULL);
     virtual ~SimCont2D();
 
-    virtual void init();
-
     void setWorldDimensions(float worldWidth,
                             float worldLength,
                             unsigned int cellSide);
@@ -63,8 +61,6 @@ public:
     void setRot(SimulationObject* obj, float rot);
 
     virtual void placeRandom(SimulationObject* obj);
-
-    virtual void processObjects();
 
     virtual void drawBeforeObjects();
 
@@ -104,13 +100,13 @@ public:
     int setViewAngle(lua_State* luaState);
     int setGoCost(lua_State* luaState);
     int setRotateCost(lua_State* luaState);
-
-protected:
+   
     void startCollisionDetection(float x, float y, float rad);
     SimulationObject* nextCollision(float& distance, float& angle);
 
-    void perceive(Agent* agent);
-    void act(Agent* agent);
+protected:
+    virtual void perceive(Agent* agent);
+    virtual void act(Agent* agent);
     virtual void onScanObject(Agent* orig,
                                 SimulationObject* targ,
                                 float distance,

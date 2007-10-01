@@ -21,6 +21,7 @@
 #define __INCLUDE_GRAPHIC_H
 
 #include "Orbit.h"
+#include "pyc.h"
 
 class Graphic
 {
@@ -31,7 +32,7 @@ public:
     virtual Graphic* createSameType()=0;
 
     virtual void init(void* obj)=0;
-    virtual void draw()=0;
+    virtual void draw(pyc::Layer* layer)=0;
 
 protected:
     void* mObject;

@@ -18,7 +18,6 @@
  */
 
 #include "PopDynFixedSpecies.h"
-#include "Lab.h"
 #include "SimulationObject.h"
 #include "functions.h"
 #include "random.h"
@@ -52,8 +51,10 @@ void PopDynFixedSpecies::addSpeciesStatistics(unsigned int speciesIndex, Statist
     mSpecies[speciesIndex].mStatistics.push_back(stats);
 }
 
-void PopDynFixedSpecies::init()
+void PopDynFixedSpecies::init(PopulationManager* popManager)
 {
+    PopulationDynamics::init(popManager);
+
     for (vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
         iterSpecies != mSpecies.end();
         iterSpecies++)
@@ -65,18 +66,18 @@ void PopDynFixedSpecies::init()
             SimulationObject* org = (*iterSpecies).mBaseOrganism->clone();
             org->initRandom();
             org->setEnergy(org->getInitialEnergy());
-            Lab::getSingleton().getSimulation()->addObject(org);
-            Lab::getSingleton().getSimulation()->placeRandom(org);
+            mPopManager->addObject(org);
+            mPopManager->placeRandom(org);
             (*iterSpecies).mOrganismVector.push_back(org);
         }
     }
 }
 
-void PopDynFixedSpecies::onCycle()
+void PopDynFixedSpecies::onCycle(unsigned long time, double realTime)
 {
-    PopulationDynamics::onCycle();
+    PopulationDynamics::onCycle(time, realTime);
 
-    if ((Lab::getSingleton().getSimulation()->getTime() % mStatisticsTimeInterval) == 0)
+    if ((time % mStatisticsTimeInterval) == 0)
     {
         for (vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
             iterSpecies != mSpecies.end();
@@ -87,7 +88,7 @@ void PopDynFixedSpecies::onCycle()
                 iterStats != (*iterSpecies).mStatistics.end();
                 iterStats++)
             {
-                (*iterStats)->dump();
+                (*iterStats)->dump(time, realTime);
             }
         }
     }
@@ -153,15 +154,15 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
             // Clone best and add to simulation
             newOrganism = bestOrganism->clone();
             newOrganism->setEnergy(newOrganism->getInitialEnergy());
-            Lab::getSingleton().getSimulation()->addObject(newOrganism);
-            Lab::getSingleton().getSimulation()->placeRandom(newOrganism);
+            mPopManager->addObject(newOrganism);
+            mPopManager->placeRandom(newOrganism);
 
             // Mutate
             newOrganism->mutate();
 
             // Remove
             (*iterSpecies).mOrganismVector[orgPos] = newOrganism;
-            Lab::getSingleton().getSimulation()->removeObject(org);
+            mPopManager->removeObject(org);
 
             return;
         }

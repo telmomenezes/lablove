@@ -17,19 +17,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_INPUT_HANDLER_H)
-#define __INCLUDE_INPUT_HANDLER_H
+#include "UnitTest++.h"
+#include "Simulation.h"
 
-#include "pyc.h"
+#include <stdexcept>
 
-class InputHandler
+TEST(SimulationRealTime)
 {
-public:
-    virtual bool onKeyDown(pyc::KeyCode keycode){return false;}
-    virtual bool onKeyUp(pyc::KeyCode keycode){return false;}
-    virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y){return false;}
-    virtual bool onMouseButtonUp(pyc::MouseButton button, int x, int y){return false;}
-    virtual bool onMouseMove(int x, int y){return false;}
-};
-#endif
+    Simulation sim;
+    double t1 = sim.getRealTime();
+    CHECK(t1 > 0.0f);
+    double t2 = sim.getRealTime();
+    CHECK(t2 > 0.0f);
+    CHECK(t2 > t1);
+}
 

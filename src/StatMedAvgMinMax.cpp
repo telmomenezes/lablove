@@ -18,7 +18,6 @@
  */
 
 #include "StatMedAvgMinMax.h"
-#include "Lab.h"
 
 StatMedAvgMinMax::StatMedAvgMinMax(lua_State* luaState)
 {
@@ -66,9 +65,9 @@ void StatMedAvgMinMax::process(SimulationObject* obj)
     }
 }
 
-void StatMedAvgMinMax::dump()
+void StatMedAvgMinMax::dump(unsigned long time, double realTime)
 {
-    fprintf(mFile, "%d", Lab::getSingleton().getSimulation()->getTime());
+    fprintf(mFile, "%d", time);
 
     for (list<list<float> >::iterator iterValueList = mValueLists.begin();
         iterValueList != mValueLists.end();

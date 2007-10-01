@@ -37,7 +37,7 @@ public:
     virtual void init();
 
     virtual void process(SimulationObject* obj);
-    virtual void dump();
+    virtual void dump(unsigned long time, double realTime);
 
     static const char mClassName[];
         static Orbit<StatMedAvgMinMax>::MethodType mMethods[];

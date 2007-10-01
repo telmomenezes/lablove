@@ -17,27 +17,36 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "UnitTest++.h"
-#include "Lab.h"
+#if !defined(__INCLUDE_POPULATION_MANAGER_H)
+#define __INCLUDE_POPULATION_MANAGER_H
 
-#include <stdexcept>
+#include "SimulationObject.h"
 
-TEST(LabSingleton)
+#include <list>
+
+using std::list;
+
+class PopulationManager
 {
-    CHECK(Lab::getSingleton().getSimulation() == NULL);
-}
+public:
+    PopulationManager();
+    virtual ~PopulationManager();
 
-TEST(LabThrowsExceptionIfRunWithoutSetSimulation)
-{
-    CHECK_THROW(Lab::getSingleton().run(), std::runtime_error);
-}
+    virtual void addObject(SimulationObject* object);
+    virtual void removeObject(SimulationObject* obj);
 
-TEST(LabRealTime)
-{
-    double t1 = Lab::getSingleton().getRealTime();
-    CHECK(t1 > 0.0f);
-    double t2 = Lab::getSingleton().getRealTime();
-    CHECK(t2 > 0.0f);
-    CHECK(t2 > t1);
-}
+    virtual void placeRandom(SimulationObject* obj){}
+
+    virtual void killOrganism(SimulationObject* org);
+
+    void setSelectedObject(SimulationObject* object);
+    SimulationObject* getSelectedObject(){return mSelectedObject;}
+
+protected:
+    list<SimulationObject*> mObjects;
+    list<SimulationObject*> mObjectsToKill;
+
+    SimulationObject* mSelectedObject;
+};
+#endif
 
