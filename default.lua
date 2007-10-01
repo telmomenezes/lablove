@@ -28,7 +28,7 @@ initialConnections = 10
 ----------------------------------------------
 
 sim = SimCont2D()
-sim:setWorldDimensions(worldWidth, worldHeight, viewRange * 2)
+sim:setWorldDimensions(worldWidth, worldHeight, 100)
 sim:setViewRange(viewRange)
 sim:setViewAngle(viewAngle)
 sim:setGoCost(goCost)

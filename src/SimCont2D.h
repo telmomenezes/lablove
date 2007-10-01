@@ -118,9 +118,9 @@ protected:
     float mWorldWidth;
     float mWorldLength;
 
-    unsigned int mCellSide;
-    unsigned int mWorldCellWidth;
-    unsigned int mWorldCellLength;
+    int mCellSide;
+    int mWorldCellWidth;
+    int mWorldCellLength;
 
     list<SimulationObject*>** mCellGrid;
 

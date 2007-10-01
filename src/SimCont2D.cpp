@@ -104,8 +104,8 @@ void SimCont2D::setWorldDimensions(float worldWidth,
     mWorldWidth = worldWidth;
     mWorldLength = worldLength;
     mCellSide = cellSide;
-    mWorldCellWidth = (unsigned int)(ceilf(mWorldWidth / mCellSide));
-    mWorldCellLength = (unsigned int)(ceilf(mWorldLength / mCellSide));
+    mWorldCellWidth = (unsigned int)(ceilf(mWorldWidth / ((float)mCellSide)));
+    mWorldCellLength = (unsigned int)(ceilf(mWorldLength / ((float)mCellSide)));
 
     unsigned int gridSize = mWorldCellWidth * mWorldCellLength;
     mCellGrid = (list<SimulationObject*>**)malloc(sizeof(list<SimulationObject*>*) * gridSize);
@@ -127,10 +127,44 @@ void SimCont2D::setPos(SimulationObject* obj, float x, float y)
     int origY1 = ((int)(origY - size)) / mCellSide;
     int origY2 = ((int)(origY + size)) / mCellSide;
 
+    if (origX1 < 0)
+    {
+        origX1 = 0;
+    }
+    if (origY1 < 0)
+    {
+        origY1 = 0;
+    }
+    if (origX2 >= mWorldCellWidth)
+    {
+        origX2 = mWorldCellWidth - 1;
+    }
+    if (origY2 >= mWorldCellLength)
+    {
+        origY2 = mWorldCellLength - 1;
+    }
+
     int targX1 = ((int)(x - size)) / mCellSide;
     int targX2 = ((int)(x + size)) / mCellSide;
     int targY1 = ((int)(y - size)) / mCellSide;
     int targY2 = ((int)(y + size)) / mCellSide;
+
+    if (targX1 < 0)
+    {
+        targX1 = 0;
+    }
+    if (targY1 < 0)
+    {
+        targY1 = 0;
+    }
+    if (targX2 >= mWorldCellWidth)
+    {
+        targX2 = mWorldCellWidth - 1;
+    }
+    if (targY2 >= mWorldCellLength)
+    {
+        targY2 = mWorldCellLength - 1;
+    }
 
     obj->mX = x;
     obj->mY = y;
@@ -183,6 +217,23 @@ void SimCont2D::removeObject(SimulationObject* obj)
     int origY1 = ((int)(origY - size)) / mCellSide;
     int origY2 = ((int)(origY + size)) / mCellSide;
 
+    if (origX1 < 0)
+    {
+        origX1 = 0;
+    }
+    if (origY1 < 0)
+    {
+        origY1 = 0;
+    }
+    if (origX2 >= mWorldCellWidth)
+    {
+        origX2 = mWorldCellWidth - 1;
+    }
+    if (origY2 >= mWorldCellLength)
+    {
+        origY2 = mWorldCellLength - 1;
+    }
+
     // Remove from cells
     for (int cellX = origX1; cellX <= origX2; cellX++)
     {
@@ -216,28 +267,29 @@ void SimCont2D::startCollisionDetection(float x, float y, float rad)
     float y1 = y - rad;
     float y2 = y + rad;
 
-    if (x1 < 0)
-    {
-        x1 = 0;
-    }
-    if (y1 < 0)
-    {
-        y1 = 0;
-    }
-    if (x2 > mWorldWidth)
-    {
-        x2 = mWorldWidth;
-    }
-    if (y2 > mWorldLength)
-    {
-        y2 = mWorldLength;
-    }
-
     mCellX1 = ((int)(x1)) / mCellSide;
     mCellX2 = ((int)(x2)) / mCellSide;
     mCellY1 = ((int)(y1)) / mCellSide;
     mCellY2 = ((int)(y2)) / mCellSide;
 
+    if (mCellX1 < 0)
+    {
+        mCellX1 = 0;
+    }
+    if (mCellY1 < 0)
+    {
+        mCellY1 = 0;
+    }
+    if (mCellX2 >= mWorldCellWidth)
+    {
+        mCellX2 = mWorldCellWidth - 1;
+    }
+    if (mCellY2 >= mWorldCellLength)
+    {
+        mCellY2 = mWorldCellLength - 1;
+    }
+
+    mCurrentCellX = mCellX1;
     mCurrentCellY = mCellY1;
 
     mCurrentCellList = mCellGrid[(mWorldCellWidth * mCurrentCellY) + mCurrentCellX];
