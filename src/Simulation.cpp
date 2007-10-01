@@ -44,22 +44,21 @@ Simulation::~Simulation()
 {
 }
 
-void Simulation::init()
+void Simulation::initGraphics(unsigned int width, unsigned int height, bool fullScreen)
 {
-    mPopulationDynamics->init(this);
+    mWindow = mPycasso.createWindow(width, height, fullScreen);
+    mEventQ = mPycasso.createEventQ();
+    mRootLayer2D = mWindow->getRootLayer2D();
 
     mLogo = mWindow->createPNGLayer("lablove.png");
+
+    mWindow->setTitle("LabLOVE");
+
 }
 
 void Simulation::run()
 {
-    mWindow = mPycasso.createWindow(800, 600);
-    mEventQ = mPycasso.createEventQ();
-    mRootLayer2D = mWindow->getRootLayer2D();
-
-    mWindow->setTitle("LabLOVE");
-
-    init();
+    mPopulationDynamics->init(this);
 
     while (!mStop)
     {
@@ -204,6 +203,23 @@ double Simulation::getRealTime()
 }
 #endif
 
+int Simulation::initGraphics(lua_State* luaState)
+{
+    int width = luaL_checkint(luaState, 1);
+    int height = luaL_checkint(luaState, 2);
+    bool fullScreen = luaL_checkbool(luaState, 3);
+
+    initGraphics(width, height, fullScreen);
+
+    return 0;
+}
+
+int Simulation::run(lua_State* luaState)
+{
+    run();
+    return 0;
+}
+
 int Simulation::setPopulationDynamics(lua_State *luaState)
 {
     PopulationDynamics* popDyn = (PopulationDynamics*)Orbit<SimulationObject>::pointer(luaState, 1);
@@ -218,9 +234,5 @@ int Simulation::setSeedIndex(lua_State* luaState)
     return 0;
 }
 
-int Simulation::run(lua_State* luaState)
-{
-    run();
-    return 0;
-}
+
 

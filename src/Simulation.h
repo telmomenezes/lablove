@@ -39,7 +39,7 @@ public:
     Simulation(lua_State* luaState=NULL);
     virtual ~Simulation();
 
-    virtual void init();
+    virtual void initGraphics(unsigned int width, unsigned int height, bool fullScreen);
     
     virtual void drawBeforeObjects(){}
 
@@ -66,9 +66,10 @@ public:
     virtual bool onMouseButtonUp(pyc::MouseButton button, int x, int y){return false;}
     virtual bool onMouseMove(int x, int y){return false;}
 
+    int run(lua_State* luaState);
+    int initGraphics(lua_State* luaState);
     int setPopulationDynamics(lua_State* luaState);
     int setSeedIndex(lua_State* luaState);
-    int run(lua_State* luaState);
 
 protected:
     virtual void perceive(Agent* agent){}

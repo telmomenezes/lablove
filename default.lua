@@ -148,6 +148,7 @@ stats:addField("connections")
 
 statTime = StatTime()
 statTime:setFile("time.csv")
---popDyn:addStatistics(statTime)
+popDyn:addStatistics(statTime)
 
+sim:initGraphics(800, 600, false)
 sim:run()

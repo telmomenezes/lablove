@@ -690,6 +690,7 @@ const char SimCont2D::mClassName[] = "SimCont2D";
 
 Orbit<SimCont2D>::MethodType SimCont2D::mMethods[] = {
     {"setPopulationDynamics", &Simulation::setPopulationDynamics},
+    {"initGraphics", &Simulation::initGraphics},
     {"run", &Simulation::run},
     {"setWorldDimensions", &SimCont2D::setWorldDimensions},
     {"setViewRange", &SimCont2D::setViewRange},

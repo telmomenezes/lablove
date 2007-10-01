@@ -146,8 +146,6 @@ protected:
     int mLastMouseX;
     int mLastMouseY;
 
-    pyc::Layer2D* mRootLayer2D;
-
     int mCellX1;
     int mCellX2;
     int mCellY1;
