@@ -19,6 +19,7 @@
 
 #include "UnitTest++.h"
 #include "SimCont2D.h"
+#include "functions.h"
 
 #include <stdexcept>
 
@@ -54,7 +55,6 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DEmptyCollisionDetection)
 
 TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection1)
 {
-    Agent agent;
     mSim.startCollisionDetection(100, 100, 100);
     float distance;
     float angle;
@@ -62,5 +62,20 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection1)
     CHECK(obj == NULL);
     CHECK_EQUAL(distance, 0);
     CHECK_EQUAL(angle, 0);
+}
+
+TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection2)
+{
+    SimulationObject* dummy = new SimulationObject();
+    mSim.addObject(dummy);
+    mSim.setPos(dummy, 100.0f, 100.0f);
+    mSim.startCollisionDetection(100.0f, 100.0f, 100.0f);
+    float distance;
+    float angle;
+    SimulationObject* obj = mSim.nextCollision(distance, angle);
+    CHECK(obj != NULL);
+    CHECK_EQUAL(distance, 0);
+    obj = mSim.nextCollision(distance, angle);
+    CHECK(obj == NULL);
 }
 

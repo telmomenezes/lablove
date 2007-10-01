@@ -316,7 +316,7 @@ SimulationObject* SimCont2D::nextCollision(float& distance, float& angle)
                 }
                 else
                 {
-                    mCurrentCellX == mCellX1;
+                    mCurrentCellX = mCellX1;
                     mCurrentCellY++;
                 }
             }
@@ -342,6 +342,10 @@ SimulationObject* SimCont2D::nextCollision(float& distance, float& angle)
             if (dist <= mCollisionRadius)
             {
                 distance = dist - obj->mSize;
+                if (distance < 0.0f)
+                {
+                    distance = 0.0f;
+                }
                 angle = atan2f(-dY, -dX);
                 mCurrentCellListIterator++;
                 return obj;
