@@ -141,10 +141,10 @@ human:setGraphic(GraphicTriangle())
 --popDyn:setHuman(human)
 
 stats = StatMedAvgMinMax()
---stats:setFile("energy.csv")
+stats:setFile("energy.csv")
 stats:addField("energy")
-stats:addField("connections")
---popDyn:addSpeciesStatistics(animatSpeciesIndex, stats)
+--stats:addField("connections")
+popDyn:addSpeciesStatistics(animatSpeciesIndex, stats)
 
 statTime = StatTime()
 statTime:setFile("time.csv")

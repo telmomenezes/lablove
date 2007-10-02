@@ -58,6 +58,8 @@ SimulationObject::SimulationObject(lua_State* luaState)
     mType = TYPE_OBJECT;
 
     mCollisionDetectionIteration = 0;
+
+    mInitialized = false;
 }
 
 SimulationObject::SimulationObject(SimulationObject* obj)
@@ -119,6 +121,8 @@ SimulationObject::SimulationObject(SimulationObject* obj)
     mType = obj->mType;
 
     mCollisionDetectionIteration = 0;
+
+    mInitialized = false;
 }
 
 SimulationObject::~SimulationObject()

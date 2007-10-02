@@ -110,6 +110,8 @@ public:
 
     unsigned long mCollisionDetectionIteration;
 
+    bool mInitialized;
+
     static const char mClassName[];
     static Orbit<SimulationObject>::MethodType mMethods[];
     static Orbit<SimulationObject>::NumberGlobalType mNumberGlobals[];

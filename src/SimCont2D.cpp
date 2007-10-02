@@ -169,20 +169,31 @@ void SimCont2D::setPos(SimulationObject* obj, float x, float y)
     obj->mX = x;
     obj->mY = y;
 
-    // Remove from cells
-    for (int cellX = origX1; cellX <= origX2; cellX++)
+    if (obj->mInitialized)
     {
-        for (int cellY = origY1; cellY <= origY2; cellY++)
+        // Remove from cells
+        for (int cellX = origX1; cellX <= origX2; cellX++)
         {
-            if ((cellX < targX1) 
-                || (cellX > targX2)
-                || (cellY < targY1)
-                || (cellY > targY2))
+            for (int cellY = origY1; cellY <= origY2; cellY++)
             {
-                list<SimulationObject*>* cellList = mCellGrid[(mWorldCellWidth * cellY) + cellX];
-                cellList->remove(obj);
+                if ((cellX < targX1) 
+                    || (cellX > targX2)
+                    || (cellY < targY1)
+                    || (cellY > targY2))
+                {
+                    list<SimulationObject*>* cellList = mCellGrid[(mWorldCellWidth * cellY) + cellX];
+                    cellList->remove(obj);
+                }
             }
         }
+    }
+    else
+    {
+        origX1 = -1;
+        origX2 = -1;
+        origY1 = -1;
+        origY2 = -1;
+        obj->mInitialized = true;
     }
 
     // Add to cells
@@ -335,8 +346,8 @@ SimulationObject* SimCont2D::nextCollision(float& distance, float& angle)
         {
             obj->mCollisionDetectionIteration = mCollisionDetectionIteration;
 
-            float dX = mCollisionX - obj->mX;
-            float dY = mCollisionY - obj->mY;
+            float dX =  obj->mX - mCollisionX;
+            float dY =  obj->mY - mCollisionY;
             float dist = sqrtf((dX * dX) + (dY * dY));
 
             if (dist <= mCollisionRadius)
@@ -346,7 +357,10 @@ SimulationObject* SimCont2D::nextCollision(float& distance, float& angle)
                 {
                     distance = 0.0f;
                 }
-                angle = atan2f(-dY, -dX);
+                if ((dX != 0.0f) || (dY != 0.0f))
+                {
+                    angle = atan2f(dY, dX);
+                }
                 mCurrentCellListIterator++;
                 return obj;
             }
