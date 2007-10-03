@@ -17,18 +17,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-// Simple2D defines
-#define DEF_S2D_ANIMAT_COLOR_R 224
-#define DEF_S2D_ANIMAT_COLOR_G 116
-#define DEF_S2D_ANIMAT_COLOR_B 24
-#define DEF_S2D_PLANT_COLOR_R 99
-#define DEF_S2D_PLANT_COLOR_G 224
-#define DEF_S2D_PLANT_COLOR_B 24
-#define DEF_S2D_GRID_COLOR_R 200
-#define DEF_S2D_GRID_COLOR_G 200
-#define DEF_S2D_GRID_COLOR_B 200
-#define DEF_S2D_ANIMAT_VIEW_R 0
-#define DEF_S2D_ANIMAT_VIEW_G 0
-#define DEF_S2D_ANIMAT_VIEW_B 0
-#define DEF_S2D_ANIMAT_VIEW_A 100
+#ifndef __INCLUDE_RANDOM_H
+#define __INCLUDE_RANDOM_H
+
+class Random
+{
+public:
+    static void setSeedIndex(unsigned int seedIndex);
+    static int getUniformInt(int start, int end);
+    static float getUniformProbability();
+    static bool getUniformBool();
+    static float getUniformFloat(float start, float end);
+};
+
+#endif
 

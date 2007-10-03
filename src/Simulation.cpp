@@ -18,9 +18,8 @@
  */
 
 #include "Simulation.h"
-#include "functions.h"
 #include "PopulationDynamics.h"
-#include "random.h"
+#include "Random.h"
 #include <math.h>
 
 #if defined(__UNIX)
@@ -110,6 +109,8 @@ void Simulation::cycle()
         obj->draw(mRootLayer2D);
     }
 
+    drawAfterObjects();
+
     mPopulationDynamics->onCycle(mSimulationTime, getRealTime());
 
     mRootLayer2D->setColor(255, 255, 255, 200);
@@ -158,7 +159,7 @@ void Simulation::addObject(SimulationObject* object)
 
 void Simulation::setSeedIndex(unsigned int index)
 {
-    randomSeedIndex(index);
+    Random::setSeedIndex(index);
 }
 
 bool Simulation::onKeyDown(pyc::KeyCode keycode)

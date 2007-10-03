@@ -20,9 +20,7 @@
 #include "SimCont2D.h"
 #include "SimulationObject.h"
 #include "PopulationDynamics.h"
-#include "functions.h"
-#include "defines.h"
-#include "random.h"
+#include "Random.h"
 
 #include <math.h>
 #include <list>
@@ -264,7 +262,7 @@ void SimCont2D::placeRandom(SimulationObject* obj)
     unsigned int worldLength = (unsigned int)mWorldLength;
 
     setPos(obj, rand() % worldWidth, rand() % worldLength);
-    setRot(obj, randomUniformProbability() * M_PI * 2);
+    setRot(obj, Random::getUniformProbability() * M_PI * 2);
 }
 
 void SimCont2D::startCollisionDetection(float x, float y, float rad)
@@ -580,6 +578,7 @@ void SimCont2D::eat(Agent* agent)
 
 void SimCont2D::drawBeforeObjects()
 {
+
     if (mShowGrid)
     {
         unsigned int cellSide = (unsigned int)mCellSide;
@@ -612,6 +611,8 @@ void SimCont2D::drawBeforeObjects()
         }
     }
 
+    mRootLayer2D->setTranslation(mViewX, mViewY);
+
     if (mShowViewRange)
     {
         list<SimulationObject*>::iterator iterObj;
@@ -631,15 +632,19 @@ void SimCont2D::drawBeforeObjects()
                 }
 
                 mRootLayer2D->setColor(150, 150, 150, 100);
-                mRootLayer2D->fillCircle(obj->mX + mViewX,
-                                            obj->mY + mViewY,
+                mRootLayer2D->fillCircle(obj->mX,
+                                            obj->mY,
                                             mViewRange,
                                             beginAngle,
                                             endAngle);
             }
         }
     }
-    
+}
+
+void SimCont2D::drawAfterObjects()
+{
+    mRootLayer2D->clearTranslation();
 }
 
 void SimCont2D::moveView(float x, float y)
@@ -754,6 +759,21 @@ void SimCont2D::setViewAngle(float angle)
 void SimCont2D::setViewRange(float range)
 {
     mViewRange = range;
+}
+
+float SimCont2D::normalizeAngle(float angle)
+{
+    float PI2 = M_PI * 2.0f;
+    while(angle > M_PI)
+    {
+        angle -= PI2;
+    }
+    while(angle <= -M_PI)
+    {
+        angle += PI2;
+    }
+
+    return angle;
 }
 
 const char SimCont2D::mClassName[] = "SimCont2D";

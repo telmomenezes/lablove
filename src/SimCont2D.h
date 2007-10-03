@@ -63,6 +63,7 @@ public:
     virtual void placeRandom(SimulationObject* obj);
 
     virtual void drawBeforeObjects();
+    virtual void drawAfterObjects();
 
     virtual void removeObject(SimulationObject* obj);
 
@@ -114,6 +115,8 @@ protected:
     void goFront(Agent* agent, float distance);
     void rotate(Agent* agent, float angle);
     void eat(Agent* agent);
+
+    float normalizeAngle(float angle);
 
     float mWorldWidth;
     float mWorldLength;

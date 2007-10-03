@@ -19,7 +19,6 @@
 
 #include "UnitTest++.h"
 #include "SimCont2D.h"
-#include "functions.h"
 
 #include <stdexcept>
 

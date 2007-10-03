@@ -18,8 +18,7 @@
  */
 
 #include "Gridbrain.h"
-#include "functions.h"
-#include "random.h"
+#include "Random.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -421,7 +420,7 @@ void Gridbrain::selectRandomConnection(unsigned int &x1,
             {
                 g1 = gridOrig->getNumber();
                 x1 = col;
-                y1 = randomUniformInt(0, gridOrig->getHeight() - 1);
+                y1 = Random::getUniformInt(0, gridOrig->getHeight() - 1);
                 found = true;
             }
         }
@@ -443,7 +442,7 @@ void Gridbrain::selectRandomConnection(unsigned int &x1,
             {
                 g2 = gridOrig->getNumber();
                 x2 = col;
-                y2 = randomUniformInt(0, gridOrig->getHeight() - 1);
+                y2 = Random::getUniformInt(0, gridOrig->getHeight() - 1);
                 return;
             }
         }
@@ -458,8 +457,8 @@ void Gridbrain::selectRandomConnection(unsigned int &x1,
 
     Grid* targGrid = mGridsVec[g2];
 
-    x2 = randomUniformInt(0, targGrid->getWidth() - 1);
-    y2 = randomUniformInt(0, targGrid->getHeight() - 1);
+    x2 = Random::getUniformInt(0, targGrid->getWidth() - 1);
+    y2 = Random::getUniformInt(0, targGrid->getHeight() - 1);
 }
 
 void Gridbrain::addRandomConnection()
@@ -474,9 +473,9 @@ void Gridbrain::addRandomConnection()
 
     selectRandomConnection(x1, y1, g1, x2, y2, g2);
     
-    weight = randomUniformProbability();
+    weight = Random::getUniformProbability();
     
-    if (randomUniformBool())
+    if (Random::getUniformBool())
     {
         weight = -weight;
     }
@@ -780,7 +779,7 @@ void Gridbrain::mutateRemoveConnection()
 {
     if (mConnectionsCount > 0) 
     {
-        unsigned int connectionPos = randomUniformInt(0, mConnectionsCount - 1);
+        unsigned int connectionPos = Random::getUniformInt(0, mConnectionsCount - 1);
 
         GridbrainConnection* conn = mConnections;
         for (unsigned int i = 0; i < connectionPos; i++)
@@ -828,7 +827,7 @@ void Gridbrain::mutateChangeConnectionWeight()
 {
     if (mConnectionsCount > 0) 
     {
-        unsigned int connectionPos = randomUniformInt(0, mConnectionsCount - 1);
+        unsigned int connectionPos = Random::getUniformInt(0, mConnectionsCount - 1);
 
         GridbrainConnection* conn = mConnections;
         for (unsigned int i = 0; i < connectionPos; i++)
@@ -837,7 +836,7 @@ void Gridbrain::mutateChangeConnectionWeight()
         }
         
         float newWeight = conn->mWeight;
-        newWeight += randomUniformFloat(-1.0f, 1.0f);
+        newWeight += Random::getUniformFloat(-1.0f, 1.0f);
         if (newWeight > 1.0f)
         {
             newWeight = 1.0f;
@@ -853,7 +852,7 @@ void Gridbrain::mutateChangeConnectionWeight()
 
 void Gridbrain::mutateChangeComponent()
 {
-    unsigned int pos = randomUniformInt(0, mNumberOfComponents - 1);
+    unsigned int pos = Random::getUniformInt(0, mNumberOfComponents - 1);
 
     unsigned int gridNumber = mComponents[pos].mGrid;
     Grid* grid = mGridsVec[gridNumber];

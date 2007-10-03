@@ -29,7 +29,6 @@ SET(SOURCE_FILES
     src/SimulationObject.cpp
     src/Plant.cpp
     src/Agent.cpp
-    src/functions.cpp
     src/Brain.cpp
     src/Gridbrain.cpp
     src/Grid.cpp
@@ -38,7 +37,7 @@ SET(SOURCE_FILES
     src/PopulationDynamics.cpp
     src/PopDynGenerations.cpp
     src/PopDynFixedSpecies.cpp
-    src/random.cpp
+    src/Random.cpp
     src/Symbol.cpp
     src/SymbolRGB.cpp
     src/SymbolTable.cpp

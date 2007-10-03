@@ -18,10 +18,8 @@
  */
 
 #include "Agent.h"
-#include "math.h"
-#include "functions.h"
-#include "defines.h"
-#include "random.h"
+
+#include <math.h>
 
 Agent::Agent(lua_State* luaState) : SimulationObject()
 {

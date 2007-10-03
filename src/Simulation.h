@@ -42,6 +42,7 @@ public:
     virtual void initGraphics(unsigned int width, unsigned int height, bool fullScreen);
     
     virtual void drawBeforeObjects(){}
+    virtual void drawAfterObjects(){}
 
     void run();
     void cycle();

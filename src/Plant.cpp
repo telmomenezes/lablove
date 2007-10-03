@@ -18,8 +18,8 @@
  */
 
 #include "Plant.h"
-#include "math.h"
-#include "defines.h"
+
+#include <math.h>
 
 Plant::Plant(lua_State* luaState) : SimulationObject()
 {

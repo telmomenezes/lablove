@@ -18,8 +18,7 @@
  */
 
 #include "SimulationObject.h"
-#include "functions.h"
-#include "random.h"
+#include "Random.h"
 #include <stdlib.h>
 
 unsigned long SimulationObject::CURRENT_ID = 0;
@@ -90,7 +89,7 @@ SimulationObject::SimulationObject(SimulationObject* obj)
     
     if (mHighAgeLimit > 0)
     {
-        mMaxAge = randomUniformInt(mLowAgeLimit, mHighAgeLimit);
+        mMaxAge = Random::getUniformInt(mLowAgeLimit, mHighAgeLimit);
     }
     else
     {
