@@ -23,12 +23,12 @@ metabolism = 0.0
 goCost = 0.0
 rotateCost = 0.0
 
-initialConnections = 10
+initialConnections = 100
 
 ----------------------------------------------
 
 sim = SimCont2D()
-sim:setWorldDimensions(worldWidth, worldHeight, 100)
+sim:setWorldDimensions(worldWidth, worldHeight, 150)
 sim:setViewRange(viewRange)
 sim:setViewAngle(viewAngle)
 sim:setGoCost(goCost)
@@ -111,7 +111,7 @@ while i < initialConnections do
 end
 
 plant = Plant()
-plant:setSize(5.0)
+plant:setSize(10.0)
 plant:setInitialEnergy(1.0)
 
 plantColor = SymbolRGB(10, 250, 50)
@@ -126,19 +126,22 @@ animatSpeciesIndex = popDyn:addSpecies(animat, numberOfAgents)
 popDyn:addSpecies(plant, numberOfPlants)
 
 human = Agent()
-
---human:setPos(worldWidth / 2, worldHeight / 2)
---human:setRot(0.0)
+dummyBrain = DummyBrain(1)
+dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
+dummyBrain:addPerception("Proximity", 0, SimCont2D.PERCEPTION_PROXIMITY)
+dummyBrain:addPerception("Contact", 0, SimCont2D.PERCEPTION_IN_CONTACT)
 human:setSize(10.0)
 human:setInitialEnergy(1.0)
 human:setMetabolism(metabolism)
+human:setBrain(dummyBrain)
 
-humanColor = SymbolRGB(0, 0, 200)
+humanColor = SymbolRGB(82, 228, 241)
 human:setColor(humanColor)
 
 human:setGraphic(GraphicTriangle())
-
---popDyn:setHuman(human)
+sim:addObject(human)
+sim:setPos(human, worldWidth / 2, worldHeight / 2)
+sim:setHuman(human)
 
 stats = StatMedAvgMinMax()
 stats:setFile("energy.csv")

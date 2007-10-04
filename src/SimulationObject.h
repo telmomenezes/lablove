@@ -87,7 +87,6 @@ public:
 
     virtual float getFieldValue(string fieldName);
 
-    bool mHuman;
     bool mDeleted;
 
     float mX;

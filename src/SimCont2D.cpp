@@ -77,6 +77,12 @@ SimCont2D::SimCont2D(lua_State* luaState)
     mCollisionRadius = 0.0f;
 
     mCollisionDetectionIteration = 0;
+
+    mHumanAgent = NULL;
+    mHumanGo = false;
+    mHumanRotateLeft = false;
+    mHumanRotateRight = false;
+    mHumanEat = false;
 }
 
 SimCont2D::~SimCont2D()
@@ -431,11 +437,6 @@ void SimCont2D::onScanObject(Agent* orig,
                 float distance,
                 float angle)
 {
-    if (orig->mHuman)
-    {
-        return;
-    }
-
     float normalizedValue;
 
     list<InterfaceItem*>* interface = orig->getBrain()->getInputInterface(0);
@@ -490,37 +491,63 @@ void SimCont2D::act(Agent* agent)
     float actionRotateParam = 0.0f;
     float actionEatParam = 0.0f;
 
-    list<InterfaceItem*>* interface = agent->getBrain()->getOutputInterface();
-    float* outBuffer = agent->getBrain()->getOutputBuffer();
-    unsigned int pos = 0;
-
-    for (list<InterfaceItem*>::iterator iterItem = interface->begin();
-        iterItem != interface->end();
-        iterItem++)
+    if (agent == mHumanAgent)
     {
-        float output = outBuffer[pos];
-        unsigned int actionType = (*iterItem)->mType;
-
-        if (output != 0.0f)
+        if (mHumanGo)
         {
-            switch (actionType)
-            {
-                case ACTION_GO:
-                    actionGo = true;
-                    actionGoParam += output;
-                    break;
-                case ACTION_ROTATE:
-                    actionRotate = true;
-                    actionRotateParam += output;
-                    break;
-                case ACTION_EAT:
-                    actionEat = true;
-                    actionEatParam += output;
-                    break;
-            }
+            actionGo = true;
+            actionGoParam = 1.0f;
         }
+        if (mHumanRotateLeft)
+        {
+            actionRotate = true;
+            actionRotateParam -= 1.0f;
+        }
+        if (mHumanRotateRight)
+        {
+            actionRotate = true;
+            actionRotateParam += 1.0f;
+        }
+        if (mHumanEat)
+        {
+            actionEat = true;
+            actionEatParam = 1.0f;
+        }
+    }
+    else
+    {
+        list<InterfaceItem*>* interface = agent->getBrain()->getOutputInterface();
+        float* outBuffer = agent->getBrain()->getOutputBuffer();
+        unsigned int pos = 0;
 
-        pos++;
+        for (list<InterfaceItem*>::iterator iterItem = interface->begin();
+            iterItem != interface->end();
+            iterItem++)
+        {
+            float output = outBuffer[pos];
+            unsigned int actionType = (*iterItem)->mType;
+
+            if (output != 0.0f)
+            {
+                switch (actionType)
+                {
+                    case ACTION_GO:
+                        actionGo = true;
+                        actionGoParam += output;
+                        break;
+                    case ACTION_ROTATE:
+                        actionRotate = true;
+                        actionRotateParam += output;
+                        break;
+                    case ACTION_EAT:
+                        actionEat = true;
+                        actionEatParam += output;
+                        break;
+                }
+            }
+
+            pos++;
+        }
     }
 
     if (actionGo)
@@ -574,6 +601,12 @@ void SimCont2D::eat(Agent* agent)
         agent->deltaEnergy(mTargetObject->getEnergy());
         killOrganism(mTargetObject);
     }
+}
+
+void SimCont2D::initGraphics(unsigned int width, unsigned int height, bool fullScreen)
+{
+    Simulation::initGraphics(width, height, fullScreen);
+    mFont = mWindow->loadFont("media/vera/Vera.ttf", 8);
 }
 
 void SimCont2D::drawBeforeObjects()
@@ -644,6 +677,12 @@ void SimCont2D::drawBeforeObjects()
 
 void SimCont2D::drawAfterObjects()
 {
+    mRootLayer2D->setTranslation(0, mWindow->getHeight() - 200.0f);
+    if (mHumanAgent)
+    {
+        mRootLayer2D->setFont(mFont);
+        mHumanAgent->getBrain()->draw(mRootLayer2D);
+    }
     mRootLayer2D->clearTranslation();
 }
 
@@ -665,29 +704,32 @@ bool SimCont2D::onKeyDown(pyc::KeyCode key)
         return true;
     }
 
-    /*switch (key)
+    switch (key)
     {
     case pyc::KEY_UP:
-        human->mActionGo = true;
+        mHumanGo = true;
         return true;
     case pyc::KEY_RIGHT:
-        human->mActionRotate = true;
-        human->mActionRotateParam = 1.0f;
+        mHumanRotateRight = true;
         return true;
     case pyc::KEY_LEFT:
-        human->mActionRotate = true;
-        human->mActionRotateParam = -1.0;
+        mHumanRotateLeft = true;
         return true;
     case pyc::KEY_E:
-        human->mActionEat = true;
+        mHumanEat = true;
         return true;
     default:
         return false;
-    }*/
+    }
 }
 
 bool SimCont2D::onKeyUp(pyc::KeyCode key)
 {
+    if (Simulation::onKeyUp(key))
+    {
+        return true;
+    }
+
     switch (key)
     {
     case pyc::KEY_G:
@@ -696,27 +738,21 @@ bool SimCont2D::onKeyUp(pyc::KeyCode key)
     case pyc::KEY_V:
         setShowViewRange(!getShowViewRange());
         return true;
-    default:
-        break;
-    }
-
-    /*switch (key)
-    {
     case pyc::KEY_UP:
-        human->mActionGo = false;
+        mHumanGo = false;
         return true;
     case pyc::KEY_RIGHT:
-        human->mActionRotate = false;
+        mHumanRotateRight = false;
         return true;
     case pyc::KEY_LEFT:
-        human->mActionRotate = false;
+        mHumanRotateLeft = false;
         return true;
     case pyc::KEY_E:
-        human->mActionEat = false;
+        mHumanEat = false;
         return true;
     default:
         return false;
-    }*/
+    }
 }
 
 bool SimCont2D::onMouseButtonDown(pyc::MouseButton button, int x, int y)
@@ -779,6 +815,7 @@ float SimCont2D::normalizeAngle(float angle)
 const char SimCont2D::mClassName[] = "SimCont2D";
 
 Orbit<SimCont2D>::MethodType SimCont2D::mMethods[] = {
+    {"addObject", &Simulation::addObject},
     {"setPopulationDynamics", &Simulation::setPopulationDynamics},
     {"initGraphics", &Simulation::initGraphics},
     {"run", &Simulation::run},
@@ -787,6 +824,9 @@ Orbit<SimCont2D>::MethodType SimCont2D::mMethods[] = {
     {"setViewAngle", &SimCont2D::setViewAngle},
     {"setGoCost", &SimCont2D::setGoCost},
     {"setRotateCost", &SimCont2D::setRotateCost},
+    {"setPos", &SimCont2D::setPos},
+    {"setRot", &SimCont2D::setRot},
+    {"setHuman", &SimCont2D::setHuman},
     {0,0}
 };
 
@@ -836,6 +876,30 @@ int SimCont2D::setRotateCost(lua_State* luaState)
 {
     float cost = luaL_checknumber(luaState, 1);
     setRotateCost(cost);
+    return 0;
+}
+
+int SimCont2D::setPos(lua_State* luaState)
+{
+    SimulationObject* simObj = (SimulationObject*)Orbit<SimCont2D>::pointer(luaState, 1);
+    float x = luaL_checknumber(luaState, 2);
+    float y = luaL_checknumber(luaState, 3);
+    setPos(simObj, x, y);
+    return 0;
+}
+
+int SimCont2D::setRot(lua_State* luaState)
+{
+    SimulationObject* simObj = (SimulationObject*)Orbit<SimCont2D>::pointer(luaState, 1);
+    float rot = luaL_checknumber(luaState, 2);
+    setRot(simObj, rot);
+    return 0;
+}
+
+int SimCont2D::setHuman(lua_State* luaState)
+{
+    Agent* agent = (Agent*)Orbit<SimCont2D>::pointer(luaState, 1);
+    setHuman(agent);
     return 0;
 }
 

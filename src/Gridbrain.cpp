@@ -915,7 +915,7 @@ const char Gridbrain::mClassName[] = "Gridbrain";
 Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
     {"addGrid", &Gridbrain::addGrid},
     {"addRandomConnection", &Gridbrain::addRandomConnection},
-        {0,0}
+    {0,0}
 };
 
 Orbit<Gridbrain>::NumberGlobalType Gridbrain::mNumberGlobals[] = {{0,0}};

@@ -62,6 +62,8 @@ public:
 
     virtual void placeRandom(SimulationObject* obj);
 
+    virtual void initGraphics(unsigned int width, unsigned int height, bool fullScreen);
+
     virtual void drawBeforeObjects();
     virtual void drawAfterObjects();
 
@@ -92,6 +94,11 @@ public:
     float getViewRange(){return mViewRange;}
     float getViewAngle(){return mViewAngle;}
 
+    void setHuman(Agent* agent){mHumanAgent = agent;}
+
+    void startCollisionDetection(float x, float y, float rad);
+    SimulationObject* nextCollision(float& distance, float& angle);
+
     static const char mClassName[];
     static Orbit<SimCont2D>::MethodType mMethods[];
     static Orbit<SimCont2D>::NumberGlobalType mNumberGlobals[];
@@ -101,9 +108,9 @@ public:
     int setViewAngle(lua_State* luaState);
     int setGoCost(lua_State* luaState);
     int setRotateCost(lua_State* luaState);
-   
-    void startCollisionDetection(float x, float y, float rad);
-    SimulationObject* nextCollision(float& distance, float& angle);
+    int setPos(lua_State* luaState);
+    int setRot(lua_State* luaState);
+    int setHuman(lua_State* luaState);
 
 protected:
     virtual void perceive(Agent* agent);
@@ -165,6 +172,14 @@ protected:
     list<SimulationObject*>::iterator mCurrentCellListIterator;
 
     unsigned long mCollisionDetectionIteration;
+
+    Agent* mHumanAgent;
+    bool mHumanGo;
+    bool mHumanRotateLeft;
+    bool mHumanRotateRight;
+    bool mHumanEat;
+
+    pyc::Font* mFont;
 };
 #endif
 

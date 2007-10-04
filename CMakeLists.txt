@@ -30,6 +30,7 @@ SET(SOURCE_FILES
     src/Plant.cpp
     src/Agent.cpp
     src/Brain.cpp
+    src/DummyBrain.cpp
     src/Gridbrain.cpp
     src/Grid.cpp
     src/GridbrainComponent

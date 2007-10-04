@@ -49,7 +49,7 @@ void Simulation::initGraphics(unsigned int width, unsigned int height, bool full
     mEventQ = mPycasso.createEventQ();
     mRootLayer2D = mWindow->getRootLayer2D();
 
-    mLogo = mWindow->createPNGLayer("lablove.png");
+    mLogo = mWindow->createPNGLayer("media/lablove.png");
 
     mWindow->setTitle("LabLOVE");
 
@@ -204,6 +204,13 @@ double Simulation::getRealTime()
 }
 #endif
 
+int Simulation::addObject(lua_State *luaState)
+{
+    SimulationObject* simObj = (SimulationObject*)Orbit<SimulationObject>::pointer(luaState, 1);
+    addObject(simObj);
+    return 0;
+}
+
 int Simulation::initGraphics(lua_State* luaState)
 {
     int width = luaL_checkint(luaState, 1);
@@ -234,6 +241,4 @@ int Simulation::setSeedIndex(lua_State* luaState)
     setSeedIndex(index);
     return 0;
 }
-
-
 

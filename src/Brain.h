@@ -22,6 +22,8 @@
 
 #include "InterfaceItem.h"
 
+#include "pyc.h"
+
 #include <list>
 #include <vector>
 
@@ -44,6 +46,7 @@ public:
     virtual float* getOutputBuffer()=0;
     virtual void cycle()=0;
     virtual void mutate()=0;
+    virtual void draw(pyc::Layer2D* layer)=0;
 
 protected:
     vector<list<InterfaceItem*>*> mInputInterfacesVector;

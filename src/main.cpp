@@ -23,6 +23,7 @@
 #include "Agent.h"
 #include "PopDynGenerations.h"
 #include "PopDynFixedSpecies.h"
+#include "DummyBrain.h"
 #include "Gridbrain.h"
 #include "Grid.h"
 #include "GridbrainComponent.h"
@@ -70,6 +71,7 @@ int main(int argc, char *argv[])
     Orbit<Agent>::orbitRegister(luaState);
     Orbit<PopDynGenerations>::orbitRegister(luaState);
     Orbit<PopDynFixedSpecies>::orbitRegister(luaState);
+    Orbit<DummyBrain>::orbitRegister(luaState);
     Orbit<Gridbrain>::orbitRegister(luaState);
     Orbit<Grid>::orbitRegister(luaState);
     Orbit<GridbrainComponent>::orbitRegister(luaState);

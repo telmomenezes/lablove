@@ -34,7 +34,6 @@ SimulationObject::SimulationObject(lua_State* luaState)
     mEnergy = 0;
     mInitialEnergy = 0;
     mCreationTime = 0;
-    mHuman = false;
 
     mX = 0.0f;
     mY = 0.0f;
@@ -72,7 +71,6 @@ SimulationObject::SimulationObject(SimulationObject* obj)
     mInitialEnergy = obj->mInitialEnergy;
     mSpeciesID = obj->mSpeciesID;
     mCreationTime = 0;
-    mHuman = false;
 
     map<unsigned int, SymbolTable*>::iterator iterTables;
     for (iterTables = obj->mSymbolTables.begin();

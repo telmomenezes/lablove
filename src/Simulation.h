@@ -67,6 +67,7 @@ public:
     virtual bool onMouseButtonUp(pyc::MouseButton button, int x, int y){return false;}
     virtual bool onMouseMove(int x, int y){return false;}
 
+    int addObject(lua_State* luaState);
     int run(lua_State* luaState);
     int initGraphics(lua_State* luaState);
     int setPopulationDynamics(lua_State* luaState);

@@ -90,6 +90,8 @@ public:
     int addGrid(lua_State* luaState);
     int addRandomConnection(lua_State* luaState);
 
+    virtual void draw(pyc::Layer2D* layer){}
+
 protected:
     void initGridInputOutput(Grid* grid, int gPos=-1);
     void calcConnectionCounts();
