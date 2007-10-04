@@ -70,7 +70,7 @@ void DummyBrain::init()
             iterInterfacesVector++)
     {
         list<InterfaceItem*>* inputInterface = *iterInterfacesVector;
-        mOffsetsVector.push_back(inputInterface->size());
+        mOffsetsVector.push_back(perceptionsCount);
         perceptionsCount += inputInterface->size();
     }
 
@@ -79,8 +79,13 @@ void DummyBrain::init()
 
 float* DummyBrain::getInputBuffer(unsigned int channel)
 {
-    float* buffer = mInputBuffer + (mOffsetsVector[channel] * 50) + mInputDepths[channel];
-    mInputDepths[channel] = mInputDepths[channel] + 1;
+    unsigned int perceptionCount = mInputInterfacesVector[channel]->size();
+    unsigned int offset = (mOffsetsVector[channel] * 50) + (mInputDepths[channel] * perceptionCount);
+    float* buffer = mInputBuffer + offset;
+    if (mInputDepths[channel] < 49)
+    {
+        mInputDepths[channel] = mInputDepths[channel] + 1;
+    }
     return buffer;
 }
 
@@ -103,12 +108,20 @@ void DummyBrain::cycle()
 
 void DummyBrain::draw(pyc::Layer2D* layer)
 {
+    if (!mInputBuffer)
+    {
+        return;
+    }
+
     layer->setColor(50, 50, 50);
 
+    char text[255];
     float y = 15.0f;
 
     for (unsigned int chan = 0; chan < mChannelCount; chan++)
     {
+        unsigned int perception = 0;
+        unsigned int perceptionCount = mInputInterfacesVector[chan]->size();
 
         list<string>::iterator iterName = mInputInterfacesNames[chan]->begin();
         for (list<InterfaceItem*>::iterator iterInterface = mInputInterfacesVector[chan]->begin();
@@ -117,10 +130,18 @@ void DummyBrain::draw(pyc::Layer2D* layer)
         {
             layer->drawText(10, y, *iterName);
 
-            float* buffer = mInputBuffer + (mOffsetsVector[channel] * 50);
+            float x = 100.0f;
+            for (unsigned int depth = 0; depth < mLastInputDepths[chan]; depth++)
+            {
+                unsigned int offset = (mOffsetsVector[chan] * 50) + (depth * perceptionCount) + perception;
+                sprintf(text, "%f", mInputBuffer[offset]);
+                layer->drawText(x, y, text);
+                x += 100.0f;
+            }
 
             y += 15.0f;
             iterName++;
+            perception++;
         }
     }
 }

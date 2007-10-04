@@ -1,12 +1,12 @@
 numberOfPlants = 100
 numberOfAgents = 100
 
-worldWidth = 1000
-worldHeight = 1000
+worldWidth = 3000
+worldHeight = 3000
 
-gridHeight = 10
-gridAlpha = 10
-gridBeta = 10
+gridHeight = 5
+gridAlpha = 3
+gridBeta = 3
 
 THR = true
 MAX = true
@@ -23,7 +23,7 @@ metabolism = 0.0
 goCost = 0.0
 rotateCost = 0.0
 
-initialConnections = 100
+initialConnections = 10
 
 ----------------------------------------------
 
