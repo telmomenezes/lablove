@@ -19,6 +19,7 @@
 
 #include "GraphicSquare.h"
 #include "SimulationObject.h"
+#include "SymbolRGB.h"
 
 GraphicSquare::GraphicSquare(lua_State* luaState)
 {
@@ -43,9 +44,15 @@ void GraphicSquare::init(void* obj)
     mObject = obj;
     SimulationObject* simObj = (SimulationObject*)mObject;
     mSize = simObj->mSize;
-    mRed = simObj->getColor()->mRed;
-    mGreen = simObj->getColor()->mGreen;
-    mBlue = simObj->getColor()->mBlue;
+
+    SymbolRGB* color = (SymbolRGB*)(simObj->getSymbolByName("color"));
+
+    if (color != NULL)
+    {
+        mRed = color->mRed;
+        mGreen = color->mGreen;
+        mBlue = color->mBlue;
+    }
 }
 
 void GraphicSquare::draw(pyc::Layer* layer)

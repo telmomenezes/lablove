@@ -17,35 +17,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "Plant.h"
+#if !defined(__INCLUDE_SYMBOL_POINTER_H)
+#define __INCLUDE_SYMBOL_POINTER_H
 
-#include <math.h>
-
-Plant::Plant(lua_State* luaState) : SimulationObject()
+class SymbolPointer
 {
-}
+public:
+    SymbolPointer()
+    {
+        mTable = 0;
+        mPos = 0;
+    }
 
-Plant::~Plant()
-{	
-}
+    SymbolPointer(const SymbolPointer& sp)
+    {
+        mTable = sp.mTable;
+        mPos = sp.mPos;
+    }
 
-SimulationObject* Plant::clone()
-{
-	return new Plant(this);
-}
+    virtual ~SymbolPointer(){}
 
-const char Plant::mClassName[] = "Plant";
-
-Orbit<Plant>::MethodType Plant::mMethods[] = {
-	{"setInitialEnergy", &SimulationObject::setInitialEnergy},
-	{"addSymbolTable", &SimulationObject::addSymbolTable},
-	{"setSize", &SimulationObject::setSize},
-	{"setAgeRange", &SimulationObject::setAgeRange},
-	{"setMetabolism", &SimulationObject::setMetabolism},
-	{"setSymbolName", &SimulationObject::setSymbolName},
-	{"addGraphic", &SimulationObject::addGraphic},
-    {0,0}
+    int mTable;
+    unsigned int mPos;
 };
-
-Orbit<Plant>::NumberGlobalType Plant::mNumberGlobals[] = {{0,0}};
+#endif
 

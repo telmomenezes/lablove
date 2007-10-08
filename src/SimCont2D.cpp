@@ -43,6 +43,7 @@ SimCont2D::SimCont2D(lua_State* luaState)
 
     mShowGrid = false;
     mShowViewRange = false;
+    mShowBrain = false;
     
     mViewRange = 0.0f;
     mViewAngle = 0.0f;
@@ -220,6 +221,12 @@ void SimCont2D::setPos(SimulationObject* obj, float x, float y)
 void SimCont2D::setRot(SimulationObject* obj, float rot)
 {
     obj->mRotZ = normalizeAngle(rot);
+}
+
+void SimCont2D::addObject(SimulationObject* object)
+{
+    Simulation::addObject(object);
+    object->initFloatData(2);
 }
 
 void SimCont2D::removeObject(SimulationObject* obj)
@@ -677,11 +684,15 @@ void SimCont2D::drawBeforeObjects()
 
 void SimCont2D::drawAfterObjects()
 {
-    mRootLayer2D->setTranslation(0, mWindow->getHeight() - 200.0f);
-    if (mHumanAgent)
+    if (mShowBrain)
     {
-        mRootLayer2D->setFont(mFont);
-        mHumanAgent->getBrain()->draw(mRootLayer2D);
+        if (mHumanAgent)
+        {
+            mRootLayer2D->setTranslation(0, mWindow->getHeight() / 2);
+            //mRootLayer2D->fillRectangle(0, 0, mWindow->getWidth(), mWindow->getHeight() / 2);
+            mRootLayer2D->setFont(mFont);
+            mHumanAgent->getBrain()->draw(mRootLayer2D);
+        }
     }
     mRootLayer2D->clearTranslation();
 }
@@ -733,10 +744,13 @@ bool SimCont2D::onKeyUp(pyc::KeyCode key)
     switch (key)
     {
     case pyc::KEY_G:
-        setShowGrid(!getShowGrid());
+        mShowGrid = !mShowGrid;
         return true;
     case pyc::KEY_V:
-        setShowViewRange(!getShowViewRange());
+        mShowViewRange = !mShowViewRange;
+        return true;
+    case pyc::KEY_B:
+        mShowBrain = !mShowBrain;
         return true;
     case pyc::KEY_UP:
         mHumanGo = false;

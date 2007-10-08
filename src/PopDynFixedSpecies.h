@@ -52,15 +52,19 @@ public:
     unsigned int addSpecies(SimulationObject* org, long population);
     void addSpeciesStatistics(unsigned int speciesIndex, Statistics* stats);
 
+    void setTournmentSize(unsigned int size){mTournmentSize = size;}
+
     static const char mClassName[];
     static Orbit<PopDynFixedSpecies>::MethodType mMethods[];
     static Orbit<PopDynFixedSpecies>::NumberGlobalType mNumberGlobals[];
 
     int addSpecies(lua_State* luaState);
     int addSpeciesStatistics(lua_State* luaState);
+    int setTournmentSize(lua_State* luaState);
 
 protected:
     vector<SpeciesData> mSpecies;
+    unsigned int mTournmentSize;
 };
 #endif
 

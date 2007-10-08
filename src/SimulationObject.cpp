@@ -28,7 +28,6 @@ SimulationObject::SimulationObject(lua_State* luaState)
     mID = CURRENT_ID++;
 
     mDeleted = false;
-    mSelected = false;
 
     mSpeciesID = 0;
     mEnergy = 0;
@@ -51,13 +50,21 @@ SimulationObject::SimulationObject(lua_State* luaState)
     mHighAgeLimit = 0;
     mMetabolism = 0.0f;
 
-    mGraphic = NULL;
-
     mType = TYPE_OBJECT;
 
     mCollisionDetectionIteration = 0;
 
     mInitialized = false;
+
+    mFloatData = NULL;
+    mBoolData = NULL;
+    mIntData = NULL;
+    mUnsignedLongData = NULL;
+
+    mFloatDataSize = 0;
+    mBoolDataSize = 0;
+    mIntDataSize = 0;
+    mUnsignedLongDataSize = 0;
 }
 
 SimulationObject::SimulationObject(SimulationObject* obj)
@@ -65,19 +72,26 @@ SimulationObject::SimulationObject(SimulationObject* obj)
     mID = CURRENT_ID++;
 
     mDeleted = false;
-    mSelected = false;
 
     mEnergy = obj->mEnergy;
     mInitialEnergy = obj->mInitialEnergy;
     mSpeciesID = obj->mSpeciesID;
     mCreationTime = 0;
 
-    map<unsigned int, SymbolTable*>::iterator iterTables;
+    map<int, SymbolTable*>::iterator iterTables;
     for (iterTables = obj->mSymbolTables.begin();
         iterTables != obj->mSymbolTables.end();
         iterTables++)
     {
         mSymbolTables[(*iterTables).first] = new SymbolTable((*iterTables).second);
+    }
+
+    map<string, SymbolPointer>::iterator iterSymPointers;
+    for (iterSymPointers = obj->mNamedSymbols.begin();
+        iterSymPointers != obj->mNamedSymbols.end();
+        iterSymPointers++)
+    {
+        mNamedSymbols[(*iterSymPointers).first] = (*iterSymPointers).second;
     }
 
     mSize = obj->mSize;
@@ -103,16 +117,13 @@ SimulationObject::SimulationObject(SimulationObject* obj)
     mRotY = 0.0f;
     mRotZ = 0.0f;
 
-    mColor = SymbolRGB(obj->mColor);
-
-    if (obj->mGraphic != NULL)
+    for (list<Graphic*>::iterator iterGraph = obj->mGraphics.begin();
+            iterGraph != obj->mGraphics.end();
+            iterGraph++)
     {
-        mGraphic= obj->mGraphic->createSameType();
-        mGraphic->init(this);
-    }
-    else
-    {
-        mGraphic = NULL;
+        Graphic* graph = (*iterGraph)->createSameType();
+        graph->init(this);
+        mGraphics.push_back(graph);
     }
 
     mType = obj->mType;
@@ -120,11 +131,57 @@ SimulationObject::SimulationObject(SimulationObject* obj)
     mCollisionDetectionIteration = 0;
 
     mInitialized = false;
+
+    mFloatDataSize = obj->mFloatDataSize;
+    mBoolDataSize = obj->mBoolDataSize;
+    mIntDataSize = obj->mIntDataSize;
+    mUnsignedLongDataSize = obj->mUnsignedLongDataSize;
+
+    if (obj->mFloatDataSize > 0)
+    {
+        unsigned int size = mFloatDataSize * sizeof(float);
+        mFloatData = (float*)malloc(size);
+        memcpy(mFloatData, obj->mFloatData, size);
+    }
+    else
+    {
+        mFloatData = NULL;
+    }
+    if (obj->mBoolDataSize > 0)
+    {
+        unsigned int size = mBoolDataSize * sizeof(bool);
+        mBoolData = (bool*)malloc(size);
+        memcpy(mBoolData, obj->mBoolData, size);
+    }
+    else
+    {
+        mBoolData = NULL;
+    }
+    if (obj->mIntDataSize > 0)
+    {
+        unsigned int size = mIntDataSize * sizeof(int);
+        mIntData = (int*)malloc(size);
+        memcpy(mIntData, obj->mIntData, size);
+    }
+    else
+    {
+        mIntData = NULL;
+    }
+    if (obj->mUnsignedLongDataSize > 0)
+    {
+        unsigned int size = mUnsignedLongDataSize * sizeof(unsigned long);
+        mUnsignedLongData = (unsigned long*)malloc(size);
+        memcpy(mUnsignedLongData, obj->mUnsignedLongData, size);
+    }
+    else
+    {
+        mUnsignedLongData = NULL;
+    }
 }
 
 SimulationObject::~SimulationObject()
 {
-    map<unsigned int, SymbolTable*>::iterator iterTables;
+    map<int, SymbolTable*>::iterator iterTables;
 
     for (iterTables = mSymbolTables.begin();
         iterTables != mSymbolTables.end();
@@ -135,11 +192,36 @@ SimulationObject::~SimulationObject()
 
     mSymbolTables.clear();
 
-    if (mGraphic != NULL)
+    mNamedSymbols.clear();
+
+    if (mFloatData != NULL)
     {
-        delete mGraphic;
-        mGraphic = NULL;
+        free(mFloatData);
+        mFloatData = NULL;
     }
+    if (mBoolData != NULL)
+    {
+        free(mBoolData);
+        mBoolData = NULL;
+    }
+    if (mIntData != NULL)
+    {
+        free(mIntData);
+        mIntData = NULL;
+    }
+    if (mUnsignedLongData != NULL)
+    {
+        free(mUnsignedLongData);
+        mUnsignedLongData = NULL;
+    }
+
+    for (list<Graphic*>::iterator iterGraph = mGraphics.begin();
+            iterGraph != mGraphics.end();
+            iterGraph++)
+    {
+        delete (*iterGraph);
+    }
+    mGraphics.clear();
 }
 
 SimulationObject* SimulationObject::clone()
@@ -147,18 +229,54 @@ SimulationObject* SimulationObject::clone()
     return new SimulationObject(this);
 }
 
-void SimulationObject::addSymbolTable(SymbolTable* table, unsigned int code)
+void SimulationObject::initFloatData(unsigned int size)
 {
-    mSymbolTables[code] = table;
+    if (mFloatData == NULL)
+    {
+        mFloatDataSize = size;
+        mFloatData = (float*)malloc(size * sizeof(float));
+    }
 }
 
-SymbolTable* SimulationObject::getSymbolTable(unsigned int code)
+void SimulationObject::initBoolData(unsigned int size)
 {
-    if (mSymbolTables.count(code) == 0)
+    if (mBoolData == NULL)
+    {
+        mBoolDataSize = size;
+        mBoolData = (bool*)malloc(size * sizeof(bool));
+    }
+}
+
+void SimulationObject::initIntData(unsigned int size)
+{
+    if (mIntData == NULL)
+    {
+        mIntDataSize = size;
+        mIntData = (int*)malloc(size * sizeof(int));
+    }
+}
+
+void SimulationObject::initUnsignedLongData(unsigned int size)
+{
+    if (mUnsignedLongData == NULL)
+    {
+        mUnsignedLongDataSize = size;
+        mUnsignedLongData = (unsigned long*)malloc(size * sizeof(unsigned long));
+    }
+}
+
+void SimulationObject::addSymbolTable(SymbolTable* table)
+{
+    mSymbolTables[table->getID()] = table;
+}
+
+SymbolTable* SimulationObject::getSymbolTable(int id)
+{
+    if (mSymbolTables.count(id) == 0)
     {
         return NULL;
     }
-    return mSymbolTables[code];
+    return mSymbolTables[id];
 }
 
 int SimulationObject::setInitialEnergy(lua_State* luaState)
@@ -171,9 +289,34 @@ int SimulationObject::setInitialEnergy(lua_State* luaState)
 int SimulationObject::addSymbolTable(lua_State* luaState)
 {
     SymbolTable* table = (SymbolTable*)Orbit<SimulationObject>::pointer(luaState, 1);
-    unsigned int code = luaL_checkint(luaState, 2);
-    addSymbolTable(table, code);
+    addSymbolTable(table);
     return 0;
+}
+
+void SimulationObject::setSymbolName(string name, int table, unsigned int pos)
+{
+    SymbolPointer sp;
+    sp.mTable = table;
+    sp.mPos = pos;
+    mNamedSymbols[name] = sp;
+}
+
+Symbol* SimulationObject::getSymbolByName(string name)
+{
+    if (mNamedSymbols.count(name) == 0)
+    {
+        return NULL;
+    }
+    
+    SymbolPointer sp = mNamedSymbols[name];
+    SymbolTable* symTab = getSymbolTable(sp.mTable);
+
+    if (symTab == NULL)
+    {
+        return NULL;
+    }
+
+    return symTab->getSymbol(sp.mPos);
 }
 
 void SimulationObject::setSize(float size)
@@ -184,9 +327,11 @@ void SimulationObject::setSize(float size)
 
 void SimulationObject::draw(pyc::Layer* layer)
 {
-    if (mGraphic != NULL)
+    for (list<Graphic*>::iterator iterGraph = mGraphics.begin();
+            iterGraph != mGraphics.end();
+            iterGraph++)
     {
-        mGraphic->draw(layer);
+        (*iterGraph)->draw(layer);
     }
 }
 
@@ -194,11 +339,6 @@ void SimulationObject::setAgeRange(unsigned long lowAgeLimit, unsigned long high
 {
     mLowAgeLimit = lowAgeLimit;
     mHighAgeLimit = highAgeLimit;
-}
-
-void SimulationObject::setColor(SymbolRGB* color)
-{
-    mColor = SymbolRGB(color);
 }
 
 float SimulationObject::getFieldValue(string fieldName)
@@ -213,10 +353,10 @@ float SimulationObject::getFieldValue(string fieldName)
     }
 }
 
-void SimulationObject::setGraphic(Graphic* graph)
+void SimulationObject::addGraphic(Graphic* graph)
 {
-    mGraphic = graph;
-    mGraphic->init(this);
+    mGraphics.push_back(graph);
+    graph->init(this);
 }
 
 int SimulationObject::setSize(lua_State* luaState)
@@ -241,17 +381,19 @@ int SimulationObject::setMetabolism(lua_State* luaState)
     return 0;
 }
 
-int SimulationObject::setColor(lua_State* luaState)
+int SimulationObject::addGraphic(lua_State* luaState)
 {
-    SymbolRGB* color = (SymbolRGB*)Orbit<SimulationObject>::pointer(luaState, 1);
-    setColor(color);
+    Graphic* graph = (Graphic*)Orbit<SimulationObject>::pointer(luaState, 1);
+    addGraphic(graph);
     return 0;
 }
 
-int SimulationObject::setGraphic(lua_State* luaState)
+int SimulationObject::setSymbolName(lua_State* luaState)
 {
-    Graphic* graph = (Graphic*)Orbit<SimulationObject>::pointer(luaState, 1);
-    setGraphic(graph);
+    string name = luaL_checkstring(luaState, 1);
+    int table = luaL_checkint(luaState, 2);
+    int pos = luaL_checkint(luaState, 3);
+    setSymbolName(name, table, pos);
     return 0;
 }
 
@@ -261,11 +403,11 @@ Orbit<SimulationObject>::MethodType SimulationObject::mMethods[] = {
 	{"setInitialEnergy", &SimulationObject::setInitialEnergy},
 	{"addSymbolTable", &SimulationObject::addSymbolTable},
 	{"setSize", &SimulationObject::setSize},
-	{"setColor", &SimulationObject::setColor},
 	{"setAgeRange", &SimulationObject::setAgeRange},
 	{"setMetabolism", &SimulationObject::setMetabolism},
-	{"setGraphic", &SimulationObject::setGraphic},
-        {0,0}
+	{"addGraphic", &SimulationObject::addGraphic},
+	{"setSymbolName", &SimulationObject::setSymbolName},
+    {0,0}
 };
 
 Orbit<SimulationObject>::NumberGlobalType SimulationObject::mNumberGlobals[] = {{0,0}};

@@ -21,8 +21,9 @@
 #define __INCLUDE_SIMULATION_OBJECT_H
 
 #include "SymbolTable.h"
+#include "Symbol.h"
 #include "Graphic.h"
-#include "SymbolRGB.h"
+#include "SymbolPointer.h"
 
 #include "Orbit.h"
 
@@ -30,9 +31,11 @@
 
 #include <map>
 #include <string>
+#include <list>
 
 using std::map;
 using std::string;
+using std::list;
 
 class SimulationObject
 {
@@ -46,16 +49,19 @@ public:
     SimulationObject(lua_State* luaState=NULL);
     SimulationObject(SimulationObject* obj);
     virtual ~SimulationObject();
-
     virtual SimulationObject* clone();
+
+    void initFloatData(unsigned int size);
+    void initBoolData(unsigned int size);
+    void initIntData(unsigned int size);
+    void initUnsignedLongData(unsigned int size);
+
     virtual void initRandom(){}
 
     unsigned long getID(){return mID;}
 
     void draw(pyc::Layer* layer);
     virtual bool isFood(){return false;}
-    void setSelected(bool selected){mSelected = selected;}
-    bool isSelected(){return mSelected;}
 
     virtual void setSize(float size);
     float getSize(){return mSize;}
@@ -77,13 +83,13 @@ public:
     void setAgeRange(unsigned long lowAgeLimit, unsigned long highAgeLimit);
     void setMetabolism(float metabolism){mMetabolism = metabolism;}
 
-    void setColor(SymbolRGB* color);
-    SymbolRGB* getColor(){return &mColor;}
+    void addSymbolTable(SymbolTable* table);
+    SymbolTable* getSymbolTable(int id);
 
-    void addSymbolTable(SymbolTable* table, unsigned int code);
-    SymbolTable* getSymbolTable(unsigned int pos);
+    void setSymbolName(string name, int table, unsigned int pos);
+    Symbol* getSymbolByName(string name);
 
-    void setGraphic(Graphic* graph);
+    void addGraphic(Graphic* graph);
 
     virtual float getFieldValue(string fieldName);
 
@@ -111,6 +117,15 @@ public:
 
     bool mInitialized;
 
+    float* mFloatData;
+    bool* mBoolData;
+    int* mIntData;
+    unsigned long* mUnsignedLongData;
+    unsigned int mFloatDataSize;
+    unsigned int mBoolDataSize;
+    unsigned int mIntDataSize;
+    unsigned int mUnsignedLongDataSize;
+
     static const char mClassName[];
     static Orbit<SimulationObject>::MethodType mMethods[];
     static Orbit<SimulationObject>::NumberGlobalType mNumberGlobals[];
@@ -120,21 +135,21 @@ public:
     int setSize(lua_State* luaState);
     int setAgeRange(lua_State* luaState);
     int setMetabolism(lua_State* luaState);
-    int setColor(lua_State* luaState);
-    int setGraphic(lua_State* luaState);
+    int addGraphic(lua_State* luaState);
+    int setSymbolName(lua_State* luaState);
 
 protected:
     unsigned long mID;
-    bool mSelected;
+
+    map<int, SymbolTable*> mSymbolTables;
+    map<string, SymbolPointer> mNamedSymbols;
+
     unsigned int mSpeciesID;
     float mInitialEnergy;
-    map<unsigned int, SymbolTable*> mSymbolTables;
     unsigned long mLowAgeLimit;
     unsigned long mHighAgeLimit;
     
-    SymbolRGB mColor;
-
-    Graphic* mGraphic;
+    list<Graphic*> mGraphics;
 };
 #endif
 

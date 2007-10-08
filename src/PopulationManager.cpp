@@ -40,7 +40,7 @@ void PopulationManager::addObject(SimulationObject* object)
 
 void PopulationManager::removeObject(SimulationObject* obj)
 {
-    if (obj->isSelected())
+    if (mSelectedObject == obj)
     {
         mSelectedObject = NULL;
     }
@@ -72,14 +72,6 @@ void PopulationManager::killOrganism(SimulationObject* org)
 
 void PopulationManager::setSelectedObject(SimulationObject* object)
 {
-    if (mSelectedObject != NULL)
-    {
-        mSelectedObject->setSelected(false);
-    }
     mSelectedObject = object;
-    if (mSelectedObject != NULL)
-    {
-        mSelectedObject->setSelected(true);
-    }
 }
 

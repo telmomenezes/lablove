@@ -25,6 +25,7 @@ unsigned int PopDynFixedSpecies::CURRENT_SPECIES_ID = 0;
 
 PopDynFixedSpecies::PopDynFixedSpecies(lua_State* luaState)
 {
+    mTournmentSize = 2;
 }
 
 PopDynFixedSpecies::~PopDynFixedSpecies()
@@ -133,7 +134,7 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
             SimulationObject* bestOrganism = NULL;
             float bestFitness = 0.0f;
 
-            for (unsigned int tournmentStep = 0; tournmentStep < 2; tournmentStep++)
+            for (unsigned int tournmentStep = 0; tournmentStep < mTournmentSize; tournmentStep++)
             {
                 unsigned int organismNumber = Random::getUniformInt(0, (*iterSpecies).mPopulation - 1);
 
@@ -175,6 +176,7 @@ Orbit<PopDynFixedSpecies>::MethodType PopDynFixedSpecies::mMethods[] = {
     {"addStatisticsTimeInterval", &PopulationDynamics::addStatistics},
     {"addSpecies", &PopDynFixedSpecies::addSpecies},
     {"addSpeciesStatistics", &PopDynFixedSpecies::addSpeciesStatistics},
+    {"setTournmentSize", &PopDynFixedSpecies::setTournmentSize},
     {0,0}
 };
 
@@ -194,6 +196,13 @@ int PopDynFixedSpecies::addSpeciesStatistics(lua_State* luaState)
     unsigned int speciesIndex = luaL_checkint(luaState, 1);
     Statistics* stats = (Statistics*)Orbit<PopDynFixedSpecies>::pointer(luaState, 2);
     addSpeciesStatistics(speciesIndex, stats);
+    return 0;
+}
+
+int PopDynFixedSpecies::setTournmentSize(lua_State* luaState)
+{
+    unsigned int size = luaL_checkint(luaState, 1);
+    setTournmentSize(size);
     return 0;
 }
 

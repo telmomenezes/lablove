@@ -31,15 +31,18 @@ class SymbolTable
 {
 public:
     SymbolTable(lua_State* luaState);
-    SymbolTable(Symbol* refSymbol);
+    SymbolTable(Symbol* refSymbol, int id=-1);
     SymbolTable(SymbolTable* table);
     virtual ~SymbolTable();
 
     Symbol* getSymbol(unsigned int index);
     unsigned int addSymbol(Symbol* sym);
+    int getID(){return mID;}
+
     void mutate();
 
     int addSymbol(lua_State* luaState);
+    int getID(lua_State* luaState);
 
     static const char mClassName[];
     static Orbit<SymbolTable>::MethodType mMethods[];
@@ -47,6 +50,11 @@ public:
 
 
 protected:
+    void create(Symbol* refSymbol, int id=-1);
+
+    static int NEXT_SYMBOL_TABLE_ID;
+
+    int mID;
     Symbol* mReferenceSymbol;
     vector<Symbol*> mSymbols;
 };

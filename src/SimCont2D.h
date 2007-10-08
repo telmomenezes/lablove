@@ -43,6 +43,8 @@ public:
                 ACTION_ROTATE,
                 ACTION_EAT};
 
+    enum FloatData {FLOAT_X,
+                    FLOAT_Y};
 
     SimCont2D(lua_State* luaState=NULL);
     virtual ~SimCont2D();
@@ -57,26 +59,21 @@ public:
     unsigned int getWorldCellLength(){return mWorldCellLength;}
     list<SimulationObject*>** getCellGrid(){return mCellGrid;}
 
+    virtual void addObject(SimulationObject* object);
+    virtual void removeObject(SimulationObject* obj);
+    virtual void placeRandom(SimulationObject* obj);
+
     void setPos(SimulationObject* obj, float x, float y);
     void setRot(SimulationObject* obj, float rot);
-
-    virtual void placeRandom(SimulationObject* obj);
 
     virtual void initGraphics(unsigned int width, unsigned int height, bool fullScreen);
 
     virtual void drawBeforeObjects();
     virtual void drawAfterObjects();
 
-    virtual void removeObject(SimulationObject* obj);
-
     void setGoCost(float cost){mGoCost = cost;}
     void setRotateCost(float cost){mRotateCost = cost;}
     
-    void setShowGrid(bool show){mShowGrid = show;}
-    void setShowViewRange(bool show){mShowViewRange = show;}
-    bool getShowGrid(){return mShowGrid;}
-    bool getShowViewRange(){return mShowViewRange;}
-
     void moveView(float x, float y);
     float getViewX(){return mViewX;}
     float getViewY(){return mViewY;}
@@ -145,6 +142,7 @@ protected:
 
     bool mShowGrid;
     bool mShowViewRange;
+    bool mShowBrain;
 
     float mGoCost;
     float mRotateCost;

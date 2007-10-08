@@ -142,10 +142,10 @@ Orbit<Agent>::MethodType Agent::mMethods[] = {
     {"setInitialEnergy", &SimulationObject::setInitialEnergy},
     {"addSymbolTable", &SimulationObject::addSymbolTable},
     {"setSize", &SimulationObject::setSize},
-    {"setColor", &SimulationObject::setColor},
-    {"setGraphic", &SimulationObject::setGraphic},
+    {"addGraphic", &SimulationObject::addGraphic},
     {"setAgeRange", &SimulationObject::setAgeRange},
     {"setMetabolism", &SimulationObject::setMetabolism},
+	{"setSymbolName", &SimulationObject::setSymbolName},
     {"setBrain", &Agent::setBrain},
     {0,0}
 };

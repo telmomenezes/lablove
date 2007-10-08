@@ -19,16 +19,19 @@
 
 #include "SymbolTable.h"
 
-SymbolTable::SymbolTable(Symbol* refSymbol)
+int SymbolTable::NEXT_SYMBOL_TABLE_ID = 0;
+
+SymbolTable::SymbolTable(Symbol* refSymbol, int id)
 {
-    mReferenceSymbol = refSymbol;
+    create(refSymbol, id);
 }
 
 SymbolTable::SymbolTable(lua_State* luaState)
 {
-    Symbol* symbol = (Symbol*)Orbit<SymbolTable>::pointer(luaState, 1);
+    Symbol* refSymbol = (Symbol*)Orbit<SymbolTable>::pointer(luaState, 1);
+    int id = luaL_optint(luaState, 2, -1);
 
-    mReferenceSymbol = symbol;
+    create(refSymbol, id);
 }
 
 SymbolTable::SymbolTable(SymbolTable* table)
@@ -59,6 +62,21 @@ SymbolTable::~SymbolTable()
     mSymbols.clear();
 }
 
+void SymbolTable::create(Symbol* refSymbol, int id)
+{
+    mReferenceSymbol = refSymbol;
+    mSymbols.push_back(mReferenceSymbol);
+
+    if (id < 0)
+    {
+        mID = NEXT_SYMBOL_TABLE_ID++;
+    }
+    else
+    {
+        mID = id;
+    }
+}
+
 Symbol* SymbolTable::getSymbol(unsigned int index)
 {
     return mSymbols[index];
@@ -85,10 +103,17 @@ int SymbolTable::addSymbol(lua_State* luaState)
     return 1;
 }
 
+int SymbolTable::getID(lua_State* luaState)
+{
+    lua_pushnumber(luaState, mID);
+    return 1;
+}
+
 const char SymbolTable::mClassName[] = "SymbolTable";
 
 Orbit<SymbolTable>::MethodType SymbolTable::mMethods[] = {
     {"addSymbol", &SymbolTable::addSymbol},
+    {"getID", &SymbolTable::getID},
     {0,0}
 };
 

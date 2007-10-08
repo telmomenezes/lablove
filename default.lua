@@ -16,14 +16,16 @@ NOT = true
 viewRange = 150.0
 viewAngle = 100.0
 
-highAgeLimit = 550
-lowAgeLimit = 450
+highAgeLimit = 5500
+lowAgeLimit = 4500
 
 metabolism = 0.0
 goCost = 0.0
 rotateCost = 0.0
 
 initialConnections = 10
+
+tournmentSize = 10
 
 ----------------------------------------------
 
@@ -40,15 +42,14 @@ animat:setAgeRange(lowAgeLimit, highAgeLimit)
 animat:setInitialEnergy(1.0)
 animat:setMetabolism(metabolism)
 
-animat:setGraphic(GraphicTriangle())
+animat:addGraphic(GraphicTriangle())
 
 animatColor = SymbolRGB(255, 50, 255)
-animat:setColor(animatColor)
 
 symTable = SymbolTable(animatColor)
-colorSymIndex = symTable:addSymbol(animatColor)
-colorTableCode = 0
-animat:addSymbolTable(symTable, colorTableCode)
+animat:addSymbolTable(symTable)
+colorTableCode = symTable:getID()
+animat:setSymbolName("color", colorTableCode, 0)
 
 brain = Gridbrain()
 
@@ -115,13 +116,16 @@ plant:setSize(10.0)
 plant:setInitialEnergy(1.0)
 
 plantColor = SymbolRGB(10, 250, 50)
-plant:setColor(plantColor)
+symTable = SymbolTable(plantColor, colorTableCode)
+plant:addSymbolTable(symTable)
+plant:setSymbolName("color", colorTableCode, 0)
 
-plant:setGraphic(GraphicSquare())
+plant:addGraphic(GraphicSquare())
 
 popDyn = PopDynFixedSpecies()
 sim:setPopulationDynamics(popDyn)
 
+popDyn:setTournmentSize(10)
 animatSpeciesIndex = popDyn:addSpecies(animat, numberOfAgents)
 popDyn:addSpecies(plant, numberOfPlants)
 
@@ -136,11 +140,13 @@ human:setMetabolism(metabolism)
 human:setBrain(dummyBrain)
 
 humanColor = SymbolRGB(82, 228, 241)
-human:setColor(humanColor)
+symTable = SymbolTable(humanColor, colorTableCode)
+human:addSymbolTable(symTable)
+human:setSymbolName("color", colorTableCode, 0)
 
-human:setGraphic(GraphicTriangle())
+human:addGraphic(GraphicTriangle())
 sim:addObject(human)
-sim:setPos(human, worldWidth / 2, worldHeight / 2)
+sim:setPos(human, 300, 300)
 sim:setHuman(human)
 
 stats = StatMedAvgMinMax()
