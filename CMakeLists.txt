@@ -41,6 +41,7 @@ SET(SOURCE_FILES
     src/Random.cpp
     src/Symbol.cpp
     src/SymbolRGB.cpp
+    src/SymbolFixedString.cpp
     src/SymbolTable.cpp
     src/Statistics.cpp
     src/StatMedAvgMinMax.cpp
@@ -90,7 +91,9 @@ SET(UNIT_TEST_FILES
         src/tests/TestSimCont2D.cpp
         src/tests/TestGrid.cpp
         src/tests/TestGridbrain.cpp
-        src/tests/TestGridbrainComponentSet.cpp)
+        src/tests/TestGridbrainComponentSet.cpp
+        src/tests/TestSymbolRGB.cpp
+        src/tests/TestSymbolFixedString.cpp)
 
 INCLUDE_DIRECTORIES("src")
 INCLUDE_DIRECTORIES("src/UnitTest++")

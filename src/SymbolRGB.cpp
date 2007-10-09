@@ -45,11 +45,11 @@ SymbolRGB::SymbolRGB(int r, int g, int b)
     mBlue = b;
 }
 
-SymbolRGB::SymbolRGB(SymbolRGB* mol)
+SymbolRGB::SymbolRGB(SymbolRGB* sym)
 {
-    mRed = mol->mRed;
-    mGreen = mol->mGreen;
-    mBlue = mol->mBlue;
+    mRed = sym->mRed;
+    mGreen = sym->mGreen;
+    mBlue = sym->mBlue;
 }
 
 SymbolRGB::~SymbolRGB()
@@ -66,13 +66,19 @@ float SymbolRGB::bind(Symbol* sym)
     // TODO: check type
     SymbolRGB* symRGB = (SymbolRGB*)sym;
 
-    double distance = 0.0f;
-    distance += fabsf(((float)(mRed - symRGB->mRed)) / 255.0f);
-    distance += fabsf(((float)(mGreen - symRGB->mGreen)) / 255.0f);
-    distance += fabsf(((float)(mBlue - symRGB->mBlue)) / 255.0f);
+    float distanceR = (float)(mRed - symRGB->mRed);
+    float distanceG = (float)(mGreen - symRGB->mGreen);
+    float distanceB = (float)(mBlue - symRGB->mBlue);
 
-    distance = distance / 3.0f;
-    return distance;
+    float distance = (distanceR * distanceR);
+    distance += (distanceG * distanceG);
+    distance += (distanceB * distanceB);
+    distance = sqrtf(distance);
+
+    // 441.68f is the max possible distance (0, 0, 0) -> (255, 255, 255)
+    distance = distance / 441.68;
+
+    return 1.0f - distance;
 }
 
 void SymbolRGB::initRandom()

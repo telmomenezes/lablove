@@ -17,33 +17,45 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_SYMBOL_RGB_H)
-#define __INCLUDE_SYMBOL_RGB_H
+#if !defined(__INCLUDE_SYMBOL_FIXED_STRING_H)
+#define __INCLUDE_SYMBOL_FIXED_STRING_H
 
 #include "Symbol.h"
-
 #include "Orbit.h"
 
-class SymbolRGB : public Symbol
+#include <string>
+
+using std::string;
+
+class SymbolFixedString : public Symbol
 {
 public:
-    SymbolRGB(lua_State* luaState=NULL);
-    SymbolRGB(int r, int g, int b);
-    SymbolRGB(SymbolRGB* sym);
-    virtual ~SymbolRGB();
+    SymbolFixedString(lua_State* luaState=NULL);
+    SymbolFixedString(string alphabet, string str);
+    SymbolFixedString(SymbolFixedString* sym);
+    virtual ~SymbolFixedString();
     virtual Symbol* clone();
 
     virtual float bind(Symbol* sym);
     virtual void initRandom();
     virtual void mutate();
 
-    static const char mClassName[];
-    static Orbit<SymbolRGB>::MethodType mMethods[];
-    static Orbit<SymbolRGB>::NumberGlobalType mNumberGlobals[];
+    string getString(){return mString;}
+    string getAlphabet(){return mAlphabet;}
+    unsigned int getLength(){return mLength;}
+    unsigned int getAlphabetLength(){return mAlphabetLength;}
 
-    int mRed;
-    int mGreen;
-    int mBlue;
+    void replaceChar(unsigned int replacePos, unsigned int charIndex);
+
+    static const char mClassName[];
+    static Orbit<SymbolFixedString>::MethodType mMethods[];
+    static Orbit<SymbolFixedString>::NumberGlobalType mNumberGlobals[];
+
+protected:
+    string mString;
+    string mAlphabet;
+    unsigned int mLength;
+    unsigned int mAlphabetLength;
 };
 #endif
 
