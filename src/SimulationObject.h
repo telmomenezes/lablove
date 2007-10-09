@@ -41,7 +41,6 @@ class SimulationObject
 {
 public:
     enum Type {TYPE_OBJECT,
-            TYPE_PLANT,
             TYPE_AGENT};
 
     static unsigned long CURRENT_ID;
@@ -61,7 +60,6 @@ public:
     unsigned long getID(){return mID;}
 
     void draw(pyc::Layer* layer);
-    virtual bool isFood(){return false;}
 
     virtual void setSize(float size);
     float getSize(){return mSize;}

@@ -19,7 +19,6 @@
 
 #include "SimCont2D.h"
 #include "SimulationObject.h"
-#include "Plant.h"
 #include "Agent.h"
 #include "PopDynGenerations.h"
 #include "PopDynFixedSpecies.h"
@@ -68,7 +67,6 @@ int main(int argc, char *argv[])
     
     Orbit<SimCont2D>::orbitRegister(luaState);
     Orbit<SimulationObject>::orbitRegister(luaState);
-    Orbit<Plant>::orbitRegister(luaState);
     Orbit<Agent>::orbitRegister(luaState);
     Orbit<PopDynGenerations>::orbitRegister(luaState);
     Orbit<PopDynFixedSpecies>::orbitRegister(luaState);

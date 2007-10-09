@@ -47,8 +47,6 @@ public:
     void run();
     void cycle();
 
-    virtual void processObjects(){};
-
     virtual void addObject(SimulationObject* object);
 
     virtual SimulationObject* getObjectByScreenPos(int x, int y){return NULL;}
@@ -74,6 +72,7 @@ public:
     int setSeedIndex(lua_State* luaState);
 
 protected:
+    virtual void process(SimulationObject* obj){}
     virtual void perceive(Agent* agent){}
     virtual void act(Agent* agent){}
     unsigned long mSimulationTime;

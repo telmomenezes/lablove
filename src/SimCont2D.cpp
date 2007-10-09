@@ -381,6 +381,24 @@ SimulationObject* SimCont2D::nextCollision(float& distance, float& angle)
     }
 }
 
+void SimCont2D::process(SimulationObject* obj)
+{
+    obj->mEnergy -= obj->mMetabolism;
+
+    if (obj->mEnergy <= 0)
+    {
+        killOrganism(obj);
+    }
+
+    if (obj->mMaxAge > 0)
+    {
+        if (mSimulationTime - obj->mCreationTime >= obj->mMaxAge)
+        {
+            killOrganism(obj);
+        }
+    }
+}
+
 void SimCont2D::perceive(Agent* agent)
 {
     mTargetObject = NULL;
@@ -603,10 +621,25 @@ void SimCont2D::rotate(Agent* agent, float angle)
 
 void SimCont2D::eat(Agent* agent)
 {
-    if ((mTargetObject) && (mTargetObject->isFood()))
+    if (mTargetObject)
     {
-        agent->deltaEnergy(mTargetObject->getEnergy());
-        killOrganism(mTargetObject);
+        Symbol* sym1 = agent->getSymbolByName("feed");
+        if (sym1 == NULL)
+        {
+            return;
+        }
+        Symbol* sym2 = mTargetObject->getSymbolByName("food");
+        if (sym2 == NULL)
+        {
+            return;
+        }
+
+        if (sym1->bind(sym2) > 0.5f)
+        {
+            float energy = mTargetObject->getEnergy();
+            agent->deltaEnergy(energy);
+            mTargetObject->deltaEnergy(-energy);
+        }
     }
 }
 
@@ -689,7 +722,9 @@ void SimCont2D::drawAfterObjects()
         if (mHumanAgent)
         {
             mRootLayer2D->setTranslation(0, mWindow->getHeight() / 2);
-            //mRootLayer2D->fillRectangle(0, 0, mWindow->getWidth(), mWindow->getHeight() / 2);
+            mRootLayer2D->setColor(255, 255, 255, 130);
+            mRootLayer2D->fillRectangle(0, 0, mWindow->getWidth(), mWindow->getHeight() / 2);
+            mRootLayer2D->setColor(50, 50, 50, 255);
             mRootLayer2D->setFont(mFont);
             mHumanAgent->getBrain()->draw(mRootLayer2D);
         }

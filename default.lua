@@ -36,20 +36,28 @@ sim:setViewAngle(viewAngle)
 sim:setGoCost(goCost)
 sim:setRotateCost(rotateCost)
 
-animat = Agent()
-animat:setSize(10.0)
-animat:setAgeRange(lowAgeLimit, highAgeLimit)
-animat:setInitialEnergy(1.0)
-animat:setMetabolism(metabolism)
+agent = Agent()
+agent:setSize(10.0)
+agent:setAgeRange(lowAgeLimit, highAgeLimit)
+agent:setInitialEnergy(1.0)
+agent:setMetabolism(metabolism)
 
-animat:addGraphic(GraphicTriangle())
+agent:addGraphic(GraphicTriangle())
 
-animatColor = SymbolRGB(255, 50, 255)
-
-symTable = SymbolTable(animatColor)
-animat:addSymbolTable(symTable)
+agentColor = SymbolRGB(255, 50, 255)
+symTable = SymbolTable(agentColor)
+agent:addSymbolTable(symTable)
 colorTableCode = symTable:getID()
-animat:setSymbolName("color", colorTableCode, 0)
+agent:setSymbolName("color", colorTableCode, 0)
+
+agentFeed = SymbolFixedString("abc", "aaa")
+agentFood = SymbolFixedString("abc", "bbb")
+agentFeedTable = SymbolTable(agentFeed)
+agentFeedTable:addSymbol(agentFood)
+agent:addSymbolTable(agentFeedTable)
+feedTableCode = agentFeedTable:getID()
+agent:setSymbolName("feed", feedTableCode, 0)
+agent:setSymbolName("food", feedTableCode, 1)
 
 brain = Gridbrain()
 
@@ -103,7 +111,7 @@ grid2:addComponentSet(actSet, gridBeta - 1, gridBeta - 1)
 
 brain:addGrid(grid2)
 
-animat:setBrain(brain)
+agent:setBrain(brain)
 
 i = 0
 while i < initialConnections do
@@ -111,7 +119,7 @@ while i < initialConnections do
     i = i + 1
 end
 
-plant = Plant()
+plant = SimulationObject()
 plant:setSize(10.0)
 plant:setInitialEnergy(1.0)
 
@@ -120,13 +128,18 @@ symTable = SymbolTable(plantColor, colorTableCode)
 plant:addSymbolTable(symTable)
 plant:setSymbolName("color", colorTableCode, 0)
 
+plantFood = SymbolFixedString("abc", "aaa")
+plantFeedTable = SymbolTable(plantFood, feedTableCode)
+plant:addSymbolTable(plantFeedTable)
+plant:setSymbolName("food", feedTableCode, 0)
+
 plant:addGraphic(GraphicSquare())
 
 popDyn = PopDynFixedSpecies()
 sim:setPopulationDynamics(popDyn)
 
 popDyn:setTournmentSize(10)
-animatSpeciesIndex = popDyn:addSpecies(animat, numberOfAgents)
+agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents)
 popDyn:addSpecies(plant, numberOfPlants)
 
 human = Agent()
@@ -144,6 +157,14 @@ symTable = SymbolTable(humanColor, colorTableCode)
 human:addSymbolTable(symTable)
 human:setSymbolName("color", colorTableCode, 0)
 
+humanFeed = SymbolFixedString("abc", "aaa")
+humanFood = SymbolFixedString("abc", "bbb")
+humanFeedTable = SymbolTable(humanFeed, feedTableCode)
+humanFeedTable:addSymbol(humanFood)
+human:addSymbolTable(humanFeedTable)
+human:setSymbolName("feed", feedTableCode, 0)
+human:setSymbolName("food", feedTableCode, 1)
+
 human:addGraphic(GraphicTriangle())
 sim:addObject(human)
 sim:setPos(human, 300, 300)
@@ -153,7 +174,7 @@ stats = StatMedAvgMinMax()
 stats:setFile("energy.csv")
 stats:addField("energy")
 --stats:addField("connections")
-popDyn:addSpeciesStatistics(animatSpeciesIndex, stats)
+popDyn:addSpeciesStatistics(agentSpeciesIndex, stats)
 
 statTime = StatTime()
 statTime:setFile("time.csv")

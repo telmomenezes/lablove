@@ -110,6 +110,7 @@ public:
     int setHuman(lua_State* luaState);
 
 protected:
+    virtual void process(SimulationObject* obj);
     virtual void perceive(Agent* agent);
     virtual void act(Agent* agent);
     virtual void onScanObject(Agent* orig,

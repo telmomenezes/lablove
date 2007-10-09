@@ -49,7 +49,7 @@ void Simulation::initGraphics(unsigned int width, unsigned int height, bool full
     mEventQ = mPycasso.createEventQ();
     mRootLayer2D = mWindow->getRootLayer2D();
 
-    mLogo = mWindow->createPNGLayer("media/lablove.png");
+    mLogo = mWindow->createPNGLayer("media/lablove_small.png");
 
     mWindow->setTitle("LabLOVE");
 
@@ -83,20 +83,7 @@ void Simulation::cycle()
     {
         SimulationObject* obj = *iterObj;
 
-        obj->mEnergy -= obj->mMetabolism;
-
-        if (obj->mEnergy < 0)
-        {
-            killOrganism(obj);
-        }
-
-        if (obj->mMaxAge > 0)
-        {
-            if (mSimulationTime - obj->mCreationTime >= obj->mMaxAge)
-            {
-                killOrganism(obj);
-            }
-        }
+        process(obj); 
 
         if (obj->mType == SimulationObject::TYPE_AGENT)
         {
@@ -114,7 +101,8 @@ void Simulation::cycle()
     mPopulationDynamics->onCycle(mSimulationTime, getRealTime());
 
     mRootLayer2D->setColor(255, 255, 255, 200);
-    mRootLayer2D->drawLayer(mLogo, 10, 10);
+    mRootLayer2D->drawLayer(mLogo, 0, 0);
+    mRootLayer2D->fillRectangle(122, 0, mWindow->getWidth() - 122, 50);
 
     mWindow->update();
 
