@@ -35,8 +35,9 @@ public:
 
     enum Perception {PERCEPTION_NULL,
                     PERCEPTION_POSITION,
-                    PERCEPTION_PROXIMITY,
-                    PERCEPTION_IN_CONTACT};
+                    PERCEPTION_DISTANCE,
+                    PERCEPTION_IN_CONTACT,
+                    PERCEPTION_OBJECT_FEATURE};
 
     enum Action {ACTION_NULL,
                 ACTION_GO,

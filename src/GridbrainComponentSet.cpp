@@ -40,18 +40,16 @@ GridbrainComponent* GridbrainComponentSet::getRandom()
 void GridbrainComponentSet::addComponent(GridbrainComponent::Type type,
                         int subType,
                         float parameter,
-                        int origSymTable,
+                        int symTable,
                         int origSymIndex,
-                        int targetSymTable,
                         int targetSymIndex)
 {
     GridbrainComponent* comp = new GridbrainComponent();
     comp->mType = type;
     comp->mSubType = subType;
     comp->mParameter = parameter;
-    comp->mOrigSymTable = origSymTable;
+    comp->mSymTable = symTable;
     comp->mOrigSymIndex = origSymIndex;
-    comp->mTargetSymTable = targetSymTable;
     comp->mTargetSymIndex = targetSymIndex;
     addComponent(comp);
 }
@@ -70,17 +68,15 @@ int GridbrainComponentSet::addComponent(lua_State* luaState)
     int type = luaL_checkint(luaState, 1);
     int subType = luaL_optint(luaState, 2, -1);
     float parameter = luaL_optnumber(luaState, 3, 0.0f);
-    int origSymTable = luaL_optint(luaState, 4, -1);
+    int symTable = luaL_optint(luaState, 4, -1);
     int origSymIndex = luaL_optint(luaState, 5, -1);
-    int targetSymTable = luaL_optint(luaState, 6, -1);
-    int targetSymIndex = luaL_optint(luaState, 7, -1);
+    int targetSymIndex = luaL_optint(luaState, 6, -1);
 
     addComponent((GridbrainComponent::Type)type,
                     subType,
                     parameter,
-                    origSymTable,
+                    symTable,
                     origSymIndex,
-                    targetSymTable,
                     targetSymIndex);
 
     return 0;

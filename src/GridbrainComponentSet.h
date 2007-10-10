@@ -37,9 +37,8 @@ public:
     void addComponent(GridbrainComponent::Type type,
                 int subType=-1,
                 float parameter=0.0f,
-                int origSymTable=-1,
+                int symTable=-1,
                 int origSymIndex=-1,
-                int targetSymTable=-1,
                 int targetSymIndex=-1);
     GridbrainComponent* getRandom();
 

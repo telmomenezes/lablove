@@ -72,9 +72,8 @@ public:
     unsigned long mRow;
     unsigned int mGrid;
 
-    int mOrigSymTable;
+    int mSymTable;
     int mOrigSymIndex;
-    int mTargetSymTable;
     int mTargetSymIndex;
 };
 

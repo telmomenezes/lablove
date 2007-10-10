@@ -492,14 +492,15 @@ void SimCont2D::onScanObject(Agent* orig,
                 inBuffer[pos] = normalizedValue;
                 break;
 
-            case PERCEPTION_PROXIMITY:
-                normalizedValue = 1.0f - (distance / mViewRange);
+            case PERCEPTION_DISTANCE:
+                normalizedValue = distance / mViewRange;
                 inBuffer[pos] = normalizedValue;
                 break;
 
-            default:
+            case PERCEPTION_OBJECT_FEATURE:
                 //normalizedValue = perception->computeBinding(orig, targ);
                 //inBuffer[pos] = normalizedValue;
+                inBuffer[pos] = 0;
                 break;
         }
 
@@ -882,8 +883,9 @@ Orbit<SimCont2D>::MethodType SimCont2D::mMethods[] = {
 Orbit<SimCont2D>::NumberGlobalType SimCont2D::mNumberGlobals[] = {
     {"PERCEPTION_NULL", PERCEPTION_NULL},
     {"PERCEPTION_POSITION", PERCEPTION_POSITION},
-    {"PERCEPTION_PROXIMITY", PERCEPTION_PROXIMITY},
+    {"PERCEPTION_DISTANCE", PERCEPTION_DISTANCE},
     {"PERCEPTION_IN_CONTACT", PERCEPTION_IN_CONTACT},
+    {"PERCEPTION_OBJECT_FEATURE", PERCEPTION_OBJECT_FEATURE},
     {"ACTION_NULL", ACTION_NULL},
     {"ACTION_GO", ACTION_GO},
     {"ACTION_ROTATE", ACTION_ROTATE},

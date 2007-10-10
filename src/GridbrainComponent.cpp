@@ -48,9 +48,8 @@ void GridbrainComponent::clearDefinitions()
     mParameter = 0.0f;
     mAggregator = false;
 
-    mOrigSymTable = -1;
+    mSymTable = -1;
     mOrigSymIndex = -1;
-    mTargetSymTable = -1;
     mTargetSymIndex = -1;
 }
 
@@ -75,9 +74,8 @@ void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)
     mParameter = comp->mParameter;
     mAggregator = comp->mAggregator;
 
-    mOrigSymTable = comp->mOrigSymTable;
+    mSymTable = comp->mSymTable;
     mOrigSymIndex = comp->mOrigSymIndex;
-    mTargetSymTable = comp->mTargetSymTable;
     mTargetSymIndex = comp->mTargetSymIndex;
 
 }
@@ -99,23 +97,23 @@ bool GridbrainComponent::isAggregator()
 float GridbrainComponent::computeBinding(SimulationObject* sourceObj,
                 SimulationObject* targetObj)
 {
-    SymbolTable* sourceTable = sourceObj->getSymbolTable(mOrigSymTable);
-    SymbolTable* targetTable = targetObj->getSymbolTable(mTargetSymTable);
+    SymbolTable* sourceTable = sourceObj->getSymbolTable(mSymTable);
+    SymbolTable* targetTable = targetObj->getSymbolTable(mSymTable);
 
     if (!targetTable)
     {
         return 0.0f;
     }
 
-    Symbol* sourceMol = sourceTable->getSymbol(mOrigSymIndex);
-    Symbol* targetMol = targetTable->getSymbol(mTargetSymIndex);
+    Symbol* sourceSym = sourceTable->getSymbol(mOrigSymIndex);
+    Symbol* targetSym = targetTable->getSymbol(mTargetSymIndex);
 
-    if (!targetMol)
+    if (!targetSym)
     {
         return 0.0f;
     }
 
-    return (sourceMol->bind(targetMol));
+    return (sourceSym->bind(targetSym));
 }
 
 const char GridbrainComponent::mClassName[] = "GridbrainComponent";
