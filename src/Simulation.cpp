@@ -20,6 +20,8 @@
 #include "Simulation.h"
 #include "PopulationDynamics.h"
 #include "Random.h"
+#include "Symbol.h"
+#include "SymbolTable.h"
 #include <math.h>
 
 #if defined(__UNIX)
@@ -148,6 +150,31 @@ void Simulation::addObject(SimulationObject* object)
 void Simulation::setSeedIndex(unsigned int index)
 {
     Random::setSeedIndex(index);
+}
+
+float Simulation::computeBinding(SimulationObject* sourceObj,
+                                    SimulationObject* targetObj,
+                                    int symTable,
+                                    int origSymIndex,
+                                    int targetSymIndex)
+{
+    SymbolTable* sourceTable = sourceObj->getSymbolTable(symTable);
+    SymbolTable* targetTable = targetObj->getSymbolTable(symTable);
+
+    if (!targetTable)
+    {
+        return 0.0f;
+    }
+
+    Symbol* sourceSym = sourceTable->getSymbol(origSymIndex);
+    Symbol* targetSym = targetTable->getSymbol(targetSymIndex);
+
+    if (!targetSym)
+    {
+        return 0.0f;
+    }
+
+    return (sourceSym->bind(targetSym));
 }
 
 bool Simulation::onKeyDown(pyc::KeyCode keycode)

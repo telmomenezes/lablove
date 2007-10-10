@@ -1,15 +1,28 @@
 #
-# Todo list for LabLOVE
+# To do list for LabLOVE
 # 
 
-- OO mutation system
-- Variable speed
+General:
+========
+
+- Newtonian Physics
 - Predator and prey predefined brains
-- Crossover operator for gridbrains
-- Mutation and crossover for symbol tables
 - No graphics
 - Disable graphics in exe parameter
 - Complete symbol system
 - Select experiment number in exe paramenter
 - Choose screen size in exe parameter
 - ...
+
+
+Genetic Operators:
+==================
+
+- Random number of mutations with logarithmic system
+- GB: originSymIndex mutation
+- GB: component parameter mutation?
+- GB: crossover
+- GB: delete/add row/column
+- GB: clone row/column set
+- GB: divide connection
+- Mutation and crossover for symbol tables

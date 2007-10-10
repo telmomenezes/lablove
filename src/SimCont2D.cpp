@@ -498,9 +498,13 @@ void SimCont2D::onScanObject(Agent* orig,
                 break;
 
             case PERCEPTION_OBJECT_FEATURE:
-                //normalizedValue = perception->computeBinding(orig, targ);
-                //inBuffer[pos] = normalizedValue;
-                inBuffer[pos] = 0;
+                InterfaceItem* item = (*iterItem);
+                normalizedValue = computeBinding(orig,
+                                                    targ,
+                                                    item->mSymTable,
+                                                    item->mOrigSymIndex,
+                                                    item->mTargetSymIndex);
+                inBuffer[pos] = normalizedValue;
                 break;
         }
 

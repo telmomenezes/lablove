@@ -43,9 +43,6 @@ public:
 
     bool isAggregator();
 
-    float computeBinding(SimulationObject* sourceObj,
-                            SimulationObject* targetObj);
-
     static const char mClassName[];
     static Orbit<GridbrainComponent>::MethodType mMethods[];
     static Orbit<GridbrainComponent>::NumberGlobalType mNumberGlobals[];

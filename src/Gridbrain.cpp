@@ -215,6 +215,9 @@ void Gridbrain::initGridInputOutput(Grid* grid, int gPos)
                 mComponents[pos].mPerceptionPosition = grid->addPerception(&mComponents[pos]);
                 InterfaceItem* item = new InterfaceItem();
                 item->mType = mComponents[pos].mSubType;
+                item->mSymTable = mComponents[pos].mSymTable;
+                item->mOrigSymIndex = mComponents[pos].mOrigSymIndex;
+                item->mTargetSymIndex = mComponents[pos].mTargetSymIndex;
                 interface->push_back(item);
             }
 

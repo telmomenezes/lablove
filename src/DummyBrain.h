@@ -48,7 +48,12 @@ public:
     virtual void cycle();
     virtual void mutate(){}
  
-    void addPerception(string name, unsigned int channel, unsigned int type);
+    void addPerception(string name,
+                        unsigned int channel,
+                        unsigned int type,
+                        int symTable=-1,
+                        int origSymIndex=-1,
+                        int targetSymIndex=-1);
 
     static const char mClassName[];
     static Orbit<DummyBrain>::MethodType mMethods[];

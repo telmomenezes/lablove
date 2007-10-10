@@ -75,6 +75,12 @@ protected:
     virtual void process(SimulationObject* obj){}
     virtual void perceive(Agent* agent){}
     virtual void act(Agent* agent){}
+    float computeBinding(SimulationObject* sourceObj,
+                            SimulationObject* targetObj,
+                            int symTable,
+                            int origSymIndex,
+                            int targetSymIndex);
+
     unsigned long mSimulationTime;
     PopulationDynamics* mPopulationDynamics;
 

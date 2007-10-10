@@ -89,10 +89,18 @@ float* DummyBrain::getInputBuffer(unsigned int channel)
     return buffer;
 }
 
-void DummyBrain::addPerception(string name, unsigned int channel, unsigned int type)
+void DummyBrain::addPerception(string name,
+                                unsigned int channel,
+                                unsigned int type,
+                                int symTable,
+                                int origSymIndex,
+                                int targetSymIndex)
 {
     InterfaceItem* item = new InterfaceItem();
     item->mType = type;
+    item->mSymTable = symTable;
+    item->mOrigSymIndex = origSymIndex;
+    item->mTargetSymIndex = targetSymIndex;
     mInputInterfacesVector[channel]->push_back(item);
     mInputInterfacesNames[channel]->push_back(name);
 }
@@ -160,7 +168,10 @@ int DummyBrain::addPerception(lua_State* luaState)
     string name = luaL_checkstring(luaState, 1);
     unsigned int channel = luaL_checkint(luaState, 2);
     unsigned int type = luaL_checkint(luaState, 3);
-    addPerception(name, channel, type);
+    int symTable = luaL_optint(luaState, 4, -1);
+    int origSymIndex = luaL_optint(luaState, 5, -1);
+    int targetSymIndex = luaL_optint(luaState, 6, -1);
+    addPerception(name, channel, type, symTable, origSymIndex, targetSymIndex);
     return 0;
 }
 

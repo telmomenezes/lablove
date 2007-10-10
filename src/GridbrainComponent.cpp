@@ -94,28 +94,6 @@ bool GridbrainComponent::isAggregator()
         || (mType == GridbrainComponent::MAX));
 }
 
-float GridbrainComponent::computeBinding(SimulationObject* sourceObj,
-                SimulationObject* targetObj)
-{
-    SymbolTable* sourceTable = sourceObj->getSymbolTable(mSymTable);
-    SymbolTable* targetTable = targetObj->getSymbolTable(mSymTable);
-
-    if (!targetTable)
-    {
-        return 0.0f;
-    }
-
-    Symbol* sourceSym = sourceTable->getSymbol(mOrigSymIndex);
-    Symbol* targetSym = targetTable->getSymbol(mTargetSymIndex);
-
-    if (!targetSym)
-    {
-        return 0.0f;
-    }
-
-    return (sourceSym->bind(targetSym));
-}
-
 const char GridbrainComponent::mClassName[] = "GridbrainComponent";
 
 Orbit<GridbrainComponent>::MethodType GridbrainComponent::mMethods[] = {{0,0}};

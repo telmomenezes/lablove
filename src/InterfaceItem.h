@@ -20,8 +20,6 @@
 #if !defined(__INCLUDE_INTERFACE_ITEM_H)
 #define __INCLUDE_INTERFACE_ITEM_H
 
-#include "Symbol.h"
-
 class InterfaceItem
 {
 public:
@@ -29,7 +27,9 @@ public:
     virtual ~InterfaceItem(){}
 
     int mType;
-    Symbol* mSymbol;
+    int mSymTable;
+    int mOrigSymIndex;
+    int mTargetSymIndex;
 };
 #endif
 
