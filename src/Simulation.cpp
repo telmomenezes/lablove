@@ -35,6 +35,14 @@ Simulation::Simulation(lua_State* luaState)
     mWindow = NULL;
     mRootLayer2D = NULL;
     mEventQ = NULL;
+
+    mLastSimulationTime = 0;
+    mLastRealTime = 0.0f;
+    mFPS = 0.0f;
+
+    mSimulationTimeText = "";
+    mRealTimeText = "";
+    mFPSText = "";
 }
 
 Simulation::~Simulation()
@@ -55,6 +63,8 @@ void Simulation::initGraphics(unsigned int width, unsigned int height, bool full
 
 void Simulation::run()
 {
+    mInitialRealTime = mPycasso.getTime();
+
     mPopulationDynamics->init(this);
 
     while (!mStop)
@@ -101,6 +111,7 @@ void Simulation::cycle()
     mRootLayer2D->setColor(255, 255, 255, 200);
     mRootLayer2D->drawLayer(mLogo, 0, 0);
     mRootLayer2D->fillRectangle(122, 0, mWindow->getWidth() - 122, 50);
+    drawTimes();
 
     mWindow->update();
 
@@ -200,6 +211,8 @@ int Simulation::initGraphics(lua_State* luaState)
 
     initGraphics(width, height, fullScreen);
 
+    mFont = mWindow->loadFont("media/vera/Vera.ttf", 8);
+
     return 0;
 }
 
@@ -221,5 +234,67 @@ int Simulation::setSeedIndex(lua_State* luaState)
     int index = luaL_checkint(luaState, 1);
     setSeedIndex(index);
     return 0;
+}
+
+void Simulation::drawTimes()
+{
+    if (mLastRealTime == 0.0f)
+    {
+        mLastRealTime = mPycasso.getTime();
+    }
+    else if (mSimulationTime % 100 == 0)
+    {
+        double realTime = mPycasso.getTime();
+        double deltaRealTime = realTime - mLastRealTime;
+        double deltaSimTime = (double)(mSimulationTime - mLastSimulationTime);
+        mLastRealTime = realTime;
+        mLastSimulationTime = mSimulationTime;
+
+        mFPS = deltaSimTime / deltaRealTime;
+
+        char text[255];
+
+        sprintf(text, "Sim Time: %d Kcycles", mSimulationTime / 1000);
+        mSimulationTimeText = text;
+
+        float totalRealTime = realTime - mInitialRealTime;
+        float days = 0;
+        float hours = 0;
+        float minutes = 0;
+        float seconds = 0;
+
+        double remainingTime = totalRealTime;
+
+        if (remainingTime > 60 * 60 * 24)
+        {
+            days = roundf(remainingTime / (60 * 60 * 24));
+            remainingTime -= days * 60 * 60 * 24;
+        }
+        if (remainingTime > 60 * 60)
+        {
+            hours = roundf(remainingTime / (60 * 60));
+            remainingTime -= hours * 60 * 60;
+        }
+        if (remainingTime > 60)
+        {
+            minutes = roundf(remainingTime / 60);
+            remainingTime -= minutes * 60;
+        }
+        seconds = roundf(remainingTime);
+
+        sprintf(text, "Real Time: %.0fd %.0fh %.0fm %.0fs", days, hours, minutes, seconds);
+        mRealTimeText = text;
+
+        sprintf(text, "FPS: %.0f", mFPS);
+        mFPSText = text;
+    }
+
+    mRootLayer2D->setFont(mFont);
+    mRootLayer2D->setColor(120, 0, 0, 255);
+    mRootLayer2D->drawText(140, 16, mSimulationTimeText);
+    mRootLayer2D->setColor(0, 120, 0, 255);
+    mRootLayer2D->drawText(140, 31, mRealTimeText);
+    mRootLayer2D->setColor(0, 0, 120, 255);
+    mRootLayer2D->drawText(140, 46, mFPSText);
 }
 

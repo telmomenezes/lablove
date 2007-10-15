@@ -648,12 +648,6 @@ void SimCont2D::eat(Agent* agent)
     }
 }
 
-void SimCont2D::initGraphics(unsigned int width, unsigned int height, bool fullScreen)
-{
-    Simulation::initGraphics(width, height, fullScreen);
-    mFont = mWindow->loadFont("media/vera/Vera.ttf", 8);
-}
-
 void SimCont2D::drawBeforeObjects()
 {
 

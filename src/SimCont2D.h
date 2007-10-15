@@ -67,8 +67,6 @@ public:
     void setPos(SimulationObject* obj, float x, float y);
     void setRot(SimulationObject* obj, float rot);
 
-    virtual void initGraphics(unsigned int width, unsigned int height, bool fullScreen);
-
     virtual void drawBeforeObjects();
     virtual void drawAfterObjects();
 
@@ -178,8 +176,6 @@ protected:
     bool mHumanRotateLeft;
     bool mHumanRotateRight;
     bool mHumanEat;
-
-    pyc::Font* mFont;
 };
 #endif
 

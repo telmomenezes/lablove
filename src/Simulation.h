@@ -30,8 +30,10 @@
 #include "Orbit.h"
 
 #include <list>
+#include <string>
 
 using std::list;
+using std::string;
 
 class Simulation : public PopulationManager
 {
@@ -81,6 +83,7 @@ protected:
                             int symTable,
                             int origSymIndex,
                             int targetSymIndex);
+    void drawTimes();
 
     unsigned long mSimulationTime;
     PopulationDynamics* mPopulationDynamics;
@@ -92,6 +95,16 @@ protected:
     pyc::Window* mWindow;
     pyc::Layer2D* mRootLayer2D;
     pyc::Layer* mLogo;
+
+    double mInitialRealTime;
+    unsigned long mLastSimulationTime;
+    double mLastRealTime;
+    double mFPS;
+    string mSimulationTimeText;
+    string mRealTimeText;
+    string mFPSText;
+
+    pyc::Font* mFont;
 };
 #endif
 
