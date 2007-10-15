@@ -22,13 +22,3 @@
 
 #include <stdexcept>
 
-TEST(SimulationRealTime)
-{
-    Simulation sim;
-    double t1 = sim.getRealTime();
-    CHECK(t1 > 0.0f);
-    double t2 = sim.getRealTime();
-    CHECK(t2 > 0.0f);
-    CHECK(t2 > t1);
-}
-

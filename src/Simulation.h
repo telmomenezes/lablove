@@ -55,9 +55,10 @@ public:
     PopulationDynamics* getPopulationDynamics(){return mPopulationDynamics;}
 
     unsigned long getTime(){return mSimulationTime;}
-    double getRealTime();
 
     void setSeedIndex(unsigned int index);
+
+    pyc::Pycasso& getPycasso(){return mPycasso;}
 
     virtual bool onKeyDown(pyc::KeyCode keycode);
     virtual bool onKeyUp(pyc::KeyCode keycode){return false;}

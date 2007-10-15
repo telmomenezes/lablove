@@ -26,7 +26,7 @@ struct SimCont2DFixture
 {
     SimCont2DFixture()
     {
-        srand((long int)(mSim.getRealTime()));
+        srand((long int)(mSim.getPycasso().getTime()));
         mWidth = 1000;
         mLength = 500;
         mCell = (rand() % 300) + 1;

@@ -24,10 +24,6 @@
 #include "SymbolTable.h"
 #include <math.h>
 
-#if defined(__UNIX)
-#include <sys/time.h>
-#endif
-
 Simulation::Simulation(lua_State* luaState)
 {
     mSimulationTime = 0;
@@ -51,7 +47,7 @@ void Simulation::initGraphics(unsigned int width, unsigned int height, bool full
     mEventQ = mPycasso.createEventQ();
     mRootLayer2D = mWindow->getRootLayer2D();
 
-    mLogo = mWindow->createPNGLayer("media/lablove_small.png");
+    mLogo = mWindow->loadImage("media/lablove_small.png");
 
     mWindow->setTitle("LabLOVE");
 
@@ -100,7 +96,7 @@ void Simulation::cycle()
 
     drawAfterObjects();
 
-    mPopulationDynamics->onCycle(mSimulationTime, getRealTime());
+    mPopulationDynamics->onCycle(mSimulationTime, mPycasso.getTime());
 
     mRootLayer2D->setColor(255, 255, 255, 200);
     mRootLayer2D->drawLayer(mLogo, 0, 0);
@@ -188,36 +184,6 @@ bool Simulation::onKeyDown(pyc::KeyCode keycode)
             return false;
     }
 }
-
-#if defined(__UNIX)
-double Simulation::getRealTime()
-{
-    timeval time;
-    gettimeofday(&time, NULL);
-
-    double seconds = (double)time.tv_sec;
-    seconds += ((double)time.tv_usec) / 1000000.0f;
-    return seconds;
-}
-#endif
-
-#if defined(__WIN32)
-double Simulation::getRealTime()
-{
-    FILETIME ft;
-    LARGE_INTEGER li;
-    __int64 t;
-    static int tzflag;
-
-    GetSystemTimeAsFileTime(&ft);
-        li.LowPart  = ft.dwLowDateTime;
-        li.HighPart = ft.dwHighDateTime;
-        t  = li.QuadPart;
-        t -= EPOCHFILETIME;
-        t /= 10;
-        return ((double)t) / 1000000.0f;
-}
-#endif
 
 int Simulation::addObject(lua_State *luaState)
 {
