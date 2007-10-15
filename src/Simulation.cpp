@@ -267,20 +267,20 @@ void Simulation::drawTimes()
 
         if (remainingTime > 60 * 60 * 24)
         {
-            days = roundf(remainingTime / (60 * 60 * 24));
+            days = truncf(remainingTime / (60 * 60 * 24));
             remainingTime -= days * 60 * 60 * 24;
         }
         if (remainingTime > 60 * 60)
         {
-            hours = roundf(remainingTime / (60 * 60));
+            hours = truncf(remainingTime / (60 * 60));
             remainingTime -= hours * 60 * 60;
         }
         if (remainingTime > 60)
         {
-            minutes = roundf(remainingTime / 60);
+            minutes = truncf(remainingTime / 60);
             remainingTime -= minutes * 60;
         }
-        seconds = roundf(remainingTime);
+        seconds = truncf(remainingTime);
 
         sprintf(text, "Real Time: %.0fd %.0fh %.0fm %.0fs", days, hours, minutes, seconds);
         mRealTimeText = text;
