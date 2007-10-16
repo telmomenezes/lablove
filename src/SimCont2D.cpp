@@ -228,7 +228,17 @@ void SimCont2D::setRot(SimulationObject* obj, float rot)
 void SimCont2D::addObject(SimulationObject* object)
 {
     Simulation::addObject(object);
-    object->initFloatData(2);
+    object->initFloatData(10);
+    object->mFloatData[FLOAT_SPEED_X] = 0.0f;
+    object->mFloatData[FLOAT_SPEED_Y] = 0.0f;
+    object->mFloatData[FLOAT_SPEED_ROT] = 0.0f;
+    object->mFloatData[FLOAT_FRICTION] = 0.0f;
+    object->mFloatData[FLOAT_FRICTION_ROT] = 0.0f;
+    object->mFloatData[FLOAT_DRAG] = 0.0f;
+    object->mFloatData[FLOAT_DRAG_ROT] = 0.0f;
+    object->mFloatData[FLOAT_IMPULSE_X] = 0.0f;
+    object->mFloatData[FLOAT_IMPULSE_Y] = 0.0f;
+    object->mFloatData[FLOAT_IMPULSE_ROT] = 0.0f;
 }
 
 void SimCont2D::removeObject(SimulationObject* obj)
@@ -399,6 +409,78 @@ void SimCont2D::process(SimulationObject* obj)
             killOrganism(obj);
         }
     }
+
+    obj->mFloatData[FLOAT_SPEED_X] += obj->mFloatData[FLOAT_IMPULSE_X];
+    obj->mFloatData[FLOAT_SPEED_Y] += obj->mFloatData[FLOAT_IMPULSE_Y];
+    obj->mFloatData[FLOAT_IMPULSE_X] = 0.0f;
+    obj->mFloatData[FLOAT_IMPULSE_Y] = 0.0f;
+
+    float speed = sqrtf((obj->mFloatData[FLOAT_SPEED_X]
+                    * obj->mFloatData[FLOAT_SPEED_X])
+                    + (obj->mFloatData[FLOAT_SPEED_Y]
+                    * obj->mFloatData[FLOAT_SPEED_Y]));
+
+    float friction = 0.005;
+    float newSpeedRatio = 0.0f;
+
+    if (speed > friction)
+    {
+        newSpeedRatio = (speed - friction) / speed;
+    }
+    
+    obj->mFloatData[FLOAT_SPEED_X] *= newSpeedRatio;
+    obj->mFloatData[FLOAT_SPEED_Y] *= newSpeedRatio;
+
+    float newX = obj->mX + obj->mFloatData[FLOAT_SPEED_X];
+    float newY = obj->mY + obj->mFloatData[FLOAT_SPEED_Y];
+
+    if (newX < 0.0f)
+    {
+        newX = 0.0f;
+        obj->mFloatData[FLOAT_SPEED_X] = 0.0f;
+    }
+    else if (newX > mWorldWidth)
+    {
+        newX = mWorldWidth;
+        obj->mFloatData[FLOAT_SPEED_X] = 0.0f;
+    }
+    if (newY < 0.0f)
+    {
+        newY = 0.0f;
+        obj->mFloatData[FLOAT_SPEED_Y] = 0.0f;
+    }
+    else if (newY > mWorldLength)
+    {
+        newY = mWorldLength;
+        obj->mFloatData[FLOAT_SPEED_Y] = 0.0f;
+    }
+
+    obj->mFloatData[FLOAT_SPEED_ROT] += obj->mFloatData[FLOAT_IMPULSE_ROT];
+    obj->mFloatData[FLOAT_IMPULSE_ROT] = 0.0f;
+
+    float rotFriction = 0.00005f;
+    float absRotFriction = rotFriction;
+    float absRotSpeed = obj->mFloatData[FLOAT_SPEED_ROT];
+
+    if (obj->mFloatData[FLOAT_SPEED_ROT] < 0.0f)
+    {
+        absRotSpeed = -absRotSpeed;
+        rotFriction = -rotFriction;
+    }
+
+    if (absRotFriction > absRotSpeed)
+    {
+        obj->mFloatData[FLOAT_SPEED_ROT] = 0.0f;
+    }
+    else
+    {
+        obj->mFloatData[FLOAT_SPEED_ROT] -= rotFriction;
+    }
+
+    float newRot = obj->mRotZ + obj->mFloatData[FLOAT_SPEED_ROT];
+
+    setPos(obj, newX, newY);
+    setRot(obj, newRot);
 }
 
 void SimCont2D::perceive(Agent* agent)
@@ -584,17 +666,17 @@ void SimCont2D::act(Agent* agent)
 
     if (actionGo)
     {
-        goFront(agent, 1.0f);
+        goFront(agent, 0.01f);
     }
     if (actionRotate)
     {
         if (actionRotateParam > 0.0f)
         {
-            rotate(agent, -0.01f);
+            rotate(agent, 0.0001f);
         }
         else if (actionRotateParam < 0.0f)
         {
-            rotate(agent, 0.01f);
+            rotate(agent, -0.0001f);
         }
     }
     if (actionEat)
@@ -605,7 +687,7 @@ void SimCont2D::act(Agent* agent)
 
 void SimCont2D::goFront(Agent* agent, float distance)
 {
-    agent->mEnergy -= mGoCost * distance;
+    /*agent->mEnergy -= mGoCost * distance;
     float newX = agent->mX + (cosf(agent->mRotZ) * distance);
     float newY = agent->mY + (sinf(agent->mRotZ) * distance);
 
@@ -617,13 +699,18 @@ void SimCont2D::goFront(Agent* agent, float distance)
         return;
     }
 
-    setPos(agent, newX, newY);
+    setPos(agent, newX, newY);*/
+
+    agent->mFloatData[FLOAT_IMPULSE_X] = cosf(agent->mRotZ) * distance;
+    agent->mFloatData[FLOAT_IMPULSE_Y] = sinf(agent->mRotZ) * distance;
 }
 
 void SimCont2D::rotate(Agent* agent, float angle)
 {
-    agent->mEnergy -= mRotateCost * angle;
-    setRot(agent, agent->mRotZ - angle);
+    /*agent->mEnergy -= mRotateCost * angle;
+    setRot(agent, agent->mRotZ - angle);*/
+
+    agent->mFloatData[FLOAT_IMPULSE_ROT] += angle;
 }
 
 void SimCont2D::eat(Agent* agent)

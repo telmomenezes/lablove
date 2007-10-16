@@ -46,12 +46,14 @@ public:
 
     enum FloatData {FLOAT_SPEED_X,
                     FLOAT_SPEED_Y,
-                    FLOAT_SPEED_ROT_X,
-                    FLOAT_SPEED_ROT_Y,
+                    FLOAT_SPEED_ROT,
                     FLOAT_FRICTION,
                     FLOAT_FRICTION_ROT,
                     FLOAT_DRAG,
-                    FLOAT_DRAG_ROT};
+                    FLOAT_DRAG_ROT,
+                    FLOAT_IMPULSE_X,
+                    FLOAT_IMPULSE_Y,
+                    FLOAT_IMPULSE_ROT};
 
     SimCont2D(lua_State* luaState=NULL);
     virtual ~SimCont2D();

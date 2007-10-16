@@ -111,7 +111,7 @@ TEST(TestSymbolFixedStringMutate1)
     SymbolFixedString sym("ABCD", "ABC");
     SymbolFixedString* sym2 = (SymbolFixedString*)sym.clone();
     sym2->mutate();
-    CHECK(sym.bind(sym2) >= 2.0f / 3.0f);
+    CHECK(sym.bind(sym2) >= 0.6666f);
     delete sym2;
 }
 
