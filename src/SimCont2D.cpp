@@ -84,6 +84,8 @@ SimCont2D::SimCont2D(lua_State* luaState)
     mHumanRotateLeft = false;
     mHumanRotateRight = false;
     mHumanEat = false;
+
+    mZoom = 1.0f;
 }
 
 SimCont2D::~SimCont2D()
@@ -650,6 +652,8 @@ void SimCont2D::eat(Agent* agent)
 
 void SimCont2D::drawBeforeObjects()
 {
+    mRootLayer2D->setScale(mZoom, mZoom);
+    mRootLayer2D->setTranslation(mViewX, mViewY);
 
     if (mShowGrid)
     {
@@ -660,30 +664,28 @@ void SimCont2D::drawBeforeObjects()
 
         mRootLayer2D->setColor(200, 200, 200);
 
-        unsigned int division = cellSide - ((cellSide - viewX) % cellSide);
-        while (division < mRootLayer2D->getWidth())
+        unsigned int division = cellSide;
+        while (division < mWorldWidth)
         {
             mRootLayer2D->drawLine(division,
                                     0,
                                     division,
-                                    mRootLayer2D->getHeight());
+                                    mWorldLength);
 
             division += cellSide;
         }
 
-        division = cellSide - ((cellSide - viewY) % cellSide);
-        while (division < mRootLayer2D->getHeight())
+        division = cellSide;
+        while (division < mWorldLength)
         {
             mRootLayer2D->drawLine(0,
                                     division,
-                                    mRootLayer2D->getWidth(),
+                                    mWorldWidth,
                                     division);
 
             division += cellSide;
         }
     }
-
-    mRootLayer2D->setTranslation(mViewX, mViewY);
 
     if (mShowViewRange)
     {
@@ -716,6 +718,9 @@ void SimCont2D::drawBeforeObjects()
 
 void SimCont2D::drawAfterObjects()
 {
+    mRootLayer2D->clearScale();
+    mRootLayer2D->clearTranslation();
+
     if (mShowBrain)
     {
         if (mHumanAgent)
@@ -726,15 +731,9 @@ void SimCont2D::drawAfterObjects()
             mRootLayer2D->setColor(50, 50, 50, 255);
             mRootLayer2D->setFont(mFont);
             mHumanAgent->getBrain()->draw(mRootLayer2D);
+            mRootLayer2D->clearTranslation();
         }
     }
-    mRootLayer2D->clearTranslation();
-}
-
-void SimCont2D::moveView(float x, float y)
-{
-    mViewX += x;
-    mViewY += y;
 }
 
 SimulationObject* SimCont2D::getObjectByScreenPos(int x, int y)
@@ -826,12 +825,36 @@ bool SimCont2D::onMouseMove(int x, int y)
         mLastMouseX = x;
         mLastMouseY = y;
 
-        moveView(deltaX, deltaY);
+        mViewX += deltaX / mZoom;
+        mViewY += deltaY / mZoom;
 
         return true;
     }
 
     return false;
+}
+
+bool SimCont2D::onMouseWheel(bool up)
+{
+    float wWidth = (float)mWindow->getWidth();
+    float wHeight = (float)mWindow->getHeight();
+
+    float centerX = -mViewX + (wWidth / (mZoom * 2.0f));
+    float centerY = -mViewY + (wHeight / (mZoom * 2.0f));
+
+    if (up)
+    {
+        mZoom *= 1.1f;
+    }
+    else
+    {
+        mZoom *= 0.9f;
+    }
+    
+    mViewX = -centerX + (wWidth / (mZoom * 2.0f));
+    mViewY = -centerY + (wHeight / (mZoom * 2.0f));
+
+    return true;
 }
 
 void SimCont2D::setViewAngle(float angle)

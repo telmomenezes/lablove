@@ -1,8 +1,8 @@
-numberOfPlants = 100
-numberOfAgents = 100
+numberOfPlants = 1000
+numberOfAgents = 1000
 
-worldWidth = 3000
-worldHeight = 3000
+worldWidth = 10000
+worldHeight = 10000
 
 gridHeight = 5
 gridAlpha = 3

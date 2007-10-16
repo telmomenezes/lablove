@@ -142,6 +142,12 @@ void Simulation::cycle()
             onMouseMove(mEventQ->getMousePosX(),
                         mEventQ->getMousePosY());
             break;
+        case pyc::EVENT_MOUSE_WHEEL_UP:
+            onMouseWheel(true);
+            break;
+        case pyc::EVENT_MOUSE_WHEEL_DOWN:
+            onMouseWheel(false);
+            break;
         default:
             break;
         }

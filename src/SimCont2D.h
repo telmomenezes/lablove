@@ -44,8 +44,14 @@ public:
                 ACTION_ROTATE,
                 ACTION_EAT};
 
-    enum FloatData {FLOAT_X,
-                    FLOAT_Y};
+    enum FloatData {FLOAT_SPEED_X,
+                    FLOAT_SPEED_Y,
+                    FLOAT_SPEED_ROT_X,
+                    FLOAT_SPEED_ROT_Y,
+                    FLOAT_FRICTION,
+                    FLOAT_FRICTION_ROT,
+                    FLOAT_DRAG,
+                    FLOAT_DRAG_ROT};
 
     SimCont2D(lua_State* luaState=NULL);
     virtual ~SimCont2D();
@@ -84,6 +90,7 @@ public:
     virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y);
     virtual bool onMouseButtonUp(pyc::MouseButton button, int x, int y);
     virtual bool onMouseMove(int x, int y);
+    virtual bool onMouseWheel(bool up);
 
     void setViewRange(float range);
     void setViewAngle(float angle);
@@ -176,6 +183,8 @@ protected:
     bool mHumanRotateLeft;
     bool mHumanRotateRight;
     bool mHumanEat;
+
+    float mZoom;
 };
 #endif
 
