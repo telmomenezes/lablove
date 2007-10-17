@@ -42,6 +42,8 @@ public:
     void setSelectedObject(SimulationObject* object);
     SimulationObject* getSelectedObject(){return mSelectedObject;}
 
+    virtual float getFieldValue(SimulationObject* obj, string fieldName);
+
 protected:
     list<SimulationObject*> mObjects;
     list<SimulationObject*> mObjectsToKill;

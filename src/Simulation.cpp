@@ -190,58 +190,6 @@ float Simulation::computeBinding(SimulationObject* sourceObj,
     return (sourceSym->bind(targetSym));
 }
 
-bool Simulation::onKeyDown(pyc::KeyCode keycode)
-{
-    switch (keycode)
-    {
-        case pyc::KEY_ESCAPE:
-            mStop = true;
-            return true;
-        default:
-            return false;
-    }
-}
-
-int Simulation::addObject(lua_State *luaState)
-{
-    SimulationObject* simObj = (SimulationObject*)Orbit<SimulationObject>::pointer(luaState, 1);
-    addObject(simObj);
-    return 0;
-}
-
-int Simulation::initGraphics(lua_State* luaState)
-{
-    int width = luaL_checkint(luaState, 1);
-    int height = luaL_checkint(luaState, 2);
-    bool fullScreen = luaL_checkbool(luaState, 3);
-
-    initGraphics(width, height, fullScreen);
-
-    mFont = mWindow->loadFont("media/vera/Vera.ttf", 8);
-
-    return 0;
-}
-
-int Simulation::run(lua_State* luaState)
-{
-    run();
-    return 0;
-}
-
-int Simulation::setPopulationDynamics(lua_State *luaState)
-{
-    PopulationDynamics* popDyn = (PopulationDynamics*)Orbit<SimulationObject>::pointer(luaState, 1);
-    setPopulationDynamics(popDyn);
-    return 0;
-}
-
-int Simulation::setSeedIndex(lua_State* luaState)
-{
-    int index = luaL_checkint(luaState, 1);
-    setSeedIndex(index);
-    return 0;
-}
-
 void Simulation::drawTimes()
 {
     if (mLastRealTime == 0.0f)
@@ -302,5 +250,57 @@ void Simulation::drawTimes()
     mRootLayer2D->drawText(140, 31, mRealTimeText);
     mRootLayer2D->setColor(0, 0, 120, 255);
     mRootLayer2D->drawText(140, 46, mFPSText);
+}
+
+bool Simulation::onKeyDown(pyc::KeyCode keycode)
+{
+    switch (keycode)
+    {
+        case pyc::KEY_ESCAPE:
+            mStop = true;
+            return true;
+        default:
+            return false;
+    }
+}
+
+int Simulation::addObject(lua_State *luaState)
+{
+    SimulationObject* simObj = (SimulationObject*)Orbit<SimulationObject>::pointer(luaState, 1);
+    addObject(simObj);
+    return 0;
+}
+
+int Simulation::initGraphics(lua_State* luaState)
+{
+    int width = luaL_checkint(luaState, 1);
+    int height = luaL_checkint(luaState, 2);
+    bool fullScreen = luaL_checkbool(luaState, 3);
+
+    initGraphics(width, height, fullScreen);
+
+    mFont = mWindow->loadFont("media/vera/Vera.ttf", 8);
+
+    return 0;
+}
+
+int Simulation::run(lua_State* luaState)
+{
+    run();
+    return 0;
+}
+
+int Simulation::setPopulationDynamics(lua_State *luaState)
+{
+    PopulationDynamics* popDyn = (PopulationDynamics*)Orbit<SimulationObject>::pointer(luaState, 1);
+    setPopulationDynamics(popDyn);
+    return 0;
+}
+
+int Simulation::setSeedIndex(lua_State* luaState)
+{
+    int index = luaL_checkint(luaState, 1);
+    setSeedIndex(index);
+    return 0;
 }
 

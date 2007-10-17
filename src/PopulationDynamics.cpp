@@ -61,6 +61,7 @@ void PopulationDynamics::onOrganismDeath(SimulationObject* org)
 void PopulationDynamics::addStatistics(Statistics* stats)
 {
     stats->init();
+    stats->setPopulationManager(mPopManager);
     mStatistics.push_back(stats);
 }
 

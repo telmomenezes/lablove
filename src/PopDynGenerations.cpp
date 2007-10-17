@@ -67,7 +67,6 @@ void PopDynGenerations::init(PopulationManager* popManager)
         {
             SimulationObject* org = (*iterSpecies).mBaseOrganism->clone();
             org->initRandom();
-            org->setEnergy(org->getInitialEnergy());
             mPopManager->addObject(org);
             mPopManager->placeRandom(org);
             (*iterSpecies).mOrganismList.push_back(org);
@@ -112,21 +111,23 @@ void PopDynGenerations::onCycle(unsigned long time, double realTime)
                         }
                         SimulationObject* org = *iterOrg;
 
-                        if ((tournmentStep == 0) || (org->getEnergy() > bestFitness))
+                        if ((tournmentStep == 0) || (org->mFitness > bestFitness))
                         {
                             bestOrganism = org;
-                            bestFitness = org->getEnergy();
+                            bestFitness = org->mFitness;
                         }
                     }
 
                     // Clone best and add to simulation
                     newOrganism = bestOrganism->clone();
-                    newOrganism->setEnergy(newOrganism->getInitialEnergy());
-                    mPopManager->addObject(newOrganism);
-                    mPopManager->placeRandom(newOrganism);
 
                     // Mutate
                     newOrganism->mutate();
+
+                    mPopManager->addObject(newOrganism);
+                    mPopManager->placeRandom(newOrganism);
+
+                    
 
                     (*iterSpecies).mOrganismList.push_back(newOrganism);
                 }
@@ -181,7 +182,6 @@ void PopDynGenerations::onOrganismDeath(SimulationObject* org)
             mPopManager->removeObject(org);
 
             SimulationObject* org = (*iterSpecies).mBaseOrganism->clone();
-            org->setEnergy(org->getInitialEnergy());
             mPopManager->addObject(org);
             mPopManager->placeRandom(org);
 

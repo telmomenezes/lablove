@@ -65,7 +65,6 @@ void PopDynFixedSpecies::init(PopulationManager* popManager)
         {
             SimulationObject* org = (*iterSpecies).mBaseOrganism->clone();
             org->initRandom();
-            org->setEnergy(org->getInitialEnergy());
             mPopManager->addObject(org);
             mPopManager->placeRandom(org);
             (*iterSpecies).mOrganismVector.push_back(org);
@@ -144,21 +143,23 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
                     iterOrg++;
                 }
 
-                if ((tournmentStep == 0) || ((*iterOrg)->getEnergy() > bestFitness))
+                if ((tournmentStep == 0) || ((*iterOrg)->mFitness > bestFitness))
                 {
                     bestOrganism = (*iterOrg);
-                    bestFitness = bestOrganism->getEnergy();
+                    bestFitness = bestOrganism->mFitness;
                 }
             }
 
             // Clone best and add to simulation
             newOrganism = bestOrganism->clone();
-            newOrganism->setEnergy(newOrganism->getInitialEnergy());
+            
+            // Mutate
+            newOrganism->mutate();
+
             mPopManager->addObject(newOrganism);
             mPopManager->placeRandom(newOrganism);
 
-            // Mutate
-            newOrganism->mutate();
+            
 
             // Remove
             (*iterSpecies).mOrganismVector[orgPos] = newOrganism;

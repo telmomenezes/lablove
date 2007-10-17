@@ -53,7 +53,7 @@ public:
     void initFloatData(unsigned int size);
     void initBoolData(unsigned int size);
     void initIntData(unsigned int size);
-    void initUnsignedLongData(unsigned int size);
+    void initULData(unsigned int size);
 
     virtual void initRandom(){}
 
@@ -61,25 +61,14 @@ public:
 
     void draw(pyc::Layer* layer);
 
-    virtual void setSize(float size);
-    float getSize(){return mSize;}
-
     unsigned int getSpeciesID(){return mSpeciesID;}
     void setSpeciesID(unsigned int id){mSpeciesID = id;}
-    float getEnergy(){return mEnergy;}
-    float getInitialEnergy(){return mInitialEnergy;}
-    void deltaEnergy(double delta){mEnergy += delta;}
-    void setEnergy(float energy){mEnergy = energy;}
-    void setInitialEnergy(float energy){mInitialEnergy = energy;}
 
     unsigned long getCreationTime(){return mCreationTime;}
     void setCreationTime(unsigned long time){mCreationTime = time;}
 
     virtual SimulationObject* crossover(SimulationObject* otherParent){return this;}
     virtual void mutate(){}
-
-    void setAgeRange(unsigned long lowAgeLimit, unsigned long highAgeLimit);
-    void setMetabolism(float metabolism){mMetabolism = metabolism;}
 
     void addSymbolTable(SymbolTable* table);
     SymbolTable* getSymbolTable(int id);
@@ -106,33 +95,27 @@ public:
 
     Type mType;
 
-    float mEnergy;
-    unsigned long mMaxAge;
-    float mMetabolism;
     unsigned long mCreationTime;
-
-    unsigned long mCollisionDetectionIteration;
-
     bool mInitialized;
+    bool mDataInitialized;
+
+    float mFitness;
 
     float* mFloatData;
     bool* mBoolData;
     int* mIntData;
-    unsigned long* mUnsignedLongData;
+    unsigned long* mULData;
     unsigned int mFloatDataSize;
     unsigned int mBoolDataSize;
     unsigned int mIntDataSize;
-    unsigned int mUnsignedLongDataSize;
+    unsigned int mULDataSize;
 
     static const char mClassName[];
     static Orbit<SimulationObject>::MethodType mMethods[];
     static Orbit<SimulationObject>::NumberGlobalType mNumberGlobals[];
 
-    int setInitialEnergy(lua_State* luaState);
     int addSymbolTable(lua_State* luaState);
     int setSize(lua_State* luaState);
-    int setAgeRange(lua_State* luaState);
-    int setMetabolism(lua_State* luaState);
     int addGraphic(lua_State* luaState);
     int setSymbolName(lua_State* luaState);
 
@@ -143,9 +126,6 @@ protected:
     map<string, SymbolPointer> mNamedSymbols;
 
     unsigned int mSpeciesID;
-    float mInitialEnergy;
-    unsigned long mLowAgeLimit;
-    unsigned long mHighAgeLimit;
     
     list<Graphic*> mGraphics;
 };

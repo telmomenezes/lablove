@@ -26,9 +26,11 @@
 
 #include <list>
 #include <vector>
+#include <string>
 
 using std::list;
 using std::vector;
+using std::string;
 
 class Brain
 {
@@ -47,6 +49,8 @@ public:
     virtual void cycle()=0;
     virtual void mutate()=0;
     virtual void draw(pyc::Layer2D* layer)=0;
+
+    virtual float getFieldValue(string fieldName){return 0.0f;}
 
 protected:
     vector<list<InterfaceItem*>*> mInputInterfacesVector;

@@ -59,7 +59,7 @@ void StatMedAvgMinMax::process(SimulationObject* obj)
         iterField != mFields.end();
         iterField++)
     {
-        float value = obj->getFieldValue(*iterField);
+        float value = mPopManager->getFieldValue(obj, *iterField);
         (*iterValueList).push_back(value);
         iterValueList++;
     }

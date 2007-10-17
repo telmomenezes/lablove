@@ -37,10 +37,10 @@ sim:setGoCost(goCost)
 sim:setRotateCost(rotateCost)
 
 agent = Agent()
-agent:setSize(10.0)
-agent:setAgeRange(lowAgeLimit, highAgeLimit)
-agent:setInitialEnergy(1.0)
-agent:setMetabolism(metabolism)
+sim:setSize(agent, 10.0)
+sim:setAgeRange(agent, lowAgeLimit, highAgeLimit)
+sim:setInitialEnergy(agent, 1.0)
+sim:setMetabolism(agent, metabolism)
 
 agent:addGraphic(GraphicTriangle())
 
@@ -120,8 +120,8 @@ while i < initialConnections do
 end
 
 plant = SimulationObject()
-plant:setSize(10.0)
-plant:setInitialEnergy(1.0)
+sim:setSize(plant, 10.0)
+sim:setInitialEnergy(plant, 1.0)
 
 plantColor = SymbolRGB(10, 250, 50)
 symTable = SymbolTable(plantColor, colorTableCode)
@@ -148,9 +148,9 @@ dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
 dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
 dummyBrain:addPerception("Contact", 0, SimCont2D.PERCEPTION_IN_CONTACT)
 dummyBrain:addPerception("Color", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, colorTableCode, 0, 0)
-human:setSize(10.0)
-human:setInitialEnergy(1.0)
-human:setMetabolism(metabolism)
+sim:setSize(human, 10.0)
+sim:setInitialEnergy(human, 1.0)
+sim:setMetabolism(human, metabolism)
 human:setBrain(dummyBrain)
 
 humanColor = SymbolRGB(82, 228, 241)

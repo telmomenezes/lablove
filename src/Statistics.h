@@ -21,6 +21,7 @@
 #define __INCLUDE_STATISTICS_H
 
 #include "SimulationObject.h"
+#include "PopulationManager.h"
 
 #include "Orbit.h"
 
@@ -48,9 +49,12 @@ public:
     int addField(lua_State* luaState);
     int setFile(lua_State* luaState);
 
+    void setPopulationManager(PopulationManager* popManager){mPopManager = popManager;}
+
 protected:
     list<string> mFields;
     FILE* mFile;
+    PopulationManager* mPopManager;
 };
 #endif
 

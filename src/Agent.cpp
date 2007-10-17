@@ -119,32 +119,14 @@ void Agent::mutate()
 
 float Agent::getFieldValue(std::string fieldName)
 {
-    /*if (fieldName == "connections")
-    {
-        if (mGridbrain)
-        {
-            return ((float)(mGridbrain->getConnectionsCount()));
-        }
-        else
-        {
-            return 0.0f;
-        }
-    }
-    else
-    {*/
-        return SimulationObject::getFieldValue(fieldName);
-    //}
+    return mBrain->getFieldValue(fieldName);
 }
 
 const char Agent::mClassName[] = "Agent";
 
 Orbit<Agent>::MethodType Agent::mMethods[] = {
-    {"setInitialEnergy", &SimulationObject::setInitialEnergy},
     {"addSymbolTable", &SimulationObject::addSymbolTable},
-    {"setSize", &SimulationObject::setSize},
     {"addGraphic", &SimulationObject::addGraphic},
-    {"setAgeRange", &SimulationObject::setAgeRange},
-    {"setMetabolism", &SimulationObject::setMetabolism},
 	{"setSymbolName", &SimulationObject::setSymbolName},
     {"setBrain", &Agent::setBrain},
     {0,0}

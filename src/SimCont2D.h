@@ -37,12 +37,14 @@ public:
                     PERCEPTION_POSITION,
                     PERCEPTION_DISTANCE,
                     PERCEPTION_IN_CONTACT,
-                    PERCEPTION_OBJECT_FEATURE};
+                    PERCEPTION_OBJECT_FEATURE
+                    };
 
     enum Action {ACTION_NULL,
                 ACTION_GO,
                 ACTION_ROTATE,
-                ACTION_EAT};
+                ACTION_EAT
+                };
 
     enum FloatData {FLOAT_SPEED_X,
                     FLOAT_SPEED_Y,
@@ -53,7 +55,17 @@ public:
                     FLOAT_DRAG_ROT,
                     FLOAT_IMPULSE_X,
                     FLOAT_IMPULSE_Y,
-                    FLOAT_IMPULSE_ROT};
+                    FLOAT_IMPULSE_ROT,
+                    FLOAT_INITIAL_ENERGY,
+                    FLOAT_ENERGY,
+                    FLOAT_METABOLISM
+                    };
+
+    enum ULData {UL_MAX_AGE,
+                UL_LOW_AGE_LIMIT,
+                UL_HIGH_AGE_LIMIT,
+                UL_COLLISION_DETECTION_ITERATION
+                };
 
     SimCont2D(lua_State* luaState=NULL);
     virtual ~SimCont2D();
@@ -68,6 +80,7 @@ public:
     unsigned int getWorldCellLength(){return mWorldCellLength;}
     list<SimulationObject*>** getCellGrid(){return mCellGrid;}
 
+    virtual void initializeData(SimulationObject* obj);
     virtual void addObject(SimulationObject* object);
     virtual void removeObject(SimulationObject* obj);
     virtual void placeRandom(SimulationObject* obj);
@@ -86,6 +99,8 @@ public:
     float getViewY(){return mViewY;}
 
     virtual SimulationObject* getObjectByScreenPos(int x, int y);
+
+    virtual float getFieldValue(SimulationObject* obj, string fieldName);
     
     virtual bool onKeyDown(pyc::KeyCode keycode);
     virtual bool onKeyUp(pyc::KeyCode keycode);
@@ -104,6 +119,13 @@ public:
     void startCollisionDetection(float x, float y, float rad);
     SimulationObject* nextCollision(float& distance, float& angle);
 
+    void setSize(SimulationObject* obj, float size);
+    void deltaEnergy(SimulationObject* obj, double delta);
+    void setEnergy(SimulationObject* obj, float energy);
+    void setInitialEnergy(SimulationObject* obj, float energy);
+    void setAgeRange(SimulationObject* obj, unsigned long lowAgeLimit, unsigned long highAgeLimit);
+    void setMetabolism(SimulationObject* obj, float metabolism);
+
     static const char mClassName[];
     static Orbit<SimCont2D>::MethodType mMethods[];
     static Orbit<SimCont2D>::NumberGlobalType mNumberGlobals[];
@@ -116,6 +138,10 @@ public:
     int setPos(lua_State* luaState);
     int setRot(lua_State* luaState);
     int setHuman(lua_State* luaState);
+    int setSize(lua_State* luaState);
+    int setInitialEnergy(lua_State* luaState);
+    int setAgeRange(lua_State* luaState);
+    int setMetabolism(lua_State* luaState);
 
 protected:
     virtual void process(SimulationObject* obj);

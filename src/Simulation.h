@@ -35,6 +35,8 @@
 using std::list;
 using std::string;
 
+#define INITIALIZE_OBJECT(obj) if(!obj->mDataInitialized){initializeData(obj);obj->mDataInitialized=true;}
+
 class Simulation : public PopulationManager
 {
 public:
@@ -49,6 +51,7 @@ public:
     void run();
     void cycle();
 
+    virtual void initializeData(SimulationObject* obj){}
     virtual void addObject(SimulationObject* object);
 
     virtual SimulationObject* getObjectByScreenPos(int x, int y){return NULL;}
