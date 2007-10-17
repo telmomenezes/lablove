@@ -144,7 +144,7 @@ void PopDynGenerations::onCycle(unsigned long time, double realTime)
                         iterStats != (*iterSpecies).mStatistics.end();
                         iterStats++)
                     {
-                        (*iterStats)->process(org);
+                        (*iterStats)->process(org, mPopManager);
                     }
 
                     (*iterSpecies).mOrganismList.pop_front();

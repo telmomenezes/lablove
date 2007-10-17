@@ -109,7 +109,7 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
                 iterStats != (*iterSpecies).mStatistics.end();
                 iterStats++)
             {
-                (*iterStats)->process(org);
+                (*iterStats)->process(org, mPopManager);
             }
 
             vector<SimulationObject*>::iterator iterOrg;

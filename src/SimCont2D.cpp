@@ -422,9 +422,9 @@ void SimCont2D::process(SimulationObject* obj)
         killOrganism(obj);
     }
 
-    if (obj->mFloatData[UL_MAX_AGE] > 0)
+    if (obj->mULData[UL_MAX_AGE] > 0)
     {
-        if (mSimulationTime - obj->mCreationTime >= obj->mFloatData[UL_MAX_AGE])
+        if (mSimulationTime - obj->mCreationTime >= obj->mULData[UL_MAX_AGE])
         {
             killOrganism(obj);
         }
@@ -440,7 +440,7 @@ void SimCont2D::process(SimulationObject* obj)
                     + (obj->mFloatData[FLOAT_SPEED_Y]
                     * obj->mFloatData[FLOAT_SPEED_Y]));
 
-    float friction = 0.003;
+    float friction = obj->mFloatData[FLOAT_FRICTION];
     float newSpeedRatio = 0.0f;
 
     if (speed > friction)
@@ -448,10 +448,10 @@ void SimCont2D::process(SimulationObject* obj)
         newSpeedRatio = (speed - friction) / speed;
     }
 
-    float drag = 0.995f;
+    float oneMinusDrag = 1 - obj->mFloatData[FLOAT_DRAG];
     
-    obj->mFloatData[FLOAT_SPEED_X] *= newSpeedRatio * drag;
-    obj->mFloatData[FLOAT_SPEED_Y] *= newSpeedRatio * drag;
+    obj->mFloatData[FLOAT_SPEED_X] *= newSpeedRatio * oneMinusDrag;
+    obj->mFloatData[FLOAT_SPEED_Y] *= newSpeedRatio * oneMinusDrag;
 
     float newX = obj->mX + obj->mFloatData[FLOAT_SPEED_X];
     float newY = obj->mY + obj->mFloatData[FLOAT_SPEED_Y];
@@ -480,7 +480,7 @@ void SimCont2D::process(SimulationObject* obj)
     obj->mFloatData[FLOAT_SPEED_ROT] += obj->mFloatData[FLOAT_IMPULSE_ROT];
     obj->mFloatData[FLOAT_IMPULSE_ROT] = 0.0f;
 
-    float rotFriction = 0.00003f;
+    float rotFriction = obj->mFloatData[FLOAT_ROT_FRICTION];
     float absRotFriction = rotFriction;
     float absRotSpeed = obj->mFloatData[FLOAT_SPEED_ROT];
 
@@ -499,8 +499,8 @@ void SimCont2D::process(SimulationObject* obj)
         obj->mFloatData[FLOAT_SPEED_ROT] -= rotFriction;
     }
 
-    float rotDrag = 0.995;
-    obj->mFloatData[FLOAT_SPEED_ROT] *= rotDrag;
+    float oneMinusRotDrag = 1.0f - obj->mFloatData[FLOAT_ROT_DRAG];
+    obj->mFloatData[FLOAT_SPEED_ROT] *= oneMinusRotDrag;
 
     float newRot = obj->mRotZ + obj->mFloatData[FLOAT_SPEED_ROT];
 
@@ -1046,6 +1046,30 @@ void SimCont2D::setMetabolism(SimulationObject* obj, float metabolism)
     obj->mFloatData[FLOAT_METABOLISM] = metabolism;
 }
 
+void SimCont2D::setFriction(SimulationObject* obj, float friction)
+{
+    INITIALIZE_OBJECT(obj)
+    obj->mFloatData[FLOAT_FRICTION] = friction;
+}
+
+void SimCont2D::setDrag(SimulationObject* obj, float drag)
+{
+    INITIALIZE_OBJECT(obj)
+    obj->mFloatData[FLOAT_DRAG] = drag;
+}
+
+void SimCont2D::setRotFriction(SimulationObject* obj, float friction)
+{
+    INITIALIZE_OBJECT(obj)
+    obj->mFloatData[FLOAT_ROT_FRICTION] = friction;
+}
+
+void SimCont2D::setRotDrag(SimulationObject* obj, float drag)
+{
+    INITIALIZE_OBJECT(obj)
+    obj->mFloatData[FLOAT_ROT_DRAG] = drag;
+}
+
 const char SimCont2D::mClassName[] = "SimCont2D";
 
 Orbit<SimCont2D>::MethodType SimCont2D::mMethods[] = {
@@ -1065,6 +1089,10 @@ Orbit<SimCont2D>::MethodType SimCont2D::mMethods[] = {
     {"setAgeRange", &SimCont2D::setAgeRange},
 	{"setMetabolism", &SimCont2D::setMetabolism},
 	{"setInitialEnergy", &SimCont2D::setInitialEnergy},
+	{"setFriction", &SimCont2D::setFriction},
+	{"setDrag", &SimCont2D::setDrag},
+	{"setRotFriction", &SimCont2D::setRotFriction},
+	{"setRotDrag", &SimCont2D::setRotDrag},
     {0,0}
 };
 
@@ -1172,6 +1200,38 @@ int SimCont2D::setMetabolism(lua_State* luaState)
     SimulationObject* simObj = (SimulationObject*)Orbit<SimCont2D>::pointer(luaState, 1);
     float metabolism = luaL_checknumber(luaState, 2);
     setMetabolism(simObj, metabolism);
+    return 0;
+}
+
+int SimCont2D::setFriction(lua_State* luaState)
+{
+    SimulationObject* simObj = (SimulationObject*)Orbit<SimCont2D>::pointer(luaState, 1);
+    float friction = luaL_checknumber(luaState, 2);
+    setFriction(simObj, friction);
+    return 0;
+}
+
+int SimCont2D::setDrag(lua_State* luaState)
+{
+    SimulationObject* simObj = (SimulationObject*)Orbit<SimCont2D>::pointer(luaState, 1);
+    float drag = luaL_checknumber(luaState, 2);
+    setDrag(simObj, drag);
+    return 0;
+}
+
+int SimCont2D::setRotFriction(lua_State* luaState)
+{
+    SimulationObject* simObj = (SimulationObject*)Orbit<SimCont2D>::pointer(luaState, 1);
+    float friction = luaL_checknumber(luaState, 2);
+    setRotFriction(simObj, friction);
+    return 0;
+}
+
+int SimCont2D::setRotDrag(lua_State* luaState)
+{
+    SimulationObject* simObj = (SimulationObject*)Orbit<SimCont2D>::pointer(luaState, 1);
+    float rotDrag = luaL_checknumber(luaState, 2);
+    setRotDrag(simObj, rotDrag);
     return 0;
 }
 

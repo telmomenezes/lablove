@@ -32,7 +32,7 @@ public:
 
     virtual void init();
 
-    virtual void process(SimulationObject* obj){}
+    virtual void process(SimulationObject* obj, PopulationManager* popManager){}
     virtual void dump(unsigned long time, double realTime);
 
     static const char mClassName[];

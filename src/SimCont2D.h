@@ -50,9 +50,9 @@ public:
                     FLOAT_SPEED_Y,
                     FLOAT_SPEED_ROT,
                     FLOAT_FRICTION,
-                    FLOAT_FRICTION_ROT,
+                    FLOAT_ROT_FRICTION,
                     FLOAT_DRAG,
-                    FLOAT_DRAG_ROT,
+                    FLOAT_ROT_DRAG,
                     FLOAT_IMPULSE_X,
                     FLOAT_IMPULSE_Y,
                     FLOAT_IMPULSE_ROT,
@@ -125,6 +125,10 @@ public:
     void setInitialEnergy(SimulationObject* obj, float energy);
     void setAgeRange(SimulationObject* obj, unsigned long lowAgeLimit, unsigned long highAgeLimit);
     void setMetabolism(SimulationObject* obj, float metabolism);
+    void setFriction(SimulationObject* obj, float friction);
+    void setDrag(SimulationObject* obj, float drag);
+    void setRotFriction(SimulationObject* obj, float friction);
+    void setRotDrag(SimulationObject* obj, float drag);
 
     static const char mClassName[];
     static Orbit<SimCont2D>::MethodType mMethods[];
@@ -142,6 +146,10 @@ public:
     int setInitialEnergy(lua_State* luaState);
     int setAgeRange(lua_State* luaState);
     int setMetabolism(lua_State* luaState);
+    int setFriction(lua_State* luaState);
+    int setDrag(lua_State* luaState);
+    int setRotFriction(lua_State* luaState);
+    int setRotDrag(lua_State* luaState);
 
 protected:
     virtual void process(SimulationObject* obj);

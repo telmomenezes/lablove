@@ -23,6 +23,11 @@ metabolism = 0.0
 goCost = 0.0
 rotateCost = 0.0
 
+friction = 0.003
+drag = 0.01--05
+rotFriction = 0.00003
+rotDrag = 0.01--05
+
 initialConnections = 10
 
 tournmentSize = 10
@@ -41,6 +46,10 @@ sim:setSize(agent, 10.0)
 sim:setAgeRange(agent, lowAgeLimit, highAgeLimit)
 sim:setInitialEnergy(agent, 1.0)
 sim:setMetabolism(agent, metabolism)
+sim:setFriction(agent, friction)
+sim:setDrag(agent, drag)
+sim:setRotFriction(agent, rotFriction)
+sim:setRotDrag(agent, rotDrag)
 
 agent:addGraphic(GraphicTriangle())
 
@@ -151,6 +160,11 @@ dummyBrain:addPerception("Color", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, colorT
 sim:setSize(human, 10.0)
 sim:setInitialEnergy(human, 1.0)
 sim:setMetabolism(human, metabolism)
+sim:setFriction(human, friction)
+sim:setDrag(human, drag)
+sim:setRotFriction(human, rotFriction)
+sim:setRotDrag(human, rotDrag)
+
 human:setBrain(dummyBrain)
 
 humanColor = SymbolRGB(82, 228, 241)

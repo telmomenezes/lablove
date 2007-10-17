@@ -54,14 +54,13 @@ void PopulationDynamics::onOrganismDeath(SimulationObject* org)
         iterStats != mStatistics.end();
         iterStats++)
     {
-        (*iterStats)->process(org);
+        (*iterStats)->process(org, mPopManager);
     }
 }
 
 void PopulationDynamics::addStatistics(Statistics* stats)
 {
     stats->init();
-    stats->setPopulationManager(mPopManager);
     mStatistics.push_back(stats);
 }
 

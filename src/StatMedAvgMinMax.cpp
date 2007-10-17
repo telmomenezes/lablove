@@ -51,7 +51,7 @@ void StatMedAvgMinMax::init()
     fflush(mFile);
 }
 
-void StatMedAvgMinMax::process(SimulationObject* obj)
+void StatMedAvgMinMax::process(SimulationObject* obj, PopulationManager* popManager)
 {
     list<list<float> >::iterator iterValueList = mValueLists.begin();
 
@@ -59,7 +59,7 @@ void StatMedAvgMinMax::process(SimulationObject* obj)
         iterField != mFields.end();
         iterField++)
     {
-        float value = mPopManager->getFieldValue(obj, *iterField);
+        float value = popManager->getFieldValue(obj, *iterField);
         (*iterValueList).push_back(value);
         iterValueList++;
     }

@@ -36,11 +36,11 @@ public:
 
     virtual void init();
 
-    virtual void process(SimulationObject* obj);
+    virtual void process(SimulationObject* obj, PopulationManager* popManager);
     virtual void dump(unsigned long time, double realTime);
 
     static const char mClassName[];
-        static Orbit<StatMedAvgMinMax>::MethodType mMethods[];
+    static Orbit<StatMedAvgMinMax>::MethodType mMethods[];
     static Orbit<StatMedAvgMinMax>::NumberGlobalType mNumberGlobals[];
 
 protected:

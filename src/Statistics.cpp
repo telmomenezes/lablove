@@ -22,7 +22,6 @@
 Statistics::Statistics()
 {
     mFile = stdout;
-    mPopManager = NULL;
 }
 
 Statistics::~Statistics()
