@@ -694,18 +694,20 @@ void SimCont2D::act(Agent* agent)
 
     if (actionGo)
     {
-        goFront(agent, 0.01f);
+        //goFront(agent, 0.01f);
+        goFront(agent, actionGoParam * 0.01f);
     }
     if (actionRotate)
     {
-        if (actionRotateParam > 0.0f)
+        /*if (actionRotateParam > 0.0f)
         {
             rotate(agent, 0.0001f);
         }
         else if (actionRotateParam < 0.0f)
         {
             rotate(agent, -0.0001f);
-        }
+        }*/
+        rotate(agent, actionRotateParam * 0.0001f);
     }
     if (actionEat)
     {
