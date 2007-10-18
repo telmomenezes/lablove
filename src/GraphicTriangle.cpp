@@ -20,6 +20,7 @@
 #include "GraphicTriangle.h"
 #include "SimulationObject.h"
 #include "SymbolRGB.h"
+#include "SymbolFloat.h"
 
 GraphicTriangle::GraphicTriangle(lua_State* luaState)
 {
@@ -43,7 +44,17 @@ void GraphicTriangle::init(void* obj)
 {
     mObject = obj;
     SimulationObject* simObj = (SimulationObject*)mObject;
-    mSize = simObj->mSize;
+
+    SymbolFloat* symSize = (SymbolFloat*)simObj->getSymbolByName("size");
+
+    if (symSize == NULL)
+    {
+        mSize = simObj->mSize;
+    }
+    else
+    {
+        mSize = symSize->getFloat();
+    }
 
     SymbolRGB* color = (SymbolRGB*)(simObj->getSymbolByName("color"));
 

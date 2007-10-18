@@ -21,6 +21,7 @@
 #include "SimulationObject.h"
 #include "PopulationDynamics.h"
 #include "Random.h"
+#include "SymbolFloat.h"
 
 #include <math.h>
 #include <list>
@@ -244,6 +245,14 @@ void SimCont2D::addObject(SimulationObject* object)
     object->mFloatData[FLOAT_IMPULSE_Y] = 0.0f;
     object->mFloatData[FLOAT_IMPULSE_ROT] = 0.0f;
 
+    SymbolFloat* symSize = (SymbolFloat*)object->getSymbolByName("size");
+
+    if (symSize != NULL)
+    {
+        object->mSize = symSize->getFloat();
+        object->mSizeSquared = object->mSize * object->mSize;
+    }
+
     object->mFloatData[FLOAT_ENERGY] = object->mFloatData[FLOAT_INITIAL_ENERGY];
 
     object->mULData[UL_COLLISION_DETECTION_ITERATION] = 0;
@@ -391,11 +400,11 @@ SimulationObject* SimCont2D::nextCollision(float& distance, float& angle)
 
             float dX =  obj->mX - mCollisionX;
             float dY =  obj->mY - mCollisionY;
-            float dist = sqrtf((dX * dX) + (dY * dY));
+            distance = sqrtf((dX * dX) + (dY * dY));
+            distance = distance - obj->mSize;
 
-            if (dist <= mCollisionRadius)
+            if (distance <= mCollisionRadius)
             {
-                distance = dist - obj->mSize;
                 if (distance < 0.0f)
                 {
                     distance = 0.0f;
@@ -531,6 +540,10 @@ void SimCont2D::perceive(Agent* agent)
         {
             bool visible = false;
             distance -= agent->mSize;
+            if (distance < 0.0f)
+            {
+                distance = 0.0f;
+            }
 
             if (mHighLimitViewAngle > mLowLimitViewAngle)
             {
@@ -694,19 +707,10 @@ void SimCont2D::act(Agent* agent)
 
     if (actionGo)
     {
-        //goFront(agent, 0.01f);
         goFront(agent, actionGoParam * 0.01f);
     }
     if (actionRotate)
     {
-        /*if (actionRotateParam > 0.0f)
-        {
-            rotate(agent, 0.0001f);
-        }
-        else if (actionRotateParam < 0.0f)
-        {
-            rotate(agent, -0.0001f);
-        }*/
         rotate(agent, actionRotateParam * 0.0001f);
     }
     if (actionEat)

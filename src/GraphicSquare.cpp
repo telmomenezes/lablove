@@ -20,6 +20,7 @@
 #include "GraphicSquare.h"
 #include "SimulationObject.h"
 #include "SymbolRGB.h"
+#include "SymbolFloat.h"
 
 GraphicSquare::GraphicSquare(lua_State* luaState)
 {
@@ -43,7 +44,19 @@ void GraphicSquare::init(void* obj)
 {
     mObject = obj;
     SimulationObject* simObj = (SimulationObject*)mObject;
-    mSize = simObj->mSize;
+
+    SymbolFloat* symSize = (SymbolFloat*)simObj->getSymbolByName("size");
+
+    if (symSize == NULL)
+    {
+        mSize = simObj->mSize;
+    }
+    else
+    {
+        mSize = symSize->getFloat();
+    }
+
+    mSize = sqrtf(2.0 * mSize * mSize);
 
     SymbolRGB* color = (SymbolRGB*)(simObj->getSymbolByName("color"));
 

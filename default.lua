@@ -1,5 +1,8 @@
-numberOfPlants = 100
-numberOfAgents = 100
+numberOfPlants = 1--00
+numberOfAgents = 1--00
+
+agentSize = 10.0
+plantSize = 100.0
 
 worldWidth = 3000
 worldHeight = 3000
@@ -42,7 +45,6 @@ sim:setGoCost(goCost)
 sim:setRotateCost(rotateCost)
 
 agent = Agent()
-sim:setSize(agent, 10.0)
 sim:setAgeRange(agent, lowAgeLimit, highAgeLimit)
 sim:setInitialEnergy(agent, 1.0)
 sim:setMetabolism(agent, metabolism)
@@ -52,6 +54,12 @@ sim:setRotFriction(agent, rotFriction)
 sim:setRotDrag(agent, rotDrag)
 
 agent:addGraphic(GraphicTriangle())
+
+symSize = SymbolFloat(agentSize)
+symTable = SymbolTable(symSize)
+agent:addSymbolTable(symTable)
+sizeTableCode = symTable:getID()
+agent:setSymbolName("size", sizeTableCode, 0)
 
 agentColor = SymbolRGB(255, 50, 255)
 symTable = SymbolTable(agentColor)
@@ -129,8 +137,12 @@ while i < initialConnections do
 end
 
 plant = SimulationObject()
-sim:setSize(plant, 10.0)
 sim:setInitialEnergy(plant, 1.0)
+
+symSize = SymbolFloat(plantSize)
+symTable = SymbolTable(symSize, sizeTableCode)
+plant:addSymbolTable(symTable)
+plant:setSymbolName("size", sizeTableCode, 0)
 
 plantColor = SymbolRGB(10, 250, 50)
 symTable = SymbolTable(plantColor, colorTableCode)
@@ -157,7 +169,6 @@ dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
 dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
 dummyBrain:addPerception("Contact", 0, SimCont2D.PERCEPTION_IN_CONTACT)
 dummyBrain:addPerception("Color", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, colorTableCode, 0, 0)
-sim:setSize(human, 10.0)
 sim:setInitialEnergy(human, 1.0)
 sim:setMetabolism(human, metabolism)
 sim:setFriction(human, friction)
@@ -166,6 +177,11 @@ sim:setRotFriction(human, rotFriction)
 sim:setRotDrag(human, rotDrag)
 
 human:setBrain(dummyBrain)
+
+symSize = SymbolFloat(agentSize)
+symTable = SymbolTable(symSize, sizeTableCode)
+human:addSymbolTable(symTable)
+human:setSymbolName("size", sizeTableCode, 0)
 
 humanColor = SymbolRGB(82, 228, 241)
 symTable = SymbolTable(humanColor, colorTableCode)

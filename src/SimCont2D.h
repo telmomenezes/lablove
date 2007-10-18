@@ -119,9 +119,9 @@ public:
     void startCollisionDetection(float x, float y, float rad);
     SimulationObject* nextCollision(float& distance, float& angle);
 
-    void setSize(SimulationObject* obj, float size);
     void deltaEnergy(SimulationObject* obj, double delta);
     void setEnergy(SimulationObject* obj, float energy);
+    void setSize(SimulationObject* obj, float size);
     void setInitialEnergy(SimulationObject* obj, float energy);
     void setAgeRange(SimulationObject* obj, unsigned long lowAgeLimit, unsigned long highAgeLimit);
     void setMetabolism(SimulationObject* obj, float metabolism);
