@@ -401,9 +401,8 @@ SimulationObject* SimCont2D::nextCollision(float& distance, float& angle)
             float dX =  obj->mX - mCollisionX;
             float dY =  obj->mY - mCollisionY;
             distance = sqrtf((dX * dX) + (dY * dY));
-            distance = distance - obj->mSize;
 
-            if (distance <= mCollisionRadius)
+            if ((distance - obj->mSize) <= mCollisionRadius)
             {
                 if (distance < 0.0f)
                 {
@@ -540,6 +539,7 @@ void SimCont2D::perceive(Agent* agent)
         {
             bool visible = false;
             distance -= agent->mSize;
+            distance -= target->mSize;
             if (distance < 0.0f)
             {
                 distance = 0.0f;

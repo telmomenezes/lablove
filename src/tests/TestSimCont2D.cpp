@@ -151,16 +151,16 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection3)
     float angle;
     SimulationObject* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
-    CHECK_EQUAL(distance, 9.0f);
+    CHECK_EQUAL(distance, 10.0f);
     obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
-    CHECK_EQUAL(distance, 9.0f);
+    CHECK_EQUAL(distance, 10.0f);
     obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
-    CHECK_EQUAL(distance, 9.0f);
+    CHECK_EQUAL(distance, 10.0f);
     obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
-    CHECK_EQUAL(distance, 9.0f);
+    CHECK_EQUAL(distance, 10.0f);
     obj = mSim.nextCollision(distance, angle);
     CHECK(obj == NULL);
 }
@@ -176,7 +176,7 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection4)
     SimulationObject* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, 0.0f, 0.001f);
-    CHECK_EQUAL(distance, 9.0f);
+    CHECK_EQUAL(distance, 10.0f);
     obj = mSim.nextCollision(distance, angle);
     CHECK(obj == NULL);
 }
@@ -192,7 +192,7 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection5)
     SimulationObject* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, M_PI / 2.0f, 0.001f);
-    CHECK_EQUAL(distance, 9.0f);
+    CHECK_EQUAL(distance, 10.0f);
     obj = mSim.nextCollision(distance, angle);
     CHECK(obj == NULL);
 }
@@ -208,7 +208,7 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection6)
     SimulationObject* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, M_PI, 0.001f);
-    CHECK_EQUAL(distance, 9.0f);
+    CHECK_EQUAL(distance, 10.0f);
     obj = mSim.nextCollision(distance, angle);
     CHECK(obj == NULL);
 }
@@ -224,7 +224,7 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection7)
     SimulationObject* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, -M_PI / 2.0f, 0.001f);
-    CHECK_EQUAL(distance, 9.0f);
+    CHECK_EQUAL(distance, 10.0f);
     obj = mSim.nextCollision(distance, angle);
     CHECK(obj == NULL);
 }
@@ -240,7 +240,7 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection8)
     SimulationObject* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, M_PI / 4.0f, 0.001f);
-    CHECK_CLOSE(distance, sqrt((10 * 10 + 10 * 10)) - 1.0f, 0.001f);
+    CHECK_CLOSE(distance, sqrt(10 * 10 + 10 * 10), 0.001f);
     obj = mSim.nextCollision(distance, angle);
     CHECK(obj == NULL);
 }
@@ -256,7 +256,7 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection9)
     SimulationObject* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, -M_PI / 4.0f, 0.001f);
-    CHECK_CLOSE(distance, sqrt((10 * 10 + 10 * 10)) - 1.0f, 0.001f);
+    CHECK_CLOSE(distance, sqrt(10 * 10 + 10 * 10), 0.001f);
     obj = mSim.nextCollision(distance, angle);
     CHECK(obj == NULL);
 }
@@ -272,7 +272,7 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection10)
     SimulationObject* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, (3 * M_PI) / 4.0f, 0.001f);
-    CHECK_CLOSE(distance, sqrt((10 * 10 + 10 * 10)) - 1.0f, 0.001f);
+    CHECK_CLOSE(distance, sqrt(10 * 10 + 10 * 10), 0.001f);
     obj = mSim.nextCollision(distance, angle);
     CHECK(obj == NULL);
 }
@@ -288,7 +288,7 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection11)
     SimulationObject* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, -(3 * M_PI) / 4.0f, 0.001f);
-    CHECK_CLOSE(distance, sqrt((10 * 10 + 10 * 10)) - 1.0f, 0.001f);
+    CHECK_CLOSE(distance, sqrt(10 * 10 + 10 * 10), 0.001f);
     obj = mSim.nextCollision(distance, angle);
     CHECK(obj == NULL);
 }
@@ -304,7 +304,7 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection12)
     SimulationObject* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, -(3 * M_PI) / 4.0f, 0.001f);
-    CHECK_CLOSE(distance, sqrt((50 * 50 + 50 * 50)) - 1.0f, 0.001f);
+    CHECK_CLOSE(distance, sqrt(50 * 50 + 50 * 50), 0.001f);
     obj = mSim.nextCollision(distance, angle);
     CHECK(obj == NULL);
 }
@@ -321,7 +321,7 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection13)
     SimulationObject* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, (3 * M_PI) / 4.0f, 0.001f);
-    CHECK_CLOSE(distance, sqrt((50 * 50 + 50 * 50)) - 10.0f, 0.001f);
+    CHECK_CLOSE(distance, sqrt(50 * 50 + 50 * 50), 0.001f);
     obj = mSim.nextCollision(distance, angle);
     CHECK(obj == NULL);
 }
@@ -352,7 +352,7 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection15)
     SimulationObject* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, M_PI, 0.001f);
-    CHECK_EQUAL(distance, 9.0f);
+    CHECK_EQUAL(distance, 10.0f);
     obj = mSim.nextCollision(distance, angle);
     CHECK(obj == NULL);
 }
