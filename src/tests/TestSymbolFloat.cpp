@@ -26,90 +26,132 @@ TEST(TestCreateSymbolFloat)
 {
     SymbolFloat sym(1.0f);
     CHECK_CLOSE(sym.getFloat(), 1.0f, 0.001f);
+    CHECK_CLOSE(sym.getMin(), 0.0f, 0.001f);
+    CHECK_CLOSE(sym.getMax(), 1.0f, 0.001f);
 }
 
-/*TEST(TestCloneSymbolFixedString)
+TEST(TestCreateSymbolFloat2)
 {
-    SymbolFixedString sym("ABC", "AABBCC");
-    SymbolFixedString* psym = (SymbolFixedString*)(sym.clone());
-    CHECK(psym->getString() == "AABBCC");
-    CHECK(psym->getAlphabet() == "ABC");
-    CHECK_EQUAL(psym->getLength(), 6);
-    CHECK_EQUAL(psym->getAlphabetLength(), 3);
+    SymbolFloat sym(-1.0f, -3.0f, 6.0f);
+    CHECK_CLOSE(sym.getFloat(), -1.0f, 0.001f);
+    CHECK_CLOSE(sym.getMin(), -3.0f, 0.001f);
+    CHECK_CLOSE(sym.getMax(), 6.0f, 0.001f);
+}
+
+TEST(TestCloneSymbolFloat)
+{
+    SymbolFloat sym(-1.0f, -3.0f, 6.0f);
+    CHECK_CLOSE(sym.getFloat(), -1.0f, 0.001f);
+    CHECK_CLOSE(sym.getMin(), -3.0f, 0.001f);
+    CHECK_CLOSE(sym.getMax(), 6.0f, 0.001f);
+    SymbolFloat* psym = (SymbolFloat*)(sym.clone());
+    CHECK_CLOSE(psym->getFloat(), -1.0f, 0.001f);
+    CHECK_CLOSE(psym->getMin(), -3.0f, 0.001f);
+    CHECK_CLOSE(psym->getMax(), 6.0f, 0.001f);
     delete psym;
 }
 
-TEST(TestSymbolFixedStringBind1)
+TEST(TestBindSymbolFloat1)
 {
-    SymbolFixedString sym1("ABC", "ABC");
-    SymbolFixedString sym2("ABC", "ABC");
-    CHECK_CLOSE(sym1.bind(&sym2), 1.0f, 0.0001f);
-    CHECK_CLOSE(sym2.bind(&sym1), 1.0f, 0.0001f);
+    SymbolFloat sym1(0.0f);
+    SymbolFloat sym2(1.0f);
+    float bind = sym1.bind(&sym2);
+    CHECK_CLOSE(bind, 1.0f, 0.001f);
 }
 
-TEST(TestSymbolFixedStringBind2)
+TEST(TestBindSymbolFloat2)
 {
-    SymbolFixedString sym1("ABC", "ABC");
-    SymbolFixedString sym2("ABC", "CAB");
-    CHECK_CLOSE(sym1.bind(&sym2), 0.0f, 0.0001f);
-    CHECK_CLOSE(sym2.bind(&sym1), 0.0f, 0.0001f);
+    SymbolFloat sym1(1.0f);
+    SymbolFloat sym2(1.0f);
+    float bind = sym1.bind(&sym2);
+    CHECK_CLOSE(bind, 0.0f, 0.001f);
 }
 
-TEST(TestSymbolFixedStringBind3)
+TEST(TestBindSymbolFloat3)
 {
-    SymbolFixedString sym1("ABC", "ABC");
-    SymbolFixedString sym2("ABC", "CBA");
-    CHECK_CLOSE(sym1.bind(&sym2), 1.0f / 3.0f, 0.0001f);
-    CHECK_CLOSE(sym2.bind(&sym1), 1.0f / 3.0f, 0.0001f);
+    SymbolFloat sym1(0.5f);
+    SymbolFloat sym2(1.0f);
+    float bind = sym1.bind(&sym2);
+    CHECK_CLOSE(bind, 0.5f, 0.001f);
 }
 
-TEST(TestSymbolFixedStringBind4)
+TEST(TestBindSymbolFloat4)
 {
-    SymbolFixedString sym1("ABCD", "ABC");
-    SymbolFixedString sym2("ABCD", "ABD");
-    CHECK_CLOSE(sym1.bind(&sym2), 2.0f / 3.0f, 0.0001f);
-    CHECK_CLOSE(sym2.bind(&sym1), 2.0f / 3.0f, 0.0001f);
+    SymbolFloat sym1(10.0f, 0.0f, 20.0f);
+    SymbolFloat sym2(20.0f, 0.0f, 20.0f);
+    float bind = sym1.bind(&sym2);
+    CHECK_CLOSE(bind, 0.5f, 0.001f);
 }
 
-TEST(TestSymbolFixedStringReplace1)
+TEST(TestBindSymbolFloat5)
 {
-    SymbolFixedString sym("ABCD", "ABC");
-    CHECK(sym.getString() == "ABC");
-    sym.replaceChar(0, 3);
-    CHECK(sym.getString() == "DBC");
+    SymbolFloat sym1(10.0f, -20.0f, 20.0f);
+    SymbolFloat sym2(20.0f, -20.0f, 20.0f);
+    float bind = sym1.bind(&sym2);
+    CHECK_CLOSE(bind, 0.25f, 0.001f);
 }
 
-TEST(TestSymbolFixedStringReplace2)
+TEST(TestBindSymbolFloat6)
 {
-    SymbolFixedString sym("ABCD", "ABC");
-    CHECK(sym.getString() == "ABC");
-    sym.replaceChar(0, 2);
-    CHECK(sym.getString() == "CBC");
+    SymbolFloat sym1(-20.0f, -20.0f, 20.0f);
+    SymbolFloat sym2(20.0f, -20.0f, 20.0f);
+    float bind = sym1.bind(&sym2);
+    CHECK_CLOSE(bind, 1.0f, 0.001f);
 }
 
-TEST(TestSymbolFixedStringReplace3)
+TEST(TestBindSymbolFloat7)
 {
-    SymbolFixedString sym("ABCD", "ABC");
-    CHECK(sym.getString() == "ABC");
-    sym.replaceChar(1, 3);
-    CHECK(sym.getString() == "ADC");
+    SymbolFloat sym1(-20.0f, -20.0f, 20.0f);
+    SymbolFloat sym2(40.0f, -20.0f, 20.0f);
+    float bind = sym1.bind(&sym2);
+    CHECK_CLOSE(bind, 1.0f, 0.001f);
 }
 
-TEST(TestSymbolFixedStringReplace4)
+TEST(TestMutateSymbolFloat1)
 {
-    SymbolFixedString sym("ABCD", "ABC");
-    CHECK(sym.getString() == "ABC");
-    sym.replaceChar(2, 3);
-    CHECK(sym.getString() == "ABD");
+    SymbolFloat sym(0.5f);
+    sym.mutate();
+    CHECK(sym.getFloat() >= 0.0f);
+    CHECK(sym.getFloat() <= 1.0f);
 }
 
-TEST(TestSymbolFixedStringMutate1)
+TEST(TestMutateSymbolFloat2)
 {
-    SymbolFixedString sym("ABCD", "ABC");
-    SymbolFixedString* sym2 = (SymbolFixedString*)sym.clone();
-    sym2->mutate();
-    CHECK(sym.bind(sym2) >= 0.6666f);
-    delete sym2;
+    SymbolFloat sym(0.0f);
+    sym.mutate();
+    CHECK(sym.getFloat() >= 0.0f);
+    CHECK(sym.getFloat() <= 1.0f);
 }
-*/
+
+TEST(TestMutateSymbolFloat3)
+{
+    SymbolFloat sym(1.0f);
+    sym.mutate();
+    CHECK(sym.getFloat() >= 0.0f);
+    CHECK(sym.getFloat() <= 1.0f);
+}
+
+TEST(TestMutateSymbolFloat4)
+{
+    SymbolFloat sym(0.0f, -0.5f, 0.5f);
+    sym.mutate();
+    CHECK(sym.getFloat() >= -0.5f);
+    CHECK(sym.getFloat() <= 0.5f);
+}
+
+TEST(TestMutateSymbolFloat5)
+{
+    SymbolFloat sym(-0.5f, -0.5f, 0.5f);
+    sym.mutate();
+    CHECK(sym.getFloat() >= -0.5f);
+    CHECK(sym.getFloat() <= 0.5f);
+}
+
+TEST(TestMutateSymbolFloat6)
+{
+    SymbolFloat sym(0.5f, -0.5f, 0.5f);
+    sym.mutate();
+    CHECK(sym.getFloat() >= -0.5f);
+    CHECK(sym.getFloat() <= 0.5f);
+}
 

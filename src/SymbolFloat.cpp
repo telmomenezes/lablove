@@ -33,7 +33,7 @@ SymbolFloat::SymbolFloat(float value, float min, float max)
 {
     mFloat = value;
     mMin = min;
-    mMax = max;;
+    mMax = max;
 }
 
 SymbolFloat::SymbolFloat(SymbolFloat* sym)
