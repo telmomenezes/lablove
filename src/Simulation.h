@@ -63,11 +63,6 @@ public:
 
     pyc::Pycasso& getPycasso(){return mPycasso;}
 
-    virtual int getFloatDataIndexByName(string name){return -1;}
-    virtual int getBoolDataIndexByName(string name){return -1;}
-    virtual int getIntDataIndexByName(string name){return -1;}
-    virtual int getULDataIndexByName(string name){return -1;}
-
     virtual bool onKeyDown(pyc::KeyCode keycode);
     virtual bool onKeyUp(pyc::KeyCode keycode){return false;}
     virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y){return false;}

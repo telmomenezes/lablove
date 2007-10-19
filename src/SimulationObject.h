@@ -81,6 +81,15 @@ public:
 
     virtual float getFieldValue(string fieldName);
 
+    void setNamedFloatDataIndex(string name, int index);
+    void setNamedBoolDataIndex(string name, int index);
+    void setNamedIntDataIndex(string name, int index);
+    void getNamedULDataIndex(string name, int index);
+    int getNamedFloatDataIndex(string name);
+    int getNamedBoolDataIndex(string name);
+    int getNamedIntDataIndex(string name);
+    int getNamedULDataIndex(string name);
+
     bool mDeleted;
 
     Type mType;
@@ -116,6 +125,10 @@ protected:
 
     map<int, SymbolTable*> mSymbolTables;
     map<string, SymbolPointer> mNamedSymbols;
+    map<string, int> mNamedFloatDataIndexes;
+    map<string, int> mNamedBoolDataIndexes;
+    map<string, int> mNamedIntDataIndexes;
+    map<string, int> mNamedULDataIndexes;
 
     unsigned int mSpeciesID;
 };

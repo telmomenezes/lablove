@@ -43,33 +43,32 @@ Graphic* GraphicTriangle::createSameType()
     return new GraphicTriangle();
 }
 
-void GraphicTriangle::init(void* obj, void* sim)
+void GraphicTriangle::init(void* obj)
 {
     mObject = obj;
     SimulationObject* simObj = (SimulationObject*)mObject;
-    Simulation* simul = (Simulation*)sim;
 
-    mXIndex = simul->getFloatDataIndexByName("x");
+    mXIndex = simObj->getNamedFloatDataIndex("x");
     if (mXIndex == -1)
     {
-        throw std::runtime_error("Failed to initialize GraphicTriangle: simulation does not define 'x' named data item");
+        throw std::runtime_error("Failed to initialize GraphicTriangle: object does not define 'x' named data item");
     }
-    mYIndex = simul->getFloatDataIndexByName("y");
+    mYIndex = simObj->getNamedFloatDataIndex("y");
     if (mYIndex == -1)
     {
-        throw std::runtime_error("Failed to initialize GraphicTriangle: simulation does not define 'y' named data item");
+        throw std::runtime_error("Failed to initialize GraphicTriangle: object does not define 'y' named data item");
     }
-    mRotIndex = simul->getFloatDataIndexByName("rot");
+    mRotIndex = simObj->getNamedFloatDataIndex("rot");
     if (mRotIndex == -1)
     {
-        throw std::runtime_error("Failed to initialize GraphicTriangle: simulation does not define 'rot' named data item");
+        throw std::runtime_error("Failed to initialize GraphicTriangle: object does not define 'rot' named data item");
     }
 
     SymbolFloat* symSize = (SymbolFloat*)simObj->getSymbolByName("size");
 
     if (symSize == NULL)
     {
-        throw std::runtime_error("Failed to initialize GraphicTriangle: simulation does not define 'size' named symbol");
+        throw std::runtime_error("Failed to initialize GraphicTriangle: object does not define 'size' named symbol");
     }
     else
     {

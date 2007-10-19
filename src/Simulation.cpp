@@ -163,7 +163,7 @@ void Simulation::addObject(SimulationObject* object)
             iterGraph != object->mGraphics.end();
             iterGraph++)
     {
-        (*iterGraph)->init(object, this);
+        (*iterGraph)->init(object);
     }
 }
 

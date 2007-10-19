@@ -31,7 +31,7 @@ public:
 
     virtual Graphic* createSameType()=0;
 
-    virtual void init(void* obj, void* sim)=0;
+    virtual void init(void* obj)=0;
     virtual void draw(pyc::Layer* layer)=0;
 
 protected:

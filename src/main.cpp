@@ -102,7 +102,8 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    lua_close(luaState);
+    // TODO: This causes a segmentation fault
+    //lua_close(luaState);
 
     return 0;
 }

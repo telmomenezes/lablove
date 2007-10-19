@@ -107,8 +107,6 @@ public:
 
     virtual float getFieldValue(SimulationObject* obj, string fieldName);
     
-    virtual int getFloatDataIndexByName(string name);
-
     virtual bool onKeyDown(pyc::KeyCode keycode);
     virtual bool onKeyUp(pyc::KeyCode keycode);
     virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y);

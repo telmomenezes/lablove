@@ -240,6 +240,10 @@ void SimCont2D::addObject(SimulationObject* object)
         object->mDataInitialized = true;
     }
 
+    object->setNamedFloatDataIndex("x", FLOAT_X);
+    object->setNamedFloatDataIndex("y", FLOAT_Y);
+    object->setNamedFloatDataIndex("rot", FLOAT_ROT);
+
     object->mFloatData[FLOAT_SPEED_X] = 0.0f;
     object->mFloatData[FLOAT_SPEED_Y] = 0.0f;
     object->mFloatData[FLOAT_SPEED_ROT] = 0.0f;
@@ -870,24 +874,6 @@ float SimCont2D::getFieldValue(SimulationObject* obj, string fieldName)
     {
         return Simulation::getFieldValue(obj, fieldName);
     }
-}
-
-int SimCont2D::getFloatDataIndexByName(string name)
-{
-    if (name == "x")
-    {
-        return FLOAT_X;
-    }
-    else if (name == "y")
-    {
-        return FLOAT_Y;
-    }
-    else if (name == "rot")
-    {
-        return FLOAT_ROT;
-    }
-
-    return -1;
 }
 
 bool SimCont2D::onKeyDown(pyc::KeyCode key)

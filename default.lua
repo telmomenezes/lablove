@@ -27,9 +27,9 @@ goCost = 0.0
 rotateCost = 0.0
 
 friction = 0.003
-drag = 0.01--05
+drag = 0.01
 rotFriction = 0.00003
-rotDrag = 0.01--05
+rotDrag = 0.01
 
 initialConnections = 10
 

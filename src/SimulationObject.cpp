@@ -308,6 +308,66 @@ void SimulationObject::setULDataFromSymbol(string symbolName, unsigned int dataI
     }
 }
 
+void SimulationObject::setNamedFloatDataIndex(string name, int index)
+{
+    mNamedFloatDataIndexes[name] = index;
+}
+
+void SimulationObject::setNamedBoolDataIndex(string name, int index)
+{
+    mNamedBoolDataIndexes[name] = index;
+}
+
+void SimulationObject::setNamedIntDataIndex(string name, int index)
+{
+    mNamedIntDataIndexes[name] = index;
+}
+
+void SimulationObject::getNamedULDataIndex(string name, int index)
+{
+    mNamedULDataIndexes[name] = index;
+}
+
+int SimulationObject::getNamedFloatDataIndex(string name)
+{
+    if (mNamedFloatDataIndexes.count(name) <= 0)
+    {
+        return -1;
+    }
+    
+    return mNamedFloatDataIndexes[name];
+}
+
+int SimulationObject::getNamedBoolDataIndex(string name)
+{
+    if (mNamedBoolDataIndexes.count(name) <= 0)
+    {
+        return -1;
+    }
+    
+    return mNamedBoolDataIndexes[name];
+}
+
+int SimulationObject::getNamedIntDataIndex(string name)
+{
+    if (mNamedIntDataIndexes.count(name) <= 0)
+    {
+        return -1;
+    }
+    
+    return mNamedIntDataIndexes[name];
+}
+
+int SimulationObject::getNamedULDataIndex(string name)
+{
+    if (mNamedULDataIndexes.count(name) <= 0)
+    {
+        return -1;
+    }
+    
+    return mNamedULDataIndexes[name];
+}
+
 void SimulationObject::addGraphic(Graphic* graph)
 {
     mGraphics.push_back(graph);
