@@ -31,6 +31,7 @@
 #include "SymbolRGB.h"
 #include "SymbolFixedString.h"
 #include "SymbolFloat.h"
+#include "SymbolUL.h"
 #include "StatMedAvgMinMax.h"
 #include "StatTime.h"
 #include "GraphicTriangle.h"
@@ -80,6 +81,7 @@ int main(int argc, char *argv[])
     Orbit<SymbolRGB>::orbitRegister(luaState);
     Orbit<SymbolFixedString>::orbitRegister(luaState);
     Orbit<SymbolFloat>::orbitRegister(luaState);
+    Orbit<SymbolUL>::orbitRegister(luaState);
     Orbit<StatMedAvgMinMax>::orbitRegister(luaState);
     Orbit<StatTime>::orbitRegister(luaState);
     Orbit<GraphicTriangle>::orbitRegister(luaState);

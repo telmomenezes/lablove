@@ -21,6 +21,9 @@
 #include "SimulationObject.h"
 #include "SymbolRGB.h"
 #include "SymbolFloat.h"
+#include "Simulation.h"
+
+#include <stdexcept>
 
 GraphicSquare::GraphicSquare(lua_State* luaState)
 {
@@ -40,16 +43,33 @@ Graphic* GraphicSquare::createSameType()
     return new GraphicSquare();
 }
 
-void GraphicSquare::init(void* obj)
+void GraphicSquare::init(void* obj, void* sim)
 {
     mObject = obj;
     SimulationObject* simObj = (SimulationObject*)mObject;
+    Simulation* simul = (Simulation*)sim;
+
+    mXIndex = simul->getFloatDataIndexByName("x");
+    if (mXIndex == -1)
+    {
+        throw std::runtime_error("Failed to initialize GraphicSquare: simulation does not define 'x' named data item");
+    }
+    mYIndex = simul->getFloatDataIndexByName("y");
+    if (mYIndex == -1)
+    {
+        throw std::runtime_error("Failed to initialize GraphicSquare: simulation does not define 'y' named data item");
+    }
+    mRotIndex = simul->getFloatDataIndexByName("rot");
+    if (mRotIndex == -1)
+    {
+        throw std::runtime_error("Failed to initialize GraphicSquare: simulation does not define 'rot' named data item");
+    }
 
     SymbolFloat* symSize = (SymbolFloat*)simObj->getSymbolByName("size");
 
     if (symSize == NULL)
     {
-        mSize = simObj->mSize;
+        throw std::runtime_error("Failed to initialize GraphicSquare: simulation does not define 'size' named symbol");
     }
     else
     {
@@ -73,9 +93,9 @@ void GraphicSquare::draw(pyc::Layer* layer)
     pyc::Layer2D* layer2D = (pyc::Layer2D*)layer;
 
     SimulationObject* simObj = (SimulationObject*)mObject;
-    float rot = simObj->mRotZ;
-    float centerX = simObj->mX;
-    float centerY = simObj->mY;
+    float rot = simObj->mFloatData[mRotIndex];
+    float centerX = simObj->mFloatData[mXIndex];
+    float centerY = simObj->mFloatData[mYIndex];
 
     layer2D->setRotation(centerX, centerY, rot);
     layer2D->setColor(mRed, mGreen, mBlue);

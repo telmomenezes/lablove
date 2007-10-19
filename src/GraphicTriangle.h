@@ -33,7 +33,7 @@ public:
     
     virtual Graphic* createSameType();
 
-    virtual void init(void* obj);
+    virtual void init(void* obj, void* sim);
     virtual void draw(pyc::Layer* layer);
 
     static const char mClassName[];
@@ -45,6 +45,9 @@ protected:
     int mRed;
     int mGreen;
     int mBlue;
+    int mXIndex;
+    int mYIndex;
+    int mRotIndex;
 };
 #endif
 

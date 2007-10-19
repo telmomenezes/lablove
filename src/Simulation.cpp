@@ -158,6 +158,13 @@ void Simulation::addObject(SimulationObject* object)
 {
     object->setCreationTime(mSimulationTime);
     PopulationManager::addObject(object);
+
+    for (list<Graphic*>::iterator iterGraph = object->mGraphics.begin();
+            iterGraph != object->mGraphics.end();
+            iterGraph++)
+    {
+        (*iterGraph)->init(object, this);
+    }
 }
 
 void Simulation::setSeedIndex(unsigned int index)

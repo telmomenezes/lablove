@@ -32,7 +32,11 @@ void Random::setSeedIndex(unsigned int seedIndex)
 
 int Random::getUniformInt(int start, int end)
 {
-    return (rand() % (end - start + 1)) + start;
+    //return (rand() % (end - start + 1)) + start;
+
+    float span = (float)(end - start) + 1.0f;
+    int delta = (int)(span * (((float)rand()) / ((float)(RAND_MAX + 1.0f))));
+    return start + delta;
 }
 
 float Random::getUniformProbability()

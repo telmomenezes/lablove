@@ -55,8 +55,6 @@ public:
     void initIntData(unsigned int size);
     void initULData(unsigned int size);
 
-    virtual void initRandom(){}
-
     unsigned long getID(){return mID;}
 
     void draw(pyc::Layer* layer);
@@ -76,22 +74,14 @@ public:
     void setSymbolName(string name, int table, unsigned int pos);
     Symbol* getSymbolByName(string name);
 
+    void setFloatDataFromSymbol(string symbolName, unsigned int dataIndex);
+    void setULDataFromSymbol(string symbolName, unsigned int dataIndex);
+
     void addGraphic(Graphic* graph);
 
     virtual float getFieldValue(string fieldName);
 
     bool mDeleted;
-
-    float mX;
-    float mY;
-    float mZ;
-
-    float mRotX;
-    float mRotY;
-    float mRotZ;
-
-    float mSize;
-    float mSizeSquared;
 
     Type mType;
 
@@ -110,6 +100,8 @@ public:
     unsigned int mIntDataSize;
     unsigned int mULDataSize;
 
+    list<Graphic*> mGraphics;
+
     static const char mClassName[];
     static Orbit<SimulationObject>::MethodType mMethods[];
     static Orbit<SimulationObject>::NumberGlobalType mNumberGlobals[];
@@ -126,8 +118,6 @@ protected:
     map<string, SymbolPointer> mNamedSymbols;
 
     unsigned int mSpeciesID;
-    
-    list<Graphic*> mGraphics;
 };
 #endif
 

@@ -51,8 +51,8 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DSetDimensions)
 TEST_FIXTURE(SimCont2DFixture, SimCont2DPlaceObject)
 {
     SimulationObject* dummy = new SimulationObject();
-    mSim.setSize(dummy, 50.0f);
     mSim.addObject(dummy);
+    mSim.setSize(dummy, 50.0f);
     mSim.setPos(dummy, 400.0f, 400.0f);
     list<SimulationObject*>** grid = mSim.getCellGrid();
     int gridX1 = 350 / mCell;
@@ -78,8 +78,8 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DPlaceObject)
 TEST_FIXTURE(SimCont2DFixture, SimCont2DRemoveObject)
 {
     SimulationObject* dummy = new SimulationObject();
-    mSim.setSize(dummy, 10.0f);
     mSim.addObject(dummy);
+    mSim.setSize(dummy, 10.0f);
     mSim.setPos(dummy, 100.0f, 100.0f);
     mSim.removeObject(dummy);
     list<SimulationObject*>** grid = mSim.getCellGrid();
@@ -312,8 +312,8 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection12)
 TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection13)
 {
     SimulationObject* dummy1 = new SimulationObject();
-    mSim.setSize(dummy1, 10.0f);
     mSim.addObject(dummy1);
+    mSim.setSize(dummy1, 10.0f);
     mSim.setPos(dummy1, 50.0f, 150.0f);
     mSim.startCollisionDetection(100.0f, 100.0f, 100.0f);
     float distance;

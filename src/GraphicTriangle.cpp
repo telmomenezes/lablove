@@ -21,6 +21,9 @@
 #include "SimulationObject.h"
 #include "SymbolRGB.h"
 #include "SymbolFloat.h"
+#include "Simulation.h"
+
+#include <stdexcept>
 
 GraphicTriangle::GraphicTriangle(lua_State* luaState)
 {
@@ -40,16 +43,33 @@ Graphic* GraphicTriangle::createSameType()
     return new GraphicTriangle();
 }
 
-void GraphicTriangle::init(void* obj)
+void GraphicTriangle::init(void* obj, void* sim)
 {
     mObject = obj;
     SimulationObject* simObj = (SimulationObject*)mObject;
+    Simulation* simul = (Simulation*)sim;
+
+    mXIndex = simul->getFloatDataIndexByName("x");
+    if (mXIndex == -1)
+    {
+        throw std::runtime_error("Failed to initialize GraphicTriangle: simulation does not define 'x' named data item");
+    }
+    mYIndex = simul->getFloatDataIndexByName("y");
+    if (mYIndex == -1)
+    {
+        throw std::runtime_error("Failed to initialize GraphicTriangle: simulation does not define 'y' named data item");
+    }
+    mRotIndex = simul->getFloatDataIndexByName("rot");
+    if (mRotIndex == -1)
+    {
+        throw std::runtime_error("Failed to initialize GraphicTriangle: simulation does not define 'rot' named data item");
+    }
 
     SymbolFloat* symSize = (SymbolFloat*)simObj->getSymbolByName("size");
 
     if (symSize == NULL)
     {
-        mSize = simObj->mSize;
+        throw std::runtime_error("Failed to initialize GraphicTriangle: simulation does not define 'size' named symbol");
     }
     else
     {
@@ -72,9 +92,9 @@ void GraphicTriangle::draw(pyc::Layer* layer)
 
     SimulationObject* simObj = (SimulationObject*)mObject;
 
-    float rot = simObj->mRotZ;
-    float centerX = simObj->mX;
-    float centerY = simObj->mY;
+    float rot = simObj->mFloatData[mRotIndex];
+    float centerX = simObj->mFloatData[mXIndex];
+    float centerY = simObj->mFloatData[mYIndex];
 
     float a1 = rot;
     float a2 = rot + (M_PI * 0.8f);

@@ -126,9 +126,9 @@ void SimCont2D::setWorldDimensions(float worldWidth,
 
 void SimCont2D::setPos(SimulationObject* obj, float x, float y)
 {
-    float origX = obj->mX;
-    float origY = obj->mY;
-    float size = obj->mSize;
+    float origX = obj->mFloatData[FLOAT_X];
+    float origY = obj->mFloatData[FLOAT_Y];
+    float size = obj->mFloatData[FLOAT_SIZE];
 
     int origX1 = ((int)(origX - size)) / mCellSide;
     int origX2 = ((int)(origX + size)) / mCellSide;
@@ -174,8 +174,8 @@ void SimCont2D::setPos(SimulationObject* obj, float x, float y)
         targY2 = mWorldCellLength - 1;
     }
 
-    obj->mX = x;
-    obj->mY = y;
+    obj->mFloatData[FLOAT_X] = x;
+    obj->mFloatData[FLOAT_Y] = y;
 
     if (obj->mInitialized)
     {
@@ -223,20 +223,22 @@ void SimCont2D::setPos(SimulationObject* obj, float x, float y)
 
 void SimCont2D::setRot(SimulationObject* obj, float rot)
 {
-    obj->mRotZ = normalizeAngle(rot);
+    obj->mFloatData[FLOAT_ROT] = normalizeAngle(rot);
 }
 
 void SimCont2D::initializeData(SimulationObject* obj)
 {
-    obj->initFloatData(13);
+    obj->initFloatData(18);
     obj->initULData(4);
 }
 
 void SimCont2D::addObject(SimulationObject* object)
 {
-    Simulation::addObject(object);
-   
-    INITIALIZE_OBJECT(object)
+    if(!object->mDataInitialized)
+    {
+        initializeData(object);
+        object->mDataInitialized = true;
+    }
 
     object->mFloatData[FLOAT_SPEED_X] = 0.0f;
     object->mFloatData[FLOAT_SPEED_Y] = 0.0f;
@@ -245,13 +247,16 @@ void SimCont2D::addObject(SimulationObject* object)
     object->mFloatData[FLOAT_IMPULSE_Y] = 0.0f;
     object->mFloatData[FLOAT_IMPULSE_ROT] = 0.0f;
 
-    SymbolFloat* symSize = (SymbolFloat*)object->getSymbolByName("size");
-
-    if (symSize != NULL)
-    {
-        object->mSize = symSize->getFloat();
-        object->mSizeSquared = object->mSize * object->mSize;
-    }
+    object->setFloatDataFromSymbol("size", FLOAT_SIZE);
+    object->mFloatData[FLOAT_SIZE_SQUARED] = object->mFloatData[FLOAT_SIZE] * object->mFloatData[FLOAT_SIZE];
+    object->setFloatDataFromSymbol("initial_energy", FLOAT_INITIAL_ENERGY);
+    object->setFloatDataFromSymbol("metabolism", FLOAT_METABOLISM);
+    object->setFloatDataFromSymbol("friction", FLOAT_FRICTION);
+    object->setFloatDataFromSymbol("drag", FLOAT_DRAG);
+    object->setFloatDataFromSymbol("rot_friction", FLOAT_ROT_FRICTION);
+    object->setFloatDataFromSymbol("rot_drag", FLOAT_ROT_DRAG);
+    object->setULDataFromSymbol("low_age_limit", UL_LOW_AGE_LIMIT);
+    object->setULDataFromSymbol("high_age_limit", UL_HIGH_AGE_LIMIT);
 
     object->mFloatData[FLOAT_ENERGY] = object->mFloatData[FLOAT_INITIAL_ENERGY];
 
@@ -268,13 +273,15 @@ void SimCont2D::addObject(SimulationObject* object)
     {
         object->mULData[UL_MAX_AGE] = 0;
     }
+
+    Simulation::addObject(object);
 }
 
 void SimCont2D::removeObject(SimulationObject* obj)
 {
-    float origX = obj->mX;
-    float origY = obj->mY;
-    float size = obj->mSize;
+    float origX = obj->mFloatData[FLOAT_X];
+    float origY = obj->mFloatData[FLOAT_Y];
+    float size = obj->mFloatData[FLOAT_SIZE];
     int origX1 = ((int)(origX - size)) / mCellSide;
     int origX2 = ((int)(origX + size)) / mCellSide;
     int origY1 = ((int)(origY - size)) / mCellSide;
@@ -398,11 +405,11 @@ SimulationObject* SimCont2D::nextCollision(float& distance, float& angle)
         {
             obj->mULData[UL_COLLISION_DETECTION_ITERATION] = mCollisionDetectionIteration;
 
-            float dX =  obj->mX - mCollisionX;
-            float dY =  obj->mY - mCollisionY;
+            float dX =  obj->mFloatData[FLOAT_X] - mCollisionX;
+            float dY =  obj->mFloatData[FLOAT_Y] - mCollisionY;
             distance = sqrtf((dX * dX) + (dY * dY));
 
-            if ((distance - obj->mSize) <= mCollisionRadius)
+            if ((distance - obj->mFloatData[FLOAT_SIZE]) <= mCollisionRadius)
             {
                 if (distance < 0.0f)
                 {
@@ -461,8 +468,8 @@ void SimCont2D::process(SimulationObject* obj)
     obj->mFloatData[FLOAT_SPEED_X] *= newSpeedRatio * oneMinusDrag;
     obj->mFloatData[FLOAT_SPEED_Y] *= newSpeedRatio * oneMinusDrag;
 
-    float newX = obj->mX + obj->mFloatData[FLOAT_SPEED_X];
-    float newY = obj->mY + obj->mFloatData[FLOAT_SPEED_Y];
+    float newX = obj->mFloatData[FLOAT_X] + obj->mFloatData[FLOAT_SPEED_X];
+    float newY = obj->mFloatData[FLOAT_Y] + obj->mFloatData[FLOAT_SPEED_Y];
 
     if (newX < 0.0f)
     {
@@ -510,7 +517,7 @@ void SimCont2D::process(SimulationObject* obj)
     float oneMinusRotDrag = 1.0f - obj->mFloatData[FLOAT_ROT_DRAG];
     obj->mFloatData[FLOAT_SPEED_ROT] *= oneMinusRotDrag;
 
-    float newRot = obj->mRotZ + obj->mFloatData[FLOAT_SPEED_ROT];
+    float newRot = obj->mFloatData[FLOAT_ROT] + obj->mFloatData[FLOAT_SPEED_ROT];
 
     setPos(obj, newX, newY);
     setRot(obj, newRot);
@@ -524,10 +531,10 @@ void SimCont2D::perceive(Agent* agent)
     mTargetObject = NULL;
     mDistanceToTargetObject = 9999999999.9f;
 
-    mLowLimitViewAngle = normalizeAngle(agent->mRotZ - mHalfViewAngle);
-    mHighLimitViewAngle = normalizeAngle(agent->mRotZ + mHalfViewAngle);
+    mLowLimitViewAngle = normalizeAngle(agent->mFloatData[FLOAT_ROT] - mHalfViewAngle);
+    mHighLimitViewAngle = normalizeAngle(agent->mFloatData[FLOAT_ROT] + mHalfViewAngle);
 
-    startCollisionDetection(agent->mX, agent->mY, mViewRange);
+    startCollisionDetection(agent->mFloatData[FLOAT_X], agent->mFloatData[FLOAT_Y], mViewRange);
 
     SimulationObject* target;
     float distance;
@@ -538,8 +545,12 @@ void SimCont2D::perceive(Agent* agent)
         if (target != agent)
         {
             bool visible = false;
-            distance -= agent->mSize;
-            distance -= target->mSize;
+            
+            // This is an aproximation
+            float extraAngle = atan2f(target->mFloatData[FLOAT_SIZE], distance);
+
+            distance -= agent->mFloatData[FLOAT_SIZE];
+            distance -= target->mFloatData[FLOAT_SIZE];
             if (distance < 0.0f)
             {
                 distance = 0.0f;
@@ -547,14 +558,14 @@ void SimCont2D::perceive(Agent* agent)
 
             if (mHighLimitViewAngle > mLowLimitViewAngle)
             {
-                if ((angle <= mHighLimitViewAngle) && (angle >= mLowLimitViewAngle))
+                if ((angle - extraAngle <= mHighLimitViewAngle) && (angle + extraAngle >= mLowLimitViewAngle))
                 {
                     visible = true;
                 }
             }
             else
             {
-                if ((angle <= mHighLimitViewAngle) || (angle >= mLowLimitViewAngle))
+                if ((angle - extraAngle <= mHighLimitViewAngle) || (angle + extraAngle >= mLowLimitViewAngle))
                 {
                     visible = true;
                 }
@@ -576,7 +587,7 @@ void SimCont2D::perceive(Agent* agent)
                 onScanObject(agent,
                                 target,
                                 distance,
-                                normalizeAngle(agent->mRotZ - angle));
+                                normalizeAngle(agent->mFloatData[FLOAT_ROT] - angle));
             }
         }
     }
@@ -721,28 +732,15 @@ void SimCont2D::act(Agent* agent)
 
 void SimCont2D::goFront(Agent* agent, float distance)
 {
-    /*agent->mEnergy -= mGoCost * distance;
-    float newX = agent->mX + (cosf(agent->mRotZ) * distance);
-    float newY = agent->mY + (sinf(agent->mRotZ) * distance);
+    //agent->mEnergy -= mGoCost * distance;
 
-    if ((newX < 0)
-        || (newY < 0)
-        || (newX >= mWorldWidth)
-        || (newY >= mWorldLength))
-    {
-        return;
-    }
-
-    setPos(agent, newX, newY);*/
-
-    agent->mFloatData[FLOAT_IMPULSE_X] = cosf(agent->mRotZ) * distance;
-    agent->mFloatData[FLOAT_IMPULSE_Y] = sinf(agent->mRotZ) * distance;
+    agent->mFloatData[FLOAT_IMPULSE_X] = cosf(agent->mFloatData[FLOAT_ROT]) * distance;
+    agent->mFloatData[FLOAT_IMPULSE_Y] = sinf(agent->mFloatData[FLOAT_ROT]) * distance;
 }
 
 void SimCont2D::rotate(Agent* agent, float angle)
 {
-    /*agent->mEnergy -= mRotateCost * angle;
-    setRot(agent, agent->mRotZ - angle);*/
+    //agent->mEnergy -= mRotateCost * angle;
 
     agent->mFloatData[FLOAT_IMPULSE_ROT] += angle;
 }
@@ -818,8 +816,8 @@ void SimCont2D::drawBeforeObjects()
 
             if (obj->mType == SimulationObject::TYPE_AGENT)
             {
-                float beginAngle = normalizeAngle(obj->mRotZ - mHalfViewAngle);
-                float endAngle = normalizeAngle(obj->mRotZ + mHalfViewAngle);
+                float beginAngle = normalizeAngle(obj->mFloatData[FLOAT_ROT] - mHalfViewAngle);
+                float endAngle = normalizeAngle(obj->mFloatData[FLOAT_ROT] + mHalfViewAngle);
 
                 if (beginAngle > endAngle)
                 {
@@ -827,8 +825,8 @@ void SimCont2D::drawBeforeObjects()
                 }
 
                 mRootLayer2D->setColor(150, 150, 150, 100);
-                mRootLayer2D->fillCircle(obj->mX,
-                                            obj->mY,
+                mRootLayer2D->fillCircle(obj->mFloatData[FLOAT_X],
+                                            obj->mFloatData[FLOAT_Y],
                                             mViewRange,
                                             beginAngle,
                                             endAngle);
@@ -872,6 +870,24 @@ float SimCont2D::getFieldValue(SimulationObject* obj, string fieldName)
     {
         return Simulation::getFieldValue(obj, fieldName);
     }
+}
+
+int SimCont2D::getFloatDataIndexByName(string name)
+{
+    if (name == "x")
+    {
+        return FLOAT_X;
+    }
+    else if (name == "y")
+    {
+        return FLOAT_Y;
+    }
+    else if (name == "rot")
+    {
+        return FLOAT_ROT;
+    }
+
+    return -1;
 }
 
 bool SimCont2D::onKeyDown(pyc::KeyCode key)
@@ -1018,62 +1034,13 @@ float SimCont2D::normalizeAngle(float angle)
 
 void SimCont2D::setSize(SimulationObject* obj, float size)
 {
-    obj->mSize = size;
-    obj->mSizeSquared = size * size;
+    obj->mFloatData[FLOAT_SIZE] = size;
+    obj->mFloatData[FLOAT_SIZE_SQUARED] = size * size;
 }
 
 void SimCont2D::deltaEnergy(SimulationObject* obj, double delta)
 {
     obj->mFloatData[FLOAT_ENERGY] += delta;
-}
-
-void SimCont2D::setEnergy(SimulationObject* obj, float energy)
-{
-    obj->mFloatData[FLOAT_ENERGY] = energy;
-}
-
-void SimCont2D::setInitialEnergy(SimulationObject* obj, float energy)
-{
-
-    INITIALIZE_OBJECT(obj)
-    obj->mFloatData[FLOAT_INITIAL_ENERGY] = energy;
-}
-
-void SimCont2D::setAgeRange(SimulationObject* obj, unsigned long lowAgeLimit, unsigned long highAgeLimit)
-{
-    INITIALIZE_OBJECT(obj)
-    obj->mULData[UL_LOW_AGE_LIMIT] = lowAgeLimit;
-    obj->mULData[UL_HIGH_AGE_LIMIT] = highAgeLimit;
-}
-
-void SimCont2D::setMetabolism(SimulationObject* obj, float metabolism)
-{
-    INITIALIZE_OBJECT(obj)
-    obj->mFloatData[FLOAT_METABOLISM] = metabolism;
-}
-
-void SimCont2D::setFriction(SimulationObject* obj, float friction)
-{
-    INITIALIZE_OBJECT(obj)
-    obj->mFloatData[FLOAT_FRICTION] = friction;
-}
-
-void SimCont2D::setDrag(SimulationObject* obj, float drag)
-{
-    INITIALIZE_OBJECT(obj)
-    obj->mFloatData[FLOAT_DRAG] = drag;
-}
-
-void SimCont2D::setRotFriction(SimulationObject* obj, float friction)
-{
-    INITIALIZE_OBJECT(obj)
-    obj->mFloatData[FLOAT_ROT_FRICTION] = friction;
-}
-
-void SimCont2D::setRotDrag(SimulationObject* obj, float drag)
-{
-    INITIALIZE_OBJECT(obj)
-    obj->mFloatData[FLOAT_ROT_DRAG] = drag;
 }
 
 const char SimCont2D::mClassName[] = "SimCont2D";
@@ -1091,14 +1058,6 @@ Orbit<SimCont2D>::MethodType SimCont2D::mMethods[] = {
     {"setPos", &SimCont2D::setPos},
     {"setRot", &SimCont2D::setRot},
     {"setHuman", &SimCont2D::setHuman},
-    {"setSize", &SimCont2D::setSize},
-    {"setAgeRange", &SimCont2D::setAgeRange},
-	{"setMetabolism", &SimCont2D::setMetabolism},
-	{"setInitialEnergy", &SimCont2D::setInitialEnergy},
-	{"setFriction", &SimCont2D::setFriction},
-	{"setDrag", &SimCont2D::setDrag},
-	{"setRotFriction", &SimCont2D::setRotFriction},
-	{"setRotDrag", &SimCont2D::setRotDrag},
     {0,0}
 };
 
@@ -1173,71 +1132,6 @@ int SimCont2D::setHuman(lua_State* luaState)
 {
     Agent* agent = (Agent*)Orbit<SimCont2D>::pointer(luaState, 1);
     setHuman(agent);
-    return 0;
-}
-
-int SimCont2D::setSize(lua_State* luaState)
-{
-    SimulationObject* simObj = (SimulationObject*)Orbit<SimCont2D>::pointer(luaState, 1);
-    float size = luaL_checknumber(luaState, 2);
-    setSize(simObj, size);
-    return 0;
-}
-
-int SimCont2D::setInitialEnergy(lua_State* luaState)
-{
-    SimulationObject* simObj = (SimulationObject*)Orbit<SimCont2D>::pointer(luaState, 1);
-    float energy = luaL_checknumber(luaState, 2);
-    setInitialEnergy(simObj, energy);
-    return 0;
-}
-
-int SimCont2D::setAgeRange(lua_State* luaState)
-{
-    SimulationObject* simObj = (SimulationObject*)Orbit<SimCont2D>::pointer(luaState, 1);
-    int lowAgeLimit = luaL_checkint(luaState, 2);
-    int highAgeLimit = luaL_checkint(luaState, 3);
-    setAgeRange(simObj, lowAgeLimit, highAgeLimit);
-    return 0;
-}
-
-int SimCont2D::setMetabolism(lua_State* luaState)
-{
-    SimulationObject* simObj = (SimulationObject*)Orbit<SimCont2D>::pointer(luaState, 1);
-    float metabolism = luaL_checknumber(luaState, 2);
-    setMetabolism(simObj, metabolism);
-    return 0;
-}
-
-int SimCont2D::setFriction(lua_State* luaState)
-{
-    SimulationObject* simObj = (SimulationObject*)Orbit<SimCont2D>::pointer(luaState, 1);
-    float friction = luaL_checknumber(luaState, 2);
-    setFriction(simObj, friction);
-    return 0;
-}
-
-int SimCont2D::setDrag(lua_State* luaState)
-{
-    SimulationObject* simObj = (SimulationObject*)Orbit<SimCont2D>::pointer(luaState, 1);
-    float drag = luaL_checknumber(luaState, 2);
-    setDrag(simObj, drag);
-    return 0;
-}
-
-int SimCont2D::setRotFriction(lua_State* luaState)
-{
-    SimulationObject* simObj = (SimulationObject*)Orbit<SimCont2D>::pointer(luaState, 1);
-    float friction = luaL_checknumber(luaState, 2);
-    setRotFriction(simObj, friction);
-    return 0;
-}
-
-int SimCont2D::setRotDrag(lua_State* luaState)
-{
-    SimulationObject* simObj = (SimulationObject*)Orbit<SimCont2D>::pointer(luaState, 1);
-    float rotDrag = luaL_checknumber(luaState, 2);
-    setRotDrag(simObj, rotDrag);
     return 0;
 }
 

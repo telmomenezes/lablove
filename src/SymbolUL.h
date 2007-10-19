@@ -17,25 +17,37 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_GRAPHIC_H)
-#define __INCLUDE_GRAPHIC_H
+#if !defined(__INCLUDE_SYMBOL_UL_H)
+#define __INCLUDE_SYMBOL_UL_H
 
+#include "Symbol.h"
 #include "Orbit.h"
-#include "pyc.h"
 
-class Graphic
+class SymbolUL : public Symbol
 {
 public:
-    Graphic(lua_State* luaState=NULL);
-    virtual ~Graphic();
+    SymbolUL(lua_State* luaState);
+    SymbolUL(unsigned long value, unsigned long min=0.0f, unsigned long max=1.0f);
+    SymbolUL(SymbolUL* sym);
+    virtual ~SymbolUL();
+    virtual Symbol* clone();
 
-    virtual Graphic* createSameType()=0;
+    virtual float bind(Symbol* sym);
+    virtual void initRandom();
+    virtual void mutate();
 
-    virtual void init(void* obj, void* sim)=0;
-    virtual void draw(pyc::Layer* layer)=0;
+    unsigned long getUL(){return mUL;}
+    unsigned long getMin(){return mMin;}
+    unsigned long getMax(){return mMax;}
+
+    static const char mClassName[];
+    static Orbit<SymbolUL>::MethodType mMethods[];
+    static Orbit<SymbolUL>::NumberGlobalType mNumberGlobals[];
 
 protected:
-    void* mObject;
+    unsigned long mUL;
+    unsigned long mMax;
+    unsigned long mMin;
 };
 #endif
 

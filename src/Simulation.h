@@ -35,8 +35,6 @@
 using std::list;
 using std::string;
 
-#define INITIALIZE_OBJECT(obj) if(!obj->mDataInitialized){initializeData(obj);obj->mDataInitialized=true;}
-
 class Simulation : public PopulationManager
 {
 public:
@@ -64,6 +62,11 @@ public:
     void setSeedIndex(unsigned int index);
 
     pyc::Pycasso& getPycasso(){return mPycasso;}
+
+    virtual int getFloatDataIndexByName(string name){return -1;}
+    virtual int getBoolDataIndexByName(string name){return -1;}
+    virtual int getIntDataIndexByName(string name){return -1;}
+    virtual int getULDataIndexByName(string name){return -1;}
 
     virtual bool onKeyDown(pyc::KeyCode keycode);
     virtual bool onKeyUp(pyc::KeyCode keycode){return false;}

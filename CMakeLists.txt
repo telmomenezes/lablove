@@ -42,6 +42,7 @@ SET(SOURCE_FILES
     src/SymbolRGB.cpp
     src/SymbolFixedString.cpp
     src/SymbolFloat.cpp
+    src/SymbolUL.cpp
     src/SymbolTable.cpp
     src/Statistics.cpp
     src/StatMedAvgMinMax.cpp

@@ -1,8 +1,8 @@
-numberOfPlants = 1--00
-numberOfAgents = 1--00
+numberOfPlants = 100
+numberOfAgents = 100
 
 agentSize = 10.0
-plantSize = 100.0
+plantSize = 10.0
 
 worldWidth = 3000
 worldHeight = 3000
@@ -45,13 +45,6 @@ sim:setGoCost(goCost)
 sim:setRotateCost(rotateCost)
 
 agent = Agent()
-sim:setAgeRange(agent, lowAgeLimit, highAgeLimit)
-sim:setInitialEnergy(agent, 1.0)
-sim:setMetabolism(agent, metabolism)
-sim:setFriction(agent, friction)
-sim:setDrag(agent, drag)
-sim:setRotFriction(agent, rotFriction)
-sim:setRotDrag(agent, rotDrag)
 
 agent:addGraphic(GraphicTriangle())
 
@@ -60,6 +53,39 @@ symTable = SymbolTable(symSize)
 agent:addSymbolTable(symTable)
 sizeTableCode = symTable:getID()
 agent:setSymbolName("size", sizeTableCode, 0)
+
+symFriction = SymbolFloat(friction)
+symDrag = SymbolFloat(drag)
+symRotFriction = SymbolFloat(rotFriction)
+symRotDrag = SymbolFloat(rotDrag)
+symTable = SymbolTable(symFriction)
+symTable:addSymbol(symDrag)
+symTable:addSymbol(symRotFriction)
+symTable:addSymbol(symRotDrag)
+agent:addSymbolTable(symTable)
+physicsTableCode = symTable:getID()
+agent:setSymbolName("friction", physicsTableCode, 0)
+agent:setSymbolName("drag", physicsTableCode, 1)
+agent:setSymbolName("rot_friction", physicsTableCode, 2)
+agent:setSymbolName("rot_drag", physicsTableCode, 3)
+
+symInitialEnergy = SymbolFloat(1.0)
+symMetabolism = SymbolFloat(metabolism)
+symTable = SymbolTable(symInitialEnergy)
+symTable:addSymbol(symMetabolism)
+agent:addSymbolTable(symTable)
+energyTableCode = symTable:getID()
+agent:setSymbolName("initial_energy", energyTableCode, 0)
+agent:setSymbolName("metabolism", energyTableCode, 1)
+
+symLowAgeLimit = SymbolUL(lowAgeLimit)
+symHighAgeLimit = SymbolUL(highAgeLimit)
+symTable = SymbolTable(symLowAgeLimit)
+symTable:addSymbol(symHighAgeLimit)
+agent:addSymbolTable(symTable)
+ageTableCode = symTable:getID()
+agent:setSymbolName("low_age_limit", ageTableCode, 0)
+agent:setSymbolName("high_age_limit", ageTableCode, 1)
 
 agentColor = SymbolRGB(255, 50, 255)
 symTable = SymbolTable(agentColor)
@@ -137,12 +163,16 @@ while i < initialConnections do
 end
 
 plant = SimulationObject()
-sim:setInitialEnergy(plant, 1.0)
 
 symSize = SymbolFloat(plantSize)
 symTable = SymbolTable(symSize, sizeTableCode)
 plant:addSymbolTable(symTable)
 plant:setSymbolName("size", sizeTableCode, 0)
+
+symPlantInitialEnergy = SymbolFloat(1.0)
+symTable = SymbolTable(symPlantInitialEnergy, energyTableCode)
+plant:addSymbolTable(symTable)
+plant:setSymbolName("initial_energy", energyTableCode, 0)
 
 plantColor = SymbolRGB(10, 250, 50)
 symTable = SymbolTable(plantColor, colorTableCode)
@@ -169,12 +199,6 @@ dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
 dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
 dummyBrain:addPerception("Contact", 0, SimCont2D.PERCEPTION_IN_CONTACT)
 dummyBrain:addPerception("Color", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, colorTableCode, 0, 0)
-sim:setInitialEnergy(human, 1.0)
-sim:setMetabolism(human, metabolism)
-sim:setFriction(human, friction)
-sim:setDrag(human, drag)
-sim:setRotFriction(human, rotFriction)
-sim:setRotDrag(human, rotDrag)
 
 human:setBrain(dummyBrain)
 
@@ -182,6 +206,36 @@ symSize = SymbolFloat(agentSize)
 symTable = SymbolTable(symSize, sizeTableCode)
 human:addSymbolTable(symTable)
 human:setSymbolName("size", sizeTableCode, 0)
+
+symHFriction = SymbolFloat(friction)
+symHDrag = SymbolFloat(drag)
+symHRotFriction = SymbolFloat(rotFriction)
+symHRotDrag = SymbolFloat(rotDrag)
+symTable = SymbolTable(symFriction, physicsTableCode)
+symTable:addSymbol(symHDrag)
+symTable:addSymbol(symHRotFriction)
+symTable:addSymbol(symHRotDrag)
+human:addSymbolTable(symTable)
+human:setSymbolName("friction", physicsTableCode, 0)
+human:setSymbolName("drag", physicsTableCode, 1)
+human:setSymbolName("rot_friction", physicsTableCode, 2)
+human:setSymbolName("rot_drag", physicsTableCode, 3)
+
+symHInitialEnergy = SymbolFloat(1.0)
+symHMetabolism = SymbolFloat(metabolism)
+symTable = SymbolTable(symHInitialEnergy, energyTableCode)
+symTable:addSymbol(symHMetabolism)
+human:addSymbolTable(symTable)
+human:setSymbolName("initial_energy", energyTableCode, 0)
+human:setSymbolName("metabolism", energyTableCode, 1)
+
+symHLowAgeLimit = SymbolUL(lowAgeLimit)
+symHHighAgeLimit = SymbolUL(highAgeLimit)
+symTable = SymbolTable(symHLowAgeLimit, ageTableCode)
+symTable:addSymbol(symHHighAgeLimit)
+human:addSymbolTable(symTable)
+human:setSymbolName("low_age_limit", ageTableCode, 0)
+human:setSymbolName("high_age_limit", ageTableCode, 1)
 
 humanColor = SymbolRGB(82, 228, 241)
 symTable = SymbolTable(humanColor, colorTableCode)

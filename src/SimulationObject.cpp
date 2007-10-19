@@ -19,6 +19,8 @@
 
 #include "SimulationObject.h"
 #include "Random.h"
+#include "SymbolFloat.h"
+#include "SymbolUL.h"
 #include <stdlib.h>
 
 unsigned long SimulationObject::CURRENT_ID = 0;
@@ -31,17 +33,6 @@ SimulationObject::SimulationObject(lua_State* luaState)
 
     mSpeciesID = 0;
     mCreationTime = 0;
-
-    mX = 0.0f;
-    mY = 0.0f;
-    mZ = 0.0f;
-
-    mRotX = 0.0f;
-    mRotY = 0.0f;
-    mRotZ = 0.0f;
-
-    mSize = 1.0f;
-    mSizeSquared = 1.0f;
 
     mInitialized = false;
 
@@ -85,23 +76,11 @@ SimulationObject::SimulationObject(SimulationObject* obj)
         mNamedSymbols[(*iterSymPointers).first] = (*iterSymPointers).second;
     }
 
-    mSize = obj->mSize;
-    mSizeSquared = obj->mSizeSquared;
-    
-    mX = 0.0f;
-    mY = 0.0f;
-    mZ = 0.0f;
-
-    mRotX = 0.0f;
-    mRotY = 0.0f;
-    mRotZ = 0.0f;
-
     for (list<Graphic*>::iterator iterGraph = obj->mGraphics.begin();
             iterGraph != obj->mGraphics.end();
             iterGraph++)
     {
         Graphic* graph = (*iterGraph)->createSameType();
-        graph->init(this);
         mGraphics.push_back(graph);
     }
 
@@ -155,7 +134,7 @@ SimulationObject::SimulationObject(SimulationObject* obj)
         mULData = NULL;
     }
 
-    mDataInitialized = true;
+    mDataInitialized = obj->mDataInitialized;
 
     mFitness = 0.0f;
 }
@@ -311,10 +290,27 @@ float SimulationObject::getFieldValue(string fieldName)
     return 0.0f;
 }
 
+void SimulationObject::setFloatDataFromSymbol(string symbolName, unsigned int dataIndex)
+{
+    SymbolFloat* symFloat = (SymbolFloat*)getSymbolByName(symbolName);
+    if (symFloat != NULL)
+    {
+        mFloatData[dataIndex] = symFloat->getFloat();
+    }
+}
+
+void SimulationObject::setULDataFromSymbol(string symbolName, unsigned int dataIndex)
+{
+    SymbolUL* symUL = (SymbolUL*)getSymbolByName(symbolName);
+    if (symUL != NULL)
+    {
+        mULData[dataIndex] = symUL->getUL();
+    }
+}
+
 void SimulationObject::addGraphic(Graphic* graph)
 {
     mGraphics.push_back(graph);
-    graph->init(this);
 }
 
 const char SimulationObject::mClassName[] = "SimulationObject";

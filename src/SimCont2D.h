@@ -46,7 +46,12 @@ public:
                 ACTION_EAT
                 };
 
-    enum FloatData {FLOAT_SPEED_X,
+    enum FloatData {FLOAT_X,
+                    FLOAT_Y,
+                    FLOAT_ROT,
+                    FLOAT_SIZE,
+                    FLOAT_SIZE_SQUARED,
+                    FLOAT_SPEED_X,
                     FLOAT_SPEED_Y,
                     FLOAT_SPEED_ROT,
                     FLOAT_FRICTION,
@@ -102,6 +107,8 @@ public:
 
     virtual float getFieldValue(SimulationObject* obj, string fieldName);
     
+    virtual int getFloatDataIndexByName(string name);
+
     virtual bool onKeyDown(pyc::KeyCode keycode);
     virtual bool onKeyUp(pyc::KeyCode keycode);
     virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y);
@@ -120,15 +127,7 @@ public:
     SimulationObject* nextCollision(float& distance, float& angle);
 
     void deltaEnergy(SimulationObject* obj, double delta);
-    void setEnergy(SimulationObject* obj, float energy);
     void setSize(SimulationObject* obj, float size);
-    void setInitialEnergy(SimulationObject* obj, float energy);
-    void setAgeRange(SimulationObject* obj, unsigned long lowAgeLimit, unsigned long highAgeLimit);
-    void setMetabolism(SimulationObject* obj, float metabolism);
-    void setFriction(SimulationObject* obj, float friction);
-    void setDrag(SimulationObject* obj, float drag);
-    void setRotFriction(SimulationObject* obj, float friction);
-    void setRotDrag(SimulationObject* obj, float drag);
 
     static const char mClassName[];
     static Orbit<SimCont2D>::MethodType mMethods[];
@@ -142,14 +141,6 @@ public:
     int setPos(lua_State* luaState);
     int setRot(lua_State* luaState);
     int setHuman(lua_State* luaState);
-    int setSize(lua_State* luaState);
-    int setInitialEnergy(lua_State* luaState);
-    int setAgeRange(lua_State* luaState);
-    int setMetabolism(lua_State* luaState);
-    int setFriction(lua_State* luaState);
-    int setDrag(lua_State* luaState);
-    int setRotFriction(lua_State* luaState);
-    int setRotDrag(lua_State* luaState);
 
 protected:
     virtual void process(SimulationObject* obj);
