@@ -33,7 +33,7 @@ rotDrag = 0.01
 
 initialConnections = 10
 
-tournmentSize = 10
+tournmentSize = 3
 
 ----------------------------------------------
 
@@ -162,7 +162,7 @@ while i < initialConnections do
     i = i + 1
 end
 
-plant = SimulationObject()
+plant = GraphicalObject()
 
 symSize = SymbolFloat(plantSize)
 symTable = SymbolTable(symSize, sizeTableCode)

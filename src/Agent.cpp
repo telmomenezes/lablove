@@ -21,13 +21,13 @@
 
 #include <math.h>
 
-Agent::Agent(lua_State* luaState) : SimulationObject()
+Agent::Agent(lua_State* luaState) : GraphicalObject()
 {
-    mBrain = NULL;
     mType = TYPE_AGENT;
+    mBrain = NULL;
 }
 
-Agent::Agent(Agent* agent) : SimulationObject(agent)
+Agent::Agent(Agent* agent) : GraphicalObject(agent)
 {
     mBrain = agent->mBrain->clone();
 }
@@ -126,7 +126,7 @@ const char Agent::mClassName[] = "Agent";
 
 Orbit<Agent>::MethodType Agent::mMethods[] = {
     {"addSymbolTable", &SimulationObject::addSymbolTable},
-    {"addGraphic", &SimulationObject::addGraphic},
+    {"addGraphic", &GraphicalObject::addGraphic},
 	{"setSymbolName", &SimulationObject::setSymbolName},
     {"setBrain", &Agent::setBrain},
     {0,0}

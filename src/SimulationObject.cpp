@@ -27,6 +27,7 @@ unsigned long SimulationObject::CURRENT_ID = 0;
 
 SimulationObject::SimulationObject(lua_State* luaState)
 {
+    mType = TYPE_OBJECT;
     mID = CURRENT_ID++;
 
     mDeleted = false;
@@ -74,14 +75,6 @@ SimulationObject::SimulationObject(SimulationObject* obj)
         iterSymPointers++)
     {
         mNamedSymbols[(*iterSymPointers).first] = (*iterSymPointers).second;
-    }
-
-    for (list<Graphic*>::iterator iterGraph = obj->mGraphics.begin();
-            iterGraph != obj->mGraphics.end();
-            iterGraph++)
-    {
-        Graphic* graph = (*iterGraph)->createSameType();
-        mGraphics.push_back(graph);
     }
 
     mType = obj->mType;
@@ -174,14 +167,6 @@ SimulationObject::~SimulationObject()
         free(mULData);
         mULData = NULL;
     }
-
-    for (list<Graphic*>::iterator iterGraph = mGraphics.begin();
-            iterGraph != mGraphics.end();
-            iterGraph++)
-    {
-        delete (*iterGraph);
-    }
-    mGraphics.clear();
 }
 
 SimulationObject* SimulationObject::clone()
@@ -275,16 +260,6 @@ Symbol* SimulationObject::getSymbolByName(string name)
     return symTab->getSymbol(sp.mPos);
 }
 
-void SimulationObject::draw(pyc::Layer* layer)
-{
-    for (list<Graphic*>::iterator iterGraph = mGraphics.begin();
-            iterGraph != mGraphics.end();
-            iterGraph++)
-    {
-        (*iterGraph)->draw(layer);
-    }
-}
-
 float SimulationObject::getFieldValue(string fieldName)
 {
     return 0.0f;
@@ -368,16 +343,10 @@ int SimulationObject::getNamedULDataIndex(string name)
     return mNamedULDataIndexes[name];
 }
 
-void SimulationObject::addGraphic(Graphic* graph)
-{
-    mGraphics.push_back(graph);
-}
-
 const char SimulationObject::mClassName[] = "SimulationObject";
 
 Orbit<SimulationObject>::MethodType SimulationObject::mMethods[] = {
 	{"addSymbolTable", &SimulationObject::addSymbolTable},
-	{"addGraphic", &SimulationObject::addGraphic},
 	{"setSymbolName", &SimulationObject::setSymbolName},
     {0,0}
 };
@@ -388,13 +357,6 @@ int SimulationObject::addSymbolTable(lua_State* luaState)
 {
     SymbolTable* table = (SymbolTable*)Orbit<SimulationObject>::pointer(luaState, 1);
     addSymbolTable(table);
-    return 0;
-}
-
-int SimulationObject::addGraphic(lua_State* luaState)
-{
-    Graphic* graph = (Graphic*)Orbit<SimulationObject>::pointer(luaState, 1);
-    addGraphic(graph);
     return 0;
 }
 

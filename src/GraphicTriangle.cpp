@@ -43,28 +43,27 @@ Graphic* GraphicTriangle::createSameType()
     return new GraphicTriangle();
 }
 
-void GraphicTriangle::init(void* obj)
+void GraphicTriangle::init(SimulationObject* obj)
 {
     mObject = obj;
-    SimulationObject* simObj = (SimulationObject*)mObject;
 
-    mXIndex = simObj->getNamedFloatDataIndex("x");
+    mXIndex = obj->getNamedFloatDataIndex("x");
     if (mXIndex == -1)
     {
         throw std::runtime_error("Failed to initialize GraphicTriangle: object does not define 'x' named data item");
     }
-    mYIndex = simObj->getNamedFloatDataIndex("y");
+    mYIndex = obj->getNamedFloatDataIndex("y");
     if (mYIndex == -1)
     {
         throw std::runtime_error("Failed to initialize GraphicTriangle: object does not define 'y' named data item");
     }
-    mRotIndex = simObj->getNamedFloatDataIndex("rot");
+    mRotIndex = obj->getNamedFloatDataIndex("rot");
     if (mRotIndex == -1)
     {
         throw std::runtime_error("Failed to initialize GraphicTriangle: object does not define 'rot' named data item");
     }
 
-    SymbolFloat* symSize = (SymbolFloat*)simObj->getSymbolByName("size");
+    SymbolFloat* symSize = (SymbolFloat*)obj->getSymbolByName("size");
 
     if (symSize == NULL)
     {
@@ -75,7 +74,7 @@ void GraphicTriangle::init(void* obj)
         mSize = symSize->getFloat();
     }
 
-    SymbolRGB* color = (SymbolRGB*)(simObj->getSymbolByName("color"));
+    SymbolRGB* color = (SymbolRGB*)(obj->getSymbolByName("color"));
 
     if (color != NULL)
     {
@@ -89,11 +88,9 @@ void GraphicTriangle::draw(pyc::Layer* layer)
 {
     pyc::Layer2D* layer2D = (pyc::Layer2D*)layer;
 
-    SimulationObject* simObj = (SimulationObject*)mObject;
-
-    float rot = simObj->mFloatData[mRotIndex];
-    float centerX = simObj->mFloatData[mXIndex];
-    float centerY = simObj->mFloatData[mYIndex];
+    float rot = mObject->mFloatData[mRotIndex];
+    float centerX = mObject->mFloatData[mXIndex];
+    float centerY = mObject->mFloatData[mYIndex];
 
     float a1 = rot;
     float a2 = rot + (M_PI * 0.8f);

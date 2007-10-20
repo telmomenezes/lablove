@@ -17,37 +17,37 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_GRAPHIC_SQUARE_H)
-#define __INCLUDE_GRAPHIC_SQUARE_H
+#if !defined(__INCLUDE_GRAPHICAL_OBJECT_H)
+#define __INCLUDE_GRAPHICAL_OBJECT_H
 
+#include "SimulationObject.h"
 #include "Graphic.h"
 #include "Orbit.h"
-
 #include "pyc.h"
 
-class GraphicSquare : public Graphic
+#include <list>
+
+using std::list;
+
+class GraphicalObject : public SimulationObject
 {
 public:
-    GraphicSquare(lua_State* luaState=NULL);
-    virtual ~GraphicSquare();
-    
-    virtual Graphic* createSameType();
+    GraphicalObject(lua_State* luaState=NULL);
+    GraphicalObject(GraphicalObject* obj);
+    virtual ~GraphicalObject();
+    virtual SimulationObject* clone();
 
-    virtual void init(SimulationObject* obj);
-    virtual void draw(pyc::Layer* layer);
+    void draw(pyc::Layer* layer);
+
+    void addGraphic(Graphic* graph);
+
+    list<Graphic*> mGraphics;
 
     static const char mClassName[];
-    static Orbit<GraphicSquare>::MethodType mMethods[];
-    static Orbit<GraphicSquare>::NumberGlobalType mNumberGlobals[];
+    static Orbit<GraphicalObject>::MethodType mMethods[];
+    static Orbit<GraphicalObject>::NumberGlobalType mNumberGlobals[];
 
-protected:
-    float mSize;
-    int mRed;
-    int mGreen;
-    int mBlue;
-    int mXIndex;
-    int mYIndex;
-    int mRotIndex;
+    int addGraphic(lua_State* luaState);
 };
 #endif
 

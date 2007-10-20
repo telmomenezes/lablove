@@ -598,8 +598,16 @@ void Gridbrain::cycle()
                     {
                         //printf("ACT ");
                         // TODO: return 1 if the action was executed?
-                        outputVector[comp->mActionPosition] = comp->mInput;
-                        output = 0.0f;
+                        output = comp->mInput;
+                        if (output > 1.0f)
+                        {
+                            output = 1.0f;
+                        }
+                        else if (output < -1.0f)
+                        {
+                            output = -1.0f;
+                        }
+                        outputVector[comp->mActionPosition] = output;
                     }
                     else if (comp->mType == GridbrainComponent::THR)
                     {

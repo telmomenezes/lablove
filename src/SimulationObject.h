@@ -22,7 +22,6 @@
 
 #include "SymbolTable.h"
 #include "Symbol.h"
-#include "Graphic.h"
 #include "SymbolPointer.h"
 
 #include "Orbit.h"
@@ -41,6 +40,7 @@ class SimulationObject
 {
 public:
     enum Type {TYPE_OBJECT,
+            TYPE_GRAPHICAL_OBJECT,
             TYPE_AGENT};
 
     static unsigned long CURRENT_ID;
@@ -57,7 +57,7 @@ public:
 
     unsigned long getID(){return mID;}
 
-    void draw(pyc::Layer* layer);
+    virtual void draw(pyc::Layer* layer){}
 
     unsigned int getSpeciesID(){return mSpeciesID;}
     void setSpeciesID(unsigned int id){mSpeciesID = id;}
@@ -76,8 +76,6 @@ public:
 
     void setFloatDataFromSymbol(string symbolName, unsigned int dataIndex);
     void setULDataFromSymbol(string symbolName, unsigned int dataIndex);
-
-    void addGraphic(Graphic* graph);
 
     virtual float getFieldValue(string fieldName);
 
@@ -109,15 +107,12 @@ public:
     unsigned int mIntDataSize;
     unsigned int mULDataSize;
 
-    list<Graphic*> mGraphics;
-
     static const char mClassName[];
     static Orbit<SimulationObject>::MethodType mMethods[];
     static Orbit<SimulationObject>::NumberGlobalType mNumberGlobals[];
 
     int addSymbolTable(lua_State* luaState);
     int setSize(lua_State* luaState);
-    int addGraphic(lua_State* luaState);
     int setSymbolName(lua_State* luaState);
 
 protected:

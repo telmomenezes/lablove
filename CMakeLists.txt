@@ -27,6 +27,7 @@ SET(SOURCE_FILES
     src/SimCont2D.cpp
     src/ScriptableObject.cpp
     src/SimulationObject.cpp
+    src/GraphicalObject.cpp
     src/Agent.cpp
     src/Brain.cpp
     src/DummyBrain.cpp

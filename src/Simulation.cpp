@@ -22,6 +22,7 @@
 #include "Random.h"
 #include "Symbol.h"
 #include "SymbolTable.h"
+#include "GraphicalObject.h"
 #include <math.h>
 
 Simulation::Simulation(lua_State* luaState)
@@ -159,11 +160,16 @@ void Simulation::addObject(SimulationObject* object)
     object->setCreationTime(mSimulationTime);
     PopulationManager::addObject(object);
 
-    for (list<Graphic*>::iterator iterGraph = object->mGraphics.begin();
-            iterGraph != object->mGraphics.end();
-            iterGraph++)
+    if ((object->mType == SimulationObject::TYPE_GRAPHICAL_OBJECT)
+        || (object->mType == SimulationObject::TYPE_AGENT))
     {
-        (*iterGraph)->init(object);
+        GraphicalObject* gObj = (GraphicalObject*)object;
+        for (list<Graphic*>::iterator iterGraph = gObj->mGraphics.begin();
+                iterGraph != gObj->mGraphics.end();
+                iterGraph++)
+        {
+            (*iterGraph)->init(gObj);
+        }
     }
 }
 

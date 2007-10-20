@@ -20,11 +20,11 @@
 #if !defined(__INCLUDE_AGENT_H)
 #define __INCLUDE_AGENT_H
 
-#include "SimulationObject.h"
+#include "GraphicalObject.h"
 #include "Brain.h"
 #include "Orbit.h"
 
-class Agent : public SimulationObject
+class Agent : public GraphicalObject
 {
 public:
     Agent(lua_State* luaState=NULL);

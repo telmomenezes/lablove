@@ -20,6 +20,7 @@
 #if !defined(__INCLUDE_GRAPHIC_H)
 #define __INCLUDE_GRAPHIC_H
 
+#include "SimulationObject.h"
 #include "Orbit.h"
 #include "pyc.h"
 
@@ -31,11 +32,11 @@ public:
 
     virtual Graphic* createSameType()=0;
 
-    virtual void init(void* obj)=0;
+    virtual void init(SimulationObject* obj)=0;
     virtual void draw(pyc::Layer* layer)=0;
 
 protected:
-    void* mObject;
+    SimulationObject* mObject;
 };
 #endif
 

@@ -33,7 +33,7 @@ public:
     
     virtual Graphic* createSameType();
 
-    virtual void init(void* obj);
+    virtual void init(SimulationObject* obj);
     virtual void draw(pyc::Layer* layer);
 
     static const char mClassName[];

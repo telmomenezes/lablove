@@ -720,9 +720,34 @@ void SimCont2D::act(Agent* agent)
         }
     }
 
+    if (actionGoParam > 1.0f)
+    {
+        actionGoParam = 1.0f;
+    }
+    else if (actionGoParam < -1.0f)
+    {
+        actionGoParam = -1.0f;
+    }
+    if (actionRotateParam > 1.0f)
+    {
+        actionRotateParam = 1.0f;
+    }
+    else if (actionRotateParam < -1.0f)
+    {
+        actionRotateParam = -1.0f;
+    }
+    if (actionEatParam > 1.0f)
+    {
+        actionEatParam = 1.0f;
+    }
+    else if (actionEatParam < -1.0f)
+    {
+        actionEatParam = -1.0f;
+    }
+
     if (actionGo)
     {
-        goFront(agent, actionGoParam * 0.01f);
+        goFront(agent, actionGoParam * 0.005f);
     }
     if (actionRotate)
     {
@@ -737,6 +762,8 @@ void SimCont2D::act(Agent* agent)
 void SimCont2D::goFront(Agent* agent, float distance)
 {
     //agent->mEnergy -= mGoCost * distance;
+
+    //distance = fabsf(distance);
 
     agent->mFloatData[FLOAT_IMPULSE_X] = cosf(agent->mFloatData[FLOAT_ROT]) * distance;
     agent->mFloatData[FLOAT_IMPULSE_Y] = sinf(agent->mFloatData[FLOAT_ROT]) * distance;
