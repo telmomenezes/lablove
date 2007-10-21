@@ -27,9 +27,9 @@ Agent::Agent(lua_State* luaState) : GraphicalObject()
     mBrain = NULL;
 }
 
-Agent::Agent(Agent* agent) : GraphicalObject(agent)
+Agent::Agent(Agent* agent, bool randomize) : GraphicalObject(agent)
 {
-    mBrain = agent->mBrain->clone();
+    mBrain = agent->mBrain->clone(randomize);
 }
 
 Agent::~Agent()
@@ -76,9 +76,9 @@ Agent::~Agent()
     mGridbrain->addConnection(0, 2, 1, 1, 2, 1, 1.0f);
 }*/
 
-SimulationObject* Agent::clone()
+SimulationObject* Agent::clone(bool randomize)
 {
-    return new Agent(this);
+    return new Agent(this, randomize);
 }
 
 Brain* Agent::setBrain(Brain* brain)

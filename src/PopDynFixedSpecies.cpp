@@ -61,7 +61,7 @@ void PopDynFixedSpecies::init(PopulationManager* popManager)
     {
         for (unsigned int i = 0; i < (*iterSpecies).mPopulation; i++)
         {
-            SimulationObject* org = (*iterSpecies).mBaseOrganism->clone();
+            SimulationObject* org = (*iterSpecies).mBaseOrganism->clone(true);
             mPopManager->addObject(org);
             mPopManager->placeRandom(org);
             (*iterSpecies).mOrganismVector.push_back(org);

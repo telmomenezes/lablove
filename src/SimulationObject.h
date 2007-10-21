@@ -48,7 +48,7 @@ public:
     SimulationObject(lua_State* luaState=NULL);
     SimulationObject(SimulationObject* obj);
     virtual ~SimulationObject();
-    virtual SimulationObject* clone();
+    virtual SimulationObject* clone(bool randomize=false);
 
     void initFloatData(unsigned int size);
     void initBoolData(unsigned int size);

@@ -38,7 +38,7 @@ public:
     Brain();
     virtual ~Brain();
 
-    virtual Brain* clone()=0;
+    virtual Brain* clone(bool randomize=false)=0;
 
     virtual void init()=0;
 

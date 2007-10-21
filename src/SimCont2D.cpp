@@ -763,7 +763,7 @@ void SimCont2D::goFront(Agent* agent, float distance)
 {
     //agent->mEnergy -= mGoCost * distance;
 
-    //distance = fabsf(distance);
+    distance = fabsf(distance);
 
     agent->mFloatData[FLOAT_IMPULSE_X] = cosf(agent->mFloatData[FLOAT_ROT]) * distance;
     agent->mFloatData[FLOAT_IMPULSE_Y] = sinf(agent->mFloatData[FLOAT_ROT]) * distance;

@@ -36,7 +36,7 @@ public:
     Gridbrain(lua_State* luaState=NULL);
     virtual ~Gridbrain();
 
-    virtual Brain* clone();
+    virtual Brain* clone(bool randomize=false);
 
     void addGrid(Grid* grid);
     virtual void init();

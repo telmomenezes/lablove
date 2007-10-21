@@ -46,7 +46,7 @@ GraphicalObject::~GraphicalObject()
     mGraphics.clear();
 }
 
-SimulationObject* GraphicalObject::clone()
+SimulationObject* GraphicalObject::clone(bool randomize)
 {
     return new GraphicalObject(this);
 }

@@ -39,7 +39,7 @@ public:
     DummyBrain(lua_State* luaState);
     virtual ~DummyBrain();
 
-    virtual Brain* clone(){return NULL;}
+    virtual Brain* clone(bool randomize=false){return NULL;}
 
     virtual void init();
 

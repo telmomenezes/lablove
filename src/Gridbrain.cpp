@@ -60,7 +60,7 @@ Gridbrain::~Gridbrain()
     mGridsCount = 0;
 }
 
-Brain* Gridbrain::clone()
+Brain* Gridbrain::clone(bool randomize)
 {
     Gridbrain* gb = new Gridbrain();
 
@@ -81,13 +81,38 @@ Brain* Gridbrain::clone()
 
     gb->mComponents = (GridbrainComponent*)malloc(mNumberOfComponents * sizeof(GridbrainComponent));
 
-    for (unsigned int index = 0; index < mNumberOfComponents; index++)
+    unsigned int index = 0;
+
+    for (unsigned int i = 0; i < mGridsCount; i++)
     {
-        gb->mComponents[index].clearDefinitions();
-        gb->mComponents[index].clearPosition();
-        gb->mComponents[index].clearConnections();
-        gb->mComponents[index].copyDefinitions(&mComponents[index]);
-        gb->mComponents[index].copyPosition(&mComponents[index]);
+        Grid* grid = mGridsVec[i];
+
+        for (unsigned int x = 0;
+            x < grid->getWidth();
+            x++)
+        {
+            for (unsigned int y = 0;
+                y < grid->getHeight();
+                y++)
+            {
+                gb->mComponents[index].clearDefinitions();
+                gb->mComponents[index].clearPosition();
+                gb->mComponents[index].clearConnections();
+
+                if (randomize)
+                {
+                    GridbrainComponent* comp = grid->getRandomComponent(index);
+                    gb->mComponents[index].copyDefinitions(comp);
+                }
+                else
+                {
+                    gb->mComponents[index].copyDefinitions(&mComponents[index]);
+                }
+                gb->mComponents[index].copyPosition(&mComponents[index]);
+
+                index++;
+            }
+        }
     }
 
     for (unsigned int index = 0; index < mNumberOfComponents; index++)
@@ -95,15 +120,22 @@ Brain* Gridbrain::clone()
         GridbrainConnection* conn = mComponents[index].mFirstConnection;
         while (conn != NULL)
         {
-            Grid* gridOrig = mGridsVec[conn->mGridOrig];
-            Grid* gridTarg = mGridsVec[conn->mGridTarg];
-            gb->addConnection(gridOrig->getXByCode(conn->mColumnOrig),
-                gridOrig->getYByCode(conn->mRowOrig),
-                conn->mGridOrig,
-                gridTarg->getXByCode(conn->mColumnTarg),
-                gridTarg->getYByCode(conn->mRowTarg),
-                conn->mGridTarg,
-                conn->mWeight);
+            if (randomize)
+            {
+                gb->addRandomConnection();
+            }
+            else
+            {
+                Grid* gridOrig = mGridsVec[conn->mGridOrig];
+                Grid* gridTarg = mGridsVec[conn->mGridTarg];
+                gb->addConnection(gridOrig->getXByCode(conn->mColumnOrig),
+                    gridOrig->getYByCode(conn->mRowOrig),
+                    conn->mGridOrig,
+                    gridTarg->getXByCode(conn->mColumnTarg),
+                    gridTarg->getYByCode(conn->mRowTarg),
+                    conn->mGridTarg,
+                    conn->mWeight);
+            }
             conn = (GridbrainConnection*)conn->mNextConnection;
         }
     }
@@ -138,7 +170,6 @@ void Gridbrain::init()
     mComponents = (GridbrainComponent*)malloc(mNumberOfComponents * sizeof(GridbrainComponent));
 
     // Init grids with random components
-
     unsigned int pos = 0;
 
     for (unsigned int i = 0; i < mGridsCount; i++)

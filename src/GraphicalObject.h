@@ -35,7 +35,7 @@ public:
     GraphicalObject(lua_State* luaState=NULL);
     GraphicalObject(GraphicalObject* obj);
     virtual ~GraphicalObject();
-    virtual SimulationObject* clone();
+    virtual SimulationObject* clone(bool randomize=false);
 
     void draw(pyc::Layer* layer);
 
