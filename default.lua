@@ -41,6 +41,7 @@ addConnectionProb = 0.1
 removeConnectionProb = 0.1
 changeWeightProb = 0.1
 changeComponentProb = 0.1
+weightMutationStanDev = 1.0
 
 ----------------------------------------------
 
@@ -116,6 +117,7 @@ brain:setMutateAddConnectionProb(addConnectionProb)
 brain:setMutateRemoveConnectionProb(removeConnectionProb)
 brain:setMutateChangeConnectionWeightProb(changeWeightProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
+brain:setWeightMutationStanDev(weightMutationStanDev)
 
 perSet = GridbrainComponentSet()
 perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_POSITION)

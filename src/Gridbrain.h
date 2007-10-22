@@ -86,6 +86,7 @@ public:
     void setMutateRemoveConnectionProb(float prob){mMutateRemoveConnectionProb = prob;}
     void setMutateChangeConnectionWeightProb(float prob){mMutateChangeConnectionWeightProb = prob;}
     void setMutateChangeComponentProb(float prob){mMutateChangeComponentProb = prob;}
+    void setWeightMutationStanDev(float sd){mWeightMutationStanDev = sd;}
 
     static const char mClassName[];
     static Orbit<Gridbrain>::MethodType mMethods[];
@@ -97,6 +98,7 @@ public:
     int setMutateRemoveConnectionProb(lua_State* luaState);
     int setMutateChangeConnectionWeightProb(lua_State* luaState);
     int setMutateChangeComponentProb(lua_State* luaState);
+    int setWeightMutationStanDev(lua_State* luaState);
 
 protected:
     void initGridInputOutput(Grid* grid, int gPos=-1);
@@ -128,6 +130,7 @@ protected:
     float mMutateRemoveConnectionProb;
     float mMutateChangeConnectionWeightProb;
     float mMutateChangeComponentProb;
+    float mWeightMutationStanDev;
 };
 
 #endif

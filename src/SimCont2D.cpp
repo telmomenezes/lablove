@@ -330,8 +330,8 @@ void SimCont2D::placeRandom(SimulationObject* obj)
     unsigned int worldLength = (unsigned int)mWorldLength;
 
     setPos(obj,
-            mDistPosition->iuniform(0, worldWidth) - 1,
-            mDistPosition->iuniform(0, worldLength) - 1);
+            mDistPosition->iuniform(0, worldWidth),
+            mDistPosition->iuniform(0, worldLength));
     setRot(obj, mDistPosition->uniform(0, M_PI * 2));
 }
 
@@ -752,7 +752,7 @@ void SimCont2D::act(Agent* agent)
 
     if (actionGo)
     {
-        goFront(agent, actionGoParam * 0.005f);
+        goFront(agent, actionGoParam * 0.01f);
     }
     if (actionRotate)
     {

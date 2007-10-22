@@ -45,6 +45,7 @@ Gridbrain::Gridbrain(lua_State* luaState)
     mMutateRemoveConnectionProb = 0.0f;
     mMutateChangeConnectionWeightProb = 0.0f;
     mMutateChangeComponentProb = 0.0f;
+    mWeightMutationStanDev = 1.0f;
 }
 
 Gridbrain::~Gridbrain()
@@ -896,7 +897,7 @@ void Gridbrain::mutateChangeConnectionWeight()
         }
 
         float newWeight = conn->mWeight;
-        newWeight += mDistWeights->uniform(-1.0f, 1.0f);
+        newWeight += mDistWeights->normal(0.0f, mWeightMutationStanDev);
         if (newWeight > 1.0f)
         {
             newWeight = 1.0f;
@@ -997,6 +998,7 @@ Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
     {"setMutateRemoveConnectionProb", &Gridbrain::setMutateRemoveConnectionProb},
     {"setMutateChangeConnectionWeightProb", &Gridbrain::setMutateChangeConnectionWeightProb},
     {"setMutateChangeComponentProb", &Gridbrain::setMutateChangeComponentProb},
+    {"setWeightMutationStanDev", &Gridbrain::setWeightMutationStanDev},
     {0,0}
 };
 
@@ -1041,6 +1043,13 @@ int Gridbrain::setMutateChangeComponentProb(lua_State* luaState)
 {
     float prob = luaL_checknumber(luaState, 1);
     setMutateChangeComponentProb(prob);
+    return 0;
+}
+
+int Gridbrain::setWeightMutationStanDev(lua_State* luaState)
+{
+    float sd = luaL_checknumber(luaState, 1);
+    setWeightMutationStanDev(sd);
     return 0;
 }
 
