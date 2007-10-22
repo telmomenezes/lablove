@@ -5,6 +5,9 @@
  */
 
 #include "GridbrainComponentSet.h"
+#include "Simulation.h"
+
+mt_distribution* GridbrainComponentSet::mDistComponentSet = Simulation::getNewDistribution();
 
 GridbrainComponentSet::GridbrainComponentSet(lua_State* luaState)
 {
@@ -33,7 +36,7 @@ GridbrainComponent* GridbrainComponentSet::getRandom()
         return GridbrainComponent::getNullComponent();
     }
 
-    unsigned int pos = random() % mSize;
+    unsigned int pos = mDistComponentSet->iuniform(0, mSize);
     return mComponentVec[pos];
 }
 

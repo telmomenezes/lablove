@@ -18,8 +18,11 @@
  */
 
 #include "SymbolRGB.h"
+#include "Simulation.h"
 #include <math.h>
 #include <stdlib.h>
+
+mt_distribution* SymbolRGB::mDistRGB = Simulation::getNewDistribution();
 
 SymbolRGB::SymbolRGB(lua_State* luaState)
 {
@@ -82,15 +85,15 @@ float SymbolRGB::bind(Symbol* sym)
 
 void SymbolRGB::initRandom()
 {
-    mRed = random() % 256;
-    mGreen = random() % 256;
-    mBlue = random() % 256;
+    mRed = mDistRGB->iuniform(0, 256);
+    mGreen = mDistRGB->iuniform(0, 256);
+    mBlue = mDistRGB->iuniform(0, 256);
 }
 
 void SymbolRGB::mutate()
 {
-    int delta = random() % 255;
-    unsigned int selector = random() % 3;
+    int delta = mDistRGB->iuniform(0, 256);
+    unsigned int selector = mDistRGB->iuniform(0, 3);
 
     switch (selector)
     {

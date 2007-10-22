@@ -22,6 +22,7 @@
 
 #include "GridbrainComponent.h"
 #include "Orbit.h"
+#include "randistrs.h"
 
 #include <vector>
 
@@ -50,6 +51,9 @@ public:
 
     vector<GridbrainComponent*> mComponentVec;
     unsigned int mSize;
+
+protected:
+    static mt_distribution* mDistComponentSet;
 };
 #endif
 

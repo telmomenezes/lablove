@@ -22,6 +22,7 @@
 
 #include "Symbol.h"
 #include "Orbit.h"
+#include "randistrs.h"
 
 #include <string>
 
@@ -52,6 +53,8 @@ public:
     static Orbit<SymbolFixedString>::NumberGlobalType mNumberGlobals[];
 
 protected:
+    static mt_distribution* mDistFixedString;
+
     string mString;
     string mAlphabet;
     unsigned int mLength;

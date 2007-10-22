@@ -21,8 +21,8 @@
 #define __INCLUDE_SYMBOL_RGB_H
 
 #include "Symbol.h"
-
 #include "Orbit.h"
+#include "randistrs.h"
 
 class SymbolRGB : public Symbol
 {
@@ -44,6 +44,9 @@ public:
     int mRed;
     int mGreen;
     int mBlue;
+
+protected:
+    static mt_distribution* mDistRGB;
 };
 #endif
 

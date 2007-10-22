@@ -22,6 +22,7 @@
 
 #include "Symbol.h"
 #include "Orbit.h"
+#include "randistrs.h"
 
 #include <vector>
 
@@ -53,6 +54,7 @@ protected:
     void create(Symbol* refSymbol, int id=-1);
 
     static int NEXT_SYMBOL_TABLE_ID;
+    static mt_distribution* mDistIndex;
 
     int mID;
     Symbol* mReferenceSymbol;

@@ -18,8 +18,10 @@
  */
 
 #include "SymbolTable.h"
+#include "Simulation.h"
 
 int SymbolTable::NEXT_SYMBOL_TABLE_ID = 0;
+mt_distribution* SymbolTable::mDistIndex = Simulation::getNewDistribution();
 
 SymbolTable::SymbolTable(Symbol* refSymbol, int id)
 {
@@ -91,7 +93,7 @@ unsigned int SymbolTable::addSymbol(Symbol* sym)
 
 void SymbolTable::mutate()
 {
-    unsigned int index = random() % mSymbols.size();
+    unsigned int index = mDistIndex->iuniform(0, mSymbols.size());
     mSymbols[index]->mutate();
 }
 

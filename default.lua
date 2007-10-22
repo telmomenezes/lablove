@@ -37,6 +37,11 @@ tournmentSize = 3
 
 seedIndex = -1
 
+addConnectionProb = 0.1
+removeConnectionProb = 0.1
+changeWeightProb = 0.1
+changeComponentProb = 0.1
+
 ----------------------------------------------
 
 sim = SimCont2D()
@@ -106,6 +111,11 @@ agent:setSymbolName("feed", feedTableCode, 0)
 agent:setSymbolName("food", feedTableCode, 1)
 
 brain = Gridbrain()
+
+brain:setMutateAddConnectionProb(addConnectionProb)
+brain:setMutateRemoveConnectionProb(removeConnectionProb)
+brain:setMutateChangeConnectionWeightProb(changeWeightProb)
+brain:setMutateChangeComponentProb(changeComponentProb)
 
 perSet = GridbrainComponentSet()
 perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_POSITION)

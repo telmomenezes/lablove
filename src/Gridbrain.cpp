@@ -444,7 +444,7 @@ void Gridbrain::selectRandomConnection(unsigned int &x1,
                     unsigned int &y2,
                     unsigned int &g2)
 {
-    unsigned int connPos = rand() % mTotalPossibleConnections;
+    unsigned int connPos = mDistConnections->iuniform(0, mTotalPossibleConnections);
     unsigned int curPos = 0;
     unsigned int colConnCount = 0;
 
@@ -480,7 +480,7 @@ void Gridbrain::selectRandomConnection(unsigned int &x1,
 
     if (gridOrig->getType() == Grid::ALPHA)
     {
-        unsigned int targConnPos = rand() % colConnCount;
+        unsigned int targConnPos = mDistConnections->iuniform(0, colConnCount);
 
         curPos = 0;
         unsigned int width = gridOrig->getWidth();
@@ -876,16 +876,25 @@ void Gridbrain::mutateRemoveConnection()
 
 void Gridbrain::mutateChangeConnectionWeight()
 {
-    if (mConnectionsCount > 0) 
+    float nonSelectionProb = 1.0f - mMutateChangeConnectionWeightProb;
+    if (nonSelectionProb == 1.0f)
     {
-        unsigned int connectionPos = mDistConnections->iuniform(0, mConnectionsCount);
+        return;
+    }
+    float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+    double nextPos = trunc(log(prob) / log(nonSelectionProb));
+    
+    unsigned int connectionPos = 0;
+    GridbrainConnection* conn = mConnections;
 
-        GridbrainConnection* conn = mConnections;
-        for (unsigned int i = 0; i < connectionPos; i++)
+    while (nextPos < mConnectionsCount) 
+    {
+        while (connectionPos < nextPos)
         {
             conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+            connectionPos++;
         }
-        
+
         float newWeight = conn->mWeight;
         newWeight += mDistWeights->uniform(-1.0f, 1.0f);
         if (newWeight > 1.0f)
@@ -898,20 +907,38 @@ void Gridbrain::mutateChangeConnectionWeight()
         }
 
         conn->mWeight = newWeight;
+
+        prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+        nextPos += trunc(log(prob) / log(nonSelectionProb));
     }
 }
 
 void Gridbrain::mutateChangeComponent()
 {
-    unsigned int pos = mDistComponents->iuniform(0, mNumberOfComponents);
 
-    unsigned int gridNumber = mComponents[pos].mGrid;
-    Grid* grid = mGridsVec[gridNumber];
+    float nonSelectionProb = 1.0f - mMutateChangeComponentProb;
+    if (nonSelectionProb == 1.0f)
+    {
+        return;
+    }
+    float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+    double nextPos = trunc(log(prob) / log(nonSelectionProb));
 
-    GridbrainComponent* comp = grid->getRandomComponent(pos);
-    mComponents[pos].copyDefinitions(comp);
+    while (nextPos < mNumberOfComponents)
+    {
+        unsigned int pos = (unsigned int)nextPos;
 
-    initGridInputOutput(grid, gridNumber);
+        unsigned int gridNumber = mComponents[pos].mGrid;
+        Grid* grid = mGridsVec[gridNumber];
+
+        GridbrainComponent* comp = grid->getRandomComponent(pos);
+        mComponents[pos].copyDefinitions(comp);
+
+        initGridInputOutput(grid, gridNumber);
+
+        prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+        nextPos += trunc(log(prob) / log(nonSelectionProb));
+    }
 }
 
 Grid* Gridbrain::getGrid(unsigned int number)

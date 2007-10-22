@@ -18,8 +18,11 @@
  */
 
 #include "SymbolFixedString.h"
+#include "Simulation.h"
 #include <math.h>
 #include <stdlib.h>
+
+mt_distribution* SymbolFixedString::mDistFixedString = Simulation::getNewDistribution();
 
 SymbolFixedString::SymbolFixedString(lua_State* luaState)
 {
@@ -79,15 +82,15 @@ void SymbolFixedString::initRandom()
 
     for (unsigned int i = 0; i < mLength; i++)
     {
-        unsigned int pos = rand() % mAlphabetLength;
+        unsigned int pos = mDistFixedString->iuniform(0, mAlphabetLength);
         mString += mAlphabet.substr(pos, 1);
     }
 }
 
 void SymbolFixedString::mutate()
 {
-    unsigned int replacePos = rand() % mLength;
-    unsigned int charIndex = rand() % mAlphabetLength;
+    unsigned int replacePos = mDistFixedString->iuniform(0, mLength);
+    unsigned int charIndex = mDistFixedString->iuniform(0, mAlphabetLength);
     replaceChar(replacePos, charIndex);
 }
 
