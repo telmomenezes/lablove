@@ -99,6 +99,8 @@ public:
 
     void setGoCost(float cost){mGoCost = cost;}
     void setRotateCost(float cost){mRotateCost = cost;}
+    void setGoForceScale(float scale){mGoForceScale = scale;}
+    void setRotateForceScale(float scale){mRotateForceScale = scale;}
     
     void moveView(float x, float y);
     float getViewX(){return mViewX;}
@@ -137,6 +139,8 @@ public:
     int setViewAngle(lua_State* luaState);
     int setGoCost(lua_State* luaState);
     int setRotateCost(lua_State* luaState);
+    int setGoForceScale(lua_State* luaState);
+    int setRotateForceScale(lua_State* luaState);
     int setPos(lua_State* luaState);
     int setRot(lua_State* luaState);
     int setHuman(lua_State* luaState);
@@ -149,8 +153,8 @@ protected:
                                 SimulationObject* targ,
                                 float distance,
                                 float angle);
-    void goFront(Agent* agent, float distance);
-    void rotate(Agent* agent, float angle);
+    void goFront(Agent* agent, float force);
+    void rotate(Agent* agent, float force);
     void eat(Agent* agent);
     float normalizeAngle(float angle);
         
@@ -181,6 +185,8 @@ protected:
 
     float mGoCost;
     float mRotateCost;
+    float mGoForceScale;
+    float mRotateForceScale;
 
     SimulationObject* mTargetObject;
     float mDistanceToTargetObject;

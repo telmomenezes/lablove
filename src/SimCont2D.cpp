@@ -58,6 +58,9 @@ SimCont2D::SimCont2D(lua_State* luaState)
     mGoCost = 0.0f;
     mRotateCost = 0.0f;
 
+    mGoForceScale = 0.0f;
+    mRotateForceScale = 0.0f;
+
     mTargetObject = NULL;
     mDistanceToTargetObject = 0.0f;
 
@@ -454,8 +457,8 @@ void SimCont2D::process(SimulationObject* obj)
         }
     }
 
-    obj->mFloatData[FLOAT_SPEED_X] += obj->mFloatData[FLOAT_IMPULSE_X];
-    obj->mFloatData[FLOAT_SPEED_Y] += obj->mFloatData[FLOAT_IMPULSE_Y];
+    obj->mFloatData[FLOAT_SPEED_X] += obj->mFloatData[FLOAT_IMPULSE_X] / obj->mFloatData[FLOAT_SIZE];
+    obj->mFloatData[FLOAT_SPEED_Y] += obj->mFloatData[FLOAT_IMPULSE_Y] / obj->mFloatData[FLOAT_SIZE];
     obj->mFloatData[FLOAT_IMPULSE_X] = 0.0f;
     obj->mFloatData[FLOAT_IMPULSE_Y] = 0.0f;
 
@@ -464,7 +467,7 @@ void SimCont2D::process(SimulationObject* obj)
                     + (obj->mFloatData[FLOAT_SPEED_Y]
                     * obj->mFloatData[FLOAT_SPEED_Y]));
 
-    float friction = obj->mFloatData[FLOAT_FRICTION];
+    float friction = obj->mFloatData[FLOAT_FRICTION] * obj->mFloatData[FLOAT_SIZE];
     float newSpeedRatio = 0.0f;
 
     if (speed > friction)
@@ -501,10 +504,10 @@ void SimCont2D::process(SimulationObject* obj)
         obj->mFloatData[FLOAT_SPEED_Y] = 0.0f;
     }
 
-    obj->mFloatData[FLOAT_SPEED_ROT] += obj->mFloatData[FLOAT_IMPULSE_ROT];
+    obj->mFloatData[FLOAT_SPEED_ROT] += obj->mFloatData[FLOAT_IMPULSE_ROT] / obj->mFloatData[FLOAT_SIZE];
     obj->mFloatData[FLOAT_IMPULSE_ROT] = 0.0f;
 
-    float rotFriction = obj->mFloatData[FLOAT_ROT_FRICTION];
+    float rotFriction = obj->mFloatData[FLOAT_ROT_FRICTION] * obj->mFloatData[FLOAT_SIZE];
     float absRotFriction = rotFriction;
     float absRotSpeed = obj->mFloatData[FLOAT_SPEED_ROT];
 
@@ -633,7 +636,7 @@ void SimCont2D::onScanObject(Agent* orig,
                 break;
 
             case PERCEPTION_POSITION:
-                normalizedValue = angle / mHalfViewAngle;
+                normalizedValue = angle / M_PI;
                 inBuffer[pos] = normalizedValue;
                 break;
 
@@ -752,11 +755,11 @@ void SimCont2D::act(Agent* agent)
 
     if (actionGo)
     {
-        goFront(agent, actionGoParam * 0.01f);
+        goFront(agent, actionGoParam * mGoForceScale);
     }
     if (actionRotate)
     {
-        rotate(agent, actionRotateParam * 0.0001f);
+        rotate(agent, actionRotateParam * mRotateForceScale);
     }
     if (actionEat)
     {
@@ -764,21 +767,21 @@ void SimCont2D::act(Agent* agent)
     }
 }
 
-void SimCont2D::goFront(Agent* agent, float distance)
+void SimCont2D::goFront(Agent* agent, float force)
 {
-    //agent->mEnergy -= mGoCost * distance;
+    deltaEnergy(agent, -mGoCost * force);
 
-    distance = fabsf(distance);
+    force = fabsf(force);
 
-    agent->mFloatData[FLOAT_IMPULSE_X] = cosf(agent->mFloatData[FLOAT_ROT]) * distance;
-    agent->mFloatData[FLOAT_IMPULSE_Y] = sinf(agent->mFloatData[FLOAT_ROT]) * distance;
+    agent->mFloatData[FLOAT_IMPULSE_X] = cosf(agent->mFloatData[FLOAT_ROT]) * force;
+    agent->mFloatData[FLOAT_IMPULSE_Y] = sinf(agent->mFloatData[FLOAT_ROT]) * force;
 }
 
-void SimCont2D::rotate(Agent* agent, float angle)
+void SimCont2D::rotate(Agent* agent, float force)
 {
-    //agent->mEnergy -= mRotateCost * angle;
+    deltaEnergy(agent, -mRotateCost * force);
 
-    agent->mFloatData[FLOAT_IMPULSE_ROT] += angle;
+    agent->mFloatData[FLOAT_IMPULSE_ROT] += force;
 }
 
 void SimCont2D::eat(Agent* agent)
@@ -1074,6 +1077,8 @@ Orbit<SimCont2D>::MethodType SimCont2D::mMethods[] = {
     {"setViewAngle", &SimCont2D::setViewAngle},
     {"setGoCost", &SimCont2D::setGoCost},
     {"setRotateCost", &SimCont2D::setRotateCost},
+    {"setGoForceScale", &SimCont2D::setGoForceScale},
+    {"setRotateForceScale", &SimCont2D::setRotateForceScale},
     {"setPos", &SimCont2D::setPos},
     {"setRot", &SimCont2D::setRot},
     {"setHuman", &SimCont2D::setHuman},
@@ -1127,6 +1132,20 @@ int SimCont2D::setRotateCost(lua_State* luaState)
 {
     float cost = luaL_checknumber(luaState, 1);
     setRotateCost(cost);
+    return 0;
+}
+
+int SimCont2D::setGoForceScale(lua_State* luaState)
+{
+    float scale = luaL_checknumber(luaState, 1);
+    setGoForceScale(scale);
+    return 0;
+}
+
+int SimCont2D::setRotateForceScale(lua_State* luaState)
+{
+    float scale = luaL_checknumber(luaState, 1);
+    setRotateForceScale(scale);
     return 0;
 }
 

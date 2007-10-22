@@ -25,10 +25,12 @@ lowAgeLimit = 4500
 metabolism = 0.0
 goCost = 0.0
 rotateCost = 0.0
+goForceScale = 0.1
+rotateForceScale = 0.001
 
-friction = 0.003
+friction = 0.0003
 drag = 0.01
-rotFriction = 0.00003
+rotFriction = 0.000003
 rotDrag = 0.01
 
 initialConnections = 10
@@ -51,6 +53,8 @@ sim:setViewRange(viewRange)
 sim:setViewAngle(viewAngle)
 sim:setGoCost(goCost)
 sim:setRotateCost(rotateCost)
+sim:setGoForceScale(goForceScale)
+sim:setRotateForceScale(rotateForceScale)
 sim:setSeedIndex(seedIndex)
 
 agent = Agent()

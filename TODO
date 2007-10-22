@@ -17,7 +17,6 @@ General:
 Genetic Operators:
 ==================
 
-- Random number of mutations with logarithmic system
 - GB: originSymIndex mutation
 - GB: component parameter mutation?
 - GB: crossover
@@ -25,3 +24,10 @@ Genetic Operators:
 - GB: clone row/column set
 - GB: divide connection
 - Mutation and crossover for symbol tables
+
+Gridbrain:
+==========
+
+- Sigmoid threshold
+- ...
+
