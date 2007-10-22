@@ -38,7 +38,6 @@ SET(SOURCE_FILES
     src/PopulationDynamics.cpp
     src/PopDynGenerations.cpp
     src/PopDynFixedSpecies.cpp
-    src/Random.cpp
     src/Symbol.cpp
     src/SymbolRGB.cpp
     src/SymbolFixedString.cpp
@@ -50,7 +49,10 @@ SET(SOURCE_FILES
     src/StatTime.cpp
     src/Graphic.cpp
     src/GraphicTriangle.cpp
-    src/GraphicSquare.cpp)
+    src/GraphicSquare.cpp
+    src/RandDistManager.cpp
+    src/mtwist/mtwist.c
+    src/mtwist/randistrs.c)
 
 
 ADD_LIBRARY(llove ${SOURCE_FILES})
@@ -100,6 +102,7 @@ SET(UNIT_TEST_FILES
 
 INCLUDE_DIRECTORIES("src")
 INCLUDE_DIRECTORIES("src/UnitTest++")
+INCLUDE_DIRECTORIES("src/mtwist")
 ADD_EXECUTABLE(test ${UNIT_TEST_FILES})
 TARGET_LINK_LIBRARIES(test llove pycasso lua dl)
 

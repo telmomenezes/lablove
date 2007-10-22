@@ -24,10 +24,9 @@
 #include "SimulationObject.h"
 #include "Agent.h"
 #include "PopulationDynamics.h"
-
 #include "pyc.h"
-
 #include "Orbit.h"
+#include "RandDistManager.h"
 
 #include <list>
 #include <string>
@@ -59,7 +58,8 @@ public:
 
     unsigned long getTime(){return mSimulationTime;}
 
-    void setSeedIndex(unsigned int index);
+    void setSeedIndex(int index=-1);
+    static mt_distribution* getNewDistribution();
 
     pyc::Pycasso& getPycasso(){return mPycasso;}
 
@@ -86,6 +86,8 @@ protected:
                             int origSymIndex,
                             int targetSymIndex);
     void drawTimes();
+
+    static RandDistManager mDistManager;
 
     unsigned long mSimulationTime;
     PopulationDynamics* mPopulationDynamics;

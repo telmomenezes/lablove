@@ -19,9 +19,10 @@
 
 #include "PopDynFixedSpecies.h"
 #include "SimulationObject.h"
-#include "Random.h"
+#include "Simulation.h"
 
 unsigned int PopDynFixedSpecies::CURRENT_SPECIES_ID = 0;
+mt_distribution* PopDynFixedSpecies::mDistOrganism = Simulation::getNewDistribution();
 
 PopDynFixedSpecies::PopDynFixedSpecies(lua_State* luaState)
 {
@@ -132,7 +133,7 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
 
             for (unsigned int tournmentStep = 0; tournmentStep < mTournmentSize; tournmentStep++)
             {
-                unsigned int organismNumber = Random::getUniformInt(0, (*iterSpecies).mPopulation - 1);
+                unsigned int organismNumber = mDistOrganism->iuniform(0, (*iterSpecies).mPopulation);
 
                 iterOrg = (*iterSpecies).mOrganismVector.begin();
                 for (unsigned int i = 0; i < organismNumber; i++)

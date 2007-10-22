@@ -20,13 +20,16 @@
 #include "SimCont2D.h"
 #include "SimulationObject.h"
 #include "PopulationDynamics.h"
-#include "Random.h"
 #include "SymbolFloat.h"
 
 #include <math.h>
 #include <list>
 
 using std::list;
+
+mt_distribution* SimCont2D::mDistAge = Simulation::getNewDistribution();
+
+mt_distribution* SimCont2D::mDistPosition = Simulation::getNewDistribution();
 
 SimCont2D::SimCont2D(lua_State* luaState)
 {
@@ -269,7 +272,7 @@ void SimCont2D::addObject(SimulationObject* object)
     if (object->mULData[UL_HIGH_AGE_LIMIT] > 0)
     {
         object->mULData[UL_MAX_AGE] =
-            Random::getUniformInt(
+            mDistAge->iuniform(
                 object->mULData[UL_LOW_AGE_LIMIT],
                 object->mULData[UL_HIGH_AGE_LIMIT]);
     }
@@ -326,8 +329,10 @@ void SimCont2D::placeRandom(SimulationObject* obj)
     unsigned int worldWidth = (unsigned int)mWorldWidth;
     unsigned int worldLength = (unsigned int)mWorldLength;
 
-    setPos(obj, rand() % worldWidth, rand() % worldLength);
-    setRot(obj, Random::getUniformProbability() * M_PI * 2);
+    setPos(obj,
+            mDistPosition->iuniform(0, worldWidth) - 1,
+            mDistPosition->iuniform(0, worldLength) - 1);
+    setRot(obj, mDistPosition->uniform(0, M_PI * 2));
 }
 
 void SimCont2D::startCollisionDetection(float x, float y, float rad)
@@ -1060,6 +1065,7 @@ const char SimCont2D::mClassName[] = "SimCont2D";
 
 Orbit<SimCont2D>::MethodType SimCont2D::mMethods[] = {
     {"addObject", &Simulation::addObject},
+    {"setSeedIndex", &Simulation::setSeedIndex},
     {"setPopulationDynamics", &Simulation::setPopulationDynamics},
     {"initGraphics", &Simulation::initGraphics},
     {"run", &Simulation::run},

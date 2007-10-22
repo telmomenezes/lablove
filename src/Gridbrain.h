@@ -27,6 +27,7 @@
 #include "GridbrainComponent.h"
 #include "GridbrainConnection.h"
 #include "GridbrainComponentSet.h"
+#include "randistrs.h"
 
 #include <vector>
 
@@ -66,7 +67,7 @@ public:
                 unsigned int &x2,
                 unsigned int &y2,
                 unsigned int &g2);
-    void addRandomConnection();
+    void addRandomConnections(unsigned int count);
     void setMaxInputDepth(unsigned int maxInputDepth){mMaxInputDepth = maxInputDepth;}
 
     void cycle();
@@ -77,24 +78,39 @@ public:
 
     unsigned int getConnectionsCount(){return mConnectionsCount;}
 
+    virtual void draw(pyc::Layer2D* layer){}
+
     virtual void mutate();
-    void mutateAddConnection();
-    void mutateRemoveConnection();
-    void mutateChangeConnectionWeight();
-    void mutateChangeComponent();
+
+    void setMutateAddConnectionProb(float prob){mMutateAddConnectionProb = prob;}
+    void setMutateRemoveConnectionProb(float prob){mMutateRemoveConnectionProb = prob;}
+    void setMutateChangeConnectionWeightProb(float prob){mMutateChangeConnectionWeightProb = prob;}
+    void setMutateChangeComponentProb(float prob){mMutateChangeComponentProb = prob;}
 
     static const char mClassName[];
     static Orbit<Gridbrain>::MethodType mMethods[];
     static Orbit<Gridbrain>::NumberGlobalType mNumberGlobals[];
 
     int addGrid(lua_State* luaState);
-    int addRandomConnection(lua_State* luaState);
-
-    virtual void draw(pyc::Layer2D* layer){}
+    int addRandomConnections(lua_State* luaState);
+    int setMutateAddConnectionProb(lua_State* luaState);
+    int setMutateRemoveConnectionProb(lua_State* luaState);
+    int setMutateChangeConnectionWeightProb(lua_State* luaState);
+    int setMutateChangeComponentProb(lua_State* luaState);
 
 protected:
     void initGridInputOutput(Grid* grid, int gPos=-1);
     void calcConnectionCounts();
+
+    void mutateAddConnection();
+    void mutateRemoveConnection();
+    void mutateChangeConnectionWeight();
+    void mutateChangeComponent();
+
+    static mt_distribution* mDistConnections;
+    static mt_distribution* mDistMutationsProb;
+    static mt_distribution* mDistWeights;
+    static mt_distribution* mDistComponents;
 
     std::vector<Grid*> mGridsVec;
 
@@ -107,6 +123,11 @@ protected:
     unsigned int mFirstBetaIndex;
     unsigned int mTotalPossibleConnections;
     unsigned int mBetaComponentsCount;
+
+    float mMutateAddConnectionProb;
+    float mMutateRemoveConnectionProb;
+    float mMutateChangeConnectionWeightProb;
+    float mMutateChangeComponentProb;
 };
 
 #endif

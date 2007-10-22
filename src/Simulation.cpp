@@ -19,11 +19,14 @@
 
 #include "Simulation.h"
 #include "PopulationDynamics.h"
-#include "Random.h"
 #include "Symbol.h"
 #include "SymbolTable.h"
 #include "GraphicalObject.h"
+
 #include <math.h>
+#include <stdexcept>
+
+RandDistManager Simulation::mDistManager;
 
 Simulation::Simulation(lua_State* luaState)
 {
@@ -173,9 +176,14 @@ void Simulation::addObject(SimulationObject* object)
     }
 }
 
-void Simulation::setSeedIndex(unsigned int index)
+void Simulation::setSeedIndex(int index)
 {
-    Random::setSeedIndex(index);
+    mDistManager.setSeedIndex(index);
+}
+
+mt_distribution* Simulation::getNewDistribution()
+{
+    return mDistManager.getNewDistribution();
 }
 
 float Simulation::computeBinding(SimulationObject* sourceObj,
@@ -312,7 +320,7 @@ int Simulation::setPopulationDynamics(lua_State *luaState)
 
 int Simulation::setSeedIndex(lua_State* luaState)
 {
-    int index = luaL_checkint(luaState, 1);
+    int index = luaL_optint(luaState, 1, -1);
     setSeedIndex(index);
     return 0;
 }

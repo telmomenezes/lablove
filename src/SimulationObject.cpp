@@ -18,7 +18,6 @@
  */
 
 #include "SimulationObject.h"
-#include "Random.h"
 #include "SymbolFloat.h"
 #include "SymbolUL.h"
 #include <stdlib.h>

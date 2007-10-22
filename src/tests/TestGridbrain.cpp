@@ -69,10 +69,8 @@ TEST_FIXTURE(GridbrainFixture, GridbrainAddConnection)
 TEST_FIXTURE(GridbrainFixture, GridbrainAddRandomConnections)
 {
     CHECK_EQUAL(mGridbrain.getConnectionsCount(), 0);
-    mGridbrain.addRandomConnection();
+    mGridbrain.addRandomConnections(1);
     CHECK_EQUAL(mGridbrain.getConnectionsCount(), 1);
-    mGridbrain.addRandomConnection();
-    CHECK_EQUAL(mGridbrain.getConnectionsCount(), 2);
 }
 
 TEST_FIXTURE(GridbrainFixture, GridbrainGetComponent)

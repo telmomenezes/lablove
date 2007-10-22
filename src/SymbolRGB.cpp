@@ -18,7 +18,6 @@
  */
 
 #include "SymbolRGB.h"
-#include "Random.h"
 #include <math.h>
 #include <stdlib.h>
 

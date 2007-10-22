@@ -22,6 +22,7 @@
 
 #include "PopulationDynamics.h"
 #include "Statistics.h"
+#include "randistrs.h"
 
 #include <list>
 #include <vector>
@@ -63,6 +64,8 @@ public:
     int setTournmentSize(lua_State* luaState);
 
 protected:
+    static mt_distribution* mDistOrganism;
+
     vector<SpeciesData> mSpecies;
     unsigned int mTournmentSize;
 };

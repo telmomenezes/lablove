@@ -18,11 +18,16 @@
  */
 
 #include "Gridbrain.h"
-#include "Random.h"
+#include "Simulation.h"
 
 #include <stdlib.h>
 #include <string.h>
 #include <stdexcept>
+
+mt_distribution* Gridbrain::mDistConnections = Simulation::getNewDistribution();
+mt_distribution* Gridbrain::mDistMutationsProb = Simulation::getNewDistribution();
+mt_distribution* Gridbrain::mDistWeights = Simulation::getNewDistribution();
+mt_distribution* Gridbrain::mDistComponents = Simulation::getNewDistribution();
 
 Gridbrain::Gridbrain(lua_State* luaState)
 {
@@ -35,6 +40,11 @@ Gridbrain::Gridbrain(lua_State* luaState)
     mTotalPossibleConnections = 0;
     mBetaComponentsCount = 0;
     mGridsCount = 0;
+
+    mMutateAddConnectionProb = 0.0f;
+    mMutateRemoveConnectionProb = 0.0f;
+    mMutateChangeConnectionWeightProb = 0.0f;
+    mMutateChangeComponentProb = 0.0f;
 }
 
 Gridbrain::~Gridbrain()
@@ -72,6 +82,11 @@ Brain* Gridbrain::clone(bool randomize)
     gb->mFirstBetaIndex = mFirstBetaIndex;
     gb->mTotalPossibleConnections = mTotalPossibleConnections;
     gb->mBetaComponentsCount = mBetaComponentsCount;
+
+    gb->mMutateAddConnectionProb = mMutateAddConnectionProb;
+    gb->mMutateRemoveConnectionProb = mMutateAddConnectionProb;
+    gb->mMutateChangeConnectionWeightProb = mMutateAddConnectionProb;
+    gb->mMutateChangeComponentProb = mMutateAddConnectionProb;
 
     for (unsigned int i = 0; i < mGridsCount; i++)
     {
@@ -122,7 +137,7 @@ Brain* Gridbrain::clone(bool randomize)
         {
             if (randomize)
             {
-                gb->addRandomConnection();
+                gb->addRandomConnections(1);
             }
             else
             {
@@ -383,6 +398,7 @@ void Gridbrain::addConnection(unsigned int xOrig,
     conn->mPrevGlobalConnection = NULL;
     mConnections = conn;
 
+
     if (nextConn != NULL)
     {
         nextConn->mPrevGlobalConnection = conn;
@@ -454,7 +470,7 @@ void Gridbrain::selectRandomConnection(unsigned int &x1,
             {
                 g1 = gridOrig->getNumber();
                 x1 = col;
-                y1 = Random::getUniformInt(0, gridOrig->getHeight() - 1);
+                y1 = mDistConnections->iuniform(0, gridOrig->getHeight());
                 found = true;
             }
         }
@@ -476,7 +492,7 @@ void Gridbrain::selectRandomConnection(unsigned int &x1,
             {
                 g2 = gridOrig->getNumber();
                 x2 = col;
-                y2 = Random::getUniformInt(0, gridOrig->getHeight() - 1);
+                y2 = mDistConnections->iuniform(0, gridOrig->getHeight());
                 return;
             }
         }
@@ -491,11 +507,11 @@ void Gridbrain::selectRandomConnection(unsigned int &x1,
 
     Grid* targGrid = mGridsVec[g2];
 
-    x2 = Random::getUniformInt(0, targGrid->getWidth() - 1);
-    y2 = Random::getUniformInt(0, targGrid->getHeight() - 1);
+    x2 = mDistConnections->iuniform(0, targGrid->getWidth());
+    y2 = mDistConnections->iuniform(0, targGrid->getHeight());
 }
 
-void Gridbrain::addRandomConnection()
+void Gridbrain::addRandomConnections(unsigned int count)
 {
     unsigned int x1;
     unsigned int x2;
@@ -505,16 +521,12 @@ void Gridbrain::addRandomConnection()
     unsigned int g2;
     float weight;
 
-    selectRandomConnection(x1, y1, g1, x2, y2, g2);
-    
-    weight = Random::getUniformProbability();
-    
-    if (Random::getUniformBool())
+    for (unsigned int i = 0; i < count; i++)
     {
-        weight = -weight;
+        selectRandomConnection(x1, y1, g1, x2, y2, g2);
+        weight = mDistWeights->uniform(-1.0f, 1.0f);
+        addConnection(x1, y1, g1, x2, y2, g2, weight);
     }
-    
-    addConnection(x1, y1, g1, x2, y2, g2, weight);
 }
 
 void Gridbrain::cycle()
@@ -790,38 +802,35 @@ void Gridbrain::cycle()
 
 void Gridbrain::mutate()
 {
-    unsigned type = rand() % 4;
-
-    switch (type)
-    {
-    case 0:
-        mutateAddConnection();
-        break;
-    case 1:
-        mutateRemoveConnection();
-        break;
-    case 2:
-        mutateChangeConnectionWeight();
-        break;
-    case 3:
-        mutateChangeComponent();
-        break;
-    deafult:
-        // ASSERT ERROR?
-        break;
-    }
+    mutateAddConnection();
+    mutateRemoveConnection();
+    mutateChangeConnectionWeight();
+    mutateChangeComponent();
 }
 
 void Gridbrain::mutateAddConnection()
 {
-    addRandomConnection();
+
+    float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+
+    if (prob < mMutateAddConnectionProb)
+    {
+        addRandomConnections(1);
+    }
 }
 
 void Gridbrain::mutateRemoveConnection()
 {
     if (mConnectionsCount > 0) 
     {
-        unsigned int connectionPos = Random::getUniformInt(0, mConnectionsCount - 1);
+        float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+
+        if (prob >= mMutateRemoveConnectionProb)
+        {
+            return;
+        }
+
+        unsigned int connectionPos = mDistConnections->iuniform(0, mConnectionsCount);
 
         GridbrainConnection* conn = mConnections;
         for (unsigned int i = 0; i < connectionPos; i++)
@@ -869,7 +878,7 @@ void Gridbrain::mutateChangeConnectionWeight()
 {
     if (mConnectionsCount > 0) 
     {
-        unsigned int connectionPos = Random::getUniformInt(0, mConnectionsCount - 1);
+        unsigned int connectionPos = mDistConnections->iuniform(0, mConnectionsCount);
 
         GridbrainConnection* conn = mConnections;
         for (unsigned int i = 0; i < connectionPos; i++)
@@ -878,7 +887,7 @@ void Gridbrain::mutateChangeConnectionWeight()
         }
         
         float newWeight = conn->mWeight;
-        newWeight += Random::getUniformFloat(-1.0f, 1.0f);
+        newWeight += mDistWeights->uniform(-1.0f, 1.0f);
         if (newWeight > 1.0f)
         {
             newWeight = 1.0f;
@@ -894,7 +903,7 @@ void Gridbrain::mutateChangeConnectionWeight()
 
 void Gridbrain::mutateChangeComponent()
 {
-    unsigned int pos = Random::getUniformInt(0, mNumberOfComponents - 1);
+    unsigned int pos = mDistComponents->iuniform(0, mNumberOfComponents);
 
     unsigned int gridNumber = mComponents[pos].mGrid;
     Grid* grid = mGridsVec[gridNumber];
@@ -956,7 +965,11 @@ const char Gridbrain::mClassName[] = "Gridbrain";
 
 Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
     {"addGrid", &Gridbrain::addGrid},
-    {"addRandomConnection", &Gridbrain::addRandomConnection},
+    {"addRandomConnections", &Gridbrain::addRandomConnections},
+    {"setMutateAddConnectionProb", &Gridbrain::setMutateAddConnectionProb},
+    {"setMutateRemoveConnectionProb", &Gridbrain::setMutateRemoveConnectionProb},
+    {"setMutateChangeConnectionWeightProb", &Gridbrain::setMutateChangeConnectionWeightProb},
+    {"setMutateChangeComponentProb", &Gridbrain::setMutateChangeComponentProb},
     {0,0}
 };
 
@@ -969,9 +982,38 @@ int Gridbrain::addGrid(lua_State* luaState)
         return 0;
 }
 
-int Gridbrain::addRandomConnection(lua_State* luaState)
+int Gridbrain::addRandomConnections(lua_State* luaState)
 {
-        addRandomConnection();
-        return 0;
+    unsigned int count = luaL_checkint(luaState, 1);
+    addRandomConnections(count);
+    return 0;
+}
+
+int Gridbrain::setMutateAddConnectionProb(lua_State* luaState)
+{
+    float prob = luaL_checknumber(luaState, 1);
+    setMutateAddConnectionProb(prob);
+    return 0;
+}
+
+int Gridbrain::setMutateRemoveConnectionProb(lua_State* luaState)
+{
+    float prob = luaL_checknumber(luaState, 1);
+    setMutateRemoveConnectionProb(prob);
+    return 0;
+}
+
+int Gridbrain::setMutateChangeConnectionWeightProb(lua_State* luaState)
+{
+    float prob = luaL_checknumber(luaState, 1);
+    setMutateChangeConnectionWeightProb(prob);
+    return 0;
+}
+
+int Gridbrain::setMutateChangeComponentProb(lua_State* luaState)
+{
+    float prob = luaL_checknumber(luaState, 1);
+    setMutateChangeComponentProb(prob);
+    return 0;
 }
 

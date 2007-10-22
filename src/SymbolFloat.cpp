@@ -18,9 +18,12 @@
  */
 
 #include "SymbolFloat.h"
-#include "Random.h"
+#include "Simulation.h"
+
 #include <math.h>
 #include <stdlib.h>
+
+mt_distribution* SymbolFloat::mDistFloat = Simulation::getNewDistribution();
 
 SymbolFloat::SymbolFloat(lua_State* luaState)
 {
@@ -75,13 +78,13 @@ float SymbolFloat::bind(Symbol* sym)
 
 void SymbolFloat::initRandom()
 {
-    mFloat = Random::getUniformFloat(mMin, mMax);
+    mFloat = mDistFloat->uniform(mMin, mMax);
 }
 
 void SymbolFloat::mutate()
 {
     float span = fabsf(mMax - mMin);
-    float delta = Random::getUniformFloat(0.0f, span);
+    float delta = mDistFloat->uniform(0.0f, span);
     delta -= span / 2.0f;
     mFloat += delta;
 

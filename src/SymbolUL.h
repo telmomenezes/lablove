@@ -22,6 +22,7 @@
 
 #include "Symbol.h"
 #include "Orbit.h"
+#include "randistrs.h"
 
 class SymbolUL : public Symbol
 {
@@ -45,6 +46,8 @@ public:
     static Orbit<SymbolUL>::NumberGlobalType mNumberGlobals[];
 
 protected:
+    static mt_distribution* mDistUL;
+
     unsigned long mUL;
     unsigned long mMax;
     unsigned long mMin;

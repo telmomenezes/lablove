@@ -22,6 +22,7 @@
 
 #include "PopulationDynamics.h"
 #include "Statistics.h"
+#include "randistrs.h"
 
 #include <list>
 #include <vector>
@@ -63,8 +64,9 @@ public:
     int setGenerationTime(lua_State* luaState);
 
 protected:
-
     vector<SpeciesData> mSpecies;
+
+    static mt_distribution* mDistOrganism;
 
     unsigned int mGenerationTime;
     unsigned long mGeneration;

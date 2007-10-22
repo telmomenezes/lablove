@@ -35,6 +35,8 @@ initialConnections = 10
 
 tournmentSize = 3
 
+seedIndex = -1
+
 ----------------------------------------------
 
 sim = SimCont2D()
@@ -43,6 +45,7 @@ sim:setViewRange(viewRange)
 sim:setViewAngle(viewAngle)
 sim:setGoCost(goCost)
 sim:setRotateCost(rotateCost)
+sim:setSeedIndex(seedIndex)
 
 agent = Agent()
 
@@ -156,11 +159,7 @@ brain:addGrid(grid2)
 
 agent:setBrain(brain)
 
-i = 0
-while i < initialConnections do
-    brain:addRandomConnection()
-    i = i + 1
-end
+brain:addRandomConnections(initialConnections)
 
 plant = GraphicalObject()
 

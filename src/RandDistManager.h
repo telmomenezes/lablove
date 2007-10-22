@@ -17,18 +17,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __INCLUDE_RANDOM_H
-#define __INCLUDE_RANDOM_H
+#if !defined(__INCLUDE_RAND_DIST_MANAGER_H)
+#define __INCLUDE_RAND_DIST_MANAGER_H
 
-class Random
+#include "randistrs.h"
+#include <list>
+
+using std::list;
+
+class RandDistManager
 {
 public:
-    static void setSeedIndex(unsigned int seedIndex);
-    static int getUniformInt(int start, int end);
-    static float getUniformProbability();
-    static bool getUniformBool();
-    static float getUniformFloat(float start, float end);
-};
+    RandDistManager();
+    virtual ~RandDistManager();
 
+    void setSeedIndex(int index=-1);
+    void setSeed(unsigned long seed);
+    mt_distribution* getNewDistribution();
+
+protected:
+    mt_distribution mSeedGenerator;
+    list<mt_distribution*> mDistributions;
+};
 #endif
 

@@ -24,6 +24,7 @@
 #include "SimulationObject.h"
 #include "PopulationDynamics.h"
 #include "Agent.h"
+#include "randistrs.h"
 
 #include "pyc.h"
 
@@ -151,8 +152,10 @@ protected:
     void goFront(Agent* agent, float distance);
     void rotate(Agent* agent, float angle);
     void eat(Agent* agent);
-
     float normalizeAngle(float angle);
+        
+    static mt_distribution* mDistAge;
+    static mt_distribution* mDistPosition;
 
     float mWorldWidth;
     float mWorldLength;

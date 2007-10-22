@@ -18,9 +18,12 @@
  */
 
 #include "SymbolUL.h"
-#include "Random.h"
+#include "Simulation.h"
+
 #include <math.h>
 #include <stdlib.h>
+
+mt_distribution* SymbolUL::mDistUL = Simulation::getNewDistribution();
 
 SymbolUL::SymbolUL(lua_State* luaState)
 {
@@ -75,7 +78,7 @@ float SymbolUL::bind(Symbol* sym)
 
 void SymbolUL::initRandom()
 {
-    mUL = Random::getUniformInt(mMin, mMax);
+    mUL = mDistUL->iuniform(mMin, mMax);
 }
 
 void SymbolUL::mutate()

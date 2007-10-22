@@ -19,9 +19,10 @@
 
 #include "PopDynGenerations.h"
 #include "SimulationObject.h"
-#include "Random.h"
+#include "Simulation.h"
 
 unsigned int PopDynGenerations::CURRENT_SPECIES_ID = 0;
+mt_distribution* PopDynGenerations::mDistOrganism = Simulation::getNewDistribution();
 
 PopDynGenerations::PopDynGenerations(lua_State* luaState)
 {
@@ -99,7 +100,7 @@ void PopDynGenerations::onCycle(unsigned long time, double realTime)
 
                     for (unsigned int tournmentStep = 0; tournmentStep < 2; tournmentStep++)
                     {
-                        unsigned int organismNumber = Random::getUniformInt(0, (*iterSpecies).mPopulation - 1);
+                        unsigned int organismNumber = mDistOrganism->iuniform(0, (*iterSpecies).mPopulation);
 
                         list<SimulationObject*>::iterator iterOrg = (*iterSpecies).mOrganismList.begin();
                         for (unsigned int i = 0; i < organismNumber; i++)
