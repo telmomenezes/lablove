@@ -769,9 +769,9 @@ void SimCont2D::act(Agent* agent)
 
 void SimCont2D::goFront(Agent* agent, float force)
 {
-    deltaEnergy(agent, -mGoCost * force);
+    deltaEnergy(agent, -mGoCost * fabsf(force));
 
-    force = fabsf(force);
+    //force = fabsf(force);
 
     agent->mFloatData[FLOAT_IMPULSE_X] = cosf(agent->mFloatData[FLOAT_ROT]) * force;
     agent->mFloatData[FLOAT_IMPULSE_Y] = sinf(agent->mFloatData[FLOAT_ROT]) * force;
@@ -779,7 +779,7 @@ void SimCont2D::goFront(Agent* agent, float force)
 
 void SimCont2D::rotate(Agent* agent, float force)
 {
-    deltaEnergy(agent, -mRotateCost * force);
+    deltaEnergy(agent, -mRotateCost * fabsf(force));
 
     agent->mFloatData[FLOAT_IMPULSE_ROT] += force;
 }
@@ -1072,6 +1072,7 @@ Orbit<SimCont2D>::MethodType SimCont2D::mMethods[] = {
     {"setPopulationDynamics", &Simulation::setPopulationDynamics},
     {"initGraphics", &Simulation::initGraphics},
     {"run", &Simulation::run},
+    {"setTimeLimit", &Simulation::setTimeLimit},
     {"setWorldDimensions", &SimCont2D::setWorldDimensions},
     {"setViewRange", &SimCont2D::setViewRange},
     {"setViewAngle", &SimCont2D::setViewAngle},

@@ -70,11 +70,14 @@ public:
     virtual bool onMouseMove(int x, int y){return false;}
     virtual bool onMouseWheel(bool up){return false;}
 
+    void setTimeLimit(unsigned long limit);
+
     int addObject(lua_State* luaState);
     int run(lua_State* luaState);
     int initGraphics(lua_State* luaState);
     int setPopulationDynamics(lua_State* luaState);
     int setSeedIndex(lua_State* luaState);
+    int setTimeLimit(lua_State* luaState);
 
 protected:
     virtual void process(SimulationObject* obj){}
@@ -109,6 +112,8 @@ protected:
     string mFPSText;
 
     pyc::Font* mFont;
+
+    unsigned long mTimeLimit;
 };
 #endif
 

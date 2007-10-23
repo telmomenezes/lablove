@@ -25,25 +25,27 @@ lowAgeLimit = 4500
 metabolism = 0.0
 goCost = 0.0
 rotateCost = 0.0
-goForceScale = 0.1
-rotateForceScale = 0.001
+goForceScale = 0.3
+rotateForceScale = 0.006
 
-friction = 0.0003
-drag = 0.01
-rotFriction = 0.000003
-rotDrag = 0.01
+friction = 0.000--3
+drag = 0.05
+rotFriction = 0.00000--3
+rotDrag = 0.05
 
 initialConnections = 10
 
-tournmentSize = 3
+tournmentSize = 10
 
 seedIndex = -1
 
 addConnectionProb = 0.1
 removeConnectionProb = 0.1
-changeWeightProb = 0.1
-changeComponentProb = 0.1
+changeWeightProb = 0.01
+changeComponentProb = 0.01
 weightMutationStanDev = 1.0
+
+timeLimit = 0
 
 ----------------------------------------------
 
@@ -56,6 +58,7 @@ sim:setRotateCost(rotateCost)
 sim:setGoForceScale(goForceScale)
 sim:setRotateForceScale(rotateForceScale)
 sim:setSeedIndex(seedIndex)
+sim:setTimeLimit(timeLimit)
 
 agent = Agent()
 
@@ -100,7 +103,7 @@ ageTableCode = symTable:getID()
 agent:setSymbolName("low_age_limit", ageTableCode, 0)
 agent:setSymbolName("high_age_limit", ageTableCode, 1)
 
-agentColor = SymbolRGB(255, 50, 255)
+agentColor = SymbolRGB(255, 0, 0)
 symTable = SymbolTable(agentColor)
 agent:addSymbolTable(symTable)
 colorTableCode = symTable:getID()
@@ -189,7 +192,7 @@ symTable = SymbolTable(symPlantInitialEnergy, energyTableCode)
 plant:addSymbolTable(symTable)
 plant:setSymbolName("initial_energy", energyTableCode, 0)
 
-plantColor = SymbolRGB(10, 250, 50)
+plantColor = SymbolRGB(0, 255, 0)
 symTable = SymbolTable(plantColor, colorTableCode)
 plant:addSymbolTable(symTable)
 plant:setSymbolName("color", colorTableCode, 0)

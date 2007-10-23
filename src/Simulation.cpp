@@ -47,6 +47,8 @@ Simulation::Simulation(lua_State* luaState)
     mSimulationTimeText = "";
     mRealTimeText = "";
     mFPSText = "";
+
+    mTimeLimit = 0;
 }
 
 Simulation::~Simulation()
@@ -74,6 +76,10 @@ void Simulation::run()
     while (!mStop)
     {
         cycle();
+        if ((mTimeLimit != 0) && (mTimeLimit < mSimulationTime))
+        {
+            mStop = true;
+        }
     }
 }
 
@@ -285,6 +291,11 @@ bool Simulation::onKeyDown(pyc::KeyCode keycode)
     }
 }
 
+void Simulation::setTimeLimit(unsigned long limit)
+{
+    mTimeLimit = limit * 1000;
+}
+
 int Simulation::addObject(lua_State *luaState)
 {
     SimulationObject* simObj = (SimulationObject*)Orbit<SimulationObject>::pointer(luaState, 1);
@@ -322,6 +333,13 @@ int Simulation::setSeedIndex(lua_State* luaState)
 {
     int index = luaL_optint(luaState, 1, -1);
     setSeedIndex(index);
+    return 0;
+}
+
+int Simulation::setTimeLimit(lua_State* luaState)
+{
+    int limit = luaL_checkint(luaState, 1);
+    setTimeLimit(limit);
     return 0;
 }
 
