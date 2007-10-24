@@ -27,6 +27,7 @@ mt_distribution* PopDynFixedSpecies::mDistOrganism = Simulation::getNewDistribut
 PopDynFixedSpecies::PopDynFixedSpecies(lua_State* luaState)
 {
     mTournmentSize = 2;
+    mStatisticsTimeInterval = 1000;
 }
 
 PopDynFixedSpecies::~PopDynFixedSpecies()
@@ -72,8 +73,6 @@ void PopDynFixedSpecies::init(PopulationManager* popManager)
 
 void PopDynFixedSpecies::onCycle(unsigned long time, double realTime)
 {
-    PopulationDynamics::onCycle(time, realTime);
-
     if ((time % mStatisticsTimeInterval) == 0)
     {
         for (vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
@@ -93,8 +92,6 @@ void PopDynFixedSpecies::onCycle(unsigned long time, double realTime)
 
 void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
 {
-    PopulationDynamics::onOrganismDeath(org);
-
     unsigned int speciesPos = 0;
     for (vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
         iterSpecies != mSpecies.end();
@@ -169,8 +166,7 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
 const char PopDynFixedSpecies::mClassName[] = "PopDynFixedSpecies";
 
 Orbit<PopDynFixedSpecies>::MethodType PopDynFixedSpecies::mMethods[] = {
-    {"addStatistics", &PopulationDynamics::addStatistics},
-    {"setStatisticsTimeInterval", &PopulationDynamics::setStatisticsTimeInterval},
+    {"setStatisticsTimeInterval", &PopDynFixedSpecies::setStatisticsTimeInterval},
     {"addSpecies", &PopDynFixedSpecies::addSpecies},
     {"addSpeciesStatistics", &PopDynFixedSpecies::addSpeciesStatistics},
     {"setTournmentSize", &PopDynFixedSpecies::setTournmentSize},
@@ -200,6 +196,13 @@ int PopDynFixedSpecies::setTournmentSize(lua_State* luaState)
 {
     unsigned int size = luaL_checkint(luaState, 1);
     setTournmentSize(size);
+    return 0;
+}
+
+int PopDynFixedSpecies::setStatisticsTimeInterval(lua_State* luaState)
+{
+    unsigned long interval = luaL_checkint(luaState, 1);
+    setStatisticsTimeInterval(interval);
     return 0;
 }
 

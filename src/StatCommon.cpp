@@ -17,17 +17,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "StatMedAvgMinMax.h"
+#include "StatCommon.h"
 
-StatMedAvgMinMax::StatMedAvgMinMax(lua_State* luaState)
+StatCommon::StatCommon(lua_State* luaState)
 {
 }
 
-StatMedAvgMinMax::~StatMedAvgMinMax()
+StatCommon::~StatCommon()
 {
 }
 
-void StatMedAvgMinMax::init()
+void StatCommon::init()
 {
     fprintf(mFile, "sim_time");
 
@@ -53,7 +53,7 @@ void StatMedAvgMinMax::init()
     fflush(mFile);
 }
 
-void StatMedAvgMinMax::process(SimulationObject* obj, PopulationManager* popManager)
+void StatCommon::process(SimulationObject* obj, PopulationManager* popManager)
 {
     list<list<float> >::iterator iterValueList = mValueLists.begin();
 
@@ -67,7 +67,7 @@ void StatMedAvgMinMax::process(SimulationObject* obj, PopulationManager* popMana
     }
 }
 
-void StatMedAvgMinMax::dump(unsigned long time, double realTime)
+void StatCommon::dump(unsigned long time, double realTime)
 {
     fprintf(mFile, "%d", time);
 
@@ -169,13 +169,13 @@ void StatMedAvgMinMax::dump(unsigned long time, double realTime)
     fflush(mFile);
 }
 
-const char StatMedAvgMinMax::mClassName[] = "StatMedAvgMinMax";
+const char StatCommon::mClassName[] = "StatCommon";
 
-Orbit<StatMedAvgMinMax>::MethodType StatMedAvgMinMax::mMethods[] = {
+Orbit<StatCommon>::MethodType StatCommon::mMethods[] = {
     {"addField", &Statistics::addField},
     {"setFile", &Statistics::setFile},
     {0,0}
 };
 
-Orbit<StatMedAvgMinMax>::NumberGlobalType StatMedAvgMinMax::mNumberGlobals[] = {{0,0}};
+Orbit<StatCommon>::NumberGlobalType StatCommon::mNumberGlobals[] = {{0,0}};
 

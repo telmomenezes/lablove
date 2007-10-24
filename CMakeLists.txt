@@ -45,7 +45,7 @@ SET(SOURCE_FILES
     src/SymbolUL.cpp
     src/SymbolTable.cpp
     src/Statistics.cpp
-    src/StatMedAvgMinMax.cpp
+    src/StatCommon.cpp
     src/StatTime.cpp
     src/Graphic.cpp
     src/GraphicTriangle.cpp

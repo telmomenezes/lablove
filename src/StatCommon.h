@@ -17,8 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_STATMEDAVGMINMAX_H)
-#define __INCLUDE_STATMEDAVGMINMAX_H
+#if !defined(__INCLUDE_STAT_COMMON_H)
+#define __INCLUDE_STAT_COMMON_H
 
 #include "Statistics.h"
 
@@ -28,11 +28,11 @@
 
 using std::list;
 
-class StatMedAvgMinMax : public Statistics
+class StatCommon : public Statistics
 {
 public:
-    StatMedAvgMinMax(lua_State* luaState=NULL);
-    virtual ~StatMedAvgMinMax();
+    StatCommon(lua_State* luaState=NULL);
+    virtual ~StatCommon();
 
     virtual void init();
 
@@ -40,8 +40,8 @@ public:
     virtual void dump(unsigned long time, double realTime);
 
     static const char mClassName[];
-    static Orbit<StatMedAvgMinMax>::MethodType mMethods[];
-    static Orbit<StatMedAvgMinMax>::NumberGlobalType mNumberGlobals[];
+    static Orbit<StatCommon>::MethodType mMethods[];
+    static Orbit<StatCommon>::NumberGlobalType mNumberGlobals[];
 
 protected:
     list<list<float> > mValueLists;

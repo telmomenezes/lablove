@@ -55,6 +55,8 @@ public:
 
     void setTournmentSize(unsigned int size){mTournmentSize = size;}
 
+    void setStatisticsTimeInterval(unsigned long interval){mStatisticsTimeInterval = interval;}
+
     static const char mClassName[];
     static Orbit<PopDynFixedSpecies>::MethodType mMethods[];
     static Orbit<PopDynFixedSpecies>::NumberGlobalType mNumberGlobals[];
@@ -62,12 +64,15 @@ public:
     int addSpecies(lua_State* luaState);
     int addSpeciesStatistics(lua_State* luaState);
     int setTournmentSize(lua_State* luaState);
+    int setStatisticsTimeInterval(lua_State* luaState);
 
 protected:
     static mt_distribution* mDistOrganism;
 
     vector<SpeciesData> mSpecies;
     unsigned int mTournmentSize;
+
+    unsigned long mStatisticsTimeInterval;
 };
 #endif
 

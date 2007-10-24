@@ -22,12 +22,6 @@
 
 #include "PopulationManager.h"
 #include "SimulationObject.h"
-#include "Statistics.h"
-#include "Orbit.h"
-
-#include <list>
-
-using std::list;
 
 class PopulationDynamics
 {
@@ -36,19 +30,11 @@ public:
     virtual ~PopulationDynamics();
 
     virtual void init(PopulationManager* popManager);
-    virtual void onCycle(unsigned long time, double realTime);
-    virtual void onOrganismDeath(SimulationObject* org);
-    void addStatistics(Statistics* stats);
-
-    void setStatisticsTimeInterval(unsigned long interval){mStatisticsTimeInterval = interval;}
-
-    int addStatistics(lua_State* luaState);
-    int setStatisticsTimeInterval(lua_State* luaState);
+    virtual void onCycle(unsigned long time, double realTime)=0;
+    virtual void onOrganismDeath(SimulationObject* org)=0;
 
 protected:
     PopulationManager* mPopManager;
-    list<Statistics*> mStatistics;
-    unsigned long mStatisticsTimeInterval;
 };
 #endif
 

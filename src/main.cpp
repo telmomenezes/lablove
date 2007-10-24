@@ -33,7 +33,7 @@
 #include "SymbolFixedString.h"
 #include "SymbolFloat.h"
 #include "SymbolUL.h"
-#include "StatMedAvgMinMax.h"
+#include "StatCommon.h"
 #include "StatTime.h"
 #include "GraphicTriangle.h"
 #include "GraphicSquare.h"
@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
     Orbit<SymbolFixedString>::orbitRegister(luaState);
     Orbit<SymbolFloat>::orbitRegister(luaState);
     Orbit<SymbolUL>::orbitRegister(luaState);
-    Orbit<StatMedAvgMinMax>::orbitRegister(luaState);
+    Orbit<StatCommon>::orbitRegister(luaState);
     Orbit<StatTime>::orbitRegister(luaState);
     Orbit<GraphicTriangle>::orbitRegister(luaState);
     Orbit<GraphicSquare>::orbitRegister(luaState);

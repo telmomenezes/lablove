@@ -21,7 +21,6 @@
 
 PopulationDynamics::PopulationDynamics()
 {
-    mStatisticsTimeInterval = 1000;
 }
 
 PopulationDynamics::~PopulationDynamics()
@@ -31,50 +30,5 @@ PopulationDynamics::~PopulationDynamics()
 void PopulationDynamics::init(PopulationManager* popManager)
 {
     mPopManager = popManager;
-}
-
-void PopulationDynamics::onCycle(unsigned long time, double realTime)
-{
-    // Dump statistics
-    if ((time % mStatisticsTimeInterval) == 0)
-    {
-        for (list<Statistics*>::iterator iterStats = mStatistics.begin();
-            iterStats != mStatistics.end();
-            iterStats++)
-        {
-            (*iterStats)->dump(time, realTime);
-        }
-    }
-}
-
-void PopulationDynamics::onOrganismDeath(SimulationObject* org)
-{
-    // Update statistics
-    for (list<Statistics*>::iterator iterStats = mStatistics.begin();
-        iterStats != mStatistics.end();
-        iterStats++)
-    {
-        (*iterStats)->process(org, mPopManager);
-    }
-}
-
-void PopulationDynamics::addStatistics(Statistics* stats)
-{
-    stats->init();
-    mStatistics.push_back(stats);
-}
-
-int PopulationDynamics::addStatistics(lua_State* luaState)
-{
-    Statistics* stats = (Statistics*)Orbit<SimulationObject>::pointer(luaState, 1);
-    addStatistics(stats);
-    return 0;
-}
-
-int PopulationDynamics::setStatisticsTimeInterval(lua_State* luaState)
-{
-    unsigned long interval = luaL_checkint(luaState, 1);
-    setStatisticsTimeInterval(interval);
-    return 0;
 }
 
