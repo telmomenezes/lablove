@@ -37,7 +37,8 @@ typedef struct
 {
     SimulationObject* mBaseOrganism;
     vector<SimulationObject*> mOrganismVector;
-    list<Statistics*> mStatistics;
+    list<Statistics*> mDeathStatistics;
+    list<Statistics*> mSampleStatistics;
     long mPopulation;
 } SpeciesData;
 
@@ -51,18 +52,21 @@ public:
     virtual void onOrganismDeath(SimulationObject* org);
 
     unsigned int addSpecies(SimulationObject* org, long population);
-    void addSpeciesStatistics(unsigned int speciesIndex, Statistics* stats);
+
+    void addSampleStatistics(unsigned int speciesIndex, Statistics* stats);
+    void addDeathStatistics(unsigned int speciesIndex, Statistics* stats);
+    void setStatisticsTimeInterval(unsigned long interval){mStatisticsTimeInterval = interval;}
 
     void setTournmentSize(unsigned int size){mTournmentSize = size;}
 
-    void setStatisticsTimeInterval(unsigned long interval){mStatisticsTimeInterval = interval;}
 
     static const char mClassName[];
     static Orbit<PopDynFixedSpecies>::MethodType mMethods[];
     static Orbit<PopDynFixedSpecies>::NumberGlobalType mNumberGlobals[];
 
     int addSpecies(lua_State* luaState);
-    int addSpeciesStatistics(lua_State* luaState);
+    int addSampleStatistics(lua_State* luaState);
+    int addDeathStatistics(lua_State* luaState);
     int setTournmentSize(lua_State* luaState);
     int setStatisticsTimeInterval(lua_State* luaState);
 

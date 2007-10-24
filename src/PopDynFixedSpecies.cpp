@@ -47,10 +47,16 @@ unsigned int PopDynFixedSpecies::addSpecies(SimulationObject* org, long populati
     return mSpecies.size() - 1;
 }
 
-void PopDynFixedSpecies::addSpeciesStatistics(unsigned int speciesIndex, Statistics* stats)
+void PopDynFixedSpecies::addSampleStatistics(unsigned int speciesIndex, Statistics* stats)
 {
     stats->init();
-    mSpecies[speciesIndex].mStatistics.push_back(stats);
+    mSpecies[speciesIndex].mSampleStatistics.push_back(stats);
+}
+
+void PopDynFixedSpecies::addDeathStatistics(unsigned int speciesIndex, Statistics* stats)
+{
+    stats->init();
+    mSpecies[speciesIndex].mDeathStatistics.push_back(stats);
 }
 
 void PopDynFixedSpecies::init(PopulationManager* popManager)
@@ -79,11 +85,25 @@ void PopDynFixedSpecies::onCycle(unsigned long time, double realTime)
             iterSpecies != mSpecies.end();
             iterSpecies++)
         {
-            // Dump statistics
-            for (list<Statistics*>::iterator iterStats = (*iterSpecies).mStatistics.begin();
-                iterStats != (*iterSpecies).mStatistics.end();
+            // Dump death statistics
+            for (list<Statistics*>::iterator iterStats = (*iterSpecies).mDeathStatistics.begin();
+                iterStats != (*iterSpecies).mDeathStatistics.end();
                 iterStats++)
             {
+                (*iterStats)->dump(time, realTime);
+            }
+
+            // Process and dump sample statistics
+            for (list<Statistics*>::iterator iterStats = (*iterSpecies).mSampleStatistics.begin();
+                iterStats != (*iterSpecies).mSampleStatistics.end();
+                iterStats++)
+            {
+                for (vector<SimulationObject*>::iterator iterOrg = (*iterSpecies).mOrganismVector.begin();
+                        iterOrg != (*iterSpecies).mOrganismVector.end();
+                        iterOrg++)
+                {
+                    (*iterStats)->process(*iterOrg, mPopManager);
+                }
                 (*iterStats)->dump(time, realTime);
             }
         }
@@ -99,9 +119,9 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
     {
         if (org->getSpeciesID() == (*iterSpecies).mBaseOrganism->getSpeciesID())
         {
-            // Update statistics
-            for (list<Statistics*>::iterator iterStats = (*iterSpecies).mStatistics.begin();
-                iterStats != (*iterSpecies).mStatistics.end();
+            // Update death statistics
+            for (list<Statistics*>::iterator iterStats = (*iterSpecies).mDeathStatistics.begin();
+                iterStats != (*iterSpecies).mDeathStatistics.end();
                 iterStats++)
             {
                 (*iterStats)->process(org, mPopManager);
@@ -168,7 +188,8 @@ const char PopDynFixedSpecies::mClassName[] = "PopDynFixedSpecies";
 Orbit<PopDynFixedSpecies>::MethodType PopDynFixedSpecies::mMethods[] = {
     {"setStatisticsTimeInterval", &PopDynFixedSpecies::setStatisticsTimeInterval},
     {"addSpecies", &PopDynFixedSpecies::addSpecies},
-    {"addSpeciesStatistics", &PopDynFixedSpecies::addSpeciesStatistics},
+    {"addSampleStatistics", &PopDynFixedSpecies::addSampleStatistics},
+    {"addDeathStatistics", &PopDynFixedSpecies::addDeathStatistics},
     {"setTournmentSize", &PopDynFixedSpecies::setTournmentSize},
     {0,0}
 };
@@ -184,11 +205,19 @@ int PopDynFixedSpecies::addSpecies(lua_State* luaState)
     return 1;
 }
 
-int PopDynFixedSpecies::addSpeciesStatistics(lua_State* luaState)
+int PopDynFixedSpecies::addSampleStatistics(lua_State* luaState)
 {
     unsigned int speciesIndex = luaL_checkint(luaState, 1);
     Statistics* stats = (Statistics*)Orbit<PopDynFixedSpecies>::pointer(luaState, 2);
-    addSpeciesStatistics(speciesIndex, stats);
+    addSampleStatistics(speciesIndex, stats);
+    return 0;
+}
+
+int PopDynFixedSpecies::addDeathStatistics(lua_State* luaState)
+{
+    unsigned int speciesIndex = luaL_checkint(luaState, 1);
+    Statistics* stats = (Statistics*)Orbit<PopDynFixedSpecies>::pointer(luaState, 2);
+    addDeathStatistics(speciesIndex, stats);
     return 0;
 }
 
