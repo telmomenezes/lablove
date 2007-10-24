@@ -49,14 +49,24 @@ Simulation::Simulation(lua_State* luaState)
     mFPSText = "";
 
     mTimeLimit = 0;
+
+    mDrawGraphics = true;
 }
 
 Simulation::~Simulation()
 {
 }
 
-void Simulation::initGraphics(unsigned int width, unsigned int height, bool fullScreen)
+void Simulation::initGraphics(unsigned int width,
+                                unsigned int height,
+                                bool fullScreen,
+                                bool noGraphics)
 {
+    if (noGraphics)
+    {
+        mPycasso.setPreferredSystem(pyc::SYSTEM_NULL);
+    }
+
     mWindow = mPycasso.createWindow(width, height, fullScreen);
     mEventQ = mPycasso.createEventQ();
     mRootLayer2D = mWindow->getRootLayer2D();
@@ -65,6 +75,10 @@ void Simulation::initGraphics(unsigned int width, unsigned int height, bool full
 
     mWindow->setTitle("LabLOVE");
 
+    if (!mWindow->isReal())
+    {
+        mDrawGraphics = false;
+    }
 }
 
 void Simulation::run()
@@ -95,7 +109,10 @@ void Simulation::cycle()
     }
     mObjectsToKill.clear();
 
-    drawBeforeObjects();
+    if (mDrawGraphics)
+    {
+        drawBeforeObjects();
+    }
 
     for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
     {
@@ -110,11 +127,17 @@ void Simulation::cycle()
             agent->compute();
             act(agent);
         }
-
-        obj->draw(mRootLayer2D);
+    
+        if (mDrawGraphics)
+        {
+            obj->draw(mRootLayer2D);
+        }
     }
 
-    drawAfterObjects();
+    if (mDrawGraphics)
+    {
+        drawAfterObjects();
+    }
 
     mPopulationDynamics->onCycle(mSimulationTime, mPycasso.getTime());
 
@@ -308,8 +331,13 @@ int Simulation::initGraphics(lua_State* luaState)
     int width = luaL_checkint(luaState, 1);
     int height = luaL_checkint(luaState, 2);
     bool fullScreen = luaL_checkbool(luaState, 3);
+    bool noGraphics = false;
+    if (lua_gettop(luaState) > 3)
+    {        
+        noGraphics = luaL_checkbool(luaState, 4);
+    }
 
-    initGraphics(width, height, fullScreen);
+    initGraphics(width, height, fullScreen, noGraphics);
 
     mFont = mWindow->loadFont("media/vera/Vera.ttf", 8);
 

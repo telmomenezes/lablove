@@ -40,7 +40,10 @@ public:
     Simulation(lua_State* luaState=NULL);
     virtual ~Simulation();
 
-    virtual void initGraphics(unsigned int width, unsigned int height, bool fullScreen);
+    virtual void initGraphics(unsigned int width,
+                                unsigned int height,
+                                bool fullScreen,
+                                bool noGraphics=false);
     
     virtual void drawBeforeObjects(){}
     virtual void drawAfterObjects(){}
@@ -114,6 +117,8 @@ protected:
     pyc::Font* mFont;
 
     unsigned long mTimeLimit;
+
+    bool mDrawGraphics;
 };
 #endif
 

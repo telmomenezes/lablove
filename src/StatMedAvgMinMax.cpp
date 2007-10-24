@@ -42,6 +42,8 @@ void StatMedAvgMinMax::init()
         fprintf(mFile, ",%s", (*iterField).c_str());
         fprintf(mFile, "_avg", (*iterField).c_str());
         fprintf(mFile, ",%s", (*iterField).c_str());
+        fprintf(mFile, "_sd", (*iterField).c_str());
+        fprintf(mFile, ",%s", (*iterField).c_str());
         fprintf(mFile, "_min", (*iterField).c_str());
         fprintf(mFile, ",%s", (*iterField).c_str());
         fprintf(mFile, "_max", (*iterField).c_str());
@@ -132,8 +134,6 @@ void StatMedAvgMinMax::dump(unsigned long time, double realTime)
             index++;
         }
 
-        (*iterValueList).clear();
-
         float avg = 0.0f;
 
         if (count != 0)
@@ -143,7 +143,27 @@ void StatMedAvgMinMax::dump(unsigned long time, double realTime)
 
         med = (medianValue1 + medianValue2) / 2.0f;
 
-        fprintf(mFile, ",%f,%f,%f,%f", med, avg, min, max);
+        float var = 0.0f;
+
+        if (count != 0.0f)
+        {
+            for (list<float>::iterator iterValue = (*iterValueList).begin();
+                    iterValue != (*iterValueList).end();
+                    iterValue++)
+            {
+                float value = (*iterValue);
+                float dif = value - avg;
+                var += dif * dif;
+            }
+
+            var /= count;
+        }
+
+        float sd = sqrtf(var);
+
+        (*iterValueList).clear();
+
+        fprintf(mFile, ",%f,%f,%f,%f,%f", med, avg, sd, min, max);
     }
     fprintf(mFile, "\n");
     fflush(mFile);

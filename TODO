@@ -5,12 +5,10 @@
 General:
 ========
 
+- Choose log rate
+- Variance / standard dev in statistics
 - Predator and prey predefined brains
-- No graphics
-- Disable graphics in exe parameter
 - Complete symbol system
-- Select experiment number in exe paramenter
-- Choose screen size in exe parameter
 - ...
 
 

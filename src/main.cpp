@@ -52,13 +52,72 @@ extern "C"
 }
 
 #include <stdexcept>
+#include <string>
+#include <map>
 
-#if defined(__LABLOVE_WITH_GRAPHICS) && defined(__WIN32)
-INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)
-#else
-int main(int argc, char *argv[])
-#endif
+using std::string;
+using std::map;
+
+map<string, string> gCommandParameters;
+string gScriptFile;
+
+int parseCommandLine(int argc, char *argv[])
 {
+    gScriptFile = "default.lua";
+    string paramName = "";
+
+    for (unsigned int i = 1; i < argc; i++)
+    {
+        string argStr = argv[i];
+        if (argStr[0] == '-')
+        {
+            paramName = argStr.erase(0, 1);
+        }
+        else
+        {
+            if (paramName != "")
+            {
+                gCommandParameters[paramName] = argStr;
+                paramName = "";
+            }
+            else
+            {
+                gScriptFile = argStr;
+            }
+        }
+    }
+}
+
+int getCommandLineParameter(lua_State *luaState)
+{
+    if (lua_gettop(luaState) != 1)
+    {
+        lua_pushstring(luaState, "incorrect number of arguments");
+        lua_error(luaState);
+    }
+    
+    if (!lua_isstring(luaState, 1))
+    {
+        lua_pushstring(luaState, "incorrect argument");
+        lua_error(luaState);
+    }
+
+    string paramName = lua_tostring(luaState, 1);
+    string paramValue = "";
+
+    if (gCommandParameters.count(paramName) != 0)
+    {
+        paramValue = gCommandParameters[paramName];
+    }
+    
+
+    lua_pushstring(luaState, paramValue.c_str());
+    return 1;
+}
+
+int main(int argc, char *argv[])
+{
+    parseCommandLine(argc, argv);
     lua_State* luaState = lua_open();
     
     luaopen_base(luaState);
@@ -89,13 +148,9 @@ int main(int argc, char *argv[])
     Orbit<GraphicTriangle>::orbitRegister(luaState);
     Orbit<GraphicSquare>::orbitRegister(luaState);
 
-    char* scriptFile = "default.lua";
-    if (argc == 2)
-    {
-        scriptFile = argv[1];
-    }
+    lua_register(luaState, "getCommandLineParameter", getCommandLineParameter);
 
-    int error = luaL_loadfile(luaState, scriptFile) || lua_pcall (luaState, 0, 0, 0);
+    int error = luaL_loadfile(luaState, gScriptFile.c_str()) || lua_pcall (luaState, 0, 0, 0);
     
     if (error)
     {

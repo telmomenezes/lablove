@@ -127,7 +127,7 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
 
             SimulationObject* newOrganism = NULL;
 
-            // Tournment selection of 2
+            // Tournment selection
             SimulationObject* bestOrganism = NULL;
             float bestFitness = 0.0f;
 
@@ -157,8 +157,6 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
             mPopManager->addObject(newOrganism);
             mPopManager->placeRandom(newOrganism);
 
-            
-
             // Remove
             (*iterSpecies).mOrganismVector[orgPos] = newOrganism;
             mPopManager->removeObject(org);
@@ -172,7 +170,7 @@ const char PopDynFixedSpecies::mClassName[] = "PopDynFixedSpecies";
 
 Orbit<PopDynFixedSpecies>::MethodType PopDynFixedSpecies::mMethods[] = {
     {"addStatistics", &PopulationDynamics::addStatistics},
-    {"addStatisticsTimeInterval", &PopulationDynamics::addStatistics},
+    {"setStatisticsTimeInterval", &PopulationDynamics::setStatisticsTimeInterval},
     {"addSpecies", &PopDynFixedSpecies::addSpecies},
     {"addSpeciesStatistics", &PopDynFixedSpecies::addSpeciesStatistics},
     {"setTournmentSize", &PopDynFixedSpecies::setTournmentSize},
