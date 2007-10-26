@@ -35,7 +35,7 @@ struct GridbrainFixture
     {
         mGrid = new Grid();
         mGrid->init(Grid::BETA, 2, 2);
-        mGridbrain.addGrid(mGrid);
+        mGridbrain.addGrid(mGrid, "test");
         mGridbrain.init();
     }
 

@@ -161,9 +161,10 @@ Brain* Gridbrain::clone(bool randomize)
     return gb;
 }
 
-void Gridbrain::addGrid(Grid* grid)
+void Gridbrain::addGrid(Grid* grid, string name)
 {
-    grid->setNumber(mGridsVec.size());
+    int number = mGridsVec.size();
+    grid->setNumber(number);
     grid->setOffset(mNumberOfComponents);
     unsigned int gridComponentCount = grid->getHeight() * grid->getWidth();
     mNumberOfComponents += gridComponentCount;
@@ -177,6 +178,8 @@ void Gridbrain::addGrid(Grid* grid)
     mGridsVec.push_back(grid);
 
     mGridsCount++;
+
+    mChannels[name] = number;
 }
 
 void Gridbrain::init()
@@ -1007,7 +1010,8 @@ Orbit<Gridbrain>::NumberGlobalType Gridbrain::mNumberGlobals[] = {{0,0}};
 int Gridbrain::addGrid(lua_State* luaState)
 {
         Grid* grid = (Grid*)(Orbit<Gridbrain>::pointer(luaState, 1));
-        addGrid(grid);
+        string name = luaL_checkstring(luaState, 2);
+        addGrid(grid, name);
         return 0;
 }
 

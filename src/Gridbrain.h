@@ -30,6 +30,10 @@
 #include "randistrs.h"
 
 #include <vector>
+#include <string>
+
+using std::vector;
+using std::string;
 
 class Gridbrain : public Brain
 {
@@ -39,7 +43,7 @@ public:
 
     virtual Brain* clone(bool randomize=false);
 
-    void addGrid(Grid* grid);
+    void addGrid(Grid* grid, string name);
     virtual void init();
 
     virtual float* getInputBuffer(unsigned int channel);
@@ -114,7 +118,7 @@ protected:
     static mt_distribution* mDistWeights;
     static mt_distribution* mDistComponents;
 
-    std::vector<Grid*> mGridsVec;
+    vector<Grid*> mGridsVec;
 
     GridbrainComponent* mComponents;
     unsigned int mMaxInputDepth;

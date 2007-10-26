@@ -26,10 +26,12 @@
 
 #include <list>
 #include <vector>
+#include <map>
 #include <string>
 
 using std::list;
 using std::vector;
+using std::map;
 using std::string;
 
 class Brain
@@ -52,9 +54,12 @@ public:
 
     virtual float getFieldValue(string fieldName){return 0.0f;}
 
+    int getChannelByName(string name);
+
 protected:
     vector<list<InterfaceItem*>*> mInputInterfacesVector;
     list<InterfaceItem*> mOutputInterface;
+    map<string, int> mChannels;
 };
 #endif
 

@@ -64,3 +64,13 @@ list<InterfaceItem*>* Brain::getOutputInterface()
     return &mOutputInterface;
 }
 
+int Brain::getChannelByName(string name)
+{
+    if (mChannels.count(name) == 0)
+    {
+        return -1;
+    }
+
+    return mChannels[name];
+}
+
