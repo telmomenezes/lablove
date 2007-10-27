@@ -103,7 +103,13 @@ SET(UNIT_TEST_FILES
 INCLUDE_DIRECTORIES("src")
 INCLUDE_DIRECTORIES("src/UnitTest++")
 INCLUDE_DIRECTORIES("src/mtwist")
+
 ADD_EXECUTABLE(test ${UNIT_TEST_FILES})
 TARGET_LINK_LIBRARIES(test llove pycasso lua dl)
 
 ADD_CUSTOM_COMMAND(TARGET test POST_BUILD COMMAND "./test")
+
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    INCLUDE_DIRECTORIES("/usr/local/include/SDL")
+    SET_TARGET_PROPERTIES(lablove test PROPERTIES LINK_FLAGS "-L/usr/local/lib -lfreetype /usr/local/lib/libSDLmain.a /usr/local/lib/libSDL.a -Wl,-framework,OpenGL -Wl,-framework,Cocoa -Wl,-framework,QuickTime -Wl,-framework,ApplicationServices -Wl,-framework,Carbon -Wl,-framework,AudioToolbox -Wl,-framework,AudioUnit -Wl,-framework,IOKit")
+ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
