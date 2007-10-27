@@ -20,9 +20,12 @@
 #if !defined(__INCLUDE_SYMBOL_FLOAT_H)
 #define __INCLUDE_SYMBOL_FLOAT_H
 
+#include "Simulation.h"
 #include "Symbol.h"
 #include "Orbit.h"
 #include "randistrs.h"
+
+namespace{Simulation sim;}
 
 class SymbolFloat : public Symbol
 {
