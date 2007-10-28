@@ -196,50 +196,6 @@ extern double		rds_lempirical(mt_state* state,
 			  int n_probs, double* values, double* probs);
 					/* Empirical distribution */
 
-/*
- * Functions that use the default state of the PRNG.
- */
-extern long		rd_iuniform(long lower, long upper);
-					/* (Integer) uniform distribution */
-#ifndef MT_NO_LONGLONG
-extern long long	rd_liuniform(long long lower, long long upper);
-					/* (Integer) uniform distribution */
-#endif /* MT_NO_LONGLONG */
-extern double		rd_uniform(double lower, double upper);
-					/* (Floating) uniform distribution */
-extern double		rd_luniform(double lower, double upper);
-					/* (Floating) uniform distribution */
-extern double		rd_exponential(double mean);
-					/* Exponential distribution */
-extern double		rd_lexponential(double mean);
-					/* Exponential distribution */
-extern double		rd_erlang(int p, double mean);
-					/* p-Erlang distribution */
-extern double		rd_lerlang(int p, double mean);
-					/* p-Erlang distribution */
-extern double		rd_weibull(double shape, double scale);
-					/* Weibull distribution */
-extern double		rd_lweibull(double shape, double scale);
-					/* Weibull distribution */
-extern double		rd_normal(double mean, double sigma);
-					/* Normal distribution */
-extern double		rd_lnormal(double mean, double sigma);
-					/* Normal distribution */
-extern double		rd_lognormal(double shape, double scale);
-					/* Lognormal distribution */
-extern double		rd_llognormal(double shape, double scale);
-					/* Lognormal distribution */
-extern double		rd_triangular(double lower, double upper, double mode);
-					/* Triangular distribution */
-extern double		rd_ltriangular(double lower, double upper,
-			  double mode);	/* Triangular distribution */
-extern double		rd_empirical(int n_probs,
-			  double* values, double* probs);
-					/* Empirical distribution */
-extern double		rd_lempirical(int n_probs,
-			  double* values, double* probs);
-					/* Empirical distribution */
-
 #ifdef __cplusplus
     }
 #endif

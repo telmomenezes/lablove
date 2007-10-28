@@ -305,13 +305,6 @@ int			mt_loadstate(FILE* statefile);
 #define DEVURANDOM	"/dev/urandom"
 
 /*
- * Many applications need only a single PRNG, so it's a nuisance to have to
- * specify a state.  For those applications, we will provide a default
- * state, and functions to use it.
- */
-mt_state		mt_default_state;
-
-/*
  * To generate double-precision random numbers, we need to divide the result
  * of mts_lrand or mts_llrand by 2^32 or 2^64, respectively.  The quickest
  * way to do that on most machines is to multiply by the inverses of those
@@ -320,9 +313,9 @@ mt_state		mt_default_state;
  * run time as part of initialization, which will produce a nice exact
  * result.
  */
-double			mt_32_to_double;
+double			mt_32_to_double = 0.0f;
 					/* Multiplier to convert long to dbl */
-double			mt_64_to_double;
+double			mt_64_to_double = 0.0f;
 					/* Mult'r to cvt long long to dbl */
 
 /*
@@ -864,89 +857,3 @@ int mts_loadstate(
     return 1;
     }
 
-/*
- * Initialize the default Mersenne Twist PRNG from a 32-bit seed.
- *
- * See mts_seed32 for full commentary.
- */
-void mt_seed32(
-    unsigned long	seed)		/* 32-bit seed to start from */
-    {
-    mts_seed32(&mt_default_state, seed);
-    }
-
-/*
- * Initialize the default Mersenne Twist PRNG from a 32-bit seed.
- *
- * See mts_seed32new for full commentary.
- */
-void mt_seed32new(
-    unsigned long	seed)		/* 32-bit seed to start from */
-    {
-    mts_seed32new(&mt_default_state, seed);
-    }
-
-/*
- * Initialize a Mersenne Twist RNG from a 624-long seed.
- *
- * See mts_seedfull for full commentary.
- */
-void mt_seedfull(
-    unsigned long	seeds[MT_STATE_SIZE])
-    {
-    mts_seedfull(&mt_default_state, seeds);
-    }
-
-/*
- * Initialize the PRNG from random input.  See mts_seed.
- */
-void mt_seed()
-    {
-    mts_seed(&mt_default_state);
-    }
-
-/*
- * Initialize the PRNG from random input.  See mts_goodseed.
- */
-void mt_goodseed()
-    {
-    mts_goodseed(&mt_default_state);
-    }
-
-/*
- * Initialize the PRNG from random input.  See mts_bestseed.
- */
-void mt_bestseed()
-    {
-    mts_bestseed(&mt_default_state);
-    }
-
-/*
- * Return a pointer to the current state of the PRNG.  The purpose of
- * this function is to allow the state to be saved for later
- * restoration.  The state should not be modified; instead, it should
- * be reused later as a parameter to one of the mts_xxx functions.
- */
-extern mt_state* mt_getstate()
-    {
-    return &mt_default_state;
-    }
-
-/*
- * Save state to a file.  The save format is compatible with Richard
- * J. Wagner's format, although the details are different.
- */
-int mt_savestate(
-    FILE*		statefile)	/* File to save to */
-    {
-    return mts_savestate(statefile, &mt_default_state);
-    }
-
-/*
- * Load state from a file.
- */
-int mt_loadstate(
-    FILE*		statefile)	/* File to load from */
-    {
-    return mts_loadstate(statefile, &mt_default_state);
-    }

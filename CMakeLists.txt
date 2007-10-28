@@ -55,7 +55,8 @@ SET(SOURCE_FILES
     src/mtwist/randistrs.c)
 
 
-ADD_LIBRARY(llove ${SOURCE_FILES})
+ADD_LIBRARY(llove SHARED ${SOURCE_FILES})
+TARGET_LINK_LIBRARIES(llove llove pycasso lua dl)
 
 ADD_EXECUTABLE(lablove src/main.cpp)
 TARGET_LINK_LIBRARIES(lablove llove pycasso lua dl)
