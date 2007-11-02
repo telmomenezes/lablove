@@ -43,7 +43,7 @@ Graphic* GraphicSquare::createSameType()
     return new GraphicSquare();
 }
 
-void GraphicSquare::init(SimulationObject* obj)
+void GraphicSquare::init(SimulationObject* obj, pyc::Pycasso* pycasso)
 {
     mObject = obj;
 

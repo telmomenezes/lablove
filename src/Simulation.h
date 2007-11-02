@@ -119,6 +119,10 @@ protected:
     unsigned long mTimeLimit;
 
     bool mDrawGraphics;
+
+    double mLastDrawTime;
+    unsigned int mTargetFPS;
+    double mFrameDuration;
 };
 #endif
 

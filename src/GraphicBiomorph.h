@@ -17,19 +17,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_GRAPHIC_SQUARE_H)
-#define __INCLUDE_GRAPHIC_SQUARE_H
+#if !defined(__INCLUDE_GRAPHIC_BIOMORPH_H)
+#define __INCLUDE_GRAPHIC_BIOMORPH_H
 
 #include "Graphic.h"
 #include "Orbit.h"
 
 #include "pyc.h"
 
-class GraphicSquare : public Graphic
+class GraphicBiomorph : public Graphic
 {
 public:
-    GraphicSquare(lua_State* luaState=NULL);
-    virtual ~GraphicSquare();
+    GraphicBiomorph(lua_State* luaState=NULL);
+    virtual ~GraphicBiomorph();
     
     virtual Graphic* createSameType();
 
@@ -37,10 +37,13 @@ public:
     virtual void draw(pyc::Layer* layer);
 
     static const char mClassName[];
-    static Orbit<GraphicSquare>::MethodType mMethods[];
-    static Orbit<GraphicSquare>::NumberGlobalType mNumberGlobals[];
+    static Orbit<GraphicBiomorph>::MethodType mMethods[];
+    static Orbit<GraphicBiomorph>::NumberGlobalType mNumberGlobals[];
 
 protected:
+    void calcTree(float x, float y, int length, int dir);
+    void normalizePoints();
+
     float mSize;
     int mRed;
     int mGreen;
@@ -48,6 +51,21 @@ protected:
     int mXIndex;
     int mYIndex;
     int mRotIndex;
+
+    unsigned int mLineCount;
+    float* mX1Points;
+    float* mY1Points;
+    float* mX2Points;
+    float* mY2Points;
+    unsigned int mCurrentLine;
+
+    float mParameters[19];
+
+    int mDX[8];
+    int mDY[8];
+
+    pyc::Window* mWindow;
+    pyc::Layer2D* mLayer;
 };
 #endif
 

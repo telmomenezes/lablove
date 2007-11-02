@@ -32,7 +32,7 @@ public:
 
     virtual Graphic* createSameType()=0;
 
-    virtual void init(SimulationObject* obj)=0;
+    virtual void init(SimulationObject* obj, pyc::Pycasso* pycasso)=0;
     virtual void draw(pyc::Layer* layer)=0;
 
 protected:

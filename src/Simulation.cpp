@@ -51,6 +51,11 @@ Simulation::Simulation(lua_State* luaState)
     mTimeLimit = 0;
 
     mDrawGraphics = true;
+
+    mLastDrawTime = 0.0f;
+    mTargetFPS = 60;
+
+    mFrameDuration = 1.0f / (double)mTargetFPS;
 }
 
 Simulation::~Simulation()
@@ -99,6 +104,17 @@ void Simulation::run()
 
 void Simulation::cycle()
 {
+    bool drawThisCycle = false;
+
+    double realTime = mPycasso.getTime();
+    if (realTime - mLastDrawTime >= mFrameDuration)
+    {
+        mLastDrawTime = realTime;
+        drawThisCycle = true;
+    }
+
+    bool draw = mDrawGraphics && drawThisCycle;
+
     list<SimulationObject*>::iterator iterObj;
 
     for (iterObj = mObjectsToKill.begin();
@@ -109,7 +125,7 @@ void Simulation::cycle()
     }
     mObjectsToKill.clear();
 
-    if (mDrawGraphics)
+    if (draw)
     {
         drawBeforeObjects();
     }
@@ -128,13 +144,13 @@ void Simulation::cycle()
             act(agent);
         }
     
-        if (mDrawGraphics)
+        if (draw)
         {
             obj->draw(mRootLayer2D);
         }
     }
 
-    if (mDrawGraphics)
+    if (draw)
     {
         drawAfterObjects();
     }
@@ -146,7 +162,10 @@ void Simulation::cycle()
     mRootLayer2D->fillRectangle(122, 0, mWindow->getWidth() - 122, 50);
     drawTimes();
 
-    mWindow->update();
+    if (draw)
+    {
+        mWindow->update();
+    }
 
     mSimulationTime++;
 
@@ -200,7 +219,7 @@ void Simulation::addObject(SimulationObject* object)
                 iterGraph != gObj->mGraphics.end();
                 iterGraph++)
         {
-            (*iterGraph)->init(gObj);
+            (*iterGraph)->init(gObj, &mPycasso);
         }
     }
 }

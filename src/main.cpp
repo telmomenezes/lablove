@@ -32,11 +32,13 @@
 #include "SymbolRGB.h"
 #include "SymbolFixedString.h"
 #include "SymbolFloat.h"
+#include "SymbolFloatVector.h"
 #include "SymbolUL.h"
 #include "StatCommon.h"
 #include "StatTime.h"
 #include "GraphicTriangle.h"
 #include "GraphicSquare.h"
+#include "GraphicBiomorph.h"
 
 #if defined(__LABLOVE_WITH_GRAPHICS)
 #if defined(__WIN32)
@@ -142,11 +144,13 @@ int main(int argc, char *argv[])
     Orbit<SymbolRGB>::orbitRegister(luaState);
     Orbit<SymbolFixedString>::orbitRegister(luaState);
     Orbit<SymbolFloat>::orbitRegister(luaState);
+    Orbit<SymbolFloatVector>::orbitRegister(luaState);
     Orbit<SymbolUL>::orbitRegister(luaState);
     Orbit<StatCommon>::orbitRegister(luaState);
     Orbit<StatTime>::orbitRegister(luaState);
     Orbit<GraphicTriangle>::orbitRegister(luaState);
     Orbit<GraphicSquare>::orbitRegister(luaState);
+    Orbit<GraphicBiomorph>::orbitRegister(luaState);
 
     lua_register(luaState, "getCommandLineParameter", getCommandLineParameter);
 

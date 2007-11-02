@@ -43,7 +43,7 @@ Graphic* GraphicTriangle::createSameType()
     return new GraphicTriangle();
 }
 
-void GraphicTriangle::init(SimulationObject* obj)
+void GraphicTriangle::init(SimulationObject* obj, pyc::Pycasso* pycasso)
 {
     mObject = obj;
 

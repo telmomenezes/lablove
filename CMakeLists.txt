@@ -42,6 +42,7 @@ SET(SOURCE_FILES
     src/SymbolRGB.cpp
     src/SymbolFixedString.cpp
     src/SymbolFloat.cpp
+    src/SymbolFloatVector.cpp
     src/SymbolUL.cpp
     src/SymbolTable.cpp
     src/Statistics.cpp
@@ -50,6 +51,7 @@ SET(SOURCE_FILES
     src/Graphic.cpp
     src/GraphicTriangle.cpp
     src/GraphicSquare.cpp
+    src/GraphicBiomorph.cpp
     src/RandDistManager.cpp
     src/mtwist/mtwist.c
     src/mtwist/randistrs.c)
