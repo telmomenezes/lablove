@@ -67,7 +67,7 @@ GraphicBiomorph::~GraphicBiomorph()
         mY2Points = NULL;
     }
 
-    //mWindow->removeLayer(mLayer);
+    mWindow->removeLayer(mLayer);
 }
 
 Graphic* GraphicBiomorph::createSameType()
@@ -113,9 +113,64 @@ void GraphicBiomorph::init(SimulationObject* obj, pyc::Pycasso* pycasso)
 
     if (color != NULL)
     {
-        mRed = color->mRed;
-        mGreen = color->mGreen;
-        mBlue = color->mBlue;
+        int red = color->mRed;
+        int green = color->mGreen;
+        int blue = color->mBlue;
+
+        int firstColor = 0;
+        int secondColor = 0;
+        int thirdColor = 0;
+
+        int rgb[3];
+        rgb[0] = red;
+        rgb[1] = green;
+        rgb[2] = blue;
+
+        if (green < rgb[firstColor])
+        {
+            firstColor = 1;
+        }
+        if (blue < rgb[firstColor])
+        {
+            firstColor = 2;
+        }
+        if (green >= rgb[secondColor])
+        {
+            secondColor = 1;
+        }
+        if (blue >= rgb[secondColor])
+        {
+            secondColor = 2;
+        }
+        if ((firstColor != 0) && (thirdColor != 0))
+        {
+            secondColor = 0;
+        }
+        if ((firstColor != 1) && (thirdColor != 1))
+        {
+            secondColor = 1;
+        }
+        if ((firstColor != 2) && (thirdColor != 2))
+        {
+            secondColor = 2;
+        }
+
+        rgb[thirdColor] *= 3;
+        if (rgb[thirdColor] > 255)
+        {
+            rgb[thirdColor] = 255;
+        }
+
+        rgb[secondColor] /= 3;
+        rgb[firstColor] = 0;
+
+        mRed = rgb[0];
+        mGreen = rgb[1];
+        mBlue = rgb[2];
+    }
+    else
+    {
+        throw std::runtime_error("Failed to initialize GraphicBiomorph: object does not define 'color' named symbol");
     }
 
     SymbolFloatVector* symFloatVector = (SymbolFloatVector*)obj->getSymbolByName("biomorph");
@@ -319,24 +374,6 @@ void GraphicBiomorph::draw(pyc::Layer* layer)
     layer2D->setColor(255, 255, 255);
     layer2D->setRotation(centerX, centerY, rot - (M_PI / 2.0f));
     layer2D->drawLayer(mLayer, centerX - halfSide, centerY - halfSide, side, side);
-    layer2D->clearRotation();
-    return;
-
-    // Code to draw line by line
-    layer2D->setColor(mRed, mGreen, mBlue);
-    layer2D->setLineWidth(1.0f);
-
-    layer2D->setRotation(centerX, centerY, rot - (M_PI / 2.0f));
-
-    for (unsigned int i = 0; i < mLineCount; i++)
-    {
-        float x1 = mX1Points[i] + centerX;
-        float y1 = mY1Points[i] + centerY;
-        float x2 = mX2Points[i] + centerX;
-        float y2 = mY2Points[i] + centerY;
-        layer2D->drawLine(x1, y1, x2, y2);
-    }
-
     layer2D->clearRotation();
 }
 

@@ -111,6 +111,8 @@ void Agent::compute()
 
 void Agent::mutate()
 {
+    SimulationObject::mutate();
+
     if (mBrain != NULL)
     {
         mBrain->mutate();

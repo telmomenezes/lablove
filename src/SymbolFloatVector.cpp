@@ -116,18 +116,20 @@ void SymbolFloatVector::initRandom()
 
 void SymbolFloatVector::mutate()
 {
+    // TODO: this mutation strategy is temporary
     float span = fabsf(mMax - mMin);
     float delta = mDistFloatVector->uniform(0.0f, span);
+    unsigned int index = (unsigned int)(mDistFloatVector->uniform(0.0f, mSize));
     delta -= span / 2.0f;
-    mVector[0] += delta;
+    mVector[index] += delta;
 
-    if (mVector[0] > mMax)
+    if (mVector[index] > mMax)
     {
-        mVector[0] = mMax;
+        mVector[index] = mMax;
     }
-    else if (mVector[0] < mMin)
+    else if (mVector[index] < mMin)
     {
-        mVector[0] = mMin;
+        mVector[index] = mMin;
     }
 }
 

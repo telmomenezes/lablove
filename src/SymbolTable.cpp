@@ -22,6 +22,7 @@
 
 int SymbolTable::NEXT_SYMBOL_TABLE_ID = 0;
 mt_distribution* SymbolTable::mDistIndex = Simulation::getNewDistribution();
+mt_distribution* SymbolTable::mDistMutationsProb = Simulation::getNewDistribution();
 
 SymbolTable::SymbolTable(Symbol* refSymbol, int id)
 {
@@ -48,6 +49,8 @@ SymbolTable::SymbolTable(SymbolTable* table)
     {
         mSymbols.push_back((*iterSymbol)->clone());
     }
+
+    mMutateSymbolProb = table->mMutateSymbolProb;
 }
 
 SymbolTable::~SymbolTable()
@@ -77,6 +80,8 @@ void SymbolTable::create(Symbol* refSymbol, int id)
     {
         mID = id;
     }
+
+    mMutateSymbolProb = 0.0f;
 }
 
 Symbol* SymbolTable::getSymbol(unsigned int index)
@@ -93,8 +98,23 @@ unsigned int SymbolTable::addSymbol(Symbol* sym)
 
 void SymbolTable::mutate()
 {
-    unsigned int index = mDistIndex->iuniform(0, mSymbols.size());
-    mSymbols[index]->mutate();
+    float nonSelectionProb = 1.0f - mMutateSymbolProb;
+    if (nonSelectionProb == 1.0f)
+    {
+        return;
+    }
+    float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+    double nextPos = trunc(log(prob) / log(nonSelectionProb));
+    
+    unsigned int symbolPos = 0;
+    unsigned int symbolCount = mSymbols.size();
+
+    while (nextPos < symbolCount) 
+    {
+        mSymbols[nextPos]->mutate();
+        prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+        nextPos += trunc(log(prob) / log(nonSelectionProb));
+    }
 }
 
 int SymbolTable::addSymbol(lua_State* luaState)
@@ -111,11 +131,19 @@ int SymbolTable::getID(lua_State* luaState)
     return 1;
 }
 
+int SymbolTable::setMutateSymbolProb(lua_State* luaState)
+{
+    float prob = luaL_checknumber(luaState, 1);
+    setMutateSymbolProb(prob);
+    return 0;
+}
+
 const char SymbolTable::mClassName[] = "SymbolTable";
 
 Orbit<SymbolTable>::MethodType SymbolTable::mMethods[] = {
     {"addSymbol", &SymbolTable::addSymbol},
     {"getID", &SymbolTable::getID},
+    {"setMutateSymbolProb", &SymbolTable::setMutateSymbolProb},
     {0,0}
 };
 

@@ -93,6 +93,11 @@ void SymbolRGB::initRandom()
 void SymbolRGB::mutate()
 {
     int delta = mDistRGB->iuniform(0, 256);
+    int signal = mDistRGB->iuniform(0, 2);
+    if (signal == 1)
+    {
+        delta = -delta;
+    }
     unsigned int selector = mDistRGB->iuniform(0, 3);
 
     switch (selector)
@@ -133,9 +138,19 @@ void SymbolRGB::mutate()
     }
 }
 
+int SymbolRGB::initRandom(lua_State* luaState)
+{
+    initRandom();
+    return 0;
+}
+
 const char SymbolRGB::mClassName[] = "SymbolRGB";
 
-Orbit<SymbolRGB>::MethodType SymbolRGB::mMethods[] = {{0,0}};
+Orbit<SymbolRGB>::MethodType SymbolRGB::mMethods[] =
+{
+    {"initRandom", &SymbolRGB::initRandom},
+    {0,0}
+};
 
 Orbit<SymbolRGB>::NumberGlobalType SymbolRGB::mNumberGlobals[] = {{0,0}};
 

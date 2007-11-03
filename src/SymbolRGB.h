@@ -37,6 +37,8 @@ public:
     virtual void initRandom();
     virtual void mutate();
 
+    int initRandom(lua_State* luaState);
+
     static const char mClassName[];
     static Orbit<SymbolRGB>::MethodType mMethods[];
     static Orbit<SymbolRGB>::NumberGlobalType mNumberGlobals[];

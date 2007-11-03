@@ -98,9 +98,19 @@ void SymbolFloat::mutate()
     }
 }
 
+int SymbolFloat::initRandom(lua_State* luaState)
+{
+    initRandom();
+    return 0;
+}
+
 const char SymbolFloat::mClassName[] = "SymbolFloat";
 
-Orbit<SymbolFloat>::MethodType SymbolFloat::mMethods[] = {{0,0}};
+Orbit<SymbolFloat>::MethodType SymbolFloat::mMethods[] =
+{
+    {"initRandom", &SymbolFloat::initRandom},
+    {0,0}
+};
 
 Orbit<SymbolFloat>::NumberGlobalType SymbolFloat::mNumberGlobals[] = {{0,0}};
 

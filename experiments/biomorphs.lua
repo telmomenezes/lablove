@@ -1,8 +1,9 @@
 numberOfPlants = 100
 numberOfAgents = 100
 
-agentSize = 10.0
-plantSize = 10.0
+agentMinSize = 7.0
+agentMaxSize = 20.0
+plantSize = 7.0
 
 worldWidth = 3000
 worldHeight = 3000
@@ -42,6 +43,9 @@ removeConnectionProb = 0.1
 changeWeightProb = 0.01
 changeComponentProb = 0.01
 weightMutationStanDev = 1.0
+mutateBiomoprhSymbolProb = 0.2
+mutateSizeSymbolProb = 0.2
+mutateColorSymbolProb = 0.2
 
 timeLimit = 0
 
@@ -60,132 +64,150 @@ sim:setRotateForceScale(rotateForceScale)
 sim:setSeedIndex(seedIndex)
 sim:setTimeLimit(timeLimit)
 
-agent = Agent()
+popDyn = PopDynFixedSpecies()
+sim:setPopulationDynamics(popDyn)
+popDyn:setTournmentSize(10)
 
-agent:addGraphic(GraphicBiomorph())
+sizeTableCode = 0
+physicsTableCode = 1 
+energyTableCode = 2
+ageTableCode = 3
+colorTableCode = 4
+feedTableCode = 5
+biomorphTableCode = 6
 
-symSize = SymbolFloat(agentSize)
-symTable = SymbolTable(symSize)
-agent:addSymbolTable(symTable)
-sizeTableCode = symTable:getID()
-agent:setSymbolName("size", sizeTableCode, 0)
+function addAgentSpecies(red, green, blue, feed, food)
+    agent = Agent()
 
-symFriction = SymbolFloat(friction)
-symDrag = SymbolFloat(drag)
-symRotFriction = SymbolFloat(rotFriction)
-symRotDrag = SymbolFloat(rotDrag)
-symTable = SymbolTable(symFriction)
-symTable:addSymbol(symDrag)
-symTable:addSymbol(symRotFriction)
-symTable:addSymbol(symRotDrag)
-agent:addSymbolTable(symTable)
-physicsTableCode = symTable:getID()
-agent:setSymbolName("friction", physicsTableCode, 0)
-agent:setSymbolName("drag", physicsTableCode, 1)
-agent:setSymbolName("rot_friction", physicsTableCode, 2)
-agent:setSymbolName("rot_drag", physicsTableCode, 3)
+    agent:addGraphic(GraphicBiomorph())
 
-symInitialEnergy = SymbolFloat(1.0)
-symMetabolism = SymbolFloat(metabolism)
-symTable = SymbolTable(symInitialEnergy)
-symTable:addSymbol(symMetabolism)
-agent:addSymbolTable(symTable)
-energyTableCode = symTable:getID()
-agent:setSymbolName("initial_energy", energyTableCode, 0)
-agent:setSymbolName("metabolism", energyTableCode, 1)
+    symSize = SymbolFloat(agentMinSize, agentMinSize, agentMaxSize)
+    symSize:initRandom()
+    symTable = SymbolTable(symSize, sizeTableCode)
+    symTable:setMutateSymbolProb(mutateSizeSymbolProb)
+    agent:addSymbolTable(symTable)
+    agent:setSymbolName("size", sizeTableCode, 0)
 
-symLowAgeLimit = SymbolUL(lowAgeLimit)
-symHighAgeLimit = SymbolUL(highAgeLimit)
-symTable = SymbolTable(symLowAgeLimit)
-symTable:addSymbol(symHighAgeLimit)
-agent:addSymbolTable(symTable)
-ageTableCode = symTable:getID()
-agent:setSymbolName("low_age_limit", ageTableCode, 0)
-agent:setSymbolName("high_age_limit", ageTableCode, 1)
+    symFriction = SymbolFloat(friction)
+    symDrag = SymbolFloat(drag)
+    symRotFriction = SymbolFloat(rotFriction)
+    symRotDrag = SymbolFloat(rotDrag)
+    symTable = SymbolTable(symFriction, physicsTableCode)
+    symTable:addSymbol(symDrag)
+    symTable:addSymbol(symRotFriction)
+    symTable:addSymbol(symRotDrag)
+    agent:addSymbolTable(symTable)
+    agent:setSymbolName("friction", physicsTableCode, 0)
+    agent:setSymbolName("drag", physicsTableCode, 1)
+    agent:setSymbolName("rot_friction", physicsTableCode, 2)
+    agent:setSymbolName("rot_drag", physicsTableCode, 3)
 
-agentColor = SymbolRGB(255, 0, 0)
-symTable = SymbolTable(agentColor)
-agent:addSymbolTable(symTable)
-colorTableCode = symTable:getID()
-agent:setSymbolName("color", colorTableCode, 0)
+    symInitialEnergy = SymbolFloat(1.0)
+    symMetabolism = SymbolFloat(metabolism)
+    symTable = SymbolTable(symInitialEnergy, energyTableCode)
+    symTable:addSymbol(symMetabolism)
+    agent:addSymbolTable(symTable)
+    agent:setSymbolName("initial_energy", energyTableCode, 0)
+    agent:setSymbolName("metabolism", energyTableCode, 1)
 
-agentFeed = SymbolFixedString("abc", "aaa")
-agentFood = SymbolFixedString("abc", "bbb")
-agentFeedTable = SymbolTable(agentFeed)
-agentFeedTable:addSymbol(agentFood)
-agent:addSymbolTable(agentFeedTable)
-feedTableCode = agentFeedTable:getID()
-agent:setSymbolName("feed", feedTableCode, 0)
-agent:setSymbolName("food", feedTableCode, 1)
+    symLowAgeLimit = SymbolUL(lowAgeLimit)
+    symHighAgeLimit = SymbolUL(highAgeLimit)
+    symTable = SymbolTable(symLowAgeLimit, ageTableCode)
+    symTable:addSymbol(symHighAgeLimit)
+    agent:addSymbolTable(symTable)
+    agent:setSymbolName("low_age_limit", ageTableCode, 0)
+    agent:setSymbolName("high_age_limit", ageTableCode, 1)
 
-symBiomorph = SymbolFloatVector(19)
-symBiomorph:initRandom()
-symTable = SymbolTable(symBiomorph)
-agent:addSymbolTable(symTable)
-biomorphTableCode = symTable:getID()
-agent:setSymbolName("biomorph", biomorphTableCode, 0)
+    agentColor = SymbolRGB(0, 0, 0)
+    symTable = SymbolTable(agentColor, colorTableCode)
+    symTable:setMutateSymbolProb(mutateColorSymbolProb)
+    agent:addSymbolTable(symTable)
+    agent:setSymbolName("color", colorTableCode, 0)
 
-brain = Gridbrain()
+    agentFeed = SymbolFixedString("abc", feed)
+    agentFood = SymbolFixedString("abc", food)
+    agentFeedTable = SymbolTable(agentFeed, feedTableCode)
+    agentFeedTable:addSymbol(agentFood)
+    agent:addSymbolTable(agentFeedTable)
+    agent:setSymbolName("feed", feedTableCode, 0)
+    agent:setSymbolName("food", feedTableCode, 1)
 
-brain:setMutateAddConnectionProb(addConnectionProb)
-brain:setMutateRemoveConnectionProb(removeConnectionProb)
-brain:setMutateChangeConnectionWeightProb(changeWeightProb)
-brain:setMutateChangeComponentProb(changeComponentProb)
-brain:setWeightMutationStanDev(weightMutationStanDev)
+    symBiomorph = SymbolFloatVector(19)
+    symBiomorph:initRandom()
+    symTable = SymbolTable(symBiomorph, biomorphTableCode)
+    symTable:setMutateSymbolProb(mutateBiomoprhSymbolProb)
+    agent:addSymbolTable(symTable)
+    agent:setSymbolName("biomorph", biomorphTableCode, 0)
 
-perSet = GridbrainComponentSet()
-perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_POSITION)
-perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_DISTANCE)
-perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_IN_CONTACT)
-perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, 0, colorTableCode, 0, 0)
+    brain = Gridbrain()
 
-alphaSet = GridbrainComponentSet()
-if THR then
-    alphaSet:addComponent(GridbrainComponent.THR)
-end
-if MAX then
-    alphaSet:addComponent(GridbrainComponent.MAX)
-end
-if MUL then
-    alphaSet:addComponent(GridbrainComponent.MUL)
-end
-if NOT then
-    alphaSet:addComponent(GridbrainComponent.NOT)
-end
+    brain:setMutateAddConnectionProb(addConnectionProb)
+    brain:setMutateRemoveConnectionProb(removeConnectionProb)
+    brain:setMutateChangeConnectionWeightProb(changeWeightProb)
+    brain:setMutateChangeComponentProb(changeComponentProb)
+    brain:setWeightMutationStanDev(weightMutationStanDev)
 
-grid = Grid()
-grid:init(Grid.ALPHA, gridAlpha, gridHeight)
-grid:addComponentSet(perSet, 0, 0)
-grid:addComponentSet(alphaSet, 1, gridAlpha - 1)
+    perSet = GridbrainComponentSet()
+    perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_POSITION)
+    perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_DISTANCE)
+    perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_IN_CONTACT)
+    perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, 0, feedTableCode, 0, 1)
+    perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, 0, feedTableCode, 1, 0)
 
-brain:addGrid(grid, "objects");
+    alphaSet = GridbrainComponentSet()
+    if THR then
+        alphaSet:addComponent(GridbrainComponent.THR)
+    end
+    if MAX then
+        alphaSet:addComponent(GridbrainComponent.MAX)
+    end
+    if MUL then
+        alphaSet:addComponent(GridbrainComponent.MUL)
+    end
+    if NOT then
+        alphaSet:addComponent(GridbrainComponent.NOT)
+    end
 
-actSet = GridbrainComponentSet()
-actSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_GO)
-actSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_ROTATE)
-actSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_EAT)
+    grid = Grid()
+    grid:init(Grid.ALPHA, gridAlpha, gridHeight)
+    grid:addComponentSet(perSet, 0, 0)
+    grid:addComponentSet(alphaSet, 1, gridAlpha - 1)
 
-betaSet = GridbrainComponentSet()
-if THR then
-    betaSet:addComponent(GridbrainComponent.THR)
-end
-if MAX then
-    betaSet:addComponent(GridbrainComponent.MUL)
-end
-if NOT then
-    betaSet:addComponent(GridbrainComponent.NOT)
-end
+    brain:addGrid(grid, "objects");
+
+    actSet = GridbrainComponentSet()
+    actSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_GO)
+    actSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_ROTATE)
+    actSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_EAT)
+
+    betaSet = GridbrainComponentSet()
+    if THR then
+        betaSet:addComponent(GridbrainComponent.THR)
+    end
+    if MAX then
+        betaSet:addComponent(GridbrainComponent.MUL)
+    end
+    if NOT then
+        betaSet:addComponent(GridbrainComponent.NOT)
+    end
     
-grid2 = Grid()
-grid2:init(Grid.BETA, gridBeta, gridHeight)
-grid2:addComponentSet(betaSet, 0, gridBeta - 2)
-grid2:addComponentSet(actSet, gridBeta - 1, gridBeta - 1)
+    grid2 = Grid()
+    grid2:init(Grid.BETA, gridBeta, gridHeight)
+    grid2:addComponentSet(betaSet, 0, gridBeta - 2)
+    grid2:addComponentSet(actSet, gridBeta - 1, gridBeta - 1)
 
-brain:addGrid(grid2, "beta")
+    brain:addGrid(grid2, "beta")
 
-agent:setBrain(brain)
+    agent:setBrain(brain)
 
-brain:addRandomConnections(initialConnections)
+    brain:addRandomConnections(initialConnections)
+
+    popDyn:addSpecies(agent, numberOfAgents)
+end
+
+addAgentSpecies(255, 0, 0, "aaa", "bbb")
+addAgentSpecies(0, 0, 255, "bbb", "ccc")
+addAgentSpecies(0, 255, 0, "ccc", "aaa")
 
 plant = GraphicalObject()
 
@@ -211,11 +233,6 @@ plant:setSymbolName("food", feedTableCode, 0)
 
 plant:addGraphic(GraphicSquare())
 
-popDyn = PopDynFixedSpecies()
-sim:setPopulationDynamics(popDyn)
-
-popDyn:setTournmentSize(10)
-agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents)
 popDyn:addSpecies(plant, numberOfPlants)
 
 human = Agent()
@@ -227,7 +244,7 @@ dummyBrain:addPerception("Color", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, colorT
 
 human:setBrain(dummyBrain)
 
-symSize = SymbolFloat(agentSize)
+symSize = SymbolFloat(10.0)
 symTable = SymbolTable(symSize, sizeTableCode)
 human:addSymbolTable(symTable)
 human:setSymbolName("size", sizeTableCode, 0)
@@ -236,7 +253,7 @@ symHFriction = SymbolFloat(friction)
 symHDrag = SymbolFloat(drag)
 symHRotFriction = SymbolFloat(rotFriction)
 symHRotDrag = SymbolFloat(rotDrag)
-symTable = SymbolTable(symFriction, physicsTableCode)
+symTable = SymbolTable(symHFriction, physicsTableCode)
 symTable:addSymbol(symHDrag)
 symTable:addSymbol(symHRotFriction)
 symTable:addSymbol(symHRotDrag)
@@ -279,16 +296,6 @@ human:addGraphic(GraphicTriangle())
 sim:addObject(human)
 sim:setPos(human, 300, 300)
 sim:setHuman(human)
-
-stats = StatCommon()
-stats:setFile("energy.csv")
-stats:addField("energy")
---stats:addField("connections")
-popDyn:addDeathStatistics(agentSpeciesIndex, stats)
-
-statTime = StatTime()
-statTime:setFile("time.csv")
-popDyn:addDeathStatistics(agentSpeciesIndex, statTime)
 
 sim:initGraphics(screenWidth, screenHeight, fullScreen, noGraphics)
 sim:run()

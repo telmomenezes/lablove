@@ -66,7 +66,7 @@ public:
     void setCreationTime(unsigned long time){mCreationTime = time;}
 
     virtual SimulationObject* crossover(SimulationObject* otherParent){return this;}
-    virtual void mutate(){}
+    virtual void mutate();
 
     void addSymbolTable(SymbolTable* table);
     SymbolTable* getSymbolTable(int id);

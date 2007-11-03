@@ -42,8 +42,11 @@ public:
 
     void mutate();
 
+    void setMutateSymbolProb(float prob){mMutateSymbolProb = prob;}
+
     int addSymbol(lua_State* luaState);
     int getID(lua_State* luaState);
+    int setMutateSymbolProb(lua_State* luaState);
 
     static const char mClassName[];
     static Orbit<SymbolTable>::MethodType mMethods[];
@@ -55,10 +58,13 @@ protected:
 
     static int NEXT_SYMBOL_TABLE_ID;
     static mt_distribution* mDistIndex;
+    static mt_distribution* mDistMutationsProb;
 
     int mID;
     Symbol* mReferenceSymbol;
     vector<Symbol*> mSymbols;
+
+    float mMutateSymbolProb;
 };
 #endif
 

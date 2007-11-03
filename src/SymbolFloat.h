@@ -43,6 +43,8 @@ public:
     float getFloat(){return mFloat;}
     float getMin(){return mMin;}
     float getMax(){return mMax;}
+    
+    int initRandom(lua_State* luaState);
 
     static const char mClassName[];
     static Orbit<SymbolFloat>::MethodType mMethods[];

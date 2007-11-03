@@ -342,6 +342,17 @@ int SimulationObject::getNamedULDataIndex(string name)
     return mNamedULDataIndexes[name];
 }
 
+void SimulationObject::mutate()
+{
+    map<int, SymbolTable*>::iterator iterTables;
+    for (iterTables = mSymbolTables.begin();
+        iterTables != mSymbolTables.end();
+        iterTables++)
+    {
+        (*iterTables).second->mutate();
+    }
+}
+
 const char SimulationObject::mClassName[] = "SimulationObject";
 
 Orbit<SimulationObject>::MethodType SimulationObject::mMethods[] = {
