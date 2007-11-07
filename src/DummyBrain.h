@@ -39,7 +39,7 @@ public:
     DummyBrain(lua_State* luaState);
     virtual ~DummyBrain();
 
-    virtual Brain* clone(bool randomize=false){return NULL;}
+    virtual Brain* clone(bool randomize=false);
 
     virtual void init();
 
@@ -55,11 +55,14 @@ public:
                         int origSymIndex=-1,
                         int targetSymIndex=-1);
 
+    void setChannelName(int channel, string name){mChannels[name] = channel;}
+
     static const char mClassName[];
     static Orbit<DummyBrain>::MethodType mMethods[];
     static Orbit<DummyBrain>::NumberGlobalType mNumberGlobals[];
 
     int addPerception(lua_State* luaState);
+    int setChannelName(lua_State* luaState);
 
     virtual void draw(pyc::Layer2D* layer);
 

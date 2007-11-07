@@ -73,6 +73,10 @@ public:
                 UL_COLLISION_DETECTION_ITERATION
                 };
 
+    enum IntData {INT_CHANNEL_OBJECTS,
+                INT_CHANNEL_BETA
+                };
+
     SimCont2D(lua_State* luaState=NULL);
     virtual ~SimCont2D();
 

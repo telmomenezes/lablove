@@ -47,6 +47,20 @@ DummyBrain::~DummyBrain()
     }
 }
 
+Brain* DummyBrain::clone(bool randomize)
+{
+    DummyBrain* db = new DummyBrain(mChannelCount);
+
+    for (map<string, int>::iterator iterChannel = mChannels.begin();
+            iterChannel != mChannels.end();
+            iterChannel++)
+    {
+        db->mChannels[(*iterChannel).first] = (*iterChannel).second;
+    }
+
+    return db;
+}
+
 void DummyBrain::create()
 {
     mInputBuffer = NULL;
@@ -158,6 +172,7 @@ const char DummyBrain::mClassName[] = "DummyBrain";
 
 Orbit<DummyBrain>::MethodType DummyBrain::mMethods[] = {
     {"addPerception", &DummyBrain::addPerception},
+    {"setChannelName", &DummyBrain::setChannelName},
     {0,0}
 };
 
@@ -172,6 +187,14 @@ int DummyBrain::addPerception(lua_State* luaState)
     int origSymIndex = luaL_optint(luaState, 5, -1);
     int targetSymIndex = luaL_optint(luaState, 6, -1);
     addPerception(name, channel, type, symTable, origSymIndex, targetSymIndex);
+    return 0;
+}
+
+int DummyBrain::setChannelName(lua_State* luaState)
+{
+    int channel = luaL_checkint(luaState, 1);
+    string name = luaL_checkstring(luaState, 2);
+    setChannelName(channel, name);
     return 0;
 }
 

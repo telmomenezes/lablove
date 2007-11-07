@@ -38,14 +38,14 @@ initialConnections = 10
 
 tournmentSize = 10
 
-addConnectionProb = 0.1
-removeConnectionProb = 0.1
+addConnectionProb = 0.001
+removeConnectionProb = 0.001
 changeWeightProb = 0.01
-changeComponentProb = 0.01
-weightMutationStanDev = 1.0
-mutateBiomoprhSymbolProb = 0.2
-mutateSizeSymbolProb = 0.2
-mutateColorSymbolProb = 0.2
+changeComponentProb = 0.001
+weightMutationStanDev = 0.1
+mutateBiomoprhSymbolProb = 0.1
+mutateSizeSymbolProb = 0.1
+mutateColorSymbolProb = 0.1
 
 timeLimit = 0
 
@@ -237,6 +237,7 @@ popDyn:addSpecies(plant, numberOfPlants)
 
 human = Agent()
 dummyBrain = DummyBrain(1)
+dummyBrain:setChannelName(0, "objects")
 dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
 dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
 dummyBrain:addPerception("Contact", 0, SimCont2D.PERCEPTION_IN_CONTACT)

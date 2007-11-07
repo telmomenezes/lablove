@@ -236,6 +236,7 @@ void SimCont2D::initializeData(SimulationObject* obj)
 {
     obj->initFloatData(18);
     obj->initULData(4);
+    obj->initIntData(2);
 }
 
 void SimCont2D::addObject(SimulationObject* object)
@@ -282,6 +283,16 @@ void SimCont2D::addObject(SimulationObject* object)
     else
     {
         object->mULData[UL_MAX_AGE] = 0;
+    }
+
+    if (object->mType == SimulationObject::TYPE_AGENT)
+    {
+        Agent* agent = (Agent*)object;
+        int channelObjects = agent->getBrain()->getChannelByName("objects");
+        int channelBeta = agent->getBrain()->getChannelByName("beta");
+
+        object->mIntData[INT_CHANNEL_OBJECTS] = channelObjects;
+        object->mIntData[INT_CHANNEL_BETA] = channelBeta;
     }
 
     Simulation::addObject(object);
@@ -612,8 +623,8 @@ void SimCont2D::onScanObject(Agent* orig,
 {
     float normalizedValue;
 
-    list<InterfaceItem*>* interface = orig->getBrain()->getInputInterface(0);
-    float* inBuffer = orig->getBrain()->getInputBuffer(0);
+    list<InterfaceItem*>* interface = orig->getBrain()->getInputInterface(orig->mIntData[INT_CHANNEL_OBJECTS]);
+    float* inBuffer = orig->getBrain()->getInputBuffer(orig->mIntData[INT_CHANNEL_OBJECTS]);
     unsigned int pos = 0;
 
     for (list<InterfaceItem*>::iterator iterItem = interface->begin();

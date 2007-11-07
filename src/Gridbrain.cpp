@@ -131,6 +131,13 @@ Brain* Gridbrain::clone(bool randomize)
         }
     }
 
+    for (map<string, int>::iterator iterChannel = mChannels.begin();
+            iterChannel != mChannels.end();
+            iterChannel++)
+    {
+        gb->mChannels[(*iterChannel).first] = (*iterChannel).second;
+    }
+
     for (unsigned int index = 0; index < mNumberOfComponents; index++)
     {
         GridbrainConnection* conn = mComponents[index].mFirstConnection;

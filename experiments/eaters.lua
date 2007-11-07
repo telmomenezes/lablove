@@ -213,6 +213,7 @@ popDyn:addSpecies(plant, numberOfPlants)
 
 human = Agent()
 dummyBrain = DummyBrain(1)
+dummyBrain:setChannelName(0, "objects")
 dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
 dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
 dummyBrain:addPerception("Contact", 0, SimCont2D.PERCEPTION_IN_CONTACT)
