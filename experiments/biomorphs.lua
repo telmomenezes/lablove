@@ -8,7 +8,7 @@ plantSize = 7.0
 worldWidth = 3000
 worldHeight = 3000
 
-gridHeight = 5
+gridHeight = 10
 gridAlpha = 3
 gridBeta = 3
 
@@ -45,7 +45,7 @@ changeComponentProb = 0.001
 weightMutationStanDev = 0.1
 mutateBiomoprhSymbolProb = 0.1
 mutateSizeSymbolProb = 0.1
-mutateColorSymbolProb = 0.1
+mutateColorSymbolProb = 0.0
 
 timeLimit = 0
 
@@ -118,7 +118,7 @@ function addAgentSpecies(red, green, blue, feed, food)
     agent:setSymbolName("low_age_limit", ageTableCode, 0)
     agent:setSymbolName("high_age_limit", ageTableCode, 1)
 
-    agentColor = SymbolRGB(0, 0, 0)
+    agentColor = SymbolRGB(red, green, blue)
     symTable = SymbolTable(agentColor, colorTableCode)
     symTable:setMutateSymbolProb(mutateColorSymbolProb)
     agent:addSymbolTable(symTable)
@@ -150,7 +150,7 @@ function addAgentSpecies(red, green, blue, feed, food)
     perSet = GridbrainComponentSet()
     perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_POSITION)
     perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_DISTANCE)
-    perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_IN_CONTACT)
+    --perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_IN_CONTACT)
     perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, 0, feedTableCode, 0, 1)
     perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, 0, feedTableCode, 1, 0)
 
@@ -226,10 +226,13 @@ symTable = SymbolTable(plantColor, colorTableCode)
 plant:addSymbolTable(symTable)
 plant:setSymbolName("color", colorTableCode, 0)
 
+plantFeed = SymbolFixedString("abcd", "ddd")
 plantFood = SymbolFixedString("abc", "aaa")
-plantFeedTable = SymbolTable(plantFood, feedTableCode)
+plantFeedTable = SymbolTable(plantFeed, feedTableCode)
+plantFeedTable:addSymbol(plantFood)
 plant:addSymbolTable(plantFeedTable)
-plant:setSymbolName("food", feedTableCode, 0)
+plant:setSymbolName("feed", feedTableCode, 0)
+plant:setSymbolName("food", feedTableCode, 1)
 
 plant:addGraphic(GraphicSquare())
 
@@ -242,6 +245,8 @@ dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
 dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
 dummyBrain:addPerception("Contact", 0, SimCont2D.PERCEPTION_IN_CONTACT)
 dummyBrain:addPerception("Color", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, colorTableCode, 0, 0)
+dummyBrain:addPerception("Food", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 0, 1)
+dummyBrain:addPerception("Predator", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 1, 0)
 
 human:setBrain(dummyBrain)
 

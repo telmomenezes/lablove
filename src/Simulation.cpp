@@ -256,7 +256,10 @@ float Simulation::computeBinding(SimulationObject* sourceObj,
         return 0.0f;
     }
 
-    return (sourceSym->bind(targetSym));
+
+    float binding = sourceSym->bind(targetSym);
+
+    return binding;
 }
 
 void Simulation::drawTimes()

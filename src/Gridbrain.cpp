@@ -191,11 +191,52 @@ void Gridbrain::addGrid(Grid* grid, string name)
 
 void Gridbrain::init()
 {
+    if (mComponents == NULL)
+    {
+        calcConnectionCounts();
+    
+        mComponents = (GridbrainComponent*)malloc(mNumberOfComponents * sizeof(GridbrainComponent));
+
+        // Init grids with random components
+        unsigned int pos = 0;
+
+        for (unsigned int i = 0; i < mGridsCount; i++)
+        {
+            Grid* grid = mGridsVec[i];
+
+            for (unsigned int x = 0;
+                x < grid->getWidth();
+                x++)
+            {
+                for (unsigned int y = 0;
+                    y < grid->getHeight();
+                    y++)
+                {
+                    mComponents[pos].clearConnections();
+                    GridbrainComponent* comp = grid->getRandomComponent(pos);
+                    mComponents[pos].copyDefinitions(comp);
+
+                    mComponents[pos].mOffset = pos;
+                    mComponents[pos].mColumn = grid->getColumnCode(x);
+                    mComponents[pos].mRow = grid->getRowCode(y);
+                    mComponents[pos].mGrid = i;
+
+                    pos++;
+                }
+            }
+        }
+    }
+
+    initGridsInputOutput();
+}
+
+void Gridbrain::initEmpty()
+{
     calcConnectionCounts();
     
     mComponents = (GridbrainComponent*)malloc(mNumberOfComponents * sizeof(GridbrainComponent));
 
-    // Init grids with random components
+    // Init grids with NUL components
     unsigned int pos = 0;
 
     for (unsigned int i = 0; i < mGridsCount; i++)
@@ -211,8 +252,7 @@ void Gridbrain::init()
                 y++)
             {
                 mComponents[pos].clearConnections();
-                GridbrainComponent* comp = grid->getRandomComponent(pos);
-                mComponents[pos].copyDefinitions(comp);
+                mComponents[pos].clearDefinitions();
 
                 mComponents[pos].mOffset = pos;
                 mComponents[pos].mColumn = grid->getColumnCode(x);
@@ -223,8 +263,26 @@ void Gridbrain::init()
             }
         }
     }
+}
 
-    initGridsInputOutput();
+void Gridbrain::setComponent(unsigned int x,
+                unsigned int y,
+                unsigned int gridNumber,
+                GridbrainComponent::Type type,
+                int subType,
+                float parameter,
+                int symTable,
+                int origSymIndex,
+                int targetSymIndex)
+{
+    GridbrainComponent* comp = getComponent(x, y, gridNumber);
+
+    comp->mType = type;
+    comp->mSubType = subType;
+    comp->mParameter = parameter;
+    comp->mSymTable = symTable;
+    comp->mOrigSymIndex = origSymIndex;
+    comp->mTargetSymIndex = targetSymIndex;
 }
 
 void Gridbrain::initGridsInputOutput()
@@ -348,6 +406,7 @@ void Gridbrain::addConnection(unsigned int xOrig,
                 unsigned int gTarg,
                 float weight)
 {
+    printf("addConnection: %d, %d @ %d -> %d, %d @ %d [%f]\n", xOrig, yOrig, gOrig, xTarg, yTarg, gTarg, weight);fflush(stdout);
     // TODO: disallow invalid connections?
     if (connectionExists(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg))
     {
@@ -1002,7 +1061,10 @@ float* Gridbrain::getOutputBuffer()
 const char Gridbrain::mClassName[] = "Gridbrain";
 
 Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
+    {"initEmpty", &Gridbrain::initEmpty},
+    {"setComponent", &Gridbrain::setComponent},
     {"addGrid", &Gridbrain::addGrid},
+    {"addConnection", &Gridbrain::addConnection},
     {"addRandomConnections", &Gridbrain::addRandomConnections},
     {"setMutateAddConnectionProb", &Gridbrain::setMutateAddConnectionProb},
     {"setMutateRemoveConnectionProb", &Gridbrain::setMutateRemoveConnectionProb},
@@ -1014,12 +1076,48 @@ Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
 
 Orbit<Gridbrain>::NumberGlobalType Gridbrain::mNumberGlobals[] = {{0,0}};
 
+int Gridbrain::initEmpty(lua_State* luaState)
+{
+        initEmpty();
+        return 0;
+}
+
+int Gridbrain::setComponent(lua_State* luaState)
+{
+    unsigned int x = luaL_checkint(luaState, 1);
+    unsigned int y = luaL_checkint(luaState, 2);
+    unsigned int gridNumber = luaL_checkint(luaState, 3);
+    GridbrainComponent::Type type = (GridbrainComponent::Type)luaL_checkint(luaState, 4);
+    unsigned int subType = luaL_optint(luaState, 5, -1);
+    float parameter = luaL_optnumber(luaState, 6, 0.0f);
+    int symTable = luaL_optint(luaState, 7, -1);
+    int origSymIndex = luaL_optint(luaState, 8, -1);
+    int targetSymIndex = luaL_optint(luaState, 9, -1);
+
+    setComponent(x, y, gridNumber, type, subType, parameter, symTable, origSymIndex, targetSymIndex);
+    return 0;
+}
+
 int Gridbrain::addGrid(lua_State* luaState)
 {
         Grid* grid = (Grid*)(Orbit<Gridbrain>::pointer(luaState, 1));
         string name = luaL_checkstring(luaState, 2);
         addGrid(grid, name);
         return 0;
+}
+
+int Gridbrain::addConnection(lua_State* luaState)
+{
+    unsigned int xOrig = luaL_checkint(luaState, 1);
+    unsigned int yOrig = luaL_checkint(luaState, 2);
+    unsigned int gOrig = luaL_checkint(luaState, 3);
+    unsigned int xTarg = luaL_checkint(luaState, 4);
+    unsigned int yTarg = luaL_checkint(luaState, 5);
+    unsigned int gTarg = luaL_checkint(luaState, 6);
+    float weight = luaL_checknumber(luaState, 7);
+
+    addConnection(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg, weight);
+    return 0;
 }
 
 int Gridbrain::addRandomConnections(lua_State* luaState)

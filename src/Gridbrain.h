@@ -45,6 +45,7 @@ public:
 
     void addGrid(Grid* grid, string name);
     virtual void init();
+    void initEmpty();
 
     virtual float* getInputBuffer(unsigned int channel);
     virtual float* getOutputBuffer();
@@ -86,6 +87,16 @@ public:
 
     virtual void mutate();
 
+    void setComponent(unsigned int x,
+                unsigned int y,
+                unsigned int gridNumber,
+                GridbrainComponent::Type type,
+                int subType=-1,
+                float parameter=0.0f,
+                int symTable=-1,
+                int origSymIndex=-1,
+                int targetSymIndex=-1);
+
     void setMutateAddConnectionProb(float prob){mMutateAddConnectionProb = prob;}
     void setMutateRemoveConnectionProb(float prob){mMutateRemoveConnectionProb = prob;}
     void setMutateChangeConnectionWeightProb(float prob){mMutateChangeConnectionWeightProb = prob;}
@@ -96,7 +107,10 @@ public:
     static Orbit<Gridbrain>::MethodType mMethods[];
     static Orbit<Gridbrain>::NumberGlobalType mNumberGlobals[];
 
+    int initEmpty(lua_State* luaState);
+    int setComponent(lua_State* luaState);
     int addGrid(lua_State* luaState);
+    int addConnection(lua_State* luaState);
     int addRandomConnections(lua_State* luaState);
     int setMutateAddConnectionProb(lua_State* luaState);
     int setMutateRemoveConnectionProb(lua_State* luaState);

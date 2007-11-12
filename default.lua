@@ -1,4 +1,4 @@
-experiment = "biomorphs"
+experiment = "programed_eaters"
 
 expParam = getCommandLineParameter("exp");
 if expParam ~= "" then experiment = expParam end
