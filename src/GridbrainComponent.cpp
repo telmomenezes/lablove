@@ -42,11 +42,11 @@ void GridbrainComponent::clearDefinitions()
     mState = 0;
     mForwardFlag = false;
     mRecurrentFlag = false;
+    mCycleFlag = false;
     mPerceptionPosition = 0;
     mActionPosition = 0;
 
     mParameter = 0.0f;
-    mAggregator = false;
 
     mSymTable = -1;
     mOrigSymIndex = -1;
@@ -72,7 +72,6 @@ void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)
     mType = comp->mType;
     mSubType = comp->mSubType;
     mParameter = comp->mParameter;
-    mAggregator = comp->mAggregator;
 
     mSymTable = comp->mSymTable;
     mOrigSymIndex = comp->mOrigSymIndex;
@@ -91,7 +90,15 @@ void GridbrainComponent::copyPosition(GridbrainComponent* comp)
 bool GridbrainComponent::isAggregator()
 {
     return ((mType == GridbrainComponent::AGG )
-        || (mType == GridbrainComponent::MAX));
+        || (mType == GridbrainComponent::MAX)
+        || (mType == GridbrainComponent::MMAX));
+}
+
+bool GridbrainComponent::isMultiplier()
+{
+    return ((mType == GridbrainComponent::MUL)
+        || (mType == GridbrainComponent::AND)
+        || (mType == GridbrainComponent::MMAX));
 }
 
 const char GridbrainComponent::mClassName[] = "GridbrainComponent";
@@ -101,13 +108,14 @@ Orbit<GridbrainComponent>::MethodType GridbrainComponent::mMethods[] = {{0,0}};
 Orbit<GridbrainComponent>::NumberGlobalType GridbrainComponent::mNumberGlobals[] = {
     {"NUL", NUL},
     {"PER", PER},
-    {"STA", STA},
     {"ACT", ACT},
     {"THR", THR},
     {"AGG", AGG},
     {"MAX", MAX},
     {"MUL", MUL},
     {"NOT", NOT},
+    {"MMAX", MAX},
+    {"AND", AND},
     {0,0}
 };
 

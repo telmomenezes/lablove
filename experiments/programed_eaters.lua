@@ -7,9 +7,9 @@ plantSize = 10.0
 worldWidth = 3000
 worldHeight = 3000
 
-gridHeight = 5
-gridAlpha = 3
-gridBeta = 3
+gridHeight = 10
+gridAlpha = 10
+gridBeta = 10
 
 THR = true
 MAX = true
@@ -37,12 +37,6 @@ initialConnections = 10
 
 tournmentSize = 10
 
-addConnectionProb = 0.1
-removeConnectionProb = 0.1
-changeWeightProb = 0.01
-changeComponentProb = 0.01
-weightMutationStanDev = 1.0
-
 timeLimit = 0
 
 ----------------------------------------------
@@ -50,7 +44,7 @@ timeLimit = 0
 dofile("experiments/aux/basic_command_line.lua")
 
 sim = SimCont2D()
-sim:setWorldDimensions(worldWidth, worldHeight, 150)
+sim:setWorldDimensions(worldWidth, worldHeight, 100)
 sim:setViewRange(viewRange)
 sim:setViewAngle(viewAngle)
 sim:setGoCost(goCost)
@@ -127,21 +121,49 @@ brain:setMutateChangeComponentProb(0)
 brain:setWeightMutationStanDev(0)
 
 grid = Grid()
-grid:init(Grid.ALPHA, 5, 5)
+grid:init(Grid.ALPHA, 4, 3)
 brain:addGrid(grid, "objects");
 
 grid2 = Grid()
-grid2:init(Grid.BETA, 5, 5)
+grid2:init(Grid.BETA, 3, 4)
 brain:addGrid(grid2, "beta")
 
 brain:initEmpty()
-brain:setComponent(0, 0, 0, GridbrainComponent.PER, SimCont2D.PERCEPTION_POSITION)
-brain:setComponent(0, 1, 0, GridbrainComponent.NOT)
-brain:setComponent(1, 0, 0, GridbrainComponent.ACT, SimCont2D.ACTION_ROTATE)
 
-brain:addConnection(0, 1, 0, 1, 0, 0, 1.0)
+brain:setComponent(0, 0, 0, GridbrainComponent.PER, SimCont2D.PERCEPTION_POSITION)
+brain:setComponent(0, 1, 0, GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, 0, feedTableCode, 0, 1)
+brain:setComponent(0, 2, 0, GridbrainComponent.PER, SimCont2D.PERCEPTION_DISTANCE)
+brain:setComponent(1, 0, 0, GridbrainComponent.THR)
+brain:setComponent(2, 1, 0, GridbrainComponent.NOT)
+brain:setComponent(2, 2, 0, GridbrainComponent.MAX)
+brain:setComponent(3, 0, 0, GridbrainComponent.AND)
+brain:setComponent(3, 1, 0, GridbrainComponent.AND)
+
+brain:setComponent(0, 2, 1, GridbrainComponent.THR)
+brain:setComponent(0, 3, 1, GridbrainComponent.NOT)
+brain:setComponent(1, 2, 1, GridbrainComponent.NOT)
+brain:setComponent(2, 0, 1, GridbrainComponent.ACT, SimCont2D.ACTION_ROTATE)
+brain:setComponent(2, 1, 1, GridbrainComponent.ACT, SimCont2D.ACTION_GO)
+brain:setComponent(2, 2, 1, GridbrainComponent.ACT, SimCont2D.ACTION_ROTATE)
+brain:setComponent(2, 3, 1, GridbrainComponent.ACT, SimCont2D.ACTION_EAT)
 
 agent:setBrain(brain)
+
+brain:addConnection(0, 0, 0, 1, 0, 0, 1.0)
+brain:addConnection(0, 1, 0, 3, 0, 0, 1.0)
+brain:addConnection(0, 1, 0, 0, 2, 1, 1.0)
+brain:addConnection(0, 1, 0, 2, 2, 0, 1.0)
+brain:addConnection(0, 2, 0, 2, 2, 0, -1.0)
+brain:addConnection(1, 0, 0, 3, 0, 0, 1.0)
+brain:addConnection(1, 0, 0, 2, 1, 0, 1.0)
+brain:addConnection(2, 1, 0, 3, 1, 0, 1.0)
+brain:addConnection(2, 2, 0, 3, 0, 0, 1.0)
+brain:addConnection(2, 2, 0, 3, 1, 0, 1.0)
+brain:addConnection(3, 0, 0, 2, 0, 1, -1.0)
+brain:addConnection(3, 1, 0, 2, 1, 1, 1.0)
+brain:addConnection(0, 2, 1, 1, 2, 1, 1.0)
+brain:addConnection(0, 3, 1, 2, 3, 1, 1.0)
+brain:addConnection(1, 2, 1, 2, 2, 1, 1.0)
 
 plant = GraphicalObject()
 
@@ -160,10 +182,13 @@ symTable = SymbolTable(plantColor, colorTableCode)
 plant:addSymbolTable(symTable)
 plant:setSymbolName("color", colorTableCode, 0)
 
+plantFeed = SymbolFixedString("abcd", "ddd")
 plantFood = SymbolFixedString("abc", "aaa")
-plantFeedTable = SymbolTable(plantFood, feedTableCode)
+plantFeedTable = SymbolTable(plantFeed, feedTableCode)
+plantFeedTable:addSymbol(plantFood)
 plant:addSymbolTable(plantFeedTable)
-plant:setSymbolName("food", feedTableCode, 0)
+plant:setSymbolName("feed", feedTableCode, 0)
+plant:setSymbolName("food", feedTableCode, 1)
 
 plant:addGraphic(GraphicSquare())
 
@@ -171,7 +196,7 @@ popDyn = PopDynFixedSpecies()
 sim:setPopulationDynamics(popDyn)
 
 popDyn:setTournmentSize(10)
-agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents)
+agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, false)
 popDyn:addSpecies(plant, numberOfPlants)
 
 human = Agent()
@@ -181,6 +206,8 @@ dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
 dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
 dummyBrain:addPerception("Contact", 0, SimCont2D.PERCEPTION_IN_CONTACT)
 dummyBrain:addPerception("Color", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, colorTableCode, 0, 0)
+dummyBrain:addPerception("Food", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 0, 1)
+dummyBrain:addPerception("Predator", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 1, 0)
 
 human:setBrain(dummyBrain)
 

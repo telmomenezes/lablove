@@ -7,13 +7,15 @@ plantSize = 10.0
 worldWidth = 3000
 worldHeight = 3000
 
-gridHeight = 5
-gridAlpha = 3
-gridBeta = 3
+gridHeight = 10
+gridAlpha = 10
+gridBeta = 10
 
 THR = true
-MAX = true
-MUL = true
+MAX = false
+MMAX = true
+MUL = false
+AND = true
 NOT = true
 
 viewRange = 150.0
@@ -139,8 +141,14 @@ end
 if MAX then
     alphaSet:addComponent(GridbrainComponent.MAX)
 end
+if MMAX then
+    alphaSet:addComponent(GridbrainComponent.MMAX)
+end
 if MUL then
     alphaSet:addComponent(GridbrainComponent.MUL)
+end
+if AND then
+    alphaSet:addComponent(GridbrainComponent.AND)
 end
 if NOT then
     alphaSet:addComponent(GridbrainComponent.NOT)
@@ -162,7 +170,10 @@ betaSet = GridbrainComponentSet()
 if THR then
     betaSet:addComponent(GridbrainComponent.THR)
 end
-if MAX then
+if AND then
+    alphaSet:addComponent(GridbrainComponent.AND)
+end
+if MUL then
     betaSet:addComponent(GridbrainComponent.MUL)
 end
 if NOT then
@@ -197,10 +208,13 @@ symTable = SymbolTable(plantColor, colorTableCode)
 plant:addSymbolTable(symTable)
 plant:setSymbolName("color", colorTableCode, 0)
 
+plantFeed = SymbolFixedString("abcd", "ddd")
 plantFood = SymbolFixedString("abc", "aaa")
-plantFeedTable = SymbolTable(plantFood, feedTableCode)
+plantFeedTable = SymbolTable(plantFeed, feedTableCode)
+plantFeedTable:addSymbol(plantFood)
 plant:addSymbolTable(plantFeedTable)
-plant:setSymbolName("food", feedTableCode, 0)
+plant:setSymbolName("feed", feedTableCode, 0)
+plant:setSymbolName("food", feedTableCode, 1)
 
 plant:addGraphic(GraphicSquare())
 
@@ -216,8 +230,7 @@ dummyBrain = DummyBrain(1)
 dummyBrain:setChannelName(0, "objects")
 dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
 dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
-dummyBrain:addPerception("Contact", 0, SimCont2D.PERCEPTION_IN_CONTACT)
-dummyBrain:addPerception("Color", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, colorTableCode, 0, 0)
+dummyBrain:addPerception("Feed", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 0, 1)
 
 human:setBrain(dummyBrain)
 

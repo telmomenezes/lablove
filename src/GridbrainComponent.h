@@ -28,7 +28,7 @@
 class GridbrainComponent
 {
 public:
-    enum Type {NUL, PER, STA, ACT, THR, AGG, MAX, MUL, NOT};
+    enum Type {NUL, PER, ACT, THR, AGG, MAX, MUL, NOT, MMAX, AND};
 
     GridbrainComponent(lua_State* luaState=NULL);
     virtual ~GridbrainComponent();
@@ -41,6 +41,7 @@ public:
     void copyDefinitions(GridbrainComponent* comp);
     void copyPosition(GridbrainComponent* comp);
 
+    bool isMultiplier();
     bool isAggregator();
 
     static const char mClassName[];
@@ -58,7 +59,7 @@ public:
     GridbrainConnection* mFirstConnection;
     float mParameter;
     float mState;
-    bool mAggregator;
+    bool mCycleFlag;
     bool mForwardFlag;
     bool mRecurrentFlag;
     unsigned int mOffset;

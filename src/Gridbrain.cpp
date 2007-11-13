@@ -406,7 +406,6 @@ void Gridbrain::addConnection(unsigned int xOrig,
                 unsigned int gTarg,
                 float weight)
 {
-    printf("addConnection: %d, %d @ %d -> %d, %d @ %d [%f]\n", xOrig, yOrig, gOrig, xTarg, yTarg, gTarg, weight);fflush(stdout);
     // TODO: disallow invalid connections?
     if (connectionExists(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg))
     {
@@ -611,6 +610,7 @@ void Gridbrain::cycle()
 
         comp->mInput = 0;
         comp->mState = 0;
+        comp->mCycleFlag = false;
         comp->mForwardFlag = false;
         comp->mRecurrentFlag = false;
 
@@ -665,7 +665,7 @@ void Gridbrain::cycle()
                     {
                         comp = &(mComponents[i]);
 
-                        if (!comp->mAggregator)
+                        if (!comp->isAggregator())
                         {
                             if (comp->mType == GridbrainComponent::PER)
                             {
@@ -702,11 +702,6 @@ void Gridbrain::cycle()
                         //printf("PER ");
                         output = comp->mState;
                     }
-                    else if (comp->mType == GridbrainComponent::STA)
-                    {
-                        //printf("STA ");
-                        output = comp->mState;
-                    }
                     else if (comp->mType == GridbrainComponent::ACT)
                     {
                         //printf("ACT ");
@@ -725,8 +720,8 @@ void Gridbrain::cycle()
                     else if (comp->mType == GridbrainComponent::THR)
                     {
                         //printf("THR ");
-                        if ((comp->mInput > 0.1)
-                            || (comp->mInput < -0.1))
+                        if ((comp->mInput > 0.05)
+                            || (comp->mInput < -0.05))
                         {
                             output = comp->mInput;
                         }
@@ -748,13 +743,30 @@ void Gridbrain::cycle()
                             output = 0.0f;
                         }
                     }
-                    else if (comp->mType == GridbrainComponent::MAX)
+                    else if ((comp->mType == GridbrainComponent::MAX)
+                        || (comp->mType == GridbrainComponent::MMAX))
                     {
-                        //printf("MAX ");
-                        if (comp->mInput >= comp->mState)
+                        //printf("MAX/MMAX ");
+                        if ((comp->mType != GridbrainComponent::MMAX) || (comp->mInput != 0))
                         {
-                            output = 1.0f;
-                            comp->mState = comp->mInput;
+                            if (!comp->mCycleFlag)
+                            {
+                                output = 1.0f;
+                                comp->mState = comp->mInput;
+                                comp->mCycleFlag = true;
+                            }
+                            else
+                            {
+                                if (comp->mInput >= comp->mState)
+                                {
+                                    output = 1.0f;
+                                    comp->mState = comp->mInput;
+                                }
+                                else
+                                {
+                                    output = 0.0f;
+                                }
+                            }
                         }
                         else
                         {
@@ -765,6 +777,22 @@ void Gridbrain::cycle()
                     {
                         //printf("MUL ");
                         output = comp->mInput;
+                    }
+                    else if (comp->mType == GridbrainComponent::AND)
+                    {
+                        //printf("AND ");
+                        if (comp->mInput > 0.0f)
+                        {
+                            output = 1.0f;
+                        }
+                        else if (comp->mInput < 0.0f)
+                        {
+                            output = -1.0f;
+                        }
+                        else
+                        {
+                            output = 0.0f;
+                        }
                     }
                     else if (comp->mType == GridbrainComponent::NOT)
                     {
@@ -816,7 +844,7 @@ void Gridbrain::cycle()
                             // Feed forward
                             if (conn->mFeedForward)
                             {
-                                if (targetComp->mType == GridbrainComponent::MUL)
+                                if (targetComp->isMultiplier())
                                 {
                                     if (!targetComp->mForwardFlag)
                                     {
@@ -836,7 +864,7 @@ void Gridbrain::cycle()
                             // Recurent
                             else
                             {
-                                if (targetComp->mType == GridbrainComponent::MUL)
+                                if (targetComp->isMultiplier())
                                 {
                                     if (!targetComp->mRecurrentFlag)
                                     {

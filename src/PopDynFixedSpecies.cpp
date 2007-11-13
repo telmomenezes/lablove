@@ -34,13 +34,14 @@ PopDynFixedSpecies::~PopDynFixedSpecies()
 {
 }
 
-unsigned int PopDynFixedSpecies::addSpecies(SimulationObject* org, long population)
+unsigned int PopDynFixedSpecies::addSpecies(SimulationObject* org, long population, bool diversify)
 {
     org->setSpeciesID(++CURRENT_SPECIES_ID);
 
     SpeciesData species;
     species.mBaseOrganism = org;
     species.mPopulation = population;
+    species.mDiversify = diversify;
 
     mSpecies.push_back(species);
 
@@ -69,7 +70,7 @@ void PopDynFixedSpecies::init(PopulationManager* popManager)
     {
         for (unsigned int i = 0; i < (*iterSpecies).mPopulation; i++)
         {
-            SimulationObject* org = (*iterSpecies).mBaseOrganism->clone(true);
+            SimulationObject* org = (*iterSpecies).mBaseOrganism->clone((*iterSpecies).mDiversify);
             mPopManager->addObject(org);
             mPopManager->placeRandom(org);
             (*iterSpecies).mOrganismVector.push_back(org);
@@ -200,7 +201,12 @@ int PopDynFixedSpecies::addSpecies(lua_State* luaState)
 {
     SimulationObject* obj = (SimulationObject*)Orbit<PopDynFixedSpecies>::pointer(luaState, 1);
     int population = luaL_checkint(luaState, 2);
-    unsigned int index = addSpecies(obj, population);
+    bool diversify = true;
+    if (lua_gettop(luaState) > 2)
+    {        
+        diversify = luaL_checkbool(luaState, 3);
+    }
+    unsigned int index = addSpecies(obj, population, diversify);
     lua_pushinteger(luaState, index);
     return 1;
 }

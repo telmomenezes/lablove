@@ -40,6 +40,7 @@ typedef struct
     list<Statistics*> mDeathStatistics;
     list<Statistics*> mSampleStatistics;
     long mPopulation;
+    bool mDiversify;
 } SpeciesData;
 
 public:
@@ -51,7 +52,7 @@ public:
     virtual void onCycle(unsigned long time, double realTime);
     virtual void onOrganismDeath(SimulationObject* org);
 
-    unsigned int addSpecies(SimulationObject* org, long population);
+    unsigned int addSpecies(SimulationObject* org, long population, bool diversify=true);
 
     void addSampleStatistics(unsigned int speciesIndex, Statistics* stats);
     void addDeathStatistics(unsigned int speciesIndex, Statistics* stats);

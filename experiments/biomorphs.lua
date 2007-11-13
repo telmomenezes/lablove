@@ -184,7 +184,7 @@ function addAgentSpecies(red, green, blue, feed, food)
     if THR then
         betaSet:addComponent(GridbrainComponent.THR)
     end
-    if MAX then
+    if MUL then
         betaSet:addComponent(GridbrainComponent.MUL)
     end
     if NOT then
