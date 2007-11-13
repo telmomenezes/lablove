@@ -7,6 +7,8 @@ INCLUDE_DIRECTORIES("/usr/include/pycasso")
 
 #SET(CMAKE_VERBOSE_MAKEFILE "ON")
 
+INCLUDE(CMakeModules/FindLua.cmake)
+
 IF(DEBUG)
     SET(CMAKE_CXX_FLAGS "-Wno-deprecated -g")
 ELSE(DEBUG)
@@ -58,10 +60,10 @@ SET(SOURCE_FILES
 
 
 ADD_LIBRARY(llove SHARED ${SOURCE_FILES})
-TARGET_LINK_LIBRARIES(llove llove pycasso lua dl)
+TARGET_LINK_LIBRARIES(llove llove pycasso ${Lua_LIBRARIES} dl)
 
 ADD_EXECUTABLE(lablove src/main.cpp)
-TARGET_LINK_LIBRARIES(lablove llove pycasso lua dl)
+TARGET_LINK_LIBRARIES(lablove llove pycasso ${Lua_LIBRARIES} dl)
 
 SET(UNIT_TEST_FILES
     src/UnitTest++/AssertException.cpp
@@ -106,9 +108,10 @@ SET(UNIT_TEST_FILES
 INCLUDE_DIRECTORIES("src")
 INCLUDE_DIRECTORIES("src/UnitTest++")
 INCLUDE_DIRECTORIES("src/mtwist")
+INCLUDE_DIRECTORIES(${Lua_INCLUDE_DIR})
 
 ADD_EXECUTABLE(test ${UNIT_TEST_FILES})
-TARGET_LINK_LIBRARIES(test llove pycasso lua dl)
+TARGET_LINK_LIBRARIES(test llove pycasso ${Lua_LIBRARIES} dl)
 
 ADD_CUSTOM_COMMAND(TARGET test POST_BUILD COMMAND "./test")
 
