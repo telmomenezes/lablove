@@ -37,7 +37,7 @@ rotDrag = 0.05
 
 initialConnections = 10
 
-tournmentSize = 10
+tournamentSize = 10
 
 addConnectionProb = 0.1
 removeConnectionProb = 0.1
@@ -221,7 +221,7 @@ plant:addGraphic(GraphicSquare())
 popDyn = PopDynFixedSpecies()
 sim:setPopulationDynamics(popDyn)
 
-popDyn:setTournmentSize(10)
+popDyn:setTournamentSize(10)
 agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents)
 popDyn:addSpecies(plant, numberOfPlants)
 

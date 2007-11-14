@@ -58,7 +58,7 @@ public:
     void addDeathStatistics(unsigned int speciesIndex, Statistics* stats);
     void setStatisticsTimeInterval(unsigned long interval){mStatisticsTimeInterval = interval;}
 
-    void setTournmentSize(unsigned int size){mTournmentSize = size;}
+    void setTournamentSize(unsigned int size){mTournamentSize = size;}
 
 
     static const char mClassName[];
@@ -68,14 +68,14 @@ public:
     int addSpecies(lua_State* luaState);
     int addSampleStatistics(lua_State* luaState);
     int addDeathStatistics(lua_State* luaState);
-    int setTournmentSize(lua_State* luaState);
+    int setTournamentSize(lua_State* luaState);
     int setStatisticsTimeInterval(lua_State* luaState);
 
 protected:
     static mt_distribution* mDistOrganism;
 
     vector<SpeciesData> mSpecies;
-    unsigned int mTournmentSize;
+    unsigned int mTournamentSize;
 
     unsigned long mStatisticsTimeInterval;
 };

@@ -92,7 +92,7 @@ void PopDynGenerations::onCycle(unsigned long time, double realTime)
 
                 for (unsigned int i = 0; i < (*iterSpecies).mPopulation; i++)
                 {
-                    // Tournment selection of 2
+                    // Tournament selection of 2
                     SimulationObject* bestOrganism = NULL;
                     float bestFitness = 0.0f;
 
@@ -204,7 +204,7 @@ int PopDynGenerations::addSpecies(lua_State* luaState)
     bool isStatic = luaL_checkbool(luaState, 3);
     unsigned int index = addSpecies(obj, population, isStatic);
 
-    lua_pushnumber(luaState, index);
+    lua_pushinteger(luaState, index);
     return 1;
 }
 

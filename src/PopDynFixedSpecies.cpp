@@ -26,7 +26,7 @@ mt_distribution* PopDynFixedSpecies::mDistOrganism = Simulation::getNewDistribut
 
 PopDynFixedSpecies::PopDynFixedSpecies(lua_State* luaState)
 {
-    mTournmentSize = 2;
+    mTournamentSize = 2;
     mStatisticsTimeInterval = 1000;
 }
 
@@ -145,11 +145,11 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
 
             SimulationObject* newOrganism = NULL;
 
-            // Tournment selection
+            // Tournament selection
             SimulationObject* bestOrganism = NULL;
             float bestFitness = 0.0f;
 
-            for (unsigned int tournmentStep = 0; tournmentStep < mTournmentSize; tournmentStep++)
+            for (unsigned int tournamentStep = 0; tournamentStep < mTournamentSize; tournamentStep++)
             {
                 unsigned int organismNumber = mDistOrganism->iuniform(0, (*iterSpecies).mPopulation);
 
@@ -159,7 +159,7 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
                     iterOrg++;
                 }
 
-                if ((tournmentStep == 0) || ((*iterOrg)->mFitness > bestFitness))
+                if ((tournamentStep == 0) || ((*iterOrg)->mFitness > bestFitness))
                 {
                     bestOrganism = (*iterOrg);
                     bestFitness = bestOrganism->mFitness;
@@ -191,7 +191,7 @@ Orbit<PopDynFixedSpecies>::MethodType PopDynFixedSpecies::mMethods[] = {
     {"addSpecies", &PopDynFixedSpecies::addSpecies},
     {"addSampleStatistics", &PopDynFixedSpecies::addSampleStatistics},
     {"addDeathStatistics", &PopDynFixedSpecies::addDeathStatistics},
-    {"setTournmentSize", &PopDynFixedSpecies::setTournmentSize},
+    {"setTournamentSize", &PopDynFixedSpecies::setTournamentSize},
     {0,0}
 };
 
@@ -207,7 +207,7 @@ int PopDynFixedSpecies::addSpecies(lua_State* luaState)
         diversify = luaL_checkbool(luaState, 3);
     }
     unsigned int index = addSpecies(obj, population, diversify);
-    lua_pushnumber(luaState, index);
+    lua_pushinteger(luaState, index);
     return 1;
 }
 
@@ -227,10 +227,10 @@ int PopDynFixedSpecies::addDeathStatistics(lua_State* luaState)
     return 0;
 }
 
-int PopDynFixedSpecies::setTournmentSize(lua_State* luaState)
+int PopDynFixedSpecies::setTournamentSize(lua_State* luaState)
 {
     unsigned int size = luaL_checkint(luaState, 1);
-    setTournmentSize(size);
+    setTournamentSize(size);
     return 0;
 }
 

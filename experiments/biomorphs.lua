@@ -36,7 +36,7 @@ rotDrag = 0.05
 
 initialConnections = 10
 
-tournmentSize = 10
+tournamentSize = 10
 
 addConnectionProb = 0.001
 removeConnectionProb = 0.001
@@ -66,7 +66,7 @@ sim:setTimeLimit(timeLimit)
 
 popDyn = PopDynFixedSpecies()
 sim:setPopulationDynamics(popDyn)
-popDyn:setTournmentSize(10)
+popDyn:setTournamentSize(10)
 
 sizeTableCode = 0
 physicsTableCode = 1 
