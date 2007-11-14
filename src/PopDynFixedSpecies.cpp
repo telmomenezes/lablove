@@ -207,7 +207,7 @@ int PopDynFixedSpecies::addSpecies(lua_State* luaState)
         diversify = luaL_checkbool(luaState, 3);
     }
     unsigned int index = addSpecies(obj, population, diversify);
-    lua_pushinteger(luaState, index);
+    lua_pushnumber(luaState, index);
     return 1;
 }
 

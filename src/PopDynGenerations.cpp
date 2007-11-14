@@ -204,7 +204,7 @@ int PopDynGenerations::addSpecies(lua_State* luaState)
     bool isStatic = luaL_checkbool(luaState, 3);
     unsigned int index = addSpecies(obj, population, isStatic);
 
-    lua_pushinteger(luaState, index);
+    lua_pushnumber(luaState, index);
     return 1;
 }
 
