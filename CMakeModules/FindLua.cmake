@@ -4,7 +4,10 @@ ENDIF(Lua_INCLUDE_DIR AND Lua_LIBRARIES)
 
 FIND_PATH(Lua_INCLUDE_DIR lua.h /usr/include /usr/local/include /usr/include/lua50 /usr/include/lua51)
 
-FIND_LIBRARY(Lua_LIBRARIES NAMES lua lua50 lua51 lualib lualib50 lualib51)
+FIND_LIBRARY(Lua_LIBRARIES NAMES lua lua50 lua51)
+FIND_LIBRARY(LuaLib_LIBRARIES NAMES lualib lualib50)
+
+SET(Lua_LIBRARIES ${Lua_LIBARIES} ${LuaLib_LBRARIES})
 
 IF(Lua_INCLUDE_DIR AND Lua_LIBRARIES)
     SET(Lua_FOUND TRUE)
