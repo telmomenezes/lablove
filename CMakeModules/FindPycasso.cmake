@@ -4,7 +4,7 @@ ENDIF(Pycasso_INCLUDE_DIR AND Pycasso_LIBRARIES)
 
 FIND_PATH(Pycasso_INCLUDE_DIR pyc.h /usr/include/pycasso /usr/local/include/pycasso ~/pycasso/include)
 
-FIND_LIBRARY(Pycasso_LIBRARIES NAMES pycasso)
+FIND_LIBRARY(Pycasso_LIBRARIES NAMES pycasso PATHS ~/pycasso)
 
 IF(Pycasso_INCLUDE_DIR AND Pycasso_LIBRARIES)
     SET(Pycasso_FOUND TRUE)
