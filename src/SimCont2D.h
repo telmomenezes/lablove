@@ -24,7 +24,7 @@
 #include "SimulationObject.h"
 #include "PopulationDynamics.h"
 #include "Agent.h"
-#include "randistrs.h"
+#include "RandDistManager.h"
 
 #include "pyc.h"
 

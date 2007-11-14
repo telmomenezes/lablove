@@ -19,10 +19,9 @@
 
 #include "PopDynFixedSpecies.h"
 #include "SimulationObject.h"
-#include "Simulation.h"
 
 unsigned int PopDynFixedSpecies::CURRENT_SPECIES_ID = 0;
-mt_distribution* PopDynFixedSpecies::mDistOrganism = Simulation::getNewDistribution();
+mt_distribution* PopDynFixedSpecies::mDistOrganism = gDistManager.getNewDistribution();
 
 PopDynFixedSpecies::PopDynFixedSpecies(lua_State* luaState)
 {

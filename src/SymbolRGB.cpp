@@ -18,11 +18,10 @@
  */
 
 #include "SymbolRGB.h"
-#include "Simulation.h"
 #include <math.h>
 #include <stdlib.h>
 
-mt_distribution* SymbolRGB::mDistRGB = Simulation::getNewDistribution();
+mt_distribution* SymbolRGB::mDistRGB = gDistManager.getNewDistribution();
 
 SymbolRGB::SymbolRGB(lua_State* luaState)
 {

@@ -23,7 +23,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-mt_distribution* SymbolFloat::mDistFloat = Simulation::getNewDistribution();
+mt_distribution* SymbolFloat::mDistFloat = gDistManager.getNewDistribution();
 
 SymbolFloat::SymbolFloat(lua_State* luaState)
 {

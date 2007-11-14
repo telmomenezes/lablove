@@ -18,11 +18,10 @@
  */
 
 #include "SymbolFixedString.h"
-#include "Simulation.h"
 #include <math.h>
 #include <stdlib.h>
 
-mt_distribution* SymbolFixedString::mDistFixedString = Simulation::getNewDistribution();
+mt_distribution* SymbolFixedString::mDistFixedString = gDistManager.getNewDistribution();
 
 SymbolFixedString::SymbolFixedString(lua_State* luaState)
 {

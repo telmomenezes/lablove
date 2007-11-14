@@ -22,7 +22,7 @@
 
 #include "Symbol.h"
 #include "Orbit.h"
-#include "randistrs.h"
+#include "RandDistManager.h"
 
 #include <string>
 

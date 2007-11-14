@@ -23,9 +23,7 @@
 #include "Simulation.h"
 #include "Symbol.h"
 #include "Orbit.h"
-#include "randistrs.h"
-
-namespace{Simulation sim;}
+#include "RandDistManager.h"
 
 class SymbolFloat : public Symbol
 {

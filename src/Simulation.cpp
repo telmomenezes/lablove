@@ -26,8 +26,6 @@
 #include <math.h>
 #include <stdexcept>
 
-RandDistManager Simulation::mDistManager;
-
 Simulation::Simulation(lua_State* luaState)
 {
     mSimulationTime = 0;
@@ -226,12 +224,7 @@ void Simulation::addObject(SimulationObject* object)
 
 void Simulation::setSeedIndex(int index)
 {
-    mDistManager.setSeedIndex(index);
-}
-
-mt_distribution* Simulation::getNewDistribution()
-{
-    return mDistManager.getNewDistribution();
+    gDistManager.setSeedIndex(index);
 }
 
 float Simulation::computeBinding(SimulationObject* sourceObj,

@@ -5,9 +5,8 @@
  */
 
 #include "GridbrainComponentSet.h"
-#include "Simulation.h"
 
-mt_distribution* GridbrainComponentSet::mDistComponentSet = Simulation::getNewDistribution();
+mt_distribution* GridbrainComponentSet::mDistComponentSet = gDistManager.getNewDistribution();
 
 GridbrainComponentSet::GridbrainComponentSet(lua_State* luaState)
 {

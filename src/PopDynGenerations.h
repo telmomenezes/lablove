@@ -22,7 +22,7 @@
 
 #include "PopulationDynamics.h"
 #include "Statistics.h"
-#include "randistrs.h"
+#include "RandDistManager.h"
 
 #include <list>
 #include <vector>

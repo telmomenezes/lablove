@@ -18,16 +18,15 @@
  */
 
 #include "Gridbrain.h"
-#include "Simulation.h"
 
 #include <stdlib.h>
 #include <string.h>
 #include <stdexcept>
 
-mt_distribution* Gridbrain::mDistConnections = Simulation::getNewDistribution();
-mt_distribution* Gridbrain::mDistMutationsProb = Simulation::getNewDistribution();
-mt_distribution* Gridbrain::mDistWeights = Simulation::getNewDistribution();
-mt_distribution* Gridbrain::mDistComponents = Simulation::getNewDistribution();
+mt_distribution* Gridbrain::mDistConnections = gDistManager.getNewDistribution();
+mt_distribution* Gridbrain::mDistMutationsProb = gDistManager.getNewDistribution();
+mt_distribution* Gridbrain::mDistWeights = gDistManager.getNewDistribution();
+mt_distribution* Gridbrain::mDistComponents = gDistManager.getNewDistribution();
 
 Gridbrain::Gridbrain(lua_State* luaState)
 {

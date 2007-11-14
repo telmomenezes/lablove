@@ -27,7 +27,7 @@
 #include "GridbrainComponent.h"
 #include "GridbrainConnection.h"
 #include "GridbrainComponentSet.h"
-#include "randistrs.h"
+#include "RandDistManager.h"
 
 #include <vector>
 #include <string>

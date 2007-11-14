@@ -27,9 +27,8 @@
 
 using std::list;
 
-mt_distribution* SimCont2D::mDistAge = Simulation::getNewDistribution();
-
-mt_distribution* SimCont2D::mDistPosition = Simulation::getNewDistribution();
+mt_distribution* SimCont2D::mDistAge = gDistManager.getNewDistribution();
+mt_distribution* SimCont2D::mDistPosition = gDistManager.getNewDistribution();
 
 SimCont2D::SimCont2D(lua_State* luaState)
 {

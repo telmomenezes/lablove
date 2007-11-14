@@ -23,9 +23,7 @@
 #include "Simulation.h"
 #include "Symbol.h"
 #include "Orbit.h"
-#include "randistrs.h"
-
-namespace{Simulation sim_SymbolFloatVector;}
+#include "RandDistManager.h"
 
 class SymbolFloatVector : public Symbol
 {

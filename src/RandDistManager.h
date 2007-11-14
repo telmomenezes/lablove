@@ -39,5 +39,8 @@ protected:
     mt_distribution mSeedGenerator;
     list<mt_distribution*> mDistributions;
 };
+
+static RandDistManager gDistManager;
+
 #endif
 

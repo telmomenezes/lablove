@@ -20,11 +20,9 @@
 #include "SymbolTable.h"
 #include "Simulation.h"
 
-Simulation sim;
-
 int SymbolTable::NEXT_SYMBOL_TABLE_ID = 0;
-mt_distribution* SymbolTable::mDistIndex = Simulation::getNewDistribution();
-mt_distribution* SymbolTable::mDistMutationsProb = Simulation::getNewDistribution();
+mt_distribution* SymbolTable::mDistIndex = gDistManager.getNewDistribution();
+mt_distribution* SymbolTable::mDistMutationsProb = gDistManager.getNewDistribution();
 
 SymbolTable::SymbolTable(Symbol* refSymbol, int id)
 {

@@ -18,12 +18,11 @@
  */
 
 #include "SymbolUL.h"
-#include "Simulation.h"
 
 #include <math.h>
 #include <stdlib.h>
 
-mt_distribution* SymbolUL::mDistUL = Simulation::getNewDistribution();
+mt_distribution* SymbolUL::mDistUL = gDistManager.getNewDistribution();
 
 SymbolUL::SymbolUL(lua_State* luaState)
 {

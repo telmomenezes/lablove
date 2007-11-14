@@ -19,10 +19,9 @@
 
 #include "PopDynGenerations.h"
 #include "SimulationObject.h"
-#include "Simulation.h"
 
 unsigned int PopDynGenerations::CURRENT_SPECIES_ID = 0;
-mt_distribution* PopDynGenerations::mDistOrganism = Simulation::getNewDistribution();
+mt_distribution* PopDynGenerations::mDistOrganism = gDistManager.getNewDistribution();
 
 PopDynGenerations::PopDynGenerations(lua_State* luaState)
 {

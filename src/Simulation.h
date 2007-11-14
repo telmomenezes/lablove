@@ -62,7 +62,6 @@ public:
     unsigned long getTime(){return mSimulationTime;}
 
     void setSeedIndex(int index=-1);
-    static mt_distribution* getNewDistribution();
 
     pyc::Pycasso& getPycasso(){return mPycasso;}
 
