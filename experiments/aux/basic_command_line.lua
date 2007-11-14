@@ -17,3 +17,7 @@ if paramNoGraphics == "true" then noGraphics = true end
 seedIndex = -1
 paramSeedIndex = getCommandLineParameter("seedindex")
 if paramSeedIndex ~= "" then seedIndex = tonumber(paramSeedIndex) end
+
+timeLimit = 0
+paramTimeLimit = getCommandLineParameter("timelimit")
+if paramTimeLimit ~= "" then timeLimit = tonumber(paramTimeLimit) end
