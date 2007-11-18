@@ -37,7 +37,6 @@ public:
     void addComponent(GridbrainComponent* component);
     void addComponent(GridbrainComponent::Type type,
                 int subType=-1,
-                float parameter=0.0f,
                 int symTable=-1,
                 int origSymIndex=-1,
                 int targetSymIndex=-1);

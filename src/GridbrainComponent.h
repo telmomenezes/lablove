@@ -24,11 +24,28 @@
 #include "SimulationObject.h"
 #include "Orbit.h"
 
+#define COMPONENT_INPUT_TYPE(compType, inputType) \
+switch(compType) \
+{ \
+case GridbrainComponent::MUL: \
+case GridbrainComponent::MMAX: \
+case GridbrainComponent::AND: \
+    inputType = GridbrainComponent::IN_MUL; \
+    break; \
+case GridbrainComponent::TAND: \
+case GridbrainComponent::TNAND: \
+    inputType = GridbrainComponent::IN_TMUL; \
+    break; \
+default: \
+    inputType = GridbrainComponent::IN_SUM; \
+    break; \
+} \
 
 class GridbrainComponent
 {
 public:
-    enum Type {NUL, PER, ACT, THR, AGG, MAX, MUL, NOT, MMAX, AND};
+    enum Type {NUL, PER, ACT, THR, AGG, MAX, MUL, NOT, MMAX, AND, TAND, TNAND};
+    enum InputType {IN_SUM, IN_MUL, IN_TMUL};
 
     GridbrainComponent(lua_State* luaState=NULL);
     virtual ~GridbrainComponent();
@@ -41,7 +58,6 @@ public:
     void copyDefinitions(GridbrainComponent* comp);
     void copyPosition(GridbrainComponent* comp);
 
-    bool isMultiplier();
     bool isAggregator();
 
     static const char mClassName[];
@@ -57,7 +73,6 @@ public:
     float mRecurrentInput;
     unsigned int mConnectionsCount;
     GridbrainConnection* mFirstConnection;
-    float mParameter;
     float mState;
     bool mCycleFlag;
     bool mForwardFlag;

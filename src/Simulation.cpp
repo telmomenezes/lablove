@@ -40,11 +40,11 @@ Simulation::Simulation(lua_State* luaState)
 
     mLastSimulationTime = 0;
     mLastRealTime = 0.0f;
-    mFPS = 0.0f;
+    mCPS = 0.0f;
 
     mSimulationTimeText = "";
     mRealTimeText = "";
-    mFPSText = "";
+    mCPSText = "";
 
     mTimeLimit = 0;
 
@@ -269,7 +269,7 @@ void Simulation::drawTimes()
         mLastRealTime = realTime;
         mLastSimulationTime = mSimulationTime;
 
-        mFPS = deltaSimTime / deltaRealTime;
+        mCPS = deltaSimTime / deltaRealTime;
 
         char text[255];
 
@@ -304,8 +304,8 @@ void Simulation::drawTimes()
         sprintf(text, "Real Time: %.0fd %.0fh %.0fm %.0fs", days, hours, minutes, seconds);
         mRealTimeText = text;
 
-        sprintf(text, "FPS: %.0f", mFPS);
-        mFPSText = text;
+        sprintf(text, "CPS: %.0f", mCPS);
+        mCPSText = text;
     }
 
     mRootLayer2D->setFont(mFont);
@@ -314,7 +314,7 @@ void Simulation::drawTimes()
     mRootLayer2D->setColor(0, 120, 0, 255);
     mRootLayer2D->drawText(140, 31, mRealTimeText);
     mRootLayer2D->setColor(0, 0, 120, 255);
-    mRootLayer2D->drawText(140, 46, mFPSText);
+    mRootLayer2D->drawText(140, 46, mCPSText);
 }
 
 bool Simulation::onKeyDown(pyc::KeyCode keycode)

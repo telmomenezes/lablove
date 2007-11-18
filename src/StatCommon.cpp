@@ -21,6 +21,7 @@
 
 StatCommon::StatCommon(lua_State* luaState)
 {
+    mCount = 0;
 }
 
 StatCommon::~StatCommon()
@@ -29,7 +30,7 @@ StatCommon::~StatCommon()
 
 void StatCommon::init()
 {
-    fprintf(mFile, "sim_time");
+    fprintf(mFile, "sim_time,count");
 
     for (list<string>::iterator iterField = mFields.begin();
         iterField != mFields.end();
@@ -65,11 +66,13 @@ void StatCommon::process(SimulationObject* obj, PopulationManager* popManager)
         (*iterValueList).push_back(value);
         iterValueList++;
     }
+
+    mCount++;
 }
 
 void StatCommon::dump(unsigned long time, double realTime)
 {
-    fprintf(mFile, "%d", time);
+    fprintf(mFile, "%d,%d", time, mCount);
 
     for (list<list<float> >::iterator iterValueList = mValueLists.begin();
         iterValueList != mValueLists.end();
@@ -167,6 +170,8 @@ void StatCommon::dump(unsigned long time, double realTime)
     }
     fprintf(mFile, "\n");
     fflush(mFile);
+
+    mCount = 0;
 }
 
 const char StatCommon::mClassName[] = "StatCommon";

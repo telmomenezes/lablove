@@ -26,7 +26,7 @@ mt_distribution* PopDynFixedSpecies::mDistOrganism = gDistManager.getNewDistribu
 PopDynFixedSpecies::PopDynFixedSpecies(lua_State* luaState)
 {
     mTournamentSize = 2;
-    mStatisticsTimeInterval = 1000;
+    mStatisticsTimeInterval = 100 * 1000;
 }
 
 PopDynFixedSpecies::~PopDynFixedSpecies()

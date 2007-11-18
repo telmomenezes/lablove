@@ -56,10 +56,9 @@ public:
 
     void addSampleStatistics(unsigned int speciesIndex, Statistics* stats);
     void addDeathStatistics(unsigned int speciesIndex, Statistics* stats);
-    void setStatisticsTimeInterval(unsigned long interval){mStatisticsTimeInterval = interval;}
+    void setStatisticsTimeInterval(unsigned long interval){mStatisticsTimeInterval = interval * 1000;}
 
     void setTournamentSize(unsigned int size){mTournamentSize = size;}
-
 
     static const char mClassName[];
     static Orbit<PopDynFixedSpecies>::MethodType mMethods[];

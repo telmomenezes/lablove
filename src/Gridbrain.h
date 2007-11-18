@@ -20,6 +20,8 @@
 #ifndef __INCLUDE_GRIDBRAIN_H
 #define __INCLUDE_GRIDBRAIN_H
 
+#define GB_THRESHOLD 0.1f
+
 #include <stdio.h>
 
 #include "Brain.h"
@@ -92,7 +94,6 @@ public:
                 unsigned int gridNumber,
                 GridbrainComponent::Type type,
                 int subType=-1,
-                float parameter=0.0f,
                 int symTable=-1,
                 int origSymIndex=-1,
                 int targetSymIndex=-1);
@@ -121,6 +122,8 @@ public:
 protected:
     void initGridInputOutput(Grid* grid, int gPos=-1);
     void calcConnectionCounts();
+
+    void applyWeight(GridbrainConnection* conn);
 
     void mutateAddConnection();
     void mutateRemoveConnection();

@@ -151,8 +151,8 @@ function addAgentSpecies(red, green, blue, feed, food)
     perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_POSITION)
     perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_DISTANCE)
     --perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_IN_CONTACT)
-    perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, 0, feedTableCode, 0, 1)
-    perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, 0, feedTableCode, 1, 0)
+    perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 0, 1)
+    perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 1, 0)
 
     alphaSet = GridbrainComponentSet()
     if THR then

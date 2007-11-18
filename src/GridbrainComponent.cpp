@@ -45,9 +45,6 @@ void GridbrainComponent::clearDefinitions()
     mCycleFlag = false;
     mPerceptionPosition = 0;
     mActionPosition = 0;
-
-    mParameter = 0.0f;
-
     mSymTable = -1;
     mOrigSymIndex = -1;
     mTargetSymIndex = -1;
@@ -71,8 +68,6 @@ void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)
 {
     mType = comp->mType;
     mSubType = comp->mSubType;
-    mParameter = comp->mParameter;
-
     mSymTable = comp->mSymTable;
     mOrigSymIndex = comp->mOrigSymIndex;
     mTargetSymIndex = comp->mTargetSymIndex;
@@ -94,13 +89,6 @@ bool GridbrainComponent::isAggregator()
         || (mType == GridbrainComponent::MMAX));
 }
 
-bool GridbrainComponent::isMultiplier()
-{
-    return ((mType == GridbrainComponent::MUL)
-        || (mType == GridbrainComponent::AND)
-        || (mType == GridbrainComponent::MMAX));
-}
-
 const char GridbrainComponent::mClassName[] = "GridbrainComponent";
 
 Orbit<GridbrainComponent>::MethodType GridbrainComponent::mMethods[] = {{0,0}};
@@ -114,8 +102,10 @@ Orbit<GridbrainComponent>::NumberGlobalType GridbrainComponent::mNumberGlobals[]
     {"MAX", MAX},
     {"MUL", MUL},
     {"NOT", NOT},
-    {"MMAX", MAX},
+    {"MMAX", MMAX},
     {"AND", AND},
+    {"TAND", TAND},
+    {"TNAND", TNAND},
     {0,0}
 };
 

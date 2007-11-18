@@ -7,19 +7,21 @@ plantSize = 10.0
 worldWidth = 3000
 worldHeight = 3000
 
-gridHeight = 10
-gridAlpha = 10
-gridBeta = 10
+gridHeight = 5
+gridAlpha = 5
+gridBeta = 5
 
-THR = true
+THR = false
 MAX = false
 MMAX = true
 MUL = false
-AND = true
+AND = false
 NOT = true
+TAND = true
+TNAND = true
 
 viewRange = 150.0
-viewAngle = 100.0
+viewAngle = 170.0
 
 highAgeLimit = 5500
 lowAgeLimit = 4500
@@ -131,8 +133,8 @@ brain:setWeightMutationStanDev(weightMutationStanDev)
 perSet = GridbrainComponentSet()
 perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_POSITION)
 perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_DISTANCE)
-perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_IN_CONTACT)
-perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, 0, colorTableCode, 0, 0)
+--perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_IN_CONTACT)
+perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 0, 1)
 
 alphaSet = GridbrainComponentSet()
 if THR then
@@ -152,6 +154,12 @@ if AND then
 end
 if NOT then
     alphaSet:addComponent(GridbrainComponent.NOT)
+end
+if TAND then
+    alphaSet:addComponent(GridbrainComponent.TAND)
+end
+if TNAND then
+    alphaSet:addComponent(GridbrainComponent.TNAND)
 end
 
 grid = Grid()
@@ -178,6 +186,12 @@ if MUL then
 end
 if NOT then
     betaSet:addComponent(GridbrainComponent.NOT)
+end
+if TAND then
+    alphaSet:addComponent(GridbrainComponent.TAND)
+end
+if TNAND then
+    alphaSet:addComponent(GridbrainComponent.TNAND)
 end
     
 grid2 = Grid()

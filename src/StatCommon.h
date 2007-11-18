@@ -45,6 +45,7 @@ public:
 
 protected:
     list<list<float> > mValueLists;
+    unsigned long mCount;
 };
 #endif
 

@@ -17,7 +17,7 @@ MUL = true
 NOT = true
 
 viewRange = 150.0
-viewAngle = 100.0
+viewAngle = 170.0
 
 highAgeLimit = 5500
 lowAgeLimit = 4500
@@ -121,49 +121,44 @@ brain:setMutateChangeComponentProb(0)
 brain:setWeightMutationStanDev(0)
 
 grid = Grid()
-grid:init(Grid.ALPHA, 4, 3)
+grid:init(Grid.ALPHA, 3, 3)
 brain:addGrid(grid, "objects");
 
 grid2 = Grid()
-grid2:init(Grid.BETA, 3, 4)
+grid2:init(Grid.BETA, 2, 3)
 brain:addGrid(grid2, "beta")
 
 brain:initEmpty()
 
 brain:setComponent(0, 0, 0, GridbrainComponent.PER, SimCont2D.PERCEPTION_POSITION)
-brain:setComponent(0, 1, 0, GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, 0, feedTableCode, 0, 1)
+brain:setComponent(0, 1, 0, GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 0, 1)
 brain:setComponent(0, 2, 0, GridbrainComponent.PER, SimCont2D.PERCEPTION_DISTANCE)
-brain:setComponent(1, 0, 0, GridbrainComponent.THR)
-brain:setComponent(2, 1, 0, GridbrainComponent.NOT)
-brain:setComponent(2, 2, 0, GridbrainComponent.MAX)
-brain:setComponent(3, 0, 0, GridbrainComponent.AND)
-brain:setComponent(3, 1, 0, GridbrainComponent.AND)
+brain:setComponent(1, 1, 0, GridbrainComponent.TNAND)
+brain:setComponent(1, 2, 0, GridbrainComponent.MMAX)
+brain:setComponent(2, 0, 0, GridbrainComponent.TAND)
+brain:setComponent(2, 1, 0, GridbrainComponent.TAND)
 
-brain:setComponent(0, 2, 1, GridbrainComponent.THR)
-brain:setComponent(0, 3, 1, GridbrainComponent.NOT)
-brain:setComponent(1, 2, 1, GridbrainComponent.NOT)
-brain:setComponent(2, 0, 1, GridbrainComponent.ACT, SimCont2D.ACTION_ROTATE)
-brain:setComponent(2, 1, 1, GridbrainComponent.ACT, SimCont2D.ACTION_GO)
-brain:setComponent(2, 2, 1, GridbrainComponent.ACT, SimCont2D.ACTION_ROTATE)
-brain:setComponent(2, 3, 1, GridbrainComponent.ACT, SimCont2D.ACTION_EAT)
+brain:setComponent(0, 0, 1, GridbrainComponent.NOT)
+brain:setComponent(0, 2, 1, GridbrainComponent.NOT)
+brain:setComponent(1, 0, 1, GridbrainComponent.ACT, SimCont2D.ACTION_ROTATE)
+brain:setComponent(1, 1, 1, GridbrainComponent.ACT, SimCont2D.ACTION_GO)
+brain:setComponent(1, 2, 1, GridbrainComponent.ACT, SimCont2D.ACTION_EAT)
 
 agent:setBrain(brain)
 
-brain:addConnection(0, 0, 0, 1, 0, 0, 1.0)
-brain:addConnection(0, 1, 0, 3, 0, 0, 1.0)
-brain:addConnection(0, 1, 0, 0, 2, 1, 1.0)
-brain:addConnection(0, 1, 0, 2, 2, 0, 1.0)
-brain:addConnection(0, 2, 0, 2, 2, 0, -1.0)
-brain:addConnection(1, 0, 0, 3, 0, 0, 1.0)
-brain:addConnection(1, 0, 0, 2, 1, 0, 1.0)
-brain:addConnection(2, 1, 0, 3, 1, 0, 1.0)
-brain:addConnection(2, 2, 0, 3, 0, 0, 1.0)
-brain:addConnection(2, 2, 0, 3, 1, 0, 1.0)
-brain:addConnection(3, 0, 0, 2, 0, 1, -1.0)
-brain:addConnection(3, 1, 0, 2, 1, 1, 1.0)
-brain:addConnection(0, 2, 1, 1, 2, 1, 1.0)
-brain:addConnection(0, 3, 1, 2, 3, 1, 1.0)
-brain:addConnection(1, 2, 1, 2, 2, 1, 1.0)
+brain:addConnection(0, 0, 0, 2, 0, 0, 0.5)
+brain:addConnection(0, 0, 0, 1, 1, 0, 0.5)
+brain:addConnection(0, 1, 0, 2, 0, 0, 0.5)
+brain:addConnection(0, 1, 0, 0, 0, 1, 0.5)
+brain:addConnection(0, 1, 0, 1, 2, 0, 0.5)
+brain:addConnection(0, 2, 0, 1, 2, 0, -0.5)
+brain:addConnection(1, 1, 0, 2, 1, 0, 0.5)
+brain:addConnection(1, 2, 0, 2, 0, 0, 0.5)
+brain:addConnection(1, 2, 0, 2, 1, 0, 0.5)
+brain:addConnection(2, 0, 0, 1, 0, 1, -0.5)
+brain:addConnection(2, 1, 0, 1, 1, 1, 0.5)
+brain:addConnection(0, 0, 1, 1, 0, 1, 0.5)
+brain:addConnection(0, 2, 1, 1, 2, 1, 0.5)
 
 plant = GraphicalObject()
 

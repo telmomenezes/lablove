@@ -108,10 +108,10 @@ protected:
     double mInitialRealTime;
     unsigned long mLastSimulationTime;
     double mLastRealTime;
-    double mFPS;
+    double mCPS;
     string mSimulationTimeText;
     string mRealTimeText;
-    string mFPSText;
+    string mCPSText;
 
     pyc::Font* mFont;
 

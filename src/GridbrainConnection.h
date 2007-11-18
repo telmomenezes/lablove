@@ -31,6 +31,7 @@ typedef struct
     unsigned int mTarget;
     bool mInterGrid;
     float mWeight;
+    float mRealWeight;
     void* mPrevConnection;
     void* mNextConnection;
     void* mPrevGlobalConnection;

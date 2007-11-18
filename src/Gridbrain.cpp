@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdexcept>
+#include <float.h>
 
 mt_distribution* Gridbrain::mDistConnections = gDistManager.getNewDistribution();
 mt_distribution* Gridbrain::mDistMutationsProb = gDistManager.getNewDistribution();
@@ -269,7 +270,6 @@ void Gridbrain::setComponent(unsigned int x,
                 unsigned int gridNumber,
                 GridbrainComponent::Type type,
                 int subType,
-                float parameter,
                 int symTable,
                 int origSymIndex,
                 int targetSymIndex)
@@ -278,7 +278,6 @@ void Gridbrain::setComponent(unsigned int x,
 
     comp->mType = type;
     comp->mSubType = subType;
-    comp->mParameter = parameter;
     comp->mSymTable = symTable;
     comp->mOrigSymIndex = origSymIndex;
     comp->mTargetSymIndex = targetSymIndex;
@@ -427,6 +426,7 @@ void Gridbrain::addConnection(unsigned int xOrig,
     conn->mGridTarg = targComp->mGrid;
     conn->mTarget = target;
     conn->mWeight = weight;
+    applyWeight(conn);
     conn->mOrigComponent = comp;
     conn->mFeedForward = true;
 
@@ -599,8 +599,10 @@ void Gridbrain::addRandomConnections(unsigned int count)
 
 void Gridbrain::cycle()
 {
+    //printf("======= BEGIN CYCLE ======\n");
     GridbrainComponent* comp;
     GridbrainConnection* conn;
+    GridbrainComponent::InputType inputType;
 
     // Reset all components
     for (unsigned int i = 0; i < mNumberOfComponents; i++)
@@ -677,10 +679,10 @@ void Gridbrain::cycle()
                             {
                                 comp->mState = 0;
                             }
-                            comp->mForwardFlag = false;
-                            comp->mRecurrentFlag = false;
                         }
                         comp->mInput = 0;
+                        comp->mForwardFlag = false;
+                        comp->mRecurrentFlag = false;
                     }
                 }
 
@@ -691,18 +693,17 @@ void Gridbrain::cycle()
 
                     // compute component output
                     float output;
-                    if (comp->mType == GridbrainComponent::NUL)
+                    switch(comp->mType)
                     {
+                    case GridbrainComponent::NUL:
                         //printf("NUL ");
                         output = 0.0f;
-                    }
-                    else if (comp->mType == GridbrainComponent::PER)
-                    {
+                        break;
+                    case GridbrainComponent::PER:
                         //printf("PER ");
                         output = comp->mState;
-                    }
-                    else if (comp->mType == GridbrainComponent::ACT)
-                    {
+                        break;
+                    case GridbrainComponent::ACT:
                         //printf("ACT ");
                         // TODO: return 1 if the action was executed?
                         output = comp->mInput;
@@ -715,12 +716,12 @@ void Gridbrain::cycle()
                             output = -1.0f;
                         }
                         outputVector[comp->mActionPosition] = output;
-                    }
-                    else if (comp->mType == GridbrainComponent::THR)
-                    {
+
+                        break;
+                    case GridbrainComponent::THR:
                         //printf("THR ");
-                        if ((comp->mInput > 0.05)
-                            || (comp->mInput < -0.05))
+                        if ((comp->mInput > GB_THRESHOLD)
+                            || (comp->mInput < -GB_THRESHOLD))
                         {
                             output = comp->mInput;
                         }
@@ -728,9 +729,8 @@ void Gridbrain::cycle()
                         {
                             output = 0.0f;
                         }
-                    }
-                    else if (comp->mType == GridbrainComponent::AGG)
-                    {
+                        break;
+                    case GridbrainComponent::AGG:
                         //printf("AGG ");
                         if ((comp->mInput > 0.1)
                             || (comp->mInput < -0.1))
@@ -741,10 +741,9 @@ void Gridbrain::cycle()
                         {
                             output = 0.0f;
                         }
-                    }
-                    else if ((comp->mType == GridbrainComponent::MAX)
-                        || (comp->mType == GridbrainComponent::MMAX))
-                    {
+                        break;
+                    case GridbrainComponent::MAX:
+                    case GridbrainComponent::MMAX:
                         //printf("MAX/MMAX ");
                         if ((comp->mType != GridbrainComponent::MMAX) || (comp->mInput != 0))
                         {
@@ -771,15 +770,14 @@ void Gridbrain::cycle()
                         {
                             output = 0.0f;
                         }
-                    }
-                    else if (comp->mType == GridbrainComponent::MUL)
-                    {
+                        break;
+                    case GridbrainComponent::MUL:
                         //printf("MUL ");
                         output = comp->mInput;
-                    }
-                    else if (comp->mType == GridbrainComponent::AND)
-                    {
-                        //printf("AND ");
+                        break;
+                    case GridbrainComponent::AND:
+                    case GridbrainComponent::TAND:
+                        //printf("AND/TAND ");
                         if (comp->mInput > 0.0f)
                         {
                             output = 1.0f;
@@ -792,10 +790,10 @@ void Gridbrain::cycle()
                         {
                             output = 0.0f;
                         }
-                    }
-                    else if (comp->mType == GridbrainComponent::NOT)
-                    {
-                        //printf("NOT ");
+                        break;
+                    case GridbrainComponent::NOT:
+                    case GridbrainComponent::TNAND:
+                        //printf("NOT/TNAND ");
                         if (comp->mInput == 0.0f)
                         {
                             output = 1.0f;
@@ -804,11 +802,13 @@ void Gridbrain::cycle()
                         {
                             output = 0.0f;
                         }
+                        break;
+                    default:
+                        // TODO: this is an error. how to inform?
+                        output = 0.0f;
+                        break;
                     }
-                    else {
-                            // TODO: this is an error. how to inform?
-                            output = 0.0f;
-                    }
+                            
 
                     if (output > 1.0f)
                     {
@@ -828,7 +828,84 @@ void Gridbrain::cycle()
                         if ((!firstAlpha) || (!conn->mInterGrid))
                         {
                             GridbrainComponent* targetComp = &(mComponents[conn->mTarget]);
-                            float input = output * conn->mWeight;
+                            float input = output * conn->mRealWeight;
+
+                            COMPONENT_INPUT_TYPE(targetComp->mType, inputType)
+
+                            // Feed forward
+                            if (conn->mFeedForward)
+                            {
+                                switch(inputType)
+                                {
+                                case GridbrainComponent::IN_MUL:
+                                    if (!targetComp->mForwardFlag)
+                                    {
+                                        targetComp->mInput = input;
+                                        targetComp->mForwardFlag = true;
+                                    }
+                                    else
+                                    {
+                                        targetComp->mInput *= input;
+                                    }
+                                    break;
+                                case GridbrainComponent::IN_TMUL:
+                                    if ((input < GB_THRESHOLD)
+                                        && (input > -GB_THRESHOLD))
+                                    {
+                                        input = 0.0f;
+                                    }
+                                    if (!targetComp->mForwardFlag)
+                                    {
+                                       targetComp->mInput = input;
+                                       targetComp->mForwardFlag = true;
+                                    }
+                                    else
+                                    {
+                                        targetComp->mInput *= input;
+                                    }
+                                    break;
+                                case GridbrainComponent::IN_SUM:
+                                    targetComp->mInput += input;
+                                    break;
+                                }
+                            }
+                            // Recurrent
+                            else
+                            {
+                                switch(inputType)
+                                {
+                                case GridbrainComponent::IN_MUL:
+                                    if (!targetComp->mRecurrentFlag)
+                                    {
+                                        targetComp->mRecurrentInput = input;
+                                        targetComp->mRecurrentFlag = true;
+                                    }
+                                    else
+                                    {
+                                        targetComp->mRecurrentInput *= input;
+                                    }
+                                    break;
+                                case GridbrainComponent::IN_TMUL:
+                                    if ((input < GB_THRESHOLD)
+                                        && (input > -GB_THRESHOLD))
+                                    {
+                                        input = 0.0f;
+                                    }
+                                    if (!targetComp->mRecurrentFlag)
+                                    {
+                                        targetComp->mRecurrentInput = input;
+                                        targetComp->mRecurrentFlag = true;
+                                    }
+                                    else
+                                    {
+                                        targetComp->mRecurrentInput *= input;
+                                    }
+                                    break;
+                                case GridbrainComponent::IN_SUM:
+                                    targetComp->mRecurrentInput += input;
+                                    break;
+                                }
+                            }
 
                             /*printf("(%d, %d, %d)[%f] -> (%d, %d, %d)[%f]\n",
                                 conn->mColumnOrig,
@@ -839,47 +916,6 @@ void Gridbrain::cycle()
                                 conn->mRowTarg,
                                 conn->mGridTarg,
                                 input);*/
-                            
-                            // Feed forward
-                            if (conn->mFeedForward)
-                            {
-                                if (targetComp->isMultiplier())
-                                {
-                                    if (!targetComp->mForwardFlag)
-                                    {
-                                        targetComp->mInput = input;
-                                        targetComp->mForwardFlag = true;
-                                    }
-                                    else
-                                    {
-                                        targetComp->mInput *= input;
-                                    }
-                                }
-                                else
-                                {
-                                    targetComp->mInput += input;
-                                }
-                            }
-                            // Recurent
-                            else
-                            {
-                                if (targetComp->isMultiplier())
-                                {
-                                    if (!targetComp->mRecurrentFlag)
-                                    {
-                                        targetComp->mRecurrentInput = input;
-                                        targetComp->mRecurrentFlag = true;
-                                    }
-                                    else
-                                    {
-                                        targetComp->mRecurrentInput *= input;
-                                    }
-                                }
-                                else
-                                {
-                                    targetComp->mRecurrentInput += input;
-                                }
-                            }
                         }
                         conn = (GridbrainConnection*)conn->mNextConnection;
                     }
@@ -1004,6 +1040,7 @@ void Gridbrain::mutateChangeConnectionWeight()
         }
 
         conn->mWeight = newWeight;
+        applyWeight(conn);
 
         prob = mDistMutationsProb->uniform(0.0f, 1.0f);
         nextPos += trunc(log(prob) / log(nonSelectionProb));
@@ -1085,6 +1122,26 @@ float* Gridbrain::getOutputBuffer()
     return mGridsVec[mGridsCount - 1]->getOutputVector();
 }
 
+void Gridbrain::applyWeight(GridbrainConnection* conn)
+{
+    if (conn->mWeight <= -1.0f)
+    {
+        conn->mRealWeight = -FLT_MAX;
+    }
+    else if (conn->mWeight >= 1.0f)
+    {
+        conn->mRealWeight = FLT_MAX;
+    }
+    else if (conn->mWeight < 0.0f)
+    {
+        conn->mRealWeight = -(1.0f / (1.0f + conn->mWeight)) + 1.0f;
+    }
+    else
+    {
+        conn->mRealWeight = (1.0f / (1.0f - conn->mWeight)) - 1.0f;
+    }
+}
+
 const char Gridbrain::mClassName[] = "Gridbrain";
 
 Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
@@ -1116,12 +1173,11 @@ int Gridbrain::setComponent(lua_State* luaState)
     unsigned int gridNumber = luaL_checkint(luaState, 3);
     GridbrainComponent::Type type = (GridbrainComponent::Type)luaL_checkint(luaState, 4);
     unsigned int subType = luaL_optint(luaState, 5, -1);
-    float parameter = luaL_optnumber(luaState, 6, 0.0f);
-    int symTable = luaL_optint(luaState, 7, -1);
-    int origSymIndex = luaL_optint(luaState, 8, -1);
-    int targetSymIndex = luaL_optint(luaState, 9, -1);
+    int symTable = luaL_optint(luaState, 6, -1);
+    int origSymIndex = luaL_optint(luaState, 7, -1);
+    int targetSymIndex = luaL_optint(luaState, 8, -1);
 
-    setComponent(x, y, gridNumber, type, subType, parameter, symTable, origSymIndex, targetSymIndex);
+    setComponent(x, y, gridNumber, type, subType, symTable, origSymIndex, targetSymIndex);
     return 0;
 }
 
