@@ -59,8 +59,16 @@ changeWeightProb = getNumberParameter("changeweightprob", changeWeightProb)
 changeComponentProb = getNumberParameter("changecompprob", changeComponentProb)
 weightMutationStanDev = getNumberParameter("weightmutstandev", weightMutationStanDev)
 
-logSuffix = "_eaters_" .. addConnectionProb .. "_" .. removeConnectionProb .. "_" .. changeWeightProb .. "_" .. changeComponentProb
-print(logSuffix)
+logSuffix = "_eaters_"
+            .. addConnectionProb
+            .. "_"
+            .. removeConnectionProb
+            .. "_"
+            .. changeWeightProb
+            .. "_"
+            .. changeComponentProb
+            .. "s"
+            .. seedIndex
 
 sim = SimCont2D()
 sim:setWorldDimensions(worldWidth, worldHeight, 150)
