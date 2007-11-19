@@ -1,23 +1,28 @@
-screenWidth = 800
-paramScreenWidth = getCommandLineParameter("swidth")
-if paramScreenWidth ~= "" then screenWidth = tonumber(paramScreenWidth) end
+function getNumberParameter(paramName, paramDefault)
+    param = getCommandLineParameter(paramName)
 
-screenHeight = 600
-paramScreenHeight = getCommandLineParameter("sheight")
-if paramScreenHeight ~= "" then screenHeight = tonumber(paramScreenHeight) end
+    if param == "" then
+        return paramDefault
+    else
+        return tonumber(param)
+    end
+end
 
-fullScreen = false
-paramFullScreen = getCommandLineParameter("fullscreen")
-if paramFullScreen == "true" then fullScreen = true end
+function getBoolParameter(paramName, paramDefault)
+    param = getCommandLineParameter(paramName)
 
-noGraphics = false
-paramNoGraphics = getCommandLineParameter("nograph")
-if paramNoGraphics == "true" then noGraphics = true end
+    if param == "" then
+        return paramDefault
+    elseif param == "true" then
+        return true
+    else
+        return false
+    end
+end
 
-seedIndex = -1
-paramSeedIndex = getCommandLineParameter("seedindex")
-if paramSeedIndex ~= "" then seedIndex = tonumber(paramSeedIndex) end
-
-timeLimit = 0
-paramTimeLimit = getCommandLineParameter("timelimit")
-if paramTimeLimit ~= "" then timeLimit = tonumber(paramTimeLimit) end
+screenWidth = getNumberParameter("swidth", 800)
+screenHeight = getNumberParameter("sheight", 600)
+fullScreen = getBoolParameter("fullscreen", false)
+noGraphics = getBoolParameter("nograph", false)
+seedIndex = getNumberParameter("seedindex", -1)
+timeLimit = getNumberParameter("timelimit", 0)

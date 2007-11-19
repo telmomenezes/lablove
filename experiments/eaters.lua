@@ -53,6 +53,15 @@ timeLimit = 0
 
 dofile("experiments/aux/basic_command_line.lua")
 
+addConnectionProb = getNumberParameter("addconnprob", addConnectionProb)
+removeConnectionProb = getNumberParameter("removeconnprob", removeConnectionProb)
+changeWeightProb = getNumberParameter("changeweightprob", changeWeightProb)
+changeComponentProb = getNumberParameter("changecompprob", changeComponentProb)
+weightMutationStanDev = getNumberParameter("weightmutstandev", weightMutationStanDev)
+
+logSuffix = "_eaters_" .. addConnectionProb .. "_" .. removeConnectionProb .. "_" .. changeWeightProb .. "_" .. changeComponentProb
+print(logSuffix)
+
 sim = SimCont2D()
 sim:setWorldDimensions(worldWidth, worldHeight, 150)
 sim:setViewRange(viewRange)
@@ -302,14 +311,14 @@ sim:setPos(human, 300, 300)
 sim:setHuman(human)
 
 stats = StatCommon()
-stats:setFile("energy.csv")
+stats:setFile("energy" .. logSuffix .. ".csv")
 stats:addField("energy")
 --stats:addField("connections")
 popDyn:addDeathStatistics(agentSpeciesIndex, stats)
 
-statTime = StatTime()
-statTime:setFile("time.csv")
-popDyn:addDeathStatistics(agentSpeciesIndex, statTime)
+--statTime = StatTime()
+--statTime:setFile("time.csv")
+--popDyn:addDeathStatistics(agentSpeciesIndex, statTime)
 
 sim:initGraphics(screenWidth, screenHeight, fullScreen, noGraphics)
 sim:run()
