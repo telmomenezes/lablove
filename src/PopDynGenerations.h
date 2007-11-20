@@ -21,7 +21,7 @@
 #define __INCLUDE_POPDYN_GENERATIONS_H
 
 #include "PopulationDynamics.h"
-#include "Statistics.h"
+#include "Log.h"
 #include "RandDistManager.h"
 
 #include <list>
@@ -37,7 +37,7 @@ typedef struct
 {
     SimulationObject* mBaseOrganism;
     list<SimulationObject*> mOrganismList;
-    list<Statistics*> mStatistics;
+    list<Log*> mLogs;
     long mPopulation;
     bool mStatic;
 } SpeciesData;
@@ -52,7 +52,7 @@ public:
     virtual void onOrganismDeath(SimulationObject* org);
 
     unsigned int addSpecies(SimulationObject* org, long population, bool isStatic);
-    void addSpeciesStatistics(unsigned int speciesIndex, Statistics* stats);
+    void addSpeciesLog(unsigned int speciesIndex, Log* log);
     void setGenerationTime(unsigned int time){mGenerationTime = time;}
 
     static const char mClassName[];
@@ -60,7 +60,7 @@ public:
     static Orbit<PopDynGenerations>::NumberGlobalType mNumberGlobals[];
 
     int addSpecies(lua_State* luaState);
-    int addSpeciesStatistics(lua_State* luaState);
+    int addSpeciesLog(lua_State* luaState);
     int setGenerationTime(lua_State* luaState);
 
 protected:

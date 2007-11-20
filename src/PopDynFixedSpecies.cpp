@@ -26,7 +26,7 @@ mt_distribution* PopDynFixedSpecies::mDistOrganism = gDistManager.getNewDistribu
 PopDynFixedSpecies::PopDynFixedSpecies(lua_State* luaState)
 {
     mTournamentSize = 2;
-    mStatisticsTimeInterval = 100 * 1000;
+    mLogTimeInterval = 100 * 1000;
 }
 
 PopDynFixedSpecies::~PopDynFixedSpecies()
@@ -47,16 +47,16 @@ unsigned int PopDynFixedSpecies::addSpecies(SimulationObject* org, long populati
     return mSpecies.size() - 1;
 }
 
-void PopDynFixedSpecies::addSampleStatistics(unsigned int speciesIndex, Statistics* stats)
+void PopDynFixedSpecies::addSampleLog(unsigned int speciesIndex, Log* log)
 {
-    stats->init();
-    mSpecies[speciesIndex].mSampleStatistics.push_back(stats);
+    log->init();
+    mSpecies[speciesIndex].mSampleLogs.push_back(log);
 }
 
-void PopDynFixedSpecies::addDeathStatistics(unsigned int speciesIndex, Statistics* stats)
+void PopDynFixedSpecies::addDeathLog(unsigned int speciesIndex, Log* log)
 {
-    stats->init();
-    mSpecies[speciesIndex].mDeathStatistics.push_back(stats);
+    log->init();
+    mSpecies[speciesIndex].mDeathLogs.push_back(log);
 }
 
 void PopDynFixedSpecies::init(PopulationManager* popManager)
@@ -79,32 +79,32 @@ void PopDynFixedSpecies::init(PopulationManager* popManager)
 
 void PopDynFixedSpecies::onCycle(unsigned long time, double realTime)
 {
-    if ((time % mStatisticsTimeInterval) == 0)
+    if ((time % mLogTimeInterval) == 0)
     {
         for (vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
             iterSpecies != mSpecies.end();
             iterSpecies++)
         {
             // Dump death statistics
-            for (list<Statistics*>::iterator iterStats = (*iterSpecies).mDeathStatistics.begin();
-                iterStats != (*iterSpecies).mDeathStatistics.end();
-                iterStats++)
+            for (list<Log*>::iterator iterLogs = (*iterSpecies).mDeathLogs.begin();
+                iterLogs != (*iterSpecies).mDeathLogs.end();
+                iterLogs++)
             {
-                (*iterStats)->dump(time, realTime);
+                (*iterLogs)->dump(time, realTime);
             }
 
             // Process and dump sample statistics
-            for (list<Statistics*>::iterator iterStats = (*iterSpecies).mSampleStatistics.begin();
-                iterStats != (*iterSpecies).mSampleStatistics.end();
-                iterStats++)
+            for (list<Log*>::iterator iterLogs = (*iterSpecies).mSampleLogs.begin();
+                iterLogs != (*iterSpecies).mSampleLogs.end();
+                iterLogs++)
             {
                 for (vector<SimulationObject*>::iterator iterOrg = (*iterSpecies).mOrganismVector.begin();
                         iterOrg != (*iterSpecies).mOrganismVector.end();
                         iterOrg++)
                 {
-                    (*iterStats)->process(*iterOrg, mPopManager);
+                    (*iterLogs)->process(*iterOrg, mPopManager);
                 }
-                (*iterStats)->dump(time, realTime);
+                (*iterLogs)->dump(time, realTime);
             }
         }
     }
@@ -120,11 +120,11 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
         if (org->getSpeciesID() == (*iterSpecies).mBaseOrganism->getSpeciesID())
         {
             // Update death statistics
-            for (list<Statistics*>::iterator iterStats = (*iterSpecies).mDeathStatistics.begin();
-                iterStats != (*iterSpecies).mDeathStatistics.end();
-                iterStats++)
+            for (list<Log*>::iterator iterLogs = (*iterSpecies).mDeathLogs.begin();
+                iterLogs != (*iterSpecies).mDeathLogs.end();
+                iterLogs++)
             {
-                (*iterStats)->process(org, mPopManager);
+                (*iterLogs)->process(org, mPopManager);
             }
 
             vector<SimulationObject*>::iterator iterOrg;
@@ -186,10 +186,10 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
 const char PopDynFixedSpecies::mClassName[] = "PopDynFixedSpecies";
 
 Orbit<PopDynFixedSpecies>::MethodType PopDynFixedSpecies::mMethods[] = {
-    {"setStatisticsTimeInterval", &PopDynFixedSpecies::setStatisticsTimeInterval},
+    {"setLogTimeInterval", &PopDynFixedSpecies::setLogTimeInterval},
     {"addSpecies", &PopDynFixedSpecies::addSpecies},
-    {"addSampleStatistics", &PopDynFixedSpecies::addSampleStatistics},
-    {"addDeathStatistics", &PopDynFixedSpecies::addDeathStatistics},
+    {"addSampleLog", &PopDynFixedSpecies::addSampleLog},
+    {"addDeathLog", &PopDynFixedSpecies::addDeathLog},
     {"setTournamentSize", &PopDynFixedSpecies::setTournamentSize},
     {0,0}
 };
@@ -210,19 +210,19 @@ int PopDynFixedSpecies::addSpecies(lua_State* luaState)
     return 1;
 }
 
-int PopDynFixedSpecies::addSampleStatistics(lua_State* luaState)
+int PopDynFixedSpecies::addSampleLog(lua_State* luaState)
 {
     unsigned int speciesIndex = luaL_checkint(luaState, 1);
-    Statistics* stats = (Statistics*)Orbit<PopDynFixedSpecies>::pointer(luaState, 2);
-    addSampleStatistics(speciesIndex, stats);
+    Log* log = (Log*)Orbit<PopDynFixedSpecies>::pointer(luaState, 2);
+    addSampleLog(speciesIndex, log);
     return 0;
 }
 
-int PopDynFixedSpecies::addDeathStatistics(lua_State* luaState)
+int PopDynFixedSpecies::addDeathLog(lua_State* luaState)
 {
     unsigned int speciesIndex = luaL_checkint(luaState, 1);
-    Statistics* stats = (Statistics*)Orbit<PopDynFixedSpecies>::pointer(luaState, 2);
-    addDeathStatistics(speciesIndex, stats);
+    Log* log = (Log*)Orbit<PopDynFixedSpecies>::pointer(luaState, 2);
+    addDeathLog(speciesIndex, log);
     return 0;
 }
 
@@ -233,10 +233,10 @@ int PopDynFixedSpecies::setTournamentSize(lua_State* luaState)
     return 0;
 }
 
-int PopDynFixedSpecies::setStatisticsTimeInterval(lua_State* luaState)
+int PopDynFixedSpecies::setLogTimeInterval(lua_State* luaState)
 {
     unsigned long interval = luaL_checkint(luaState, 1);
-    setStatisticsTimeInterval(interval);
+    setLogTimeInterval(interval);
     return 0;
 }
 

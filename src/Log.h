@@ -17,42 +17,22 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_STATISTICS_H)
-#define __INCLUDE_STATISTICS_H
+#if !defined(__INCLUDE_LOG_H)
+#define __INCLUDE_LOG_H
 
-#include "Log.h"
 #include "SimulationObject.h"
 #include "PopulationManager.h"
 
-#include "Orbit.h"
-
-#include <stdio.h>
-
-#include <string>
-#include <list>
-
-using std::string;
-using std::list;
-
-class Statistics : public Log
+class Log
 {
 public:
-    Statistics();
-    virtual ~Statistics();
+    Log();
+    virtual ~Log();
 
     virtual void init(){}
 
-    void addField(string fieldName);
-    void setFile(string filePath);
     virtual void process(SimulationObject* obj, PopulationManager* popManager)=0;
     virtual void dump(unsigned long time, double realTime)=0;
-
-    int addField(lua_State* luaState);
-    int setFile(lua_State* luaState);
-
-protected:
-    list<string> mFields;
-    FILE* mFile;
 };
 #endif
 

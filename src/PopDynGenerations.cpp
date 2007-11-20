@@ -47,10 +47,10 @@ unsigned int PopDynGenerations::addSpecies(SimulationObject* org, long populatio
     return mSpecies.size() - 1;
 }
 
-void PopDynGenerations::addSpeciesStatistics(unsigned int speciesIndex, Statistics* stats)
+void PopDynGenerations::addSpeciesLog(unsigned int speciesIndex, Log* log)
 {
-    stats->init();
-    mSpecies[speciesIndex].mStatistics.push_back(stats);
+    log->init();
+    mSpecies[speciesIndex].mLogs.push_back(log);
 }
 
 void PopDynGenerations::init(PopulationManager* popManager)
@@ -135,11 +135,11 @@ void PopDynGenerations::onCycle(unsigned long time, double realTime)
                     SimulationObject* org = (*iterSpecies).mOrganismList.front();
 
                     // Update statistics
-                    for (list<Statistics*>::iterator iterStats = (*iterSpecies).mStatistics.begin();
-                        iterStats != (*iterSpecies).mStatistics.end();
-                        iterStats++)
+                    for (list<Log*>::iterator iterLogs = (*iterSpecies).mLogs.begin();
+                        iterLogs != (*iterSpecies).mLogs.end();
+                        iterLogs++)
                     {
-                        (*iterStats)->process(org, mPopManager);
+                        (*iterLogs)->process(org, mPopManager);
                     }
 
                     (*iterSpecies).mOrganismList.pop_front();
@@ -147,12 +147,12 @@ void PopDynGenerations::onCycle(unsigned long time, double realTime)
                 }
             }
 
-            // Dump statistics
-            for (list<Statistics*>::iterator iterStats = (*iterSpecies).mStatistics.begin();
-                iterStats != (*iterSpecies).mStatistics.end();
-                iterStats++)
+            // Dump logs
+            for (list<Log*>::iterator iterLogs = (*iterSpecies).mLogs.begin();
+                iterLogs != (*iterSpecies).mLogs.end();
+                iterLogs++)
             {
-                (*iterStats)->dump(time, realTime);
+                (*iterLogs)->dump(time, realTime);
             }
         }
 
@@ -189,7 +189,7 @@ const char PopDynGenerations::mClassName[] = "PopDynGenerations";
 
 Orbit<PopDynGenerations>::MethodType PopDynGenerations::mMethods[] = {
     {"addSpecies", &PopDynGenerations::addSpecies},
-    {"addSpeciesStatistics", &PopDynGenerations::addSpeciesStatistics},
+    {"addSpeciesLog", &PopDynGenerations::addSpeciesLog},
     {"setGenerationTime", &PopDynGenerations::setGenerationTime},
     {0,0}
 };
@@ -207,11 +207,11 @@ int PopDynGenerations::addSpecies(lua_State* luaState)
     return 1;
 }
 
-int PopDynGenerations::addSpeciesStatistics(lua_State* luaState)
+int PopDynGenerations::addSpeciesLog(lua_State* luaState)
 {
     unsigned int speciesIndex = luaL_checkint(luaState, 1);
-    Statistics* stats = (Statistics*)Orbit<PopDynGenerations>::pointer(luaState, 2);
-    addSpeciesStatistics(speciesIndex, stats);
+    Log* log = (Log*)Orbit<PopDynGenerations>::pointer(luaState, 2);
+    addSpeciesLog(speciesIndex, log);
     return 0;
 }
 

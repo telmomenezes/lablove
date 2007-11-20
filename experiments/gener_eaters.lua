@@ -307,7 +307,7 @@ stats = StatCommon()
 stats:setFile("energy.csv")
 stats:addField("energy")
 --stats:addField("connections")
-popDyn:addSpeciesStatistics(agentSpeciesIndex, stats)
+popDyn:addSpeciesLog(agentSpeciesIndex, stats)
 
 sim:initGraphics(screenWidth, screenHeight, fullScreen, noGraphics)
 sim:run()

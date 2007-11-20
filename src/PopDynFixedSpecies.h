@@ -21,7 +21,7 @@
 #define __INCLUDE_POPDYN_FIXED_SPECIES_H
 
 #include "PopulationDynamics.h"
-#include "Statistics.h"
+#include "Log.h"
 #include "RandDistManager.h"
 
 #include <list>
@@ -37,8 +37,8 @@ typedef struct
 {
     SimulationObject* mBaseOrganism;
     vector<SimulationObject*> mOrganismVector;
-    list<Statistics*> mDeathStatistics;
-    list<Statistics*> mSampleStatistics;
+    list<Log*> mDeathLogs;
+    list<Log*> mSampleLogs;
     long mPopulation;
     bool mDiversify;
 } SpeciesData;
@@ -54,9 +54,9 @@ public:
 
     unsigned int addSpecies(SimulationObject* org, long population, bool diversify=true);
 
-    void addSampleStatistics(unsigned int speciesIndex, Statistics* stats);
-    void addDeathStatistics(unsigned int speciesIndex, Statistics* stats);
-    void setStatisticsTimeInterval(unsigned long interval){mStatisticsTimeInterval = interval * 1000;}
+    void addSampleLog(unsigned int speciesIndex, Log* log);
+    void addDeathLog(unsigned int speciesIndex, Log* log);
+    void setLogTimeInterval(unsigned long interval){mLogTimeInterval = interval * 1000;}
 
     void setTournamentSize(unsigned int size){mTournamentSize = size;}
 
@@ -65,10 +65,10 @@ public:
     static Orbit<PopDynFixedSpecies>::NumberGlobalType mNumberGlobals[];
 
     int addSpecies(lua_State* luaState);
-    int addSampleStatistics(lua_State* luaState);
-    int addDeathStatistics(lua_State* luaState);
+    int addSampleLog(lua_State* luaState);
+    int addDeathLog(lua_State* luaState);
     int setTournamentSize(lua_State* luaState);
-    int setStatisticsTimeInterval(lua_State* luaState);
+    int setLogTimeInterval(lua_State* luaState);
 
 protected:
     static mt_distribution* mDistOrganism;
@@ -76,7 +76,7 @@ protected:
     vector<SpeciesData> mSpecies;
     unsigned int mTournamentSize;
 
-    unsigned long mStatisticsTimeInterval;
+    unsigned long mLogTimeInterval;
 };
 #endif
 

@@ -47,6 +47,7 @@ SET(SOURCE_FILES
     src/SymbolFloatVector.cpp
     src/SymbolUL.cpp
     src/SymbolTable.cpp
+    src/Log.cpp
     src/Statistics.cpp
     src/StatCommon.cpp
     src/StatTime.cpp

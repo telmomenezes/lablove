@@ -263,11 +263,11 @@ stats = StatCommon()
 stats:setFile("energy.csv")
 stats:addField("energy")
 --stats:addField("connections")
-popDyn:addDeathStatistics(agentSpeciesIndex, stats)
+popDyn:addDeathLog(agentSpeciesIndex, stats)
 
 statTime = StatTime()
 statTime:setFile("time.csv")
-popDyn:addDeathStatistics(agentSpeciesIndex, statTime)
+popDyn:addDeathLog(agentSpeciesIndex, statTime)
 
 sim:initGraphics(screenWidth, screenHeight, fullScreen, noGraphics)
 sim:run()
