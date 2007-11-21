@@ -36,6 +36,7 @@ PopulationManager::~PopulationManager()
 void PopulationManager::addObject(SimulationObject* object)
 {
     mObjects.push_back(object);
+    object->onAdd();
 }
 
 void PopulationManager::removeObject(SimulationObject* obj)

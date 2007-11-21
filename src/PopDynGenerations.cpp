@@ -130,8 +130,6 @@ void PopDynGenerations::onCycle(unsigned long time, double realTime)
                 // Delete old population
                 for (unsigned int i = 0; i < (*iterSpecies).mPopulation; i++)
                 {
-                    
-
                     SimulationObject* org = (*iterSpecies).mOrganismList.front();
 
                     // Update statistics

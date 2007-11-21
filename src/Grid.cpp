@@ -36,6 +36,8 @@ Grid::Grid(lua_State* luaState)
     mInputDepth = 0;
     mPerceptionsCount = 0;
     mActionsCount = 0;
+    mWriteX = 0;
+    mWriteY = 0;
 
     if (luaState)
     {
@@ -56,6 +58,8 @@ Grid::Grid(const Grid& grid)
     mActionsCount = 0;
     mInputMatrix = NULL;
     mOutputVector = NULL;
+    mWriteX = 0;
+    mWriteY = 0;
 
     Grid* auxGrid = (Grid*)&grid;
 

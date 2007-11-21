@@ -189,10 +189,10 @@ if NOT then
     betaSet:addComponent(GridbrainComponent.NOT)
 end
 if TAND then
-    alphaSet:addComponent(GridbrainComponent.TAND)
+    betaSet:addComponent(GridbrainComponent.TAND)
 end
 if TNAND then
-    alphaSet:addComponent(GridbrainComponent.TNAND)
+    betaSet:addComponent(GridbrainComponent.TNAND)
 end
     
 grid2 = Grid()

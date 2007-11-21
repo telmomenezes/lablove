@@ -34,6 +34,7 @@
 #include "SymbolFloat.h"
 #include "SymbolFloatVector.h"
 #include "SymbolUL.h"
+#include "LogBestBrain.h"
 #include "StatCommon.h"
 #include "StatTime.h"
 #include "GraphicTriangle.h"
@@ -146,6 +147,7 @@ int main(int argc, char *argv[])
     Orbit<SymbolFloat>::orbitRegister(luaState);
     Orbit<SymbolFloatVector>::orbitRegister(luaState);
     Orbit<SymbolUL>::orbitRegister(luaState);
+    Orbit<LogBestBrain>::orbitRegister(luaState);
     Orbit<StatCommon>::orbitRegister(luaState);
     Orbit<StatTime>::orbitRegister(luaState);
     Orbit<GraphicTriangle>::orbitRegister(luaState);

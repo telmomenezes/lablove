@@ -46,6 +46,14 @@ SimulationObject* Agent::clone(bool randomize)
     return new Agent(this, randomize);
 }
 
+void Agent::onAdd()
+{
+    if (mBrain != NULL)
+    {
+        mBrain->onAdd();
+    }
+}
+
 Brain* Agent::setBrain(Brain* brain)
 {
     mBrain = brain;

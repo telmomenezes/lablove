@@ -48,6 +48,7 @@ changeComponentProb = 0.01
 weightMutationStanDev = 1.0
 
 timeLimit = 0
+logTimeInterval = 100
 
 ----------------------------------------------
 
@@ -205,10 +206,10 @@ if NOT then
     betaSet:addComponent(GridbrainComponent.NOT)
 end
 if TAND then
-    alphaSet:addComponent(GridbrainComponent.TAND)
+    betaSet:addComponent(GridbrainComponent.TAND)
 end
 if TNAND then
-    alphaSet:addComponent(GridbrainComponent.TNAND)
+    betaSet:addComponent(GridbrainComponent.TNAND)
 end
     
 grid2 = Grid()
@@ -324,9 +325,12 @@ stats:addField("energy")
 --stats:addField("connections")
 popDyn:addDeathLog(agentSpeciesIndex, stats)
 
---statTime = StatTime()
---statTime:setFile("time.csv")
---popDyn:addDeathLog(agentSpeciesIndex, statTime)
+logBrain = LogBestBrain()
+logBrain:setFileNamePrefix("brain")
+logBrain:setFileNameSuffix(".svg")
+popDyn:addDeathLog(agentSpeciesIndex, logBrain)
+
+popDyn:setLogTimeInterval(logTimeInterval)
 
 sim:initGraphics(screenWidth, screenHeight, fullScreen, noGraphics)
 sim:run()

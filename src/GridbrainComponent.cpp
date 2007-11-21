@@ -67,12 +67,12 @@ void GridbrainComponent::clearConnections()
 void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)
 {
     mType = comp->mType;
-    mSubType = comp->mSubType;
+    ;mSubType = comp->mSubType;
     mSymTable = comp->mSymTable;
     mOrigSymIndex = comp->mOrigSymIndex;
     mTargetSymIndex = comp->mTargetSymIndex;
 
-}
+;}
 
 void GridbrainComponent::copyPosition(GridbrainComponent* comp)
 {
@@ -87,6 +87,39 @@ bool GridbrainComponent::isAggregator()
     return ((mType == GridbrainComponent::AGG )
         || (mType == GridbrainComponent::MAX)
         || (mType == GridbrainComponent::MMAX));
+}
+
+string GridbrainComponent::getName()
+{
+    switch(mType)
+    {
+    case NUL:
+        return "NUL";
+    case PER:
+        return "PER";
+    case ACT:
+        return "ACT";
+    case THR:
+        return "THR";
+    case AGG:
+        return "AGG";
+    case MAX:
+        return "MAX";
+    case MUL:
+        return "MUL";
+    case NOT:
+        return "NOT";
+    case MMAX:
+        return "MMAX";
+    case AND:
+        return "AND";
+    case TAND:
+        return "TAND";
+    case TNAND:
+        return "TNAND";
+    default:
+        return "?";
+    }
 }
 
 const char GridbrainComponent::mClassName[] = "GridbrainComponent";

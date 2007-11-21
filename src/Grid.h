@@ -84,6 +84,10 @@ public:
     void setColConnCount(unsigned int col, unsigned int count){mColumnsConnectionsCountVec[col] = count;}
     float* getInputBuffer();
 
+    unsigned int getWriteX(){return mWriteX;}
+    unsigned int getWriteY(){return mWriteY;}
+    void setWritePos(unsigned int x, unsigned int y){mWriteX = x; mWriteY = y;}
+
     static const char mClassName[];
     static Orbit<Grid>::MethodType mMethods[];
     static Orbit<Grid>::NumberGlobalType mNumberGlobals[];
@@ -121,6 +125,9 @@ protected:
     vector<GridbrainComponent*> mActionsVec;
 
     vector<unsigned int> mColumnsConnectionsCountVec;
+
+    unsigned int mWriteX;
+    unsigned int mWriteY;
 };
 #endif
 

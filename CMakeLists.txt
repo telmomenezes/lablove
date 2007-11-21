@@ -34,6 +34,7 @@ SET(SOURCE_FILES
     src/Brain.cpp
     src/DummyBrain.cpp
     src/Gridbrain.cpp
+    src/GridbrainWrite.cpp
     src/Grid.cpp
     src/GridbrainComponent
     src/GridbrainComponentSet.cpp
@@ -48,6 +49,7 @@ SET(SOURCE_FILES
     src/SymbolUL.cpp
     src/SymbolTable.cpp
     src/Log.cpp
+    src/LogBestBrain.cpp
     src/Statistics.cpp
     src/StatCommon.cpp
     src/StatTime.cpp

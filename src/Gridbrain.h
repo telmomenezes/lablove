@@ -47,6 +47,7 @@ public:
 
     void addGrid(Grid* grid, string name);
     virtual void init();
+    virtual void onAdd();
     void initEmpty();
 
     virtual float* getInputBuffer(unsigned int channel);
@@ -119,6 +120,8 @@ public:
     int setMutateChangeComponentProb(lua_State* luaState);
     int setWeightMutationStanDev(lua_State* luaState);
 
+    virtual string write();
+
 protected:
     void initGridInputOutput(Grid* grid, int gPos=-1);
     void calcConnectionCounts();
@@ -129,6 +132,13 @@ protected:
     void mutateRemoveConnection();
     void mutateChangeConnectionWeight();
     void mutateChangeComponent();
+
+    void initGridWritePositions();
+    void getComponentWritePos(unsigned int& posX,
+                                unsigned int& posY,
+                                unsigned int x,
+                                unsigned int y,
+                                unsigned int grid);
 
     static mt_distribution* mDistConnections;
     static mt_distribution* mDistMutationsProb;

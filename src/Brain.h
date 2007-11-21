@@ -43,6 +43,7 @@ public:
     virtual Brain* clone(bool randomize=false)=0;
 
     virtual void init()=0;
+    virtual void onAdd(){}
 
     list<InterfaceItem*>* getInputInterface(unsigned int channel);
     list<InterfaceItem*>* getOutputInterface();
@@ -55,6 +56,7 @@ public:
     virtual float getFieldValue(string fieldName){return 0.0f;}
 
     int getChannelByName(string name);
+    virtual string write(){return "";}
 
 protected:
     vector<list<InterfaceItem*>*> mInputInterfacesVector;

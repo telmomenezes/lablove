@@ -163,8 +163,6 @@ Brain* Gridbrain::clone(bool randomize)
         }
     }
 
-    gb->initGridsInputOutput();
-
     return gb;
 }
 
@@ -226,8 +224,12 @@ void Gridbrain::init()
             }
         }
     }
+}
 
+void Gridbrain::onAdd()
+{
     initGridsInputOutput();
+    initGridWritePositions();
 }
 
 void Gridbrain::initEmpty()
@@ -1047,6 +1049,54 @@ void Gridbrain::mutateChangeConnectionWeight()
     }
 }
 
+/*void Gridbrain::mutateSplitConnection()
+{
+    float nonSelectionProb = 1.0f - mMutateSplitConnection;
+    if (nonSelectionProb == 1.0f)
+    {
+        return;
+    }
+    float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+    double nextPos = trunc(log(prob) / log(nonSelectionProb));
+    
+    unsigned int connectionPos = 0;
+    GridbrainConnection* conn = mConnections;
+
+    while (nextPos < mConnectionsCount) 
+    {
+        while (connectionPos < nextPos)
+        {
+            conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+            connectionPos++;
+        }
+
+        unsigned int g1 = conn->mGridOrig;
+        unsigned int g2 = conn->mGridTarg;
+        Grid* gridOrig = mGridsVector[g1];
+        Grid* gridTarg = mGridsVector[g2];
+        unsigned int x1 = gridOrig->getXByCode(conn->mColumnOrig); 
+        unsigned int y1 = gridOrig->getYByCode(conn->mRowOrig); 
+        unsigned int x2 = gridTarg->getXByCode(conn->mColumnTarg); 
+        unsigned int y2 = gridTarg->getYByCode(conn->mRowTarg);
+
+        if (g1 == g2)
+        {
+            int deltaX = x2 - x1;
+            if (deltaX < 0)
+            {
+                deltaX = -deltaX;
+            }
+            if (deltaX > 1)
+            {
+                middleColumn
+            }
+        }
+
+        prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+        nextPos += trunc(log(prob) / log(nonSelectionProb));
+    }
+}*/
+
 void Gridbrain::mutateChangeComponent()
 {
 
@@ -1068,7 +1118,7 @@ void Gridbrain::mutateChangeComponent()
         GridbrainComponent* comp = grid->getRandomComponent(pos);
         mComponents[pos].copyDefinitions(comp);
 
-        initGridInputOutput(grid, gridNumber);
+        //initGridInputOutput(grid, gridNumber);
 
         prob = mDistMutationsProb->uniform(0.0f, 1.0f);
         nextPos += trunc(log(prob) / log(nonSelectionProb));

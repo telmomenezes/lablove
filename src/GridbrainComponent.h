@@ -24,6 +24,9 @@
 #include "SimulationObject.h"
 #include "Orbit.h"
 
+#include <string>
+using std::string;
+
 #define COMPONENT_INPUT_TYPE(compType, inputType) \
 switch(compType) \
 { \
@@ -59,6 +62,8 @@ public:
     void copyPosition(GridbrainComponent* comp);
 
     bool isAggregator();
+
+    string getName();
 
     static const char mClassName[];
     static Orbit<GridbrainComponent>::MethodType mMethods[];
