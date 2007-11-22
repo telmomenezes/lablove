@@ -41,8 +41,8 @@ initialConnections = 10
 
 tournamentSize = 10
 
-addConnectionProb = 0.1
-removeConnectionProb = 0.1
+addConnectionProb = 0.01
+removeConnectionProb = 0.01
 changeWeightProb = 0.01
 changeComponentProb = 0.01
 weightMutationStanDev = 1.0
@@ -320,15 +320,15 @@ sim:setPos(human, 300, 300)
 sim:setHuman(human)
 
 stats = StatCommon()
-stats:setFile("energy" .. logSuffix .. ".csv")
+stats:setFile("logs/energy" .. logSuffix .. ".csv")
 stats:addField("energy")
 --stats:addField("connections")
 popDyn:addDeathLog(agentSpeciesIndex, stats)
 
 logBrain = LogBestBrain()
-logBrain:setFileNamePrefix("brain")
+logBrain:setFileNamePrefix("logs/brains/brain" .. logSuffix)
 logBrain:setFileNameSuffix(".svg")
-popDyn:addDeathLog(agentSpeciesIndex, logBrain)
+popDyn:addSampleLog(agentSpeciesIndex, logBrain)
 
 popDyn:setLogTimeInterval(logTimeInterval)
 

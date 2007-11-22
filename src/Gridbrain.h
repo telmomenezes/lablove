@@ -63,6 +63,19 @@ public:
                 unsigned int yTarg,
                 unsigned int gTarg,
                 float weight);
+    void removeConnection(GridbrainConnection* conn);
+    void removeConnection(unsigned int xOrig,
+                unsigned int yOrig,
+                unsigned int gOrig,
+                unsigned int xTarg,
+                unsigned int yTarg,
+                unsigned int gTarg);
+    GridbrainConnection* getConnection(unsigned int xOrig,
+                unsigned int yOrig,
+                unsigned int gOrig,
+                unsigned int xTarg,
+                unsigned int yTarg,
+                unsigned int gTarg);
     bool connectionExists(unsigned int xOrig,
                 unsigned int yOrig,
                 unsigned int gOrig,
@@ -102,6 +115,7 @@ public:
     void setMutateAddConnectionProb(float prob){mMutateAddConnectionProb = prob;}
     void setMutateRemoveConnectionProb(float prob){mMutateRemoveConnectionProb = prob;}
     void setMutateChangeConnectionWeightProb(float prob){mMutateChangeConnectionWeightProb = prob;}
+    void setMutateSplitConnectionProb(float prob){mMutateSplitConnectionProb = prob;}
     void setMutateChangeComponentProb(float prob){mMutateChangeComponentProb = prob;}
     void setWeightMutationStanDev(float sd){mWeightMutationStanDev = sd;}
 
@@ -117,6 +131,7 @@ public:
     int setMutateAddConnectionProb(lua_State* luaState);
     int setMutateRemoveConnectionProb(lua_State* luaState);
     int setMutateChangeConnectionWeightProb(lua_State* luaState);
+    int setMutateSplitConnectionProb(lua_State* luaState);
     int setMutateChangeComponentProb(lua_State* luaState);
     int setWeightMutationStanDev(lua_State* luaState);
 
@@ -131,6 +146,7 @@ protected:
     void mutateAddConnection();
     void mutateRemoveConnection();
     void mutateChangeConnectionWeight();
+    void mutateSplitConnection();
     void mutateChangeComponent();
 
     void initGridWritePositions();
@@ -157,9 +173,12 @@ protected:
     unsigned int mTotalPossibleConnections;
     unsigned int mBetaComponentsCount;
 
+    bool bRecurrentAllowed;
+
     float mMutateAddConnectionProb;
     float mMutateRemoveConnectionProb;
     float mMutateChangeConnectionWeightProb;
+    float mMutateSplitConnectionProb;
     float mMutateChangeComponentProb;
     float mWeightMutationStanDev;
 };

@@ -115,8 +115,8 @@ string Gridbrain::write()
         Grid* gridTarg = mGridsVec[conn->mGridTarg];
         unsigned int comp1X = gridOrig->getXByCode(conn->mColumnOrig);
         unsigned int comp1Y = gridOrig->getYByCode(conn->mRowOrig);
-        unsigned int comp2X = gridOrig->getXByCode(conn->mColumnTarg);
-        unsigned int comp2Y = gridOrig->getYByCode(conn->mRowTarg);
+        unsigned int comp2X = gridTarg->getXByCode(conn->mColumnTarg);
+        unsigned int comp2Y = gridTarg->getYByCode(conn->mRowTarg);
         unsigned int centerX1;
         unsigned int centerX2;
         unsigned int centerY1;
