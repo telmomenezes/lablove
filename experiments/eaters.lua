@@ -7,9 +7,9 @@ plantSize = 10.0
 worldWidth = 3000
 worldHeight = 3000
 
-gridHeight = 5
-gridAlpha = 5
-gridBeta = 5
+gridHeight = 3
+gridAlpha = 3
+gridBeta = 2
 
 THR = false
 MAX = false
@@ -39,12 +39,14 @@ rotDrag = 0.05
 
 initialConnections = 10
 
-tournamentSize = 10
+tournamentSize = 2
 
 addConnectionProb = 0.01
 removeConnectionProb = 0.01
 changeWeightProb = 0.01
-changeComponentProb = 0.01
+splitConnectionProb = 0.01
+joinConnectionsProb = 0.01
+changeComponentProb = 0.05
 weightMutationStanDev = 1.0
 
 timeLimit = 0
@@ -145,6 +147,8 @@ brain = Gridbrain()
 brain:setMutateAddConnectionProb(addConnectionProb)
 brain:setMutateRemoveConnectionProb(removeConnectionProb)
 brain:setMutateChangeConnectionWeightProb(changeWeightProb)
+brain:setMutateSplitConnectionProb(splitConnectionProb)
+brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
 brain:setWeightMutationStanDev(weightMutationStanDev)
 
@@ -326,9 +330,9 @@ stats:addField("energy")
 popDyn:addDeathLog(agentSpeciesIndex, stats)
 
 logBrain = LogBestBrain()
-logBrain:setFileNamePrefix("logs/brains/brain" .. logSuffix)
+logBrain:setFileNamePrefix("logs/brains/brain" .. logSuffix .. "t")
 logBrain:setFileNameSuffix(".svg")
-popDyn:addSampleLog(agentSpeciesIndex, logBrain)
+popDyn:addDeathLog(agentSpeciesIndex, logBrain)
 
 popDyn:setLogTimeInterval(logTimeInterval)
 

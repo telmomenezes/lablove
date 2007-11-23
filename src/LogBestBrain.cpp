@@ -19,6 +19,7 @@
 
 #include "LogBestBrain.h"
 #include "Agent.h"
+#include "Simulation.h"
 
 #include <stdio.h>
 
@@ -43,7 +44,7 @@ void LogBestBrain::process(SimulationObject* obj, PopulationManager* popManager)
         mFirstObject = false;
        //TODO: check if object is agent
        Agent* agent = (Agent*)obj;
-       mBrainString = agent->getBrain()->write();
+       mBrainString = agent->getBrain()->write(agent, (Simulation*)popManager);
     }
 }
 

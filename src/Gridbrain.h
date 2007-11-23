@@ -116,6 +116,7 @@ public:
     void setMutateRemoveConnectionProb(float prob){mMutateRemoveConnectionProb = prob;}
     void setMutateChangeConnectionWeightProb(float prob){mMutateChangeConnectionWeightProb = prob;}
     void setMutateSplitConnectionProb(float prob){mMutateSplitConnectionProb = prob;}
+    void setMutateJoinConnectionsProb(float prob){mMutateJoinConnectionsProb = prob;}
     void setMutateChangeComponentProb(float prob){mMutateChangeComponentProb = prob;}
     void setWeightMutationStanDev(float sd){mWeightMutationStanDev = sd;}
 
@@ -132,10 +133,11 @@ public:
     int setMutateRemoveConnectionProb(lua_State* luaState);
     int setMutateChangeConnectionWeightProb(lua_State* luaState);
     int setMutateSplitConnectionProb(lua_State* luaState);
+    int setMutateJoinConnectionsProb(lua_State* luaState);
     int setMutateChangeComponentProb(lua_State* luaState);
     int setWeightMutationStanDev(lua_State* luaState);
 
-    virtual string write();
+    virtual string write(SimulationObject* obj, PopulationManager* pop);
 
 protected:
     void initGridInputOutput(Grid* grid, int gPos=-1);
@@ -147,6 +149,7 @@ protected:
     void mutateRemoveConnection();
     void mutateChangeConnectionWeight();
     void mutateSplitConnection();
+    void mutateJoinConnections();
     void mutateChangeComponent();
 
     void initGridWritePositions();
@@ -173,12 +176,13 @@ protected:
     unsigned int mTotalPossibleConnections;
     unsigned int mBetaComponentsCount;
 
-    bool bRecurrentAllowed;
+    bool mRecurrentAllowed;
 
     float mMutateAddConnectionProb;
     float mMutateRemoveConnectionProb;
     float mMutateChangeConnectionWeightProb;
     float mMutateSplitConnectionProb;
+    float mMutateJoinConnectionsProb;
     float mMutateChangeComponentProb;
     float mWeightMutationStanDev;
 };

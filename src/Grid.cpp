@@ -19,9 +19,6 @@
 
 #include "Grid.h"
 
-unsigned int Grid::CURRENT_COLUMN_ID = 0;
-unsigned int Grid::CURRENT_ROW_ID = 0;
-
 Grid::Grid(lua_State* luaState)
 {
     mType = ALPHA;
@@ -79,17 +76,8 @@ Grid::Grid(const Grid& grid)
         mComponentSetByColumn.push_back(*iterComp);
     }
 
-    for (unsigned int i = 0; i < mHeight; i++)
-    {
-        unsigned long code = grid.mRowsVec[i];
-        mRowsVec.push_back(code);
-        mRowsMap[code] = i;
-    }
     for (unsigned int i = 0; i < mWidth; i++)
     {
-        unsigned long code = grid.mColumnsVec[i];
-        mColumnsVec.push_back(code);
-        mColumnsMap[code] = i;
         mColumnsConnectionsCountVec.push_back(grid.mColumnsConnectionsCountVec[i]);
     }
 }
@@ -116,17 +104,8 @@ void Grid::init(Type type, unsigned int width, unsigned int height)
 
     for (unsigned int i = 0; i < mWidth; i++)
     {
-        mColumnsVec.push_back(CURRENT_COLUMN_ID);
-        mColumnsMap[CURRENT_COLUMN_ID] = i;
-        CURRENT_COLUMN_ID++;
         mColumnsConnectionsCountVec.push_back(0);
         mComponentSetByColumn.push_back(NULL);
-    }
-    for (unsigned int i = 0; i < mHeight; i++)
-    {
-        mRowsVec.push_back(CURRENT_ROW_ID);
-        mRowsMap[CURRENT_ROW_ID] = i;
-        CURRENT_ROW_ID++;
     }
 
     mSize = mWidth * mHeight;

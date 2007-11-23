@@ -134,6 +134,8 @@ public:
     void deltaEnergy(SimulationObject* obj, double delta);
     void setSize(SimulationObject* obj, float size);
 
+    virtual string getInterfaceName(bool input, int type);
+
     static const char mClassName[];
     static Orbit<SimCont2D>::MethodType mMethods[];
     static Orbit<SimCont2D>::NumberGlobalType mNumberGlobals[];

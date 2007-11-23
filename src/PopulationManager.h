@@ -23,8 +23,10 @@
 #include "SimulationObject.h"
 
 #include <list>
+#include <string>
 
 using std::list;
+using std::string;
 
 class PopulationManager
 {
@@ -43,6 +45,8 @@ public:
     SimulationObject* getSelectedObject(){return mSelectedObject;}
 
     virtual float getFieldValue(SimulationObject* obj, string fieldName);
+
+    virtual string getInterfaceName(bool input, int type){return "?";}
 
 protected:
     list<SimulationObject*> mObjects;

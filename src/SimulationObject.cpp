@@ -259,6 +259,22 @@ Symbol* SimulationObject::getSymbolByName(string name)
     return symTab->getSymbol(sp.mPos);
 }
 
+string SimulationObject::getSymbolName(int table, unsigned int pos)
+{
+    for (map<string, SymbolPointer>::iterator iterName = mNamedSymbols.begin();
+            iterName != mNamedSymbols.end();
+            iterName++)
+    {
+        if (((*iterName).second.mTable == table)
+            && ((*iterName).second.mPos == pos))
+        {
+            return (*iterName).first;
+        }
+    }
+
+    return "?";
+}
+
 float SimulationObject::getFieldValue(string fieldName)
 {
     return 0.0f;

@@ -21,6 +21,8 @@
 #define __INCLUDE_BRAIN_H
 
 #include "InterfaceItem.h"
+#include "SimulationObject.h"
+#include "PopulationManager.h"
 
 #include "pyc.h"
 
@@ -56,7 +58,7 @@ public:
     virtual float getFieldValue(string fieldName){return 0.0f;}
 
     int getChannelByName(string name);
-    virtual string write(){return "";}
+    virtual string write(SimulationObject* obj, PopulationManager* pop){return "";}
 
 protected:
     vector<list<InterfaceItem*>*> mInputInterfacesVector;

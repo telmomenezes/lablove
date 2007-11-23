@@ -1074,6 +1074,38 @@ void SimCont2D::deltaEnergy(SimulationObject* obj, double delta)
     obj->mFloatData[FLOAT_ENERGY] += delta;
 }
 
+string SimCont2D::getInterfaceName(bool input, int type)
+{
+    if (input)
+    {
+        switch (type)
+        {
+        case PERCEPTION_IN_CONTACT:
+            return "contact";
+        case PERCEPTION_POSITION:
+            return "position";
+        case PERCEPTION_DISTANCE:
+            return "distance";
+        default:
+            return "?";
+        }
+    }
+    else
+    {
+        switch (type)
+        {
+        case ACTION_GO:
+            return "go";
+        case ACTION_ROTATE:
+            return "rotate";
+        case ACTION_EAT:
+            return "eat";
+        default:
+            return "?";
+        }
+    }
+}
+
 const char SimCont2D::mClassName[] = "SimCont2D";
 
 Orbit<SimCont2D>::MethodType SimCont2D::mMethods[] = {

@@ -39,6 +39,8 @@ tournamentSize = 10
 
 timeLimit = 0
 
+logTimeInterval = 100
+
 ----------------------------------------------
 
 dofile("experiments/aux/basic_command_line.lua")
@@ -265,9 +267,16 @@ stats:addField("energy")
 --stats:addField("connections")
 popDyn:addDeathLog(agentSpeciesIndex, stats)
 
-statTime = StatTime()
-statTime:setFile("time.csv")
-popDyn:addDeathLog(agentSpeciesIndex, statTime)
+logBrain = LogBestBrain()
+logBrain:setFileNamePrefix("logs/brains/brain_prog")
+logBrain:setFileNameSuffix(".svg")
+popDyn:addDeathLog(agentSpeciesIndex, logBrain)
+
+--statTime = StatTime()
+--statTime:setFile("time.csv")
+--popDyn:addDeathLog(agentSpeciesIndex, statTime)
+
+popDyn:setLogTimeInterval(logTimeInterval)
 
 sim:initGraphics(screenWidth, screenHeight, fullScreen, noGraphics)
 sim:run()

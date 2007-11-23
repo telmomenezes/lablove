@@ -74,10 +74,6 @@ public:
     unsigned int getPerceptionsCount(){return mPerceptionsCount;}
     unsigned int getActionsCount(){return mActionsCount;}
     float getOutput(unsigned int number);
-    unsigned long getRowCode(unsigned int pos){return mRowsVec[pos];}
-    unsigned long getColumnCode(unsigned int pos){return mColumnsVec[pos];}
-    unsigned int getXByCode(unsigned long code){return mColumnsMap[code];}
-    unsigned int getYByCode(unsigned long code){return mRowsMap[code];}
     unsigned int getXByOffset(unsigned int offset);
     void removeInputOutput();
     unsigned int getColConnCount(unsigned int col){return mColumnsConnectionsCountVec[col];}
@@ -94,9 +90,6 @@ public:
 
     int addComponentSet(lua_State* luaState);
     int init(lua_State* luaState);
-
-    static unsigned int CURRENT_COLUMN_ID;
-    static unsigned int CURRENT_ROW_ID;
 
 protected:
     Type mType;
@@ -115,11 +108,6 @@ protected:
 
     list<GridbrainComponentSet*> mComponentSetsList;
     vector<GridbrainComponentSet*> mComponentSetByColumn;
-
-    vector<unsigned long> mRowsVec;
-    vector<unsigned long> mColumnsVec;
-    map<unsigned long, unsigned int> mRowsMap;
-    map<unsigned long, unsigned int> mColumnsMap;
 
     vector<GridbrainComponent*> mPerceptionsVec;
     vector<GridbrainComponent*> mActionsVec;

@@ -74,7 +74,7 @@ void Gridbrain::getComponentWritePos(unsigned int& posX,
     posY = gridY + (y * (COMPONENT_SIDE + COMPONENT_MARGIN)) + (COMPONENT_SIDE / 2);
 }
 
-string Gridbrain::write()
+string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
 {
     string svg;
     char buffer[1000];
@@ -101,7 +101,24 @@ string Gridbrain::write()
                 svg += buffer;
 
                 GridbrainComponent* comp = getComponent(x, y, i);
-                sprintf(buffer, "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"10\" fill=\"black\">%s</text>\n", compX, compY + 3, comp->getName().c_str());
+
+                int labelY = compY + 3;
+
+                if ((comp->mType == GridbrainComponent::PER)
+                    || (comp->mType == GridbrainComponent::ACT))
+                {
+                    labelY += 5;
+                    string subName = pop->getInterfaceName(comp->mType == GridbrainComponent::PER, comp->mSubType);
+                    if (subName == "?")
+                    {
+                        subName = obj->getSymbolName(comp->mSymTable, comp->mTargetSymIndex);
+                    }
+                    sprintf(buffer, "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"7\" fill=\"black\">%s</text>\n", compX, labelY, subName.c_str());
+                    svg += buffer;
+                    labelY -= 10;
+                }
+
+                sprintf(buffer, "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"10\" fill=\"black\">%s</text>\n", compX, labelY, comp->getName().c_str());
                 svg += buffer;
             }
         }
@@ -113,10 +130,10 @@ string Gridbrain::write()
     {
         Grid* gridOrig = mGridsVec[conn->mGridOrig];
         Grid* gridTarg = mGridsVec[conn->mGridTarg];
-        unsigned int comp1X = gridOrig->getXByCode(conn->mColumnOrig);
-        unsigned int comp1Y = gridOrig->getYByCode(conn->mRowOrig);
-        unsigned int comp2X = gridTarg->getXByCode(conn->mColumnTarg);
-        unsigned int comp2Y = gridTarg->getYByCode(conn->mRowTarg);
+        unsigned int comp1X = conn->mColumnOrig;
+        unsigned int comp1Y = conn->mRowOrig;
+        unsigned int comp2X = conn->mColumnTarg;
+        unsigned int comp2Y = conn->mRowTarg;
         unsigned int centerX1;
         unsigned int centerX2;
         unsigned int centerY1;
