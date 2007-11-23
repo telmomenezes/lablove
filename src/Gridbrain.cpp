@@ -1033,35 +1033,59 @@ void Gridbrain::mutate()
 
 void Gridbrain::mutateAddConnection()
 {
-
-    float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
-
-    if (prob < mMutateAddConnectionProb)
+    float nonSelectionProb = 1.0f - mMutateAddConnectionProb;
+    if (nonSelectionProb == 1.0f)
     {
+        return;
+    }
+    float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+    double nextPos = trunc(log(prob) / log(nonSelectionProb));
+    
+    unsigned int connectionPos = 0;
+    GridbrainConnection* conn = mConnections;
+
+    while (nextPos < mConnectionsCount) 
+    {
+        while (connectionPos < nextPos)
+        {
+            conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+            connectionPos++;
+        }
+
         addRandomConnections(1);
+
+        prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+        nextPos += trunc(log(prob) / log(nonSelectionProb));
     }
 }
 
 void Gridbrain::mutateRemoveConnection()
 {
-    if (mConnectionsCount > 0) 
+    float nonSelectionProb = 1.0f - mMutateRemoveConnectionProb;
+    if (nonSelectionProb == 1.0f)
     {
-        float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+        return;
+    }
+    float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+    double nextPos = trunc(log(prob) / log(nonSelectionProb));
+    
+    unsigned int connectionPos = 0;
+    GridbrainConnection* conn = mConnections;
 
-        if (prob >= mMutateRemoveConnectionProb)
-        {
-            return;
-        }
-
-        unsigned int connectionPos = mDistConnections->iuniform(0, mConnectionsCount);
-
-        GridbrainConnection* conn = mConnections;
-        for (unsigned int i = 0; i < connectionPos; i++)
+    while (nextPos < mConnectionsCount) 
+    {
+        while (connectionPos < nextPos)
         {
             conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+            connectionPos++;
         }
 
+        GridbrainConnection* nextConn = (GridbrainConnection*)conn->mNextGlobalConnection;
         removeConnection(conn);
+        conn = nextConn;
+
+        prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+        nextPos += trunc(log(prob) / log(nonSelectionProb));
     }
 }
 
@@ -1276,8 +1300,6 @@ void Gridbrain::mutateJoinConnections()
             }
         }
 
-        printf("Join connections!\n");fflush(stdout);
-
         GridbrainComponent* pivot = getComponent(conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg);
         GridbrainConnection* iterConn = pivot->mFirstConnection;
         unsigned int candidateConnections = 0;
@@ -1324,7 +1346,6 @@ void Gridbrain::mutateJoinConnections()
             unsigned int y2 = iterConn->mRowTarg;
             unsigned int g2 = iterConn->mGridTarg;
 
-            printf("new: %d,%d,%d->%d,%d,%d\n", x1, y1, g1, x2, y2, g2);
             if (!connectionExists(x1, y1, g1, x2, y2, g2))
             {
                 float weight = 0;
@@ -1345,11 +1366,6 @@ void Gridbrain::mutateJoinConnections()
                 {
                     nextConn = (GridbrainConnection*)conn->mNextGlobalConnection;
                 }
-
-                printf("remove: %d,%d,%d->%d,%d,%d [%f]\n", conn->mColumnOrig, conn->mRowOrig, conn->mGridOrig, conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg, conn->mWeight);
-                printf("remove: %d,%d,%d->%d,%d,%d [%f]\n", iterConn->mColumnOrig, iterConn->mRowOrig, iterConn->mGridOrig, iterConn->mColumnTarg, iterConn->mRowTarg, iterConn->mGridTarg, iterConn->mWeight);
-                printf("add: %d,%d,%d->%d,%d,%d [%f]\n", x1, y1, g1, x2, y2, g2, weight);
-                fflush(stdout);
 
                 removeConnection(conn);
                 removeConnection(iterConn);

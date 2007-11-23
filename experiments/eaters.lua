@@ -46,7 +46,7 @@ removeConnectionProb = 0.01
 changeWeightProb = 0.01
 splitConnectionProb = 0.01
 joinConnectionsProb = 0.01
-changeComponentProb = 0.05
+changeComponentProb = 0.01
 weightMutationStanDev = 1.0
 
 timeLimit = 0
@@ -59,6 +59,8 @@ dofile("experiments/aux/basic_command_line.lua")
 addConnectionProb = getNumberParameter("addconnprob", addConnectionProb)
 removeConnectionProb = getNumberParameter("removeconnprob", removeConnectionProb)
 changeWeightProb = getNumberParameter("changeweightprob", changeWeightProb)
+splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb)
+joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb)
 changeComponentProb = getNumberParameter("changecompprob", changeComponentProb)
 weightMutationStanDev = getNumberParameter("weightmutstandev", weightMutationStanDev)
 
@@ -68,6 +70,10 @@ logSuffix = "_eaters_"
             .. removeConnectionProb
             .. "_"
             .. changeWeightProb
+            .. "_"
+            .. splitConnectionProb
+            .. "_"
+            .. joinConnectionsProb
             .. "_"
             .. changeComponentProb
             .. "s"
