@@ -1394,7 +1394,7 @@ void Gridbrain::mutateJoinConnections()
                 GridbrainConnection* nextConn = (GridbrainConnection*)conn->mNextGlobalConnection;
                 if (nextConn == iterConn)
                 {
-                    nextConn = (GridbrainConnection*)conn->mNextGlobalConnection;
+                    nextConn = (GridbrainConnection*)nextConn->mNextGlobalConnection;
                 }
 
                 removeConnection(conn);
