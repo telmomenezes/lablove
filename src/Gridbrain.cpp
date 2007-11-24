@@ -412,16 +412,36 @@ void Gridbrain::addConnection(unsigned int xOrig,
                 unsigned int gTarg,
                 float weight)
 {
-    // TODO: disallow invalid connections?
+    Grid* gridOrig = mGridsVec[gOrig];
+    Grid* gridTarg = mGridsVec[gTarg];
+
+    if ((xOrig >= gridOrig->getWidth())
+        || (xTarg >= gridTarg->getWidth())
+        || (yOrig >= gridOrig->getHeight())
+        || (yTarg >= gridTarg->getHeight())
+        || (weight < -1.0f)
+        || (weight > 1.0f))
+    {
+        char buffer[500];
+        sprintf(buffer,
+                    "Parameter(s) out of range in gridbrain add connection: %d,%d,%d -> %d,%d,%d [%f]",
+                    xOrig,
+                    yOrig,
+                    gOrig,
+                    xTarg,
+                    yTarg,
+                    gTarg,
+                    weight);
+        throw std::runtime_error(buffer);
+    }
+
     if (connectionExists(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg))
     {
         return;
     }
 
-    Grid* grid = mGridsVec[gOrig];
-    unsigned int orig = (xOrig * grid->getHeight()) + yOrig + grid->getOffset();
-    grid = mGridsVec[gTarg];
-    unsigned int target = (xTarg * grid->getHeight()) + yTarg + grid->getOffset();
+    unsigned int orig = (xOrig * gridOrig->getHeight()) + yOrig + gridOrig->getOffset();
+    unsigned int target = (xTarg * gridTarg->getHeight()) + yTarg + gridTarg->getOffset();
 
     GridbrainComponent* comp = &(mComponents[orig]);
     GridbrainComponent* targComp = &(mComponents[target]);
