@@ -1044,12 +1044,17 @@ void Gridbrain::mutateAddConnection()
     unsigned int connectionPos = 0;
     GridbrainConnection* conn = mConnections;
 
-    while (nextPos < mConnectionsCount) 
+    while (conn != NULL) 
     {
         while (connectionPos < nextPos)
         {
             conn = (GridbrainConnection*)conn->mNextGlobalConnection;
             connectionPos++;
+
+            if (conn == NULL)
+            {
+                return;
+            }
         }
 
         addRandomConnections(1);
@@ -1072,12 +1077,17 @@ void Gridbrain::mutateRemoveConnection()
     unsigned int connectionPos = 0;
     GridbrainConnection* conn = mConnections;
 
-    while (nextPos < mConnectionsCount) 
+    while (conn != NULL) 
     {
         while (connectionPos < nextPos)
         {
             conn = (GridbrainConnection*)conn->mNextGlobalConnection;
             connectionPos++;
+
+            if (conn == NULL)
+            {
+                return;
+            }
         }
 
         GridbrainConnection* nextConn = (GridbrainConnection*)conn->mNextGlobalConnection;
