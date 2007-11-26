@@ -158,11 +158,10 @@ brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
 brain:setWeightMutationStanDev(weightMutationStanDev)
 
-perSet = GridbrainComponentSet()
-perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_POSITION)
-perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_DISTANCE)
---perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_IN_CONTACT)
-perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 0, 1)
+--perSet = GridbrainComponentSet()
+--perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_POSITION)
+--perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_DISTANCE)
+--perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 0, 1)
 
 alphaSet = GridbrainComponentSet()
 if THR then
@@ -189,18 +188,22 @@ end
 if TNAND then
     alphaSet:addComponent(GridbrainComponent.TNAND)
 end
+alphaSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_POSITION)
+alphaSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_DISTANCE)
+alphaSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 0, 1)
+
 
 grid = Grid()
 grid:init(Grid.ALPHA, gridAlpha, gridHeight)
-grid:addComponentSet(perSet, 0, 0)
-grid:addComponentSet(alphaSet, 1, gridAlpha - 1)
+--grid:addComponentSet(perSet, 0, 0)
+grid:addComponentSet(alphaSet, 0, gridAlpha - 1)
 
 brain:addGrid(grid, "objects");
 
-actSet = GridbrainComponentSet()
-actSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_GO)
-actSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_ROTATE)
-actSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_EAT)
+--actSet = GridbrainComponentSet()
+--actSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_GO)
+--actSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_ROTATE)
+--actSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_EAT)
 
 betaSet = GridbrainComponentSet()
 if THR then
@@ -221,11 +224,14 @@ end
 if TNAND then
     betaSet:addComponent(GridbrainComponent.TNAND)
 end
+betaSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_GO)
+betaSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_ROTATE)
+betaSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_EAT)
     
 grid2 = Grid()
 grid2:init(Grid.BETA, gridBeta, gridHeight)
-grid2:addComponentSet(betaSet, 0, gridBeta - 2)
-grid2:addComponentSet(actSet, gridBeta - 1, gridBeta - 1)
+grid2:addComponentSet(betaSet, 0, gridBeta - 1)
+--grid2:addComponentSet(actSet, gridBeta - 1, gridBeta - 1)
 
 brain:addGrid(grid2, "beta")
 
