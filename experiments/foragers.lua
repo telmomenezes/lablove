@@ -48,10 +48,11 @@ weightMutationStanDev = 1.0
 splitConnectionProb = 0.01
 joinConnectionsProb = 0.01
 changeComponentProb = 0.01
-swapComponentProb = 0.01
+swapComponentProb = 0.0
 
 timeLimit = 0
 logTimeInterval = 100
+logBrains = false
 
 humanAgent = false
 
@@ -337,10 +338,12 @@ stats:addField("energy")
 stats:addField("gb_connections")
 popDyn:addDeathLog(agentSpeciesIndex, stats)
 
-logBrain = LogBestBrain()
-logBrain:setFileNamePrefix("logs/brains/brain" .. logSuffix .. "t")
-logBrain:setFileNameSuffix(".svg")
-popDyn:addDeathLog(agentSpeciesIndex, logBrain)
+if logBrains then
+    logBrain = LogBestBrain()
+    logBrain:setFileNamePrefix("logs/brains/brain" .. logSuffix .. "t")
+    logBrain:setFileNameSuffix(".svg")
+    popDyn:addDeathLog(agentSpeciesIndex, logBrain)
+end
 
 popDyn:setLogTimeInterval(logTimeInterval)
 

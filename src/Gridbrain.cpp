@@ -1475,10 +1475,40 @@ void Gridbrain::mutateSwapComponent()
 
         while (conn != NULL)
         {
+            
+            if ((conn->mColumnOrig == x1) 
+                && (conn->mRowOrig == y1)
+                && (conn->mGridOrig == gridNumber))
+            {
+                conn->mColumnOrig = x2;
+                conn->mRowOrig = y2;
+            }
+            else if ((conn->mColumnOrig == x2)
+                && (conn->mRowOrig == y2)
+                && (conn->mGridOrig == gridNumber))
+            {
+                conn->mColumnOrig = x1;
+                conn->mRowOrig = y1;
+            }
+
+            if ((conn->mColumnTarg == x1)
+                && (conn->mRowTarg == y1)
+                && (conn->mGridTarg == gridNumber))
+            {
+                conn->mColumnTarg = x2;
+                conn->mRowTarg = y2;
+            }
+            else if ((conn->mColumnTarg == x2)
+                && (conn->mRowTarg == y2)
+                && (conn->mGridTarg == gridNumber))
+            {
+                conn->mColumnTarg = x1;
+                conn->mRowTarg = y1;
+            }
+
             if (((!mRecurrentAllowed)
                 || (grid->getType() == Grid::ALPHA))
-                && ((x1 >= conn->mColumnTarg)
-                || (x2 <= conn->mColumnOrig)))
+                && (conn->mColumnOrig >= conn->mColumnTarg))
             {
                 GridbrainConnection* nextConn = (GridbrainConnection*)conn->mNextGlobalConnection;
                 removeConnection(conn);
@@ -1486,28 +1516,6 @@ void Gridbrain::mutateSwapComponent()
             }
             else
             {
-                if ((conn->mColumnOrig == x1) && (conn->mRowOrig == y1))
-                {
-                    conn->mColumnOrig = x2;
-                    conn->mRowOrig = y2;
-                }
-                else if ((conn->mColumnOrig == x2) && (conn->mRowOrig == y2))
-                {
-                    conn->mColumnOrig = x1;
-                    conn->mRowOrig = y1;
-                }
-
-                if ((conn->mColumnTarg == x1) && (conn->mRowTarg == y1))
-                {
-                    conn->mColumnTarg = x2;
-                    conn->mRowTarg = y2;
-                }
-                else if ((conn->mColumnTarg == x2) && (conn->mRowTarg == y2))
-                {
-                    conn->mColumnTarg = x1;
-                    conn->mRowTarg = y1;
-                }
-
                 conn = (GridbrainConnection*)conn->mNextGlobalConnection;
             }
         }
