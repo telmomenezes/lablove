@@ -45,10 +45,11 @@ Gridbrain::Gridbrain(lua_State* luaState)
     mMutateAddConnectionProb = 0.0f;
     mMutateRemoveConnectionProb = 0.0f;
     mMutateChangeConnectionWeightProb = 0.0f;
+    mWeightMutationStanDev = 1.0f;
     mMutateSplitConnectionProb = 0.0f;
     mMutateJoinConnectionsProb = 0.0f;
     mMutateChangeComponentProb = 0.0f;
-    mWeightMutationStanDev = 1.0f;
+    mMutateSwapComponentProb = 0.0f;
 }
 
 Gridbrain::~Gridbrain()
@@ -89,11 +90,12 @@ Brain* Gridbrain::clone(bool randomize)
     gb->mRecurrentAllowed = mRecurrentAllowed;
 
     gb->mMutateAddConnectionProb = mMutateAddConnectionProb;
-    gb->mMutateRemoveConnectionProb = mMutateAddConnectionProb;
-    gb->mMutateChangeConnectionWeightProb = mMutateAddConnectionProb;
+    gb->mMutateRemoveConnectionProb = mMutateRemoveConnectionProb;
+    gb->mMutateChangeConnectionWeightProb = mMutateChangeConnectionWeightProb;
     gb->mMutateSplitConnectionProb = mMutateSplitConnectionProb;
     gb->mMutateJoinConnectionsProb = mMutateJoinConnectionsProb;
-    gb->mMutateChangeComponentProb = mMutateAddConnectionProb;
+    gb->mMutateChangeComponentProb = mMutateChangeComponentProb;
+    gb->mMutateSwapComponentProb = mMutateSwapComponentProb;
 
     for (unsigned int i = 0; i < mGridsCount; i++)
     {
@@ -1049,6 +1051,7 @@ void Gridbrain::mutate()
     mutateSplitConnection();
     mutateJoinConnections();
     mutateChangeComponent();
+    mutateSwapComponent();
 }
 
 void Gridbrain::mutateAddConnection()
@@ -1436,6 +1439,89 @@ void Gridbrain::mutateChangeComponent()
     }
 }
 
+void Gridbrain::mutateSwapComponent()
+{
+
+    float nonSelectionProb = 1.0f - mMutateSwapComponentProb;
+    if (nonSelectionProb == 1.0f)
+    {
+        return;
+    }
+    float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+    double nextPos = trunc(log(prob) / log(nonSelectionProb));
+
+    while (nextPos < mNumberOfComponents)
+    {
+        unsigned int pos = (unsigned int)nextPos;
+
+        unsigned int gridNumber = mComponents[pos].mGrid;
+        Grid* grid = mGridsVec[gridNumber];
+
+        GridbrainComponent* comp1 = &mComponents[pos];
+
+        unsigned int x1 = comp1->mColumn;
+        unsigned int y1 = comp1->mRow;
+
+        unsigned int x2 = mDistComponents->iuniform(0, grid->getWidth() - 1);
+        if (x2 >= comp1->mColumn)
+        {
+            x2++;
+        }
+        unsigned int y2 = mDistComponents->iuniform(0, grid->getHeight());
+
+        GridbrainComponent* comp2 = getComponent(x2, y2, gridNumber);
+
+        GridbrainConnection* conn = mConnections;
+
+        while (conn != NULL)
+        {
+            if (((!mRecurrentAllowed)
+                || (grid->getType() == Grid::ALPHA))
+                && ((x1 >= conn->mColumnTarg)
+                || (x2 <= conn->mColumnOrig)))
+            {
+                GridbrainConnection* nextConn = (GridbrainConnection*)conn->mNextGlobalConnection;
+                removeConnection(conn);
+                conn = nextConn;
+            }
+            else
+            {
+                if ((conn->mColumnOrig == x1) && (conn->mRowOrig == y1))
+                {
+                    conn->mColumnOrig = x2;
+                    conn->mRowOrig = y2;
+                }
+                else if ((conn->mColumnOrig == x2) && (conn->mRowOrig == y2))
+                {
+                    conn->mColumnOrig = x1;
+                    conn->mRowOrig = y1;
+                }
+
+                if ((conn->mColumnTarg == x1) && (conn->mRowTarg == y1))
+                {
+                    conn->mColumnTarg = x2;
+                    conn->mRowTarg = y2;
+                }
+                else if ((conn->mColumnTarg == x2) && (conn->mRowTarg == y2))
+                {
+                    conn->mColumnTarg = x1;
+                    conn->mRowTarg = y1;
+                }
+
+                conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+            }
+        }
+
+        GridbrainComponent auxComp;
+        auxComp.copyDefinitions(comp1);
+        comp1->copyDefinitions(comp2);
+        comp2->copyDefinitions(&auxComp);
+
+        prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+        nextPos += trunc(log(prob) / log(nonSelectionProb));
+    }
+}
+
 Grid* Gridbrain::getGrid(unsigned int number)
 {
     if (mGridsCount <= number)
@@ -1510,6 +1596,20 @@ void Gridbrain::applyWeight(GridbrainConnection* conn)
     }
 }
 
+float Gridbrain::getFieldValue(string fieldName)
+{
+    if (fieldName == "gb_connections")
+    {
+        return mConnectionsCount;
+    }
+    else if (fieldName == "gb_components")
+    {
+        return mNumberOfComponents;
+    }
+
+    return 0.0f;
+}
+
 const char Gridbrain::mClassName[] = "Gridbrain";
 
 Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
@@ -1521,10 +1621,11 @@ Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
     {"setMutateAddConnectionProb", &Gridbrain::setMutateAddConnectionProb},
     {"setMutateRemoveConnectionProb", &Gridbrain::setMutateRemoveConnectionProb},
     {"setMutateChangeConnectionWeightProb", &Gridbrain::setMutateChangeConnectionWeightProb},
+    {"setWeightMutationStanDev", &Gridbrain::setWeightMutationStanDev},
     {"setMutateSplitConnectionProb", &Gridbrain::setMutateSplitConnectionProb},
     {"setMutateJoinConnectionsProb", &Gridbrain::setMutateJoinConnectionsProb},
     {"setMutateChangeComponentProb", &Gridbrain::setMutateChangeComponentProb},
-    {"setWeightMutationStanDev", &Gridbrain::setWeightMutationStanDev},
+    {"setMutateSwapComponentProb", &Gridbrain::setMutateSwapComponentProb},
     {0,0}
 };
 
@@ -1619,6 +1720,13 @@ int Gridbrain::setMutateChangeComponentProb(lua_State* luaState)
 {
     float prob = luaL_checknumber(luaState, 1);
     setMutateChangeComponentProb(prob);
+    return 0;
+}
+
+int Gridbrain::setMutateSwapComponentProb(lua_State* luaState)
+{
+    float prob = luaL_checknumber(luaState, 1);
+    setMutateSwapComponentProb(prob);
     return 0;
 }
 

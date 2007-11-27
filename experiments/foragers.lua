@@ -44,13 +44,16 @@ tournamentSize = 2
 addConnectionProb = 0.01
 removeConnectionProb = 0.01
 changeWeightProb = 0.01
+weightMutationStanDev = 1.0
 splitConnectionProb = 0.01
 joinConnectionsProb = 0.01
 changeComponentProb = 0.01
-weightMutationStanDev = 1.0
+swapComponentProb = 0.01
 
 timeLimit = 0
 logTimeInterval = 100
+
+humanAgent = false
 
 ----------------------------------------------
 
@@ -59,12 +62,13 @@ dofile("experiments/aux/basic_command_line.lua")
 addConnectionProb = getNumberParameter("addconnprob", addConnectionProb)
 removeConnectionProb = getNumberParameter("removeconnprob", removeConnectionProb)
 changeWeightProb = getNumberParameter("changeweightprob", changeWeightProb)
+weightMutationStanDev = getNumberParameter("weightmutstandev", weightMutationStanDev)
 splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb)
 joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb)
 changeComponentProb = getNumberParameter("changecompprob", changeComponentProb)
-weightMutationStanDev = getNumberParameter("weightmutstandev", weightMutationStanDev)
+swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb)
 
-logSuffix = "_eaters_"
+logSuffix = "_foragers_"
             .. addConnectionProb
             .. "_"
             .. removeConnectionProb
@@ -76,6 +80,8 @@ logSuffix = "_eaters_"
             .. joinConnectionsProb
             .. "_"
             .. changeComponentProb
+            .. "_"
+            .. swapComponentProb
             .. "s"
             .. seedIndex
 
@@ -153,15 +159,11 @@ brain = Gridbrain()
 brain:setMutateAddConnectionProb(addConnectionProb)
 brain:setMutateRemoveConnectionProb(removeConnectionProb)
 brain:setMutateChangeConnectionWeightProb(changeWeightProb)
+brain:setWeightMutationStanDev(weightMutationStanDev)
 brain:setMutateSplitConnectionProb(splitConnectionProb)
 brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
-brain:setWeightMutationStanDev(weightMutationStanDev)
-
---perSet = GridbrainComponentSet()
---perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_POSITION)
---perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_DISTANCE)
---perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 0, 1)
+brain:setMutateSwapComponentProb(swapComponentProb)
 
 alphaSet = GridbrainComponentSet()
 if THR then
@@ -192,18 +194,11 @@ alphaSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_POSITION)
 alphaSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_DISTANCE)
 alphaSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 0, 1)
 
-
 grid = Grid()
 grid:init(Grid.ALPHA, gridAlpha, gridHeight)
---grid:addComponentSet(perSet, 0, 0)
-grid:addComponentSet(alphaSet, 0, gridAlpha - 1)
+grid:addComponentSet(alphaSet)
 
 brain:addGrid(grid, "objects");
-
---actSet = GridbrainComponentSet()
---actSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_GO)
---actSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_ROTATE)
---actSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_EAT)
 
 betaSet = GridbrainComponentSet()
 if THR then
@@ -230,8 +225,7 @@ betaSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_EAT)
     
 grid2 = Grid()
 grid2:init(Grid.BETA, gridBeta, gridHeight)
-grid2:addComponentSet(betaSet, 0, gridBeta - 1)
---grid2:addComponentSet(actSet, gridBeta - 1, gridBeta - 1)
+grid2:addComponentSet(betaSet)
 
 brain:addGrid(grid2, "beta")
 
@@ -273,72 +267,74 @@ popDyn:setTournamentSize(10)
 agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents)
 popDyn:addSpecies(plant, numberOfPlants)
 
-human = Agent()
-dummyBrain = DummyBrain(1)
-dummyBrain:setChannelName(0, "objects")
-dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
-dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
-dummyBrain:addPerception("Feed", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 0, 1)
+if humanAgent then
+    human = Agent()
+    dummyBrain = DummyBrain(1)
+    dummyBrain:setChannelName(0, "objects")
+    dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
+    dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
+    dummyBrain:addPerception("Feed", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 0, 1)
 
-human:setBrain(dummyBrain)
+    human:setBrain(dummyBrain)
 
-symSize = SymbolFloat(agentSize)
-symTable = SymbolTable(symSize, sizeTableCode)
-human:addSymbolTable(symTable)
-human:setSymbolName("size", sizeTableCode, 0)
+    symSize = SymbolFloat(agentSize)
+    symTable = SymbolTable(symSize, sizeTableCode)
+    human:addSymbolTable(symTable)
+    human:setSymbolName("size", sizeTableCode, 0)
 
-symHFriction = SymbolFloat(friction)
-symHDrag = SymbolFloat(drag)
-symHRotFriction = SymbolFloat(rotFriction)
-symHRotDrag = SymbolFloat(rotDrag)
-symTable = SymbolTable(symFriction, physicsTableCode)
-symTable:addSymbol(symHDrag)
-symTable:addSymbol(symHRotFriction)
-symTable:addSymbol(symHRotDrag)
-human:addSymbolTable(symTable)
-human:setSymbolName("friction", physicsTableCode, 0)
-human:setSymbolName("drag", physicsTableCode, 1)
-human:setSymbolName("rot_friction", physicsTableCode, 2)
-human:setSymbolName("rot_drag", physicsTableCode, 3)
+    symHFriction = SymbolFloat(friction)
+    symHDrag = SymbolFloat(drag)
+    symHRotFriction = SymbolFloat(rotFriction)
+    symHRotDrag = SymbolFloat(rotDrag)
+    symTable = SymbolTable(symFriction, physicsTableCode)
+    symTable:addSymbol(symHDrag)
+    symTable:addSymbol(symHRotFriction)
+    symTable:addSymbol(symHRotDrag)
+    human:addSymbolTable(symTable)
+    human:setSymbolName("friction", physicsTableCode, 0)
+    human:setSymbolName("drag", physicsTableCode, 1)
+    human:setSymbolName("rot_friction", physicsTableCode, 2)
+    human:setSymbolName("rot_drag", physicsTableCode, 3)
 
-symHInitialEnergy = SymbolFloat(1.0)
-symHMetabolism = SymbolFloat(metabolism)
-symTable = SymbolTable(symHInitialEnergy, energyTableCode)
-symTable:addSymbol(symHMetabolism)
-human:addSymbolTable(symTable)
-human:setSymbolName("initial_energy", energyTableCode, 0)
-human:setSymbolName("metabolism", energyTableCode, 1)
+    symHInitialEnergy = SymbolFloat(1.0)
+    symHMetabolism = SymbolFloat(metabolism)
+    symTable = SymbolTable(symHInitialEnergy, energyTableCode)
+    symTable:addSymbol(symHMetabolism)
+    human:addSymbolTable(symTable)
+    human:setSymbolName("initial_energy", energyTableCode, 0)
+    human:setSymbolName("metabolism", energyTableCode, 1)
 
-symHLowAgeLimit = SymbolUL(lowAgeLimit)
-symHHighAgeLimit = SymbolUL(highAgeLimit)
-symTable = SymbolTable(symHLowAgeLimit, ageTableCode)
-symTable:addSymbol(symHHighAgeLimit)
-human:addSymbolTable(symTable)
-human:setSymbolName("low_age_limit", ageTableCode, 0)
-human:setSymbolName("high_age_limit", ageTableCode, 1)
+    symHLowAgeLimit = SymbolUL(lowAgeLimit)
+    symHHighAgeLimit = SymbolUL(highAgeLimit)
+    symTable = SymbolTable(symHLowAgeLimit, ageTableCode)
+    symTable:addSymbol(symHHighAgeLimit)
+    human:addSymbolTable(symTable)
+    human:setSymbolName("low_age_limit", ageTableCode, 0)
+    human:setSymbolName("high_age_limit", ageTableCode, 1)
 
-humanColor = SymbolRGB(82, 228, 241)
-symTable = SymbolTable(humanColor, colorTableCode)
-human:addSymbolTable(symTable)
-human:setSymbolName("color", colorTableCode, 0)
+    humanColor = SymbolRGB(82, 228, 241)
+    symTable = SymbolTable(humanColor, colorTableCode)
+    human:addSymbolTable(symTable)
+    human:setSymbolName("color", colorTableCode, 0)
 
-humanFeed = SymbolFixedString("abc", "aaa")
-humanFood = SymbolFixedString("abc", "bbb")
-humanFeedTable = SymbolTable(humanFeed, feedTableCode)
-humanFeedTable:addSymbol(humanFood)
-human:addSymbolTable(humanFeedTable)
-human:setSymbolName("feed", feedTableCode, 0)
-human:setSymbolName("food", feedTableCode, 1)
+    humanFeed = SymbolFixedString("abc", "aaa")
+    humanFood = SymbolFixedString("abc", "bbb")
+    humanFeedTable = SymbolTable(humanFeed, feedTableCode)
+    humanFeedTable:addSymbol(humanFood)
+    human:addSymbolTable(humanFeedTable)
+    human:setSymbolName("feed", feedTableCode, 0)
+    human:setSymbolName("food", feedTableCode, 1)
 
-human:addGraphic(GraphicTriangle())
-sim:addObject(human)
-sim:setPos(human, 300, 300)
-sim:setHuman(human)
+    human:addGraphic(GraphicTriangle())
+    sim:addObject(human)
+    sim:setPos(human, 300, 300)
+    sim:setHuman(human)
+end
 
 stats = StatCommon()
 stats:setFile("logs/energy" .. logSuffix .. ".csv")
 stats:addField("energy")
---stats:addField("connections")
+stats:addField("gb_connections")
 popDyn:addDeathLog(agentSpeciesIndex, stats)
 
 logBrain = LogBestBrain()

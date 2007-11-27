@@ -67,7 +67,7 @@ void GridbrainComponent::clearConnections()
 void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)
 {
     mType = comp->mType;
-    ;mSubType = comp->mSubType;
+    mSubType = comp->mSubType;
     mSymTable = comp->mSymTable;
     mOrigSymIndex = comp->mOrigSymIndex;
     mTargetSymIndex = comp->mTargetSymIndex;

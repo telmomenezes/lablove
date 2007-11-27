@@ -115,10 +115,15 @@ public:
     void setMutateAddConnectionProb(float prob){mMutateAddConnectionProb = prob;}
     void setMutateRemoveConnectionProb(float prob){mMutateRemoveConnectionProb = prob;}
     void setMutateChangeConnectionWeightProb(float prob){mMutateChangeConnectionWeightProb = prob;}
+    void setWeightMutationStanDev(float sd){mWeightMutationStanDev = sd;}
     void setMutateSplitConnectionProb(float prob){mMutateSplitConnectionProb = prob;}
     void setMutateJoinConnectionsProb(float prob){mMutateJoinConnectionsProb = prob;}
     void setMutateChangeComponentProb(float prob){mMutateChangeComponentProb = prob;}
-    void setWeightMutationStanDev(float sd){mWeightMutationStanDev = sd;}
+    void setMutateSwapComponentProb(float prob){mMutateSwapComponentProb = prob;}
+
+    virtual float getFieldValue(string fieldName);
+
+    virtual string write(SimulationObject* obj, PopulationManager* pop);
 
     static const char mClassName[];
     static Orbit<Gridbrain>::MethodType mMethods[];
@@ -135,9 +140,8 @@ public:
     int setMutateSplitConnectionProb(lua_State* luaState);
     int setMutateJoinConnectionsProb(lua_State* luaState);
     int setMutateChangeComponentProb(lua_State* luaState);
+    int setMutateSwapComponentProb(lua_State* luaState);
     int setWeightMutationStanDev(lua_State* luaState);
-
-    virtual string write(SimulationObject* obj, PopulationManager* pop);
 
 protected:
     void initGridInputOutput(Grid* grid, int gPos=-1);
@@ -151,6 +155,7 @@ protected:
     void mutateSplitConnection();
     void mutateJoinConnections();
     void mutateChangeComponent();
+    void mutateSwapComponent();
 
     void initGridWritePositions();
     void getComponentWritePos(unsigned int& posX,
@@ -181,10 +186,11 @@ protected:
     float mMutateAddConnectionProb;
     float mMutateRemoveConnectionProb;
     float mMutateChangeConnectionWeightProb;
+    float mWeightMutationStanDev;
     float mMutateSplitConnectionProb;
     float mMutateJoinConnectionsProb;
     float mMutateChangeComponentProb;
-    float mWeightMutationStanDev;
+    float mMutateSwapComponentProb;
 };
 
 #endif
