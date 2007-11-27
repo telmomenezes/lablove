@@ -45,8 +45,8 @@ addConnectionProb = 0.01
 removeConnectionProb = 0.01
 changeWeightProb = 0.01
 weightMutationStanDev = 1.0
-splitConnectionProb = 0.01
-joinConnectionsProb = 0.01
+splitConnectionProb = 0.0
+joinConnectionsProb = 0.0
 changeComponentProb = 0.01
 swapComponentProb = 0.0
 
