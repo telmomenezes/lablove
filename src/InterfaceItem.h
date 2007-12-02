@@ -20,16 +20,26 @@
 #if !defined(__INCLUDE_INTERFACE_ITEM_H)
 #define __INCLUDE_INTERFACE_ITEM_H
 
+#include "Orbit.h"
+
 class InterfaceItem
 {
 public:
-    InterfaceItem(){}
-    virtual ~InterfaceItem(){}
+    enum TableLinkType {NO_LINK, SYM_TO_SYM, TAB_TO_SYM, SYM_TO_TAB, TAB_TO_TAB};
+
+    InterfaceItem(lua_State* luaState=NULL);
+    virtual ~InterfaceItem();
 
     int mType;
-    int mSymTable;
+    int mOrigSymTable;
+    int mTargetSymTable;
     int mOrigSymIndex;
     int mTargetSymIndex;
+    TableLinkType mTableLinkType;
+
+    static const char mClassName[];
+    static Orbit<InterfaceItem>::MethodType mMethods[];
+    static Orbit<InterfaceItem>::NumberGlobalType mNumberGlobals[];
 };
 #endif
 

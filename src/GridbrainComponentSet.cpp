@@ -41,16 +41,20 @@ GridbrainComponent* GridbrainComponentSet::getRandom()
 
 void GridbrainComponentSet::addComponent(GridbrainComponent::Type type,
                         int subType,
-                        int symTable,
+                        InterfaceItem::TableLinkType linkType,
+                        int origSymTable,
+                        int targetSymTable,
                         int origSymIndex,
                         int targetSymIndex)
 {
     GridbrainComponent* comp = new GridbrainComponent();
     comp->mType = type;
     comp->mSubType = subType;
-    comp->mSymTable = symTable;
+    comp->mOrigSymTable = origSymTable;
+    comp->mTargetSymTable = targetSymTable;
     comp->mOrigSymIndex = origSymIndex;
     comp->mTargetSymIndex = targetSymIndex;
+    comp->mTableLinkType = linkType;
     addComponent(comp);
 }
 
@@ -67,13 +71,17 @@ int GridbrainComponentSet::addComponent(lua_State* luaState)
 {
     int type = luaL_checkint(luaState, 1);
     int subType = luaL_optint(luaState, 2, -1);
-    int symTable = luaL_optint(luaState, 3, -1);
-    int origSymIndex = luaL_optint(luaState, 4, -1);
-    int targetSymIndex = luaL_optint(luaState, 5, -1);
+    InterfaceItem::TableLinkType linkType = (InterfaceItem::TableLinkType)(luaL_optint(luaState, 3, InterfaceItem::NO_LINK));
+    int origSymTable = luaL_optint(luaState, 4, -1);
+    int targetSymTable = luaL_optint(luaState, 5, -1);
+    int origSymIndex = luaL_optint(luaState, 6, -1);
+    int targetSymIndex = luaL_optint(luaState, 7, -1);
 
     addComponent((GridbrainComponent::Type)type,
                     subType,
-                    symTable,
+                    linkType,
+                    origSymTable,
+                    targetSymTable,
                     origSymIndex,
                     targetSymIndex);
 

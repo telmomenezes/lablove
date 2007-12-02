@@ -46,7 +46,7 @@ SymbolRGB::SymbolRGB(int r, int g, int b)
     mBlue = b;
 }
 
-SymbolRGB::SymbolRGB(SymbolRGB* sym)
+SymbolRGB::SymbolRGB(SymbolRGB* sym) : Symbol(sym)
 {
     mRed = sym->mRed;
     mGreen = sym->mGreen;
@@ -62,7 +62,7 @@ Symbol* SymbolRGB::clone()
     return new SymbolRGB(this);
 }
 
-float SymbolRGB::bind(Symbol* sym)
+float SymbolRGB::getDistance(Symbol* sym)
 {
     // TODO: check type
     SymbolRGB* symRGB = (SymbolRGB*)sym;
@@ -148,6 +148,7 @@ const char SymbolRGB::mClassName[] = "SymbolRGB";
 Orbit<SymbolRGB>::MethodType SymbolRGB::mMethods[] =
 {
     {"initRandom", &SymbolRGB::initRandom},
+    {"setAlwaysRandom", &Symbol::setAlwaysRandom},
     {0,0}
 };
 

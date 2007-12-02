@@ -39,7 +39,7 @@ SymbolFixedString::SymbolFixedString(string alphabet, string str)
     mAlphabetLength = mAlphabet.size();
 }
 
-SymbolFixedString::SymbolFixedString(SymbolFixedString* sym)
+SymbolFixedString::SymbolFixedString(SymbolFixedString* sym) : Symbol(sym)
 {
     mString = sym->mString;
     mAlphabet = sym->mAlphabet;
@@ -56,7 +56,7 @@ Symbol* SymbolFixedString::clone()
     return new SymbolFixedString(this);
 }
 
-float SymbolFixedString::bind(Symbol* sym)
+float SymbolFixedString::getDistance(Symbol* sym)
 {
     // TODO: check type
     SymbolFixedString* symStr = (SymbolFixedString*)sym;
@@ -102,7 +102,10 @@ void SymbolFixedString::replaceChar(unsigned int replacePos, unsigned int charIn
 
 const char SymbolFixedString::mClassName[] = "SymbolFixedString";
 
-Orbit<SymbolFixedString>::MethodType SymbolFixedString::mMethods[] = {{0,0}};
+Orbit<SymbolFixedString>::MethodType SymbolFixedString::mMethods[] = {
+    {"setAlwaysRandom", &Symbol::setAlwaysRandom},
+    {0,0}
+};
 
 Orbit<SymbolFixedString>::NumberGlobalType SymbolFixedString::mNumberGlobals[] = {{0,0}};
 

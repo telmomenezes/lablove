@@ -45,9 +45,10 @@ void GridbrainComponent::clearDefinitions()
     mCycleFlag = false;
     mPerceptionPosition = 0;
     mActionPosition = 0;
-    mSymTable = -1;
+    mOrigSymTable = -1;
+    mTargetSymTable = -1;
     mOrigSymIndex = -1;
-    mTargetSymIndex = -1;
+    mTargetSymIndex = InterfaceItem::NO_LINK;
 }
 
 void GridbrainComponent::clearPosition()
@@ -68,10 +69,11 @@ void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)
 {
     mType = comp->mType;
     mSubType = comp->mSubType;
-    mSymTable = comp->mSymTable;
+    mOrigSymTable = comp->mOrigSymTable;
+    mTargetSymTable = comp->mTargetSymTable;
     mOrigSymIndex = comp->mOrigSymIndex;
     mTargetSymIndex = comp->mTargetSymIndex;
-
+    mTableLinkType = comp->mTableLinkType;
 ;}
 
 void GridbrainComponent::copyPosition(GridbrainComponent* comp)

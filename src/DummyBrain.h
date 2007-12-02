@@ -51,7 +51,8 @@ public:
     void addPerception(string name,
                         unsigned int channel,
                         unsigned int type,
-                        int symTable=-1,
+                        int origSymTable=-1,
+                        int targetSymTable=-1,
                         int origSymIndex=-1,
                         int targetSymIndex=-1);
 

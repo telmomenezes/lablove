@@ -17,29 +17,26 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_SYMBOL_H)
-#define __INCLUDE_SYMBOL_H
+#include "InterfaceItem.h"
 
-#include "Orbit.h"
-
-class Symbol
+InterfaceItem::InterfaceItem(lua_State* luaState)
 {
-public:
-    Symbol();
-    Symbol(Symbol* sym);
-    virtual ~Symbol();
+}
 
-    virtual Symbol* clone() = 0;
+InterfaceItem::~InterfaceItem()
+{
+}
 
-    virtual float getDistance(Symbol* sym) = 0;
-    virtual void initRandom() = 0;
-    virtual void mutate() = 0;
+const char InterfaceItem::mClassName[] = "InterfaceItem";
 
-    void setAlwaysRandom(){mAlwaysRandom = true;}
-    int setAlwaysRandom(lua_State* luaState);
+Orbit<InterfaceItem>::MethodType InterfaceItem::mMethods[] = {{0,0}};
 
-    bool mAlwaysRandom;
-
+Orbit<InterfaceItem>::NumberGlobalType InterfaceItem::mNumberGlobals[] = {
+    {"NO_LINK", NO_LINK},
+    {"SYM_TO_SYM", SYM_TO_SYM},
+    {"TAB_TO_SYM", TAB_TO_SYM},
+    {"SYM_TO_TAB", SYM_TO_TAB},
+    {"TAB_TO_TAB", TAB_TO_TAB},
+    {0,0}
 };
-#endif
 

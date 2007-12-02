@@ -47,7 +47,13 @@ SymbolTable::SymbolTable(SymbolTable* table)
         iterSymbol != table->mSymbols.end();
         iterSymbol++)
     {
-        mSymbols.push_back((*iterSymbol)->clone());
+        Symbol* sym = (*iterSymbol)->clone();
+
+        if ((*iterSymbol)->mAlwaysRandom)
+        {
+            sym->initRandom();
+        }
+        mSymbols.push_back(sym);
     }
 
     mMutateSymbolProb = table->mMutateSymbolProb;

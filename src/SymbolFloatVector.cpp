@@ -43,7 +43,7 @@ SymbolFloatVector::SymbolFloatVector(unsigned int size, float min, float max)
     calcMaxDistance();
 }
 
-SymbolFloatVector::SymbolFloatVector(SymbolFloatVector* sym)
+SymbolFloatVector::SymbolFloatVector(SymbolFloatVector* sym) : Symbol(sym)
 {
     mSize = sym->mSize;
     mMin = sym->mMin;
@@ -77,7 +77,7 @@ void SymbolFloatVector::calcMaxDistance()
     mMaxDistance = distance;
 }
 
-float SymbolFloatVector::bind(Symbol* sym)
+float SymbolFloatVector::getDistance(Symbol* sym)
 {
     // TODO: check type
     SymbolFloatVector* symVec = (SymbolFloatVector*)sym;
@@ -138,6 +138,7 @@ const char SymbolFloatVector::mClassName[] = "SymbolFloatVector";
 Orbit<SymbolFloatVector>::MethodType SymbolFloatVector::mMethods[] =
 {
     {"initRandom", &SymbolFloatVector::initRandom},
+    {"setAlwaysRandom", &Symbol::setAlwaysRandom},
     {0,0}
 };
 

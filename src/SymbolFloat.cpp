@@ -39,7 +39,7 @@ SymbolFloat::SymbolFloat(float value, float min, float max)
     mMax = max;
 }
 
-SymbolFloat::SymbolFloat(SymbolFloat* sym)
+SymbolFloat::SymbolFloat(SymbolFloat* sym) : Symbol(sym)
 {
     mFloat = sym->mFloat;
     mMin = sym->mMin;
@@ -55,7 +55,7 @@ Symbol* SymbolFloat::clone()
     return new SymbolFloat(this);
 }
 
-float SymbolFloat::bind(Symbol* sym)
+float SymbolFloat::getDistance(Symbol* sym)
 {
     // TODO: check type
     SymbolFloat* symFloat = (SymbolFloat*)sym;
@@ -109,6 +109,7 @@ const char SymbolFloat::mClassName[] = "SymbolFloat";
 Orbit<SymbolFloat>::MethodType SymbolFloat::mMethods[] =
 {
     {"initRandom", &SymbolFloat::initRandom},
+    {"setAlwaysRandom", &Symbol::setAlwaysRandom},
     {0,0}
 };
 

@@ -657,9 +657,10 @@ void SimCont2D::onScanObject(Agent* orig,
 
             case PERCEPTION_OBJECT_FEATURE:
                 InterfaceItem* item = (*iterItem);
-                normalizedValue = computeBinding(orig,
+                normalizedValue = calcSymbolsDistance(orig,
                                                     targ,
-                                                    item->mSymTable,
+                                                    item->mOrigSymTable,
+                                                    item->mTargetSymTable,
                                                     item->mOrigSymIndex,
                                                     item->mTargetSymIndex);
                 inBuffer[pos] = normalizedValue;
@@ -674,10 +675,9 @@ void SimCont2D::act(Agent* agent)
 {
     bool actionGo = false;
     bool actionRotate = false;
-    bool actionEat = false;
+    Action actionEat = ACTION_NULL;
     float actionGoParam = 0.0f;
     float actionRotateParam = 0.0f;
-    float actionEatParam = 0.0f;
 
     if (agent == mHumanAgent)
     {
@@ -698,8 +698,7 @@ void SimCont2D::act(Agent* agent)
         }
         if (mHumanEat)
         {
-            actionEat = true;
-            actionEatParam = 1.0f;
+            actionEat = ACTION_EAT;
         }
     }
     else
@@ -713,7 +712,7 @@ void SimCont2D::act(Agent* agent)
             iterItem++)
         {
             float output = outBuffer[pos];
-            unsigned int actionType = (*iterItem)->mType;
+            Action actionType = (Action)(*iterItem)->mType;
 
             if (output != 0.0f)
             {
@@ -728,8 +727,8 @@ void SimCont2D::act(Agent* agent)
                         actionRotateParam += output;
                         break;
                     case ACTION_EAT:
-                        actionEat = true;
-                        actionEatParam += output;
+                    case ACTION_EATB:
+                        actionEat = actionType;
                         break;
                 }
             }
@@ -754,14 +753,6 @@ void SimCont2D::act(Agent* agent)
     {
         actionRotateParam = -1.0f;
     }
-    if (actionEatParam > 1.0f)
-    {
-        actionEatParam = 1.0f;
-    }
-    else if (actionEatParam < -1.0f)
-    {
-        actionEatParam = -1.0f;
-    }
 
     if (actionGo)
     {
@@ -771,9 +762,9 @@ void SimCont2D::act(Agent* agent)
     {
         rotate(agent, actionRotateParam * mRotateForceScale);
     }
-    if (actionEat)
+    if (actionEat != ACTION_NULL)
     {
-        eat(agent);
+        eat(agent, actionEat);
     }
 }
 
@@ -794,7 +785,7 @@ void SimCont2D::rotate(Agent* agent, float force)
     agent->mFloatData[FLOAT_IMPULSE_ROT] += force;
 }
 
-void SimCont2D::eat(Agent* agent)
+void SimCont2D::eat(Agent* agent, Action actionType)
 {
     if (mTargetObject)
     {
@@ -809,11 +800,25 @@ void SimCont2D::eat(Agent* agent)
             return;
         }
 
-        if (sym1->bind(sym2) > 0.5f)
+        switch (actionType)
         {
+        case ACTION_EAT:
+            if (sym1->getDistance(sym2) > 0.5f)
+            {
+                float energy = mTargetObject->mFloatData[FLOAT_ENERGY];
+                deltaEnergy(agent, energy);
+                deltaEnergy(mTargetObject, -energy);
+            }
+            break;
+        case ACTION_EATB:
+            float distance = sym1->getDistance(sym2);
+            distance -= 0.5f;
+            distance *= 2.0f;
+
             float energy = mTargetObject->mFloatData[FLOAT_ENERGY];
-            deltaEnergy(agent, energy);
+            deltaEnergy(agent, distance * energy);
             deltaEnergy(mTargetObject, -energy);
+            break;
         }
     }
 }
@@ -1100,6 +1105,8 @@ string SimCont2D::getInterfaceName(bool input, int type)
             return "rotate";
         case ACTION_EAT:
             return "eat";
+        case ACTION_EATB:
+            return "eatB";
         default:
             return "?";
         }
@@ -1138,6 +1145,7 @@ Orbit<SimCont2D>::NumberGlobalType SimCont2D::mNumberGlobals[] = {
     {"ACTION_GO", ACTION_GO},
     {"ACTION_ROTATE", ACTION_ROTATE},
     {"ACTION_EAT", ACTION_EAT},
+    {"ACTION_EATB", ACTION_EATB},
     {0,0}
 };
 

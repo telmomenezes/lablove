@@ -44,7 +44,8 @@ public:
     enum Action {ACTION_NULL,
                 ACTION_GO,
                 ACTION_ROTATE,
-                ACTION_EAT
+                ACTION_EAT,
+                ACTION_EATB
                 };
 
     enum FloatData {FLOAT_X,
@@ -161,7 +162,7 @@ protected:
                                 float angle);
     void goFront(Agent* agent, float force);
     void rotate(Agent* agent, float force);
-    void eat(Agent* agent);
+    void eat(Agent* agent, Action actionType);
     float normalizeAngle(float angle);
         
     static mt_distribution* mDistAge;

@@ -44,48 +44,48 @@ TEST(TestSymbolRGBBind1)
 {
     SymbolRGB sym1(0, 0, 0);
     SymbolRGB sym2(0, 0, 0);
-    CHECK_CLOSE(sym1.bind(&sym2), 1.0f, 0.0001f);
+    CHECK_CLOSE(sym1.getDistance(&sym2), 1.0f, 0.0001f);
 }
 
 TEST(TestSymbolRGBBind2)
 {
     SymbolRGB sym1(0, 0, 0);
     SymbolRGB sym2(255, 255, 255);
-    CHECK_CLOSE(sym1.bind(&sym2), 0.0f, 0.0001f);
+    CHECK_CLOSE(sym1.getDistance(&sym2), 0.0f, 0.0001f);
 }
 
 TEST(TestSymbolRGBBind3)
 {
     SymbolRGB sym1(0, 0, 0);
     SymbolRGB sym2(255, 0, 0);
-    CHECK_CLOSE(sym1.bind(&sym2), 0.4227f, 0.0001f);
+    CHECK_CLOSE(sym1.getDistance(&sym2), 0.4227f, 0.0001f);
 }
 
 TEST(TestSymbolRGBBind4)
 {
     SymbolRGB sym1(0, 0, 0);
     SymbolRGB sym2(0, 255, 0);
-    CHECK_CLOSE(sym1.bind(&sym2), 0.4227f, 0.0001f);
+    CHECK_CLOSE(sym1.getDistance(&sym2), 0.4227f, 0.0001f);
 }
 
 TEST(TestSymbolRGBBind5)
 {
     SymbolRGB sym1(0, 0, 255);
     SymbolRGB sym2(0, 0, 0);
-    CHECK_CLOSE(sym1.bind(&sym2), 0.4227f, 0.0001f);
+    CHECK_CLOSE(sym1.getDistance(&sym2), 0.4227f, 0.0001f);
 }
 
 TEST(TestSymbolRGBBind6)
 {
     SymbolRGB sym1(0, 255, 0);
     SymbolRGB sym2(255, 0, 0);
-    CHECK_CLOSE(sym1.bind(&sym2), 0.1835f, 0.0001f);
+    CHECK_CLOSE(sym1.getDistance(&sym2), 0.1835f, 0.0001f);
 }
 
 TEST(TestSymbolRGBBind7)
 {
     SymbolRGB sym1(10, 123, 54);
     SymbolRGB sym2(216, 2, 15);
-    CHECK_CLOSE(sym1.bind(&sym2), 0.4519f, 0.0001f);
+    CHECK_CLOSE(sym1.getDistance(&sym2), 0.4519f, 0.0001f);
 }
 

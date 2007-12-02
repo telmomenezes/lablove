@@ -21,6 +21,7 @@
 #define _INCLUDE_GRIDBRAIN_COMPONENT_H
 
 #include "GridbrainConnection.h"
+#include "InterfaceItem.h"
 #include "SimulationObject.h"
 #include "Orbit.h"
 
@@ -90,9 +91,11 @@ public:
     unsigned long mRow;
     unsigned int mGrid;
 
-    int mSymTable;
+    int mOrigSymTable;
+    int mTargetSymTable;
     int mOrigSymIndex;
     int mTargetSymIndex;
+    InterfaceItem::TableLinkType mTableLinkType;
 };
 
 #endif

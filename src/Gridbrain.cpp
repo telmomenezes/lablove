@@ -280,7 +280,9 @@ void Gridbrain::setComponent(unsigned int x,
                 unsigned int gridNumber,
                 GridbrainComponent::Type type,
                 int subType,
-                int symTable,
+                InterfaceItem::TableLinkType linkType,
+                int origSymTable,
+                int targetSymTable,
                 int origSymIndex,
                 int targetSymIndex)
 {
@@ -288,9 +290,11 @@ void Gridbrain::setComponent(unsigned int x,
 
     comp->mType = type;
     comp->mSubType = subType;
-    comp->mSymTable = symTable;
+    comp->mOrigSymTable = origSymTable;
+    comp->mTargetSymTable = targetSymTable;
     comp->mOrigSymIndex = origSymIndex;
     comp->mTargetSymIndex = targetSymIndex;
+    comp->mTableLinkType = linkType;
 }
 
 void Gridbrain::initGridsInputOutput()
@@ -338,9 +342,11 @@ void Gridbrain::initGridInputOutput(Grid* grid, int gPos)
                 mComponents[pos].mPerceptionPosition = grid->addPerception(&mComponents[pos]);
                 InterfaceItem* item = new InterfaceItem();
                 item->mType = mComponents[pos].mSubType;
-                item->mSymTable = mComponents[pos].mSymTable;
+                item->mOrigSymTable = mComponents[pos].mOrigSymTable;
+                item->mTargetSymTable = mComponents[pos].mTargetSymTable;
                 item->mOrigSymIndex = mComponents[pos].mOrigSymIndex;
                 item->mTargetSymIndex = mComponents[pos].mTargetSymIndex;
+                item->mTableLinkType = mComponents[pos].mTableLinkType;
                 interface->push_back(item);
             }
 
@@ -1652,11 +1658,13 @@ int Gridbrain::setComponent(lua_State* luaState)
     unsigned int gridNumber = luaL_checkint(luaState, 3);
     GridbrainComponent::Type type = (GridbrainComponent::Type)luaL_checkint(luaState, 4);
     unsigned int subType = luaL_optint(luaState, 5, -1);
-    int symTable = luaL_optint(luaState, 6, -1);
-    int origSymIndex = luaL_optint(luaState, 7, -1);
-    int targetSymIndex = luaL_optint(luaState, 8, -1);
+    InterfaceItem::TableLinkType linkType = (InterfaceItem::TableLinkType)(luaL_optint(luaState, 6, InterfaceItem::NO_LINK));
+    int origSymTable = luaL_optint(luaState, 7, -1);
+    int targetSymTable = luaL_optint(luaState, 8, -1);
+    int origSymIndex = luaL_optint(luaState, 9, -1);
+    int targetSymIndex = luaL_optint(luaState, 10, -1);
 
-    setComponent(x, y, gridNumber, type, subType, symTable, origSymIndex, targetSymIndex);
+    setComponent(x, y, gridNumber, type, subType, linkType, origSymTable, targetSymTable, origSymIndex, targetSymIndex);
     return 0;
 }
 

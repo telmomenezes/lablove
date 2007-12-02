@@ -32,6 +32,7 @@ SET(SOURCE_FILES
     src/GraphicalObject.cpp
     src/Agent.cpp
     src/Brain.cpp
+    src/InterfaceItem.cpp
     src/DummyBrain.cpp
     src/Gridbrain.cpp
     src/GridbrainWrite.cpp

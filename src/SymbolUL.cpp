@@ -38,7 +38,7 @@ SymbolUL::SymbolUL(unsigned long value, unsigned long min, unsigned long max)
     mMax = max;
 }
 
-SymbolUL::SymbolUL(SymbolUL* sym)
+SymbolUL::SymbolUL(SymbolUL* sym) : Symbol(sym)
 {
     mUL = sym->mUL;
     mMin = sym->mMin;
@@ -54,7 +54,7 @@ Symbol* SymbolUL::clone()
     return new SymbolUL(this);
 }
 
-float SymbolUL::bind(Symbol* sym)
+float SymbolUL::getDistance(Symbol* sym)
 {
     // TODO: check type
     SymbolUL* symUL = (SymbolUL*)sym;
@@ -87,7 +87,10 @@ void SymbolUL::mutate()
 
 const char SymbolUL::mClassName[] = "SymbolUL";
 
-Orbit<SymbolUL>::MethodType SymbolUL::mMethods[] = {{0,0}};
+Orbit<SymbolUL>::MethodType SymbolUL::mMethods[] = {
+    {"setAlwaysRandom", &Symbol::setAlwaysRandom},
+    {0,0}
+};
 
 Orbit<SymbolUL>::NumberGlobalType SymbolUL::mNumberGlobals[] = {{0,0}};
 

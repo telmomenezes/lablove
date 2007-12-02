@@ -227,21 +227,22 @@ void Simulation::setSeedIndex(int index)
     gDistManager.setSeedIndex(index);
 }
 
-float Simulation::computeBinding(SimulationObject* sourceObj,
+float Simulation::calcSymbolsDistance(SimulationObject* origObj,
                                     SimulationObject* targetObj,
-                                    int symTable,
+                                    int origSymTable,
+                                    int targetSymTable,
                                     int origSymIndex,
                                     int targetSymIndex)
 {
-    SymbolTable* sourceTable = sourceObj->getSymbolTable(symTable);
-    SymbolTable* targetTable = targetObj->getSymbolTable(symTable);
+    SymbolTable* origTable = origObj->getSymbolTable(origSymTable);
+    SymbolTable* targetTable = targetObj->getSymbolTable(targetSymTable);
 
     if (!targetTable)
     {
         return 0.0f;
     }
 
-    Symbol* sourceSym = sourceTable->getSymbol(origSymIndex);
+    Symbol* origSym = origTable->getSymbol(origSymIndex);
     Symbol* targetSym = targetTable->getSymbol(targetSymIndex);
 
     if (!targetSym)
@@ -250,9 +251,9 @@ float Simulation::computeBinding(SimulationObject* sourceObj,
     }
 
 
-    float binding = sourceSym->bind(targetSym);
+    float distance = origSym->getDistance(targetSym);
 
-    return binding;
+    return distance;
 }
 
 void Simulation::drawTimes()

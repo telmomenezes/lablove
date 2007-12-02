@@ -21,9 +21,21 @@
 
 Symbol::Symbol()
 {
+    mAlwaysRandom = false;
+}
+
+Symbol::Symbol(Symbol* sym)
+{
+    mAlwaysRandom = sym->mAlwaysRandom;
 }
 
 Symbol::~Symbol()
 {   
+}
+
+int Symbol::setAlwaysRandom(lua_State* luaState)
+{
+    setAlwaysRandom();
+    return 0;
 }
 

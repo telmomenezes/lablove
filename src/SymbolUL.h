@@ -33,7 +33,7 @@ public:
     virtual ~SymbolUL();
     virtual Symbol* clone();
 
-    virtual float bind(Symbol* sym);
+    virtual float getDistance(Symbol* sym);
     virtual void initRandom();
     virtual void mutate();
 
