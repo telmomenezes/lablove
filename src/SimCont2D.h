@@ -38,7 +38,7 @@ public:
                     PERCEPTION_POSITION,
                     PERCEPTION_DISTANCE,
                     PERCEPTION_IN_CONTACT,
-                    PERCEPTION_OBJECT_FEATURE
+                    PERCEPTION_SYMBOL,
                     };
 
     enum Action {ACTION_NULL,

@@ -43,8 +43,8 @@ void GridbrainComponentSet::addComponent(GridbrainComponent::Type type,
                         int subType,
                         InterfaceItem::TableLinkType linkType,
                         int origSymTable,
-                        int targetSymTable,
                         int origSymIndex,
+                        int targetSymTable,
                         int targetSymIndex)
 {
     GridbrainComponent* comp = new GridbrainComponent();
@@ -73,16 +73,16 @@ int GridbrainComponentSet::addComponent(lua_State* luaState)
     int subType = luaL_optint(luaState, 2, -1);
     InterfaceItem::TableLinkType linkType = (InterfaceItem::TableLinkType)(luaL_optint(luaState, 3, InterfaceItem::NO_LINK));
     int origSymTable = luaL_optint(luaState, 4, -1);
-    int targetSymTable = luaL_optint(luaState, 5, -1);
-    int origSymIndex = luaL_optint(luaState, 6, -1);
+    int origSymIndex = luaL_optint(luaState, 5, -1);
+    int targetSymTable = luaL_optint(luaState, 6, -1);
     int targetSymIndex = luaL_optint(luaState, 7, -1);
 
     addComponent((GridbrainComponent::Type)type,
                     subType,
                     linkType,
                     origSymTable,
-                    targetSymTable,
                     origSymIndex,
+                    targetSymTable,
                     targetSymIndex);
 
     return 0;

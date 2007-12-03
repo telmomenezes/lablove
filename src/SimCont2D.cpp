@@ -655,7 +655,7 @@ void SimCont2D::onScanObject(Agent* orig,
                 inBuffer[pos] = normalizedValue;
                 break;
 
-            case PERCEPTION_OBJECT_FEATURE:
+            case PERCEPTION_SYMBOL:
                 InterfaceItem* item = (*iterItem);
                 normalizedValue = calcSymbolsDistance(orig,
                                                     targ,
@@ -1140,7 +1140,7 @@ Orbit<SimCont2D>::NumberGlobalType SimCont2D::mNumberGlobals[] = {
     {"PERCEPTION_POSITION", PERCEPTION_POSITION},
     {"PERCEPTION_DISTANCE", PERCEPTION_DISTANCE},
     {"PERCEPTION_IN_CONTACT", PERCEPTION_IN_CONTACT},
-    {"PERCEPTION_OBJECT_FEATURE", PERCEPTION_OBJECT_FEATURE},
+    {"PERCEPTION_SYMBOL", PERCEPTION_SYMBOL},
     {"ACTION_NULL", ACTION_NULL},
     {"ACTION_GO", ACTION_GO},
     {"ACTION_ROTATE", ACTION_ROTATE},

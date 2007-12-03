@@ -1,3 +1,13 @@
+-- FORAGERS
+-- Agents evolve to find and eat food items
+-- All food items are the same
+--------------------------------------------------------------------------------
+
+dofile("experiments/aux/basic_defines.lua")
+
+-- Experiment Parameters
+--------------------------------------------------------------------------------
+
 numberOfPlants = 100
 numberOfAgents = 100
 
@@ -7,24 +17,19 @@ plantSize = 10.0
 worldWidth = 3000
 worldHeight = 3000
 
-gridHeight = 3
-gridAlpha = 3
-gridBeta = 2
+alphaWidth = 3
+betaWidth = 2
+alphaHeight = 3
+betaHeight = 3
 
-THR = false
-MAX = false
-MMAX = true
-MUL = false
-AND = false
-NOT = true
-TAND = true
-TNAND = true
+alphaComponents = {TAND, TNAND, NOT, MMAX}
+betaComponents = {TAND, TNAND, NOT}
 
 viewRange = 150.0
 viewAngle = 170.0
 
-highAgeLimit = 5500
 lowAgeLimit = 4500
+highAgeLimit = 5500
 
 metabolism = 0.0
 goCost = 0.0
@@ -32,9 +37,9 @@ rotateCost = 0.0
 goForceScale = 0.3
 rotateForceScale = 0.006
 
-friction = 0.000--3
+friction = 0.0
 drag = 0.05
-rotFriction = 0.00000--3
+rotFriction = 0.0
 rotDrag = 0.05
 
 initialConnections = 10
@@ -56,7 +61,8 @@ logBrains = false
 
 humanAgent = false
 
-----------------------------------------------
+-- Command line, log file names, etc
+--------------------------------------------------------------------------------
 
 dofile("experiments/aux/basic_command_line.lua")
 
@@ -86,6 +92,9 @@ logSuffix = "_foragers_"
             .. "s"
             .. seedIndex
 
+-- Simulation
+--------------------------------------------------------------------------------
+
 sim = SimCont2D()
 sim:setWorldDimensions(worldWidth, worldHeight, 150)
 sim:setViewRange(viewRange)
@@ -96,6 +105,9 @@ sim:setGoForceScale(goForceScale)
 sim:setRotateForceScale(rotateForceScale)
 sim:setSeedIndex(seedIndex)
 sim:setTimeLimit(timeLimit)
+
+-- Agents
+--------------------------------------------------------------------------------
 
 agent = Agent()
 
@@ -155,6 +167,8 @@ feedTableCode = agentFeedTable:getID()
 agent:setSymbolName("feed", feedTableCode, 0)
 agent:setSymbolName("food", feedTableCode, 1)
 
+-- Agent Brain
+
 brain = Gridbrain()
 
 brain:setMutateAddConnectionProb(addConnectionProb)
@@ -167,65 +181,29 @@ brain:setMutateChangeComponentProb(changeComponentProb)
 brain:setMutateSwapComponentProb(swapComponentProb)
 
 alphaSet = GridbrainComponentSet()
-if THR then
-    alphaSet:addComponent(GridbrainComponent.THR)
+for i, comp in pairs(alphaComponents) do
+    alphaSet:addComponent(comp)
 end
-if MAX then
-    alphaSet:addComponent(GridbrainComponent.MAX)
-end
-if MMAX then
-    alphaSet:addComponent(GridbrainComponent.MMAX)
-end
-if MUL then
-    alphaSet:addComponent(GridbrainComponent.MUL)
-end
-if AND then
-    alphaSet:addComponent(GridbrainComponent.AND)
-end
-if NOT then
-    alphaSet:addComponent(GridbrainComponent.NOT)
-end
-if TAND then
-    alphaSet:addComponent(GridbrainComponent.TAND)
-end
-if TNAND then
-    alphaSet:addComponent(GridbrainComponent.TNAND)
-end
-alphaSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_POSITION)
-alphaSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_DISTANCE)
-alphaSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 0, 1)
+alphaSet:addComponent(PER, SimCont2D.PERCEPTION_POSITION)
+alphaSet:addComponent(PER, SimCont2D.PERCEPTION_DISTANCE)
+alphaSet:addComponent(PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, 0, feedTableCode, 1)
 
 grid = Grid()
-grid:init(Grid.ALPHA, gridAlpha, gridHeight)
+grid:init(ALPHA, alphaWidth, alphaHeight)
 grid:addComponentSet(alphaSet)
 
 brain:addGrid(grid, "objects");
 
 betaSet = GridbrainComponentSet()
-if THR then
-    betaSet:addComponent(GridbrainComponent.THR)
+for i, comp in pairs(betaComponents) do
+    betaSet:addComponent(comp)
 end
-if AND then
-    alphaSet:addComponent(GridbrainComponent.AND)
-end
-if MUL then
-    betaSet:addComponent(GridbrainComponent.MUL)
-end
-if NOT then
-    betaSet:addComponent(GridbrainComponent.NOT)
-end
-if TAND then
-    betaSet:addComponent(GridbrainComponent.TAND)
-end
-if TNAND then
-    betaSet:addComponent(GridbrainComponent.TNAND)
-end
-betaSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_GO)
-betaSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_ROTATE)
-betaSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_EAT)
+betaSet:addComponent(ACT, SimCont2D.ACTION_GO)
+betaSet:addComponent(ACT, SimCont2D.ACTION_ROTATE)
+betaSet:addComponent(ACT, SimCont2D.ACTION_EAT)
     
 grid2 = Grid()
-grid2:init(Grid.BETA, gridBeta, gridHeight)
+grid2:init(BETA, betaWidth, betaHeight)
 grid2:addComponentSet(betaSet)
 
 brain:addGrid(grid2, "beta")
@@ -233,6 +211,9 @@ brain:addGrid(grid2, "beta")
 agent:setBrain(brain)
 
 brain:addRandomConnections(initialConnections)
+
+-- Plants
+--------------------------------------------------------------------------------
 
 plant = GraphicalObject()
 
@@ -261,6 +242,9 @@ plant:setSymbolName("food", feedTableCode, 1)
 
 plant:addGraphic(GraphicSquare())
 
+-- Population Dynamics
+--------------------------------------------------------------------------------
+
 popDyn = PopDynFixedSpecies()
 sim:setPopulationDynamics(popDyn)
 
@@ -268,13 +252,16 @@ popDyn:setTournamentSize(10)
 agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents)
 popDyn:addSpecies(plant, numberOfPlants)
 
+-- Human Agent
+--------------------------------------------------------------------------------
+
 if humanAgent then
     human = Agent()
     dummyBrain = DummyBrain(1)
     dummyBrain:setChannelName(0, "objects")
     dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
     dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
-    dummyBrain:addPerception("Feed", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 0, 1)
+    dummyBrain:addPerception("Feed", 0, SimCont2D.PERCEPTION_SYMBOL, feedTableCode, 0, feedTableCode, 1)
 
     human:setBrain(dummyBrain)
 
@@ -332,6 +319,9 @@ if humanAgent then
     sim:setHuman(human)
 end
 
+-- Logs and Statistics
+--------------------------------------------------------------------------------
+
 stats = StatCommon()
 stats:setFile("logs/energy" .. logSuffix .. ".csv")
 stats:addField("energy")
@@ -346,6 +336,9 @@ if logBrains then
 end
 
 popDyn:setLogTimeInterval(logTimeInterval)
+
+-- Start Simulation
+--------------------------------------------------------------------------------
 
 sim:initGraphics(screenWidth, screenHeight, fullScreen, noGraphics)
 sim:run()

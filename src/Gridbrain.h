@@ -110,8 +110,8 @@ public:
                 int subType=-1,
                 InterfaceItem::TableLinkType linkType=InterfaceItem::NO_LINK,
                 int origSymTable=-1,
-                int targetSymTalbe=-1,
                 int origSymIndex=-1,
+                int targetSymTalbe=-1,
                 int targetSymIndex=-1);
 
     void setMutateAddConnectionProb(float prob){mMutateAddConnectionProb = prob;}

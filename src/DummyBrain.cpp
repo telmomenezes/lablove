@@ -107,8 +107,8 @@ void DummyBrain::addPerception(string name,
                                 unsigned int channel,
                                 unsigned int type,
                                 int origSymTable,
-                                int targetSymTable,
                                 int origSymIndex,
+                                int targetSymTable,
                                 int targetSymIndex)
 {
     InterfaceItem* item = new InterfaceItem();
@@ -186,10 +186,10 @@ int DummyBrain::addPerception(lua_State* luaState)
     unsigned int channel = luaL_checkint(luaState, 2);
     unsigned int type = luaL_checkint(luaState, 3);
     int origSymTable = luaL_optint(luaState, 4, -1);
-    int targetSymTable = luaL_optint(luaState, 5, -1);
-    int origSymIndex = luaL_optint(luaState, 6, -1);
+    int origSymIndex = luaL_optint(luaState, 5, -1);
+    int targetSymTable = luaL_optint(luaState, 6, -1);
     int targetSymIndex = luaL_optint(luaState, 7, -1);
-    addPerception(name, channel, type, origSymTable, targetSymTable, origSymIndex, targetSymIndex);
+    addPerception(name, channel, type, origSymTable, origSymIndex, targetSymTable, targetSymIndex);
     return 0;
 }
 

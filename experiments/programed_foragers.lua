@@ -1,3 +1,13 @@
+-- PROGRAMED FORAGERS
+-- Human programed agents that find and eat food items
+-- All food items are the same
+--------------------------------------------------------------------------------
+
+dofile("experiments/aux/basic_defines.lua")
+
+-- Experiment Parameters
+--------------------------------------------------------------------------------
+
 numberOfPlants = 100
 numberOfAgents = 100
 
@@ -7,20 +17,11 @@ plantSize = 10.0
 worldWidth = 3000
 worldHeight = 3000
 
-gridHeight = 10
-gridAlpha = 10
-gridBeta = 10
-
-THR = true
-MAX = true
-MUL = true
-NOT = true
-
 viewRange = 150.0
 viewAngle = 170.0
 
-highAgeLimit = 5500
 lowAgeLimit = 4500
+highAgeLimit = 5500
 
 metabolism = 0.0
 goCost = 0.0
@@ -28,22 +29,29 @@ rotateCost = 0.0
 goForceScale = 0.3
 rotateForceScale = 0.006
 
-friction = 0.000--3
+friction = 0.0
 drag = 0.05
-rotFriction = 0.00000--3
+rotFriction = 0.0
 rotDrag = 0.05
-
-initialConnections = 10
-
-tournamentSize = 10
 
 timeLimit = 0
 
 logTimeInterval = 100
 
-----------------------------------------------
+humanAgent = true
+
+-- Command line, log file names, etc
+--------------------------------------------------------------------------------
 
 dofile("experiments/aux/basic_command_line.lua")
+
+logSuffix = "_proramed_foragers_"
+            .. "s"
+            .. seedIndex
+
+
+-- Simulation
+--------------------------------------------------------------------------------
 
 sim = SimCont2D()
 sim:setWorldDimensions(worldWidth, worldHeight, 100)
@@ -55,6 +63,9 @@ sim:setGoForceScale(goForceScale)
 sim:setRotateForceScale(rotateForceScale)
 sim:setSeedIndex(seedIndex)
 sim:setTimeLimit(timeLimit)
+
+-- Agents
+--------------------------------------------------------------------------------
 
 agent = Agent()
 
@@ -114,6 +125,8 @@ feedTableCode = agentFeedTable:getID()
 agent:setSymbolName("feed", feedTableCode, 0)
 agent:setSymbolName("food", feedTableCode, 1)
 
+-- Agent Brain
+
 brain = Gridbrain()
 
 brain:setMutateAddConnectionProb(0)
@@ -132,19 +145,19 @@ brain:addGrid(grid2, "beta")
 
 brain:initEmpty()
 
-brain:setComponent(0, 0, 0, GridbrainComponent.PER, SimCont2D.PERCEPTION_POSITION)
-brain:setComponent(0, 1, 0, GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 0, 1)
-brain:setComponent(0, 2, 0, GridbrainComponent.PER, SimCont2D.PERCEPTION_DISTANCE)
-brain:setComponent(1, 1, 0, GridbrainComponent.TNAND)
-brain:setComponent(1, 2, 0, GridbrainComponent.MMAX)
-brain:setComponent(2, 0, 0, GridbrainComponent.TAND)
-brain:setComponent(2, 1, 0, GridbrainComponent.TAND)
+brain:setComponent(0, 0, 0, PER, SimCont2D.PERCEPTION_POSITION)
+brain:setComponent(0, 1, 0, PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, 0, feedTableCode, 1)
+brain:setComponent(0, 2, 0, PER, SimCont2D.PERCEPTION_DISTANCE)
+brain:setComponent(1, 1, 0, TNAND)
+brain:setComponent(1, 2, 0, MMAX)
+brain:setComponent(2, 0, 0, TAND)
+brain:setComponent(2, 1, 0, TAND)
 
-brain:setComponent(0, 0, 1, GridbrainComponent.NOT)
-brain:setComponent(0, 2, 1, GridbrainComponent.NOT)
-brain:setComponent(1, 0, 1, GridbrainComponent.ACT, SimCont2D.ACTION_ROTATE)
-brain:setComponent(1, 1, 1, GridbrainComponent.ACT, SimCont2D.ACTION_GO)
-brain:setComponent(1, 2, 1, GridbrainComponent.ACT, SimCont2D.ACTION_EAT)
+brain:setComponent(0, 0, 1, NOT)
+brain:setComponent(0, 2, 1, NOT)
+brain:setComponent(1, 0, 1, ACT, SimCont2D.ACTION_ROTATE)
+brain:setComponent(1, 1, 1, ACT, SimCont2D.ACTION_GO)
+brain:setComponent(1, 2, 1, ACT, SimCont2D.ACTION_EAT)
 
 agent:setBrain(brain)
 
@@ -161,6 +174,9 @@ brain:addConnection(2, 0, 0, 1, 0, 1, -0.5)
 brain:addConnection(2, 1, 0, 1, 1, 1, 0.5)
 brain:addConnection(0, 0, 1, 1, 0, 1, 0.5)
 brain:addConnection(0, 2, 1, 1, 2, 1, 0.5)
+
+-- Plants
+--------------------------------------------------------------------------------
 
 plant = GraphicalObject()
 
@@ -189,6 +205,9 @@ plant:setSymbolName("food", feedTableCode, 1)
 
 plant:addGraphic(GraphicSquare())
 
+-- Population Dynamics
+--------------------------------------------------------------------------------
+
 popDyn = PopDynFixedSpecies()
 sim:setPopulationDynamics(popDyn)
 
@@ -202,9 +221,12 @@ dummyBrain:setChannelName(0, "objects")
 dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
 dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
 dummyBrain:addPerception("Contact", 0, SimCont2D.PERCEPTION_IN_CONTACT)
-dummyBrain:addPerception("Color", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, colorTableCode, 0, 0)
-dummyBrain:addPerception("Food", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 0, 1)
-dummyBrain:addPerception("Predator", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 1, 0)
+dummyBrain:addPerception("Color", 0, SimCont2D.PERCEPTION_SYMBOL, colorTableCode, 0, colorTableCode, 0)
+dummyBrain:addPerception("Food", 0, SimCont2D.PERCEPTION_SYMBOL, feedTableCode, 0, feedTableCode, 1)
+dummyBrain:addPerception("Predator", 0, SimCont2D.PERCEPTION_SYMBOL, feedTableCode, 1, feedTableCode, 0)
+
+-- Human Agent
+--------------------------------------------------------------------------------
 
 human:setBrain(dummyBrain)
 
@@ -261,20 +283,23 @@ sim:addObject(human)
 sim:setPos(human, 300, 300)
 sim:setHuman(human)
 
+-- Logs and Statistics
+--------------------------------------------------------------------------------
+
 stats = StatCommon()
-stats:setFile("energy.csv")
+stats:setFile("logs/energy" .. logSuffix .. ".csv")
 stats:addField("energy")
---stats:addField("connections")
 popDyn:addDeathLog(agentSpeciesIndex, stats)
 
-logBrain = LogBestBrain()
-logBrain:setFileNamePrefix("logs/brains/brain_prog")
-logBrain:setFileNameSuffix(".svg")
-popDyn:addDeathLog(agentSpeciesIndex, logBrain)
+if logBrains then
+    logBrain = LogBestBrain()
+    logBrain:setFileNamePrefix("logs/brains/brain" .. logSuffix .. "t")
+    logBrain:setFileNameSuffix(".svg")
+    popDyn:addDeathLog(agentSpeciesIndex, logBrain)
+end
 
---statTime = StatTime()
---statTime:setFile("time.csv")
---popDyn:addDeathLog(agentSpeciesIndex, statTime)
+-- Start Simulation
+--------------------------------------------------------------------------------
 
 popDyn:setLogTimeInterval(logTimeInterval)
 
