@@ -130,7 +130,51 @@ void GraphicGradient::draw(pyc::Layer* layer)
 
 const char GraphicGradient::mClassName[] = "GraphicGradient";
 
-Orbit<GraphicGradient>::MethodType GraphicGradient::mMethods[] = {{0,0}};
+Orbit<GraphicGradient>::MethodType GraphicGradient::mMethods[] = {
+    {"setSymbolName", &GraphicGradient::setSymbolName},
+    {"setReferenceSymbol", &GraphicGradient::setReferenceSymbol},
+    {"setColor1", &GraphicGradient::setColor1},
+    {"setColor2", &GraphicGradient::setColor2},
+    {0,0}
+};
 
 Orbit<GraphicGradient>::NumberGlobalType GraphicGradient::mNumberGlobals[] = {{0,0}};
+
+int GraphicGradient::setSymbolName(lua_State* luaState)
+{
+    string name = luaL_checkstring(luaState, 1);
+    setSymbolName(name);
+
+    return 0;
+}
+
+int GraphicGradient::setReferenceSymbol(lua_State* luaState)
+{
+    Symbol* refSym = (Symbol*)Orbit<GraphicGradient>::pointer(luaState, 1);
+    setReferenceSymbol(refSym);
+
+    return 0;
+}
+
+int GraphicGradient::setColor1(lua_State* luaState)
+{
+    float red = luaL_checkint(luaState, 1);
+    float green = luaL_checkint(luaState, 2);
+    float blue = luaL_checkint(luaState, 3);
+
+    setColor1(red, green, blue);
+
+    return 0;
+}
+
+int GraphicGradient::setColor2(lua_State* luaState)
+{
+    float red = luaL_checkint(luaState, 1);
+    float green = luaL_checkint(luaState, 2);
+    float blue = luaL_checkint(luaState, 3);
+
+    setColor2(red, green, blue);
+
+    return 0;
+}
 

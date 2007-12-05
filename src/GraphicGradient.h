@@ -45,6 +45,11 @@ public:
     static Orbit<GraphicGradient>::MethodType mMethods[];
     static Orbit<GraphicGradient>::NumberGlobalType mNumberGlobals[];
 
+    int setSymbolName(lua_State* luaState);
+    int setReferenceSymbol(lua_State* luaState);
+    int setColor1(lua_State* luaState);
+    int setColor2(lua_State* luaState);
+
 protected:
     float mSize;
     int mRed;

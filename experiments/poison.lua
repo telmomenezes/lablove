@@ -9,7 +9,7 @@ dofile("experiments/aux/basic_defines.lua")
 -- Experiment Parameters
 --------------------------------------------------------------------------------
 
-numberOfPlants = 100
+numberOfPlants = 200
 numberOfAgents = 100
 
 agentSize = 10.0
@@ -60,7 +60,7 @@ timeLimit = 0
 logTimeInterval = 100
 logBrains = false
 
-humanAgent = false
+humanAgent = true
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
@@ -153,13 +153,13 @@ ageTableCode = symTable:getID()
 agent:setSymbolName("low_age_limit", ageTableCode, 0)
 agent:setSymbolName("high_age_limit", ageTableCode, 1)
 
-agentColor = SymbolRGB(255, 0, 0)
+agentColor = SymbolRGB(0, 0, 255)
 symTable = SymbolTable(agentColor)
 agent:addSymbolTable(symTable)
 colorTableCode = symTable:getID()
 agent:setSymbolName("color", colorTableCode, 0)
 
-agentFeed = SymbolFixedString("ab", "aaaaaaaaaa")
+agentFeed = SymbolFloat(0.0)
 agentFeedTable = SymbolTable(agentFeed)
 agent:addSymbolTable(agentFeedTable)
 feedTableCode = agentFeedTable:getID()
@@ -200,7 +200,7 @@ for i, comp in pairs(betaComponents) do
 end
 betaSet:addComponent(ACT, SimCont2D.ACTION_GO)
 betaSet:addComponent(ACT, SimCont2D.ACTION_ROTATE)
-betaSet:addComponent(ACT, SimCont2D.ACTION_EAT)
+betaSet:addComponent(ACT, SimCont2D.ACTION_EATB)
     
 grid2 = Grid()
 grid2:init(BETA, betaWidth, betaHeight)
@@ -227,19 +227,28 @@ symTable = SymbolTable(symPlantInitialEnergy, energyTableCode)
 plant:addSymbolTable(symTable)
 plant:setSymbolName("initial_energy", energyTableCode, 0)
 
-plantColor = SymbolRGB(0, 255, 0)
-plantColor:setAlwaysRandom()
-symTable = SymbolTable(plantColor, colorTableCode)
+symLowAgeLimit = SymbolUL(lowAgeLimit)
+symHighAgeLimit = SymbolUL(highAgeLimit)
+symTable = SymbolTable(symLowAgeLimit, ageTableCode)
+symTable:addSymbol(symHighAgeLimit)
 plant:addSymbolTable(symTable)
-plant:setSymbolName("color", colorTableCode, 0)
+plant:setSymbolName("low_age_limit", ageTableCode, 0)
+plant:setSymbolName("high_age_limit", ageTableCode, 1)
 
-plantFood = SymbolFixedString("ab", "aaaaaaaaaa")
+plantFood = SymbolFloat(0.0)
+plantFood:setAlwaysRandom()
 plantFoodTable = SymbolTable(plantFood, foodTableCode)
 plantFoodTable:addSymbol(plantFood)
 plant:addSymbolTable(plantFoodTable)
 plant:setSymbolName("food", foodTableCode, 0)
 
-plant:addGraphic(GraphicSquare())
+graphic = GraphicGradient()
+graphic:setSymbolName("food")
+graphic:setReferenceSymbol(plantFood)
+graphic:setColor1(0, 255, 0)
+graphic:setColor2(255, 0, 0)
+
+plant:addGraphic(graphic)
 
 -- Population Dynamics
 --------------------------------------------------------------------------------
@@ -260,7 +269,7 @@ if humanAgent then
     dummyBrain:setChannelName(0, "objects")
     dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
     dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
-    dummyBrain:addPerception("Feed", 0, SimCont2D.PERCEPTION_SYMBOL, feedTableCode, 0, feedTableCode, 1)
+    dummyBrain:addPerception("Feed", 0, SimCont2D.PERCEPTION_SYMBOL, feedTableCode, 0, foodTableCode, 0)
 
     human:setBrain(dummyBrain)
 
@@ -304,13 +313,10 @@ if humanAgent then
     human:addSymbolTable(symTable)
     human:setSymbolName("color", colorTableCode, 0)
 
-    humanFeed = SymbolFixedString("abc", "aaa")
-    humanFood = SymbolFixedString("abc", "bbb")
+    humanFeed = SymbolFloat(0.0)
     humanFeedTable = SymbolTable(humanFeed, feedTableCode)
-    humanFeedTable:addSymbol(humanFood)
     human:addSymbolTable(humanFeedTable)
     human:setSymbolName("feed", feedTableCode, 0)
-    human:setSymbolName("food", feedTableCode, 1)
 
     human:addGraphic(GraphicTriangle())
     sim:addObject(human)
