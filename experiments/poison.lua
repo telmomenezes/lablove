@@ -245,8 +245,8 @@ plant:setSymbolName("food", foodTableCode, 0)
 graphic = GraphicGradient()
 graphic:setSymbolName("food")
 graphic:setReferenceSymbol(plantFood)
-graphic:setColor1(0, 255, 0)
-graphic:setColor2(255, 0, 0)
+graphic:setColor1(255, 0, 0)
+graphic:setColor2(0, 255, 0)
 
 plant:addGraphic(graphic)
 

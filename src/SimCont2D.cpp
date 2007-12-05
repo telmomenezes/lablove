@@ -47,6 +47,7 @@ SimCont2D::SimCont2D(lua_State* luaState)
     mShowGrid = false;
     mShowViewRange = false;
     mShowBrain = false;
+    mShowEnergy = false;
     
     mViewRange = 0.0f;
     mViewAngle = 0.0f;
@@ -698,7 +699,7 @@ void SimCont2D::act(Agent* agent)
         }
         if (mHumanEat)
         {
-            actionEat = ACTION_EAT;
+            actionEat = ACTION_EATB;
         }
     }
     else
@@ -891,8 +892,26 @@ void SimCont2D::drawBeforeObjects()
 
 void SimCont2D::drawAfterObjects()
 {
+    if (mShowEnergy)
+    {
+        mRootLayer2D->setFont(mFont);
+        char text[255];
+        list<SimulationObject*>::iterator iterObj;
+        for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
+        {
+            SimulationObject* obj = *iterObj;
+
+            mRootLayer2D->setColor(100, 100, 100, 100);
+            sprintf(text, "%f", obj->mFloatData[FLOAT_ENERGY]);
+            mRootLayer2D->drawText(obj->mFloatData[FLOAT_X],
+                                    obj->mFloatData[FLOAT_Y],
+                                    text);
+        }
+    }
+
     mRootLayer2D->clearScale();
     mRootLayer2D->clearTranslation();
+
 
     if (mShowBrain)
     {
@@ -969,6 +988,9 @@ bool SimCont2D::onKeyUp(pyc::KeyCode key)
         return true;
     case pyc::KEY_B:
         mShowBrain = !mShowBrain;
+        return true;
+    case pyc::KEY_N:
+        mShowEnergy = !mShowEnergy;
         return true;
     case pyc::KEY_UP:
         mHumanGo = false;

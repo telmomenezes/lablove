@@ -189,6 +189,7 @@ protected:
     bool mShowGrid;
     bool mShowViewRange;
     bool mShowBrain;
+    bool mShowEnergy;
 
     float mGoCost;
     float mRotateCost;
