@@ -57,6 +57,7 @@ SET(SOURCE_FILES
     src/Graphic.cpp
     src/GraphicTriangle.cpp
     src/GraphicSquare.cpp
+    src/GraphicGradient.cpp
     src/GraphicBiomorph.cpp
     src/RandDistManager.cpp
     src/mtwist/mtwist.c

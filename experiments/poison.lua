@@ -228,6 +228,7 @@ plant:addSymbolTable(symTable)
 plant:setSymbolName("initial_energy", energyTableCode, 0)
 
 plantColor = SymbolRGB(0, 255, 0)
+plantColor:setAlwaysRandom()
 symTable = SymbolTable(plantColor, colorTableCode)
 plant:addSymbolTable(symTable)
 plant:setSymbolName("color", colorTableCode, 0)

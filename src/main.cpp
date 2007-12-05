@@ -40,6 +40,7 @@
 #include "StatTime.h"
 #include "GraphicTriangle.h"
 #include "GraphicSquare.h"
+#include "GraphicGradient.h"
 #include "GraphicBiomorph.h"
 
 #if defined(__LABLOVE_WITH_GRAPHICS)
@@ -154,6 +155,7 @@ int main(int argc, char *argv[])
     Orbit<StatTime>::orbitRegister(luaState);
     Orbit<GraphicTriangle>::orbitRegister(luaState);
     Orbit<GraphicSquare>::orbitRegister(luaState);
+    Orbit<GraphicGradient>::orbitRegister(luaState);
     Orbit<GraphicBiomorph>::orbitRegister(luaState);
 
     lua_register(luaState, "getCommandLineParameter", getCommandLineParameter);

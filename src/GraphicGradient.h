@@ -17,28 +17,33 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_GRAPHIC_TRIANGLE_H)
-#define __INCLUDE_GRAPHIC_TRIANGLE_H
+#if !defined(__INCLUDE_GRAPHIC_GRADIENT_H)
+#define __INCLUDE_GRAPHIC_GRADIENT_H
 
 #include "Graphic.h"
 #include "Orbit.h"
 
 #include "pyc.h"
 
-class GraphicTriangle : public Graphic
+class GraphicGradient : public Graphic
 {
 public:
-    GraphicTriangle(lua_State* luaState=NULL);
-    virtual ~GraphicTriangle();
+    GraphicGradient(lua_State* luaState=NULL);
+    virtual ~GraphicGradient();
     
     virtual Graphic* clone();
 
     virtual void init(SimulationObject* obj, pyc::Pycasso* pycasso);
     virtual void draw(pyc::Layer* layer);
 
+    void setSymbolName(string symbolName){mSymbolName = symbolName;}
+    void setReferenceSymbol(Symbol* refSymbol){mReferenceSymbol = refSymbol;}
+    void setColor1(int red, int green, int blue){mRed1 = red; mGreen1 = green; mBlue1 = blue;}
+    void setColor2(int red, int green, int blue){mRed2 = red; mGreen2 = green; mBlue2 = blue;}
+
     static const char mClassName[];
-    static Orbit<GraphicTriangle>::MethodType mMethods[];
-    static Orbit<GraphicTriangle>::NumberGlobalType mNumberGlobals[];
+    static Orbit<GraphicGradient>::MethodType mMethods[];
+    static Orbit<GraphicGradient>::NumberGlobalType mNumberGlobals[];
 
 protected:
     float mSize;
@@ -48,6 +53,16 @@ protected:
     int mXIndex;
     int mYIndex;
     int mRotIndex;
+
+    string mSymbolName;
+    Symbol* mReferenceSymbol;
+
+    int mRed1;
+    int mGreen1;
+    int mBlue1;
+    int mRed2;
+    int mGreen2;
+    int mBlue2;
 };
 #endif
 

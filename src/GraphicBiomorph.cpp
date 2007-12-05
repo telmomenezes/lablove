@@ -70,7 +70,7 @@ GraphicBiomorph::~GraphicBiomorph()
     mWindow->removeLayer(mLayer);
 }
 
-Graphic* GraphicBiomorph::createSameType()
+Graphic* GraphicBiomorph::clone()
 {
     return new GraphicBiomorph();
 }

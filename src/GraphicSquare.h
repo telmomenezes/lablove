@@ -31,7 +31,7 @@ public:
     GraphicSquare(lua_State* luaState=NULL);
     virtual ~GraphicSquare();
     
-    virtual Graphic* createSameType();
+    virtual Graphic* clone();
 
     virtual void init(SimulationObject* obj, pyc::Pycasso* pycasso);
     virtual void draw(pyc::Layer* layer);

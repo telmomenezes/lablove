@@ -31,7 +31,7 @@ public:
     GraphicBiomorph(lua_State* luaState=NULL);
     virtual ~GraphicBiomorph();
     
-    virtual Graphic* createSameType();
+    virtual Graphic* clone();
 
     virtual void init(SimulationObject* obj, pyc::Pycasso* pycasso);
     virtual void draw(pyc::Layer* layer);

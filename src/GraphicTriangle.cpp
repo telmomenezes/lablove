@@ -38,7 +38,7 @@ GraphicTriangle::~GraphicTriangle()
 {   
 }
 
-Graphic* GraphicTriangle::createSameType()
+Graphic* GraphicTriangle::clone()
 {
     return new GraphicTriangle();
 }

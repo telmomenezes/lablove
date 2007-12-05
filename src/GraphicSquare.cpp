@@ -38,7 +38,7 @@ GraphicSquare::~GraphicSquare()
 {   
 }
 
-Graphic* GraphicSquare::createSameType()
+Graphic* GraphicSquare::clone()
 {
     return new GraphicSquare();
 }

@@ -30,7 +30,7 @@ GraphicalObject::GraphicalObject(GraphicalObject* obj) : SimulationObject(obj)
             iterGraph != obj->mGraphics.end();
             iterGraph++)
     {
-        Graphic* graph = (*iterGraph)->createSameType();
+        Graphic* graph = (*iterGraph)->clone();
         mGraphics.push_back(graph);
     }
 }
