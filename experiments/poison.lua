@@ -45,7 +45,7 @@ rotDrag = 0.05
 
 initialConnections = 10
 
-tournamentSize = 2
+tournamentSize = 10
 
 addConnectionProb = 0.01
 removeConnectionProb = 0.01
