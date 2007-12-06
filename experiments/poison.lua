@@ -18,7 +18,7 @@ plantSize = 10.0
 worldWidth = 3000
 worldHeight = 3000
 
-alphaWidth = 3
+alphaWidth = 4
 betaWidth = 2
 alphaHeight = 3
 betaHeight = 3

@@ -742,6 +742,7 @@ void Gridbrain::cycle()
     // Evaluate grids
     for (unsigned int gridNumber = 0; gridNumber < mGridsCount; gridNumber++)
     {
+        //printf("----> GRID: %d\n", gridNumber);
         Grid* grid = mGridsVec[gridNumber];
 
         unsigned int inputDepth = 1;
@@ -765,6 +766,7 @@ void Gridbrain::cycle()
 
         for (unsigned int pass = 0; pass < passCount; pass++)
         {
+            //printf("----> PASS: %d\n", pass);
             bool firstAlpha = false;
             if (pass < (passCount - 1))
             {
@@ -875,6 +877,10 @@ void Gridbrain::cycle()
                                 {
                                     output = 1.0f;
                                     comp->mState = comp->mInput;
+                                    if (pass > 0)
+                                    {
+                                        comp->mState += 1.0f;
+                                    }
                                 }
                                 else
                                 {

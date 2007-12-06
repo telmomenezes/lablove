@@ -8,7 +8,7 @@ dofile("experiments/aux/basic_defines.lua")
 -- Experiment Parameters
 --------------------------------------------------------------------------------
 
-numberOfPlants = 100
+numberOfPlants = 200
 numberOfAgents = 100
 
 agentSize = 10.0
@@ -202,7 +202,7 @@ plant:setSymbolName("low_age_limit", ageTableCode, 0)
 plant:setSymbolName("high_age_limit", ageTableCode, 1)
 
 plantFood = SymbolFloat(1.0)
---plantFood:setAlwaysRandom()
+plantFood:setAlwaysRandom()
 plantFoodTable = SymbolTable(plantFood, foodTableCode)
 plantFoodTable:addSymbol(plantFood)
 plant:addSymbolTable(plantFoodTable)
@@ -211,8 +211,8 @@ plant:setSymbolName("food", foodTableCode, 0)
 graphic = GraphicGradient()
 graphic:setSymbolName("food")
 graphic:setReferenceSymbol(plantFood)
-graphic:setColor1(255, 0, 0)
-graphic:setColor2(0, 255, 0)
+graphic:setColor1(0, 255, 0)
+graphic:setColor2(255, 0, 0)
 
 plant:addGraphic(graphic)
 
