@@ -1,7 +1,7 @@
--- PROGRAMED FORAGERS
--- Human programed agents that find and eat food items
--- All food items are the same
---------------------------------------------------------------------------------
+-- PROGRAMED POISON
+-- Human programed agents that find and eat certain food items
+-- Amount of energy gathered from food is realtive to symbol_distance(feed,food)
+-- Food will be poisonous if symbol_distance(feed,food) > 0.5
 
 dofile("experiments/aux/basic_defines.lua")
 
@@ -45,7 +45,7 @@ humanAgent = true
 
 dofile("experiments/aux/basic_command_line.lua")
 
-logSuffix = "_programed_foragers_"
+logSuffix = "_programed_poison"
             .. "s"
             .. seedIndex
 
@@ -110,20 +110,19 @@ ageTableCode = symTable:getID()
 agent:setSymbolName("low_age_limit", ageTableCode, 0)
 agent:setSymbolName("high_age_limit", ageTableCode, 1)
 
-agentColor = SymbolRGB(255, 0, 0)
+agentColor = SymbolRGB(0, 0, 255)
 symTable = SymbolTable(agentColor)
 agent:addSymbolTable(symTable)
 colorTableCode = symTable:getID()
 agent:setSymbolName("color", colorTableCode, 0)
 
-agentFeed = SymbolFixedString("abc", "aaa")
-agentFood = SymbolFixedString("abc", "bbb")
+agentFeed = SymbolFloat(0.0)
 agentFeedTable = SymbolTable(agentFeed)
-agentFeedTable:addSymbol(agentFood)
 agent:addSymbolTable(agentFeedTable)
 feedTableCode = agentFeedTable:getID()
+dummyTable = SymbolTable(agentFeed)
+foodTableCode = dummyTable:getID()
 agent:setSymbolName("feed", feedTableCode, 0)
-agent:setSymbolName("food", feedTableCode, 1)
 
 -- Agent Brain
 
@@ -136,7 +135,7 @@ brain:setMutateChangeComponentProb(0)
 brain:setWeightMutationStanDev(0)
 
 grid = Grid()
-grid:init(Grid.ALPHA, 3, 3)
+grid:init(Grid.ALPHA, 4, 3)
 brain:addGrid(grid, "objects");
 
 grid2 = Grid()
@@ -146,34 +145,38 @@ brain:addGrid(grid2, "beta")
 brain:initEmpty()
 
 brain:setComponent(0, 0, 0, PER, SimCont2D.PERCEPTION_POSITION)
-brain:setComponent(0, 1, 0, PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, 0, feedTableCode, 1)
-brain:setComponent(0, 2, 0, PER, SimCont2D.PERCEPTION_DISTANCE)
-brain:setComponent(1, 1, 0, TNAND)
-brain:setComponent(1, 2, 0, MMAX)
-brain:setComponent(2, 0, 0, TAND)
-brain:setComponent(2, 1, 0, TAND)
+brain:setComponent(0, 1, 0, PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, 0, foodTableCode, 0)
+brain:setComponent(0, 2, 0, PER, SimCont2D.PERCEPTION_TARGET)
+brain:setComponent(1, 1, 0, TAND)
+brain:setComponent(2, 1, 0, TNAND)
+brain:setComponent(2, 2, 0, MMAX)
+brain:setComponent(3, 0, 0, TAND)
+brain:setComponent(3, 1, 0, TAND)
+brain:setComponent(3, 2, 0, TAND)
 
 brain:setComponent(0, 0, 1, NOT)
-brain:setComponent(0, 2, 1, NOT)
 brain:setComponent(1, 0, 1, ACT, SimCont2D.ACTION_ROTATE)
 brain:setComponent(1, 1, 1, ACT, SimCont2D.ACTION_GO)
-brain:setComponent(1, 2, 1, ACT, SimCont2D.ACTION_EATB)
+brain:setComponent(1, 2, 1, ACT, SimCont2D.ACTION_EAT)
 
 agent:setBrain(brain)
 
-brain:addConnection(0, 0, 0, 2, 0, 0, 0.5)
-brain:addConnection(0, 0, 0, 1, 1, 0, 0.5)
-brain:addConnection(0, 1, 0, 2, 0, 0, 0.5)
-brain:addConnection(0, 1, 0, 0, 0, 1, 0.5)
-brain:addConnection(0, 1, 0, 1, 2, 0, 0.5)
-brain:addConnection(0, 2, 0, 1, 2, 0, -0.5)
-brain:addConnection(1, 1, 0, 2, 1, 0, 0.5)
-brain:addConnection(1, 2, 0, 2, 0, 0, 0.5)
-brain:addConnection(1, 2, 0, 2, 1, 0, 0.5)
-brain:addConnection(2, 0, 0, 1, 0, 1, -0.5)
-brain:addConnection(2, 1, 0, 1, 1, 1, 0.5)
+brain:addConnection(0, 0, 0, 3, 0, 0, 0.5)
+brain:addConnection(0, 0, 0, 2, 1, 0, 0.5)
+brain:addConnection(0, 1, 0, 1, 1, 0, 0.16)
+brain:addConnection(0, 1, 0, 2, 2, 0, 0.5)
+brain:addConnection(0, 2, 0, 3, 2, 0, 0.5)
+brain:addConnection(1, 1, 0, 3, 0, 0, 0.5)
+brain:addConnection(1, 1, 0, 0, 0, 1, 0.5)
+brain:addConnection(1, 1, 0, 2, 2, 0, 0.5)
+brain:addConnection(1, 1, 0, 3, 2, 0, 0.5)
+brain:addConnection(2, 1, 0, 3, 1, 0, 0.5)
+brain:addConnection(2, 2, 0, 3, 0, 0, 0.5)
+brain:addConnection(2, 2, 0, 3, 1, 0, 0.5)
+brain:addConnection(3, 0, 0, 1, 0, 1, -0.5)
+brain:addConnection(3, 1, 0, 1, 1, 1, 0.5)
+brain:addConnection(3, 2, 0, 1, 2, 1, 0.5)
 brain:addConnection(0, 0, 1, 1, 0, 1, 0.5)
-brain:addConnection(0, 2, 1, 1, 2, 1, 0.5)
 
 -- Plants
 --------------------------------------------------------------------------------
@@ -190,20 +193,28 @@ symTable = SymbolTable(symPlantInitialEnergy, energyTableCode)
 plant:addSymbolTable(symTable)
 plant:setSymbolName("initial_energy", energyTableCode, 0)
 
-plantColor = SymbolRGB(0, 255, 0)
-symTable = SymbolTable(plantColor, colorTableCode)
+symLowAgeLimit = SymbolUL(lowAgeLimit)
+symHighAgeLimit = SymbolUL(highAgeLimit)
+symTable = SymbolTable(symLowAgeLimit, ageTableCode)
+symTable:addSymbol(symHighAgeLimit)
 plant:addSymbolTable(symTable)
-plant:setSymbolName("color", colorTableCode, 0)
+plant:setSymbolName("low_age_limit", ageTableCode, 0)
+plant:setSymbolName("high_age_limit", ageTableCode, 1)
 
-plantFeed = SymbolFixedString("abcd", "ddd")
-plantFood = SymbolFixedString("abc", "aaa")
-plantFeedTable = SymbolTable(plantFeed, feedTableCode)
-plantFeedTable:addSymbol(plantFood)
-plant:addSymbolTable(plantFeedTable)
-plant:setSymbolName("feed", feedTableCode, 0)
-plant:setSymbolName("food", feedTableCode, 1)
+plantFood = SymbolFloat(1.0)
+--plantFood:setAlwaysRandom()
+plantFoodTable = SymbolTable(plantFood, foodTableCode)
+plantFoodTable:addSymbol(plantFood)
+plant:addSymbolTable(plantFoodTable)
+plant:setSymbolName("food", foodTableCode, 0)
 
-plant:addGraphic(GraphicSquare())
+graphic = GraphicGradient()
+graphic:setSymbolName("food")
+graphic:setReferenceSymbol(plantFood)
+graphic:setColor1(255, 0, 0)
+graphic:setColor2(0, 255, 0)
+
+plant:addGraphic(graphic)
 
 -- Population Dynamics
 --------------------------------------------------------------------------------
@@ -228,60 +239,67 @@ dummyBrain:addPerception("Predator", 0, SimCont2D.PERCEPTION_SYMBOL, feedTableCo
 -- Human Agent
 --------------------------------------------------------------------------------
 
-human:setBrain(dummyBrain)
+if humanAgent then
+    human = Agent()
+    dummyBrain = DummyBrain(1)
+    dummyBrain:setChannelName(0, "objects")
+    dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
+    dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
+    dummyBrain:addPerception("Feed", 0, SimCont2D.PERCEPTION_SYMBOL, feedTableCode, 0, foodTableCode, 0)
+    dummyBrain:addPerception("Target", 0, SimCont2D.PERCEPTION_TARGET)
 
-symSize = SymbolFloat(agentSize)
-symTable = SymbolTable(symSize, sizeTableCode)
-human:addSymbolTable(symTable)
-human:setSymbolName("size", sizeTableCode, 0)
+    human:setBrain(dummyBrain)
 
-symHFriction = SymbolFloat(friction)
-symHDrag = SymbolFloat(drag)
-symHRotFriction = SymbolFloat(rotFriction)
-symHRotDrag = SymbolFloat(rotDrag)
-symTable = SymbolTable(symFriction, physicsTableCode)
-symTable:addSymbol(symHDrag)
-symTable:addSymbol(symHRotFriction)
-symTable:addSymbol(symHRotDrag)
-human:addSymbolTable(symTable)
-human:setSymbolName("friction", physicsTableCode, 0)
-human:setSymbolName("drag", physicsTableCode, 1)
-human:setSymbolName("rot_friction", physicsTableCode, 2)
-human:setSymbolName("rot_drag", physicsTableCode, 3)
+    symSize = SymbolFloat(agentSize)
+    symTable = SymbolTable(symSize, sizeTableCode)
+    human:addSymbolTable(symTable)
+    human:setSymbolName("size", sizeTableCode, 0)
 
-symHInitialEnergy = SymbolFloat(1.0)
-symHMetabolism = SymbolFloat(metabolism)
-symTable = SymbolTable(symHInitialEnergy, energyTableCode)
-symTable:addSymbol(symHMetabolism)
-human:addSymbolTable(symTable)
-human:setSymbolName("initial_energy", energyTableCode, 0)
-human:setSymbolName("metabolism", energyTableCode, 1)
+    symHFriction = SymbolFloat(friction)
+    symHDrag = SymbolFloat(drag)
+    symHRotFriction = SymbolFloat(rotFriction)
+    symHRotDrag = SymbolFloat(rotDrag)
+    symTable = SymbolTable(symFriction, physicsTableCode)
+    symTable:addSymbol(symHDrag)
+    symTable:addSymbol(symHRotFriction)
+    symTable:addSymbol(symHRotDrag)
+    human:addSymbolTable(symTable)
+    human:setSymbolName("friction", physicsTableCode, 0)
+    human:setSymbolName("drag", physicsTableCode, 1)
+    human:setSymbolName("rot_friction", physicsTableCode, 2)
+    human:setSymbolName("rot_drag", physicsTableCode, 3)
 
-symHLowAgeLimit = SymbolUL(lowAgeLimit)
-symHHighAgeLimit = SymbolUL(highAgeLimit)
-symTable = SymbolTable(symHLowAgeLimit, ageTableCode)
-symTable:addSymbol(symHHighAgeLimit)
-human:addSymbolTable(symTable)
-human:setSymbolName("low_age_limit", ageTableCode, 0)
-human:setSymbolName("high_age_limit", ageTableCode, 1)
+    symHInitialEnergy = SymbolFloat(1.0)
+    symHMetabolism = SymbolFloat(metabolism)
+    symTable = SymbolTable(symHInitialEnergy, energyTableCode)
+    symTable:addSymbol(symHMetabolism)
+    human:addSymbolTable(symTable)
+    human:setSymbolName("initial_energy", energyTableCode, 0)
+    human:setSymbolName("metabolism", energyTableCode, 1)
 
-humanColor = SymbolRGB(82, 228, 241)
-symTable = SymbolTable(humanColor, colorTableCode)
-human:addSymbolTable(symTable)
-human:setSymbolName("color", colorTableCode, 0)
+    symHLowAgeLimit = SymbolUL(lowAgeLimit)
+    symHHighAgeLimit = SymbolUL(highAgeLimit)
+    symTable = SymbolTable(symHLowAgeLimit, ageTableCode)
+    symTable:addSymbol(symHHighAgeLimit)
+    human:addSymbolTable(symTable)
+    human:setSymbolName("low_age_limit", ageTableCode, 0)
+    human:setSymbolName("high_age_limit", ageTableCode, 1)
 
-humanFeed = SymbolFixedString("abc", "aaa")
-humanFood = SymbolFixedString("abc", "bbb")
-humanFeedTable = SymbolTable(humanFeed, feedTableCode)
-humanFeedTable:addSymbol(humanFood)
-human:addSymbolTable(humanFeedTable)
-human:setSymbolName("feed", feedTableCode, 0)
-human:setSymbolName("food", feedTableCode, 1)
+    humanColor = SymbolRGB(82, 228, 241)
+    symTable = SymbolTable(humanColor, colorTableCode)
+    human:addSymbolTable(symTable)
+    human:setSymbolName("color", colorTableCode, 0)
 
-human:addGraphic(GraphicTriangle())
-sim:addObject(human)
-sim:setPos(human, 300, 300)
-sim:setHuman(human)
+    humanFeed = SymbolFloat(0.0)
+    humanFeedTable = SymbolTable(humanFeed, feedTableCode)
+    human:addSymbolTable(humanFeedTable)
+    human:setSymbolName("feed", feedTableCode, 0)
+
+    human:addGraphic(GraphicTriangle())
+    sim:addObject(human)
+    sim:setPos(human, 300, 300)
+    sim:setHuman(human)
+end
 
 -- Logs and Statistics
 --------------------------------------------------------------------------------
