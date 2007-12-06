@@ -60,7 +60,7 @@ timeLimit = 0
 logTimeInterval = 100
 logBrains = false
 
-humanAgent = true
+humanAgent = false
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
