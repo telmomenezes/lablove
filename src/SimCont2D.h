@@ -37,6 +37,7 @@ public:
     enum Perception {PERCEPTION_NULL,
                     PERCEPTION_POSITION,
                     PERCEPTION_DISTANCE,
+                    PERCEPTION_TARGET,
                     PERCEPTION_IN_CONTACT,
                     PERCEPTION_SYMBOL,
                     };
@@ -198,6 +199,7 @@ protected:
 
     SimulationObject* mTargetObject;
     float mDistanceToTargetObject;
+    float* mCurrentTargetInputBuffer;
 
     bool mDragging;
     int mLastMouseX;

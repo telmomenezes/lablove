@@ -63,6 +63,7 @@ SimCont2D::SimCont2D(lua_State* luaState)
 
     mTargetObject = NULL;
     mDistanceToTargetObject = 0.0f;
+    mCurrentTargetInputBuffer = NULL;
 
     mDragging = false;
     mLastMouseX = 0;
@@ -553,6 +554,7 @@ void SimCont2D::perceive(Agent* agent)
 {
     mTargetObject = NULL;
     mDistanceToTargetObject = 9999999999.9f;
+    mCurrentTargetInputBuffer = NULL;
 
     mLowLimitViewAngle = normalizeAngle(agent->mFloatData[FLOAT_ROT] - mHalfViewAngle);
     mHighLimitViewAngle = normalizeAngle(agent->mFloatData[FLOAT_ROT] + mHalfViewAngle);
@@ -596,17 +598,6 @@ void SimCont2D::perceive(Agent* agent)
 
             if (visible)
             {
-                // Is in contact?
-                // TODO: use the nearest to angle 0 instead of the closest distance
-                if (distance <= 0)
-                {
-                    if ((mTargetObject == NULL) || (distance < mDistanceToTargetObject))
-                    {
-                        mTargetObject = target;
-                        mDistanceToTargetObject = distance;
-                    }
-                }
-
                 onScanObject(agent,
                                 target,
                                 distance,
@@ -621,6 +612,19 @@ void SimCont2D::onScanObject(Agent* orig,
                 float distance,
                 float angle)
 {
+    bool isTarget = false;
+
+    // TODO: use the nearest to angle 0 instead of the closest distance?
+    if (distance <= 0)
+    {
+        if ((mTargetObject == NULL) || (distance < mDistanceToTargetObject))
+        {
+            mTargetObject = targ;
+            mDistanceToTargetObject = distance;
+            isTarget = true;
+        }
+    }
+
     float normalizedValue;
 
     list<InterfaceItem*>* interface = orig->getBrain()->getInputInterface(orig->mIntData[INT_CHANNEL_OBJECTS]);
@@ -656,6 +660,22 @@ void SimCont2D::onScanObject(Agent* orig,
                 inBuffer[pos] = normalizedValue;
                 break;
 
+            case PERCEPTION_TARGET:
+                if (isTarget)
+                {
+                    inBuffer[pos] = 1.0f;
+
+                    if (mCurrentTargetInputBuffer != NULL)
+                    {
+                        mCurrentTargetInputBuffer[pos] = 0.0f;
+                    }
+                }
+                else
+                {
+                    inBuffer[pos] = 0.0f;
+                }
+                break;
+
             case PERCEPTION_SYMBOL:
                 InterfaceItem* item = (*iterItem);
                 normalizedValue = calcSymbolsDistance(orig,
@@ -669,6 +689,11 @@ void SimCont2D::onScanObject(Agent* orig,
         }
 
         pos++;
+    }
+
+    if (isTarget)
+    {
+        mCurrentTargetInputBuffer = inBuffer;
     }
 }
 
@@ -1109,6 +1134,8 @@ string SimCont2D::getInterfaceName(bool input, int type)
         {
         case PERCEPTION_IN_CONTACT:
             return "contact";
+        case PERCEPTION_TARGET:
+            return "target";
         case PERCEPTION_POSITION:
             return "position";
         case PERCEPTION_DISTANCE:
@@ -1161,6 +1188,7 @@ Orbit<SimCont2D>::NumberGlobalType SimCont2D::mNumberGlobals[] = {
     {"PERCEPTION_NULL", PERCEPTION_NULL},
     {"PERCEPTION_POSITION", PERCEPTION_POSITION},
     {"PERCEPTION_DISTANCE", PERCEPTION_DISTANCE},
+    {"PERCEPTION_TARGET", PERCEPTION_TARGET},
     {"PERCEPTION_IN_CONTACT", PERCEPTION_IN_CONTACT},
     {"PERCEPTION_SYMBOL", PERCEPTION_SYMBOL},
     {"ACTION_NULL", ACTION_NULL},

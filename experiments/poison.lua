@@ -186,6 +186,7 @@ for i, comp in pairs(alphaComponents) do
 end
 alphaSet:addComponent(PER, SimCont2D.PERCEPTION_POSITION)
 alphaSet:addComponent(PER, SimCont2D.PERCEPTION_DISTANCE)
+alphaSet:addComponent(PER, SimCont2D.PERCEPTION_TARGET)
 alphaSet:addComponent(PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, 0, foodTableCode, 0)
 
 grid = Grid()
@@ -270,6 +271,7 @@ if humanAgent then
     dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
     dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
     dummyBrain:addPerception("Feed", 0, SimCont2D.PERCEPTION_SYMBOL, feedTableCode, 0, foodTableCode, 0)
+    dummyBrain:addPerception("Target", 0, SimCont2D.PERCEPTION_TARGET)
 
     human:setBrain(dummyBrain)
 
