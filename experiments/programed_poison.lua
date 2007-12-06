@@ -38,7 +38,7 @@ timeLimit = 0
 
 logTimeInterval = 100
 
-humanAgent = false
+humanAgent = true
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
@@ -92,7 +92,7 @@ agent:setSymbolName("drag", physicsTableCode, 1)
 agent:setSymbolName("rot_friction", physicsTableCode, 2)
 agent:setSymbolName("rot_drag", physicsTableCode, 3)
 
-symInitialEnergy = SymbolFloat(0.0)
+symInitialEnergy = SymbolFloat(0.000001)
 symMetabolism = SymbolFloat(metabolism)
 symTable = SymbolTable(symInitialEnergy)
 symTable:addSymbol(symMetabolism)
@@ -157,7 +157,7 @@ brain:setComponent(3, 2, 0, TAND)
 brain:setComponent(0, 0, 1, NOT)
 brain:setComponent(1, 0, 1, ACT, SimCont2D.ACTION_ROTATE)
 brain:setComponent(1, 1, 1, ACT, SimCont2D.ACTION_GO)
-brain:setComponent(1, 2, 1, ACT, SimCont2D.ACTION_EAT)
+brain:setComponent(1, 2, 1, ACT, SimCont2D.ACTION_EATB)
 
 agent:setBrain(brain)
 

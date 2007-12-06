@@ -456,7 +456,7 @@ void SimCont2D::process(SimulationObject* obj)
 {
     obj->mFloatData[FLOAT_ENERGY] -= obj->mFloatData[FLOAT_METABOLISM];
 
-    if (obj->mFloatData[FLOAT_ENERGY] < 0)
+    if (obj->mFloatData[FLOAT_ENERGY] <= 0)
     {
         killOrganism(obj);
     }
