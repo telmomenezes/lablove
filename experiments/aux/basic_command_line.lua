@@ -1,11 +1,20 @@
-function getNumberParameter(paramName, paramDefault)
+parameterString = ""
+
+function getNumberParameter(paramName, paramDefault, shortName)
     param = getCommandLineParameter(paramName)
 
+    paramOut = 0.0
     if param == "" then
-        return paramDefault
+        paramOut = paramDefault
     else
-        return tonumber(param)
+        paramOut = tonumber(param)
     end
+
+    if (shortName ~= nil) then
+        parameterString = parameterString .. shortName .. paramOut
+    end
+
+    return paramOut
 end
 
 function getBoolParameter(paramName, paramDefault)

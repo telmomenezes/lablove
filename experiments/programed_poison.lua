@@ -38,7 +38,7 @@ timeLimit = 0
 
 logTimeInterval = 100
 
-humanAgent = true
+humanAgent = false
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
@@ -92,7 +92,7 @@ agent:setSymbolName("drag", physicsTableCode, 1)
 agent:setSymbolName("rot_friction", physicsTableCode, 2)
 agent:setSymbolName("rot_drag", physicsTableCode, 3)
 
-symInitialEnergy = SymbolFloat(1.0)
+symInitialEnergy = SymbolFloat(0.0)
 symMetabolism = SymbolFloat(metabolism)
 symTable = SymbolTable(symInitialEnergy)
 symTable:addSymbol(symMetabolism)
@@ -269,7 +269,7 @@ if humanAgent then
     human:setSymbolName("rot_friction", physicsTableCode, 2)
     human:setSymbolName("rot_drag", physicsTableCode, 3)
 
-    symHInitialEnergy = SymbolFloat(1.0)
+    symHInitialEnergy = SymbolFloat(0.0)
     symHMetabolism = SymbolFloat(metabolism)
     symTable = SymbolTable(symHInitialEnergy, energyTableCode)
     symTable:addSymbol(symHMetabolism)

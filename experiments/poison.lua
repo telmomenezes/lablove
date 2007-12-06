@@ -67,29 +67,17 @@ humanAgent = false
 
 dofile("experiments/aux/basic_command_line.lua")
 
-addConnectionProb = getNumberParameter("addconnprob", addConnectionProb)
-removeConnectionProb = getNumberParameter("removeconnprob", removeConnectionProb)
-changeWeightProb = getNumberParameter("changeweightprob", changeWeightProb)
-weightMutationStanDev = getNumberParameter("weightmutstandev", weightMutationStanDev)
-splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb)
-joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb)
-changeComponentProb = getNumberParameter("changecompprob", changeComponentProb)
-swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb)
+addConnectionProb = getNumberParameter("addconnprob", addConnectionProb, "mac")
+removeConnectionProb = getNumberParameter("removeconnprob", removeConnectionProb, "mrc")
+changeWeightProb = getNumberParameter("changeweightprob", changeWeightProb, "mcw")
+weightMutationStanDev = getNumberParameter("weightmutstandev", weightMutationStanDev, "mcwsd")
+splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "msc")
+joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb, "mjc")
+changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, "mcc")
+swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb, "mswc")
 
 logSuffix = "_poison_"
-            .. addConnectionProb
-            .. "_"
-            .. removeConnectionProb
-            .. "_"
-            .. changeWeightProb
-            .. "_"
-            .. splitConnectionProb
-            .. "_"
-            .. joinConnectionsProb
-            .. "_"
-            .. changeComponentProb
-            .. "_"
-            .. swapComponentProb
+            .. parameterString
             .. "s"
             .. seedIndex
 
@@ -135,7 +123,7 @@ agent:setSymbolName("drag", physicsTableCode, 1)
 agent:setSymbolName("rot_friction", physicsTableCode, 2)
 agent:setSymbolName("rot_drag", physicsTableCode, 3)
 
-symInitialEnergy = SymbolFloat(1.0)
+symInitialEnergy = SymbolFloat(0.0)
 symMetabolism = SymbolFloat(metabolism)
 symTable = SymbolTable(symInitialEnergy)
 symTable:addSymbol(symMetabolism)
