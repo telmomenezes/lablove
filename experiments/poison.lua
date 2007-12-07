@@ -58,9 +58,9 @@ swapComponentProb = 0.0
 
 timeLimit = 0
 logTimeInterval = 100
-logBrains = false
+logBrains = true
 
-humanAgent = true
+humanAgent = false
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
@@ -75,6 +75,7 @@ splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "
 joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb, "mjc")
 changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, "mcc")
 swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb, "mswc")
+tournamentSize = getNumberParameter("tournamentsize", tournamentSize, "ts")
 
 logSuffix = "_poison_"
             .. parameterString
