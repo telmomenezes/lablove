@@ -30,6 +30,7 @@ LogBestBrain::LogBestBrain(lua_State* luaState)
     mFileNamePrefix = "";
     mFileNameSuffix = "";
     mBrainString = "";
+    mLogOnlyLast = false;
 }
 
 LogBestBrain::~LogBestBrain()
@@ -51,7 +52,14 @@ void LogBestBrain::process(SimulationObject* obj, PopulationManager* popManager)
 void LogBestBrain::dump(unsigned long time, double realTime)
 {
     char fileName[255];
-    sprintf(fileName, "%s%d%s", mFileNamePrefix.c_str(), time / 1000, mFileNameSuffix.c_str());
+    if (mLogOnlyLast)
+    {
+        sprintf(fileName, "%s%s", mFileNamePrefix.c_str(), mFileNameSuffix.c_str());
+    }
+    else
+    {
+        sprintf(fileName, "%s%d%s", mFileNamePrefix.c_str(), time / 1000, mFileNameSuffix.c_str());
+    }    
     FILE* file = fopen(fileName, "w");
     fprintf(file, mBrainString.c_str());
     fflush(file);
@@ -66,6 +74,7 @@ const char LogBestBrain::mClassName[] = "LogBestBrain";
 Orbit<LogBestBrain>::MethodType LogBestBrain::mMethods[] = {
     {"setFileNamePrefix", &LogBestBrain::setFileNamePrefix},
     {"setFileNameSuffix", &LogBestBrain::setFileNameSuffix},
+    {"setLogOnlyLast", &LogBestBrain::setLogOnlyLast},
     {0,0}
 };
 
@@ -83,6 +92,14 @@ int LogBestBrain::setFileNameSuffix(lua_State* luaState)
 {
     string suffix = luaL_checkstring(luaState, 1);
     setFileNameSuffix(suffix);
+
+    return 0;
+}
+
+int LogBestBrain::setLogOnlyLast(lua_State* luaState)
+{
+    bool onlyLast = luaL_checkbool(luaState, 1);
+    setLogOnlyLast(onlyLast);
 
     return 0;
 }

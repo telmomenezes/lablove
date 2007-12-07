@@ -111,7 +111,7 @@ string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
                     string subName = pop->getInterfaceName(comp->mType == GridbrainComponent::PER, comp->mSubType);
                     if (subName == "?")
                     {
-                        subName = obj->getSymbolName(comp->mTargetSymTable, comp->mTargetSymIndex);
+                        subName = obj->getSymbolName(comp->mOrigSymTable, comp->mOrigSymIndex);
                     }
                     sprintf(buffer, "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"7\" fill=\"black\">%s</text>\n", compX, labelY, subName.c_str());
                     svg += buffer;
@@ -154,7 +154,7 @@ string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
         float x2 = centerX2 - (cosAngle * radius * 1.4f);
         float y2 = centerY2 - (sinAngle * radius * 1.4f);
 
-        sprintf(buffer, "<line x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" stroke=\"red\" stroke-width=\"2\"/>\n", x1, y1, x2, y2);
+        sprintf(buffer, "<line x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" stroke=\"black\" stroke-width=\"2\"/>\n", x1, y1, x2, y2);
         svg += buffer;
 
         float halfArrowAngle = 0.25;
@@ -170,8 +170,14 @@ string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
         float ay2 = y2 - (sinf(arrowAngle2) * arrowLength);
 
         sprintf(buffer,
-                "<polygon fill=\"red\" stroke=\"red\" stroke-width=\"1\" points=\"%f,%f %f,%f %f,%f\" />\n",
+                "<polygon fill=\"black\" stroke=\"black\" stroke-width=\"1\" points=\"%f,%f %f,%f %f,%f\" />\n",
                 x2, y2, ax1, ay1, ax2, ay2);
+        svg += buffer;
+        
+        float cLabelX = x1 + ((x2 - x1) / 2);
+        float cLabelY = y1 + ((y2 - y1) / 2);
+
+        sprintf(buffer, "<text x=\"%f\" y=\"%f\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"8\" fill=\"red\">%f</text>\n", cLabelX, cLabelY, conn->mWeight);
         svg += buffer;
 
         conn = (GridbrainConnection*)(conn->mNextGlobalConnection);

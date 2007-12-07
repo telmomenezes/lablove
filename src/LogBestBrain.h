@@ -42,6 +42,7 @@ public:
 
     void setFileNamePrefix(string prefix){mFileNamePrefix = prefix;}
     void setFileNameSuffix(string suffix){mFileNameSuffix = suffix;}
+    void setLogOnlyLast(bool onlyLast){mLogOnlyLast = onlyLast;}
 
     static const char mClassName[];
     static Orbit<LogBestBrain>::MethodType mMethods[];
@@ -49,6 +50,7 @@ public:
 
     int setFileNamePrefix(lua_State* luaState);
     int setFileNameSuffix(lua_State* luaState);
+    int setLogOnlyLast(lua_State* luaState);
 
 protected:
     float mBestFitness;
@@ -56,6 +58,7 @@ protected:
     string mBrainString;
     string mFileNamePrefix;
     string mFileNameSuffix;
+    bool mLogOnlyLast;
 };
 #endif
 

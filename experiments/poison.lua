@@ -59,6 +59,7 @@ swapComponentProb = 0.0
 timeLimit = 0
 logTimeInterval = 100
 logBrains = true
+logOnlyLastBrain = true
 
 humanAgent = false
 
@@ -328,6 +329,10 @@ if logBrains then
     logBrain = LogBestBrain()
     logBrain:setFileNamePrefix("logs/brains/brain" .. logSuffix .. "t")
     logBrain:setFileNameSuffix(".svg")
+    if logOnlyLastBrain then
+        logBrain:setLogOnlyLast(true)
+        logBrain:setFileNamePrefix("logs/brains/brain" .. logSuffix)
+    end
     popDyn:addDeathLog(agentSpeciesIndex, logBrain)
 end
 
