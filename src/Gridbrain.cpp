@@ -848,18 +848,6 @@ void Gridbrain::cycle()
                             output = 0.0f;
                         }
                         break;
-                    case GridbrainComponent::AGG:
-                        //printf("AGG ");
-                        if ((comp->mInput > 0.1)
-                            || (comp->mInput < -0.1))
-                        {
-                            output = comp->mInput;
-                        }
-                        else
-                        {
-                            output = 0.0f;
-                        }
-                        break;
                     case GridbrainComponent::MAX:
                     case GridbrainComponent::MMAX:
                         //printf("MAX/MMAX ");

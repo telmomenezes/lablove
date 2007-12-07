@@ -48,7 +48,7 @@ default: \
 class GridbrainComponent
 {
 public:
-    enum Type {NUL, PER, ACT, THR, AGG, MAX, MUL, NOT, MMAX, AND, TAND, TNAND};
+    enum Type {NUL, PER, ACT, THR, MAX, MUL, NOT, MMAX, AND, TAND, TNAND};
     enum InputType {IN_SUM, IN_MUL, IN_TMUL};
 
     GridbrainComponent(lua_State* luaState=NULL);

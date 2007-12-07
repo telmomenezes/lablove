@@ -99,23 +99,3 @@ TEST_FIXTURE(GridbrainFixture, GridbrainCycleOnEmptyGrid)
     mGridbrain.cycle();
 }
 
-TEST_FIXTURE(GridbrainFixture, GridbrainTestNOT)
-{
-    GridbrainComponent* comp = mGridbrain.getComponent(0, 0, 0);
-    comp->mType = GridbrainComponent::NOT;
-    mGridbrain.cycle();
-    CHECK_CLOSE(comp->mOutput, 1.0f, 0.0f);
-}
-
-TEST_FIXTURE(GridbrainFixture, GridbrainTestTwoNOTs)
-{
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NOT;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 1.0);
-    mGridbrain.cycle();
-    CHECK_CLOSE(comp1->mOutput, 1.0f, 0.0f);
-    CHECK_CLOSE(comp2->mOutput, 0.0f, 0.0f);
-}
-

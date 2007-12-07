@@ -86,8 +86,7 @@ void GridbrainComponent::copyPosition(GridbrainComponent* comp)
 
 bool GridbrainComponent::isAggregator()
 {
-    return ((mType == GridbrainComponent::AGG )
-        || (mType == GridbrainComponent::MAX)
+    return ((mType == GridbrainComponent::MAX)
         || (mType == GridbrainComponent::MMAX));
 }
 
@@ -103,8 +102,6 @@ string GridbrainComponent::getName()
         return "ACT";
     case THR:
         return "THR";
-    case AGG:
-        return "AGG";
     case MAX:
         return "MAX";
     case MUL:
@@ -133,7 +130,6 @@ Orbit<GridbrainComponent>::NumberGlobalType GridbrainComponent::mNumberGlobals[]
     {"PER", PER},
     {"ACT", ACT},
     {"THR", THR},
-    {"AGG", AGG},
     {"MAX", MAX},
     {"MUL", MUL},
     {"NOT", NOT},

@@ -1,6 +1,7 @@
 PROJECT(lablove)
 
 OPTION(DEBUG "Debug settings" OFF)
+OPTION(PROFILE "Profile settings" OFF)
 
 # TODO: Create a cmake script to find the correct directory for pycasso
 
@@ -9,11 +10,15 @@ OPTION(DEBUG "Debug settings" OFF)
 INCLUDE(CMakeModules/FindLua.cmake)
 INCLUDE(CMakeModules/FindPycasso.cmake)
 
-IF(DEBUG)
-    SET(CMAKE_CXX_FLAGS "-Wno-deprecated -g")
-ELSE(DEBUG)
-    SET(CMAKE_CXX_FLAGS "-Wno-deprecated -O3")
-ENDIF(DEBUG)
+IF(PROFILE)
+    SET(CMAKE_CXX_FLAGS "-Wno-deprecated -g -pg")
+ELSE(PROFILE)
+    IF(DEBUG)
+        SET(CMAKE_CXX_FLAGS "-Wno-deprecated -g")
+    ELSE(DEBUG)
+        SET(CMAKE_CXX_FLAGS "-Wno-deprecated -O3")
+    ENDIF(DEBUG)
+ENDIF(PROFILE)
 
 IF(UNIX)
     ADD_DEFINITIONS(-D__UNIX)
@@ -105,6 +110,7 @@ SET(UNIT_TEST_FILES
         src/tests/TestSimCont2D.cpp
         src/tests/TestGrid.cpp
         src/tests/TestGridbrain.cpp
+        src/tests/TestGridbrainComponents.cpp
         src/tests/TestGridbrainComponentSet.cpp
         src/tests/TestSymbolRGB.cpp
         src/tests/TestSymbolFixedString.cpp
