@@ -10,7 +10,7 @@ dofile("experiments/aux/basic_defines.lua")
 --------------------------------------------------------------------------------
 
 numberOfPlants = 200
-numberOfAgents = 100
+numberOfAgents = 50
 
 agentSize = 10.0
 plantSize = 10.0
@@ -87,7 +87,7 @@ logSuffix = "_poison_"
 --------------------------------------------------------------------------------
 
 sim = SimCont2D()
-sim:setWorldDimensions(worldWidth, worldHeight, 150)
+sim:setWorldDimensions(worldWidth, worldHeight, 250)
 sim:setViewRange(viewRange)
 sim:setViewAngle(viewAngle)
 sim:setGoCost(goCost)

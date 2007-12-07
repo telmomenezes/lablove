@@ -9,7 +9,7 @@ dofile("experiments/aux/basic_defines.lua")
 --------------------------------------------------------------------------------
 
 numberOfPlants = 200
-numberOfAgents = 100
+numberOfAgents = 50
 
 agentSize = 10.0
 plantSize = 10.0
@@ -36,7 +36,7 @@ rotDrag = 0.05
 
 timeLimit = 0
 
-logTimeInterval = 100
+logTimeInterval = 10
 
 humanAgent = true
 
@@ -54,7 +54,7 @@ logSuffix = "_programed_poison"
 --------------------------------------------------------------------------------
 
 sim = SimCont2D()
-sim:setWorldDimensions(worldWidth, worldHeight, 100)
+sim:setWorldDimensions(worldWidth, worldHeight, 250)
 sim:setViewRange(viewRange)
 sim:setViewAngle(viewAngle)
 sim:setGoCost(goCost)
