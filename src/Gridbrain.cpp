@@ -726,6 +726,7 @@ void Gridbrain::cycle()
         comp = &(mComponents[i]);
 
         comp->mInput = 0;
+        comp->mOutput = 0;
         comp->mState = 0;
         comp->mCycleFlag = false;
         comp->mForwardFlag = false;
