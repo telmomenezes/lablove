@@ -27,6 +27,16 @@ PopDynSpeciesBuffers::PopDynSpeciesBuffers(lua_State* luaState)
 
 PopDynSpeciesBuffers::~PopDynSpeciesBuffers()
 {
+    for (map<unsigned int, SpeciesData>::iterator iterSpecies = mSpecies.begin();
+        iterSpecies != mSpecies.end();
+        iterSpecies++)
+    {
+        SpeciesData* species = &((*iterSpecies).second);
+        for (unsigned int i = 0; i < species->mBufferSize; i++)
+        {
+            delete species->mOrganismVector[i];
+        }
+    }
 }
 
 void PopDynSpeciesBuffers::init(PopulationManager* popManager)

@@ -45,7 +45,8 @@ rotDrag = 0.05
 
 initialConnections = 10
 
-tournamentSize = 10
+compCount = 10
+bufferSize = 100
 
 addConnectionProb = 0.01
 removeConnectionProb = 0.01
@@ -68,15 +69,16 @@ humanAgent = false
 
 dofile("experiments/aux/basic_command_line.lua")
 
-addConnectionProb = getNumberParameter("addconnprob", addConnectionProb, "mac")
-removeConnectionProb = getNumberParameter("removeconnprob", removeConnectionProb, "mrc")
-changeWeightProb = getNumberParameter("changeweightprob", changeWeightProb, "mcw")
-weightMutationStanDev = getNumberParameter("weightmutstandev", weightMutationStanDev, "mcwsd")
-splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "msc")
-joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb, "mjc")
-changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, "mcc")
-swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb, "mswc")
-tournamentSize = getNumberParameter("tournamentsize", tournamentSize, "ts")
+addConnectionProb = getNumberParameter("addconnprob", addConnectionProb, "con-")
+removeConnectionProb = getNumberParameter("removeconnprob", removeConnectionProb, "con+")
+changeWeightProb = getNumberParameter("changeweightprob", changeWeightProb, "wgt")
+weightMutationStanDev = getNumberParameter("weightmutstandev", weightMutationStanDev, "wsd")
+splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "spc")
+joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb, "joc")
+changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, "chg")
+swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb, "swp")
+bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
+compCount = getNumberParameter("compcount", compCount, "cc")
 
 logSuffix = "_poison_"
             .. parameterString
@@ -244,12 +246,12 @@ plant:addGraphic(graphic)
 -- Population Dynamics
 --------------------------------------------------------------------------------
 
-popDyn = PopDynFixedSpecies()
+popDyn = PopDynSpeciesBuffers()
 sim:setPopulationDynamics(popDyn)
 
-popDyn:setTournamentSize(tournamentSize)
-agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents)
-popDyn:addSpecies(plant, numberOfPlants)
+popDyn:setCompCount(compCount)
+agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize)
+popDyn:addSpecies(plant, numberOfPlants, 1)
 
 -- Human Agent
 --------------------------------------------------------------------------------
