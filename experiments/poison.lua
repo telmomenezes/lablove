@@ -46,7 +46,7 @@ rotDrag = 0.05
 initialConnections = 10
 
 compCount = 10
-bufferSize = 100
+bufferSize = 50
 
 addConnectionProb = 0.01
 removeConnectionProb = 0.01

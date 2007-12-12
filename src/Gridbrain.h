@@ -165,6 +165,11 @@ protected:
                                 unsigned int x,
                                 unsigned int y,
                                 unsigned int grid);
+    
+    void initRandomConnectionSequence(float selectionProb);
+    GridbrainConnection* nextRandomConnection();
+    void initRandomComponentSequence(float selectionProb);
+    int nextRandomComponent();
 
     static mt_distribution* mDistConnections;
     static mt_distribution* mDistMutationsProb;
@@ -193,6 +198,12 @@ protected:
     float mMutateJoinConnectionsProb;
     float mMutateChangeComponentProb;
     float mMutateSwapComponentProb;
+
+    float mConnSeqProb;
+    GridbrainConnection* mConnSeqCurrent;
+    unsigned int mConnSeqPos;
+    float mCompSeqProb;
+    int mCompSeqPos;
 };
 
 #endif

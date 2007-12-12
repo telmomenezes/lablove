@@ -94,12 +94,14 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
 
     vector<SimulationObject*>::iterator iterOrg;
 
+
     // Buffer replacements
     for (unsigned int i = 0; i < mCompCount; i++)
     {
         unsigned int organismNumber = mDistOrganism->iuniform(0, species->mBufferSize);
 
         SimulationObject* org2 = species->mOrganismVector[organismNumber];
+
 
         if (org->mFitness > org2->mFitness)
         {
