@@ -46,7 +46,9 @@ SET(SOURCE_FILES
     src/GridbrainComponentSet.cpp
     src/PopulationDynamics.cpp
     src/PopDynGenerations.cpp
+    src/PopDynSpecies.cpp
     src/PopDynFixedSpecies.cpp
+    src/PopDynSpeciesBuffers.cpp
     src/Symbol.cpp
     src/SymbolRGB.cpp
     src/SymbolFixedString.cpp

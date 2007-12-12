@@ -17,24 +17,24 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_POPDYN_FIXED_SPECIES_H)
-#define __INCLUDE_POPDYN_FIXED_SPECIES_H
+#if !defined(__INCLUDE_POPDYN_SPECIES_BUFFERS_H)
+#define __INCLUDE_POPDYN_SPECIES_BUFFERS_H
 
 #include "PopDynSpecies.h"
 
-class PopDynFixedSpecies : public PopDynSpecies
+class PopDynSpeciesBuffers : public PopDynSpecies
 {
 public:
-    PopDynFixedSpecies(lua_State* luaState=NULL);
-    virtual ~PopDynFixedSpecies();
+    PopDynSpeciesBuffers(lua_State* luaState=NULL);
+    virtual ~PopDynSpeciesBuffers();
     virtual void init(PopulationManager* popManager);
     virtual void onOrganismDeath(SimulationObject* org);
 
     void setTournamentSize(unsigned int size){mTournamentSize = size;}
 
     static const char mClassName[];
-    static Orbit<PopDynFixedSpecies>::MethodType mMethods[];
-    static Orbit<PopDynFixedSpecies>::NumberGlobalType mNumberGlobals[];
+    static Orbit<PopDynSpeciesBuffers>::MethodType mMethods[];
+    static Orbit<PopDynSpeciesBuffers>::NumberGlobalType mNumberGlobals[];
 
     int setTournamentSize(lua_State* luaState);
 

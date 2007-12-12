@@ -17,19 +17,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "PopDynFixedSpecies.h"
+#include "PopDynSpeciesBuffers.h"
 #include "SimulationObject.h"
 
-PopDynFixedSpecies::PopDynFixedSpecies(lua_State* luaState)
+PopDynSpeciesBuffers::PopDynSpeciesBuffers(lua_State* luaState)
 {
     mTournamentSize = 2;
 }
 
-PopDynFixedSpecies::~PopDynFixedSpecies()
+PopDynSpeciesBuffers::~PopDynSpeciesBuffers()
 {
 }
 
-void PopDynFixedSpecies::init(PopulationManager* popManager)
+void PopDynSpeciesBuffers::init(PopulationManager* popManager)
 {
     PopulationDynamics::init(popManager);
 
@@ -47,7 +47,7 @@ void PopDynFixedSpecies::init(PopulationManager* popManager)
     }
 }
 
-void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
+void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
 {
     PopDynSpecies::onOrganismDeath(org);
 
@@ -105,20 +105,20 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
     mPopManager->removeObject(org);
 }
 
-const char PopDynFixedSpecies::mClassName[] = "PopDynFixedSpecies";
+const char PopDynSpeciesBuffers::mClassName[] = "PopDynSpeciesBuffers";
 
-Orbit<PopDynFixedSpecies>::MethodType PopDynFixedSpecies::mMethods[] = {
+Orbit<PopDynSpeciesBuffers>::MethodType PopDynSpeciesBuffers::mMethods[] = {
     {"setLogTimeInterval", &PopDynSpecies::setLogTimeInterval},
     {"addSpecies", &PopDynSpecies::addSpecies},
     {"addSampleLog", &PopDynSpecies::addSampleLog},
     {"addDeathLog", &PopDynSpecies::addDeathLog},
-    {"setTournamentSize", &PopDynFixedSpecies::setTournamentSize},
+    {"setTournamentSize", &PopDynSpeciesBuffers::setTournamentSize},
     {0,0}
 };
 
-Orbit<PopDynFixedSpecies>::NumberGlobalType PopDynFixedSpecies::mNumberGlobals[] = {{0,0}};
+Orbit<PopDynSpeciesBuffers>::NumberGlobalType PopDynSpeciesBuffers::mNumberGlobals[] = {{0,0}};
 
-int PopDynFixedSpecies::setTournamentSize(lua_State* luaState)
+int PopDynSpeciesBuffers::setTournamentSize(lua_State* luaState)
 {
     unsigned int size = luaL_checkint(luaState, 1);
     setTournamentSize(size);
