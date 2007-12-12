@@ -33,6 +33,7 @@ public:
     unsigned int addSpecies(SimulationObject* org, unsigned int population, unsigned int bufferSize);
 
     void setCompCount(unsigned int count){mCompCount = count;}
+    void setFitnessAging(float aging){mFitnessAging = aging;}
 
     static const char mClassName[];
     static Orbit<PopDynSpeciesBuffers>::MethodType mMethods[];
@@ -40,11 +41,13 @@ public:
 
     int addSpecies(lua_State* luaState);
     int setCompCount(lua_State* luaState);
+    int setFitnessAging(lua_State* luaState);
 
 protected:
     void mutateAndSend(unsigned int speciesID);
 
     unsigned int mCompCount;
+    float mFitnessAging;
 };
 #endif
 

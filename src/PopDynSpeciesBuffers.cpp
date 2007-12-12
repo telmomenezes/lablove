@@ -23,6 +23,7 @@
 PopDynSpeciesBuffers::PopDynSpeciesBuffers(lua_State* luaState)
 {
     mCompCount = 1;
+    mFitnessAging = 0.0f;
 }
 
 PopDynSpeciesBuffers::~PopDynSpeciesBuffers()
@@ -110,6 +111,10 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
             delete species->mOrganismVector[organismNumber];
             species->mOrganismVector[organismNumber] = orgClone;
         }
+        else
+        {
+            org->mFitness *= (1.0f - mFitnessAging);
+        }
     }
 
     // Remove
@@ -136,6 +141,13 @@ int PopDynSpeciesBuffers::setCompCount(lua_State* luaState)
 {
     unsigned int count = luaL_checkint(luaState, 1);
     setCompCount(count);
+    return 0;
+}
+
+int PopDynSpeciesBuffers::setFitnessAging(lua_State* luaState)
+{
+    float aging = luaL_checknumber(luaState, 1);
+    setFitnessAging(aging);
     return 0;
 }
 

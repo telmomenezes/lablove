@@ -45,16 +45,17 @@ rotDrag = 0.05
 
 initialConnections = 10
 
-compCount = 10
+compCount = 1
 bufferSize = 50
+fitnessAging = 0.1
 
-addConnectionProb = 0.01
-removeConnectionProb = 0.01
-changeWeightProb = 0.01
+addConnectionProb = 0.1
+removeConnectionProb = 0.1
+changeWeightProb = 0.1
 weightMutationStanDev = 1.0
 splitConnectionProb = 0.0
 joinConnectionsProb = 0.0
-changeComponentProb = 0.01
+changeComponentProb = 0.1
 swapComponentProb = 0.0
 
 timeLimit = 0
@@ -79,6 +80,7 @@ changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, 
 swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb, "swp")
 bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
 compCount = getNumberParameter("compcount", compCount, "cc")
+fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")
 
 logSuffix = "_poison_"
             .. parameterString
