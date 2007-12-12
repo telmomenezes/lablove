@@ -41,7 +41,8 @@ typedef struct
     vector<SimulationObject*> mOrganismVector;
     list<Log*> mDeathLogs;
     list<Log*> mSampleLogs;
-    long mPopulation;
+    unsigned int mPopulation;
+    unsigned int mBufferSize;
 } SpeciesData;
 
 public:
@@ -53,7 +54,7 @@ public:
     virtual void onCycle(unsigned long time, double realTime);
     virtual void onOrganismDeath(SimulationObject* org);
 
-    unsigned int addSpecies(SimulationObject* org, long population);
+    unsigned int addSpecies(SimulationObject* org, unsigned int population);
 
     void addSampleLog(unsigned int speciesIndex, Log* log);
     void addDeathLog(unsigned int speciesIndex, Log* log);

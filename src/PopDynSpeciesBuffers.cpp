@@ -22,7 +22,7 @@
 
 PopDynSpeciesBuffers::PopDynSpeciesBuffers(lua_State* luaState)
 {
-    mTournamentSize = 2;
+    mCompCount = 1;
 }
 
 PopDynSpeciesBuffers::~PopDynSpeciesBuffers()
@@ -37,91 +37,103 @@ void PopDynSpeciesBuffers::init(PopulationManager* popManager)
         iterSpecies != mSpecies.end();
         iterSpecies++)
     {
-        for (unsigned int i = 0; i < (*iterSpecies).second.mPopulation; i++)
+        unsigned int speciesID = (*iterSpecies).first;
+        SpeciesData* species = &((*iterSpecies).second);
+        for (unsigned int i = 0; i < species->mBufferSize; i++)
         {
-            SimulationObject* org = (*iterSpecies).second.mBaseOrganism->clone(true);
-            mPopManager->addObject(org);
-            mPopManager->placeRandom(org);
-            (*iterSpecies).second.mOrganismVector.push_back(org);
+            SimulationObject* org = species->mBaseOrganism->clone(true);
+            species->mOrganismVector.push_back(org);
+        }
+        for (unsigned int i = 0; i < species->mPopulation; i++)
+        {
+            mutateAndSend(speciesID);
         }
     }
 }
 
-void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
+unsigned int PopDynSpeciesBuffers::addSpecies(SimulationObject* org, unsigned int population, unsigned int bufferSize)
 {
-    PopDynSpecies::onOrganismDeath(org);
+    unsigned int speciesID = PopDynSpecies::addSpecies(org, population);
+    mSpecies[speciesID].mBufferSize = bufferSize;
 
-    SpeciesData* species = &(mSpecies[org->getSpeciesID()]);
+    return speciesID;
+}
 
-    vector<SimulationObject*>::iterator iterOrg;
-
-    int orgPos = -1;
-    int curPos = 0;
-    for (iterOrg = species->mOrganismVector.begin();
-        (iterOrg != species->mOrganismVector.end()) && orgPos < 0;
-        iterOrg++)
-    {
-        if ((*iterOrg) == org)
-        {
-            orgPos = curPos;
-        }
-        curPos++;
-    }
-
-    SimulationObject* newOrganism = NULL;
-
-    // Tournament selection
-    SimulationObject* bestOrganism = NULL;
-    float bestFitness = 0.0f;
-
-    for (unsigned int tournamentStep = 0; tournamentStep < mTournamentSize; tournamentStep++)
-    {
-        unsigned int organismNumber = mDistOrganism->iuniform(0, species->mPopulation);
-
-        iterOrg = species->mOrganismVector.begin();
-        for (unsigned int i = 0; i < organismNumber; i++)
-        {
-            iterOrg++;
-        }
-
-        if ((tournamentStep == 0) || ((*iterOrg)->mFitness > bestFitness))
-        {
-            bestOrganism = (*iterOrg);
-            bestFitness = bestOrganism->mFitness;
-        }
-    }
-
-    // Clone best and add to simulation
-    newOrganism = bestOrganism->clone();
+void PopDynSpeciesBuffers::mutateAndSend(unsigned int speciesID)
+{
+    SpeciesData* species = &(mSpecies[speciesID]);
+    unsigned int organismNumber = mDistOrganism->iuniform(0, species->mBufferSize);
+    SimulationObject* org = species->mOrganismVector[organismNumber];
+    
+    // Clone and add to simulation
+    SimulationObject* newOrganism = org->clone();
             
     // Mutate
     newOrganism->mutate();
 
     mPopManager->addObject(newOrganism);
     mPopManager->placeRandom(newOrganism);
+}
+
+void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
+{
+    PopDynSpecies::onOrganismDeath(org);
+
+    unsigned int speciesID = org->getSpeciesID();
+    SpeciesData* species = &(mSpecies[speciesID]);
+
+    vector<SimulationObject*>::iterator iterOrg;
+
+    // Buffer replacements
+    for (unsigned int i = 0; i < mCompCount; i++)
+    {
+        unsigned int organismNumber = mDistOrganism->iuniform(0, species->mBufferSize);
+
+        SimulationObject* org2 = species->mOrganismVector[organismNumber];
+
+        if (org->mFitness > org2->mFitness)
+        {
+            SimulationObject* orgClone = org->clone();
+            orgClone->mFitness = org->mFitness;
+            delete species->mOrganismVector[organismNumber];
+            species->mOrganismVector[organismNumber] = orgClone;
+        }
+    }
 
     // Remove
-    species->mOrganismVector[orgPos] = newOrganism;
     mPopManager->removeObject(org);
+
+    // Replace
+    mutateAndSend(speciesID);
 }
 
 const char PopDynSpeciesBuffers::mClassName[] = "PopDynSpeciesBuffers";
 
 Orbit<PopDynSpeciesBuffers>::MethodType PopDynSpeciesBuffers::mMethods[] = {
     {"setLogTimeInterval", &PopDynSpecies::setLogTimeInterval},
-    {"addSpecies", &PopDynSpecies::addSpecies},
+    {"addSpecies", &PopDynSpeciesBuffers::addSpecies},
     {"addSampleLog", &PopDynSpecies::addSampleLog},
     {"addDeathLog", &PopDynSpecies::addDeathLog},
-    {"setTournamentSize", &PopDynSpeciesBuffers::setTournamentSize},
+    {"setCompCount", &PopDynSpeciesBuffers::setCompCount},
     {0,0}
 };
 
 Orbit<PopDynSpeciesBuffers>::NumberGlobalType PopDynSpeciesBuffers::mNumberGlobals[] = {{0,0}};
 
-int PopDynSpeciesBuffers::setTournamentSize(lua_State* luaState)
+int PopDynSpeciesBuffers::setCompCount(lua_State* luaState)
 {
-    unsigned int size = luaL_checkint(luaState, 1);
-    setTournamentSize(size);
+    unsigned int count = luaL_checkint(luaState, 1);
+    setCompCount(count);
     return 0;
+}
+
+int PopDynSpeciesBuffers::addSpecies(lua_State* luaState)
+{
+    SimulationObject* obj = (SimulationObject*)Orbit<SimulationObject>::pointer(luaState, 1);
+    unsigned int population = luaL_checkint(luaState, 2);
+    unsigned int bufferSize = luaL_checkint(luaState, 3);
+    unsigned int id = addSpecies(obj, population, bufferSize);
+    lua_pushinteger(luaState, id);
+    return 1;
 }
 

@@ -30,16 +30,21 @@ public:
     virtual void init(PopulationManager* popManager);
     virtual void onOrganismDeath(SimulationObject* org);
 
-    void setTournamentSize(unsigned int size){mTournamentSize = size;}
+    unsigned int addSpecies(SimulationObject* org, unsigned int population, unsigned int bufferSize);
+
+    void setCompCount(unsigned int count){mCompCount = count;}
 
     static const char mClassName[];
     static Orbit<PopDynSpeciesBuffers>::MethodType mMethods[];
     static Orbit<PopDynSpeciesBuffers>::NumberGlobalType mNumberGlobals[];
 
-    int setTournamentSize(lua_State* luaState);
+    int addSpecies(lua_State* luaState);
+    int setCompCount(lua_State* luaState);
 
 protected:
-    unsigned int mTournamentSize;
+    void mutateAndSend(unsigned int speciesID);
+
+    unsigned int mCompCount;
 };
 #endif
 

@@ -32,7 +32,7 @@ PopDynSpecies::~PopDynSpecies()
 {
 }
 
-unsigned int PopDynSpecies::addSpecies(SimulationObject* org, long population)
+unsigned int PopDynSpecies::addSpecies(SimulationObject* org, unsigned int population)
 {
     unsigned int speciesID = ++CURRENT_SPECIES_ID;
     org->setSpeciesID(speciesID);
