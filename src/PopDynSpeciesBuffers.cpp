@@ -103,7 +103,6 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
 
         SimulationObject* org2 = species->mOrganismVector[organismNumber];
 
-
         if (org->mFitness > org2->mFitness)
         {
             SimulationObject* orgClone = org->clone();
@@ -113,7 +112,7 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
         }
         else
         {
-            org->mFitness *= (1.0f - mFitnessAging);
+            org2->mFitness *= (1.0f - mFitnessAging);
         }
     }
 
@@ -132,6 +131,7 @@ Orbit<PopDynSpeciesBuffers>::MethodType PopDynSpeciesBuffers::mMethods[] = {
     {"addSampleLog", &PopDynSpecies::addSampleLog},
     {"addDeathLog", &PopDynSpecies::addDeathLog},
     {"setCompCount", &PopDynSpeciesBuffers::setCompCount},
+    {"setFitnessAging", &PopDynSpeciesBuffers::setFitnessAging},
     {0,0}
 };
 

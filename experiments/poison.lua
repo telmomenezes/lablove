@@ -129,7 +129,7 @@ agent:setSymbolName("drag", physicsTableCode, 1)
 agent:setSymbolName("rot_friction", physicsTableCode, 2)
 agent:setSymbolName("rot_drag", physicsTableCode, 3)
 
-symInitialEnergy = SymbolFloat(0.000001)
+symInitialEnergy = SymbolFloat(0.0001)
 symMetabolism = SymbolFloat(metabolism)
 symTable = SymbolTable(symInitialEnergy)
 symTable:addSymbol(symMetabolism)
@@ -252,6 +252,7 @@ popDyn = PopDynSpeciesBuffers()
 sim:setPopulationDynamics(popDyn)
 
 popDyn:setCompCount(compCount)
+popDyn:setFitnessAging(fitnessAging)
 agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize)
 popDyn:addSpecies(plant, numberOfPlants, 1)
 
