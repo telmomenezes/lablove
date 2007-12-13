@@ -76,7 +76,7 @@ splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "
 joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb, "joc")
 changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, "chg")
 swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb, "swp")
-tournamentSize = getNumberParameter("tournamnentsize", tournamentSize, "ts")
+tournamentSize = getNumberParameter("tournamentsize", tournamentSize, "ts")
 
 logSuffix = "_poison_"
             .. parameterString
