@@ -1106,14 +1106,14 @@ void Gridbrain::initRandomComponentSequence(float selectionProb)
 
 int Gridbrain::nextRandomComponent()
 {
-    if (mConnSeqProb == 1.0f)
+    if (mCompSeqProb == 1.0f)
     {
         mCompSeqPos = -1;
         return mCompSeqPos;
     }
 
     float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
-    double nextPos = trunc(log(prob) / log(mConnSeqProb));
+    double nextPos = trunc(log(prob) / log(mCompSeqProb));
 
     mCompSeqPos += (int)nextPos;
 
