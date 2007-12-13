@@ -45,7 +45,9 @@ rotDrag = 0.05
 
 initialConnections = 10
 
-tournamentSize = 2
+compCount = 1
+bufferSize = 50
+fitnessAging = 0.1
 
 addConnectionProb = 0.1
 removeConnectionProb = 0.1
@@ -76,7 +78,9 @@ splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "
 joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb, "joc")
 changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, "chg")
 swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb, "swp")
-tournamentSize = getNumberParameter("tournamnentsize", tournamentSize, "ts")
+bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
+compCount = getNumberParameter("compcount", compCount, "cc")
+fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")
 
 logSuffix = "_poison_"
             .. parameterString
@@ -244,12 +248,13 @@ plant:addGraphic(graphic)
 -- Population Dynamics
 --------------------------------------------------------------------------------
 
-popDyn = PopDynFixedSpecies()
+popDyn = PopDynSpeciesBuffers()
 sim:setPopulationDynamics(popDyn)
 
-popDyn:setTournamentSize(tournamentSize)
-agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents)
-popDyn:addSpecies(plant, numberOfPlants)
+popDyn:setCompCount(compCount)
+popDyn:setFitnessAging(fitnessAging)
+agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize)
+popDyn:addSpecies(plant, numberOfPlants, 1)
 
 -- Human Agent
 --------------------------------------------------------------------------------
