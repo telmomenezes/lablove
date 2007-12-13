@@ -145,6 +145,16 @@ public:
     int setMutateSwapComponentProb(lua_State* luaState);
     int setWeightMutationStanDev(lua_State* luaState);
 
+    static long MUTATIONS_ADD_CONN;
+    static long MUTATIONS_REM_CONN;
+    static long MUTATIONS_CHG_WGT;
+    static long MUTATIONS_SPLIT_CONN;
+    static long MUTATIONS_JOIN_CONN;
+    static long MUTATIONS_CHG_COMP;
+    static long MUTATIONS_SWP_COMP;
+
+    static void debugMutationsCount();
+
 protected:
     void initGridInputOutput(Grid* grid, int gPos=-1);
     void calcConnectionCounts();

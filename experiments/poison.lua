@@ -47,13 +47,13 @@ initialConnections = 10
 
 tournamentSize = 2
 
-addConnectionProb = 0.1
-removeConnectionProb = 0.1
-changeWeightProb = 0.1
+addConnectionProb = 0.01
+removeConnectionProb = 0.01
+changeWeightProb = 0.01
 weightMutationStanDev = 1.0
 splitConnectionProb = 0.0
 joinConnectionsProb = 0.0
-changeComponentProb = 0.1
+changeComponentProb = 0.01
 swapComponentProb = 0.0
 
 timeLimit = 0

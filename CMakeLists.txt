@@ -40,6 +40,7 @@ SET(SOURCE_FILES
     src/InterfaceItem.cpp
     src/DummyBrain.cpp
     src/Gridbrain.cpp
+    src/GridbrainMutations.cpp
     src/GridbrainWrite.cpp
     src/Grid.cpp
     src/GridbrainComponent

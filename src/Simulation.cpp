@@ -102,6 +102,8 @@ void Simulation::run()
 
 void Simulation::cycle()
 {
+    //if ((mSimulationTime % 1000) == 0) Gridbrain::debugMutationsCount();
+
     bool drawThisCycle = false;
 
     double realTime = mPycasso.getTime();
