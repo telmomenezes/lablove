@@ -157,7 +157,7 @@ int PopDynSpeciesBuffers::setFitnessAging(lua_State* luaState)
 
 int PopDynSpeciesBuffers::addSpecies(lua_State* luaState)
 {
-    SimulationObject* obj = (SimulationObject*)Orbit<SimulationObject>::pointer(luaState, 1);
+    SimulationObject* obj = (SimulationObject*)Orbit<PopDynSpeciesBuffers>::pointer(luaState, 1);
     unsigned int population = luaL_checkint(luaState, 2);
     unsigned int bufferSize = luaL_checkint(luaState, 3);
     bool diversify = true;

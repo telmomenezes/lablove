@@ -39,6 +39,7 @@ GraphicGradient::GraphicGradient(lua_State* luaState)
     mRed2 = 0;
     mGreen2 = 0;
     mBlue2 = 0;
+    mCenter = 0.5f;
 }
 
 GraphicGradient::~GraphicGradient()
@@ -56,6 +57,7 @@ Graphic* GraphicGradient::clone()
     graph->mRed2 = mRed2;
     graph->mGreen2 = mGreen2;
     graph->mBlue2 = mBlue2;
+    graph->mCenter = mCenter;
     return graph;
 }
 
@@ -101,6 +103,17 @@ void GraphicGradient::init(SimulationObject* obj, pyc::Pycasso* pycasso)
 
     float distance = mReferenceSymbol->getDistance(sym);
 
+    if (distance < mCenter)
+    {
+        distance /= mCenter * 2.0f;
+    }
+    else
+    {
+        distance -= mCenter;
+        distance /= mCenter * 2.0f;
+        distance += 0.5f;
+    }
+
     float deltaRed = mRed2 - mRed1;
     float deltaGreen = mGreen2 - mGreen1;
     float deltaBlue = mBlue2 - mBlue1;
@@ -135,6 +148,7 @@ Orbit<GraphicGradient>::MethodType GraphicGradient::mMethods[] = {
     {"setReferenceSymbol", &GraphicGradient::setReferenceSymbol},
     {"setColor1", &GraphicGradient::setColor1},
     {"setColor2", &GraphicGradient::setColor2},
+    {"setCenter", &GraphicGradient::setCenter},
     {0,0}
 };
 
@@ -174,6 +188,14 @@ int GraphicGradient::setColor2(lua_State* luaState)
     float blue = luaL_checkint(luaState, 3);
 
     setColor2(red, green, blue);
+
+    return 0;
+}
+
+int GraphicGradient::setCenter(lua_State* luaState)
+{
+    float center = luaL_checknumber(luaState, 1);
+    setCenter(center);
 
     return 0;
 }

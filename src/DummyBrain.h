@@ -68,8 +68,6 @@ public:
     virtual void draw(pyc::Layer2D* layer);
 
 protected:
-    void create();
-
     vector<list<string>*> mInputInterfacesNames;
     vector<unsigned int> mOffsetsVector;
     vector<unsigned int> mInputDepths;

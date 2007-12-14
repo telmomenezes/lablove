@@ -94,6 +94,8 @@ SimCont2D::SimCont2D(lua_State* luaState)
     mHumanEat = false;
 
     mZoom = 1.0f;
+
+    mFeedCenter = 0.5f;
 }
 
 SimCont2D::~SimCont2D()
@@ -838,11 +840,19 @@ void SimCont2D::eat(Agent* agent, Action actionType)
             break;
         case ACTION_EATB:
             float distance = sym1->getDistance(sym2);
-            distance -= 0.5f;
-            distance *= 2.0f;
+            float energyFactor;
+
+            if (distance < mFeedCenter)
+            {
+                energyFactor = -(mFeedCenter - distance) / mFeedCenter;
+            }
+            else
+            {
+                energyFactor = (distance - mFeedCenter) / (1.0f - mFeedCenter);
+            }
 
             float energy = mTargetObject->mFloatData[FLOAT_ENERGY];
-            deltaEnergy(agent, distance * energy);
+            deltaEnergy(agent, energyFactor * energy);
             deltaEnergy(mTargetObject, -energy);
             break;
         }
@@ -1181,6 +1191,7 @@ Orbit<SimCont2D>::MethodType SimCont2D::mMethods[] = {
     {"setPos", &SimCont2D::setPos},
     {"setRot", &SimCont2D::setRot},
     {"setHuman", &SimCont2D::setHuman},
+    {"setFeedCenter", &SimCont2D::setFeedCenter},
     {0,0}
 };
 
@@ -1271,6 +1282,13 @@ int SimCont2D::setHuman(lua_State* luaState)
 {
     Agent* agent = (Agent*)Orbit<SimCont2D>::pointer(luaState, 1);
     setHuman(agent);
+    return 0;
+}
+
+int SimCont2D::setFeedCenter(lua_State* luaState)
+{
+    float center = luaL_checknumber(luaState, 1);
+    setFeedCenter(center);
     return 0;
 }
 

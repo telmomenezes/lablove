@@ -38,7 +38,7 @@ timeLimit = 0
 
 logTimeInterval = 10
 
-humanAgent = true
+humanAgent = false
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------

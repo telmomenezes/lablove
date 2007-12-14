@@ -43,9 +43,13 @@ drag = 0.05
 rotFriction = 0.0
 rotDrag = 0.05
 
+feedCenter = 0.25
+
 initialConnections = 10
 
-tournamentSize = 2
+compCount = 1
+bufferSize = 50
+fitnessAging = 0.1
 
 addConnectionProb = 0.01
 removeConnectionProb = 0.01
@@ -61,7 +65,7 @@ logTimeInterval = 100
 logBrains = true
 logOnlyLastBrain = true
 
-humanAgent = false
+humanAgent = true
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
@@ -76,7 +80,9 @@ splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "
 joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb, "joc")
 changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, "chg")
 swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb, "swp")
-tournamentSize = getNumberParameter("tournamentsize", tournamentSize, "ts")
+bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
+compCount = getNumberParameter("compcount", compCount, "cc")
+fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")
 
 logSuffix = "_poison_"
             .. parameterString
@@ -96,6 +102,7 @@ sim:setGoForceScale(goForceScale)
 sim:setRotateForceScale(rotateForceScale)
 sim:setSeedIndex(seedIndex)
 sim:setTimeLimit(timeLimit)
+sim:setFeedCenter(feedCenter)
 
 -- Agents
 --------------------------------------------------------------------------------
@@ -238,18 +245,20 @@ graphic:setSymbolName("food")
 graphic:setReferenceSymbol(plantFood)
 graphic:setColor1(255, 0, 0)
 graphic:setColor2(0, 255, 0)
+graphic:setCenter(feedCenter)
 
 plant:addGraphic(graphic)
 
 -- Population Dynamics
 --------------------------------------------------------------------------------
 
-popDyn = PopDynFixedSpecies()
+popDyn = PopDynSpeciesBuffers()
 sim:setPopulationDynamics(popDyn)
 
-popDyn:setTournamentSize(tournamentSize)
-agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents)
-popDyn:addSpecies(plant, numberOfPlants)
+popDyn:setCompCount(compCount)
+popDyn:setFitnessAging(fitnessAging)
+agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize)
+popDyn:addSpecies(plant, numberOfPlants, 1)
 
 -- Human Agent
 --------------------------------------------------------------------------------
@@ -327,11 +336,12 @@ popDyn:addDeathLog(agentSpeciesIndex, stats)
 
 if logBrains then
     logBrain = LogBestBrain()
-    logBrain:setFileNamePrefix("logs/brains/brain" .. logSuffix .. "t")
     logBrain:setFileNameSuffix(".svg")
     if logOnlyLastBrain then
         logBrain:setLogOnlyLast(true)
         logBrain:setFileNamePrefix("logs/brains/brain" .. logSuffix)
+    else
+        logBrain:setFileNamePrefix("logs/brains/brain" .. logSuffix .. "t")
     end
     popDyn:addDeathLog(agentSpeciesIndex, logBrain)
 end

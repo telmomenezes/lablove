@@ -20,7 +20,7 @@
 #include "PopDynSpecies.h"
 #include "SimulationObject.h"
 
-unsigned int PopDynSpecies::CURRENT_SPECIES_ID = 0;
+unsigned int PopDynSpecies::CURRENT_SPECIES_ID = 1;
 mt_distribution* PopDynSpecies::mDistOrganism = gDistManager.getNewDistribution();
 
 PopDynSpecies::PopDynSpecies(lua_State* luaState)

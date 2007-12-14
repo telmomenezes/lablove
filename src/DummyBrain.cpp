@@ -21,15 +21,34 @@
 
 DummyBrain::DummyBrain(unsigned int channelCount)
 {
-
     mChannelCount = channelCount;
-    create();
+    mInputBuffer = NULL;
+
+    for (unsigned int i = 0; i < mChannelCount; i++)
+    {
+        list<InterfaceItem*>* interfaceList = new list<InterfaceItem*>();
+        mInputInterfacesVector.push_back(interfaceList);
+        list<string>* nameList = new list<string>();
+        mInputInterfacesNames.push_back(nameList);
+        mInputDepths.push_back(0);
+        mLastInputDepths.push_back(0);
+    }
 }
 
 DummyBrain::DummyBrain(lua_State* luaState)
 {
     mChannelCount = luaL_checkint(luaState, 1);
-    create();
+    mInputBuffer = NULL;
+
+    for (unsigned int i = 0; i < mChannelCount; i++)
+    {
+        list<InterfaceItem*>* interfaceList = new list<InterfaceItem*>();
+        mInputInterfacesVector.push_back(interfaceList);
+        list<string>* nameList = new list<string>();
+        mInputInterfacesNames.push_back(nameList);
+        mInputDepths.push_back(0);
+        mLastInputDepths.push_back(0);
+    }
 }
 
 DummyBrain::~DummyBrain()
@@ -59,21 +78,6 @@ Brain* DummyBrain::clone(bool randomize)
     }
 
     return db;
-}
-
-void DummyBrain::create()
-{
-    mInputBuffer = NULL;
-
-    for (unsigned int i = 0; i < mChannelCount; i++)
-    {
-        list<InterfaceItem*>* interfaceList = new list<InterfaceItem*>();
-        mInputInterfacesVector.push_back(interfaceList);
-        list<string>* nameList = new list<string>();
-        mInputInterfacesNames.push_back(nameList);
-        mInputDepths.push_back(0);
-        mLastInputDepths.push_back(0);
-    }
 }
 
 void DummyBrain::init()

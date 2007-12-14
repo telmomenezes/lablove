@@ -107,6 +107,8 @@ public:
     void setRotateCost(float cost){mRotateCost = cost;}
     void setGoForceScale(float scale){mGoForceScale = scale;}
     void setRotateForceScale(float scale){mRotateForceScale = scale;}
+
+    void setFeedCenter(float center){mFeedCenter = center;}
     
     void moveView(float x, float y);
     float getViewX(){return mViewX;}
@@ -152,6 +154,7 @@ public:
     int setPos(lua_State* luaState);
     int setRot(lua_State* luaState);
     int setHuman(lua_State* luaState);
+    int setFeedCenter(lua_State* luaState);
 
 protected:
     virtual void process(SimulationObject* obj);
@@ -229,6 +232,8 @@ protected:
     bool mHumanEat;
 
     float mZoom;
+
+    float mFeedCenter;
 };
 #endif
 

@@ -40,6 +40,7 @@ public:
     void setReferenceSymbol(Symbol* refSymbol){mReferenceSymbol = refSymbol;}
     void setColor1(int red, int green, int blue){mRed1 = red; mGreen1 = green; mBlue1 = blue;}
     void setColor2(int red, int green, int blue){mRed2 = red; mGreen2 = green; mBlue2 = blue;}
+    void setCenter(float center){mCenter = center;}
 
     static const char mClassName[];
     static Orbit<GraphicGradient>::MethodType mMethods[];
@@ -49,6 +50,7 @@ public:
     int setReferenceSymbol(lua_State* luaState);
     int setColor1(lua_State* luaState);
     int setColor2(lua_State* luaState);
+    int setCenter(lua_State* luaState);
 
 protected:
     float mSize;
@@ -68,6 +70,8 @@ protected:
     int mRed2;
     int mGreen2;
     int mBlue2;
+
+    float mCenter;
 };
 #endif
 
