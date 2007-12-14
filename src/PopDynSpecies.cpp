@@ -34,7 +34,7 @@ PopDynSpecies::~PopDynSpecies()
 
 unsigned int PopDynSpecies::addSpecies(SimulationObject* org, unsigned int population)
 {
-    unsigned int speciesID = ++CURRENT_SPECIES_ID;
+    unsigned int speciesID = CURRENT_SPECIES_ID++;
     org->setSpeciesID(speciesID);
 
     SpeciesData species;
@@ -92,7 +92,13 @@ void PopDynSpecies::onCycle(unsigned long time, double realTime)
 
 void PopDynSpecies::onOrganismDeath(SimulationObject* org)
 {
-    SpeciesData* species = &(mSpecies[org->getSpeciesID()]);
+    int speciesID = org->getSpeciesID();
+
+    if (speciesID == 0)
+    {
+        return;
+    }
+    SpeciesData* species = &(mSpecies[speciesID]);
             
     // Update death statistics
     for (list<Log*>::iterator iterLogs = species->mDeathLogs.begin();
@@ -101,15 +107,6 @@ void PopDynSpecies::onOrganismDeath(SimulationObject* org)
     {
         (*iterLogs)->process(org, mPopManager);
     }
-}
-
-int PopDynSpecies::addSpecies(lua_State* luaState)
-{
-    SimulationObject* obj = (SimulationObject*)Orbit<SimulationObject>::pointer(luaState, 1);
-    int population = luaL_checkint(luaState, 2);
-    unsigned int id = addSpecies(obj, population);
-    lua_pushinteger(luaState, id);
-    return 1;
 }
 
 int PopDynSpecies::addSampleLog(lua_State* luaState)

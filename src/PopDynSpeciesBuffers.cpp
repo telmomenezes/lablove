@@ -52,7 +52,7 @@ void PopDynSpeciesBuffers::init(PopulationManager* popManager)
         SpeciesData* species = &((*iterSpecies).second);
         for (unsigned int i = 0; i < species->mBufferSize; i++)
         {
-            SimulationObject* org = species->mBaseOrganism->clone(true);
+            SimulationObject* org = species->mBaseOrganism->clone(species->mDiversify);
             species->mOrganismVector.push_back(org);
         }
         for (unsigned int i = 0; i < species->mPopulation; i++)
@@ -62,10 +62,11 @@ void PopDynSpeciesBuffers::init(PopulationManager* popManager)
     }
 }
 
-unsigned int PopDynSpeciesBuffers::addSpecies(SimulationObject* org, unsigned int population, unsigned int bufferSize)
+unsigned int PopDynSpeciesBuffers::addSpecies(SimulationObject* org, unsigned int population, unsigned int bufferSize, bool diversify)
 {
     unsigned int speciesID = PopDynSpecies::addSpecies(org, population);
     mSpecies[speciesID].mBufferSize = bufferSize;
+    mSpecies[speciesID].mDiversify = diversify;
 
     return speciesID;
 }
@@ -91,10 +92,13 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
     PopDynSpecies::onOrganismDeath(org);
 
     unsigned int speciesID = org->getSpeciesID();
+    if (speciesID == 0)
+    {
+        return;
+    }
     SpeciesData* species = &(mSpecies[speciesID]);
 
     vector<SimulationObject*>::iterator iterOrg;
-
 
     // Buffer replacements
     for (unsigned int i = 0; i < mCompCount; i++)
@@ -156,7 +160,12 @@ int PopDynSpeciesBuffers::addSpecies(lua_State* luaState)
     SimulationObject* obj = (SimulationObject*)Orbit<SimulationObject>::pointer(luaState, 1);
     unsigned int population = luaL_checkint(luaState, 2);
     unsigned int bufferSize = luaL_checkint(luaState, 3);
-    unsigned int id = addSpecies(obj, population, bufferSize);
+    bool diversify = true;
+    if (lua_gettop(luaState) > 3)
+    {
+        diversify = luaL_checkbool(luaState, 4);
+    }
+    unsigned int id = addSpecies(obj, population, bufferSize, diversify);
     lua_pushinteger(luaState, id);
     return 1;
 }

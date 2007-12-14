@@ -30,7 +30,7 @@ public:
     virtual void init(PopulationManager* popManager);
     virtual void onOrganismDeath(SimulationObject* org);
 
-    unsigned int addSpecies(SimulationObject* org, unsigned int population, unsigned int bufferSize);
+    unsigned int addSpecies(SimulationObject* org, unsigned int population, unsigned int bufferSize, bool diversify=true);
 
     void setCompCount(unsigned int count){mCompCount = count;}
     void setFitnessAging(float aging){mFitnessAging = aging;}

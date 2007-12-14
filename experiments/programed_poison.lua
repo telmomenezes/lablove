@@ -269,7 +269,7 @@ if humanAgent then
     human:setSymbolName("rot_friction", physicsTableCode, 2)
     human:setSymbolName("rot_drag", physicsTableCode, 3)
 
-    symHInitialEnergy = SymbolFloat(0.0)
+    symHInitialEnergy = SymbolFloat(0.000001)
     symHMetabolism = SymbolFloat(metabolism)
     symTable = SymbolTable(symHInitialEnergy, energyTableCode)
     symTable:addSymbol(symHMetabolism)

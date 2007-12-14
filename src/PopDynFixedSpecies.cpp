@@ -37,21 +37,36 @@ void PopDynFixedSpecies::init(PopulationManager* popManager)
         iterSpecies != mSpecies.end();
         iterSpecies++)
     {
-        for (unsigned int i = 0; i < (*iterSpecies).second.mPopulation; i++)
+        SpeciesData* species = &((*iterSpecies).second);
+        for (unsigned int i = 0; i < species->mPopulation; i++)
         {
-            SimulationObject* org = (*iterSpecies).second.mBaseOrganism->clone(true);
+            SimulationObject* org = species->mBaseOrganism->clone(species->mDiversify);
             mPopManager->addObject(org);
             mPopManager->placeRandom(org);
-            (*iterSpecies).second.mOrganismVector.push_back(org);
+            species->mOrganismVector.push_back(org);
         }
     }
+}
+
+unsigned int PopDynFixedSpecies::addSpecies(SimulationObject* org, unsigned int population, bool diversify)
+{
+    unsigned int speciesID = PopDynSpecies::addSpecies(org, population);
+    mSpecies[speciesID].mDiversify = diversify;
+
+    return speciesID;
 }
 
 void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
 {
     PopDynSpecies::onOrganismDeath(org);
 
-    SpeciesData* species = &(mSpecies[org->getSpeciesID()]);
+    int speciesID = org->getSpeciesID();
+
+    if (speciesID == 0)
+    {
+        return;
+    }
+    SpeciesData* species = &(mSpecies[speciesID]);
 
     vector<SimulationObject*>::iterator iterOrg;
 
@@ -73,7 +88,7 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
     // Tournament selection
     SimulationObject* bestOrganism = NULL;
     float bestFitness = 0.0f;
-
+    
     for (unsigned int tournamentStep = 0; tournamentStep < mTournamentSize; tournamentStep++)
     {
         unsigned int organismNumber = mDistOrganism->iuniform(0, species->mPopulation);
@@ -109,7 +124,7 @@ const char PopDynFixedSpecies::mClassName[] = "PopDynFixedSpecies";
 
 Orbit<PopDynFixedSpecies>::MethodType PopDynFixedSpecies::mMethods[] = {
     {"setLogTimeInterval", &PopDynSpecies::setLogTimeInterval},
-    {"addSpecies", &PopDynSpecies::addSpecies},
+    {"addSpecies", &PopDynFixedSpecies::addSpecies},
     {"addSampleLog", &PopDynSpecies::addSampleLog},
     {"addDeathLog", &PopDynSpecies::addDeathLog},
     {"setTournamentSize", &PopDynFixedSpecies::setTournamentSize},
@@ -117,6 +132,20 @@ Orbit<PopDynFixedSpecies>::MethodType PopDynFixedSpecies::mMethods[] = {
 };
 
 Orbit<PopDynFixedSpecies>::NumberGlobalType PopDynFixedSpecies::mNumberGlobals[] = {{0,0}};
+
+int PopDynFixedSpecies::addSpecies(lua_State* luaState)
+{
+    SimulationObject* obj = (SimulationObject*)Orbit<PopDynFixedSpecies>::pointer(luaState, 1);
+    int population = luaL_checkint(luaState, 2);
+    bool diversify = true;
+    if (lua_gettop(luaState) > 2)
+    {
+        diversify = luaL_checkbool(luaState, 3);
+    }
+    unsigned int index = addSpecies(obj, population, diversify);
+    lua_pushinteger(luaState, index);
+    return 1;
+}
 
 int PopDynFixedSpecies::setTournamentSize(lua_State* luaState)
 {

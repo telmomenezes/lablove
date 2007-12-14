@@ -43,6 +43,7 @@ typedef struct
     list<Log*> mSampleLogs;
     unsigned int mPopulation;
     unsigned int mBufferSize;
+    bool mDiversify;
 } SpeciesData;
 
 public:
@@ -59,7 +60,6 @@ public:
     void addDeathLog(unsigned int speciesIndex, Log* log);
     void setLogTimeInterval(unsigned long interval){mLogTimeInterval = interval * 1000;}
 
-    int addSpecies(lua_State* luaState);
     int addSampleLog(lua_State* luaState);
     int addDeathLog(lua_State* luaState);
     int setLogTimeInterval(lua_State* luaState);
