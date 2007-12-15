@@ -223,12 +223,11 @@ plant:addGraphic(graphic)
 -- Population Dynamics
 --------------------------------------------------------------------------------
 
-popDyn = PopDynFixedSpecies()
+popDyn = PopDynSpeciesBuffers()
 sim:setPopulationDynamics(popDyn)
 
-popDyn:setTournamentSize(10)
-agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, false)
-popDyn:addSpecies(plant, numberOfPlants)
+agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, 1, false)
+popDyn:addSpecies(plant, numberOfPlants, 1)
 
 human = Agent()
 dummyBrain = DummyBrain(1)

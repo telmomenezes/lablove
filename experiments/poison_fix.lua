@@ -45,17 +45,15 @@ rotDrag = 0.05
 
 initialConnections = 10
 
-compCount = 1
-bufferSize = 50
-fitnessAging = 0.1
+tournamentSize = 2
 
-addConnectionProb = 0.1
-removeConnectionProb = 0.1
-changeWeightProb = 0.1
+addConnectionProb = 0.01
+removeConnectionProb = 0.01
+changeWeightProb = 0.01
 weightMutationStanDev = 1.0
 splitConnectionProb = 0.0
 joinConnectionsProb = 0.0
-changeComponentProb = 0.1
+changeComponentProb = 0.01
 swapComponentProb = 0.0
 
 timeLimit = 0
@@ -63,7 +61,7 @@ logTimeInterval = 100
 logBrains = true
 logOnlyLastBrain = true
 
-humanAgent = false
+humanAgent = true
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
@@ -78,9 +76,7 @@ splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "
 joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb, "joc")
 changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, "chg")
 swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb, "swp")
-bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
-compCount = getNumberParameter("compcount", compCount, "cc")
-fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")
+tournamentSize = getNumberParameter("tournamentsize", tournamentSize, "ts")
 
 logSuffix = "_poison_"
             .. parameterString
@@ -129,7 +125,7 @@ agent:setSymbolName("drag", physicsTableCode, 1)
 agent:setSymbolName("rot_friction", physicsTableCode, 2)
 agent:setSymbolName("rot_drag", physicsTableCode, 3)
 
-symInitialEnergy = SymbolFloat(0.0001)
+symInitialEnergy = SymbolFloat(0.000001)
 symMetabolism = SymbolFloat(metabolism)
 symTable = SymbolTable(symInitialEnergy)
 symTable:addSymbol(symMetabolism)
@@ -248,13 +244,12 @@ plant:addGraphic(graphic)
 -- Population Dynamics
 --------------------------------------------------------------------------------
 
-popDyn = PopDynSpeciesBuffers()
+popDyn = PopDynFixedSpecies()
 sim:setPopulationDynamics(popDyn)
 
-popDyn:setCompCount(compCount)
-popDyn:setFitnessAging(fitnessAging)
-agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize)
-popDyn:addSpecies(plant, numberOfPlants, 1)
+popDyn:setTournamentSize(tournamentSize)
+agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents)
+popDyn:addSpecies(plant, numberOfPlants)
 
 -- Human Agent
 --------------------------------------------------------------------------------
