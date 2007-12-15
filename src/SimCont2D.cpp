@@ -242,7 +242,7 @@ void SimCont2D::initializeData(SimulationObject* obj)
     obj->initIntData(2);
 }
 
-void SimCont2D::addObject(SimulationObject* object)
+void SimCont2D::addObject(SimulationObject* object, bool init)
 {
     if(!object->mDataInitialized)
     {
@@ -286,6 +286,11 @@ void SimCont2D::addObject(SimulationObject* object)
     else
     {
         object->mULData[UL_MAX_AGE] = 0;
+    }
+
+    if (init)
+    {
+        object->mULData[UL_MAX_AGE] = mDistAge->iuniform(0, object->mULData[UL_MAX_AGE]);
     }
 
     if (object->mType == SimulationObject::TYPE_AGENT)

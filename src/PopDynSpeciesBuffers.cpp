@@ -57,7 +57,7 @@ void PopDynSpeciesBuffers::init(PopulationManager* popManager)
         }
         for (unsigned int i = 0; i < species->mPopulation; i++)
         {
-            mutateAndSend(speciesID);
+            mutateAndSend(speciesID, true);
         }
     }
 }
@@ -71,7 +71,7 @@ unsigned int PopDynSpeciesBuffers::addSpecies(SimulationObject* org, unsigned in
     return speciesID;
 }
 
-void PopDynSpeciesBuffers::mutateAndSend(unsigned int speciesID)
+void PopDynSpeciesBuffers::mutateAndSend(unsigned int speciesID, bool init)
 {
     SpeciesData* species = &(mSpecies[speciesID]);
     unsigned int organismNumber = mDistOrganism->iuniform(0, species->mBufferSize);
@@ -83,7 +83,7 @@ void PopDynSpeciesBuffers::mutateAndSend(unsigned int speciesID)
     // Mutate
     newOrganism->mutate();
 
-    mPopManager->addObject(newOrganism);
+    mPopManager->addObject(newOrganism, init);
     mPopManager->placeRandom(newOrganism);
 }
 

@@ -29,8 +29,7 @@ betaComponents = {TAND, TNAND, NOT}
 viewRange = 150.0
 viewAngle = 170.0
 
-lowAgeLimit = 4500
-highAgeLimit = 5500
+maxAge = 5000
 
 metabolism = 0.0
 goCost = 0.0
@@ -65,7 +64,7 @@ logTimeInterval = 100
 logBrains = true
 logOnlyLastBrain = true
 
-humanAgent = true
+humanAgent = false
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
@@ -132,7 +131,7 @@ agent:setSymbolName("drag", physicsTableCode, 1)
 agent:setSymbolName("rot_friction", physicsTableCode, 2)
 agent:setSymbolName("rot_drag", physicsTableCode, 3)
 
-symInitialEnergy = SymbolFloat(0.000001)
+symInitialEnergy = SymbolFloat(0.0001)
 symMetabolism = SymbolFloat(metabolism)
 symTable = SymbolTable(symInitialEnergy)
 symTable:addSymbol(symMetabolism)
@@ -141,8 +140,8 @@ energyTableCode = symTable:getID()
 agent:setSymbolName("initial_energy", energyTableCode, 0)
 agent:setSymbolName("metabolism", energyTableCode, 1)
 
-symLowAgeLimit = SymbolUL(lowAgeLimit)
-symHighAgeLimit = SymbolUL(highAgeLimit)
+symLowAgeLimit = SymbolUL(maxAge)
+symHighAgeLimit = SymbolUL(maxAge)
 symTable = SymbolTable(symLowAgeLimit)
 symTable:addSymbol(symHighAgeLimit)
 agent:addSymbolTable(symTable)
@@ -225,8 +224,8 @@ symTable = SymbolTable(symPlantInitialEnergy, energyTableCode)
 plant:addSymbolTable(symTable)
 plant:setSymbolName("initial_energy", energyTableCode, 0)
 
-symLowAgeLimit = SymbolUL(lowAgeLimit)
-symHighAgeLimit = SymbolUL(highAgeLimit)
+symLowAgeLimit = SymbolUL(maxAge)
+symHighAgeLimit = SymbolUL(maxAge)
 symTable = SymbolTable(symLowAgeLimit, ageTableCode)
 symTable:addSymbol(symHighAgeLimit)
 plant:addSymbolTable(symTable)
@@ -301,8 +300,8 @@ if humanAgent then
     human:setSymbolName("initial_energy", energyTableCode, 0)
     human:setSymbolName("metabolism", energyTableCode, 1)
 
-    symHLowAgeLimit = SymbolUL(lowAgeLimit)
-    symHHighAgeLimit = SymbolUL(highAgeLimit)
+    symHLowAgeLimit = SymbolUL(maxAge)
+    symHHighAgeLimit = SymbolUL(maxAge)
     symTable = SymbolTable(symHLowAgeLimit, ageTableCode)
     symTable:addSymbol(symHHighAgeLimit)
     human:addSymbolTable(symTable)

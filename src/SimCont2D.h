@@ -93,7 +93,7 @@ public:
     list<SimulationObject*>** getCellGrid(){return mCellGrid;}
 
     virtual void initializeData(SimulationObject* obj);
-    virtual void addObject(SimulationObject* object);
+    virtual void addObject(SimulationObject* object, bool init=false);
     virtual void removeObject(SimulationObject* obj);
     virtual void placeRandom(SimulationObject* obj);
 

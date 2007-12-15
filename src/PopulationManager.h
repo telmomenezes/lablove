@@ -34,7 +34,7 @@ public:
     PopulationManager();
     virtual ~PopulationManager();
 
-    virtual void addObject(SimulationObject* object);
+    virtual void addObject(SimulationObject* object, bool init=false);
     virtual void removeObject(SimulationObject* obj);
 
     virtual void placeRandom(SimulationObject* obj){}

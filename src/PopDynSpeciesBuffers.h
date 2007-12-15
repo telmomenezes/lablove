@@ -44,7 +44,7 @@ public:
     int setFitnessAging(lua_State* luaState);
 
 protected:
-    void mutateAndSend(unsigned int speciesID);
+    void mutateAndSend(unsigned int speciesID, bool init=false);
 
     unsigned int mCompCount;
     float mFitnessAging;

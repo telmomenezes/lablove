@@ -53,7 +53,7 @@ public:
     void cycle();
 
     virtual void initializeData(SimulationObject* obj){}
-    virtual void addObject(SimulationObject* object);
+    virtual void addObject(SimulationObject* object, bool init=false);
 
     virtual SimulationObject* getObjectByScreenPos(int x, int y){return NULL;}
 

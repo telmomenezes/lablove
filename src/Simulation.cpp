@@ -206,7 +206,7 @@ void Simulation::cycle()
     }
 }
 
-void Simulation::addObject(SimulationObject* object)
+void Simulation::addObject(SimulationObject* object, bool init)
 {
     object->setCreationTime(mSimulationTime);
     PopulationManager::addObject(object);

@@ -33,7 +33,7 @@ PopulationManager::~PopulationManager()
     mObjects.clear();
 }
 
-void PopulationManager::addObject(SimulationObject* object)
+void PopulationManager::addObject(SimulationObject* object, bool init)
 {
     mObjects.push_back(object);
     object->onAdd();
