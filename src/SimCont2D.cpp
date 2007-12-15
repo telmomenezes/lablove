@@ -980,7 +980,7 @@ float SimCont2D::getFieldValue(SimulationObject* obj, string fieldName)
     }
 }
 
-bool SimCont2D::onKeyDown(pyc::KeyCode key)
+bool SimCont2D::onKeyDown(art::KeyCode key)
 {
     if (Simulation::onKeyDown(key))
     {
@@ -989,16 +989,16 @@ bool SimCont2D::onKeyDown(pyc::KeyCode key)
 
     switch (key)
     {
-    case pyc::KEY_UP:
+    case art::KEY_UP:
         mHumanGo = true;
         return true;
-    case pyc::KEY_RIGHT:
+    case art::KEY_RIGHT:
         mHumanRotateRight = true;
         return true;
-    case pyc::KEY_LEFT:
+    case art::KEY_LEFT:
         mHumanRotateLeft = true;
         return true;
-    case pyc::KEY_E:
+    case art::KEY_E:
         mHumanEat = true;
         return true;
     default:
@@ -1006,7 +1006,7 @@ bool SimCont2D::onKeyDown(pyc::KeyCode key)
     }
 }
 
-bool SimCont2D::onKeyUp(pyc::KeyCode key)
+bool SimCont2D::onKeyUp(art::KeyCode key)
 {
     if (Simulation::onKeyUp(key))
     {
@@ -1015,28 +1015,28 @@ bool SimCont2D::onKeyUp(pyc::KeyCode key)
 
     switch (key)
     {
-    case pyc::KEY_G:
+    case art::KEY_G:
         mShowGrid = !mShowGrid;
         return true;
-    case pyc::KEY_V:
+    case art::KEY_V:
         mShowViewRange = !mShowViewRange;
         return true;
-    case pyc::KEY_B:
+    case art::KEY_B:
         mShowBrain = !mShowBrain;
         return true;
-    case pyc::KEY_N:
+    case art::KEY_N:
         mShowEnergy = !mShowEnergy;
         return true;
-    case pyc::KEY_UP:
+    case art::KEY_UP:
         mHumanGo = false;
         return true;
-    case pyc::KEY_RIGHT:
+    case art::KEY_RIGHT:
         mHumanRotateRight = false;
         return true;
-    case pyc::KEY_LEFT:
+    case art::KEY_LEFT:
         mHumanRotateLeft = false;
         return true;
-    case pyc::KEY_E:
+    case art::KEY_E:
         mHumanEat = false;
         return true;
     default:
@@ -1044,7 +1044,7 @@ bool SimCont2D::onKeyUp(pyc::KeyCode key)
     }
 }
 
-bool SimCont2D::onMouseButtonDown(pyc::MouseButton button, int x, int y)
+bool SimCont2D::onMouseButtonDown(art::MouseButton button, int x, int y)
 {
     mDragging = true;
     mLastMouseX = x;
@@ -1052,7 +1052,7 @@ bool SimCont2D::onMouseButtonDown(pyc::MouseButton button, int x, int y)
     return false;
 }
 
-bool SimCont2D::onMouseButtonUp(pyc::MouseButton button, int x, int y)
+bool SimCont2D::onMouseButtonUp(art::MouseButton button, int x, int y)
 {
     mDragging = false;
     return false;

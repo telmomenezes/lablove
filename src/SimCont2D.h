@@ -26,7 +26,7 @@
 #include "Agent.h"
 #include "RandDistManager.h"
 
-#include "pyc.h"
+#include "art.h"
 
 #include "Orbit.h"
 
@@ -118,10 +118,10 @@ public:
 
     virtual float getFieldValue(SimulationObject* obj, string fieldName);
     
-    virtual bool onKeyDown(pyc::KeyCode keycode);
-    virtual bool onKeyUp(pyc::KeyCode keycode);
-    virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y);
-    virtual bool onMouseButtonUp(pyc::MouseButton button, int x, int y);
+    virtual bool onKeyDown(art::KeyCode keycode);
+    virtual bool onKeyUp(art::KeyCode keycode);
+    virtual bool onMouseButtonDown(art::MouseButton button, int x, int y);
+    virtual bool onMouseButtonUp(art::MouseButton button, int x, int y);
     virtual bool onMouseMove(int x, int y);
     virtual bool onMouseWheel(bool up);
 

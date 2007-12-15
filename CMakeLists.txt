@@ -3,12 +3,10 @@ PROJECT(lablove)
 OPTION(DEBUG "Debug settings" OFF)
 OPTION(PROFILE "Profile settings" OFF)
 
-# TODO: Create a cmake script to find the correct directory for pycasso
-
 #SET(CMAKE_VERBOSE_MAKEFILE "ON")
 
 INCLUDE(CMakeModules/FindLua.cmake)
-INCLUDE(CMakeModules/FindPycasso.cmake)
+INCLUDE(CMakeModules/FindArtist.cmake)
 
 IF(PROFILE)
     SET(CMAKE_CXX_FLAGS "-Wno-deprecated -g -pg")
@@ -73,10 +71,10 @@ SET(SOURCE_FILES
 
 
 ADD_LIBRARY(llove SHARED ${SOURCE_FILES})
-TARGET_LINK_LIBRARIES(llove llove ${Pycasso_LIBRARIES} ${Lua_LIBRARIES} dl)
+TARGET_LINK_LIBRARIES(llove llove ${Artist_LIBRARIES} ${Lua_LIBRARIES} dl)
 
 ADD_EXECUTABLE(lablove src/main.cpp)
-TARGET_LINK_LIBRARIES(lablove llove ${Pycasso_LIBRARIES} ${Lua_LIBRARIES} dl)
+TARGET_LINK_LIBRARIES(lablove llove ${Artist_LIBRARIES} ${Lua_LIBRARIES} dl)
 
 SET(UNIT_TEST_FILES
     src/UnitTest++/AssertException.cpp
@@ -123,10 +121,10 @@ INCLUDE_DIRECTORIES("src")
 INCLUDE_DIRECTORIES("src/UnitTest++")
 INCLUDE_DIRECTORIES("src/mtwist")
 INCLUDE_DIRECTORIES(${Lua_INCLUDE_DIR})
-INCLUDE_DIRECTORIES(${Pycasso_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${Artist_INCLUDE_DIR})
 
 ADD_EXECUTABLE(test ${UNIT_TEST_FILES})
-TARGET_LINK_LIBRARIES(test llove ${Pycasso_LIBRARIES} ${Lua_LIBRARIES} dl)
+TARGET_LINK_LIBRARIES(test llove ${Artist_LIBRARIES} ${Lua_LIBRARIES} dl)
 
 ADD_CUSTOM_COMMAND(TARGET test POST_BUILD COMMAND "./test")
 

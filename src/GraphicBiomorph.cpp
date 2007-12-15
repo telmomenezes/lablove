@@ -75,9 +75,9 @@ Graphic* GraphicBiomorph::clone()
     return new GraphicBiomorph();
 }
 
-void GraphicBiomorph::init(SimulationObject* obj, pyc::Pycasso* pycasso)
+void GraphicBiomorph::init(SimulationObject* obj, art::Artist* artist)
 {
-    mWindow = pycasso->getWindow();
+    mWindow = artist->getWindow();
     mLayer = mWindow->createLayer2D(128, 128);
 
     mObject = obj;
@@ -360,9 +360,9 @@ void GraphicBiomorph::normalizePoints()
     }
 }
 
-void GraphicBiomorph::draw(pyc::Layer* layer)
+void GraphicBiomorph::draw(art::Layer* layer)
 {
-    pyc::Layer2D* layer2D = (pyc::Layer2D*)layer;
+    art::Layer2D* layer2D = (art::Layer2D*)layer;
 
     float rot = mObject->mFloatData[mRotIndex];
     float centerX = mObject->mFloatData[mXIndex];

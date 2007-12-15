@@ -26,7 +26,7 @@
 
 #include "Orbit.h"
 
-#include "pyc.h"
+#include "art.h"
 
 #include <map>
 #include <string>
@@ -59,7 +59,7 @@ public:
 
     unsigned long getID(){return mID;}
 
-    virtual void draw(pyc::Layer* layer){}
+    virtual void draw(art::Layer* layer){}
 
     unsigned int getSpeciesID(){return mSpeciesID;}
     void setSpeciesID(unsigned int id){mSpeciesID = id;}

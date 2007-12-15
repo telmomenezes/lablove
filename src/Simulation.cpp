@@ -67,11 +67,11 @@ void Simulation::initGraphics(unsigned int width,
 {
     if (noGraphics)
     {
-        mPycasso.setPreferredSystem(pyc::SYSTEM_NULL);
+        mArtist.setPreferredSystem(art::SYSTEM_NULL);
     }
 
-    mWindow = mPycasso.createWindow(width, height, fullScreen);
-    mEventQ = mPycasso.createEventQ();
+    mWindow = mArtist.createWindow(width, height, fullScreen);
+    mEventQ = mArtist.createEventQ();
     mRootLayer2D = mWindow->getRootLayer2D();
 
     mLogo = mWindow->loadImage("media/lablove_small.png");
@@ -86,7 +86,7 @@ void Simulation::initGraphics(unsigned int width,
 
 void Simulation::run()
 {
-    mInitialRealTime = mPycasso.getTime();
+    mInitialRealTime = mArtist.getTime();
 
     mPopulationDynamics->init(this);
 
@@ -106,7 +106,7 @@ void Simulation::cycle()
 
     bool drawThisCycle = false;
 
-    double realTime = mPycasso.getTime();
+    double realTime = mArtist.getTime();
     if (realTime - mLastDrawTime >= mFrameDuration)
     {
         mLastDrawTime = realTime;
@@ -155,7 +155,7 @@ void Simulation::cycle()
         drawAfterObjects();
     }
 
-    mPopulationDynamics->onCycle(mSimulationTime, mPycasso.getTime());
+    mPopulationDynamics->onCycle(mSimulationTime, mArtist.getTime());
 
     mRootLayer2D->setColor(255, 255, 255, 200);
     mRootLayer2D->drawLayer(mLogo, 0, 0);
@@ -174,30 +174,30 @@ void Simulation::cycle()
     {
         switch (mEventQ->getType())
         {
-        case pyc::EVENT_KEY_DOWN:
+        case art::EVENT_KEY_DOWN:
             onKeyDown(mEventQ->getKeyCode());
             break;
-        case pyc::EVENT_KEY_UP:
+        case art::EVENT_KEY_UP:
             onKeyUp(mEventQ->getKeyCode());
             break;
-        case pyc::EVENT_MOUSE_BUTTON_DOWN:
+        case art::EVENT_MOUSE_BUTTON_DOWN:
             onMouseButtonDown(mEventQ->getMouseButton(),
                                 mEventQ->getMousePosX(),
                                 mEventQ->getMousePosY());
             break;
-        case pyc::EVENT_MOUSE_BUTTON_UP:
+        case art::EVENT_MOUSE_BUTTON_UP:
             onMouseButtonUp(mEventQ->getMouseButton(),
                             mEventQ->getMousePosX(),
                             mEventQ->getMousePosY());
             break;
-        case pyc::EVENT_MOUSE_MOTION:
+        case art::EVENT_MOUSE_MOTION:
             onMouseMove(mEventQ->getMousePosX(),
                         mEventQ->getMousePosY());
             break;
-        case pyc::EVENT_MOUSE_WHEEL_UP:
+        case art::EVENT_MOUSE_WHEEL_UP:
             onMouseWheel(true);
             break;
-        case pyc::EVENT_MOUSE_WHEEL_DOWN:
+        case art::EVENT_MOUSE_WHEEL_DOWN:
             onMouseWheel(false);
             break;
         default:
@@ -219,7 +219,7 @@ void Simulation::addObject(SimulationObject* object)
                 iterGraph != gObj->mGraphics.end();
                 iterGraph++)
         {
-            (*iterGraph)->init(gObj, &mPycasso);
+            (*iterGraph)->init(gObj, &mArtist);
         }
     }
 }
@@ -262,11 +262,11 @@ void Simulation::drawTimes()
 {
     if (mLastRealTime == 0.0f)
     {
-        mLastRealTime = mPycasso.getTime();
+        mLastRealTime = mArtist.getTime();
     }
     else if (mSimulationTime % 100 == 0)
     {
-        double realTime = mPycasso.getTime();
+        double realTime = mArtist.getTime();
         double deltaRealTime = realTime - mLastRealTime;
         double deltaSimTime = (double)(mSimulationTime - mLastSimulationTime);
         mLastRealTime = realTime;
@@ -320,11 +320,11 @@ void Simulation::drawTimes()
     mRootLayer2D->drawText(140, 46, mCPSText);
 }
 
-bool Simulation::onKeyDown(pyc::KeyCode keycode)
+bool Simulation::onKeyDown(art::KeyCode keycode)
 {
     switch (keycode)
     {
-        case pyc::KEY_ESCAPE:
+        case art::KEY_ESCAPE:
             mStop = true;
             return true;
         default:

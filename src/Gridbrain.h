@@ -63,6 +63,13 @@ public:
                 unsigned int yTarg,
                 unsigned int gTarg,
                 float weight);
+    void addConnectionReal(unsigned int xOrig,
+                unsigned int yOrig,
+                unsigned int gOrig,
+                unsigned int xTarg,
+                unsigned int yTarg,
+                unsigned int gTarg,
+                float realWeight);
     void removeConnection(GridbrainConnection* conn);
     void removeConnection(unsigned int xOrig,
                 unsigned int yOrig,
@@ -99,7 +106,7 @@ public:
 
     unsigned int getConnectionsCount(){return mConnectionsCount;}
 
-    virtual void draw(pyc::Layer2D* layer){}
+    virtual void draw(art::Layer2D* layer){}
 
     virtual void mutate();
 
@@ -135,6 +142,7 @@ public:
     int setComponent(lua_State* luaState);
     int addGrid(lua_State* luaState);
     int addConnection(lua_State* luaState);
+    int addConnectionReal(lua_State* luaState);
     int addRandomConnections(lua_State* luaState);
     int setMutateAddConnectionProb(lua_State* luaState);
     int setMutateRemoveConnectionProb(lua_State* luaState);

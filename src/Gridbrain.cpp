@@ -517,6 +517,28 @@ void Gridbrain::addConnection(unsigned int xOrig,
     mConnectionsCount++;
 }
 
+void Gridbrain::addConnectionReal(unsigned int xOrig,
+                unsigned int yOrig,
+                unsigned int gOrig,
+                unsigned int xTarg,
+                unsigned int yTarg,
+                unsigned int gTarg,
+                float realWeight)
+{
+    float weight;
+
+    if (realWeight < 0.0f)
+    {
+        weight = (1.0f / (1.0f - realWeight)) - 1.0f;
+    }
+    else
+    {
+        weight = -(1.0f / (realWeight + 1.0f)) + 1.0f;
+    }
+
+    addConnection(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg, weight);
+}
+
 void Gridbrain::removeConnection(GridbrainConnection* conn)
 {
     GridbrainComponent* comp = (GridbrainComponent*)conn->mOrigComponent;
@@ -1145,6 +1167,7 @@ Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
     {"setComponent", &Gridbrain::setComponent},
     {"addGrid", &Gridbrain::addGrid},
     {"addConnection", &Gridbrain::addConnection},
+    {"addConnectionReal", &Gridbrain::addConnectionReal},
     {"addRandomConnections", &Gridbrain::addRandomConnections},
     {"setMutateAddConnectionProb", &Gridbrain::setMutateAddConnectionProb},
     {"setMutateRemoveConnectionProb", &Gridbrain::setMutateRemoveConnectionProb},
@@ -1201,6 +1224,20 @@ int Gridbrain::addConnection(lua_State* luaState)
     float weight = luaL_checknumber(luaState, 7);
 
     addConnection(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg, weight);
+    return 0;
+}
+
+int Gridbrain::addConnectionReal(lua_State* luaState)
+{
+    unsigned int xOrig = luaL_checkint(luaState, 1);
+    unsigned int yOrig = luaL_checkint(luaState, 2);
+    unsigned int gOrig = luaL_checkint(luaState, 3);
+    unsigned int xTarg = luaL_checkint(luaState, 4);
+    unsigned int yTarg = luaL_checkint(luaState, 5);
+    unsigned int gTarg = luaL_checkint(luaState, 6);
+    float weight = luaL_checknumber(luaState, 7);
+
+    addConnectionReal(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg, weight);
     return 0;
 }
 

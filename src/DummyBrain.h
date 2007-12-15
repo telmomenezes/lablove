@@ -65,7 +65,7 @@ public:
     int addPerception(lua_State* luaState);
     int setChannelName(lua_State* luaState);
 
-    virtual void draw(pyc::Layer2D* layer);
+    virtual void draw(art::Layer2D* layer);
 
 protected:
     vector<list<string>*> mInputInterfacesNames;

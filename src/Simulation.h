@@ -24,9 +24,10 @@
 #include "SimulationObject.h"
 #include "Agent.h"
 #include "PopulationDynamics.h"
-#include "pyc.h"
 #include "Orbit.h"
 #include "RandDistManager.h"
+
+#include "art.h"
 
 #include <list>
 #include <string>
@@ -63,12 +64,12 @@ public:
 
     void setSeedIndex(int index=-1);
 
-    pyc::Pycasso& getPycasso(){return mPycasso;}
+    art::Artist& getArtist(){return mArtist;}
 
-    virtual bool onKeyDown(pyc::KeyCode keycode);
-    virtual bool onKeyUp(pyc::KeyCode keycode){return false;}
-    virtual bool onMouseButtonDown(pyc::MouseButton button, int x, int y){return false;}
-    virtual bool onMouseButtonUp(pyc::MouseButton button, int x, int y){return false;}
+    virtual bool onKeyDown(art::KeyCode keycode);
+    virtual bool onKeyUp(art::KeyCode keycode){return false;}
+    virtual bool onMouseButtonDown(art::MouseButton button, int x, int y){return false;}
+    virtual bool onMouseButtonUp(art::MouseButton button, int x, int y){return false;}
     virtual bool onMouseMove(int x, int y){return false;}
     virtual bool onMouseWheel(bool up){return false;}
 
@@ -100,11 +101,11 @@ protected:
 
     bool mStop;
     
-    pyc::Pycasso mPycasso;
-    pyc::EventQ* mEventQ;
-    pyc::Window* mWindow;
-    pyc::Layer2D* mRootLayer2D;
-    pyc::Layer* mLogo;
+    art::Artist mArtist;
+    art::EventQ* mEventQ;
+    art::Window* mWindow;
+    art::Layer2D* mRootLayer2D;
+    art::Layer* mLogo;
 
     double mInitialRealTime;
     unsigned long mLastSimulationTime;
@@ -114,7 +115,7 @@ protected:
     string mRealTimeText;
     string mCPSText;
 
-    pyc::Font* mFont;
+    art::Font* mFont;
 
     unsigned long mTimeLimit;
 

@@ -43,7 +43,7 @@ Graphic* GraphicSquare::clone()
     return new GraphicSquare();
 }
 
-void GraphicSquare::init(SimulationObject* obj, pyc::Pycasso* pycasso)
+void GraphicSquare::init(SimulationObject* obj, art::Artist* artist)
 {
     mObject = obj;
 
@@ -86,9 +86,9 @@ void GraphicSquare::init(SimulationObject* obj, pyc::Pycasso* pycasso)
     }
 }
 
-void GraphicSquare::draw(pyc::Layer* layer)
+void GraphicSquare::draw(art::Layer* layer)
 {
-    pyc::Layer2D* layer2D = (pyc::Layer2D*)layer;
+    art::Layer2D* layer2D = (art::Layer2D*)layer;
 
     float rot = mObject->mFloatData[mRotIndex];
     float centerX = mObject->mFloatData[mXIndex];

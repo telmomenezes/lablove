@@ -34,11 +34,13 @@ drag = 0.05
 rotFriction = 0.0
 rotDrag = 0.05
 
+feedCenter = 0.25
+
 timeLimit = 0
 
-logTimeInterval = 10
+logTimeInterval = 100
 
-humanAgent = false
+humanAgent = true
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
@@ -63,6 +65,7 @@ sim:setGoForceScale(goForceScale)
 sim:setRotateForceScale(rotateForceScale)
 sim:setSeedIndex(seedIndex)
 sim:setTimeLimit(timeLimit)
+sim:setFeedCenter(feedCenter)
 
 -- Agents
 --------------------------------------------------------------------------------
@@ -161,22 +164,22 @@ brain:setComponent(1, 2, 1, ACT, SimCont2D.ACTION_EATB)
 
 agent:setBrain(brain)
 
-brain:addConnection(0, 0, 0, 3, 0, 0, 0.5)
-brain:addConnection(0, 0, 0, 2, 1, 0, 0.5)
-brain:addConnection(0, 1, 0, 1, 1, 0, 0.16)
-brain:addConnection(0, 1, 0, 2, 2, 0, 0.5)
-brain:addConnection(0, 2, 0, 3, 2, 0, 0.5)
-brain:addConnection(1, 1, 0, 3, 0, 0, 0.5)
-brain:addConnection(1, 1, 0, 0, 0, 1, 0.5)
-brain:addConnection(1, 1, 0, 2, 2, 0, 0.5)
-brain:addConnection(1, 1, 0, 3, 2, 0, 0.5)
-brain:addConnection(2, 1, 0, 3, 1, 0, 0.5)
-brain:addConnection(2, 2, 0, 3, 0, 0, 0.5)
-brain:addConnection(2, 2, 0, 3, 1, 0, 0.5)
-brain:addConnection(3, 0, 0, 1, 0, 1, -0.5)
-brain:addConnection(3, 1, 0, 1, 1, 1, 0.5)
-brain:addConnection(3, 2, 0, 1, 2, 1, 0.5)
-brain:addConnection(0, 0, 1, 1, 0, 1, 0.5)
+brain:addConnectionReal(0, 0, 0, 3, 0, 0, 1.0)
+brain:addConnectionReal(0, 0, 0, 2, 1, 0, 1.0)
+brain:addConnectionReal(0, 1, 0, 1, 1, 0, 0.1 / feedCenter)
+brain:addConnectionReal(0, 1, 0, 2, 2, 0, 1.0)
+brain:addConnectionReal(0, 2, 0, 3, 2, 0, 1.0)
+brain:addConnectionReal(1, 1, 0, 3, 0, 0, 1.0)
+brain:addConnectionReal(1, 1, 0, 0, 0, 1, 1.0)
+brain:addConnectionReal(1, 1, 0, 2, 2, 0, 1.0)
+brain:addConnectionReal(1, 1, 0, 3, 2, 0, 1.0)
+brain:addConnectionReal(2, 1, 0, 3, 1, 0, 1.0)
+brain:addConnectionReal(2, 2, 0, 3, 0, 0, 1.0)
+brain:addConnectionReal(2, 2, 0, 3, 1, 0, 1.0)
+brain:addConnectionReal(3, 0, 0, 1, 0, 1, -1.0)
+brain:addConnectionReal(3, 1, 0, 1, 1, 1, 1.0)
+brain:addConnectionReal(3, 2, 0, 1, 2, 1, 1.0)
+brain:addConnectionReal(0, 0, 1, 1, 0, 1, 1.0)
 
 -- Plants
 --------------------------------------------------------------------------------
@@ -210,9 +213,10 @@ plant:setSymbolName("food", foodTableCode, 0)
 
 graphic = GraphicGradient()
 graphic:setSymbolName("food")
-graphic:setReferenceSymbol(plantFood)
-graphic:setColor1(0, 255, 0)
-graphic:setColor2(255, 0, 0)
+graphic:setReferenceSymbol(agentFeed)
+graphic:setColor1(255, 0, 0)
+graphic:setColor2(0, 255, 0)
+graphic:setCenter(feedCenter)
 
 plant:addGraphic(graphic)
 

@@ -134,7 +134,7 @@ void DummyBrain::cycle()
     }
 }
 
-void DummyBrain::draw(pyc::Layer2D* layer)
+void DummyBrain::draw(art::Layer2D* layer)
 {
     if (!mInputBuffer)
     {

@@ -51,7 +51,7 @@ SimulationObject* GraphicalObject::clone(bool randomize)
     return new GraphicalObject(this);
 }
 
-void GraphicalObject::draw(pyc::Layer* layer)
+void GraphicalObject::draw(art::Layer* layer)
 {
     for (list<Graphic*>::iterator iterGraph = mGraphics.begin();
             iterGraph != mGraphics.end();

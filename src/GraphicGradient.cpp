@@ -61,7 +61,7 @@ Graphic* GraphicGradient::clone()
     return graph;
 }
 
-void GraphicGradient::init(SimulationObject* obj, pyc::Pycasso* pycasso)
+void GraphicGradient::init(SimulationObject* obj, art::Artist* artist)
 {
     mObject = obj;
 
@@ -110,7 +110,7 @@ void GraphicGradient::init(SimulationObject* obj, pyc::Pycasso* pycasso)
     else
     {
         distance -= mCenter;
-        distance /= mCenter * 2.0f;
+        distance /= (1.0f - mCenter) * 2.0f;
         distance += 0.5f;
     }
 
@@ -127,9 +127,9 @@ void GraphicGradient::init(SimulationObject* obj, pyc::Pycasso* pycasso)
     mBlue = mBlue1 + deltaBlue;
 }
 
-void GraphicGradient::draw(pyc::Layer* layer)
+void GraphicGradient::draw(art::Layer* layer)
 {
-    pyc::Layer2D* layer2D = (pyc::Layer2D*)layer;
+    art::Layer2D* layer2D = (art::Layer2D*)layer;
 
     float rot = mObject->mFloatData[mRotIndex];
     float centerX = mObject->mFloatData[mXIndex];

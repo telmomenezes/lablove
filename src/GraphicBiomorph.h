@@ -23,7 +23,7 @@
 #include "Graphic.h"
 #include "Orbit.h"
 
-#include "pyc.h"
+#include "art.h"
 
 class GraphicBiomorph : public Graphic
 {
@@ -33,8 +33,8 @@ public:
     
     virtual Graphic* clone();
 
-    virtual void init(SimulationObject* obj, pyc::Pycasso* pycasso);
-    virtual void draw(pyc::Layer* layer);
+    virtual void init(SimulationObject* obj, art::Artist* artist);
+    virtual void draw(art::Layer* layer);
 
     static const char mClassName[];
     static Orbit<GraphicBiomorph>::MethodType mMethods[];
@@ -64,8 +64,8 @@ protected:
     int mDX[8];
     int mDY[8];
 
-    pyc::Window* mWindow;
-    pyc::Layer2D* mLayer;
+    art::Window* mWindow;
+    art::Layer2D* mLayer;
 };
 #endif
 

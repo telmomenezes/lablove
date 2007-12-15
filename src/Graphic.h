@@ -22,7 +22,7 @@
 
 #include "SimulationObject.h"
 #include "Orbit.h"
-#include "pyc.h"
+#include "art.h"
 
 class Graphic
 {
@@ -32,8 +32,8 @@ public:
 
     virtual Graphic* clone()=0;
 
-    virtual void init(SimulationObject* obj, pyc::Pycasso* pycasso)=0;
-    virtual void draw(pyc::Layer* layer)=0;
+    virtual void init(SimulationObject* obj, art::Artist* artist)=0;
+    virtual void draw(art::Layer* layer)=0;
 
 protected:
     SimulationObject* mObject;

@@ -23,7 +23,7 @@
 #include "SimulationObject.h"
 #include "Graphic.h"
 #include "Orbit.h"
-#include "pyc.h"
+#include "art.h"
 
 #include <list>
 
@@ -37,7 +37,7 @@ public:
     virtual ~GraphicalObject();
     virtual SimulationObject* clone(bool randomize=false);
 
-    void draw(pyc::Layer* layer);
+    void draw(art::Layer* layer);
 
     void addGraphic(Graphic* graph);
 
