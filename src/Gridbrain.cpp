@@ -172,7 +172,8 @@ Brain* Gridbrain::clone(bool randomize)
                 conn->mColumnTarg,
                 conn->mRowTarg,
                 conn->mGridTarg,
-                conn->mWeight);
+                conn->mWeight,
+                conn->mAge + 1.0f);
         }
         conn = (GridbrainConnection*)conn->mNextGlobalConnection;
     }
@@ -203,10 +204,10 @@ void Gridbrain::addGrid(Grid* grid, string name)
 
 void Gridbrain::init()
 {
+    initialCalculations();
+
     if (mComponents == NULL)
     {
-        calcConnectionCounts();
-    
         mComponents = (GridbrainComponent*)malloc(mNumberOfComponents * sizeof(GridbrainComponent));
 
         // Init grids with random components
@@ -242,13 +243,13 @@ void Gridbrain::init()
 
 void Gridbrain::onAdd()
 {
-    initGridsInputOutput();
+    initGridsIO();
     initGridWritePositions();
 }
 
 void Gridbrain::initEmpty()
 {
-    calcConnectionCounts();
+    initialCalculations();
     
     mComponents = (GridbrainComponent*)malloc(mNumberOfComponents * sizeof(GridbrainComponent));
 
@@ -303,93 +304,64 @@ void Gridbrain::setComponent(unsigned int x,
     comp->mTableLinkType = linkType;
 }
 
-void Gridbrain::initGridsInputOutput()
+void Gridbrain::initGridsIO()
 {
     for (unsigned int i = 0; i < mGridsCount; i++)
     {
         Grid* grid = mGridsVec[i];
-        initGridInputOutput(grid);      
-    }
-}
 
-void Gridbrain::initGridInputOutput(Grid* grid, int gPos)
-{
-    grid->removeInputOutput();
-    unsigned int pos = grid->getOffset();
+        grid->removeInputOutput();
+        unsigned int pos = grid->getOffset();
 
     
-    if (grid->getType() == Grid::ALPHA)
-    {
-        list<InterfaceItem*>* interface;
-
-        if (gPos >= 0)
+        if (grid->getType() == Grid::ALPHA)
         {
-            interface = mInputInterfacesVector[gPos];
-            for (list<InterfaceItem*>::iterator iterItem = interface->begin();
-                iterItem != interface->end();
-                iterItem++)
+            list<InterfaceItem*>* interface;
+
+            interface = new list<InterfaceItem*>();
+            mInputInterfacesVector.push_back(interface);
+
+            for (unsigned int j = 0;
+                j < grid->getSize();
+                j++)
             {
-                delete (*iterItem);
+                if (mComponents[pos].mType == GridbrainComponent::PER)
+                {
+                    mComponents[pos].mPerceptionPosition = grid->addPerception(&mComponents[pos]);
+                    InterfaceItem* item = new InterfaceItem();
+                    item->mType = mComponents[pos].mSubType;
+                    item->mOrigSymTable = mComponents[pos].mOrigSymTable;
+                    item->mTargetSymTable = mComponents[pos].mTargetSymTable;
+                    item->mOrigSymIndex = mComponents[pos].mOrigSymIndex;
+                    item->mTargetSymIndex = mComponents[pos].mTargetSymIndex;
+                    item->mTableLinkType = mComponents[pos].mTableLinkType;
+                    interface->push_back(item);
+                }
+
+                pos++;
             }
-            interface->clear();
+
+            grid->initInputMatrix(mMaxInputDepth);
         }
         else
         {
-            interface = new list<InterfaceItem*>();
-            mInputInterfacesVector.push_back(interface);
-        }
-
-        for (unsigned int j = 0;
-            j < grid->getSize();
-            j++)
-        {
-            if (mComponents[pos].mType == GridbrainComponent::PER)
+            for (unsigned int j = 0;
+                j < grid->getSize();
+                j++)
             {
-                mComponents[pos].mPerceptionPosition = grid->addPerception(&mComponents[pos]);
-                InterfaceItem* item = new InterfaceItem();
-                item->mType = mComponents[pos].mSubType;
-                item->mOrigSymTable = mComponents[pos].mOrigSymTable;
-                item->mTargetSymTable = mComponents[pos].mTargetSymTable;
-                item->mOrigSymIndex = mComponents[pos].mOrigSymIndex;
-                item->mTargetSymIndex = mComponents[pos].mTargetSymIndex;
-                item->mTableLinkType = mComponents[pos].mTableLinkType;
-                interface->push_back(item);
+                if (mComponents[pos].mType == GridbrainComponent::ACT)
+                {
+                    mComponents[pos].mActionPosition = grid->addAction(&mComponents[pos]);
+                    InterfaceItem* item = new InterfaceItem();
+                    item->mType = mComponents[pos].mSubType;
+                    mOutputInterface.push_back(item);
+                }
+
+                pos++;
             }
 
-            pos++;
+            grid->initOutputVector();
         }
-
-        grid->initInputMatrix(mMaxInputDepth);
-    }
-    else
-    {
-        if (gPos >= 0)
-        {
-            for (list<InterfaceItem*>::iterator iterItem = mOutputInterface.begin();
-            iterItem != mOutputInterface.end();
-            iterItem++)
-            {
-                delete (*iterItem);
-            }
-            mOutputInterface.clear();
-        }
-
-        for (unsigned int j = 0;
-            j < grid->getSize();
-            j++)
-        {
-            if (mComponents[pos].mType == GridbrainComponent::ACT)
-            {
-                mComponents[pos].mActionPosition = grid->addAction(&mComponents[pos]);
-                InterfaceItem* item = new InterfaceItem();
-                item->mType = mComponents[pos].mSubType;
-                mOutputInterface.push_back(item);
-            }
-
-            pos++;
-        }
-
-        grid->initOutputVector();
     }
 }
 
@@ -424,7 +396,8 @@ void Gridbrain::addConnection(unsigned int xOrig,
                 unsigned int xTarg,
                 unsigned int yTarg,
                 unsigned int gTarg,
-                float weight)
+                float weight,
+                double age)
 {
     Grid* gridOrig = mGridsVec[gOrig];
     Grid* gridTarg = mGridsVec[gTarg];
@@ -468,6 +441,7 @@ void Gridbrain::addConnection(unsigned int xOrig,
     conn->mGridTarg = targComp->mGrid;
     conn->mTarget = target;
     conn->mWeight = weight;
+    conn->mAge = age;
     applyWeight(conn);
     conn->mOrigComponent = comp;
     conn->mFeedForward = true;
@@ -1082,6 +1056,12 @@ Grid* Gridbrain::getGrid(unsigned int number)
     return mGridsVec[number];
 }
 
+void Gridbrain::initialCalculations()
+{
+    calcConnectionCounts();
+    calcConnectionDensities();
+}
+
 void Gridbrain::calcConnectionCounts()
 {
     mTotalPossibleConnections = 0;
@@ -1113,6 +1093,31 @@ void Gridbrain::calcConnectionCounts()
             grid->setColConnCount(col, possibleConnections);
             mTotalPossibleConnections += possibleConnections;
         }
+    }
+}
+
+void Gridbrain::calcConnectionDensities()
+{
+    GridbrainConnection* conn = mConnections;
+    double mAgeToStrengthConstant = 0.5f;
+
+    float totalStrengths[mGridsCount];
+    for (unsigned int i = 0; i < mGridsCount; i++)
+    {
+        totalStrengths[i] = 0.0f;
+    }
+
+    while (conn != NULL)
+    {
+        double age = conn->mAge;
+        double strength = atan(age * mAgeToStrengthConstant) / 1.57079633f;
+        totalStrengths[conn->mGridOrig] += strength;
+        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+    }
+
+    for (unsigned int i = 0; i < mGridsCount; i++)
+    {
+        mGridsVec[i]->mConnDensity = totalStrengths[i] / (double)mGridsVec[i]->getSize();
     }
 }
 

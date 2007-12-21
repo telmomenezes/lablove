@@ -47,16 +47,16 @@ feedCenter = 0.25
 initialConnections = 10
 
 compCount = 1
-bufferSize = 50
+bufferSize = 100
 fitnessAging = 0.1
 
-addConnectionProb = 0.01
-removeConnectionProb = 0.01
-changeWeightProb = 0.01
+addConnectionProb = 0.02
+removeConnectionProb = 0.02
+changeWeightProb = 0.02
 weightMutationStanDev = 1.0
 splitConnectionProb = 0.0
 joinConnectionsProb = 0.0
-changeComponentProb = 0.01
+changeComponentProb = 0.02
 swapComponentProb = 0.0
 
 timeLimit = 0

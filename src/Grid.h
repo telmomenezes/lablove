@@ -84,6 +84,8 @@ public:
     unsigned int getWriteY(){return mWriteY;}
     void setWritePos(unsigned int x, unsigned int y){mWriteX = x; mWriteY = y;}
 
+    double mConnDensity;
+
     static const char mClassName[];
     static Orbit<Grid>::MethodType mMethods[];
     static Orbit<Grid>::NumberGlobalType mNumberGlobals[];

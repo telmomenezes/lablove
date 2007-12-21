@@ -62,7 +62,8 @@ public:
                 unsigned int xTarg,
                 unsigned int yTarg,
                 unsigned int gTarg,
-                float weight);
+                float weight,
+                double age=0.0f);
     void addConnectionReal(unsigned int xOrig,
                 unsigned int yOrig,
                 unsigned int gOrig,
@@ -101,8 +102,6 @@ public:
     void cycle();
     
     Grid* getGrid(unsigned int number);
-
-    void initGridsInputOutput();
 
     unsigned int getConnectionsCount(){return mConnectionsCount;}
 
@@ -164,8 +163,10 @@ public:
     static void debugMutationsCount();
 
 protected:
-    void initGridInputOutput(Grid* grid, int gPos=-1);
+    void initGridsIO();
+    void initialCalculations();
     void calcConnectionCounts();
+    void calcConnectionDensities();
 
     void applyWeight(GridbrainConnection* conn);
 

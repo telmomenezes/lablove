@@ -30,6 +30,7 @@ Agent::Agent(lua_State* luaState) : GraphicalObject()
 Agent::Agent(Agent* agent, bool randomize) : GraphicalObject(agent)
 {
     mBrain = agent->mBrain->clone(randomize);
+    mBrain->init();
 }
 
 Agent::~Agent()
