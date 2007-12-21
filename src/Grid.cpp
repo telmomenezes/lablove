@@ -36,6 +36,7 @@ Grid::Grid(lua_State* luaState)
     mWriteX = 0;
     mWriteY = 0;
     mConnDensity = 0.0f;
+    mAverageJump = 0.0f;
 
     if (luaState)
     {
@@ -59,6 +60,7 @@ Grid::Grid(const Grid& grid)
     mWriteX = 0;
     mWriteY = 0;
     mConnDensity = 0.0f;
+    mAverageJump = 0.0f;
 
     Grid* auxGrid = (Grid*)&grid;
 

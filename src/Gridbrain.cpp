@@ -1102,22 +1102,42 @@ void Gridbrain::calcConnectionDensities()
     double mAgeToStrengthConstant = 0.5f;
 
     float totalStrengths[mGridsCount];
+    float totalJumps[mGridsCount];
+    float totalConnections[mGridsCount];
     for (unsigned int i = 0; i < mGridsCount; i++)
     {
         totalStrengths[i] = 0.0f;
+        totalJumps[i] = 0.0f;
+        totalConnections[i] = 0.0f;
     }
 
     while (conn != NULL)
     {
         double age = conn->mAge;
         double strength = atan(age * mAgeToStrengthConstant) / 1.57079633f;
-        totalStrengths[conn->mGridOrig] += strength;
+
+        if (conn->mGridOrig == conn->mGridTarg)
+        {
+            totalStrengths[conn->mGridOrig] += strength;
+            totalConnections[conn->mGridOrig] += 1.0f;
+            totalJumps[conn->mGridOrig] += fabsf(conn->mColumnTarg - conn->mColumnOrig);
+        }
+        else
+        {
+            totalStrengths[conn->mGridOrig] += strength / 2.0f;
+            totalStrengths[conn->mGridTarg] += strength / 2.0f;
+            totalConnections[conn->mGridOrig] += 0.5f;
+            totalConnections[conn->mGridTarg] += 0.5f;
+            totalJumps[conn->mGridOrig] += (mGridsVec[conn->mGridOrig]->getWidth() - conn->mColumnOrig) / 2.0f;
+            totalJumps[conn->mGridTarg] += conn->mColumnTarg / 2.0f;
+        }
         conn = (GridbrainConnection*)conn->mNextGlobalConnection;
     }
 
     for (unsigned int i = 0; i < mGridsCount; i++)
     {
         mGridsVec[i]->mConnDensity = totalStrengths[i] / (double)mGridsVec[i]->getSize();
+        mGridsVec[i]->mAverageJump = totalJumps[i] / totalConnections[i];
     }
 }
 

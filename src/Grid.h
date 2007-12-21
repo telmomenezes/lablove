@@ -85,6 +85,7 @@ public:
     void setWritePos(unsigned int x, unsigned int y){mWriteX = x; mWriteY = y;}
 
     double mConnDensity;
+    double mAverageJump;
 
     static const char mClassName[];
     static Orbit<Grid>::MethodType mMethods[];
