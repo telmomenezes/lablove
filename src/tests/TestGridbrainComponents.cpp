@@ -472,7 +472,7 @@ TEST_FIXTURE(GridbrainFixture, GridbrainTestTHR11)
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.05);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
     mGridbrain.cycle();
-    CHECK_CLOSE(comp3->mOutput, 0.947368f, 0.0001f);
+    CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainFixture, GridbrainTestTHR12)

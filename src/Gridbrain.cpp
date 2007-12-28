@@ -841,10 +841,13 @@ void Gridbrain::cycle()
                         break;
                     case GridbrainComponent::THR:
                         //printf("THR ");
-                        if ((comp->mInput > GB_THRESHOLD)
-                            || (comp->mInput < -GB_THRESHOLD))
+                        if (comp->mInput > GB_THRESHOLD)
                         {
-                            output = comp->mInput;
+                            output = 1.0f;
+                        }
+                        else if (comp->mInput < -GB_THRESHOLD)
+                        {
+                            output = -1.0f;
                         }
                         else
                         {

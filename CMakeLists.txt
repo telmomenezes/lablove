@@ -124,11 +124,21 @@ INCLUDE_DIRECTORIES(${Lua_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${Artist_INCLUDE_DIR})
 
 ADD_EXECUTABLE(test ${UNIT_TEST_FILES})
-TARGET_LINK_LIBRARIES(test llove ${Artist_LIBRARIES} ${Lua_LIBRARIES} dl)
+SET(LINK_LIBS ${LINK_LIBS} ${Artist_LIBRARIES} ${Lua_LIBRARIES} dl)
+
 
 ADD_CUSTOM_COMMAND(TARGET test POST_BUILD COMMAND "./test")
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    INCLUDE_DIRECTORIES("/usr/local/include/SDL")
-    SET_TARGET_PROPERTIES(lablove test PROPERTIES LINK_FLAGS "-L/usr/local/lib -lfreetype /usr/local/lib/libSDLmain.a /usr/local/lib/libSDL.a -Wl,-framework,OpenGL -Wl,-framework,Cocoa -Wl,-framework,QuickTime -Wl,-framework,ApplicationServices -Wl,-framework,Carbon -Wl,-framework,AudioToolbox -Wl,-framework,AudioUnit -Wl,-framework,IOKit")
+    INCLUDE(CMakeModules/FindFreeType.cmake)
+    INCLUDE(${CMAKE_ROOT}/Modules/FindSDL.cmake)
+    INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIR})
+    INCLUDE_DIRECTORIES(${FREETYPE_INCLUDE_DIR_freetype2})
+    SET(LINK_LIBS ${LINK_LIBS} ${FREETYPE_LIBRARY} ${SDL_LIBRARY})
+    SET_TARGET_PROPERTIES(llove lablove test PROPERTIES LINK_FLAGS "-Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib")
 ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
+TARGET_LINK_LIBRARIES(llove ${LINK_LIBS})
+TARGET_LINK_LIBRARIES(lablove llove ${LINK_LIBS})
+TARGET_LINK_LIBRARIES(test llove ${LINK_LIBS})
+

@@ -1,3 +1,5 @@
+dofile("experiments/aux/basic_defines.lua")
+
 numberOfPlants = 100
 numberOfAgents = 100
 
@@ -148,11 +150,11 @@ function addAgentSpecies(red, green, blue, feed, food)
     brain:setWeightMutationStanDev(weightMutationStanDev)
 
     perSet = GridbrainComponentSet()
-    perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_POSITION)
-    perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_DISTANCE)
-    --perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_IN_CONTACT)
-    perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 0, 1)
-    perSet:addComponent(GridbrainComponent.PER, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 1, 0)
+    perSet:addComponent(PER, SimCont2D.PERCEPTION_POSITION)
+    perSet:addComponent(PER, SimCont2D.PERCEPTION_DISTANCE)
+    perSet:addComponent(PER, SimCont2D.PERCEPTION_TARGET)
+    perSet:addComponent(PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, 0, feedTableCode, 1)
+    perSet:addComponent(PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, 1, feedTableCode, 0)
 
     alphaSet = GridbrainComponentSet()
     if THR then
@@ -244,9 +246,9 @@ dummyBrain:setChannelName(0, "objects")
 dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
 dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
 dummyBrain:addPerception("Contact", 0, SimCont2D.PERCEPTION_IN_CONTACT)
-dummyBrain:addPerception("Color", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, colorTableCode, 0, 0)
-dummyBrain:addPerception("Food", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 0, 1)
-dummyBrain:addPerception("Predator", 0, SimCont2D.PERCEPTION_OBJECT_FEATURE, feedTableCode, 1, 0)
+dummyBrain:addPerception("Color", 0, SimCont2D.PERCEPTION_SYMBOL, colorTableCode, 0, colorTableCode, 0)
+dummyBrain:addPerception("Food", 0, SimCont2D.PERCEPTION_SYMBOL, feedTableCode, 0, feedTableCode, 1)
+dummyBrain:addPerception("Predator", 0, SimCont2D.PERCEPTION_SYMBOL, feedTableCode, 1, feedTableCode, 0)
 
 human:setBrain(dummyBrain)
 
