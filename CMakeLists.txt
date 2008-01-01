@@ -69,13 +69,6 @@ SET(SOURCE_FILES
     src/mtwist/mtwist.c
     src/mtwist/randistrs.c)
 
-
-ADD_LIBRARY(llove SHARED ${SOURCE_FILES})
-TARGET_LINK_LIBRARIES(llove llove ${Artist_LIBRARIES} ${Lua_LIBRARIES} dl)
-
-ADD_EXECUTABLE(lablove src/main.cpp)
-TARGET_LINK_LIBRARIES(lablove llove ${Artist_LIBRARIES} ${Lua_LIBRARIES} dl)
-
 SET(UNIT_TEST_FILES
     src/UnitTest++/AssertException.cpp
     src/UnitTest++/Test.cpp
@@ -117,15 +110,24 @@ SET(UNIT_TEST_FILES
         src/tests/TestSymbolFixedString.cpp
         src/tests/TestSymbolFloat.cpp)
 
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    SET(EXTRA_SRC_FILES ${EXTRA_SRC_FILES} src/MacOSXSDL/SDLMain.m)
+ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
 INCLUDE_DIRECTORIES("src")
 INCLUDE_DIRECTORIES("src/UnitTest++")
 INCLUDE_DIRECTORIES("src/mtwist")
 INCLUDE_DIRECTORIES(${Lua_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${Artist_INCLUDE_DIR})
 
+ADD_LIBRARY(llove SHARED ${SOURCE_FILES})
+TARGET_LINK_LIBRARIES(llove llove ${Artist_LIBRARIES} ${Lua_LIBRARIES} dl)
+
+ADD_EXECUTABLE(lablove ${EXTRA_SRC_FILES} src/main.cpp)
+TARGET_LINK_LIBRARIES(lablove llove ${Artist_LIBRARIES} ${Lua_LIBRARIES} dl)
+
 ADD_EXECUTABLE(test ${UNIT_TEST_FILES})
 SET(LINK_LIBS ${LINK_LIBS} ${Artist_LIBRARIES} ${Lua_LIBRARIES} dl)
-
 
 ADD_CUSTOM_COMMAND(TARGET test POST_BUILD COMMAND "./test")
 
