@@ -61,7 +61,7 @@ Graphic* GraphicGradient::clone()
     return graph;
 }
 
-void GraphicGradient::init(SimulationObject* obj, art::Artist* artist)
+void GraphicGradient::init(SimulationObject* obj)
 {
     mObject = obj;
 
@@ -127,18 +127,16 @@ void GraphicGradient::init(SimulationObject* obj, art::Artist* artist)
     mBlue = mBlue1 + deltaBlue;
 }
 
-void GraphicGradient::draw(art::Layer* layer)
+void GraphicGradient::draw()
 {
-    art::Layer2D* layer2D = (art::Layer2D*)layer;
-
     float rot = mObject->mFloatData[mRotIndex];
     float centerX = mObject->mFloatData[mXIndex];
     float centerY = mObject->mFloatData[mYIndex];
 
-    layer2D->setRotation(centerX, centerY, rot);
-    layer2D->setColor(mRed, mGreen, mBlue);
-    layer2D->fillSquare(centerX, centerY, mSize);
-    layer2D->clearRotation();
+    art_setRotation(centerX, centerY, rot);
+    art_setColor(mRed, mGreen, mBlue, 255);
+    art_fillSquare(centerX, centerY, mSize);
+    art_clearRotation();
 }
 
 const char GraphicGradient::mClassName[] = "GraphicGradient";

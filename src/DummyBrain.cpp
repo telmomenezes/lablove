@@ -134,14 +134,14 @@ void DummyBrain::cycle()
     }
 }
 
-void DummyBrain::draw(art::Layer2D* layer)
+void DummyBrain::draw()
 {
     if (!mInputBuffer)
     {
         return;
     }
 
-    layer->setColor(50, 50, 50);
+    art_setColor(50, 50, 50, 255);
 
     char text[255];
     float y = 15.0f;
@@ -156,14 +156,14 @@ void DummyBrain::draw(art::Layer2D* layer)
                 iterInterface != mInputInterfacesVector[chan]->end();
                 iterInterface++)
         {
-            layer->drawText(10, y, *iterName);
+            art_drawText(10, y, (char*)(*iterName).c_str());
 
             float x = 100.0f;
             for (unsigned int depth = 0; depth < mLastInputDepths[chan]; depth++)
             {
                 unsigned int offset = (mOffsetsVector[chan] * 50) + (depth * perceptionCount) + perception;
                 sprintf(text, "%f", mInputBuffer[offset]);
-                layer->drawText(x, y, text);
+                art_drawText(x, y, text);
                 x += 100.0f;
             }
 

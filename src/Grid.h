@@ -22,6 +22,7 @@
 
 #include "ScriptableObject.h"
 #include "GridbrainComponentSet.h"
+#include "RandDistManager.h"
 #include "Orbit.h"
 
 #include <vector>
@@ -48,9 +49,7 @@ public:
     unsigned int getHeight(){return mHeight;}
     unsigned int getSize(){return mSize;}
 
-    void addComponentSet(GridbrainComponentSet* componentSet,
-                            int startColumn=-1,
-                            int endColumn=-1);
+    void setComponentSet(GridbrainComponentSet* componentSet);
 
     void setNumber(unsigned int number){mNumber = number;}
     unsigned int getNumber(){return mNumber;}
@@ -58,7 +57,7 @@ public:
     void setOffset(unsigned int offset){mOffset = offset;}
     
     unsigned int getOffset(){return mOffset;}
-    GridbrainComponent* getRandomComponent(unsigned int pos);
+    GridbrainComponent* getRandomComponent();
     void setInput(unsigned int number, unsigned int depth, float value);
     unsigned int addPerception(GridbrainComponent* per);
     unsigned int addAction(GridbrainComponent* act);
@@ -84,17 +83,25 @@ public:
     unsigned int getWriteY(){return mWriteY;}
     void setWritePos(unsigned int x, unsigned int y){mWriteX = x; mWriteY = y;}
 
+    void addRowOrColumn();
+
     double mConnDensity;
     double mAverageJump;
+
+    int mNewRow;
+    int mNewColumn;
+    bool mAddRowOrColumn;
 
     static const char mClassName[];
     static Orbit<Grid>::MethodType mMethods[];
     static Orbit<Grid>::NumberGlobalType mNumberGlobals[];
 
-    int addComponentSet(lua_State* luaState);
+    int setComponentSet(lua_State* luaState);
     int init(lua_State* luaState);
 
 protected:
+    static mt_distribution* mDistRowsAndColumns;
+
     Type mType;
     unsigned int mNumber;
     unsigned int mWidth;
@@ -109,8 +116,7 @@ protected:
     float* mInputMatrix;
     float* mOutputVector;
 
-    list<GridbrainComponentSet*> mComponentSetsList;
-    vector<GridbrainComponentSet*> mComponentSetByColumn;
+    GridbrainComponentSet* mComponentSet;
 
     vector<GridbrainComponent*> mPerceptionsVec;
     vector<GridbrainComponent*> mActionsVec;

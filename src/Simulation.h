@@ -64,12 +64,10 @@ public:
 
     void setSeedIndex(int index=-1);
 
-    art::Artist& getArtist(){return mArtist;}
-
-    virtual bool onKeyDown(art::KeyCode keycode);
-    virtual bool onKeyUp(art::KeyCode keycode){return false;}
-    virtual bool onMouseButtonDown(art::MouseButton button, int x, int y){return false;}
-    virtual bool onMouseButtonUp(art::MouseButton button, int x, int y){return false;}
+    virtual bool onKeyDown(Art_KeyCode keycode);
+    virtual bool onKeyUp(Art_KeyCode keycode){return false;}
+    virtual bool onMouseButtonDown(Art_MouseButton button, int x, int y){return false;}
+    virtual bool onMouseButtonUp(Art_MouseButton button, int x, int y){return false;}
     virtual bool onMouseMove(int x, int y){return false;}
     virtual bool onMouseWheel(bool up){return false;}
 
@@ -101,11 +99,7 @@ protected:
 
     bool mStop;
     
-    art::Artist mArtist;
-    art::EventQ* mEventQ;
-    art::Window* mWindow;
-    art::Layer2D* mRootLayer2D;
-    art::Layer* mLogo;
+    Art_Layer* mLogo;
 
     double mInitialRealTime;
     unsigned long mLastSimulationTime;
@@ -115,7 +109,7 @@ protected:
     string mRealTimeText;
     string mCPSText;
 
-    art::Font* mFont;
+    Art_Font* mFont;
 
     unsigned long mTimeLimit;
 

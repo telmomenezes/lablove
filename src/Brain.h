@@ -53,7 +53,7 @@ public:
     virtual float* getOutputBuffer()=0;
     virtual void cycle()=0;
     virtual void mutate()=0;
-    virtual void draw(art::Layer2D* layer)=0;
+    virtual void draw()=0;
 
     virtual float getFieldValue(string fieldName){return 0.0f;}
 

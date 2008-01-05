@@ -26,6 +26,7 @@ GridbrainComponent::GridbrainComponent(lua_State* luaState)
     clearDefinitions();
     clearPosition();
     clearConnections();
+    clearMetrics();
 }
 
 GridbrainComponent::~GridbrainComponent()
@@ -63,6 +64,11 @@ void GridbrainComponent::clearConnections()
 {
     mConnectionsCount = 0;
     mFirstConnection = NULL;
+}
+
+void GridbrainComponent::clearMetrics()
+{
+    mConnectionStrength = 0.0f;
 }
 
 void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)

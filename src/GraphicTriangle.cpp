@@ -43,7 +43,7 @@ Graphic* GraphicTriangle::clone()
     return new GraphicTriangle();
 }
 
-void GraphicTriangle::init(SimulationObject* obj, art::Artist* artist)
+void GraphicTriangle::init(SimulationObject* obj)
 {
     mObject = obj;
 
@@ -84,10 +84,8 @@ void GraphicTriangle::init(SimulationObject* obj, art::Artist* artist)
     }
 }
 
-void GraphicTriangle::draw(art::Layer* layer)
+void GraphicTriangle::draw()
 {
-    art::Layer2D* layer2D = (art::Layer2D*)layer;
-
     float rot = mObject->mFloatData[mRotIndex];
     float centerX = mObject->mFloatData[mXIndex];
     float centerY = mObject->mFloatData[mYIndex];
@@ -102,10 +100,10 @@ void GraphicTriangle::draw(art::Layer* layer)
     float x3 = centerX + (cosf(a3) * mSize);
     float y3 = centerY + (sinf(a3) * mSize);
 
-    layer2D->setColor(mRed, mGreen, mBlue);
-    layer2D->setLineWidth(2.0f);
-    layer2D->fillTriangle(x1, y1, x2, y2, x3, y3);
-    layer2D->drawTriangle(x1, y1, x2, y2, x3, y3);
+    art_setColor(mRed, mGreen, mBlue, 255);
+    art_setLineWidth(2.0f);
+    art_fillTriangle(x1, y1, x2, y2, x3, y3);
+    art_drawTriangle(x1, y1, x2, y2, x3, y3);
 }
 
 const char GraphicTriangle::mClassName[] = "GraphicTriangle";

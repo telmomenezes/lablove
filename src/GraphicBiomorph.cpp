@@ -67,7 +67,7 @@ GraphicBiomorph::~GraphicBiomorph()
         mY2Points = NULL;
     }
 
-    mWindow->removeLayer(mLayer);
+    art_removeLayer(mLayer);
 }
 
 Graphic* GraphicBiomorph::clone()
@@ -75,10 +75,9 @@ Graphic* GraphicBiomorph::clone()
     return new GraphicBiomorph();
 }
 
-void GraphicBiomorph::init(SimulationObject* obj, art::Artist* artist)
+void GraphicBiomorph::init(SimulationObject* obj)
 {
-    mWindow = artist->getWindow();
-    mLayer = mWindow->createLayer2D(128, 128);
+    mLayer = art_createLayer(128, 128);
 
     mObject = obj;
 
@@ -230,13 +229,16 @@ void GraphicBiomorph::init(SimulationObject* obj, art::Artist* artist)
 
     float spacing = mParameters[10];
 
-    mLayer->setColor(mRed, mGreen, mBlue);
-    mLayer->setLineWidth(5.0f);
+    art_drawToLayer(mLayer);
+    art_setColor(mRed, mGreen, mBlue, 255);
+    art_setLineWidth(5.0f);
 
     for (unsigned int i = 0; i < segments; i++)
     {
         calcTree(0, -i * spacing, branching, 2);
     }
+
+    art_drawToRoot();
 
     normalizePoints();
 }
@@ -348,10 +350,10 @@ void GraphicBiomorph::normalizePoints()
         mX2Points[i] += startX;
         mY2Points[i] += startY;
 
-        mLayer->drawLine(mX1Points[i],
-                            mY1Points[i],
-                            mX2Points[i],
-                            mY2Points[i]);
+        art_drawLine(mX1Points[i],
+                        mY1Points[i],
+                        mX2Points[i],
+                        mY2Points[i]);
 
         mX1Points[i] *= mSize;
         mY1Points[i] *= mSize;
@@ -360,10 +362,8 @@ void GraphicBiomorph::normalizePoints()
     }
 }
 
-void GraphicBiomorph::draw(art::Layer* layer)
+void GraphicBiomorph::draw()
 {
-    art::Layer2D* layer2D = (art::Layer2D*)layer;
-
     float rot = mObject->mFloatData[mRotIndex];
     float centerX = mObject->mFloatData[mXIndex];
     float centerY = mObject->mFloatData[mYIndex];
@@ -371,10 +371,10 @@ void GraphicBiomorph::draw(art::Layer* layer)
     float side = mSize * 3;
     float halfSide = side / 2;
 
-    layer2D->setColor(255, 255, 255);
-    layer2D->setRotation(centerX, centerY, rot - (M_PI / 2.0f));
-    layer2D->drawLayer(mLayer, centerX - halfSide, centerY - halfSide, side, side);
-    layer2D->clearRotation();
+    art_setColor(255, 255, 255, 255);
+    art_setRotation(centerX, centerY, rot - (M_PI / 2.0f));
+    art_drawScaledLayer(mLayer, centerX - halfSide, centerY - halfSide, side, side);
+    art_clearRotation();
 }
 
 const char GraphicBiomorph::mClassName[] = "GraphicBiomorph";

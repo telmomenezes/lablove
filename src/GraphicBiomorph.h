@@ -33,8 +33,8 @@ public:
     
     virtual Graphic* clone();
 
-    virtual void init(SimulationObject* obj, art::Artist* artist);
-    virtual void draw(art::Layer* layer);
+    virtual void init(SimulationObject* obj);
+    virtual void draw();
 
     static const char mClassName[];
     static Orbit<GraphicBiomorph>::MethodType mMethods[];
@@ -64,8 +64,7 @@ protected:
     int mDX[8];
     int mDY[8];
 
-    art::Window* mWindow;
-    art::Layer2D* mLayer;
+    Art_Layer* mLayer;
 };
 #endif
 

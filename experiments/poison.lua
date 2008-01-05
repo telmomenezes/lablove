@@ -187,7 +187,7 @@ alphaSet:addComponent(PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCod
 
 grid = Grid()
 grid:init(ALPHA, alphaWidth, alphaHeight)
-grid:addComponentSet(alphaSet)
+grid:setComponentSet(alphaSet)
 
 brain:addGrid(grid, "objects");
 
@@ -201,7 +201,7 @@ betaSet:addComponent(ACT, SimCont2D.ACTION_EATB)
     
 grid2 = Grid()
 grid2:init(BETA, betaWidth, betaHeight)
-grid2:addComponentSet(betaSet)
+grid2:setComponentSet(betaSet)
 
 brain:addGrid(grid2, "beta")
 

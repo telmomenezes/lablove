@@ -59,7 +59,7 @@ public:
 
     unsigned long getID(){return mID;}
 
-    virtual void draw(art::Layer* layer){}
+    virtual void draw(){}
 
     unsigned int getSpeciesID(){return mSpeciesID;}
     void setSpeciesID(unsigned int id){mSpeciesID = id;}

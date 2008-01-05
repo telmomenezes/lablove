@@ -86,13 +86,13 @@ Brain* Gridbrain::clone(bool randomize)
     Gridbrain* gb = new Gridbrain();
 
     gb->mMaxInputDepth = mMaxInputDepth;
-    gb->mNumberOfComponents = mNumberOfComponents;
+    gb->mNumberOfComponents = 0;
     gb->mConnections = NULL;
     gb->mConnectionsCount = 0;
-    gb->mGridsCount = mGridsCount;
-    gb->mFirstBetaIndex = mFirstBetaIndex;
-    gb->mTotalPossibleConnections = mTotalPossibleConnections;
-    gb->mBetaComponentsCount = mBetaComponentsCount;
+    gb->mGridsCount = 0;
+    gb->mFirstBetaIndex = 0;
+    gb->mTotalPossibleConnections = 0;
+    gb->mBetaComponentsCount = 0;
     gb->mRecurrentAllowed = mRecurrentAllowed;
 
     gb->mMutateAddConnectionProb = mMutateAddConnectionProb;
@@ -106,43 +106,14 @@ Brain* Gridbrain::clone(bool randomize)
     for (unsigned int i = 0; i < mGridsCount; i++)
     {
         Grid* grid = mGridsVec[i];
-        gb->mGridsVec.push_back(new Grid(*grid));
-    }
+        Grid* newGrid = new Grid(*grid);
 
-    gb->mComponents = (GridbrainComponent*)malloc(mNumberOfComponents * sizeof(GridbrainComponent));
-
-    unsigned int index = 0;
-
-    for (unsigned int i = 0; i < mGridsCount; i++)
-    {
-        Grid* grid = mGridsVec[i];
-
-        for (unsigned int x = 0;
-            x < grid->getWidth();
-            x++)
+        if (grid->mAddRowOrColumn)
         {
-            for (unsigned int y = 0;
-                y < grid->getHeight();
-                y++)
-            {
-                gb->mComponents[index].clearDefinitions();
-                gb->mComponents[index].clearPosition();
-                gb->mComponents[index].clearConnections();
-
-                if (randomize)
-                {
-                    GridbrainComponent* comp = grid->getRandomComponent(index);
-                    gb->mComponents[index].copyDefinitions(comp);
-                }
-                else
-                {
-                    gb->mComponents[index].copyDefinitions(&mComponents[index]);
-                }
-                gb->mComponents[index].copyPosition(&mComponents[index]);
-
-                index++;
-            }
+            newGrid->addRowOrColumn();
         }
+
+        gb->addGrid(newGrid, "");
     }
 
     for (map<string, int>::iterator iterChannel = mChannels.begin();
@@ -150,6 +121,59 @@ Brain* Gridbrain::clone(bool randomize)
             iterChannel++)
     {
         gb->mChannels[(*iterChannel).first] = (*iterChannel).second;
+    }
+
+    gb->calcConnectionCounts();
+
+    gb->mComponents = (GridbrainComponent*)malloc(gb->mNumberOfComponents * sizeof(GridbrainComponent));
+
+    unsigned int newIndex = 0;
+    unsigned int oldIndex = 0;
+
+    for (unsigned int i = 0; i < mGridsCount; i++)
+    {
+        Grid* grid = mGridsVec[i];
+        Grid* newGrid = gb->mGridsVec[i];
+
+        for (unsigned int x = 0;
+            x < newGrid->getWidth();
+            x++)
+        {
+            for (unsigned int y = 0;
+                y < newGrid->getHeight();
+                y++)
+            {
+                gb->mComponents[newIndex].clearDefinitions();
+                gb->mComponents[newIndex].clearConnections();
+                gb->mComponents[newIndex].clearMetrics();
+                
+                if ((x == newGrid->mNewColumn)
+                    || (y == newGrid->mNewRow))
+                {
+                    GridbrainComponent* comp = grid->getRandomComponent();
+                    gb->mComponents[newIndex].copyDefinitions(comp);
+                }
+                else
+                {
+                    if (randomize)
+                    {
+                        GridbrainComponent* comp = grid->getRandomComponent();
+                        gb->mComponents[newIndex].copyDefinitions(comp);
+                    }
+                    else
+                    {
+                        gb->mComponents[newIndex].copyDefinitions(&mComponents[oldIndex]);
+                    }
+
+                    oldIndex++;
+                }
+                gb->mComponents[newIndex].mOffset = newIndex;
+                gb->mComponents[newIndex].mColumn = x;
+                gb->mComponents[newIndex].mRow = y;
+                gb->mComponents[newIndex].mGrid = i;
+                newIndex++;
+            }
+        }
     }
 
     GridbrainConnection* conn = mConnections;
@@ -161,16 +185,40 @@ Brain* Gridbrain::clone(bool randomize)
         }
         else
         {
-            if ((conn->mGridOrig == conn->mGridTarg) && (conn->mColumnOrig >= conn->mColumnTarg))
+            int rowOrig = conn->mRowOrig;
+            int rowTarg = conn->mRowTarg;
+            int columnOrig = conn->mColumnOrig;
+            int columnTarg = conn->mColumnTarg;
+
+            Grid* gridOrig = gb->mGridsVec[conn->mGridOrig];
+            Grid* gridTarg = gb->mGridsVec[conn->mGridTarg];
+
+            if ((gridOrig->mNewColumn >= 0)
+                && (columnOrig >= gridOrig->mNewColumn))
             {
-                
+                columnOrig++;
+            }
+            if ((gridTarg->mNewColumn >= 0)
+                && (columnTarg >= gridTarg->mNewColumn))
+            {
+                columnTarg++;
+            }
+            if ((gridOrig->mNewRow >= 0)
+                && (rowOrig >= gridOrig->mNewRow))
+            {
+                rowOrig++;
+            }
+            if ((gridTarg->mNewRow >= 0)
+                && (rowTarg >= gridTarg->mNewRow))
+            {
+                rowTarg++;
             }
 
-            gb->addConnection(conn->mColumnOrig,
-                conn->mRowOrig,
+            gb->addConnection(columnOrig,
+                rowOrig,
                 conn->mGridOrig,
-                conn->mColumnTarg,
-                conn->mRowTarg,
+                columnTarg,
+                rowTarg,
                 conn->mGridTarg,
                 conn->mWeight,
                 conn->mAge + 1.0f);
@@ -204,7 +252,7 @@ void Gridbrain::addGrid(Grid* grid, string name)
 
 void Gridbrain::init()
 {
-    initialCalculations();
+    calcConnectionCounts();
 
     if (mComponents == NULL)
     {
@@ -226,7 +274,8 @@ void Gridbrain::init()
                     y++)
                 {
                     mComponents[pos].clearConnections();
-                    GridbrainComponent* comp = grid->getRandomComponent(pos);
+                    mComponents[pos].clearMetrics();
+                    GridbrainComponent* comp = grid->getRandomComponent();
                     mComponents[pos].copyDefinitions(comp);
 
                     mComponents[pos].mOffset = pos;
@@ -245,11 +294,12 @@ void Gridbrain::onAdd()
 {
     initGridsIO();
     initGridWritePositions();
+    calcConnectionDensities();
 }
 
 void Gridbrain::initEmpty()
 {
-    initialCalculations();
+    calcConnectionCounts();
     
     mComponents = (GridbrainComponent*)malloc(mNumberOfComponents * sizeof(GridbrainComponent));
 
@@ -270,6 +320,7 @@ void Gridbrain::initEmpty()
             {
                 mComponents[pos].clearConnections();
                 mComponents[pos].clearDefinitions();
+                mComponents[pos].clearMetrics();
 
                 mComponents[pos].mOffset = pos;
                 mComponents[pos].mColumn = x;
@@ -1059,12 +1110,6 @@ Grid* Gridbrain::getGrid(unsigned int number)
     return mGridsVec[number];
 }
 
-void Gridbrain::initialCalculations()
-{
-    calcConnectionCounts();
-    calcConnectionDensities();
-}
-
 void Gridbrain::calcConnectionCounts()
 {
     mTotalPossibleConnections = 0;
@@ -1102,7 +1147,8 @@ void Gridbrain::calcConnectionCounts()
 void Gridbrain::calcConnectionDensities()
 {
     GridbrainConnection* conn = mConnections;
-    double mAgeToStrengthConstant = 0.5f;
+    double mAgeToStrengthConstant = 0.02f;
+    double mMinimumFreeComponentRatio = 0.25f;
 
     float totalStrengths[mGridsCount];
     float totalJumps[mGridsCount];
@@ -1134,13 +1180,41 @@ void Gridbrain::calcConnectionDensities()
             totalJumps[conn->mGridOrig] += (mGridsVec[conn->mGridOrig]->getWidth() - conn->mColumnOrig) / 2.0f;
             totalJumps[conn->mGridTarg] += conn->mColumnTarg / 2.0f;
         }
+
+        getComponent(conn->mColumnOrig, conn->mRowOrig, conn->mGridOrig)->mConnectionStrength += strength;
+        getComponent(conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg)->mConnectionStrength += strength;
+
         conn = (GridbrainConnection*)conn->mNextGlobalConnection;
     }
 
     for (unsigned int i = 0; i < mGridsCount; i++)
     {
-        mGridsVec[i]->mConnDensity = totalStrengths[i] / (double)mGridsVec[i]->getSize();
-        mGridsVec[i]->mAverageJump = totalJumps[i] / totalConnections[i];
+        Grid* grid = mGridsVec[i];
+        grid->mConnDensity = totalStrengths[i] / (double)grid->getSize();
+        grid->mAverageJump = totalJumps[i] / totalConnections[i];
+
+        unsigned int startOffset = grid->getOffset();
+        unsigned int endOffset = startOffset + grid->getSize();
+
+        float freeComponents = 0.0f;
+
+        for (unsigned int pos = startOffset;
+            pos < endOffset;
+            pos++)
+        {
+            if (mComponents[pos].mConnectionStrength < 0.5f)
+            {
+                freeComponents += 1.0f;
+            }
+        }
+
+        float freeComponentRatio = freeComponents / ((float)grid->getSize());
+
+        if (freeComponentRatio <= mMinimumFreeComponentRatio)
+        {
+            grid->mAddRowOrColumn = true;
+        }
+        printf("freeComponentRatio[%d] => %f (%f)\n", i, freeComponentRatio, freeComponents);
     }
 }
 

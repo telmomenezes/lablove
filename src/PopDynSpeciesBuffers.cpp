@@ -100,8 +100,11 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
 
     vector<SimulationObject*>::iterator iterOrg;
 
+    bool deleteObj = true;
+    bool keepComparing = true;
+
     // Buffer replacements
-    for (unsigned int i = 0; i < mCompCount; i++)
+    for (unsigned int i = 0; (i < mCompCount) && keepComparing; i++)
     {
         unsigned int organismNumber = mDistOrganism->iuniform(0, species->mBufferSize);
 
@@ -109,10 +112,10 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
 
         if (org->mFitness > org2->mFitness)
         {
-            SimulationObject* orgClone = org->clone();
-            orgClone->mFitness = org->mFitness;
             delete species->mOrganismVector[organismNumber];
-            species->mOrganismVector[organismNumber] = orgClone;
+            species->mOrganismVector[organismNumber] = org;
+            deleteObj = false;
+            keepComparing = false;
         }
         else
         {
@@ -121,7 +124,7 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
     }
 
     // Remove
-    mPopManager->removeObject(org);
+    mPopManager->removeObject(org, deleteObj);
 
     // Replace
     mutateAndSend(speciesID);

@@ -34,10 +34,6 @@ Simulation::Simulation(lua_State* luaState)
 
     mStop = false;
 
-    mWindow = NULL;
-    mRootLayer2D = NULL;
-    mEventQ = NULL;
-
     mLastSimulationTime = 0;
     mLastRealTime = 0.0f;
     mCPS = 0.0f;
@@ -65,20 +61,13 @@ void Simulation::initGraphics(unsigned int width,
                                 bool fullScreen,
                                 bool noGraphics)
 {
-    if (noGraphics)
-    {
-        mArtist.setPreferredSystem(art::SYSTEM_NULL);
-    }
+    art_initSimple(width, height, fullScreen);
 
-    mWindow = mArtist.createWindow(width, height, fullScreen);
-    mEventQ = mArtist.createEventQ();
-    mRootLayer2D = mWindow->getRootLayer2D();
+    mLogo = art_loadImage("media/lablove_small.png");
 
-    mLogo = mWindow->loadImage("media/lablove_small.png");
+    art_setWinTitle("LabLOVE");
 
-    mWindow->setTitle("LabLOVE");
-
-    if (!mWindow->isReal())
+    if (strcmp(art_systemName(), "Null") == 0)
     {
         mDrawGraphics = false;
     }
@@ -86,7 +75,7 @@ void Simulation::initGraphics(unsigned int width,
 
 void Simulation::run()
 {
-    mInitialRealTime = mArtist.getTime();
+    mInitialRealTime = art_getTime();
 
     mPopulationDynamics->init(this);
 
@@ -106,7 +95,7 @@ void Simulation::cycle()
 
     bool drawThisCycle = false;
 
-    double realTime = mArtist.getTime();
+    double realTime = art_getTime();
     if (realTime - mLastDrawTime >= mFrameDuration)
     {
         mLastDrawTime = realTime;
@@ -146,7 +135,7 @@ void Simulation::cycle()
     
         if (draw)
         {
-            obj->draw(mRootLayer2D);
+            obj->draw();
         }
     }
 
@@ -155,49 +144,49 @@ void Simulation::cycle()
         drawAfterObjects();
     }
 
-    mPopulationDynamics->onCycle(mSimulationTime, mArtist.getTime());
+    mPopulationDynamics->onCycle(mSimulationTime, art_getTime());
 
-    mRootLayer2D->setColor(255, 255, 255, 200);
-    mRootLayer2D->drawLayer(mLogo, 0, 0);
-    mRootLayer2D->fillRectangle(122, 0, mWindow->getWidth() - 122, 50);
+    art_setColor(255, 255, 255, 200);
+    art_drawLayer(mLogo, 0, 0);
+    art_fillRectangle(122, 0, art_getWinWidth() - 122, 50);
     drawTimes();
 
     if (draw)
     {
-        mWindow->update();
+        art_update();
     }
 
     mSimulationTime++;
 
     // Process events
-    while (mEventQ->next())
+    while (art_nextEvent())
     {
-        switch (mEventQ->getType())
+        switch (art_getEventType())
         {
-        case art::EVENT_KEY_DOWN:
-            onKeyDown(mEventQ->getKeyCode());
+        case ART_EVENT_KEY_DOWN:
+            onKeyDown(art_getKeyCode());
             break;
-        case art::EVENT_KEY_UP:
-            onKeyUp(mEventQ->getKeyCode());
+        case ART_EVENT_KEY_UP:
+            onKeyUp(art_getKeyCode());
             break;
-        case art::EVENT_MOUSE_BUTTON_DOWN:
-            onMouseButtonDown(mEventQ->getMouseButton(),
-                                mEventQ->getMousePosX(),
-                                mEventQ->getMousePosY());
+        case ART_EVENT_MOUSE_BUTTON_DOWN:
+            onMouseButtonDown(art_getMouseButton(),
+                                art_getMousePosX(),
+                                art_getMousePosY());
             break;
-        case art::EVENT_MOUSE_BUTTON_UP:
-            onMouseButtonUp(mEventQ->getMouseButton(),
-                            mEventQ->getMousePosX(),
-                            mEventQ->getMousePosY());
+        case ART_EVENT_MOUSE_BUTTON_UP:
+            onMouseButtonUp(art_getMouseButton(),
+                            art_getMousePosX(),
+                            art_getMousePosY());
             break;
-        case art::EVENT_MOUSE_MOTION:
-            onMouseMove(mEventQ->getMousePosX(),
-                        mEventQ->getMousePosY());
+        case ART_EVENT_MOUSE_MOTION:
+            onMouseMove(art_getMousePosX(),
+                        art_getMousePosY());
             break;
-        case art::EVENT_MOUSE_WHEEL_UP:
+        case ART_EVENT_MOUSE_WHEEL_UP:
             onMouseWheel(true);
             break;
-        case art::EVENT_MOUSE_WHEEL_DOWN:
+        case ART_EVENT_MOUSE_WHEEL_DOWN:
             onMouseWheel(false);
             break;
         default:
@@ -219,7 +208,7 @@ void Simulation::addObject(SimulationObject* object, bool init)
                 iterGraph != gObj->mGraphics.end();
                 iterGraph++)
         {
-            (*iterGraph)->init(gObj, &mArtist);
+            (*iterGraph)->init(gObj);
         }
     }
 }
@@ -262,11 +251,11 @@ void Simulation::drawTimes()
 {
     if (mLastRealTime == 0.0f)
     {
-        mLastRealTime = mArtist.getTime();
+        mLastRealTime = art_getTime();
     }
     else if (mSimulationTime % 100 == 0)
     {
-        double realTime = mArtist.getTime();
+        double realTime = art_getTime();
         double deltaRealTime = realTime - mLastRealTime;
         double deltaSimTime = (double)(mSimulationTime - mLastSimulationTime);
         mLastRealTime = realTime;
@@ -311,20 +300,20 @@ void Simulation::drawTimes()
         mCPSText = text;
     }
 
-    mRootLayer2D->setFont(mFont);
-    mRootLayer2D->setColor(120, 0, 0, 255);
-    mRootLayer2D->drawText(140, 16, mSimulationTimeText);
-    mRootLayer2D->setColor(0, 120, 0, 255);
-    mRootLayer2D->drawText(140, 31, mRealTimeText);
-    mRootLayer2D->setColor(0, 0, 120, 255);
-    mRootLayer2D->drawText(140, 46, mCPSText);
+    art_setFont(mFont);
+    art_setColor(120, 0, 0, 255);
+    art_drawText(140, 16, (char*)mSimulationTimeText.c_str());
+    art_setColor(0, 120, 0, 255);
+    art_drawText(140, 31, (char*)mRealTimeText.c_str());
+    art_setColor(0, 0, 120, 255);
+    art_drawText(140, 46, (char*)mCPSText.c_str());
 }
 
-bool Simulation::onKeyDown(art::KeyCode keycode)
+bool Simulation::onKeyDown(Art_KeyCode keycode)
 {
     switch (keycode)
     {
-        case art::KEY_ESCAPE:
+        case ART_KEY_ESCAPE:
             mStop = true;
             return true;
         default:
@@ -357,7 +346,7 @@ int Simulation::initGraphics(lua_State* luaState)
 
     initGraphics(width, height, fullScreen, noGraphics);
 
-    mFont = mWindow->loadFont("media/vera/Vera.ttf", 8);
+    mFont = art_loadFont("media/vera/Vera.ttf", 8);
 
     return 0;
 }

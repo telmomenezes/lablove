@@ -39,7 +39,7 @@ void PopulationManager::addObject(SimulationObject* object, bool init)
     object->onAdd();
 }
 
-void PopulationManager::removeObject(SimulationObject* obj)
+void PopulationManager::removeObject(SimulationObject* obj, bool deleteObj)
 {
     if (mSelectedObject == obj)
     {
@@ -53,7 +53,10 @@ void PopulationManager::removeObject(SimulationObject* obj)
         if((*iterObj) == obj)
         {
             mObjects.erase(iterObj);
-            delete obj;
+            if (deleteObj)
+            {
+                delete obj;
+            }
             return;
         }
     }

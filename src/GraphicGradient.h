@@ -33,8 +33,8 @@ public:
     
     virtual Graphic* clone();
 
-    virtual void init(SimulationObject* obj, art::Artist* artist);
-    virtual void draw(art::Layer* layer);
+    virtual void init(SimulationObject* obj);
+    virtual void draw();
 
     void setSymbolName(string symbolName){mSymbolName = symbolName;}
     void setReferenceSymbol(Symbol* refSymbol){mReferenceSymbol = refSymbol;}

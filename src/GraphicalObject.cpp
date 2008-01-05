@@ -51,13 +51,13 @@ SimulationObject* GraphicalObject::clone(bool randomize)
     return new GraphicalObject(this);
 }
 
-void GraphicalObject::draw(art::Layer* layer)
+void GraphicalObject::draw()
 {
     for (list<Graphic*>::iterator iterGraph = mGraphics.begin();
             iterGraph != mGraphics.end();
             iterGraph++)
     {
-        (*iterGraph)->draw(layer);
+        (*iterGraph)->draw();
     }
 }
 

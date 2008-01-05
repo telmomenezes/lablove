@@ -105,7 +105,7 @@ public:
 
     unsigned int getConnectionsCount(){return mConnectionsCount;}
 
-    virtual void draw(art::Layer2D* layer){}
+    virtual void draw(){}
 
     virtual void mutate();
 
@@ -164,7 +164,6 @@ public:
 
 protected:
     void initGridsIO();
-    void initialCalculations();
     void calcConnectionCounts();
     void calcConnectionDensities();
 

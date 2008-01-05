@@ -137,8 +137,11 @@ IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIR})
     INCLUDE_DIRECTORIES(${FREETYPE_INCLUDE_DIR_freetype2})
     SET(LINK_LIBS ${LINK_LIBS} ${FREETYPE_LIBRARY} ${SDL_LIBRARY})
+    SET(DEFINITIONS ${DEFINITIONS} -D_OSX_SDL_)
     SET_TARGET_PROPERTIES(llove lablove test PROPERTIES LINK_FLAGS "-Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib")
 ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
+ADD_DEFINITIONS(${DEFINITIONS})
 
 TARGET_LINK_LIBRARIES(llove ${LINK_LIBS})
 TARGET_LINK_LIBRARIES(lablove llove ${LINK_LIBS})

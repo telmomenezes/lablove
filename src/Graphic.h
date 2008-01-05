@@ -32,8 +32,8 @@ public:
 
     virtual Graphic* clone()=0;
 
-    virtual void init(SimulationObject* obj, art::Artist* artist)=0;
-    virtual void draw(art::Layer* layer)=0;
+    virtual void init(SimulationObject* obj)=0;
+    virtual void draw()=0;
 
 protected:
     SimulationObject* mObject;

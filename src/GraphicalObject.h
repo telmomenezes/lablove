@@ -37,7 +37,7 @@ public:
     virtual ~GraphicalObject();
     virtual SimulationObject* clone(bool randomize=false);
 
-    void draw(art::Layer* layer);
+    void draw();
 
     void addGraphic(Graphic* graph);
 

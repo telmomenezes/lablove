@@ -94,7 +94,7 @@ public:
 
     virtual void initializeData(SimulationObject* obj);
     virtual void addObject(SimulationObject* object, bool init=false);
-    virtual void removeObject(SimulationObject* obj);
+    virtual void removeObject(SimulationObject* obj, bool deleteObj=true);
     virtual void placeRandom(SimulationObject* obj);
 
     void setPos(SimulationObject* obj, float x, float y);
@@ -118,10 +118,10 @@ public:
 
     virtual float getFieldValue(SimulationObject* obj, string fieldName);
     
-    virtual bool onKeyDown(art::KeyCode keycode);
-    virtual bool onKeyUp(art::KeyCode keycode);
-    virtual bool onMouseButtonDown(art::MouseButton button, int x, int y);
-    virtual bool onMouseButtonUp(art::MouseButton button, int x, int y);
+    virtual bool onKeyDown(Art_KeyCode keycode);
+    virtual bool onKeyUp(Art_KeyCode keycode);
+    virtual bool onMouseButtonDown(Art_MouseButton button, int x, int y);
+    virtual bool onMouseButtonUp(Art_MouseButton button, int x, int y);
     virtual bool onMouseMove(int x, int y);
     virtual bool onMouseWheel(bool up);
 

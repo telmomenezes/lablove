@@ -59,6 +59,7 @@ public:
     void clearDefinitions();
     void clearPosition();
     void clearConnections();
+    void clearMetrics();
     void copyDefinitions(GridbrainComponent* comp);
     void copyPosition(GridbrainComponent* comp);
 
@@ -96,6 +97,8 @@ public:
     int mOrigSymIndex;
     int mTargetSymIndex;
     InterfaceItem::TableLinkType mTableLinkType;
+
+    float mConnectionStrength;
 };
 
 #endif

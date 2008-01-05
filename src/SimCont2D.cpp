@@ -69,8 +69,6 @@ SimCont2D::SimCont2D(lua_State* luaState)
     mLastMouseX = 0;
     mLastMouseY = 0;
 
-    mRootLayer2D = NULL;
-
     mCellX1 = 0;
     mCellX2 = 0;
     mCellY1 = 0;
@@ -306,7 +304,7 @@ void SimCont2D::addObject(SimulationObject* object, bool init)
     Simulation::addObject(object);
 }
 
-void SimCont2D::removeObject(SimulationObject* obj)
+void SimCont2D::removeObject(SimulationObject* obj, bool deleteObj)
 {
     float origX = obj->mFloatData[FLOAT_X];
     float origY = obj->mFloatData[FLOAT_Y];
@@ -343,7 +341,7 @@ void SimCont2D::removeObject(SimulationObject* obj)
         }
     }
 
-    Simulation::removeObject(obj);
+    Simulation::removeObject(obj, deleteObj);
 }
 
 void SimCont2D::placeRandom(SimulationObject* obj)
@@ -866,8 +864,8 @@ void SimCont2D::eat(Agent* agent, Action actionType)
 
 void SimCont2D::drawBeforeObjects()
 {
-    mRootLayer2D->setScale(mZoom, mZoom);
-    mRootLayer2D->setTranslation(mViewX, mViewY);
+    art_setScale(mZoom, mZoom);
+    art_setTranslation(mViewX, mViewY);
 
     if (mShowGrid)
     {
@@ -876,15 +874,15 @@ void SimCont2D::drawBeforeObjects()
         int viewX = (int)mViewX;
         int viewY = (int)mViewY;
 
-        mRootLayer2D->setColor(200, 200, 200);
+        art_setColor(200, 200, 200, 255);
 
         unsigned int division = cellSide;
         while (division < mWorldWidth)
         {
-            mRootLayer2D->drawLine(division,
-                                    0,
-                                    division,
-                                    mWorldLength);
+            art_drawLine(division,
+                            0,
+                            division,
+                            mWorldLength);
 
             division += cellSide;
         }
@@ -892,10 +890,10 @@ void SimCont2D::drawBeforeObjects()
         division = cellSide;
         while (division < mWorldLength)
         {
-            mRootLayer2D->drawLine(0,
-                                    division,
-                                    mWorldWidth,
-                                    division);
+            art_drawLine(0,
+                            division,
+                            mWorldWidth,
+                            division);
 
             division += cellSide;
         }
@@ -919,12 +917,12 @@ void SimCont2D::drawBeforeObjects()
                     endAngle += M_PI * 2.0f;
                 }
 
-                mRootLayer2D->setColor(150, 150, 150, 100);
-                mRootLayer2D->fillCircle(obj->mFloatData[FLOAT_X],
-                                            obj->mFloatData[FLOAT_Y],
-                                            mViewRange,
-                                            beginAngle,
-                                            endAngle);
+                art_setColor(150, 150, 150, 100);
+                art_fillCircleSlice(obj->mFloatData[FLOAT_X],
+                                obj->mFloatData[FLOAT_Y],
+                                mViewRange,
+                                beginAngle,
+                                endAngle);
             }
         }
     }
@@ -934,36 +932,36 @@ void SimCont2D::drawAfterObjects()
 {
     if (mShowEnergy)
     {
-        mRootLayer2D->setFont(mFont);
+        art_setFont(mFont);
         char text[255];
         list<SimulationObject*>::iterator iterObj;
         for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
         {
             SimulationObject* obj = *iterObj;
 
-            mRootLayer2D->setColor(100, 100, 100, 100);
+            art_setColor(100, 100, 100, 100);
             sprintf(text, "%f", obj->mFloatData[FLOAT_ENERGY]);
-            mRootLayer2D->drawText(obj->mFloatData[FLOAT_X],
-                                    obj->mFloatData[FLOAT_Y],
-                                    text);
+            art_drawText(obj->mFloatData[FLOAT_X],
+                            obj->mFloatData[FLOAT_Y],
+                            text);
         }
     }
 
-    mRootLayer2D->clearScale();
-    mRootLayer2D->clearTranslation();
+    art_clearScale();
+    art_clearTranslation();
 
 
     if (mShowBrain)
     {
         if (mHumanAgent)
         {
-            mRootLayer2D->setTranslation(0, mWindow->getHeight() / 2);
-            mRootLayer2D->setColor(255, 255, 255, 130);
-            mRootLayer2D->fillRectangle(0, 0, mWindow->getWidth(), mWindow->getHeight() / 2);
-            mRootLayer2D->setColor(50, 50, 50, 255);
-            mRootLayer2D->setFont(mFont);
-            mHumanAgent->getBrain()->draw(mRootLayer2D);
-            mRootLayer2D->clearTranslation();
+            art_setTranslation(0, art_getWinHeight() / 2);
+            art_setColor(255, 255, 255, 130);
+            art_fillRectangle(0, 0, art_getWinWidth(), art_getWinHeight() / 2);
+            art_setColor(50, 50, 50, 255);
+            art_setFont(mFont);
+            mHumanAgent->getBrain()->draw();
+            art_clearTranslation();
         }
     }
 }
@@ -985,7 +983,7 @@ float SimCont2D::getFieldValue(SimulationObject* obj, string fieldName)
     }
 }
 
-bool SimCont2D::onKeyDown(art::KeyCode key)
+bool SimCont2D::onKeyDown(Art_KeyCode key)
 {
     if (Simulation::onKeyDown(key))
     {
@@ -994,16 +992,16 @@ bool SimCont2D::onKeyDown(art::KeyCode key)
 
     switch (key)
     {
-    case art::KEY_UP:
+    case ART_KEY_UP:
         mHumanGo = true;
         return true;
-    case art::KEY_RIGHT:
+    case ART_KEY_RIGHT:
         mHumanRotateRight = true;
         return true;
-    case art::KEY_LEFT:
+    case ART_KEY_LEFT:
         mHumanRotateLeft = true;
         return true;
-    case art::KEY_E:
+    case ART_KEY_E:
         mHumanEat = true;
         return true;
     default:
@@ -1011,7 +1009,7 @@ bool SimCont2D::onKeyDown(art::KeyCode key)
     }
 }
 
-bool SimCont2D::onKeyUp(art::KeyCode key)
+bool SimCont2D::onKeyUp(Art_KeyCode key)
 {
     if (Simulation::onKeyUp(key))
     {
@@ -1020,28 +1018,28 @@ bool SimCont2D::onKeyUp(art::KeyCode key)
 
     switch (key)
     {
-    case art::KEY_G:
+    case ART_KEY_G:
         mShowGrid = !mShowGrid;
         return true;
-    case art::KEY_V:
+    case ART_KEY_V:
         mShowViewRange = !mShowViewRange;
         return true;
-    case art::KEY_B:
+    case ART_KEY_B:
         mShowBrain = !mShowBrain;
         return true;
-    case art::KEY_N:
+    case ART_KEY_N:
         mShowEnergy = !mShowEnergy;
         return true;
-    case art::KEY_UP:
+    case ART_KEY_UP:
         mHumanGo = false;
         return true;
-    case art::KEY_RIGHT:
+    case ART_KEY_RIGHT:
         mHumanRotateRight = false;
         return true;
-    case art::KEY_LEFT:
+    case ART_KEY_LEFT:
         mHumanRotateLeft = false;
         return true;
-    case art::KEY_E:
+    case ART_KEY_E:
         mHumanEat = false;
         return true;
     default:
@@ -1049,7 +1047,7 @@ bool SimCont2D::onKeyUp(art::KeyCode key)
     }
 }
 
-bool SimCont2D::onMouseButtonDown(art::MouseButton button, int x, int y)
+bool SimCont2D::onMouseButtonDown(Art_MouseButton button, int x, int y)
 {
     mDragging = true;
     mLastMouseX = x;
@@ -1057,7 +1055,7 @@ bool SimCont2D::onMouseButtonDown(art::MouseButton button, int x, int y)
     return false;
 }
 
-bool SimCont2D::onMouseButtonUp(art::MouseButton button, int x, int y)
+bool SimCont2D::onMouseButtonUp(Art_MouseButton button, int x, int y)
 {
     mDragging = false;
     return false;
@@ -1083,8 +1081,8 @@ bool SimCont2D::onMouseMove(int x, int y)
 
 bool SimCont2D::onMouseWheel(bool up)
 {
-    float wWidth = (float)mWindow->getWidth();
-    float wHeight = (float)mWindow->getHeight();
+    float wWidth = (float)art_getWinWidth();
+    float wHeight = (float)art_getWinHeight();
 
     float centerX = -mViewX + (wWidth / (mZoom * 2.0f));
     float centerY = -mViewY + (wHeight / (mZoom * 2.0f));

@@ -19,6 +19,8 @@
 
 #include "Grid.h"
 
+mt_distribution* Grid::mDistRowsAndColumns = gDistManager.getNewDistribution();
+
 Grid::Grid(lua_State* luaState)
 {
     mType = ALPHA;
@@ -37,6 +39,11 @@ Grid::Grid(lua_State* luaState)
     mWriteY = 0;
     mConnDensity = 0.0f;
     mAverageJump = 0.0f;
+    mNewRow = -1;
+    mNewColumn = -1;
+    mAddRowOrColumn = false;
+
+    mComponentSet = NULL;
 
     if (luaState)
     {
@@ -61,24 +68,11 @@ Grid::Grid(const Grid& grid)
     mWriteY = 0;
     mConnDensity = 0.0f;
     mAverageJump = 0.0f;
+    mNewRow = -1;
+    mNewColumn = -1;
+    mAddRowOrColumn = false;
 
-    Grid* auxGrid = (Grid*)&grid;
-
-    list<GridbrainComponentSet*>::iterator iterSet;
-    for (iterSet = auxGrid->mComponentSetsList.begin();
-        iterSet != auxGrid->mComponentSetsList.end();
-        iterSet++)
-    {
-        mComponentSetsList.push_back(*iterSet);
-    }
-
-    vector<GridbrainComponentSet*>::iterator iterComp;
-    for (iterComp = auxGrid->mComponentSetByColumn.begin();
-        iterComp != auxGrid->mComponentSetByColumn.end();
-        iterComp++)
-    {
-        mComponentSetByColumn.push_back(*iterComp);
-    }
+    mComponentSet = grid.mComponentSet;
 
     for (unsigned int i = 0; i < mWidth; i++)
     {
@@ -109,44 +103,21 @@ void Grid::init(Type type, unsigned int width, unsigned int height)
     for (unsigned int i = 0; i < mWidth; i++)
     {
         mColumnsConnectionsCountVec.push_back(0);
-        mComponentSetByColumn.push_back(NULL);
     }
 
     mSize = mWidth * mHeight;
 }
 
-void Grid::addComponentSet(GridbrainComponentSet* componentSet,
-                            int startColumn,
-                            int endColumn)
+void Grid::setComponentSet(GridbrainComponentSet* componentSet)
 {
-    mComponentSetsList.push_back(componentSet);
-
-    int c1 = 0;
-    int c2 = mWidth - 1;
-
-    if (startColumn >= 0)
-    {
-        c1 = startColumn;
-    }
-    if (endColumn >= 0)
-    {
-        c2 = endColumn;
-    }
-
-    for (unsigned int i = c1; i <= c2; i++)
-    {
-        mComponentSetByColumn[i] = componentSet;
-    }
+    mComponentSet = componentSet;
 }
 
-GridbrainComponent* Grid::getRandomComponent(unsigned int pos)
+GridbrainComponent* Grid::getRandomComponent()
 {
-    unsigned int column = getXByOffset(pos);
-    GridbrainComponentSet* set = mComponentSetByColumn[column];
-
-    if (set)
+    if (mComponentSet)
     {
-        return mComponentSetByColumn[column]->getRandom();
+        return mComponentSet->getRandom();
     }
     else
     {
@@ -258,10 +229,27 @@ float* Grid::getInputBuffer()
     return buffer;
 }
 
+void Grid::addRowOrColumn()
+{
+    if (mDistRowsAndColumns->iuniform(0, 2) == 0)
+    {
+        mWidth++;
+        mSize = mWidth * mHeight;
+        mNewColumn = mDistRowsAndColumns->iuniform(0, mWidth);
+        mColumnsConnectionsCountVec.push_back(0);
+    }
+    else
+    {
+        mHeight++;
+        mSize = mWidth * mHeight;
+        mNewRow = mDistRowsAndColumns->iuniform(0, mHeight);
+    }
+}
+
 const char Grid::mClassName[] = "Grid";
 
 Orbit<Grid>::MethodType Grid::mMethods[] = {
-    {"addComponentSet", &Grid::addComponentSet},
+    {"setComponentSet", &Grid::setComponentSet},
     {"init", &Grid::init},
     {0,0}
 };
@@ -272,12 +260,10 @@ Orbit<Grid>::NumberGlobalType Grid::mNumberGlobals[] = {
     {0,0}
 };
 
-int Grid::addComponentSet(lua_State* luaState)
+int Grid::setComponentSet(lua_State* luaState)
 {
     GridbrainComponentSet* set = (GridbrainComponentSet*)Orbit<Grid>::pointer(luaState, 1);
-    int startColumn = luaL_optint(luaState, 2, -1);
-    int endColumn = luaL_optint(luaState, 3, -1);
-    addComponentSet(set, startColumn, endColumn);
+    setComponentSet(set);
     return 0;
 }
 
