@@ -19,11 +19,6 @@ plantSize = 10.0
 worldWidth = 3000
 worldHeight = 3000
 
-alphaWidth = 4
-betaWidth = 2
-alphaHeight = 3
-betaHeight = 3
-
 alphaComponents = {TAND, TNAND, NOT, MMAX}
 betaComponents = {TAND, TNAND, NOT}
 
@@ -185,7 +180,7 @@ alphaSet:addComponent(PER, SimCont2D.PERCEPTION_TARGET)
 alphaSet:addComponent(PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, 0, foodTableCode, 0)
 
 grid = Grid()
-grid:init(ALPHA, alphaWidth, alphaHeight)
+grid:init(ALPHA, 0, 0)
 grid:setComponentSet(alphaSet)
 
 brain:addGrid(grid, "objects");
@@ -199,7 +194,7 @@ betaSet:addComponent(ACT, SimCont2D.ACTION_ROTATE)
 betaSet:addComponent(ACT, SimCont2D.ACTION_EATB)
     
 grid2 = Grid()
-grid2:init(BETA, betaWidth, betaHeight)
+grid2:init(BETA, 0, 0)
 grid2:setComponentSet(betaSet)
 
 brain:addGrid(grid2, "beta")

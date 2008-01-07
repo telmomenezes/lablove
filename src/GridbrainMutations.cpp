@@ -116,6 +116,13 @@ void Gridbrain::mutateAddConnection()
         MUTATIONS_ADD_CONN++;
         addRandomConnections(1);
     }
+
+    // Always create a connection if none exist
+    // Otherwise a 0 connections grid is an evolutionary dead-end
+    if (mConnectionsCount == 0)
+    {
+        addRandomConnections(1);
+    }
 }
 
 void Gridbrain::mutateRemoveConnection()

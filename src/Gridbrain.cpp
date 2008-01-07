@@ -750,6 +750,12 @@ void Gridbrain::selectRandomConnection(unsigned int &x1,
 
 void Gridbrain::addRandomConnections(unsigned int count)
 {
+    // If all grids has 0 size, no connection can be created
+    if (mTotalPossibleConnections == 0)
+    {
+        return;
+    }
+
     unsigned int x1;
     unsigned int x2;
     unsigned int y1;
@@ -1208,13 +1214,23 @@ void Gridbrain::calcConnectionDensities()
             }
         }
 
-        float freeComponentRatio = freeComponents / ((float)grid->getSize());
+        float freeComponentRatio;
+        float gridSize = (float)grid->getSize();
+
+        if (gridSize == 0.0f)
+        {
+            freeComponentRatio = 0.0f;
+        }
+        else
+        {
+            freeComponentRatio = freeComponents / ((float)grid->getSize());
+        }
 
         if (freeComponentRatio <= mMinimumFreeComponentRatio)
         {
             //grid->mAddRowOrColumn = true;
         }
-        //printf("freeComponentRatio[%d] => %f (%f)\n", i, freeComponentRatio, freeComponents);
+        //printf("freeComponentRatio[%d] => %f (free: %f; total: %f)\n", i, freeComponentRatio, freeComponents, gridSize);
     }
 }
 
