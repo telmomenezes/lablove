@@ -1214,7 +1214,7 @@ void Gridbrain::calcConnectionDensities()
         {
             grid->mAddRowOrColumn = true;
         }
-        printf("freeComponentRatio[%d] => %f (%f)\n", i, freeComponentRatio, freeComponents);
+        //printf("freeComponentRatio[%d] => %f (%f)\n", i, freeComponentRatio, freeComponents);
     }
 }
 
