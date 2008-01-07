@@ -121,9 +121,9 @@ TEST_FIXTURE(GridbrainFixture, GridbrainConnectionAge3)
     Gridbrain* gb = (Gridbrain*)mGridbrain.clone();
     Gridbrain* gb2 = (Gridbrain*)gb->clone();
     GridbrainConnection* conn = gb2->getConnection(0, 0, 0, 1, 1, 0);
+    CHECK_CLOSE(conn->mAge, 2.0f, 0.0001f);
     delete gb;
     delete gb2;
-    CHECK_CLOSE(conn->mAge, 2.0f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainFixture, GridbrainConnectionAge4)
@@ -134,9 +134,9 @@ TEST_FIXTURE(GridbrainFixture, GridbrainConnectionAge4)
     gb2->removeConnection(0, 0, 0, 1, 1, 0);
     gb2->addConnection(0, 0, 0, 1, 1, 0, 0.5);
     GridbrainConnection* conn = gb2->getConnection(0, 0, 0, 1, 1, 0);
+    CHECK_CLOSE(conn->mAge, 0.0f, 0.0001f);
     delete gb;
     delete gb2;
-    CHECK_CLOSE(conn->mAge, 0.0f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainFixture, GridbrainConnectionAge5)
@@ -153,11 +153,11 @@ TEST_FIXTURE(GridbrainFixture, GridbrainConnectionAge5)
     GridbrainConnection* conn2 = gb2->getConnection(0, 0, 0, 2, 0, 0);
     GridbrainConnection* conn3 = gb2->getConnection(0, 0, 0, 1, 1, 0);
     GridbrainConnection* conn4 = gb2->getConnection(0, 0, 0, 2, 1, 0);
-    delete gb;
-    delete gb2;
     CHECK_CLOSE(conn1->mAge, 0.0f, 0.0001f);
     CHECK_CLOSE(conn2->mAge, 2.0f, 0.0001f);
     CHECK_CLOSE(conn3->mAge, 1.0f, 0.0001f);
     CHECK_CLOSE(conn4->mAge, 0.0f, 0.0001f);
+    delete gb;
+    delete gb2;
 }
 
