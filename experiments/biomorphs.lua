@@ -1,29 +1,23 @@
 dofile("experiments/aux/basic_defines.lua")
 
-numberOfPlants = 100
-numberOfAgents = 100
+numberOfPlants = 50
+numberOfAgents = 50
 
 agentMinSize = 7.0
 agentMaxSize = 20.0
 plantSize = 7.0
 
-worldWidth = 3000
-worldHeight = 3000
+worldWidth = 2000
+worldHeight = 2000
 
-gridHeight = 10
-gridAlpha = 3
-gridBeta = 3
-
-THR = true
-MAX = true
-MUL = true
-NOT = true
+gridHeight = 5
+gridAlpha = 5
+gridBeta = 5
 
 viewRange = 150.0
-viewAngle = 100.0
+viewAngle = 170.0
 
-highAgeLimit = 5500
-lowAgeLimit = 4500
+maxAge = 5000
 
 metabolism = 0.0
 goCost = 0.0
@@ -38,13 +32,15 @@ rotDrag = 0.05
 
 initialConnections = 10
 
-tournamentSize = 10
+compCount = 1
+bufferSize = 100
+fitnessAging = 0.1
 
-addConnectionProb = 0.001
-removeConnectionProb = 0.001
-changeWeightProb = 0.01
-changeComponentProb = 0.001
-weightMutationStanDev = 0.1
+addConnectionProb = 0.02
+removeConnectionProb = 0.02
+changeWeightProb = 0.02
+changeComponentProb = 0.02
+weightMutationStanDev = 1.0
 mutateBiomoprhSymbolProb = 0.1
 mutateSizeSymbolProb = 0.1
 mutateColorSymbolProb = 0.0
@@ -66,9 +62,10 @@ sim:setRotateForceScale(rotateForceScale)
 sim:setSeedIndex(seedIndex)
 sim:setTimeLimit(timeLimit)
 
-popDyn = PopDynFixedSpecies()
+popDyn = PopDynSpeciesBuffers()
 sim:setPopulationDynamics(popDyn)
-popDyn:setTournamentSize(10)
+popDyn:setCompCount(compCount)
+popDyn:setFitnessAging(fitnessAging)
 
 sizeTableCode = 0
 physicsTableCode = 1 
@@ -112,8 +109,8 @@ function addAgentSpecies(red, green, blue, feed, food)
     agent:setSymbolName("initial_energy", energyTableCode, 0)
     agent:setSymbolName("metabolism", energyTableCode, 1)
 
-    symLowAgeLimit = SymbolUL(lowAgeLimit)
-    symHighAgeLimit = SymbolUL(highAgeLimit)
+    symLowAgeLimit = SymbolUL(maxAge)
+    symHighAgeLimit = SymbolUL(maxAge)
     symTable = SymbolTable(symLowAgeLimit, ageTableCode)
     symTable:addSymbol(symHighAgeLimit)
     agent:addSymbolTable(symTable)
@@ -149,54 +146,32 @@ function addAgentSpecies(red, green, blue, feed, food)
     brain:setMutateChangeComponentProb(changeComponentProb)
     brain:setWeightMutationStanDev(weightMutationStanDev)
 
-    perSet = GridbrainComponentSet()
-    perSet:addComponent(PER, SimCont2D.PERCEPTION_POSITION)
-    perSet:addComponent(PER, SimCont2D.PERCEPTION_DISTANCE)
-    perSet:addComponent(PER, SimCont2D.PERCEPTION_TARGET)
-    perSet:addComponent(PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, 0, feedTableCode, 1)
-    perSet:addComponent(PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, 1, feedTableCode, 0)
-
     alphaSet = GridbrainComponentSet()
-    if THR then
-        alphaSet:addComponent(GridbrainComponent.THR)
-    end
-    if MAX then
-        alphaSet:addComponent(GridbrainComponent.MAX)
-    end
-    if MUL then
-        alphaSet:addComponent(GridbrainComponent.MUL)
-    end
-    if NOT then
-        alphaSet:addComponent(GridbrainComponent.NOT)
-    end
+    alphaSet:addComponent(PER, SimCont2D.PERCEPTION_POSITION)
+    alphaSet:addComponent(PER, SimCont2D.PERCEPTION_DISTANCE)
+    alphaSet:addComponent(PER, SimCont2D.PERCEPTION_TARGET)
+    alphaSet:addComponent(PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, 0, feedTableCode, 1)
+    alphaSet:addComponent(PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, 1, feedTableCode, 0)
+    alphaSet:addComponent(GridbrainComponent.TAND)
+    alphaSet:addComponent(GridbrainComponent.MMAX)
+    alphaSet:addComponent(GridbrainComponent.TNAND)
 
     grid = Grid()
     grid:init(Grid.ALPHA, gridAlpha, gridHeight)
-    grid:addComponentSet(perSet, 0, 0)
-    grid:addComponentSet(alphaSet, 1, gridAlpha - 1)
+    grid:setComponentSet(alphaSet)
 
     brain:addGrid(grid, "objects");
 
-    actSet = GridbrainComponentSet()
-    actSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_GO)
-    actSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_ROTATE)
-    actSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_EAT)
-
     betaSet = GridbrainComponentSet()
-    if THR then
-        betaSet:addComponent(GridbrainComponent.THR)
-    end
-    if MUL then
-        betaSet:addComponent(GridbrainComponent.MUL)
-    end
-    if NOT then
-        betaSet:addComponent(GridbrainComponent.NOT)
-    end
+    betaSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_GO)
+    betaSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_ROTATE)
+    betaSet:addComponent(GridbrainComponent.ACT, SimCont2D.ACTION_EAT)
+    betaSet:addComponent(GridbrainComponent.TAND)
+    betaSet:addComponent(GridbrainComponent.TNAND)
     
     grid2 = Grid()
     grid2:init(Grid.BETA, gridBeta, gridHeight)
-    grid2:addComponentSet(betaSet, 0, gridBeta - 2)
-    grid2:addComponentSet(actSet, gridBeta - 1, gridBeta - 1)
+    grid2:setComponentSet(betaSet)
 
     brain:addGrid(grid2, "beta")
 
@@ -204,12 +179,12 @@ function addAgentSpecies(red, green, blue, feed, food)
 
     brain:addRandomConnections(initialConnections)
 
-    popDyn:addSpecies(agent, numberOfAgents)
+    popDyn:addSpecies(agent, numberOfAgents, bufferSize)
 end
 
 addAgentSpecies(255, 0, 0, "aaa", "bbb")
-addAgentSpecies(0, 0, 255, "bbb", "ccc")
-addAgentSpecies(0, 255, 0, "ccc", "aaa")
+addAgentSpecies(10, 10, 10, "bbb", "ccc")
+addAgentSpecies(10, 100, 255, "ccc", "aaa")
 
 plant = GraphicalObject()
 
@@ -238,7 +213,7 @@ plant:setSymbolName("food", feedTableCode, 1)
 
 plant:addGraphic(GraphicSquare())
 
-popDyn:addSpecies(plant, numberOfPlants)
+popDyn:addSpecies(plant, numberOfPlants, 1)
 
 human = Agent()
 dummyBrain = DummyBrain(1)
@@ -279,8 +254,8 @@ human:addSymbolTable(symTable)
 human:setSymbolName("initial_energy", energyTableCode, 0)
 human:setSymbolName("metabolism", energyTableCode, 1)
 
-symHLowAgeLimit = SymbolUL(lowAgeLimit)
-symHHighAgeLimit = SymbolUL(highAgeLimit)
+symHLowAgeLimit = SymbolUL(maxAge)
+symHHighAgeLimit = SymbolUL(maxAge)
 symTable = SymbolTable(symHLowAgeLimit, ageTableCode)
 symTable:addSymbol(symHHighAgeLimit)
 human:addSymbolTable(symTable)

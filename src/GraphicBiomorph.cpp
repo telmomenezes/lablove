@@ -67,7 +67,7 @@ GraphicBiomorph::~GraphicBiomorph()
         mY2Points = NULL;
     }
 
-    art_removeLayer(mLayer);
+    //art_removeLayer(mLayer);
 }
 
 Graphic* GraphicBiomorph::clone()
@@ -238,9 +238,9 @@ void GraphicBiomorph::init(SimulationObject* obj)
         calcTree(0, -i * spacing, branching, 2);
     }
 
-    art_drawToRoot();
-
     normalizePoints();
+
+    art_drawToRoot();
 }
 
 void GraphicBiomorph::calcTree(float x, float y, int length, int dir)
