@@ -111,8 +111,8 @@ TEST_FIXTURE(GridbrainFixture, GridbrainConnectionAge2)
     mGridbrain.addConnection(0, 0, 0, 1, 1, 0, 0.5);
     Gridbrain* gb = (Gridbrain*)mGridbrain.clone();
     GridbrainConnection* conn = gb->getConnection(0, 0, 0, 1, 1, 0);
-    delete gb;
     CHECK_CLOSE(conn->mAge, 1.0f, 0.0001f);
+    delete gb;
 }
 
 TEST_FIXTURE(GridbrainFixture, GridbrainConnectionAge3)
