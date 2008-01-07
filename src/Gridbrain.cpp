@@ -1212,7 +1212,7 @@ void Gridbrain::calcConnectionDensities()
 
         if (freeComponentRatio <= mMinimumFreeComponentRatio)
         {
-            grid->mAddRowOrColumn = true;
+            //grid->mAddRowOrColumn = true;
         }
         //printf("freeComponentRatio[%d] => %f (%f)\n", i, freeComponentRatio, freeComponents);
     }
