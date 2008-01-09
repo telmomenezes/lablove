@@ -1179,7 +1179,7 @@ void Gridbrain::calcConnectionDensities()
             pos++)
         {
             unsigned int totalConns = mComponents[pos].mConnectionsCount + mComponents[pos].mInboundConnections;
-            if (totalConns > 0)
+            if (totalConns == 0)
             {
                 freeComponents += 1.0f;
             }
