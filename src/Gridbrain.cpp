@@ -51,6 +51,8 @@ Gridbrain::Gridbrain(lua_State* luaState)
     mMutateChangeComponentProb = 0.0f;
     mMutateSwapComponentProb = 0.0f;
 
+    mMinimumFreeComponentRatio = 0.0f;
+
     mConnSeqProb = 1.0f;
     mConnSeqCurrent = NULL;
     mConnSeqPos = 0;
@@ -102,6 +104,8 @@ Brain* Gridbrain::clone(bool randomize)
     gb->mMutateJoinConnectionsProb = mMutateJoinConnectionsProb;
     gb->mMutateChangeComponentProb = mMutateChangeComponentProb;
     gb->mMutateSwapComponentProb = mMutateSwapComponentProb;
+
+    gb->mMinimumFreeComponentRatio = mMinimumFreeComponentRatio;
 
     for (unsigned int i = 0; i < mGridsCount; i++)
     {
@@ -1153,51 +1157,17 @@ void Gridbrain::calcConnectionCounts()
 void Gridbrain::calcConnectionDensities()
 {
     GridbrainConnection* conn = mConnections;
-    double mAgeToStrengthConstant = 0.02f;
-    double mMinimumFreeComponentRatio = 0.25f;
 
-    float totalStrengths[mGridsCount];
-    float totalJumps[mGridsCount];
-    float totalConnections[mGridsCount];
-    for (unsigned int i = 0; i < mGridsCount; i++)
-    {
-        totalStrengths[i] = 0.0f;
-        totalJumps[i] = 0.0f;
-        totalConnections[i] = 0.0f;
-    }
-
+    // Calc inbound connections for every component
     while (conn != NULL)
     {
-        double age = conn->mAge;
-        double strength = atan(age * mAgeToStrengthConstant) / 1.57079633f;
-
-        if (conn->mGridOrig == conn->mGridTarg)
-        {
-            totalStrengths[conn->mGridOrig] += strength;
-            totalConnections[conn->mGridOrig] += 1.0f;
-            totalJumps[conn->mGridOrig] += fabsf(conn->mColumnTarg - conn->mColumnOrig);
-        }
-        else
-        {
-            totalStrengths[conn->mGridOrig] += strength / 2.0f;
-            totalStrengths[conn->mGridTarg] += strength / 2.0f;
-            totalConnections[conn->mGridOrig] += 0.5f;
-            totalConnections[conn->mGridTarg] += 0.5f;
-            totalJumps[conn->mGridOrig] += (mGridsVec[conn->mGridOrig]->getWidth() - conn->mColumnOrig) / 2.0f;
-            totalJumps[conn->mGridTarg] += conn->mColumnTarg / 2.0f;
-        }
-
-        getComponent(conn->mColumnOrig, conn->mRowOrig, conn->mGridOrig)->mConnectionStrength += strength;
-        getComponent(conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg)->mConnectionStrength += strength;
-
+        getComponent(conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg)->mInboundConnections++;
         conn = (GridbrainConnection*)conn->mNextGlobalConnection;
     }
 
     for (unsigned int i = 0; i < mGridsCount; i++)
     {
         Grid* grid = mGridsVec[i];
-        grid->mConnDensity = totalStrengths[i] / (double)grid->getSize();
-        grid->mAverageJump = totalJumps[i] / totalConnections[i];
 
         unsigned int startOffset = grid->getOffset();
         unsigned int endOffset = startOffset + grid->getSize();
@@ -1208,7 +1178,8 @@ void Gridbrain::calcConnectionDensities()
             pos < endOffset;
             pos++)
         {
-            if (mComponents[pos].mConnectionStrength < 0.5f)
+            unsigned int totalConns = mComponents[pos].mConnectionsCount + mComponents[pos].mInboundConnections;
+            if (totalConns > 0)
             {
                 freeComponents += 1.0f;
             }
@@ -1226,11 +1197,11 @@ void Gridbrain::calcConnectionDensities()
             freeComponentRatio = freeComponents / ((float)grid->getSize());
         }
 
-        if (freeComponentRatio <= mMinimumFreeComponentRatio)
+        if (freeComponentRatio < mMinimumFreeComponentRatio)
         {
-            //grid->mAddRowOrColumn = true;
+            grid->mAddRowOrColumn = true;
         }
-        //printf("freeComponentRatio[%d] => %f (free: %f; total: %f)\n", i, freeComponentRatio, freeComponents, gridSize);
+        //printf("freeComponentRatio[%d] => %f (free: %f; width: %d; height: %d)\n", i, freeComponentRatio, freeComponents, grid->getWidth(), grid->getHeight());
     }
 }
 
@@ -1295,6 +1266,7 @@ Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
     {"setMutateJoinConnectionsProb", &Gridbrain::setMutateJoinConnectionsProb},
     {"setMutateChangeComponentProb", &Gridbrain::setMutateChangeComponentProb},
     {"setMutateSwapComponentProb", &Gridbrain::setMutateSwapComponentProb},
+    {"setMinimumFreeComponentRatio", &Gridbrain::setMinimumFreeComponentRatio},
     {0,0}
 };
 
@@ -1419,6 +1391,13 @@ int Gridbrain::setWeightMutationStanDev(lua_State* luaState)
 {
     float sd = luaL_checknumber(luaState, 1);
     setWeightMutationStanDev(sd);
+    return 0;
+}
+
+int Gridbrain::setMinimumFreeComponentRatio(lua_State* luaState)
+{
+    float rate = luaL_checknumber(luaState, 1);
+    setMinimumFreeComponentRatio(rate);
     return 0;
 }
 

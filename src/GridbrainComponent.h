@@ -79,6 +79,7 @@ public:
     float mOutput;
     float mRecurrentInput;
     unsigned int mConnectionsCount;
+    unsigned int mInboundConnections;
     GridbrainConnection* mFirstConnection;
     float mState;
     bool mCycleFlag;
@@ -97,8 +98,6 @@ public:
     int mOrigSymIndex;
     int mTargetSymIndex;
     InterfaceItem::TableLinkType mTableLinkType;
-
-    float mConnectionStrength;
 };
 
 #endif

@@ -19,8 +19,8 @@ plantSize = 10.0
 worldWidth = 3000
 worldHeight = 3000
 
-alphaComponents = {TAND, TNAND, NOT, MMAX}
-betaComponents = {TAND, TNAND, NOT}
+alphaComponents = {TAND, TNAND, MMAX}
+betaComponents = {TAND, TNAND}
 
 viewRange = 150.0
 viewAngle = 170.0
@@ -52,6 +52,7 @@ splitConnectionProb = 0.0
 joinConnectionsProb = 0.0
 changeComponentProb = 0.02
 swapComponentProb = 0.0
+minimumFreeComponentRatio = 0.25
 
 timeLimit = 0
 logTimeInterval = 100
@@ -76,8 +77,9 @@ swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb, "swp")
 bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
 compCount = getNumberParameter("compcount", compCount, "cc")
 fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")
+minimumFreeComponentRatio = getNumberParameter("minfree", minimumFreeComponentRatio, "free")
 
-logSuffix = "_poison_"
+logSuffix = "_poison_from_scratch_"
             .. parameterString
             .. "s"
             .. seedIndex
@@ -169,6 +171,7 @@ brain:setMutateSplitConnectionProb(splitConnectionProb)
 brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
 brain:setMutateSwapComponentProb(swapComponentProb)
+brain:setMinimumFreeComponentRatio(minimumFreeComponentRatio)
 
 alphaSet = GridbrainComponentSet()
 for i, comp in pairs(alphaComponents) do
@@ -180,7 +183,7 @@ alphaSet:addComponent(PER, SimCont2D.PERCEPTION_TARGET)
 alphaSet:addComponent(PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, 0, foodTableCode, 0)
 
 grid = Grid()
-grid:init(ALPHA, 4, 3)
+grid:init(ALPHA, 0, 0)
 grid:setComponentSet(alphaSet)
 
 brain:addGrid(grid, "objects");
@@ -194,7 +197,7 @@ betaSet:addComponent(ACT, SimCont2D.ACTION_ROTATE)
 betaSet:addComponent(ACT, SimCont2D.ACTION_EATB)
     
 grid2 = Grid()
-grid2:init(BETA, 2, 3)
+grid2:init(BETA, 0, 0)
 grid2:setComponentSet(betaSet)
 
 brain:addGrid(grid2, "beta")

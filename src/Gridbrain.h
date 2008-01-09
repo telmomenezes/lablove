@@ -128,6 +128,7 @@ public:
     void setMutateJoinConnectionsProb(float prob){mMutateJoinConnectionsProb = prob;}
     void setMutateChangeComponentProb(float prob){mMutateChangeComponentProb = prob;}
     void setMutateSwapComponentProb(float prob){mMutateSwapComponentProb = prob;}
+    void setMinimumFreeComponentRatio(float ratio){mMinimumFreeComponentRatio = ratio;}
 
     virtual float getFieldValue(string fieldName);
 
@@ -151,6 +152,7 @@ public:
     int setMutateChangeComponentProb(lua_State* luaState);
     int setMutateSwapComponentProb(lua_State* luaState);
     int setWeightMutationStanDev(lua_State* luaState);
+    int setMinimumFreeComponentRatio(lua_State* luaState);
 
     static long MUTATIONS_ADD_CONN;
     static long MUTATIONS_REM_CONN;
@@ -216,6 +218,8 @@ protected:
     float mMutateJoinConnectionsProb;
     float mMutateChangeComponentProb;
     float mMutateSwapComponentProb;
+
+    float mMinimumFreeComponentRatio;
 
     float mConnSeqProb;
     GridbrainConnection* mConnSeqCurrent;

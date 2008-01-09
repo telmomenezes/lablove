@@ -37,8 +37,6 @@ Grid::Grid(lua_State* luaState)
     mActionsCount = 0;
     mWriteX = 0;
     mWriteY = 0;
-    mConnDensity = 0.0f;
-    mAverageJump = 0.0f;
     mNewRow = -1;
     mNewColumn = -1;
     mAddRowOrColumn = false;
@@ -66,8 +64,6 @@ Grid::Grid(const Grid& grid)
     mOutputVector = NULL;
     mWriteX = 0;
     mWriteY = 0;
-    mConnDensity = 0.0f;
-    mAverageJump = 0.0f;
     mNewRow = -1;
     mNewColumn = -1;
     mAddRowOrColumn = false;
@@ -233,6 +229,13 @@ void Grid::addRowOrColumn()
 {
     if (mDistRowsAndColumns->iuniform(0, 2) == 0)
     {
+        // If height is 0, also create new row
+        if (mHeight == 0)
+        {
+            mHeight = 1;
+            mNewRow = 0;
+        }
+
         mWidth++;
         mSize = mWidth * mHeight;
         mNewColumn = mDistRowsAndColumns->iuniform(0, mWidth);
@@ -240,6 +243,14 @@ void Grid::addRowOrColumn()
     }
     else
     {
+        // If width is 0, also create new column
+        if (mWidth == 0)
+        {
+            mWidth = 1;
+            mNewColumn = 0;
+            mColumnsConnectionsCountVec.push_back(0);
+        }
+
         mHeight++;
         mSize = mWidth * mHeight;
         mNewRow = mDistRowsAndColumns->iuniform(0, mHeight);

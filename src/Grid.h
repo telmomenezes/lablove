@@ -85,9 +85,6 @@ public:
 
     void addRowOrColumn();
 
-    double mConnDensity;
-    double mAverageJump;
-
     int mNewRow;
     int mNewColumn;
     bool mAddRowOrColumn;

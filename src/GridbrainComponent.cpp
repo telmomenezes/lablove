@@ -68,7 +68,7 @@ void GridbrainComponent::clearConnections()
 
 void GridbrainComponent::clearMetrics()
 {
-    mConnectionStrength = 0.0f;
+    mInboundConnections = 0;
 }
 
 void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)
