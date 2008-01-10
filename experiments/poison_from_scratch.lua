@@ -41,7 +41,7 @@ rotDrag = 0.05
 feedCenter = 0.25
 
 compCount = 1
-bufferSize = 100
+bufferSize = 50
 fitnessAging = 0.1
 
 addConnectionProb = 0.02
@@ -66,17 +66,10 @@ humanAgent = false
 
 dofile("experiments/aux/basic_command_line.lua")
 
-addConnectionProb = getNumberParameter("addconnprob", addConnectionProb, "con-")
-removeConnectionProb = getNumberParameter("removeconnprob", removeConnectionProb, "con+")
-changeWeightProb = getNumberParameter("changeweightprob", changeWeightProb, "wgt")
-weightMutationStanDev = getNumberParameter("weightmutstandev", weightMutationStanDev, "wsd")
 splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "spc")
 joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb, "joc")
 changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, "chg")
 swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb, "swp")
-bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
-compCount = getNumberParameter("compcount", compCount, "cc")
-fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")
 minimumFreeComponentRatio = getNumberParameter("minfree", minimumFreeComponentRatio, "free")
 
 logSuffix = "_poison_from_scratch_"
