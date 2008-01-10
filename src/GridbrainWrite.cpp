@@ -27,8 +27,9 @@
 
 void Gridbrain::initGridWritePositions()
 {
-    unsigned int currentY = GRID_MARGIN;
+    unsigned int currentY = 0;
     unsigned int maxAlphaWidth = 0;
+    unsigned int betaHeight = 0;
 
     for (unsigned int i = 0; i < mGridsCount; i++)
     {
@@ -43,22 +44,43 @@ void Gridbrain::initGridWritePositions()
                 maxAlphaWidth = grid->getWidth();
             }
         }
+        else if (grid->getType() == Grid::BETA)
+        {
+            betaHeight = grid->getHeight() * (COMPONENT_SIDE + COMPONENT_MARGIN);
+        }
     }
 
-    unsigned int alphaHeight = currentY - (GRID_MARGIN * 2);
+    unsigned int alphaHeight = currentY - GRID_MARGIN;
 
-    unsigned int i = 0;
-    while (mGridsVec[i]->getType() != Grid::BETA)
+    unsigned int alphaY = GRID_MARGIN;
+    unsigned int betaY = GRID_MARGIN;
+
+    if (alphaHeight > betaHeight)
     {
-        i++;
+        betaY = (alphaHeight / 2) - (betaHeight / 2) + GRID_MARGIN;
+    }
+    else if (betaHeight > alphaHeight)
+    {
+        alphaY = (betaHeight / 2) - (alphaHeight / 2) + GRID_MARGIN;
     }
 
-    Grid* grid = mGridsVec[i];
+    currentY = alphaY;
 
-    unsigned int betaX = (maxAlphaWidth * (COMPONENT_SIDE + COMPONENT_MARGIN)) + (COMPONENT_MARGIN * 2);
-    unsigned int betaHeight = grid->getHeight() * (COMPONENT_SIDE + COMPONENT_MARGIN);
-    unsigned int betaY = (alphaHeight / 2) - (betaHeight / 2) + GRID_MARGIN;
-    grid->setWritePos(betaX, betaY);
+    for (unsigned int i = 0; i < mGridsCount; i++)
+    {
+        Grid* grid = mGridsVec[i];
+
+        if (grid->getType() == Grid::ALPHA)
+        {
+            grid->setWritePos(GRID_MARGIN, currentY);
+            currentY += (grid->getHeight() * (COMPONENT_SIDE + COMPONENT_MARGIN)) + GRID_MARGIN;
+        }
+        else if (grid->getType() == Grid::BETA)
+        {
+            unsigned int betaX = (maxAlphaWidth * (COMPONENT_SIDE + COMPONENT_MARGIN)) + (COMPONENT_MARGIN * 2);
+            grid->setWritePos(betaX, betaY);
+        }
+    }
 }
 
 void Gridbrain::getComponentWritePos(unsigned int& posX,

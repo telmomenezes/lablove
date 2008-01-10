@@ -1161,7 +1161,7 @@ void Gridbrain::calcConnectionDensities()
     // Calc inbound connections for every component
     while (conn != NULL)
     {
-        getComponent(conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg)->mInboundConnections++;
+        (getComponent(conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg)->mInboundConnections) += 1;
         conn = (GridbrainConnection*)conn->mNextGlobalConnection;
     }
 
