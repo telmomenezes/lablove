@@ -68,7 +68,6 @@ dofile("experiments/aux/basic_command_line.lua")
 
 splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "spc")
 joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb, "joc")
-changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, "chg")
 swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb, "swp")
 minimumFreeComponentRatio = getNumberParameter("minfree", minimumFreeComponentRatio, "free")
 
