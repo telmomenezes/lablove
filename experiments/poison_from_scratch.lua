@@ -51,7 +51,7 @@ weightMutationStanDev = 1.0
 splitConnectionProb = 0.0
 joinConnectionsProb = 0.0
 changeComponentProb = 0.02
-swapComponentProb = 0.0
+swapComponentProb = 0.02
 minimumFreeComponentRatio = 0.25
 
 timeLimit = 0
