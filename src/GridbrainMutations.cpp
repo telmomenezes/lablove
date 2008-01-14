@@ -298,17 +298,7 @@ void Gridbrain::mutateJoinConnections()
         GridbrainConnection* conn = mConnSeqCurrent;
 
         GridbrainComponent* pivot = getComponent(conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg);
-        GridbrainConnection* iterConn = pivot->mFirstConnection;
-        unsigned int candidateConnections = 0;
-
-        while (iterConn != NULL)
-        {
-            if (conn->mFeedForward == iterConn->mFeedForward)
-            {
-                candidateConnections++;
-            }
-            iterConn = (GridbrainConnection*)(iterConn->mNextConnection);
-        }
+        unsigned int candidateConnections = pivot->mConnectionsCount;
 
         unsigned int pos = 0;
         if (candidateConnections > 0)
@@ -319,21 +309,11 @@ void Gridbrain::mutateJoinConnections()
         if (pos >= 1)
         {
             unsigned int currentPos = 0;
-            iterConn = NULL;
+            GridbrainConnection* iterConn = pivot->mFirstConnection;
             while (currentPos < pos)
             {
-                if (iterConn == NULL)
-                {
-                    iterConn = pivot->mFirstConnection;
-                }
-                else
-                {
-                    iterConn = (GridbrainConnection*)(iterConn->mNextConnection);
-                }
-                if (conn->mFeedForward == iterConn->mFeedForward)
-                {
-                    currentPos++;
-                }
+                iterConn = (GridbrainConnection*)(iterConn->mNextConnection);
+                currentPos++;
             }
 
             unsigned int x1 = conn->mColumnOrig;
@@ -451,13 +431,11 @@ void Gridbrain::mutateSwapComponent()
                     && (conn->mRowTarg == y2)
                     && (conn->mGridTarg == gridNumber))
                 {
-                    conn->mColumnTarg = x1;
+                   conn->mColumnTarg = x1;
                     conn->mRowTarg = y1;
                 }
 
-                if (((!mRecurrentAllowed)
-                    || (grid->getType() == Grid::ALPHA))
-                    && (conn->mColumnOrig >= conn->mColumnTarg))
+                if (conn->mColumnOrig >= conn->mColumnTarg)
                 {
                     GridbrainConnection* nextConn = (GridbrainConnection*)conn->mNextGlobalConnection;
                     removeConnection(conn);

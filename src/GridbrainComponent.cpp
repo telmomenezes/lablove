@@ -39,10 +39,8 @@ void GridbrainComponent::clearDefinitions()
     mSubType = -1;
     mInput = 0;
     mOutput = 0;
-    mRecurrentInput = 0;
     mState = 0;
     mForwardFlag = false;
-    mRecurrentFlag = false;
     mCycleFlag = false;
     mPerceptionPosition = 0;
     mActionPosition = 0;

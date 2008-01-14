@@ -37,7 +37,6 @@ typedef struct
     void* mPrevGlobalConnection;
     void* mNextGlobalConnection;
     void* mOrigComponent;
-    bool mFeedForward;
     double mAge;
 } GridbrainConnection;
 

@@ -77,14 +77,12 @@ public:
     int mSubType;
     float mInput;
     float mOutput;
-    float mRecurrentInput;
     unsigned int mConnectionsCount;
     unsigned int mInboundConnections;
     GridbrainConnection* mFirstConnection;
     float mState;
     bool mCycleFlag;
     bool mForwardFlag;
-    bool mRecurrentFlag;
     unsigned int mOffset;
     unsigned int mPerceptionPosition;
     unsigned int mActionPosition;

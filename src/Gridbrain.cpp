@@ -40,7 +40,6 @@ Gridbrain::Gridbrain(lua_State* luaState)
     mTotalPossibleConnections = 0;
     mBetaComponentsCount = 0;
     mGridsCount = 0;
-    mRecurrentAllowed = false;
 
     mMutateAddConnectionProb = 0.0f;
     mMutateRemoveConnectionProb = 0.0f;
@@ -95,7 +94,6 @@ Brain* Gridbrain::clone(bool randomize)
     gb->mFirstBetaIndex = 0;
     gb->mTotalPossibleConnections = 0;
     gb->mBetaComponentsCount = 0;
-    gb->mRecurrentAllowed = mRecurrentAllowed;
 
     gb->mMutateAddConnectionProb = mMutateAddConnectionProb;
     gb->mMutateRemoveConnectionProb = mMutateRemoveConnectionProb;
@@ -499,16 +497,10 @@ void Gridbrain::addConnection(unsigned int xOrig,
     conn->mAge = age;
     applyWeight(conn);
     conn->mOrigComponent = comp;
-    conn->mFeedForward = true;
 
     if (conn->mGridOrig == conn->mGridTarg)
     {
         conn->mInterGrid = false;
-
-        if (xOrig >= xTarg)
-        {
-            conn->mFeedForward = false;
-        }
     }
     else
     {
@@ -730,7 +722,7 @@ void Gridbrain::selectRandomConnection(unsigned int &x1,
     Grid* targGrid = mGridsVec[g2];
     y2 = mDistConnections->iuniform(0, targGrid->getHeight());
 
-    if ((g1 != g2) || mRecurrentAllowed)
+    if (g1 != g2)
     {
         x2 = mDistConnections->iuniform(0, targGrid->getWidth());
     }
@@ -793,14 +785,6 @@ void Gridbrain::cycle()
         comp->mState = 0;
         comp->mCycleFlag = false;
         comp->mForwardFlag = false;
-        comp->mRecurrentFlag = false;
-
-        // Transfer recurrent inputs to direct inputs
-        if (i >= mFirstBetaIndex)
-        {
-            comp->mInput = mComponents[i].mRecurrentInput;
-            comp->mRecurrentInput = 0;
-        }
     }
 
     // Evaluate grids
@@ -864,7 +848,6 @@ void Gridbrain::cycle()
                         }
                         comp->mInput = 0;
                         comp->mForwardFlag = false;
-                        comp->mRecurrentFlag = false;
                     }
                 }
 
@@ -1009,79 +992,38 @@ void Gridbrain::cycle()
 
                             COMPONENT_INPUT_TYPE(targetComp->mType, inputType)
 
-                            // Feed forward
-                            if (conn->mFeedForward)
+                            switch(inputType)
                             {
-                                switch(inputType)
+                            case GridbrainComponent::IN_MUL:
+                                if (!targetComp->mForwardFlag)
                                 {
-                                case GridbrainComponent::IN_MUL:
-                                    if (!targetComp->mForwardFlag)
-                                    {
-                                        targetComp->mInput = input;
-                                        targetComp->mForwardFlag = true;
-                                    }
-                                    else
-                                    {
-                                        targetComp->mInput *= input;
-                                    }
-                                    break;
-                                case GridbrainComponent::IN_TMUL:
-                                    if ((input < GB_THRESHOLD)
-                                        && (input > -GB_THRESHOLD))
-                                    {
-                                        input = 0.0f;
-                                    }
-                                    if (!targetComp->mForwardFlag)
-                                    {
-                                       targetComp->mInput = input;
-                                       targetComp->mForwardFlag = true;
-                                    }
-                                    else
-                                    {
-                                        targetComp->mInput *= input;
-                                    }
-                                    break;
-                                case GridbrainComponent::IN_SUM:
-                                    targetComp->mInput += input;
-                                    break;
+                                    targetComp->mInput = input;
+                                    targetComp->mForwardFlag = true;
                                 }
-                            }
-                            // Recurrent
-                            else
-                            {
-                                switch(inputType)
+                                else
                                 {
-                                case GridbrainComponent::IN_MUL:
-                                    if (!targetComp->mRecurrentFlag)
-                                    {
-                                        targetComp->mRecurrentInput = input;
-                                        targetComp->mRecurrentFlag = true;
-                                    }
-                                    else
-                                    {
-                                        targetComp->mRecurrentInput *= input;
-                                    }
-                                    break;
-                                case GridbrainComponent::IN_TMUL:
-                                    if ((input < GB_THRESHOLD)
-                                        && (input > -GB_THRESHOLD))
-                                    {
-                                        input = 0.0f;
-                                    }
-                                    if (!targetComp->mRecurrentFlag)
-                                    {
-                                        targetComp->mRecurrentInput = input;
-                                        targetComp->mRecurrentFlag = true;
-                                    }
-                                    else
-                                    {
-                                        targetComp->mRecurrentInput *= input;
-                                    }
-                                    break;
-                                case GridbrainComponent::IN_SUM:
-                                    targetComp->mRecurrentInput += input;
-                                    break;
+                                    targetComp->mInput *= input;
                                 }
+                                break;
+                            case GridbrainComponent::IN_TMUL:
+                                if ((input < GB_THRESHOLD)
+                                    && (input > -GB_THRESHOLD))
+                                {
+                                    input = 0.0f;
+                                }
+                                if (!targetComp->mForwardFlag)
+                                {
+                                   targetComp->mInput = input;
+                                   targetComp->mForwardFlag = true;
+                                }
+                                else
+                                {
+                                    targetComp->mInput *= input;
+                                }
+                                break;
+                            case GridbrainComponent::IN_SUM:
+                                targetComp->mInput += input;
+                                break;
                             }
 
                             /*printf("(%d, %d, %d)[%f] -> (%d, %d, %d)[%f]\n",
@@ -1138,10 +1080,6 @@ void Gridbrain::calcConnectionCounts()
             {
                 possibleConnections = mBetaComponentsCount * height;
                 possibleConnections += (width - col - 1) * height * height;
-            }
-            else if (mRecurrentAllowed)
-            {
-                possibleConnections = mBetaComponentsCount * height;
             }
             else
             {

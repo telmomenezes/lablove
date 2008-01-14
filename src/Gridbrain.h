@@ -208,8 +208,6 @@ protected:
     unsigned int mTotalPossibleConnections;
     unsigned int mBetaComponentsCount;
 
-    bool mRecurrentAllowed;
-
     float mMutateAddConnectionProb;
     float mMutateRemoveConnectionProb;
     float mMutateChangeConnectionWeightProb;
