@@ -400,57 +400,98 @@ void Gridbrain::mutateSwapComponent()
 
             GridbrainComponent* comp2 = getComponent(x2, y2, gridNumber);
 
+            // Check if swap is possible
+            bool valid = true;
             GridbrainConnection* conn = mConnections;
-
-            while (conn != NULL)
+            while (valid && (conn != NULL))
             {
-            
-                if ((conn->mColumnOrig == x1) 
-                    && (conn->mRowOrig == y1)
-                    && (conn->mGridOrig == gridNumber))
+                unsigned int connX1 = conn->mColumnOrig;
+                unsigned int connY1 = conn->mRowOrig;
+                unsigned int connX2 = conn->mColumnTarg;
+                unsigned int connY2 = conn->mRowTarg;
+                unsigned int connG1 = conn->mGridOrig;
+                unsigned int connG2 = conn->mGridTarg;
+
+                if ((connX1 == x1) 
+                    && (connY1 == y1)
+                    && (connG1 == gridNumber))
                 {
-                    conn->mColumnOrig = x2;
-                    conn->mRowOrig = y2;
+                    connX1 = x2;
+                    connY1 = y2;
                 }
-                else if ((conn->mColumnOrig == x2)
-                    && (conn->mRowOrig == y2)
-                    && (conn->mGridOrig == gridNumber))
+                else if ((connX1 == x2)
+                    && (connY1 == y2)
+                    && (connG1 == gridNumber))
                 {
-                    conn->mColumnOrig = x1;
-                    conn->mRowOrig = y1;
+                    connX1 = x1;
+                    connY1 = y1;
+                }
+                if ((connX2 == x1)
+                    && (connY2 == y1)
+                    && (connG2 == gridNumber))
+                {
+                    connX2 = x2;
+                    connY2 = y2;
+                }
+                else if ((connX2 == x2)
+                    && (connY2 == y2)
+                    && (connG2 == gridNumber))
+                {
+                    connX2 = x1;
+                    connY2 = y1;
                 }
 
-                if ((conn->mColumnTarg == x1)
-                    && (conn->mRowTarg == y1)
-                    && (conn->mGridTarg == gridNumber))
+                if (connX1 >= connX2)
                 {
-                    conn->mColumnTarg = x2;
-                    conn->mRowTarg = y2;
+                    valid = false;
                 }
-                else if ((conn->mColumnTarg == x2)
-                    && (conn->mRowTarg == y2)
-                    && (conn->mGridTarg == gridNumber))
-                {
-                   conn->mColumnTarg = x1;
-                    conn->mRowTarg = y1;
-                }
-
-                if (conn->mColumnOrig >= conn->mColumnTarg)
-                {
-                    GridbrainConnection* nextConn = (GridbrainConnection*)conn->mNextGlobalConnection;
-                    removeConnection(conn);
-                    conn = nextConn;
-                }
-                else
-                {
-                    conn = (GridbrainConnection*)conn->mNextGlobalConnection;
-                }
+                conn = (GridbrainConnection*)conn->mNextGlobalConnection;
             }
 
-            GridbrainComponent auxComp;
-            auxComp.copyDefinitions(comp1);
-            comp1->copyDefinitions(comp2);
-            comp2->copyDefinitions(&auxComp);
+            // If valid, do swap
+            if (valid)
+            {
+                conn = mConnections;
+                while (conn != NULL)
+                {
+            
+                    if ((conn->mColumnOrig == x1) 
+                        && (conn->mRowOrig == y1)
+                        && (conn->mGridOrig == gridNumber))
+                    {
+                        conn->mColumnOrig = x2;
+                        conn->mRowOrig = y2;
+                    }
+                    else if ((conn->mColumnOrig == x2)
+                        && (conn->mRowOrig == y2)
+                        && (conn->mGridOrig == gridNumber))
+                    {
+                        conn->mColumnOrig = x1;
+                        conn->mRowOrig = y1;
+                    }
+                    if ((conn->mColumnTarg == x1)
+                        && (conn->mRowTarg == y1)
+                        && (conn->mGridTarg == gridNumber))
+                    {
+                        conn->mColumnTarg = x2;
+                        conn->mRowTarg = y2;
+                    }
+                    else if ((conn->mColumnTarg == x2)
+                        && (conn->mRowTarg == y2)
+                        && (conn->mGridTarg == gridNumber))
+                    {
+                        conn->mColumnTarg = x1;
+                        conn->mRowTarg = y1;
+                    }
+
+                    conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+                }
+
+                GridbrainComponent auxComp;
+                auxComp.copyDefinitions(comp1);
+                comp1->copyDefinitions(comp2);
+                comp2->copyDefinitions(&auxComp);
+            }
         }
     }
 }

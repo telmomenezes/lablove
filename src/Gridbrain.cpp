@@ -475,6 +475,21 @@ void Gridbrain::addConnection(unsigned int xOrig,
         throw std::runtime_error(buffer);
     }
 
+    if ((gOrig == gTarg) && (xOrig >= xTarg))
+    {
+        char buffer[500];
+        sprintf(buffer,
+                    "Only feedforward connections allowed in the gridbrain. Invalid add connection: %d,%d,%d -> %d,%d,%d [%f]",
+                    xOrig,
+                    yOrig,
+                    gOrig,
+                    xTarg,
+                    yTarg,
+                    gTarg,
+                    weight);
+        throw std::runtime_error(buffer);
+    }
+
     if (connectionExists(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg))
     {
         return;
