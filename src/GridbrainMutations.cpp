@@ -163,28 +163,21 @@ void Gridbrain::mutateAddConnection(unsigned int popSize)
         return;
     }
 
-    initRandomConnectionSequence(mMutateAddConnectionProb);
+    unsigned int count = generateEventCount(mMutateAddConnectionProb, popSize);
 
-    unsigned int count = 0;
-    while (nextRandomConnection() != NULL) 
-    {
-        MUTATIONS_ADD_CONN++;
-        count++;
-    }
-
+    MUTATIONS_ADD_CONN += count;
     addRandomConnections(count);
 }
 
 void Gridbrain::mutateRemoveConnection(unsigned int popSize)
 {
-    initRandomConnectionSequence(mMutateRemoveConnectionProb);
+    unsigned int count = generateEventCount(mMutateRemoveConnectionProb, popSize);
 
-    while (nextRandomConnection() != NULL) 
+    MUTATIONS_REM_CONN += count;
+
+    for (unsigned int i = 0; i < count; i++)
     {
-        MUTATIONS_REM_CONN++;
-        GridbrainConnection* conn = mConnSeqCurrent;
-        mConnSeqCurrent = (GridbrainConnection*)mConnSeqCurrent->mNextGlobalConnection;
-        removeConnection(conn);
+        removeRandomConnection();
     }
 }
 

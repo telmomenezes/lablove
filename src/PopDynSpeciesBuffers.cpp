@@ -110,7 +110,7 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
 
         SimulationObject* org2 = species->mOrganismVector[organismNumber];
 
-        if (org->mFitness > org2->mFitness)
+        if (org->mFitness >= org2->mFitness)
         {
             delete species->mOrganismVector[organismNumber];
             species->mOrganismVector[organismNumber] = org;

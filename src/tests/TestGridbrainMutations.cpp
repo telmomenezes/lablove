@@ -61,13 +61,66 @@ TEST_FIXTURE(GridbrainMutFixture, GridbrainRemoveRandomConn)
 
 TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateAddConnection)
 {
-    mGridbrain.setMutateAddConnectionProb(0.01f);
+    mGridbrain.setMutateAddConnectionProb(0.1f);
     mGridbrain.mutate();
     CHECK(mGridbrain.isValid());
     mGridbrain.addRandomConnections(100);
-    printf("connections before: %d\n", mGridbrain.getConnectionsCount());
+    unsigned int conn1 = mGridbrain.getConnectionsCount();
     mGridbrain.mutate();
     CHECK(mGridbrain.isValid());
-    printf("connections after: %d\n", mGridbrain.getConnectionsCount());
+    unsigned int conn2 = mGridbrain.getConnectionsCount();
+    CHECK(conn1 <= conn2);
+}
+
+TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateRemoveConnection)
+{
+    mGridbrain.setMutateRemoveConnectionProb(0.1f);
+    mGridbrain.mutate();
+    CHECK(mGridbrain.isValid());
+    mGridbrain.addRandomConnections(100);
+    unsigned int conn1 = mGridbrain.getConnectionsCount();
+    mGridbrain.mutate();
+    CHECK(mGridbrain.isValid());
+    unsigned int conn2 = mGridbrain.getConnectionsCount();
+    CHECK(conn1 >= conn2);
+}
+
+TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateChangeConnection)
+{
+    mGridbrain.setMutateChangeConnectionWeightProb(0.1f);
+    mGridbrain.mutate();
+    CHECK(mGridbrain.isValid());
+    mGridbrain.addRandomConnections(100);
+    unsigned int conn1 = mGridbrain.getConnectionsCount();
+    mGridbrain.mutate();
+    CHECK(mGridbrain.isValid());
+    unsigned int conn2 = mGridbrain.getConnectionsCount();
+    CHECK(conn1 == conn2);
+}
+
+TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateChangeComponent)
+{
+    mGridbrain.setMutateChangeComponentProb(0.1f);
+    mGridbrain.mutate();
+    CHECK(mGridbrain.isValid());
+    mGridbrain.addRandomConnections(100);
+    unsigned int conn1 = mGridbrain.getConnectionsCount();
+    mGridbrain.mutate();
+    CHECK(mGridbrain.isValid());
+    unsigned int conn2 = mGridbrain.getConnectionsCount();
+    CHECK(conn1 == conn2);
+}
+
+TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateSwapComponent)
+{
+    mGridbrain.setMutateSwapComponentProb(0.1f);
+    mGridbrain.mutate();
+    CHECK(mGridbrain.isValid());
+    mGridbrain.addRandomConnections(100);
+    unsigned int conn1 = mGridbrain.getConnectionsCount();
+    mGridbrain.mutate();
+    CHECK(mGridbrain.isValid());
+    unsigned int conn2 = mGridbrain.getConnectionsCount();
+    CHECK(conn1 == conn2);
 }
 
