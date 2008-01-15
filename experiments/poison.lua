@@ -50,8 +50,8 @@ compCount = 1
 bufferSize = 100
 fitnessAging = 0.1
 
-addConnectionProb = 0.2
-removeConnectionProb = 0.2
+addConnectionProb = 0.02
+removeConnectionProb = 0.02
 changeWeightProb = 0.02
 weightMutationStanDev = 1.0
 splitConnectionProb = 0.0
