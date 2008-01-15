@@ -94,13 +94,13 @@ unsigned int Gridbrain::generateEventCount(float eventProb, unsigned int popSize
 
     unsigned int count = 0;
     float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
-    double nextPos = mConnSeqPos + (log(prob) / log(nonEventProb));
+    double nextPos = log(prob) / log(nonEventProb);
 
     while (nextPos < (double)popSize)
     {
         count++;
         prob = mDistMutationsProb->uniform(0.0f, 1.0f);
-        nextPos += mConnSeqPos + (log(prob) / log(nonEventProb));
+        nextPos += log(prob) / log(nonEventProb);
     }
 
     return count;
