@@ -51,9 +51,6 @@ public:
 
     void setComponentSet(GridbrainComponentSet* componentSet);
 
-    void setNumber(unsigned int number){mNumber = number;}
-    unsigned int getNumber(){return mNumber;}
-    
     void setOffset(unsigned int offset){mOffset = offset;}
     
     unsigned int getOffset(){return mOffset;}
@@ -100,7 +97,6 @@ protected:
     static mt_distribution* mDistRowsAndColumns;
 
     Type mType;
-    unsigned int mNumber;
     unsigned int mWidth;
     unsigned int mHeight;
     unsigned int mSize;

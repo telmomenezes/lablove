@@ -104,6 +104,7 @@ SET(UNIT_TEST_FILES
         src/tests/TestSimCont2D.cpp
         src/tests/TestGrid.cpp
         src/tests/TestGridbrain.cpp
+        src/tests/TestGridbrainMutations.cpp
         src/tests/TestGridbrainComponents.cpp
         src/tests/TestGridbrainComponentSet.cpp
         src/tests/TestSymbolRGB.cpp

@@ -27,6 +27,7 @@ TEST(CreateGridbrain)
 {
     Gridbrain gridbrain;
     CHECK_EQUAL(gridbrain.getConnectionsCount(), 0);
+    CHECK(gridbrain.isValid());
 }
 
 struct GridbrainFixture
@@ -45,12 +46,33 @@ struct GridbrainFixture
     Grid* mGrid;
 };
 
+struct GridbrainFixture2
+{
+    GridbrainFixture2()
+    {
+        mAlphaGrid = new Grid();
+        mAlphaGrid->init(Grid::ALPHA, 3, 3);
+        mGridbrain.addGrid(mAlphaGrid, "alpha");
+        mBetaGrid = new Grid();
+        mBetaGrid->init(Grid::BETA, 2, 2);
+        mGridbrain.addGrid(mBetaGrid, "alpha");
+        mGridbrain.init();
+    }
+
+    ~GridbrainFixture2(){}
+
+    Gridbrain mGridbrain;
+    Grid* mAlphaGrid;
+    Grid* mBetaGrid;
+};
+
 TEST_FIXTURE(GridbrainFixture, GridbrainAddOneGrid)
 {
     Grid* gridOut = mGridbrain.getGrid(0);
     CHECK(gridOut != NULL);
     gridOut = mGridbrain.getGrid(1);
     CHECK(gridOut == NULL);
+    CHECK(mGridbrain.isValid());
 }
 
 TEST_FIXTURE(GridbrainFixture, GridbrainZeroInitialConnections)
@@ -64,19 +86,64 @@ TEST_FIXTURE(GridbrainFixture, GridbrainAddConnection)
     mGridbrain.addConnection(0, 0, 0, 1, 1, 0, 0.5);
     CHECK_EQUAL(mGridbrain.getConnectionsCount(), 1);
     CHECK(mGridbrain.connectionExists(0, 0, 0, 1, 1, 0));
+    CHECK(mGridbrain.isValid());
 }
 
-TEST_FIXTURE(GridbrainFixture, GridbrainAddRandomConnections)
+TEST_FIXTURE(GridbrainFixture, GridbrainAddRandomConnections1)
 {
     CHECK_EQUAL(mGridbrain.getConnectionsCount(), 0);
     mGridbrain.addRandomConnections(1);
     CHECK_EQUAL(mGridbrain.getConnectionsCount(), 1);
+    CHECK(mGridbrain.isValid());
+}
+
+TEST_FIXTURE(GridbrainFixture, GridbrainAddRandomConnections2)
+{
+    CHECK_EQUAL(mGridbrain.getConnectionsCount(), 0);
+    mGridbrain.addRandomConnections(27);
+    CHECK_EQUAL(mGridbrain.getConnectionsCount(), 27);
+    CHECK(mGridbrain.isValid());
+}
+
+TEST_FIXTURE(GridbrainFixture, GridbrainAddRandomConnections3)
+{
+    CHECK_EQUAL(mGridbrain.getConnectionsCount(), 0);
+    mGridbrain.addRandomConnections(28);
+    CHECK_EQUAL(mGridbrain.getConnectionsCount(), 27);
+    CHECK(mGridbrain.isValid());
+}
+
+TEST_FIXTURE(GridbrainFixture, GridbrainAddRandomConnections4)
+{
+    CHECK_EQUAL(mGridbrain.getConnectionsCount(), 0);
+    mGridbrain.addRandomConnections(20);
+    CHECK_EQUAL(mGridbrain.getConnectionsCount(), 20);
+    mGridbrain.addRandomConnections(20);
+    CHECK_EQUAL(mGridbrain.getConnectionsCount(), 27);
+    CHECK(mGridbrain.isValid());
+}
+
+TEST_FIXTURE(GridbrainFixture2, GridbrainAddRandomConnections5)
+{
+    CHECK_EQUAL(mGridbrain.getConnectionsCount(), 0);
+    mGridbrain.addRandomConnections(20);
+    CHECK_EQUAL(mGridbrain.getConnectionsCount(), 20);
+    CHECK(mGridbrain.isValid());
+}
+
+TEST_FIXTURE(GridbrainFixture2, GridbrainAddRandomConnections6)
+{
+    CHECK_EQUAL(mGridbrain.getConnectionsCount(), 0);
+    mGridbrain.addRandomConnections(100);
+    CHECK_EQUAL(mGridbrain.getConnectionsCount(), 67);
+    CHECK(mGridbrain.isValid());
 }
 
 TEST_FIXTURE(GridbrainFixture, GridbrainGetComponent)
 {
     GridbrainComponent* comp = mGridbrain.getComponent(0, 0, 0);
     CHECK_EQUAL(comp->mType, GridbrainComponent::NUL);
+    CHECK(mGridbrain.isValid());
 }
 
 TEST_FIXTURE(GridbrainFixture, GridbrainGetComponentFromInvalidGrid)
@@ -97,6 +164,7 @@ TEST_FIXTURE(GridbrainFixture, GridbrainGetComponentFromInvalidYPosition)
 TEST_FIXTURE(GridbrainFixture, GridbrainCycleOnEmptyGrid)
 {
     mGridbrain.cycle();
+    CHECK(mGridbrain.isValid());
 }
 
 TEST_FIXTURE(GridbrainFixture, GridbrainConnectionAge1)
@@ -104,6 +172,7 @@ TEST_FIXTURE(GridbrainFixture, GridbrainConnectionAge1)
     mGridbrain.addConnection(0, 0, 0, 1, 1, 0, 0.5);
     GridbrainConnection* conn = mGridbrain.getConnection(0, 0, 0, 1, 1, 0);
     CHECK_CLOSE(conn->mAge, 0.0f, 0.0001f);
+    CHECK(mGridbrain.isValid());
 }
 
 TEST_FIXTURE(GridbrainFixture, GridbrainConnectionAge2)
@@ -112,7 +181,9 @@ TEST_FIXTURE(GridbrainFixture, GridbrainConnectionAge2)
     Gridbrain* gb = (Gridbrain*)mGridbrain.clone();
     GridbrainConnection* conn = gb->getConnection(0, 0, 0, 1, 1, 0);
     CHECK_CLOSE(conn->mAge, 1.0f, 0.0001f);
+    CHECK(gb->isValid());
     delete gb;
+    CHECK(mGridbrain.isValid());
 }
 
 TEST_FIXTURE(GridbrainFixture, GridbrainConnectionAge3)
@@ -122,8 +193,11 @@ TEST_FIXTURE(GridbrainFixture, GridbrainConnectionAge3)
     Gridbrain* gb2 = (Gridbrain*)gb->clone();
     GridbrainConnection* conn = gb2->getConnection(0, 0, 0, 1, 1, 0);
     CHECK_CLOSE(conn->mAge, 2.0f, 0.0001f);
+    CHECK(gb->isValid());
+    CHECK(gb2->isValid());
     delete gb;
     delete gb2;
+    CHECK(mGridbrain.isValid());
 }
 
 TEST_FIXTURE(GridbrainFixture, GridbrainConnectionAge4)
@@ -135,8 +209,11 @@ TEST_FIXTURE(GridbrainFixture, GridbrainConnectionAge4)
     gb2->addConnection(0, 0, 0, 1, 1, 0, 0.5);
     GridbrainConnection* conn = gb2->getConnection(0, 0, 0, 1, 1, 0);
     CHECK_CLOSE(conn->mAge, 0.0f, 0.0001f);
+    CHECK(gb->isValid());
+    CHECK(gb2->isValid());
     delete gb;
     delete gb2;
+    CHECK(mGridbrain.isValid());
 }
 
 TEST_FIXTURE(GridbrainFixture, GridbrainConnectionAge5)
@@ -157,7 +234,10 @@ TEST_FIXTURE(GridbrainFixture, GridbrainConnectionAge5)
     CHECK_CLOSE(conn2->mAge, 2.0f, 0.0001f);
     CHECK_CLOSE(conn3->mAge, 1.0f, 0.0001f);
     CHECK_CLOSE(conn4->mAge, 0.0f, 0.0001f);
+    CHECK(gb->isValid());
+    CHECK(gb2->isValid());
     delete gb;
     delete gb2;
+    CHECK(mGridbrain.isValid());
 }
 

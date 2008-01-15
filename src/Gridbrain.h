@@ -78,6 +78,7 @@ public:
                 unsigned int xTarg,
                 unsigned int yTarg,
                 unsigned int gTarg);
+    void removeRandomConnection();
     GridbrainConnection* getConnection(unsigned int xOrig,
                 unsigned int yOrig,
                 unsigned int gOrig,
@@ -90,7 +91,7 @@ public:
                 unsigned int xTarg,
                 unsigned int yTarg,
                 unsigned int gTarg);
-    void selectRandomConnection(unsigned int &x1,
+    bool selectRandomConnection(unsigned int &x1,
                 unsigned int &y1,
                 unsigned int &g1,
                 unsigned int &x2,
@@ -134,6 +135,8 @@ public:
 
     virtual string write(SimulationObject* obj, PopulationManager* pop);
 
+    bool isValid();
+
     static const char mClassName[];
     static Orbit<Gridbrain>::MethodType mMethods[];
     static Orbit<Gridbrain>::NumberGlobalType mNumberGlobals[];
@@ -165,14 +168,15 @@ public:
     static void debugMutationsCount();
 
 protected:
+
     void initGridsIO();
     void calcConnectionCounts();
     void calcConnectionDensities();
 
     void applyWeight(GridbrainConnection* conn);
 
-    void mutateAddConnection();
-    void mutateRemoveConnection();
+    void mutateAddConnection(unsigned int popSize);
+    void mutateRemoveConnection(unsigned int popSize);
     void mutateChangeConnectionWeight();
     void mutateSplitConnection();
     void mutateJoinConnections();
@@ -190,6 +194,13 @@ protected:
     GridbrainConnection* nextRandomConnection();
     void initRandomComponentSequence(float selectionProb);
     int nextRandomComponent();
+
+    unsigned int generateEventCount(float eventProb, unsigned int popSize);
+
+    unsigned int getRelativeOffset(GridbrainComponent* compOrig,
+                                            unsigned int targX,
+                                            unsigned int targY,
+                                            unsigned int targG);
 
     static mt_distribution* mDistConnections;
     static mt_distribution* mDistMutationsProb;
@@ -221,9 +232,9 @@ protected:
 
     float mConnSeqProb;
     GridbrainConnection* mConnSeqCurrent;
-    unsigned int mConnSeqPos;
+    double mConnSeqPos;
     float mCompSeqProb;
-    int mCompSeqPos;
+    double mCompSeqPos;
 };
 
 #endif

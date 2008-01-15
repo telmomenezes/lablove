@@ -24,7 +24,6 @@ mt_distribution* Grid::mDistRowsAndColumns = gDistManager.getNewDistribution();
 Grid::Grid(lua_State* luaState)
 {
     mType = ALPHA;
-    mNumber = 0;
     mWidth = 0;
     mHeight = 0;
     mSize = 0;
@@ -54,7 +53,6 @@ Grid::Grid(const Grid& grid)
     mType = grid.mType;
     mWidth = grid.mWidth;
     mHeight = grid.mHeight;
-    mNumber = grid.mNumber;
     mSize = grid.mSize;
     mOffset = grid.mOffset;
     mInputDepth = 0;

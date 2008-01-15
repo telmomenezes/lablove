@@ -34,11 +34,15 @@ long Gridbrain::MUTATIONS_SWP_COMP = 0;
 
 void Gridbrain::mutate()
 {
-    mutateAddConnection();
-    mutateRemoveConnection();
     mutateChangeConnectionWeight();
+
+    unsigned int connCount = mConnectionsCount;
+    mutateAddConnection(connCount);
+    mutateRemoveConnection(connCount);
+
     mutateSplitConnection();
     mutateJoinConnections();
+
     mutateChangeComponent();
     mutateSwapComponent();
 }
@@ -48,7 +52,7 @@ void Gridbrain::initRandomConnectionSequence(float selectionProb)
     // mConnSeqProb is the non-selection probability
     mConnSeqProb = 1.0f - selectionProb;
     mConnSeqCurrent = mConnections;
-    mConnSeqPos = 0;
+    mConnSeqPos = 0.0f;
 }
 
 GridbrainConnection* Gridbrain::nextRandomConnection()
@@ -63,12 +67,12 @@ GridbrainConnection* Gridbrain::nextRandomConnection()
     }
 
     float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
-    double nextPos = trunc(log(prob) / log(mConnSeqProb));
+    double nextPos = mConnSeqPos + (log(prob) / log(mConnSeqProb));
 
     while (mConnSeqPos < nextPos)
     {
         mConnSeqCurrent = (GridbrainConnection*)mConnSeqCurrent->mNextGlobalConnection;
-        mConnSeqPos++;
+        mConnSeqPos += 1.0f;
 
         if (mConnSeqCurrent == NULL)
         {
@@ -77,6 +81,29 @@ GridbrainConnection* Gridbrain::nextRandomConnection()
     }
 
     return mConnSeqCurrent;
+}
+
+unsigned int Gridbrain::generateEventCount(float eventProb, unsigned int popSize)
+{
+    if (eventProb == 0.0f)
+    {
+        return 0;
+    }
+
+    float nonEventProb = 1.0f - eventProb;
+
+    unsigned int count = 0;
+    float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+    double nextPos = mConnSeqPos + (log(prob) / log(nonEventProb));
+
+    while (nextPos < (double)popSize)
+    {
+        count++;
+        prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+        nextPos += mConnSeqPos + (log(prob) / log(nonEventProb));
+    }
+
+    return count;
 }
 
 void Gridbrain::initRandomComponentSequence(float selectionProb)
@@ -95,9 +122,9 @@ int Gridbrain::nextRandomComponent()
     }
 
     float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
-    double nextPos = trunc(log(prob) / log(mCompSeqProb));
+    double nextPos = log(prob) / log(mCompSeqProb);
 
-    mCompSeqPos += (int)nextPos;
+    mCompSeqPos += nextPos;
 
     if (mCompSeqPos >= mNumberOfComponents)
     {
@@ -107,25 +134,48 @@ int Gridbrain::nextRandomComponent()
     return mCompSeqPos;
 }
 
-void Gridbrain::mutateAddConnection()
+void Gridbrain::removeRandomConnection()
 {
-    initRandomConnectionSequence(mMutateAddConnectionProb);
-
-    while (nextRandomConnection() != NULL) 
+    if (mConnectionsCount == 0)
     {
-        MUTATIONS_ADD_CONN++;
-        addRandomConnections(1);
+        return;
     }
 
-    // Always create a connection if none exist
-    // Otherwise a 0 connections grid is an evolutionary dead-end
+    unsigned int pos = mDistConnections->iuniform(0, mConnectionsCount);
+    GridbrainConnection* conn = mConnections;
+    unsigned int i = 0;
+    while (i < pos)
+    {
+        conn = (GridbrainConnection*)(conn->mNextGlobalConnection);
+        i++;
+    }
+
+    removeConnection(conn);
+}
+
+void Gridbrain::mutateAddConnection(unsigned int popSize)
+{
+    // Allways create a connection if none exist
+    // otherwise a 0 connections grid is an evolutionary dead-end
     if (mConnectionsCount == 0)
     {
         addRandomConnections(1);
+        return;
     }
+
+    initRandomConnectionSequence(mMutateAddConnectionProb);
+
+    unsigned int count = 0;
+    while (nextRandomConnection() != NULL) 
+    {
+        MUTATIONS_ADD_CONN++;
+        count++;
+    }
+
+    addRandomConnections(count);
 }
 
-void Gridbrain::mutateRemoveConnection()
+void Gridbrain::mutateRemoveConnection(unsigned int popSize)
 {
     initRandomConnectionSequence(mMutateRemoveConnectionProb);
 
@@ -454,7 +504,6 @@ void Gridbrain::mutateSwapComponent()
                 conn = mConnections;
                 while (conn != NULL)
                 {
-            
                     if ((conn->mColumnOrig == x1) 
                         && (conn->mRowOrig == y1)
                         && (conn->mGridOrig == gridNumber))

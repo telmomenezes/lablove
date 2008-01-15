@@ -234,7 +234,6 @@ Brain* Gridbrain::clone(bool randomize)
 void Gridbrain::addGrid(Grid* grid, string name)
 {
     int number = mGridsVec.size();
-    grid->setNumber(number);
     grid->setOffset(mNumberOfComponents);
     unsigned int gridComponentCount = grid->getHeight() * grid->getWidth();
     mNumberOfComponents += gridComponentCount;
@@ -452,6 +451,15 @@ void Gridbrain::addConnection(unsigned int xOrig,
                 float weight,
                 double age)
 {
+    /*printf("add connection: %d,%d,%d -> %d,%d,%d [%f]\n",
+            xOrig,
+            yOrig,
+            gOrig,
+            xTarg,
+            yTarg,
+            gTarg,
+            weight);*/
+
     Grid* gridOrig = mGridsVec[gOrig];
     Grid* gridTarg = mGridsVec[gTarg];
 
@@ -522,6 +530,7 @@ void Gridbrain::addConnection(unsigned int xOrig,
         conn->mInterGrid = true;
     }
 
+    // Insert in component list, ordered by relative offset
     if (comp->mConnectionsCount == 0)
     {
         comp->mFirstConnection = conn;
@@ -530,11 +539,42 @@ void Gridbrain::addConnection(unsigned int xOrig,
     }
     else
     {
-        GridbrainConnection* nextConn = comp->mFirstConnection;
-        conn->mPrevConnection = NULL;
-        conn->mNextConnection = nextConn;
-        comp->mFirstConnection = conn;
-        nextConn->mPrevConnection = conn;
+        unsigned int offset = getRelativeOffset(comp, conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg);
+
+        GridbrainConnection* iterConn = comp->mFirstConnection;
+        bool inserted = false;
+        while ((!inserted) && (iterConn != NULL))
+        {
+            unsigned int iterOffset = getRelativeOffset(comp, iterConn->mColumnTarg, iterConn->mRowTarg, iterConn->mGridTarg);
+
+            if (iterOffset > offset)
+            {
+                conn->mNextConnection = iterConn;
+                conn->mPrevConnection = iterConn->mPrevConnection;
+                iterConn->mPrevConnection = conn;
+
+                if (conn->mPrevConnection == NULL)
+                {
+                    comp->mFirstConnection = conn;
+                }
+                else
+                {
+                    ((GridbrainConnection*)(conn->mPrevConnection))->mNextConnection = conn;
+                }
+
+                inserted = true;
+            }
+            else if (iterConn->mNextConnection == NULL)
+            {
+                iterConn->mNextConnection = conn;
+                conn->mPrevConnection = iterConn;
+                conn->mNextConnection = NULL;
+
+                inserted = true;
+            }
+
+            iterConn = (GridbrainConnection*)(iterConn->mNextConnection);
+        }
     }
 
     (comp->mConnectionsCount)++;
@@ -667,96 +707,144 @@ bool Gridbrain::connectionExists(unsigned int xOrig,
     return conn != NULL;
 }
 
-void Gridbrain::selectRandomConnection(unsigned int &x1,
+bool Gridbrain::selectRandomConnection(unsigned int &x1,
                     unsigned int &y1,
                     unsigned int &g1,
                     unsigned int &x2,
                     unsigned int &y2,
                     unsigned int &g2)
 {
-    unsigned int connPos = mDistConnections->iuniform(0, mTotalPossibleConnections);
+    unsigned int possibleConnections = mTotalPossibleConnections - mConnectionsCount;
+
+    // No free connection exists, return with false
+    if (possibleConnections == 0)
+    {
+        return false;
+    }
+
+    // Randomly select a free connection index
+    unsigned int connPos = mDistConnections->iuniform(0, possibleConnections);
+
+    // Find the origin component of the selected connection
     unsigned int curPos = 0;
     unsigned int colConnCount = 0;
-
-    Grid* gridOrig;
-
+    unsigned int targPos = 0;
+    Grid* gridOrig = NULL;
     bool found = false;
+
     for (unsigned g = 0;
         (g < mGridsCount) && (!found);
         g++)
     {
         gridOrig = mGridsVec[g];
         unsigned int width = gridOrig->getWidth();
+        unsigned int height = gridOrig->getHeight();
         
         for (unsigned int col = 0;
             (col < width) && (!found);
             col++)
         {
             colConnCount = gridOrig->getColConnCount(col);
-            curPos += colConnCount;
 
-            if (curPos >= connPos)
+            for (unsigned int row = 0;
+                (row < height) && (!found);
+                row++)
             {
-                g1 = gridOrig->getNumber();
-                x1 = col;
-                y1 = mDistConnections->iuniform(0, gridOrig->getHeight());
-                found = true;
+                GridbrainComponent* comp = getComponent(col, row, g);
+                // Increment current position by the number of free connections in the curent component
+                curPos += colConnCount - comp->mConnectionsCount;
+
+                if (curPos > connPos)
+                {
+                    g1 = g;
+                    x1 = col;
+                    y1 = row;
+                    found = true;
+                    targPos = curPos - connPos - 1;
+                }
             }
         }
     }
 
-    unsigned int targConnPos = mDistConnections->iuniform(0, colConnCount);
-    curPos = 0;
-
-    if (gridOrig->getType() == Grid::ALPHA)
+    // This should never happen
+    if (!found)
     {
-        unsigned int width = gridOrig->getWidth();
-        unsigned int targetsPerCol = gridOrig->getHeight();
-        targetsPerCol *= targetsPerCol;
-        for (unsigned int col = (x1 + 1); col < width; col++)
-        {
-            curPos += targetsPerCol;
+        throw std::runtime_error("Failed internal assertion: Could not find selected origin component in Gridbrain::selectRandomComponent()");
+    }
 
-            if (curPos >= targConnPos)
-            {
-                g2 = gridOrig->getNumber();
-                x2 = col;
-                y2 = mDistConnections->iuniform(0, gridOrig->getHeight());
-                return;
-            }
+    // Determine relative offset (to origin component) of target
+    GridbrainComponent* origComp = getComponent(x1, y1, g1);
+    GridbrainConnection* conn = origComp->mFirstConnection;
+
+    while (conn != NULL)
+    {
+        unsigned int targX = conn->mColumnTarg;
+        unsigned int targY = conn->mRowTarg;
+        unsigned int targG = conn->mGridTarg;
+
+        unsigned int offset = getRelativeOffset(origComp, targX, targY, targG);
+
+        // This works because connections lists are ordered by relative offsets in components
+        if (targPos >= offset)
+        {
+            targPos++;
         }
+
+        conn = (GridbrainConnection*)(conn->mNextConnection);
+    }
+
+    // Get target component coordinates from relative offset
+    unsigned int otherGridOffset = (gridOrig->getWidth() - x1 - 1) * gridOrig->getHeight();
+
+    if (targPos < otherGridOffset)
+    {
+        g2 = g1;
+        unsigned int relCol = targPos / gridOrig->getHeight();
+        x2 = relCol + x1 + 1;
+        y2 = targPos - (relCol * gridOrig->getHeight());
+    }
+    else
+    {
+        targPos -= otherGridOffset;
 
         // Assumes one beta at the end
         g2 = mGridsCount - 1;
+
+        Grid* gridTarg = getGrid(g2);
+        x2 = targPos / gridTarg->getHeight();
+        y2 = targPos - (x2 * gridTarg->getHeight());
+    }
+
+    //printf("selected connection: %d, %d, %d -> %d, %d, %d\n", x1, y1, g1, x2, y2, g2);
+
+    return true;
+}
+
+unsigned int Gridbrain::getRelativeOffset(GridbrainComponent* compOrig,
+                                            unsigned int targX,
+                                            unsigned int targY,
+                                            unsigned int targG)
+{
+    unsigned int offset;
+
+    unsigned int x1 = compOrig->mColumn;
+    unsigned int y1 = compOrig->mRow;
+    unsigned int g1 = compOrig->mGrid;
+
+    Grid* gridOrig = getGrid(g1);
+
+    if (targG == g1)
+    {
+        offset = ((targX - x1 - 1) * gridOrig->getHeight()) + targY;
     }
     else
     {
-        g2 = g1;
+        Grid* gridTarg = getGrid(targG);
+        offset = (gridOrig->getWidth() - x1 - 1) * gridOrig->getHeight();
+        offset += (targX * gridTarg->getHeight()) + targY;
     }
 
-    Grid* targGrid = mGridsVec[g2];
-    y2 = mDistConnections->iuniform(0, targGrid->getHeight());
-
-    if (g1 != g2)
-    {
-        x2 = mDistConnections->iuniform(0, targGrid->getWidth());
-    }
-    else
-    {
-        unsigned int width = targGrid->getWidth();
-        unsigned int targetsPerCol = targGrid->getHeight();
-        targetsPerCol *= targetsPerCol;
-        for (unsigned int col = (x1 + 1); col < width; col++)
-        {
-            curPos += targetsPerCol;
-
-            if (curPos >= targConnPos)
-            {
-                x2 = col;
-                return;
-            }
-        }
-    }
+    return offset;
 }
 
 void Gridbrain::addRandomConnections(unsigned int count)
@@ -777,9 +865,11 @@ void Gridbrain::addRandomConnections(unsigned int count)
 
     for (unsigned int i = 0; i < count; i++)
     {
-        selectRandomConnection(x1, y1, g1, x2, y2, g2);
-        weight = mDistWeights->uniform(-1.0f, 1.0f);
-        addConnection(x1, y1, g1, x2, y2, g2, weight);
+        if (selectRandomConnection(x1, y1, g1, x2, y2, g2))
+        {
+            weight = mDistWeights->uniform(-1.0f, 1.0f);
+            addConnection(x1, y1, g1, x2, y2, g2, weight);
+        }
     }
 }
 
@@ -1093,16 +1183,16 @@ void Gridbrain::calcConnectionCounts()
 
             if (grid->getType() == Grid::ALPHA)
             {
-                possibleConnections = mBetaComponentsCount * height;
-                possibleConnections += (width - col - 1) * height * height;
+                possibleConnections = mBetaComponentsCount;
+                possibleConnections += (width - col - 1) * height;
             }
             else
             {
-                possibleConnections = (width - col - 1) * height * height;
+                possibleConnections = (width - col - 1) * height;
             }
             
             grid->setColConnCount(col, possibleConnections);
-            mTotalPossibleConnections += possibleConnections;
+            mTotalPossibleConnections += possibleConnections * height;
         }
     }
 }
@@ -1200,6 +1290,36 @@ float Gridbrain::getFieldValue(string fieldName)
     }
 
     return 0.0f;
+}
+
+bool Gridbrain::isValid()
+{
+    GridbrainConnection* conn = mConnections;
+
+    while (conn != NULL)
+    {
+        if (conn->mGridOrig == conn->mGridTarg)
+        {
+            if (conn->mColumnOrig >= conn->mColumnTarg)
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (mGridsVec[conn->mGridOrig]->getType() != Grid::ALPHA)
+            {
+                return false;
+            }
+            if (mGridsVec[conn->mGridTarg]->getType() != Grid::BETA)
+            {
+                return false;
+            }
+        }
+        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+    }
+
+    return true;
 }
 
 const char Gridbrain::mClassName[] = "Gridbrain";
