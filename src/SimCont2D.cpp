@@ -94,6 +94,8 @@ SimCont2D::SimCont2D(lua_State* luaState)
     mZoom = 1.0f;
 
     mFeedCenter = 0.5f;
+
+    mFitnessMeasure = FITNESS_ENERGY_SUM;
 }
 
 SimCont2D::~SimCont2D()
@@ -552,7 +554,18 @@ void SimCont2D::process(SimulationObject* obj)
     setRot(obj, newRot);
 
     // Update fitness
-    obj->mFitness = obj->mFloatData[FLOAT_ENERGY];
+    switch (mFitnessMeasure)
+    {
+    case FITNESS_ENERGY:
+        obj->mFitness = obj->mFloatData[FLOAT_ENERGY];
+        break;
+    case FITNESS_ENERGY_SUM:
+        if ((mSimulationTime % 10) == 0)
+        {
+            obj->mFitness += obj->mFloatData[FLOAT_ENERGY];
+        }
+        break;
+    }
 }
 
 void SimCont2D::perceive(Agent* agent)
@@ -971,15 +984,16 @@ SimulationObject* SimCont2D::getObjectByScreenPos(int x, int y)
     return NULL;
 }
 
-float SimCont2D::getFieldValue(SimulationObject* obj, string fieldName)
+bool SimCont2D::getFieldValue(SimulationObject* obj, string fieldName, float& value)
 {
     if (fieldName == "energy")
     {
-        return obj->mFloatData[FLOAT_ENERGY];
+        value = obj->mFloatData[FLOAT_ENERGY];
+        return true;
     }
     else
     {
-        return Simulation::getFieldValue(obj, fieldName);
+        return Simulation::getFieldValue(obj, fieldName, value);
     }
 }
 

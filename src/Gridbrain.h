@@ -131,7 +131,7 @@ public:
     void setMutateSwapComponentProb(float prob){mMutateSwapComponentProb = prob;}
     void setMinimumFreeComponentRatio(float ratio){mMinimumFreeComponentRatio = ratio;}
 
-    virtual float getFieldValue(string fieldName);
+    virtual bool getFieldValue(string fieldName, float& value);
 
     virtual string write(SimulationObject* obj, PopulationManager* pop);
 

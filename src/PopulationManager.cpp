@@ -79,8 +79,8 @@ void PopulationManager::setSelectedObject(SimulationObject* object)
     mSelectedObject = object;
 }
 
-float PopulationManager::getFieldValue(SimulationObject* obj, string fieldName)
+bool PopulationManager::getFieldValue(SimulationObject* obj, string fieldName, float& value)
 {
-    return obj->getFieldValue(fieldName);
+    return obj->getFieldValue(fieldName, value);
 }
 

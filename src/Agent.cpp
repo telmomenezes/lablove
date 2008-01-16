@@ -93,9 +93,18 @@ void Agent::mutate()
     }
 }
 
-float Agent::getFieldValue(std::string fieldName)
+bool Agent::getFieldValue(string fieldName, float& value)
 {
-    return mBrain->getFieldValue(fieldName);
+    bool success = GraphicalObject::getFieldValue(fieldName, value);
+
+    if (success)
+    {
+        return true;
+    }
+    else
+    {
+        return mBrain->getFieldValue(fieldName, value);
+    }
 }
 
 const char Agent::mClassName[] = "Agent";

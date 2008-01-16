@@ -62,7 +62,8 @@ void StatCommon::process(SimulationObject* obj, PopulationManager* popManager)
         iterField != mFields.end();
         iterField++)
     {
-        float value = popManager->getFieldValue(obj, *iterField);
+        float value;
+        popManager->getFieldValue(obj, *iterField, value);
         (*iterValueList).push_back(value);
         iterValueList++;
     }

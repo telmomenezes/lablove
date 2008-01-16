@@ -55,7 +55,7 @@ public:
     virtual void mutate()=0;
     virtual void draw()=0;
 
-    virtual float getFieldValue(string fieldName){return 0.0f;}
+    virtual bool getFieldValue(string fieldName, float& value);
 
     int getChannelByName(string name);
     virtual string write(SimulationObject* obj, PopulationManager* pop){return "";}

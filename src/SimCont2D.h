@@ -79,6 +79,10 @@ public:
                 INT_CHANNEL_BETA
                 };
 
+    enum FitnessMeasure {FITNESS_ENERGY,
+                        FITNESS_ENERGY_SUM
+    };
+
     SimCont2D(lua_State* luaState=NULL);
     virtual ~SimCont2D();
 
@@ -116,7 +120,7 @@ public:
 
     virtual SimulationObject* getObjectByScreenPos(int x, int y);
 
-    virtual float getFieldValue(SimulationObject* obj, string fieldName);
+    virtual bool getFieldValue(SimulationObject* obj, string fieldName, float& value);
     
     virtual bool onKeyDown(Art_KeyCode keycode);
     virtual bool onKeyUp(Art_KeyCode keycode);
@@ -139,6 +143,9 @@ public:
     void setSize(SimulationObject* obj, float size);
 
     virtual string getInterfaceName(bool input, int type);
+
+    void setFitnessMeasure(FitnessMeasure measure){mFitnessMeasure = measure;}
+    FitnessMeasure getFitnessMeasure(){return mFitnessMeasure;}
 
     static const char mClassName[];
     static Orbit<SimCont2D>::MethodType mMethods[];
@@ -234,6 +241,8 @@ protected:
     float mZoom;
 
     float mFeedCenter;
+
+    FitnessMeasure mFitnessMeasure;
 };
 #endif
 

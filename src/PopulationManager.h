@@ -44,7 +44,7 @@ public:
     void setSelectedObject(SimulationObject* object);
     SimulationObject* getSelectedObject(){return mSelectedObject;}
 
-    virtual float getFieldValue(SimulationObject* obj, string fieldName);
+    virtual bool getFieldValue(SimulationObject* obj, string fieldName, float& value);
 
     virtual string getInterfaceName(bool input, int type){return "?";}
 

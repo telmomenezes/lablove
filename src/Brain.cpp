@@ -74,3 +74,8 @@ int Brain::getChannelByName(string name)
     return mChannels[name];
 }
 
+bool Brain::getFieldValue(string fieldName, float& value)
+{
+    value = 0.0f;
+    return false;
+}

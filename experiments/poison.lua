@@ -47,7 +47,7 @@ feedCenter = 0.25
 initialConnections = 10
 
 compCount = 1
-bufferSize = 100
+bufferSize = 50
 fitnessAging = 0.1
 
 addConnectionProb = 0.02
@@ -60,7 +60,7 @@ changeComponentProb = 0.02
 swapComponentProb = 0.0
 
 timeLimit = 0
-logTimeInterval = 100
+logTimeInterval = 1
 logBrains = true
 logOnlyLastBrain = true
 
@@ -329,6 +329,7 @@ end
 
 stats = StatCommon()
 stats:setFile("logs/energy" .. logSuffix .. ".csv")
+stats:addField("fitness")
 stats:addField("energy")
 stats:addField("gb_connections")
 popDyn:addDeathLog(agentSpeciesIndex, stats)

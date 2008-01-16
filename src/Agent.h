@@ -42,7 +42,7 @@ public:
     //virtual Agent* crossover(Agent* other_parent);
     virtual void mutate();
 
-    virtual float getFieldValue(std::string fieldName);
+    virtual bool getFieldValue(string fieldName, float& value);
 
     static const char mClassName[];
     static Orbit<Agent>::MethodType mMethods[];

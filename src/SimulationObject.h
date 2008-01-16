@@ -80,7 +80,7 @@ public:
     void setFloatDataFromSymbol(string symbolName, unsigned int dataIndex);
     void setULDataFromSymbol(string symbolName, unsigned int dataIndex);
 
-    virtual float getFieldValue(string fieldName);
+    virtual bool getFieldValue(string fieldName, float& value);
 
     void setNamedFloatDataIndex(string name, int index);
     void setNamedBoolDataIndex(string name, int index);

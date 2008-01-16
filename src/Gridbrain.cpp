@@ -1278,18 +1278,20 @@ void Gridbrain::applyWeight(GridbrainConnection* conn)
     }
 }
 
-float Gridbrain::getFieldValue(string fieldName)
+bool Gridbrain::getFieldValue(string fieldName, float& value)
 {
     if (fieldName == "gb_connections")
     {
-        return mConnectionsCount;
+        value = mConnectionsCount;
+        return true;
     }
     else if (fieldName == "gb_components")
     {
-        return mNumberOfComponents;
+        value = mNumberOfComponents;
+        return true;
     }
 
-    return 0.0f;
+    return Brain::getFieldValue(fieldName, value);
 }
 
 bool Gridbrain::isValid()
