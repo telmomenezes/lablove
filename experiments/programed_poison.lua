@@ -3,7 +3,7 @@
 -- Amount of energy gathered from food is realtive to symbol_distance(feed,food)
 -- Food will be poisonous if symbol_distance(feed,food) > 0.5
 
-dofile("experiments/aux/basic_defines.lua")
+dofile("experiments/scripts/basic_defines.lua")
 
 -- Experiment Parameters
 --------------------------------------------------------------------------------
@@ -44,7 +44,7 @@ humanAgent = true
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
 
-dofile("experiments/aux/basic_command_line.lua")
+dofile("experiments/scripts/basic_command_line.lua")
 
 logSuffix = "_programed_poison"
             .. "s"

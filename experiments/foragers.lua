@@ -3,7 +3,7 @@
 -- All food items are the same
 --------------------------------------------------------------------------------
 
-dofile("experiments/aux/basic_defines.lua")
+dofile("experiments/scripts/basic_defines.lua")
 
 -- Experiment Parameters
 --------------------------------------------------------------------------------
@@ -64,7 +64,7 @@ humanAgent = false
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
 
-dofile("experiments/aux/basic_command_line.lua")
+dofile("experiments/scripts/basic_command_line.lua")
 
 addConnectionProb = getNumberParameter("addconnprob", addConnectionProb)
 removeConnectionProb = getNumberParameter("removeconnprob", removeConnectionProb)

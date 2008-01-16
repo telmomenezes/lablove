@@ -52,7 +52,7 @@ timeLimit = 0
 
 ----------------------------------------------
 
-dofile("experiments/aux/basic_command_line.lua")
+dofile("experiments/scripts/basic_command_line.lua")
 
 sim = SimCont2D()
 sim:setWorldDimensions(worldWidth, worldHeight, 150)

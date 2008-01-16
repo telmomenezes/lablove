@@ -1,4 +1,4 @@
-dofile("experiments/aux/basic_defines.lua")
+dofile("experiments/scripts/basic_defines.lua")
 
 numberOfPlants = 50
 numberOfAgents = 50
@@ -49,7 +49,7 @@ timeLimit = 0
 
 ----------------------------------------------
 
-dofile("experiments/aux/basic_command_line.lua")
+dofile("experiments/scripts/basic_command_line.lua")
 
 sim = SimCont2D()
 sim:setWorldDimensions(worldWidth, worldHeight, 150)

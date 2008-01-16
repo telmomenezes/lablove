@@ -5,7 +5,7 @@
 -- Brains are initialized with 0 size
 --------------------------------------------------------------------------------
 
-dofile("experiments/aux/basic_defines.lua")
+dofile("experiments/scripts/basic_defines.lua")
 
 -- Experiment Parameters
 --------------------------------------------------------------------------------
@@ -64,7 +64,7 @@ humanAgent = false
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
 
-dofile("experiments/aux/basic_command_line.lua")
+dofile("experiments/scripts/basic_command_line.lua")
 
 splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "spc")
 joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb, "joc")
