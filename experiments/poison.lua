@@ -60,7 +60,7 @@ changeComponentProb = 0.02
 swapComponentProb = 0.0
 
 timeLimit = 0
-logTimeInterval = 1
+logTimeInterval = 100
 logBrains = true
 logOnlyLastBrain = true
 
