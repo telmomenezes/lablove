@@ -11,7 +11,8 @@ FIND_PATH(Lua_INCLUDE_DIR lua.h
             /usr/local/include/lua5.1
             c:/libs/include)
 
-FIND_LIBRARY(Lua_LIBRARIES NAMES lua lua51 lua5.1)
+FIND_LIBRARY(Lua_LIBRARIES NAMES lua lua51 lua5.1 PATHS
+                c:/libs/lib)
 
 IF(Lua_INCLUDE_DIR AND Lua_LIBRARIES)
     SET(Lua_FOUND TRUE)

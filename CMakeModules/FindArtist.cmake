@@ -8,7 +8,9 @@ FIND_PATH(Artist_INCLUDE_DIR art.h
             ~/artist/include
             c:/libs/include/artist)
 
-FIND_LIBRARY(Artist_LIBRARIES NAMES artist PATHS ~/artist)
+FIND_LIBRARY(Artist_LIBRARIES NAMES artist PATHS
+                ~/artist
+                c:/libs/lib)
 
 IF(Artist_INCLUDE_DIR AND Artist_LIBRARIES)
     SET(Artist_FOUND TRUE)
