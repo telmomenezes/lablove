@@ -31,6 +31,7 @@
 #include "GridbrainComponent.h"
 #include "GridbrainComponentSet.h"
 #include "SymbolTable.h"
+#include "SymbolBitString.h"
 #include "SymbolRGB.h"
 #include "SymbolFixedString.h"
 #include "SymbolFloat.h"
@@ -150,6 +151,7 @@ int main(int argc, char *argv[])
     Orbit<GridbrainComponent>::orbitRegister(luaState);
     Orbit<GridbrainComponentSet>::orbitRegister(luaState);
     Orbit<SymbolTable>::orbitRegister(luaState);
+    Orbit<SymbolBitString>::orbitRegister(luaState);
     Orbit<SymbolRGB>::orbitRegister(luaState);
     Orbit<SymbolFixedString>::orbitRegister(luaState);
     Orbit<SymbolFloat>::orbitRegister(luaState);

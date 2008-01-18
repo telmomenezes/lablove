@@ -72,7 +72,7 @@ float SymbolFixedString::getDistance(Symbol* sym)
     }
 
     float binding = ((float)match) / ((float)mLength);
-    return binding;
+    return 1.0f - binding;
 }
 
 void SymbolFixedString::initRandom()

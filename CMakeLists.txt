@@ -49,6 +49,7 @@ SET(SOURCE_FILES
     src/PopDynFixedSpecies.cpp
     src/PopDynSpeciesBuffers.cpp
     src/Symbol.cpp
+    src/SymbolBitString.cpp
     src/SymbolRGB.cpp
     src/SymbolFixedString.cpp
     src/SymbolFloat.cpp
@@ -107,6 +108,7 @@ SET(UNIT_TEST_FILES
         src/tests/TestGridbrainMutations.cpp
         src/tests/TestGridbrainComponents.cpp
         src/tests/TestGridbrainComponentSet.cpp
+        src/tests/TestSymbolBitString.cpp
         src/tests/TestSymbolRGB.cpp
         src/tests/TestSymbolFixedString.cpp
         src/tests/TestSymbolFloat.cpp)
