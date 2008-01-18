@@ -6,7 +6,7 @@ FIND_PATH(Artist_INCLUDE_DIR art.h
             /usr/include/artist
             /usr/local/include/artist
             ~/artist/include
-            c:\libs\include)
+            c:/libs/include)
 
 FIND_LIBRARY(Artist_LIBRARIES NAMES artist PATHS ~/artist)
 
