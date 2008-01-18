@@ -86,16 +86,16 @@ SET(UNIT_TEST_FILES
     src/UnitTest++/DeferredTestResult.cpp
     src/UnitTest++/XmlTestReporter.cpp)
 
-IF(MINGW32)
+IF(MINGW)
     SET(UNIT_TEST_FILES
         ${UNIT_TEST_FILES}
         src/UnitTest++/Win32/TimeHelpers.cpp)
-ELSE(MINGW32)
+ELSE(MINGW)
     SET(UNIT_TEST_FILES
         ${UNIT_TEST_FILES}
         src/UnitTest++/Posix/SignalTranslator.cpp
         src/UnitTest++/Posix/TimeHelpers.cpp)
-ENDIF(MINGW32)
+ENDIF(MINGW)
 
 SET(UNIT_TEST_FILES
         ${UNIT_TEST_FILES}
