@@ -8,7 +8,8 @@ FIND_PATH(Lua_INCLUDE_DIR lua.h
             /usr/include/lua51
             /usr/local/include/lua51
             /usr/include/lua5.1
-            /usr/local/include/lua5.1)
+            /usr/local/include/lua5.1
+            /opt/include)
 
 FIND_LIBRARY(Lua_LIBRARIES NAMES lua lua51 lua5.1)
 

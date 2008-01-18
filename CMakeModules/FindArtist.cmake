@@ -2,7 +2,11 @@ IF(Artist_INCLUDE_DIR AND Artist_LIBRARIES)
     SET(Artist_FIND_QUIETLY TRUE)
 ENDIF(Artist_INCLUDE_DIR AND Artist_LIBRARIES)
 
-FIND_PATH(Artist_INCLUDE_DIR art.h /usr/include/artist /usr/local/include/artist ~/artist/include)
+FIND_PATH(Artist_INCLUDE_DIR art.h
+            /usr/include/artist
+            /usr/local/include/artist
+            ~/artist/include
+            /opt/include)
 
 FIND_LIBRARY(Artist_LIBRARIES NAMES artist PATHS ~/artist)
 
