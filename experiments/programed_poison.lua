@@ -38,6 +38,7 @@ feedCenter = 0.25
 timeLimit = 0
 
 logTimeInterval = 100
+logBrains = true
 
 humanAgent = true
 
@@ -308,6 +309,7 @@ end
 
 stats = StatCommon()
 stats:setFile("logs/energy" .. logSuffix .. ".csv")
+stats:addField("fitness")
 stats:addField("energy")
 popDyn:addDeathLog(agentSpeciesIndex, stats)
 

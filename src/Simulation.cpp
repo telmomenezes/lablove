@@ -230,7 +230,7 @@ float Simulation::calcSymbolsDistance(SimulationObject* origObj,
 
     if ((origTable == NULL) || (targetTable == NULL))
     {
-        return -1.0f;
+        return 0.0f;
     }
 
     Symbol* origSym = origTable->getSymbol(origSymIndex);
@@ -238,7 +238,7 @@ float Simulation::calcSymbolsDistance(SimulationObject* origObj,
 
     if ((origSym == NULL) || (targetSym == NULL))
     {
-        return -1.0f;
+        return 0.0f;
     }
 
 
