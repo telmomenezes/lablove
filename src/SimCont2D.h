@@ -80,7 +80,8 @@ public:
                 };
 
     enum FitnessMeasure {FITNESS_ENERGY,
-                        FITNESS_ENERGY_SUM
+                        FITNESS_ENERGY_SUM,
+                        FITNESS_ENERGY_SUM_ABOVE_INIT
     };
 
     SimCont2D(lua_State* luaState=NULL);

@@ -95,7 +95,7 @@ SimCont2D::SimCont2D(lua_State* luaState)
 
     mFeedCenter = 0.5f;
 
-    mFitnessMeasure = FITNESS_ENERGY_SUM;
+    mFitnessMeasure = FITNESS_ENERGY_SUM_ABOVE_INIT;
 }
 
 SimCont2D::~SimCont2D()
@@ -563,6 +563,18 @@ void SimCont2D::process(SimulationObject* obj)
         if ((mSimulationTime % 10) == 0)
         {
             obj->mFitness += obj->mFloatData[FLOAT_ENERGY];
+        }
+        break;
+    case FITNESS_ENERGY_SUM_ABOVE_INIT:
+        if ((mSimulationTime % 10) == 0)
+        {
+            float energy = obj->mFloatData[FLOAT_ENERGY];
+            energy -= obj->mFloatData[FLOAT_INITIAL_ENERGY];
+            if (energy < 0.0f)
+            {
+                energy = 0.0f;
+            }
+            obj->mFitness += energy;
         }
         break;
     }
