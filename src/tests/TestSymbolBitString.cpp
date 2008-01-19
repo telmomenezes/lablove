@@ -56,91 +56,91 @@ TEST(TestCloneSymbolBitString)
     delete sym2;
 }
 
-TEST(TestSymbolBitStringDistance1)
+TEST(TestSymbolBitStringBinding1)
 {
     SymbolBitString sym1("0000");
     SymbolBitString sym2("0000");
-    float distance = sym1.getDistance(&sym2);
-    CHECK_CLOSE(distance, 0.0f, 0.0001f);
+    float binding = sym1.getBinding(&sym2);
+    CHECK_CLOSE(binding, 0.0f, 0.0001f);
 }
 
-TEST(TestSymbolBitStringDistance2)
+TEST(TestSymbolBitStringBinding2)
 {
     SymbolBitString sym1("1111");
     SymbolBitString sym2("1111");
-    float distance = sym1.getDistance(&sym2);
-    CHECK_CLOSE(distance, 0.0f, 0.0001f);
+    float binding = sym1.getBinding(&sym2);
+    CHECK_CLOSE(binding, 0.0f, 0.0001f);
 }
 
-TEST(TestSymbolBitStringDistance3)
+TEST(TestSymbolBitStringBinding3)
 {
     SymbolBitString sym1("0000");
     SymbolBitString sym2("1111");
-    float distance = sym1.getDistance(&sym2);
-    CHECK_CLOSE(distance, 1.0f, 0.0001f);
+    float binding = sym1.getBinding(&sym2);
+    CHECK_CLOSE(binding, 1.0f, 0.0001f);
 }
 
-TEST(TestSymbolBitStringDistance4)
+TEST(TestSymbolBitStringBinding4)
 {
     SymbolBitString sym1("0011");
     SymbolBitString sym2("1100");
-    float distance = sym1.getDistance(&sym2);
-    CHECK_CLOSE(distance, 1.0f, 0.0001f);
+    float binding = sym1.getBinding(&sym2);
+    CHECK_CLOSE(binding, 1.0f, 0.0001f);
 }
 
-TEST(TestSymbolBitStringDistance5)
+TEST(TestSymbolBitStringBinding5)
 {
     SymbolBitString sym1("0101");
     SymbolBitString sym2("1010");
-    float distance = sym1.getDistance(&sym2);
-    CHECK_CLOSE(distance, 1.0f, 0.0001f);
+    float binding = sym1.getBinding(&sym2);
+    CHECK_CLOSE(binding, 1.0f, 0.0001f);
 }
 
-TEST(TestSymbolBitStringDistance6)
+TEST(TestSymbolBitStringBinding6)
 {
     SymbolBitString sym1("010101");
     SymbolBitString sym2("000000");
-    float distance = sym1.getDistance(&sym2);
-    CHECK_CLOSE(distance, 0.5f, 0.0001f);
+    float binding = sym1.getBinding(&sym2);
+    CHECK_CLOSE(binding, 0.5f, 0.0001f);
 }
 
-TEST(TestSymbolBitStringDistance7)
+TEST(TestSymbolBitStringBinding7)
 {
     SymbolBitString sym1("010101");
     SymbolBitString sym2("******");
-    float distance = sym1.getDistance(&sym2);
-    CHECK_CLOSE(distance, 0.0f, 0.0001f);
+    float binding = sym1.getBinding(&sym2);
+    CHECK_CLOSE(binding, 0.0f, 0.0001f);
 }
 
-TEST(TestSymbolBitStringDistance8)
+TEST(TestSymbolBitStringBinding8)
 {
     SymbolBitString sym1("010101");
     SymbolBitString sym2("1010**");
-    float distance = sym1.getDistance(&sym2);
-    CHECK_CLOSE(distance, 0.666666f, 0.0001f);
+    float binding = sym1.getBinding(&sym2);
+    CHECK_CLOSE(binding, 0.666666f, 0.0001f);
 }
 
-TEST(TestSymbolBitStringDistance9)
+TEST(TestSymbolBitStringBinding9)
 {
     SymbolBitString sym1("0");
     SymbolBitString sym2("01");
-    float distance = sym1.getDistance(&sym2);
-    CHECK_CLOSE(distance, 0.5, 0.0001f);
+    float binding = sym1.getBinding(&sym2);
+    CHECK_CLOSE(binding, 0.5, 0.0001f);
 }
 
-TEST(TestSymbolBitStringDistance10)
+TEST(TestSymbolBitStringBinding10)
 {
     SymbolBitString sym1("11");
     SymbolBitString sym2("1");
-    float distance = sym1.getDistance(&sym2);
-    CHECK_CLOSE(distance, 0.5, 0.0001f);
+    float binding = sym1.getBinding(&sym2);
+    CHECK_CLOSE(binding, 0.5, 0.0001f);
 }
 
-TEST(TestSymbolBitStringDistance11)
+TEST(TestSymbolBitStringBinding11)
 {
     SymbolBitString sym1("*");
     SymbolBitString sym2("**");
-    float distance = sym1.getDistance(&sym2);
-    CHECK_CLOSE(distance, 0.5, 0.0001f);
+    float binding = sym1.getBinding(&sym2);
+    CHECK_CLOSE(binding, 0.5, 0.0001f);
 }
 

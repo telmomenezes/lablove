@@ -696,7 +696,7 @@ void SimCont2D::onScanObject(Agent* orig,
 
             case PERCEPTION_SYMBOL:
                 InterfaceItem* item = (*iterItem);
-                normalizedValue = calcSymbolsDistance(orig,
+                normalizedValue = calcSymbolsBinding(orig,
                                                     targ,
                                                     item->mOrigSymTable,
                                                     item->mTargetSymTable,
@@ -800,7 +800,7 @@ void SimCont2D::act(Agent* agent)
 
     if (actionGo)
     {
-        goFront(agent, actionGoParam * mGoForceScale);
+        go(agent, actionGoParam * mGoForceScale);
     }
     if (actionRotate)
     {
@@ -812,11 +812,10 @@ void SimCont2D::act(Agent* agent)
     }
 }
 
-void SimCont2D::goFront(Agent* agent, float force)
+void SimCont2D::go(Agent* agent, float force)
 {
-    deltaEnergy(agent, -mGoCost * fabsf(force));
-
-    //force = fabsf(force);
+    float delta = -mGoCost * fabsf(force);
+    deltaEnergy(agent, delta);
 
     agent->mFloatData[FLOAT_IMPULSE_X] = cosf(agent->mFloatData[FLOAT_ROT]) * force;
     agent->mFloatData[FLOAT_IMPULSE_Y] = sinf(agent->mFloatData[FLOAT_ROT]) * force;
@@ -847,7 +846,7 @@ void SimCont2D::eat(Agent* agent, Action actionType)
         switch (actionType)
         {
         case ACTION_EAT:
-            if (sym1->getDistance(sym2) > 0.5f)
+            if (sym1->getBinding(sym2) > 0.5f)
             {
                 float energy = mTargetObject->mFloatData[FLOAT_ENERGY];
                 deltaEnergy(agent, energy);
@@ -855,7 +854,7 @@ void SimCont2D::eat(Agent* agent, Action actionType)
             }
             break;
         case ACTION_EATB:
-            float distance = sym1->getDistance(sym2);
+            float distance = sym1->getBinding(sym2);
             float energyFactor;
 
             if (distance < mFeedCenter)

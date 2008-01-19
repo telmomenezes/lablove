@@ -55,7 +55,7 @@ Symbol* SymbolFloat::clone()
     return new SymbolFloat(this);
 }
 
-float SymbolFloat::getDistance(Symbol* sym)
+float SymbolFloat::getBinding(Symbol* sym)
 {
     // TODO: check type
     SymbolFloat* symFloat = (SymbolFloat*)sym;

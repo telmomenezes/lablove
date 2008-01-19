@@ -31,7 +31,7 @@ public:
 
     virtual Symbol* clone() = 0;
 
-    virtual float getDistance(Symbol* sym) = 0;
+    virtual float getBinding(Symbol* sym) = 0;
     virtual void initRandom() = 0;
     virtual void mutate() = 0;
 

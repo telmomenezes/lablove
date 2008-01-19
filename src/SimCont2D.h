@@ -171,7 +171,7 @@ protected:
                                 SimulationObject* targ,
                                 float distance,
                                 float angle);
-    void goFront(Agent* agent, float force);
+    void go(Agent* agent, float force);
     void rotate(Agent* agent, float force);
     void eat(Agent* agent, Action actionType);
     float normalizeAngle(float angle);

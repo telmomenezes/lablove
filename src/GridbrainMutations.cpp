@@ -34,6 +34,16 @@ long Gridbrain::MUTATIONS_SWP_COMP = 0;
 
 void Gridbrain::mutate()
 {
+    /*printf("mMutateAddConnectionProb: %f; mMutateRemoveConnectionProb: %f; mMutateChangeConnectionWeightProb: %f; mWeightMutationStanDev: %f; mMutateSplitConnectionProb: %f; mMutateJoinConnectionsProb: %f; mMutateChangeComponentProb: %f; mMutateSwapComponentProb: %f\n",
+    mMutateAddConnectionProb,
+    mMutateRemoveConnectionProb,
+    mMutateChangeConnectionWeightProb,
+    mWeightMutationStanDev,
+    mMutateSplitConnectionProb,
+    mMutateJoinConnectionsProb,
+    mMutateChangeComponentProb,
+    mMutateSwapComponentProb);*/
+
     mutateChangeConnectionWeight();
 
     unsigned int connCount = mConnectionsCount;
@@ -51,8 +61,7 @@ void Gridbrain::initRandomConnectionSequence(float selectionProb)
 {
     // mConnSeqProb is the non-selection probability
     mConnSeqProb = 1.0f - selectionProb;
-    mConnSeqCurrent = mConnections;
-    mConnSeqPos = 0.0f;
+    mConnSeqCurrent = NULL;
 }
 
 GridbrainConnection* Gridbrain::nextRandomConnection()
@@ -61,18 +70,20 @@ GridbrainConnection* Gridbrain::nextRandomConnection()
     {
         mConnSeqCurrent = NULL;
     }
-    if (mConnSeqCurrent == NULL)
-    {
-        return NULL;
-    }
 
     float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
-    double nextPos = mConnSeqPos + (log(prob) / log(mConnSeqProb));
+    unsigned int deltaPos = (unsigned int)(ceil(log(prob) / log(mConnSeqProb)));
 
-    while (mConnSeqPos < nextPos)
+    for (unsigned int i = 0; i < deltaPos; i++)
     {
-        mConnSeqCurrent = (GridbrainConnection*)mConnSeqCurrent->mNextGlobalConnection;
-        mConnSeqPos += 1.0f;
+        if (mConnSeqCurrent == NULL)
+        {
+            mConnSeqCurrent = mConnections;
+        }
+        else
+        {
+            mConnSeqCurrent = (GridbrainConnection*)mConnSeqCurrent->mNextGlobalConnection;
+        }
 
         if (mConnSeqCurrent == NULL)
         {
@@ -94,13 +105,13 @@ unsigned int Gridbrain::generateEventCount(float eventProb, unsigned int popSize
 
     unsigned int count = 0;
     float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
-    double nextPos = log(prob) / log(nonEventProb);
+    unsigned int nextPos = (unsigned int)(ceil(log(prob) / log(nonEventProb)));
 
-    while (nextPos < (double)popSize)
+    while (nextPos <= (double)popSize)
     {
         count++;
         prob = mDistMutationsProb->uniform(0.0f, 1.0f);
-        nextPos += log(prob) / log(nonEventProb);
+        nextPos += (unsigned int)(ceil(log(prob) / log(nonEventProb)));
     }
 
     return count;
@@ -110,7 +121,7 @@ void Gridbrain::initRandomComponentSequence(float selectionProb)
 {
     // mCompSeqProb is the non-selection probability
     mCompSeqProb = 1.0f - selectionProb;
-    mCompSeqPos = 0;
+    mCompSeqPos = -1;
 }
 
 int Gridbrain::nextRandomComponent()
@@ -124,7 +135,7 @@ int Gridbrain::nextRandomComponent()
     float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
     double nextPos = log(prob) / log(mCompSeqProb);
 
-    mCompSeqPos += nextPos;
+    mCompSeqPos += (unsigned int)(ceil(log(prob) / log(mCompSeqProb)));
 
     if (mCompSeqPos >= mNumberOfComponents)
     {

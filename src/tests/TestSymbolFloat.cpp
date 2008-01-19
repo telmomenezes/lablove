@@ -55,7 +55,7 @@ TEST(TestBindSymbolFloat1)
 {
     SymbolFloat sym1(0.0f);
     SymbolFloat sym2(1.0f);
-    float bind = sym1.getDistance(&sym2);
+    float bind = sym1.getBinding(&sym2);
     CHECK_CLOSE(bind, 1.0f, 0.001f);
 }
 
@@ -63,7 +63,7 @@ TEST(TestBindSymbolFloat2)
 {
     SymbolFloat sym1(1.0f);
     SymbolFloat sym2(1.0f);
-    float bind = sym1.getDistance(&sym2);
+    float bind = sym1.getBinding(&sym2);
     CHECK_CLOSE(bind, 0.0f, 0.001f);
 }
 
@@ -71,7 +71,7 @@ TEST(TestBindSymbolFloat3)
 {
     SymbolFloat sym1(0.5f);
     SymbolFloat sym2(1.0f);
-    float bind = sym1.getDistance(&sym2);
+    float bind = sym1.getBinding(&sym2);
     CHECK_CLOSE(bind, 0.5f, 0.001f);
 }
 
@@ -79,7 +79,7 @@ TEST(TestBindSymbolFloat4)
 {
     SymbolFloat sym1(10.0f, 0.0f, 20.0f);
     SymbolFloat sym2(20.0f, 0.0f, 20.0f);
-    float bind = sym1.getDistance(&sym2);
+    float bind = sym1.getBinding(&sym2);
     CHECK_CLOSE(bind, 0.5f, 0.001f);
 }
 
@@ -87,7 +87,7 @@ TEST(TestBindSymbolFloat5)
 {
     SymbolFloat sym1(10.0f, -20.0f, 20.0f);
     SymbolFloat sym2(20.0f, -20.0f, 20.0f);
-    float bind = sym1.getDistance(&sym2);
+    float bind = sym1.getBinding(&sym2);
     CHECK_CLOSE(bind, 0.25f, 0.001f);
 }
 
@@ -95,7 +95,7 @@ TEST(TestBindSymbolFloat6)
 {
     SymbolFloat sym1(-20.0f, -20.0f, 20.0f);
     SymbolFloat sym2(20.0f, -20.0f, 20.0f);
-    float bind = sym1.getDistance(&sym2);
+    float bind = sym1.getBinding(&sym2);
     CHECK_CLOSE(bind, 1.0f, 0.001f);
 }
 
@@ -103,7 +103,7 @@ TEST(TestBindSymbolFloat7)
 {
     SymbolFloat sym1(-20.0f, -20.0f, 20.0f);
     SymbolFloat sym2(40.0f, -20.0f, 20.0f);
-    float bind = sym1.getDistance(&sym2);
+    float bind = sym1.getBinding(&sym2);
     CHECK_CLOSE(bind, 1.0f, 0.001f);
 }
 

@@ -101,26 +101,26 @@ void GraphicGradient::init(SimulationObject* obj)
         throw std::runtime_error("Failed to initialize GraphicGradient: object does not define '" + mSymbolName + "' named symbol");
     }
 
-    float distance = mReferenceSymbol->getDistance(sym);
+    float binding = mReferenceSymbol->getBinding(sym);
 
-    if (distance < mCenter)
+    if (binding < mCenter)
     {
-        distance /= mCenter * 2.0f;
+        binding /= mCenter * 2.0f;
     }
     else
     {
-        distance -= mCenter;
-        distance /= (1.0f - mCenter) * 2.0f;
-        distance += 0.5f;
+        binding -= mCenter;
+        binding /= (1.0f - mCenter) * 2.0f;
+        binding += 0.5f;
     }
 
     float deltaRed = mRed2 - mRed1;
     float deltaGreen = mGreen2 - mGreen1;
     float deltaBlue = mBlue2 - mBlue1;
 
-    deltaRed *= distance;
-    deltaGreen *= distance;
-    deltaBlue *= distance;
+    deltaRed *= binding;
+    deltaGreen *= binding;
+    deltaBlue *= binding;
 
     mRed = mRed1 + deltaRed;
     mGreen = mGreen1 + deltaGreen;

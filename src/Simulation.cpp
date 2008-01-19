@@ -22,6 +22,7 @@
 #include "Symbol.h"
 #include "SymbolTable.h"
 #include "GraphicalObject.h"
+//#include "Gridbrain.h"
 
 #include <math.h>
 #include <stdexcept>
@@ -218,7 +219,7 @@ void Simulation::setSeedIndex(int index)
     gDistManager.setSeedIndex(index);
 }
 
-float Simulation::calcSymbolsDistance(SimulationObject* origObj,
+float Simulation::calcSymbolsBinding(SimulationObject* origObj,
                                     SimulationObject* targetObj,
                                     int origSymTable,
                                     int targetSymTable,
@@ -242,7 +243,7 @@ float Simulation::calcSymbolsDistance(SimulationObject* origObj,
     }
 
 
-    float distance = origSym->getDistance(targetSym);
+    float distance = origSym->getBinding(targetSym);
 
     return distance;
 }

@@ -22,8 +22,9 @@ viewAngle = 170.0
 
 maxAge = 5000
 
+initialEnergy = 1.0
 metabolism = 0.0
-goCost = 0.0
+goCost = 0.005
 rotateCost = 0.0
 goForceScale = 0.3
 rotateForceScale = 0.006
@@ -95,7 +96,7 @@ agent:setSymbolName("drag", physicsTableCode, 1)
 agent:setSymbolName("rot_friction", physicsTableCode, 2)
 agent:setSymbolName("rot_drag", physicsTableCode, 3)
 
-symInitialEnergy = SymbolFloat(0.0001)
+symInitialEnergy = SymbolFloat(initialEnergy)
 symMetabolism = SymbolFloat(metabolism)
 symTable = SymbolTable(symInitialEnergy)
 symTable:addSymbol(symMetabolism)

@@ -56,7 +56,7 @@ Symbol* SymbolFixedString::clone()
     return new SymbolFixedString(this);
 }
 
-float SymbolFixedString::getDistance(Symbol* sym)
+float SymbolFixedString::getBinding(Symbol* sym)
 {
     // TODO: check type
     SymbolFixedString* symStr = (SymbolFixedString*)sym;

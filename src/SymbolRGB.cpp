@@ -62,7 +62,7 @@ Symbol* SymbolRGB::clone()
     return new SymbolRGB(this);
 }
 
-float SymbolRGB::getDistance(Symbol* sym)
+float SymbolRGB::getBinding(Symbol* sym)
 {
     // TODO: check type
     SymbolRGB* symRGB = (SymbolRGB*)sym;

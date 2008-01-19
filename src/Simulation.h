@@ -84,7 +84,7 @@ protected:
     virtual void process(SimulationObject* obj){}
     virtual void perceive(Agent* agent){}
     virtual void act(Agent* agent){}
-    float calcSymbolsDistance(SimulationObject* origObj,
+    float calcSymbolsBinding(SimulationObject* origObj,
                             SimulationObject* targetObj,
                             int origSymTable,
                             int targetSymTable,

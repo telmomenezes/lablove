@@ -54,7 +54,6 @@ Gridbrain::Gridbrain(lua_State* luaState)
 
     mConnSeqProb = 1.0f;
     mConnSeqCurrent = NULL;
-    mConnSeqPos = 0;
     mCompSeqProb = 1.0f;
     mCompSeqPos = -1;
 }

@@ -34,7 +34,7 @@ public:
     virtual ~SymbolFloatVector();
     virtual Symbol* clone();
 
-    virtual float getDistance(Symbol* sym);
+    virtual float getBinding(Symbol* sym);
     virtual void initRandom();
     virtual void mutate();
 
@@ -49,7 +49,7 @@ public:
     int initRandom(lua_State* luaState);
 
 protected:
-    void calcMaxDistance();
+    void calcMaxBinding();
 
     static mt_distribution* mDistFloatVector;
 
@@ -57,7 +57,7 @@ protected:
     float* mVector;
     float mMax;
     float mMin;
-    float mMaxDistance;
+    float mMaxBinding;
 };
 #endif
 

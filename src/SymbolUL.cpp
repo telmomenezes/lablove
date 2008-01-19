@@ -54,7 +54,7 @@ Symbol* SymbolUL::clone()
     return new SymbolUL(this);
 }
 
-float SymbolUL::getDistance(Symbol* sym)
+float SymbolUL::getBinding(Symbol* sym)
 {
     // TODO: check type
     SymbolUL* symUL = (SymbolUL*)sym;

@@ -232,9 +232,8 @@ protected:
 
     float mConnSeqProb;
     GridbrainConnection* mConnSeqCurrent;
-    double mConnSeqPos;
     float mCompSeqProb;
-    double mCompSeqPos;
+    unsigned int mCompSeqPos;
 };
 
 #endif

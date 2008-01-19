@@ -81,7 +81,7 @@ void SymbolBitString::initFromString(string str)
     }
 }
 
-float SymbolBitString::getDistance(Symbol* sym)
+float SymbolBitString::getBinding(Symbol* sym)
 {
     // TODO: check type
     SymbolBitString* symStr = (SymbolBitString*)sym;

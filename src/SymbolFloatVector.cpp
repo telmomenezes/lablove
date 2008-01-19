@@ -31,7 +31,7 @@ SymbolFloatVector::SymbolFloatVector(lua_State* luaState)
     mMin = luaL_optnumber(luaState, 2, 0.0f);
     mMax = luaL_optnumber(luaState, 3, 1.0f);
     mVector = (float*)malloc(mSize * sizeof(float));
-    calcMaxDistance();
+    calcMaxBinding();
 }
 
 SymbolFloatVector::SymbolFloatVector(unsigned int size, float min, float max)
@@ -40,7 +40,7 @@ SymbolFloatVector::SymbolFloatVector(unsigned int size, float min, float max)
     mMin = min;
     mMax = max;
     mVector = (float*)malloc(mSize * sizeof(float));
-    calcMaxDistance();
+    calcMaxBinding();
 }
 
 SymbolFloatVector::SymbolFloatVector(SymbolFloatVector* sym) : Symbol(sym)
@@ -50,7 +50,7 @@ SymbolFloatVector::SymbolFloatVector(SymbolFloatVector* sym) : Symbol(sym)
     mMax = sym->mMax;
     mVector = (float*)malloc(mSize * sizeof(float));
     memcpy(mVector, sym->mVector, mSize * sizeof(float));
-    mMaxDistance = sym->mMaxDistance;
+    mMaxBinding = sym->mMaxBinding;
 }
 
 SymbolFloatVector::~SymbolFloatVector()
@@ -67,17 +67,17 @@ Symbol* SymbolFloatVector::clone()
     return new SymbolFloatVector(this);
 }
 
-void SymbolFloatVector::calcMaxDistance()
+void SymbolFloatVector::calcMaxBinding()
 {
     float distance = 0.0f;
     float span = mMax - mMin;
     float span2 = span * span;
     distance += span2 * mSize;
     distance = sqrtf(distance);
-    mMaxDistance = distance;
+    mMaxBinding = distance;
 }
 
-float SymbolFloatVector::getDistance(Symbol* sym)
+float SymbolFloatVector::getBinding(Symbol* sym)
 {
     // TODO: check type
     SymbolFloatVector* symVec = (SymbolFloatVector*)sym;
@@ -92,7 +92,7 @@ float SymbolFloatVector::getDistance(Symbol* sym)
 
     distance = sqrtf(distance);
 
-    float bind = distance / mMaxDistance;
+    float bind = distance / mMaxBinding;
 
     if (bind > 1.0f)
     {
