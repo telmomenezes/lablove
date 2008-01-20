@@ -55,8 +55,7 @@ addConnectionProb = 0.02
 removeConnectionProb = 0.02
 changeWeightProb = 0.02
 weightMutationStanDev = 1.0
-splitConnectionProb = 0.0
-joinConnectionsProb = 0.0
+moveConnectionOrigProb = 0.0
 changeComponentProb = 0.02
 swapComponentProb = 0.0
 
@@ -76,8 +75,7 @@ addConnectionProb = getNumberParameter("addconnprob", addConnectionProb, "con+")
 removeConnectionProb = getNumberParameter("removeconnprob", removeConnectionProb, "con-")
 changeWeightProb = getNumberParameter("changeweightprob", changeWeightProb, "wgt")
 weightMutationStanDev = getNumberParameter("weightmutstandev", weightMutationStanDev, "wsd")
-splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "spc")
-joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb, "joc")
+moveConnectionOrigProb = getNumberParameter("moveconnorigprob", moveConnectionOrigProb, "mor")
 changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, "chg")
 swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb, "swp")
 bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
@@ -172,8 +170,6 @@ brain:setMutateAddConnectionProb(addConnectionProb)
 brain:setMutateRemoveConnectionProb(removeConnectionProb)
 brain:setMutateChangeConnectionWeightProb(changeWeightProb)
 brain:setWeightMutationStanDev(weightMutationStanDev)
-brain:setMutateSplitConnectionProb(splitConnectionProb)
-brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
 brain:setMutateSwapComponentProb(swapComponentProb)
 
