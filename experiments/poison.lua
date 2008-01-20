@@ -72,8 +72,8 @@ humanAgent = false
 
 dofile("experiments/scripts/basic_command_line.lua")
 
-addConnectionProb = getNumberParameter("addconnprob", addConnectionProb, "con-")
-removeConnectionProb = getNumberParameter("removeconnprob", removeConnectionProb, "con+")
+addConnectionProb = getNumberParameter("addconnprob", addConnectionProb, "con+")
+removeConnectionProb = getNumberParameter("removeconnprob", removeConnectionProb, "con-")
 changeWeightProb = getNumberParameter("changeweightprob", changeWeightProb, "wgt")
 weightMutationStanDev = getNumberParameter("weightmutstandev", weightMutationStanDev, "wsd")
 splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "spc")
