@@ -48,10 +48,9 @@ addConnectionProb = 0.02
 removeConnectionProb = 0.02
 changeWeightProb = 0.02
 weightMutationStanDev = 1.0
-splitConnectionProb = 0.0
-joinConnectionsProb = 0.0
+moveConnectionOrigProb = 0.02
 changeComponentProb = 0.02
-swapComponentProb = 0.02
+swapComponentProb = 0.0
 minimumFreeComponentRatio = 0.25
 
 timeLimit = 0
@@ -66,9 +65,6 @@ humanAgent = false
 
 dofile("experiments/scripts/basic_command_line.lua")
 
-splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "spc")
-joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb, "joc")
-swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb, "swp")
 minimumFreeComponentRatio = getNumberParameter("minfree", minimumFreeComponentRatio, "free")
 
 logSuffix = "_poison_from_scratch_"
@@ -159,8 +155,7 @@ brain:setMutateAddConnectionProb(addConnectionProb)
 brain:setMutateRemoveConnectionProb(removeConnectionProb)
 brain:setMutateChangeConnectionWeightProb(changeWeightProb)
 brain:setWeightMutationStanDev(weightMutationStanDev)
-brain:setMutateSplitConnectionProb(splitConnectionProb)
-brain:setMutateJoinConnectionsProb(joinConnectionsProb)
+brain:setMutateMoveConnectionOriginProb(moveConnectionOrigProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
 brain:setMutateSwapComponentProb(swapComponentProb)
 brain:setMinimumFreeComponentRatio(minimumFreeComponentRatio)

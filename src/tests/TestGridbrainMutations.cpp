@@ -98,6 +98,19 @@ TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateChangeConnection)
     CHECK(conn1 == conn2);
 }
 
+TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateMoveConnectionOrigin)
+{
+    mGridbrain.setMutateMoveConnectionOriginProb(0.1f);
+    mGridbrain.mutate();
+    CHECK(mGridbrain.isValid());
+    mGridbrain.addRandomConnections(100);
+    unsigned int conn1 = mGridbrain.getConnectionsCount();
+    mGridbrain.mutate();
+    CHECK(mGridbrain.isValid());
+    unsigned int conn2 = mGridbrain.getConnectionsCount();
+    CHECK(conn1 == conn2);
+}
+
 TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateChangeComponent)
 {
     mGridbrain.setMutateChangeComponentProb(0.1f);

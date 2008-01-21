@@ -125,8 +125,7 @@ public:
     void setMutateRemoveConnectionProb(float prob){mMutateRemoveConnectionProb = prob;}
     void setMutateChangeConnectionWeightProb(float prob){mMutateChangeConnectionWeightProb = prob;}
     void setWeightMutationStanDev(float sd){mWeightMutationStanDev = sd;}
-    void setMutateSplitConnectionProb(float prob){mMutateSplitConnectionProb = prob;}
-    void setMutateJoinConnectionsProb(float prob){mMutateJoinConnectionsProb = prob;}
+    void setMutateMoveConnectionOriginProb(float prob){mMutateMoveConnectionOriginProb = prob;}
     void setMutateChangeComponentProb(float prob){mMutateChangeComponentProb = prob;}
     void setMutateSwapComponentProb(float prob){mMutateSwapComponentProb = prob;}
     void setMinimumFreeComponentRatio(float ratio){mMinimumFreeComponentRatio = ratio;}
@@ -150,8 +149,7 @@ public:
     int setMutateAddConnectionProb(lua_State* luaState);
     int setMutateRemoveConnectionProb(lua_State* luaState);
     int setMutateChangeConnectionWeightProb(lua_State* luaState);
-    int setMutateSplitConnectionProb(lua_State* luaState);
-    int setMutateJoinConnectionsProb(lua_State* luaState);
+    int setMutateMoveConnectionOriginProb(lua_State* luaState);
     int setMutateChangeComponentProb(lua_State* luaState);
     int setMutateSwapComponentProb(lua_State* luaState);
     int setWeightMutationStanDev(lua_State* luaState);
@@ -160,8 +158,7 @@ public:
     static long MUTATIONS_ADD_CONN;
     static long MUTATIONS_REM_CONN;
     static long MUTATIONS_CHG_WGT;
-    static long MUTATIONS_SPLIT_CONN;
-    static long MUTATIONS_JOIN_CONN;
+    static long MUTATIONS_MOV_ORI;
     static long MUTATIONS_CHG_COMP;
     static long MUTATIONS_SWP_COMP;
 
@@ -178,8 +175,7 @@ protected:
     void mutateAddConnection(unsigned int popSize);
     void mutateRemoveConnection(unsigned int popSize);
     void mutateChangeConnectionWeight();
-    void mutateSplitConnection();
-    void mutateJoinConnections();
+    void mutateMoveConnectionOrigin();
     void mutateChangeComponent();
     void mutateSwapComponent();
 
@@ -223,8 +219,7 @@ protected:
     float mMutateRemoveConnectionProb;
     float mMutateChangeConnectionWeightProb;
     float mWeightMutationStanDev;
-    float mMutateSplitConnectionProb;
-    float mMutateJoinConnectionsProb;
+    float mMutateMoveConnectionOriginProb;
     float mMutateChangeComponentProb;
     float mMutateSwapComponentProb;
 

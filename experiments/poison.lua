@@ -170,6 +170,7 @@ brain:setMutateAddConnectionProb(addConnectionProb)
 brain:setMutateRemoveConnectionProb(removeConnectionProb)
 brain:setMutateChangeConnectionWeightProb(changeWeightProb)
 brain:setWeightMutationStanDev(weightMutationStanDev)
+brain:setMutateMoveConnectionOriginProb(moveConnectionOrigProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
 brain:setMutateSwapComponentProb(swapComponentProb)
 

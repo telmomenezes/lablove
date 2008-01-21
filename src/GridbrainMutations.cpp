@@ -27,8 +27,7 @@
 long Gridbrain::MUTATIONS_ADD_CONN = 0;
 long Gridbrain::MUTATIONS_REM_CONN = 0;
 long Gridbrain::MUTATIONS_CHG_WGT = 0;
-long Gridbrain::MUTATIONS_SPLIT_CONN = 0;
-long Gridbrain::MUTATIONS_JOIN_CONN = 0;
+long Gridbrain::MUTATIONS_MOV_ORI = 0;
 long Gridbrain::MUTATIONS_CHG_COMP = 0;
 long Gridbrain::MUTATIONS_SWP_COMP = 0;
 
@@ -50,8 +49,7 @@ void Gridbrain::mutate()
     mutateAddConnection(connCount);
     mutateRemoveConnection(connCount);
 
-    mutateSplitConnection();
-    mutateJoinConnections();
+    mutateMoveConnectionOrigin();
 
     mutateChangeComponent();
     mutateSwapComponent();
@@ -217,193 +215,81 @@ void Gridbrain::mutateChangeConnectionWeight()
     }
 }
 
-void Gridbrain::mutateSplitConnection()
+void Gridbrain::mutateMoveConnectionOrigin()
 {
-    initRandomConnectionSequence(mMutateSplitConnectionProb);
+    // WARNING: This code assume one beta grid in the end
+
+    initRandomConnectionSequence(mMutateMoveConnectionOriginProb);
 
     while (nextRandomConnection() != NULL) 
     {
-        MUTATIONS_SPLIT_CONN++;
         GridbrainConnection* conn = mConnSeqCurrent;
 
-        unsigned int g1 = conn->mGridOrig;
-        unsigned int g2 = conn->mGridTarg;
-        Grid* gridOrig = mGridsVec[g1];
-        Grid* gridTarg = mGridsVec[g2];
-        unsigned int x1 = conn->mColumnOrig; 
-        unsigned int y1 = conn->mRowOrig; 
-        unsigned int x2 = conn->mColumnTarg; 
-        unsigned int y2 = conn->mRowTarg;
-        int g3 = -1;
-        int x3 = -1;
-        int y3 = -1;
+        Grid* gridTarg = mGridsVec[conn->mGridTarg];
 
-        if (g1 == g2)
+        int sameGridOrigins = gridTarg->getHeight() * conn->mColumnTarg;
+        int possibleOrigins = sameGridOrigins;
+
+        if (gridTarg->getType() == Grid::BETA)
         {
-            int deltaX = x2 - x1;
-            int absDeltaX = deltaX;
-            if (absDeltaX < 0)
+            for (unsigned int i = 0; i < mGridsCount - 1; i++)
             {
-                absDeltaX = -deltaX;
+                possibleOrigins += mGridsVec[i]->getSize();
             }
-            if (absDeltaX > 1)
+        }
+
+        int pos = mDistConnections->iuniform(0, possibleOrigins);
+
+        unsigned int newX;
+        unsigned int newY;
+        unsigned int newG;
+       
+        if (gridTarg->getType() == Grid::BETA)
+        {
+            unsigned int i = 0;
+            unsigned int currentLimit = mGridsVec[i]->getSize();
+
+            while (pos >= currentLimit)
             {
-                unsigned int middleColumn = mDistConnections->iuniform(1, absDeltaX);
-                if (deltaX < 0)
-                {
-                    middleColumn = -middleColumn;
-                }
-                x3 = x1 + middleColumn;
-                y3 = mDistConnections->iuniform(0, gridOrig->getHeight());
-                g3 = g1;
+                i++;    
+                currentLimit += mGridsVec[i]->getSize();
             }
+
+            newG = i;
+            pos = pos - currentLimit + mGridsVec[i]->getSize();
         }
         else
         {
-            int candidateCols1 = 0;
-            int candidateCols2 = 0;
-
-            if (x1 < (gridOrig->getWidth() - 1))
-            {
-                candidateCols1 = gridOrig->getWidth() - x1 - 1;
-            }
-            if (x2 < (gridTarg->getWidth() - 1))
-            {
-                candidateCols2 = x2;
-            }
-
-            if ((candidateCols1 != 0) || (candidateCols2 != 0))
-            {
-                unsigned int candidateCells1 = candidateCols1 * gridOrig->getHeight();
-                unsigned int candidateCells2 = candidateCols2 * gridTarg->getHeight();
-                unsigned int totalCells = candidateCells1 + candidateCells2;
-                unsigned int pivotCell = mDistConnections->iuniform(0, totalCells);
-                Grid* pivotGrid;
-
-                if (pivotCell < candidateCells1)
-                {
-                    g3 = g1;
-                    pivotGrid = gridOrig;
-                    pivotCell = pivotGrid->getSize() - pivotCell - 1;
-                }
-                else
-                {
-                    g3 = g2;
-                    pivotCell -= candidateCells1;
-                    pivotGrid = gridTarg;
-                }
-
-                x3 = pivotCell / pivotGrid->getHeight();
-                y3 = pivotCell % pivotGrid->getHeight();
-            }
+            newG = conn->mGridTarg;
         }
 
-        bool valid = false;
+        gridTarg = mGridsVec[newG];
 
-        if (g3 != -1)
+        newX = pos / gridTarg->getHeight();
+        newY = pos - (newX * gridTarg->getHeight());
+
+        if (!connectionExists(newX,
+                                newY,
+                                newG,
+                                conn->mColumnTarg,
+                                conn->mRowTarg,
+                                conn->mGridTarg))
         {
-            valid = true;
+            MUTATIONS_MOV_ORI++;
 
-            // test 1->3 connection
-            valid &= !connectionExists(x1, y1, g1, x3, y3, g3);
-            // test 2->3 connection
-            valid &= !connectionExists(x3, y3, g3, x2, y2, g2);
-        }
+            //printf("move connection: \nfrom: %d, %d, %d -> %d, %d, %d\n", newX, newY, newG, conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg);
+            //printf("  to: %d, %d, %d -> %d, %d, %d\n", conn->mColumnOrig, conn->mRowOrig, conn->mGridOrig, conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg);
 
-        if (valid)
-        {
-            float weight = conn->mWeight;
+            addConnection(newX,
+                            newY,
+                            newG,
+                            conn->mColumnTarg,
+                            conn->mRowTarg,
+                            conn->mGridTarg,
+                            conn->mWeight,
+                            conn->mAge);
 
-            // Current connection is going to be delted, advance to next one
-            mConnSeqCurrent = (GridbrainConnection*)conn->mNextGlobalConnection;
-
-            // remove 1->2 connection
-            removeConnection(x1, y1, g1, x2, y2, g2);
-
-            float weight1 = weight;
-            float weight2 = weight;
-
-            unsigned int weightSelector = mDistWeights->iuniform(0, 2);
-            if (weightSelector == 0)
-            {
-                weight1 = mDistWeights->uniform(-1.0f, 1.0f);
-            }
-            weightSelector = mDistWeights->iuniform(0, 2);
-            if (weightSelector == 0)
-            {
-                weight2 = mDistWeights->uniform(-1.0f, 1.0f);
-            }
-
-            // create 1->3 connection
-            addConnection(x1, y1, g1, x3, y3, g3, weight1);
-            // create 3->2 connection
-            addConnection(x3, y3, g3, x2, y2, g2, weight2);
-        }
-    }
-}
-
-void Gridbrain::mutateJoinConnections()
-{
-    initRandomConnectionSequence(mMutateJoinConnectionsProb);
-
-    while (nextRandomConnection() != NULL) 
-    {
-        MUTATIONS_JOIN_CONN++;
-        GridbrainConnection* conn = mConnSeqCurrent;
-
-        GridbrainComponent* pivot = getComponent(conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg);
-        unsigned int candidateConnections = pivot->mConnectionsCount;
-
-        unsigned int pos = 0;
-        if (candidateConnections > 0)
-        {
-            pos = mDistConnections->iuniform(1, candidateConnections + 1);
-        }
-
-        if (pos >= 1)
-        {
-            unsigned int currentPos = 0;
-            GridbrainConnection* iterConn = pivot->mFirstConnection;
-            while (currentPos < pos)
-            {
-                iterConn = (GridbrainConnection*)(iterConn->mNextConnection);
-                currentPos++;
-            }
-
-            unsigned int x1 = conn->mColumnOrig;
-            unsigned int y1 = conn->mRowOrig;
-            unsigned int g1 = conn->mGridOrig;
-            unsigned int x2 = iterConn->mColumnTarg;
-            unsigned int y2 = iterConn->mRowTarg;
-            unsigned int g2 = iterConn->mGridTarg;
-
-            if (!connectionExists(x1, y1, g1, x2, y2, g2))
-            {
-                float weight = 0;
-                unsigned int weightSelector = mDistWeights->iuniform(0, 3);
-                switch (weightSelector)
-                {
-                case 0:
-                    weight = conn->mWeight;
-                case 1:
-                    weight = iterConn->mWeight;
-                default:
-                    weight = mDistWeights->uniform(-1.0f, 1.0f);
-                }
-
-                // Current connection is going to be delted, advance to next one
-                GridbrainConnection* nextConn = (GridbrainConnection*)conn->mNextGlobalConnection;
-                if (nextConn == iterConn)
-                {
-                    nextConn = (GridbrainConnection*)nextConn->mNextGlobalConnection;
-                }
-
-                removeConnection(conn);
-                removeConnection(iterConn);
-                addConnection(x1, y1, g1, x2, y2, g2, weight);
-                
-                mConnSeqCurrent = nextConn;
-            }
+            removeConnection(conn);
         }
     }
 }
@@ -551,12 +437,11 @@ void Gridbrain::mutateSwapComponent()
 
 void Gridbrain::debugMutationsCount()
 {
-    printf("CON+:%d CON-:%d WGT:%d SPL:%d JOI:%d CHG:%d SWP:%d\n",
+    printf("CON+:%d CON-:%d WGT:%d MOR:%d CHG:%d SWP:%d\n",
             MUTATIONS_ADD_CONN,
             MUTATIONS_REM_CONN,
             MUTATIONS_CHG_WGT,
-            MUTATIONS_SPLIT_CONN,
-            MUTATIONS_JOIN_CONN,
+            MUTATIONS_MOV_ORI,
             MUTATIONS_CHG_COMP,
             MUTATIONS_SWP_COMP);
     fflush(stdout);
