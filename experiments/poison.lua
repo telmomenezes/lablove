@@ -4,7 +4,7 @@
 -- Food will be poisonous if symbol_distance(feed,food) > 0.5
 --------------------------------------------------------------------------------
 
-dofile("experiments/scripts/basic_defines.lua")
+dofile("basic_defines.lua")
 
 -- Experiment Parameters
 --------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ humanAgent = false
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
 
-dofile("experiments/scripts/basic_command_line.lua")
+dofile("basic_command_line.lua")
 
 addConnectionProb = getNumberParameter("addconnprob", addConnectionProb, "con+")
 removeConnectionProb = getNumberParameter("removeconnprob", removeConnectionProb, "con-")
