@@ -326,7 +326,7 @@ end
 --------------------------------------------------------------------------------
 
 stats = StatCommon()
-stats:setFile("logs/energy" .. logSuffix .. ".csv")
+stats:setFile("energy" .. logSuffix .. ".csv")
 stats:addField("fitness")
 stats:addField("energy")
 stats:addField("gb_connections")
@@ -337,9 +337,9 @@ if logBrains then
     logBrain:setFileNameSuffix(".svg")
     if logOnlyLastBrain then
         logBrain:setLogOnlyLast(true)
-        logBrain:setFileNamePrefix("logs/brains/brain" .. logSuffix)
+        logBrain:setFileNamePrefix("brain" .. logSuffix)
     else
-        logBrain:setFileNamePrefix("logs/brains/brain" .. logSuffix .. "t")
+        logBrain:setFileNamePrefix("brain" .. logSuffix .. "t")
     end
     popDyn:addDeathLog(agentSpeciesIndex, logBrain)
 end
