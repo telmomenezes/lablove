@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -67,7 +67,7 @@ public:
     unsigned long getCreationTime(){return mCreationTime;}
     void setCreationTime(unsigned long time){mCreationTime = time;}
 
-    virtual SimulationObject* crossover(SimulationObject* otherParent){return this;}
+    virtual SimulationObject* recombine(SimulationObject* otherParent);
     virtual void mutate();
 
     void addSymbolTable(SymbolTable* table);

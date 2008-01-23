@@ -20,10 +20,13 @@
 #include "PopDynSpeciesBuffers.h"
 #include "SimulationObject.h"
 
+mt_distribution* PopDynSpeciesBuffers::mDistRecombine = gDistManager.getNewDistribution();
+
 PopDynSpeciesBuffers::PopDynSpeciesBuffers(lua_State* luaState)
 {
     mCompCount = 1;
     mFitnessAging = 0.0f;
+    mRecombineProb = 0.0f;
 }
 
 PopDynSpeciesBuffers::~PopDynSpeciesBuffers()
@@ -57,7 +60,7 @@ void PopDynSpeciesBuffers::init(PopulationManager* popManager)
         }
         for (unsigned int i = 0; i < species->mPopulation; i++)
         {
-            mutateAndSend(speciesID, true);
+            xoverMutateSend(speciesID, true);
         }
     }
 }
@@ -71,14 +74,27 @@ unsigned int PopDynSpeciesBuffers::addSpecies(SimulationObject* org, unsigned in
     return speciesID;
 }
 
-void PopDynSpeciesBuffers::mutateAndSend(unsigned int speciesID, bool init)
+void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init)
 {
     SpeciesData* species = &(mSpecies[speciesID]);
     unsigned int organismNumber = mDistOrganism->iuniform(0, species->mBufferSize);
     SimulationObject* org = species->mOrganismVector[organismNumber];
-    
-    // Clone and add to simulation
-    SimulationObject* newOrganism = org->clone();
+   
+    SimulationObject* newOrganism;
+
+    float prob = mDistRecombine->uniform(0.0f, 1.0f);
+    if (prob < mRecombineProb)
+    {
+        // Recombine
+        organismNumber = mDistOrganism->iuniform(0, species->mBufferSize);
+        SimulationObject* org2 = species->mOrganismVector[organismNumber];
+        newOrganism = org->recombine(org2);
+    }
+    else
+    {
+        // Simple clone
+        newOrganism = org->clone();
+    }
             
     // Mutate
     newOrganism->mutate();
@@ -127,7 +143,7 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
     mPopManager->removeObject(org, deleteObj);
 
     // Replace
-    mutateAndSend(speciesID);
+    xoverMutateSend(speciesID);
 }
 
 const char PopDynSpeciesBuffers::mClassName[] = "PopDynSpeciesBuffers";
@@ -139,6 +155,7 @@ Orbit<PopDynSpeciesBuffers>::MethodType PopDynSpeciesBuffers::mMethods[] = {
     {"addDeathLog", &PopDynSpecies::addDeathLog},
     {"setCompCount", &PopDynSpeciesBuffers::setCompCount},
     {"setFitnessAging", &PopDynSpeciesBuffers::setFitnessAging},
+    {"setRecombineProb", &PopDynSpeciesBuffers::setRecombineProb},
     {0,0}
 };
 
@@ -155,6 +172,13 @@ int PopDynSpeciesBuffers::setFitnessAging(lua_State* luaState)
 {
     float aging = luaL_checknumber(luaState, 1);
     setFitnessAging(aging);
+    return 0;
+}
+
+int PopDynSpeciesBuffers::setRecombineProb(lua_State* luaState)
+{
+    float prob = luaL_checknumber(luaState, 1);
+    setRecombineProb(prob);
     return 0;
 }
 

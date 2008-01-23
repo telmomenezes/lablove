@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -44,6 +44,8 @@ public:
 
     void init(Type type, unsigned int width, unsigned int height);
 
+    void crossoverColumn(Grid* grid2, int xoverCol1, int xoverCol2);
+
     int getType(){return mType;}
     unsigned int getWidth(){return mWidth;}
     unsigned int getHeight(){return mHeight;}
@@ -82,6 +84,11 @@ public:
 
     void addRowOrColumn();
 
+    unsigned long getColumnCode(unsigned int col){return mColumnCodes[col];}
+    unsigned long getRowCode(unsigned int row){return mRowCodes[row];}
+    int getColumnByCode(unsigned long code);
+    int getRowByCode(unsigned long code);
+
     int mNewRow;
     int mNewColumn;
     bool mAddRowOrColumn;
@@ -94,6 +101,8 @@ public:
     int init(lua_State* luaState);
 
 protected:
+    static unsigned long CURRENT_COLUMN_CODE;
+    static unsigned long CURRENT_ROW_CODE;
     static mt_distribution* mDistRowsAndColumns;
 
     Type mType;
@@ -118,6 +127,9 @@ protected:
 
     unsigned int mWriteX;
     unsigned int mWriteY;
+
+    vector<unsigned long> mColumnCodes;
+    vector<unsigned long> mRowCodes;
 };
 #endif
 

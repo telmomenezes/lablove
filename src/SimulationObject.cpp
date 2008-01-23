@@ -1,84 +1,84 @@
-    /*
-     * LOVE Lab
-     * Copyright (C) 2007 Telmo Menezes.
-     * telmo@telmomenezes.com
-     *
-     * This program is free software; you can redistribute it and/or modify
-     * it under the terms of the version 2 of the GNU General Public License 
-     * as published by the Free Software Foundation.
-     *
-     * This program is distributed in the hope that it will be useful,
-     * but WITHOUT ANY WARRANTY; without even the implied warranty of
-     * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-     * GNU General Public License for more details.
-     *
-     * You should have received a copy of the GNU General Public License
-     * along with this program; if not, write to the Free Software
-     * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-     */
+/*
+ * LabLOVE
+ * Copyright (C) 2007 Telmo Menezes.
+ * telmo@telmomenezes.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the version 2 of the GNU General Public License 
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
-    #include "SimulationObject.h"
-    #include "SymbolFloat.h"
-    #include "SymbolUL.h"
-    #include <stdlib.h>
+#include "SimulationObject.h"
+#include "SymbolFloat.h"
+#include "SymbolUL.h"
+#include <stdlib.h>
 
-    unsigned long SimulationObject::CURRENT_ID = 0;
+unsigned long SimulationObject::CURRENT_ID = 0;
 
-    SimulationObject::SimulationObject(lua_State* luaState)
+SimulationObject::SimulationObject(lua_State* luaState)
+{
+    mType = TYPE_OBJECT;
+    mID = CURRENT_ID++;
+
+    mDeleted = false;
+
+    mSpeciesID = 0;
+    mCreationTime = 0;
+
+    mInitialized = false;
+
+    mFloatData = NULL;
+    mBoolData = NULL;
+    mIntData = NULL;
+    mULData = NULL;
+
+    mFloatDataSize = 0;
+    mBoolDataSize = 0;
+    mIntDataSize = 0;
+    mULDataSize = 0;
+
+    mFitness = 0.0f;
+
+    mDataInitialized = false;
+}
+
+SimulationObject::SimulationObject(SimulationObject* obj)
+{
+    mID = CURRENT_ID++;
+
+    mDeleted = false;
+
+    mSpeciesID = obj->mSpeciesID;
+    mCreationTime = 0;
+
+    map<int, SymbolTable*>::iterator iterTables;
+    for (iterTables = obj->mSymbolTables.begin();
+        iterTables != obj->mSymbolTables.end();
+        iterTables++)
     {
-        mType = TYPE_OBJECT;
-        mID = CURRENT_ID++;
-
-        mDeleted = false;
-
-        mSpeciesID = 0;
-        mCreationTime = 0;
-
-        mInitialized = false;
-
-        mFloatData = NULL;
-        mBoolData = NULL;
-        mIntData = NULL;
-        mULData = NULL;
-
-        mFloatDataSize = 0;
-        mBoolDataSize = 0;
-        mIntDataSize = 0;
-        mULDataSize = 0;
-
-        mFitness = 0.0f;
-
-        mDataInitialized = false;
+        mSymbolTables[(*iterTables).first] = new SymbolTable((*iterTables).second);
     }
 
-    SimulationObject::SimulationObject(SimulationObject* obj)
+    map<string, SymbolPointer>::iterator iterSymPointers;
+    for (iterSymPointers = obj->mNamedSymbols.begin();
+        iterSymPointers != obj->mNamedSymbols.end();
+        iterSymPointers++)
     {
-        mID = CURRENT_ID++;
+        mNamedSymbols[(*iterSymPointers).first] = (*iterSymPointers).second;
+    }
 
-        mDeleted = false;
+    mType = obj->mType;
 
-        mSpeciesID = obj->mSpeciesID;
-        mCreationTime = 0;
-
-        map<int, SymbolTable*>::iterator iterTables;
-        for (iterTables = obj->mSymbolTables.begin();
-            iterTables != obj->mSymbolTables.end();
-            iterTables++)
-        {
-            mSymbolTables[(*iterTables).first] = new SymbolTable((*iterTables).second);
-        }
-
-        map<string, SymbolPointer>::iterator iterSymPointers;
-        for (iterSymPointers = obj->mNamedSymbols.begin();
-            iterSymPointers != obj->mNamedSymbols.end();
-            iterSymPointers++)
-        {
-            mNamedSymbols[(*iterSymPointers).first] = (*iterSymPointers).second;
-        }
-
-        mType = obj->mType;
-
-        mInitialized = false;
+    mInitialized = false;
 
     mFloatDataSize = obj->mFloatDataSize;
     mBoolDataSize = obj->mBoolDataSize;
@@ -287,6 +287,11 @@ bool SimulationObject::getFieldValue(string fieldName, float& value)
         value = 0.0f;
         return false;
     }
+}
+
+SimulationObject* SimulationObject::recombine(SimulationObject* otherParent)
+{
+    return clone();
 }
 
 void SimulationObject::setFloatDataFromSymbol(string symbolName, unsigned int dataIndex)

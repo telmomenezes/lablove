@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -19,6 +19,8 @@
 
 #include "Grid.h"
 
+unsigned long Grid::CURRENT_COLUMN_CODE = 0;
+unsigned long Grid::CURRENT_ROW_CODE = 0;
 mt_distribution* Grid::mDistRowsAndColumns = gDistManager.getNewDistribution();
 
 Grid::Grid(lua_State* luaState)
@@ -71,7 +73,25 @@ Grid::Grid(const Grid& grid)
     for (unsigned int i = 0; i < mWidth; i++)
     {
         mColumnsConnectionsCountVec.push_back(grid.mColumnsConnectionsCountVec[i]);
+        mColumnCodes.push_back(grid.mColumnCodes[i]);
     }
+    for (unsigned int i = 0; i < mHeight; i++)
+    {
+        mRowCodes.push_back(grid.mRowCodes[i]);
+    }
+
+    /*printf("column codes: ");
+    for (unsigned int i = 0; i < mWidth; i++)
+    {
+        printf("%d ", mColumnCodes[i]);
+    }
+    printf("\n");
+    printf("row codes: ");
+    for (unsigned int i = 0; i < mHeight; i++)
+    {
+        printf("%d ", mRowCodes[i]);
+    }
+    printf("\n");*/
 }
 
 Grid::~Grid()
@@ -88,6 +108,36 @@ Grid::~Grid()
     }
 }
 
+void Grid::crossoverColumn(Grid* grid2, int xoverCol1, int xoverCol2)
+{
+    vector<unsigned long> columnCodes;
+
+    for (unsigned int i = 0; i < xoverCol1; i++)
+    {
+        columnCodes.push_back(mColumnCodes[i]);
+    }
+    for (unsigned int i = xoverCol2; i < grid2->getWidth(); i++)
+    {
+        columnCodes.push_back(grid2->mColumnCodes[i]);
+    }
+
+    mColumnCodes.clear();
+    for (unsigned int i = 0; i < columnCodes.size(); i++)
+    {
+        mColumnCodes.push_back(columnCodes[i]);
+    }
+
+    mWidth = mColumnCodes.size();
+    mSize = mWidth * mHeight;
+
+    mColumnsConnectionsCountVec.clear();
+
+    for (unsigned int i = 0; i < mWidth; i++)
+    {
+        mColumnsConnectionsCountVec.push_back(0);
+    }
+}
+
 void Grid::init(Type type, unsigned int width, unsigned int height)
 {
     mType = type;
@@ -97,6 +147,12 @@ void Grid::init(Type type, unsigned int width, unsigned int height)
     for (unsigned int i = 0; i < mWidth; i++)
     {
         mColumnsConnectionsCountVec.push_back(0);
+        mColumnCodes.push_back(CURRENT_COLUMN_CODE++);
+    }
+
+    for (unsigned int i = 0; i < mHeight; i++)
+    {
+        mRowCodes.push_back(CURRENT_ROW_CODE++);
     }
 
     mSize = mWidth * mHeight;
@@ -232,12 +288,20 @@ void Grid::addRowOrColumn()
         {
             mHeight = 1;
             mNewRow = 0;
+            mRowCodes.push_back(CURRENT_ROW_CODE++);
         }
 
         mWidth++;
         mSize = mWidth * mHeight;
         mNewColumn = mDistRowsAndColumns->iuniform(0, mWidth);
         mColumnsConnectionsCountVec.push_back(0);
+
+        vector<unsigned long>::iterator iterCode = mColumnCodes.begin();
+        for (unsigned int i = 0; i < mNewColumn; i++)
+        {
+            iterCode++;
+        }
+        mColumnCodes.insert(iterCode, CURRENT_COLUMN_CODE++);
     }
     else
     {
@@ -247,12 +311,46 @@ void Grid::addRowOrColumn()
             mWidth = 1;
             mNewColumn = 0;
             mColumnsConnectionsCountVec.push_back(0);
+            mColumnCodes.push_back(CURRENT_COLUMN_CODE++);
         }
 
         mHeight++;
         mSize = mWidth * mHeight;
         mNewRow = mDistRowsAndColumns->iuniform(0, mHeight);
+
+        vector<unsigned long>::iterator iterCode = mRowCodes.begin();
+        for (unsigned int i = 0; i < mNewRow; i++)
+        {
+            iterCode++;
+        }
+        mRowCodes.insert(iterCode, CURRENT_ROW_CODE++);
     }
+}
+
+int Grid::getColumnByCode(unsigned long code)
+{
+    for (unsigned int i = 0; i < mWidth; i++)
+    {
+        if (mColumnCodes[i] == code)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+int Grid::getRowByCode(unsigned long code)
+{
+    for (unsigned int i = 0; i < mHeight; i++)
+    {
+        if (mRowCodes[i] == code)
+        {
+            return i;
+        }
+    }
+
+    return -1;
 }
 
 const char Grid::mClassName[] = "Grid";

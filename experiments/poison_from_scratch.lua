@@ -5,7 +5,7 @@
 -- Brains are initialized with 0 size
 --------------------------------------------------------------------------------
 
-dofile("experiments/scripts/basic_defines.lua")
+dofile("basic_defines.lua")
 
 -- Experiment Parameters
 --------------------------------------------------------------------------------
@@ -63,7 +63,7 @@ humanAgent = false
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
 
-dofile("experiments/scripts/basic_command_line.lua")
+dofile("basic_command_line.lua")
 
 minimumFreeComponentRatio = getNumberParameter("minfree", minimumFreeComponentRatio, "free")
 

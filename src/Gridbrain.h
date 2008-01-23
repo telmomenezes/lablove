@@ -109,6 +109,7 @@ public:
     virtual void draw(){}
 
     virtual void mutate();
+    virtual Brain* recombine(Brain* brain);
 
     void setComponent(unsigned int x,
                 unsigned int y,
@@ -166,6 +167,7 @@ public:
 
 protected:
 
+    Gridbrain* baseClone();
     void initGridsIO();
     void calcConnectionCounts();
     void calcConnectionDensities();
@@ -202,6 +204,7 @@ protected:
     static mt_distribution* mDistMutationsProb;
     static mt_distribution* mDistWeights;
     static mt_distribution* mDistComponents;
+    static mt_distribution* mDistRecombine;
 
     vector<Grid*> mGridsVec;
 

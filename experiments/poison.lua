@@ -59,6 +59,8 @@ moveConnectionOrigProb = 0.0
 changeComponentProb = 0.02
 swapComponentProb = 0.0
 
+recombineProb = 0.05
+
 timeLimit = 0
 logTimeInterval = 100
 logBrains = true
@@ -254,6 +256,7 @@ sim:setPopulationDynamics(popDyn)
 
 popDyn:setCompCount(compCount)
 popDyn:setFitnessAging(fitnessAging)
+popDyn:setRecombineProb(recombineProb)
 agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize)
 popDyn:addSpecies(plant, numberOfPlants, 1)
 

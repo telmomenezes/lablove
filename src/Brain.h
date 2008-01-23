@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -52,7 +52,10 @@ public:
     virtual float* getInputBuffer(unsigned int channel)=0;
     virtual float* getOutputBuffer()=0;
     virtual void cycle()=0;
+
     virtual void mutate()=0;
+    virtual Brain* recombine(Brain* brain)=0;
+
     virtual void draw()=0;
 
     virtual bool getFieldValue(string fieldName, float& value);

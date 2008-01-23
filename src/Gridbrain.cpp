@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -28,6 +28,7 @@ mt_distribution* Gridbrain::mDistConnections = gDistManager.getNewDistribution()
 mt_distribution* Gridbrain::mDistMutationsProb = gDistManager.getNewDistribution();
 mt_distribution* Gridbrain::mDistWeights = gDistManager.getNewDistribution();
 mt_distribution* Gridbrain::mDistComponents = gDistManager.getNewDistribution();
+mt_distribution* Gridbrain::mDistRecombine = gDistManager.getNewDistribution();
 
 Gridbrain::Gridbrain(lua_State* luaState)
 {
@@ -80,7 +81,7 @@ Gridbrain::~Gridbrain()
     mGridsCount = 0;
 }
 
-Brain* Gridbrain::clone(bool randomize)
+Gridbrain* Gridbrain::baseClone()
 {
     Gridbrain* gb = new Gridbrain();
 
@@ -102,6 +103,20 @@ Brain* Gridbrain::clone(bool randomize)
 
     gb->mMinimumFreeComponentRatio = mMinimumFreeComponentRatio;
 
+    for (map<string, int>::iterator iterChannel = mChannels.begin();
+            iterChannel != mChannels.end();
+            iterChannel++)
+    {
+        gb->mChannels[(*iterChannel).first] = (*iterChannel).second;
+    }
+
+    return gb;
+}
+
+Brain* Gridbrain::clone(bool randomize)
+{
+    Gridbrain* gb = baseClone();
+
     for (unsigned int i = 0; i < mGridsCount; i++)
     {
         Grid* grid = mGridsVec[i];
@@ -113,13 +128,6 @@ Brain* Gridbrain::clone(bool randomize)
         }
 
         gb->addGrid(newGrid, "");
-    }
-
-    for (map<string, int>::iterator iterChannel = mChannels.begin();
-            iterChannel != mChannels.end();
-            iterChannel++)
-    {
-        gb->mChannels[(*iterChannel).first] = (*iterChannel).second;
     }
 
     gb->calcConnectionCounts();
@@ -420,7 +428,6 @@ GridbrainComponent* Gridbrain::getComponent(unsigned int x,
 {
     if (gridNumber >= mGridsCount)
     {
-
         throw std::runtime_error("Trying to get component from inexistent grid");
     }
 
@@ -823,7 +830,7 @@ unsigned int Gridbrain::getRelativeOffset(GridbrainComponent* compOrig,
                                             unsigned int targG)
 {
     unsigned int offset;
-
+    
     unsigned int x1 = compOrig->mColumn;
     unsigned int y1 = compOrig->mRow;
     unsigned int g1 = compOrig->mGrid;

@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -39,8 +39,8 @@ public:
 
     virtual void compute();
 
-    //virtual Agent* crossover(Agent* other_parent);
     virtual void mutate();
+    virtual SimulationObject* recombine(SimulationObject* otherParent);
 
     virtual bool getFieldValue(string fieldName, float& value);
 

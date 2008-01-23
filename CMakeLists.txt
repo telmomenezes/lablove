@@ -39,6 +39,7 @@ SET(SOURCE_FILES
     src/DummyBrain.cpp
     src/Gridbrain.cpp
     src/GridbrainMutations.cpp
+    src/GridbrainRecombine.cpp
     src/GridbrainWrite.cpp
     src/Grid.cpp
     src/GridbrainComponent

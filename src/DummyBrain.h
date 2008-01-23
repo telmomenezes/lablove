@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -47,6 +47,7 @@ public:
     virtual float* getOutputBuffer(){return NULL;}
     virtual void cycle();
     virtual void mutate(){}
+    virtual Brain* recombine(Brain* brain){return this->clone();}
  
     void addPerception(string name,
                         unsigned int channel,

@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -57,6 +57,10 @@ void Agent::onAdd()
 
 Brain* Agent::setBrain(Brain* brain)
 {
+    if (mBrain != NULL)
+    {
+        delete mBrain;
+    }
     mBrain = brain;
     mBrain->init();
 }
@@ -71,18 +75,6 @@ void Agent::compute()
     mBrain->cycle();
 }
 
-/*Agent* Agent::crossover(Agent* otherParent)
-{
-    // TODO: check for incompatibilities, like gridbrain dimensions?
-
-    Agent* child = new Agent();
-    child->mMaxInputDepth = mMaxInputDepth;
-    child->mGridbrain = mGridbrain->crossover(((Agent*)otherParent)->mGridbrain);
-
-    return child;
-}
-*/
-
 void Agent::mutate()
 {
     SimulationObject::mutate();
@@ -91,6 +83,15 @@ void Agent::mutate()
     {
         mBrain->mutate();
     }
+}
+
+SimulationObject* Agent::recombine(SimulationObject* otherParent)
+{
+    Agent* agent2 = (Agent*)otherParent;
+    Agent* newAgent = (Agent*)clone();
+    Brain* newBrain = mBrain->recombine(agent2->mBrain);
+    newAgent->setBrain(newBrain);
+    return newAgent;
 }
 
 bool Agent::getFieldValue(string fieldName, float& value)

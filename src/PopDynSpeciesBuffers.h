@@ -34,6 +34,7 @@ public:
 
     void setCompCount(unsigned int count){mCompCount = count;}
     void setFitnessAging(float aging){mFitnessAging = aging;}
+    void setRecombineProb(float prob){mRecombineProb = prob;}
 
     static const char mClassName[];
     static Orbit<PopDynSpeciesBuffers>::MethodType mMethods[];
@@ -42,12 +43,16 @@ public:
     int addSpecies(lua_State* luaState);
     int setCompCount(lua_State* luaState);
     int setFitnessAging(lua_State* luaState);
+    int setRecombineProb(lua_State* luaState);
 
 protected:
-    void mutateAndSend(unsigned int speciesID, bool init=false);
+    void xoverMutateSend(unsigned int speciesID, bool init=false);
+
+    static mt_distribution* mDistRecombine;
 
     unsigned int mCompCount;
     float mFitnessAging;
+    float mRecombineProb;
 };
 #endif
 
