@@ -68,6 +68,8 @@ using std::map;
 map<string, string> gCommandParameters;
 string gScriptFile;
 
+mt_distribution* gDistMain = gDistManager.getNewDistribution();
+
 int parseCommandLine(int argc, char *argv[])
 {
     gScriptFile = "default.lua";
@@ -122,6 +124,18 @@ int getCommandLineParameter(lua_State *luaState)
     return 1;
 }
 
+int randomZeroToOne(lua_State *luaState)
+{
+    if (lua_gettop(luaState) != 0)
+    {
+        lua_pushstring(luaState, "incorrect number of arguments");
+        lua_error(luaState);
+    }
+    
+    lua_pushnumber(luaState, gDistMain->uniform(0.0f, 1.0f));
+    return 1;
+}
+
 int main(int argc, char *argv[])
 {
     parseCommandLine(argc, argv);
@@ -166,6 +180,7 @@ int main(int argc, char *argv[])
     Orbit<GraphicBiomorph>::orbitRegister(luaState);
 
     lua_register(luaState, "getCommandLineParameter", getCommandLineParameter);
+    lua_register(luaState, "randomZeroToOne", randomZeroToOne);
 
     int error = luaL_loadfile(luaState, gScriptFile.c_str()) || lua_pcall (luaState, 0, 0, 0);
     

@@ -48,7 +48,7 @@ feedCenter = 0.25
 initialConnections = 0
 
 compCount = 1
-bufferSize = 50
+bufferSize = 100
 fitnessAging = 0.1
 
 addConnectionProb = 0.02
@@ -73,6 +73,31 @@ humanAgent = false
 
 dofile("basic_command_line.lua")
 
+if random then
+    r = randomZeroToOne()
+    r = r * r * 0.05
+    addConnectionProb = r
+    removeConnectionProb = r
+    r = randomZeroToOne()
+    r = r * r * 0.05
+    changeWeightProb = r
+    r = randomZeroToOne()
+    r = r * 5.0
+    weightMutationStanDev = r
+    r = randomZeroToOne()
+    r = r * r * 0.05
+    moveConnectionOrigProb = r
+    r = randomZeroToOne()
+    r = r * r * 0.05
+    changeComponentProb = r
+    r = randomZeroToOne()
+    r = r * r * 0.1
+    swapComponentProb = r
+    r = randomZeroToOne()
+    r = r * r * 0.1
+    recombineProb = r
+end
+
 addConnectionProb = getNumberParameter("addconnprob", addConnectionProb, "con+")
 removeConnectionProb = getNumberParameter("removeconnprob", removeConnectionProb, "con-")
 changeWeightProb = getNumberParameter("changeweightprob", changeWeightProb, "wgt")
@@ -80,6 +105,7 @@ weightMutationStanDev = getNumberParameter("weightmutstandev", weightMutationSta
 moveConnectionOrigProb = getNumberParameter("moveconnorigprob", moveConnectionOrigProb, "mor")
 changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, "chg")
 swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb, "swp")
+swapComponentProb = getNumberParameter("recombineprob", recombineProb, "rec")
 bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
 compCount = getNumberParameter("compcount", compCount, "cc")
 fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")

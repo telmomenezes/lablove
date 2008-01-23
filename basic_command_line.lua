@@ -35,6 +35,7 @@ fullScreen = getBoolParameter("fullscreen", false)
 noGraphics = getBoolParameter("nograph", false)
 seedIndex = getNumberParameter("seedindex", -1)
 timeLimit = getNumberParameter("timelimit", 0)
+random = getBoolParameter("random", false)
 
 if (seedIndex >= 0) then
     seedIndex = seedIndex % 30
