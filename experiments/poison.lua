@@ -76,8 +76,8 @@ dofile("basic_command_line.lua")
 if random then
     r = randomZeroToOne()
     r = r * r * 0.05
-    addConnectionProb = r
-    removeConnectionProb = r
+    addConnectionProb = 0.01
+    removeConnectionProb = 0.01
     r = randomZeroToOne()
     r = r * r * 0.05
     changeWeightProb = r
