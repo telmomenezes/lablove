@@ -3,7 +3,7 @@
 -- Amount of energy gathered from food is realtive to symbol_distance(feed,food)
 -- Food will be poisonous if symbol_distance(feed,food) > 0.5
 
-dofile("experiments/scripts/basic_defines.lua")
+dofile("basic_defines.lua")
 
 -- Experiment Parameters
 --------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ humanAgent = true
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
 
-dofile("experiments/scripts/basic_command_line.lua")
+dofile("basic_command_line.lua")
 
 logSuffix = "_programed_poison"
             .. "s"
@@ -309,14 +309,14 @@ end
 --------------------------------------------------------------------------------
 
 stats = StatCommon()
-stats:setFile("logs/energy" .. logSuffix .. ".csv")
+stats:setFile("energy" .. logSuffix .. ".csv")
 stats:addField("fitness")
 stats:addField("energy")
 popDyn:addDeathLog(agentSpeciesIndex, stats)
 
 if logBrains then
     logBrain = LogBestBrain()
-    logBrain:setFileNamePrefix("logs/brains/brain" .. logSuffix .. "t")
+    logBrain:setFileNamePrefix("brain" .. logSuffix .. "t")
     logBrain:setFileNameSuffix(".svg")
     popDyn:addDeathLog(agentSpeciesIndex, logBrain)
 end

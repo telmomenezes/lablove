@@ -10,7 +10,7 @@ function getNumberParameter(paramName, paramDefault, shortName)
         paramOut = tonumber(param)
     end
 
-    if (shortName ~= nil) then
+    if ((shortName ~= nil) and (paramOut ~= 0)) then
         parameterString = parameterString .. shortName .. paramOut
     end
 

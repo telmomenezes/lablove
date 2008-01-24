@@ -51,12 +51,12 @@ compCount = 1
 bufferSize = 100
 fitnessAging = 0.1
 
-addConnectionProb = 0.02
-removeConnectionProb = 0.02
-changeWeightProb = 0.02
+addConnectionProb = 0.01
+removeConnectionProb = 0.01
+changeWeightProb = 0.0
 weightMutationStanDev = 1.0
 moveConnectionOrigProb = 0.0
-changeComponentProb = 0.02
+changeComponentProb = 0.01
 swapComponentProb = 0.0
 
 recombineProb = 0.05
