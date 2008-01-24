@@ -54,12 +54,12 @@ fitnessAging = 0.1
 addConnectionProb = 0.01
 removeConnectionProb = 0.01
 changeWeightProb = 0.0
-weightMutationStanDev = 1.0
+weightMutationStanDev = 0.0--1.0
 moveConnectionOrigProb = 0.0
 changeComponentProb = 0.01
 swapComponentProb = 0.0
 
-recombineProb = 0.05
+recombineProb = 0.0
 
 timeLimit = 0
 logTimeInterval = 100
@@ -355,7 +355,7 @@ end
 --------------------------------------------------------------------------------
 
 stats = StatCommon()
-stats:setFile("energy" .. logSuffix .. ".csv")
+stats:setFile("log" .. logSuffix .. ".csv")
 stats:addField("fitness")
 stats:addField("energy")
 stats:addField("gb_connections")
