@@ -45,8 +45,11 @@ Gridbrain::Gridbrain(lua_State* luaState)
     mMutateAddConnectionProb = 0.0f;
     mMutateRemoveConnectionProb = 0.0f;
     mMutateChangeConnectionWeightProb = 0.0f;
-    mWeightMutationStanDev = 1.0f;
+    mWeightMutationStanDev = 0.0f;
+    mMutateNewConnectionWeightProb = 0.0f;
     mMutateMoveConnectionOriginProb = 0.0f;
+    mMutateSplitConnectionProb = 0.0f;
+    mMutateJoinConnectionsProb = 0.0f;
     mMutateChangeComponentProb = 0.0f;
     mMutateSwapComponentProb = 0.0f;
 
@@ -97,7 +100,11 @@ Gridbrain* Gridbrain::baseClone()
     gb->mMutateAddConnectionProb = mMutateAddConnectionProb;
     gb->mMutateRemoveConnectionProb = mMutateRemoveConnectionProb;
     gb->mMutateChangeConnectionWeightProb = mMutateChangeConnectionWeightProb;
+    gb->mWeightMutationStanDev = mWeightMutationStanDev;
+    gb->mMutateNewConnectionWeightProb = mMutateNewConnectionWeightProb;
     gb->mMutateMoveConnectionOriginProb = mMutateMoveConnectionOriginProb;
+    gb->mMutateSplitConnectionProb = mMutateSplitConnectionProb;
+    gb->mMutateJoinConnectionsProb = mMutateJoinConnectionsProb;
     gb->mMutateChangeComponentProb = mMutateChangeComponentProb;
     gb->mMutateSwapComponentProb = mMutateSwapComponentProb;
 

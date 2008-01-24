@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -159,7 +159,10 @@ public:
     static long MUTATIONS_ADD_CONN;
     static long MUTATIONS_REM_CONN;
     static long MUTATIONS_CHG_WGT;
+    static long MUTATIONS_NEW_WGT;
     static long MUTATIONS_MOV_ORI;
+    static long MUTATIONS_SPLIT_CONN;
+    static long MUTATIONS_JOIN_CONN;
     static long MUTATIONS_CHG_COMP;
     static long MUTATIONS_SWP_COMP;
 
@@ -177,7 +180,10 @@ protected:
     void mutateAddConnection(unsigned int popSize);
     void mutateRemoveConnection(unsigned int popSize);
     void mutateChangeConnectionWeight();
+    void mutateNewConnectionWeight();
     void mutateMoveConnectionOrigin();
+    void mutateSplitConnection();
+    void mutateJoinConnections();
     void mutateChangeComponent();
     void mutateSwapComponent();
 
@@ -221,8 +227,11 @@ protected:
     float mMutateAddConnectionProb;
     float mMutateRemoveConnectionProb;
     float mMutateChangeConnectionWeightProb;
+    float mMutateNewConnectionWeightProb;
     float mWeightMutationStanDev;
     float mMutateMoveConnectionOriginProb;
+    float mMutateSplitConnectionProb;
+    float mMutateJoinConnectionsProb;
     float mMutateChangeComponentProb;
     float mMutateSwapComponentProb;
 
