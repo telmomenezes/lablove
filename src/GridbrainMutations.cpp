@@ -230,7 +230,7 @@ void Gridbrain::mutateNewConnectionWeight()
         MUTATIONS_NEW_WGT++;
         GridbrainConnection* conn = mConnSeqCurrent;
 
-        float newWeight = mDistWeights->normal(-1.0f, 1.0f);
+        float newWeight = mDistWeights->uniform(-1.0f, 1.0f);
         conn->mWeight = newWeight;
         applyWeight(conn);
     }

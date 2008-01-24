@@ -1,7 +1,7 @@
 -- POISON
 -- Agents evolve to find and eat certain food items
 -- Amount of energy gathered from food is realtive to symbol_distance(feed,food)
--- Food will be poisonous if symbol_distance(feed,food) > 0.5
+-- Food will be poisonous if symbol_binding(feed,food) < feedCenter
 --------------------------------------------------------------------------------
 
 dofile("basic_defines.lua")
@@ -55,7 +55,10 @@ addConnectionProb = 0.01
 removeConnectionProb = 0.01
 changeWeightProb = 0.0
 weightMutationStanDev = 0.0--1.0
+newWeightProb = 0.0
 moveConnectionOrigProb = 0.0
+splitConnectionProb = 0.0
+joinConnectionsProb = 0.0
 changeComponentProb = 0.01
 swapComponentProb = 0.0
 
@@ -102,7 +105,10 @@ addConnectionProb = getNumberParameter("addconnprob", addConnectionProb, "con+")
 removeConnectionProb = getNumberParameter("removeconnprob", removeConnectionProb, "con-")
 changeWeightProb = getNumberParameter("changeweightprob", changeWeightProb, "wgt")
 weightMutationStanDev = getNumberParameter("weightmutstandev", weightMutationStanDev, "wsd")
+newWeightProb = getNumberParameter("newweightprob", newWeightProb, "new")
 moveConnectionOrigProb = getNumberParameter("moveconnorigprob", moveConnectionOrigProb, "mor")
+splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "spl")
+joinConnectionsProb = getNumberParameter("joinconnprob", splitConnectionProb, "joi")
 changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, "chg")
 swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb, "swp")
 swapComponentProb = getNumberParameter("recombineprob", recombineProb, "rec")
@@ -198,7 +204,10 @@ brain:setMutateAddConnectionProb(addConnectionProb)
 brain:setMutateRemoveConnectionProb(removeConnectionProb)
 brain:setMutateChangeConnectionWeightProb(changeWeightProb)
 brain:setWeightMutationStanDev(weightMutationStanDev)
+brain:setMutateNewConnectionWeightProb(newWeightProb)
 brain:setMutateMoveConnectionOriginProb(moveConnectionOrigProb)
+brain:setMutateSplitConnectionProb(splitConnectionProb)
+brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
 brain:setMutateSwapComponentProb(swapComponentProb)
 
