@@ -460,7 +460,7 @@ void Gridbrain::mutateJoinConnections()
 
         if (pos >= 1)
         {
-            unsigned int currentPos = 0;
+            unsigned int currentPos = 1;
             GridbrainConnection* iterConn = pivot->mFirstConnection;
             while (currentPos < pos)
             {
@@ -489,7 +489,7 @@ void Gridbrain::mutateJoinConnections()
                     weight = mDistWeights->uniform(-1.0f, 1.0f);
                 }
 
-                // Current connection is going to be delted, advance to next one
+                // Current connection is going to be deleted, advance to next one
                 GridbrainConnection* nextConn = (GridbrainConnection*)conn->mNextGlobalConnection;
                 if (nextConn == iterConn)
                 {
