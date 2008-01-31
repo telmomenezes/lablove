@@ -62,7 +62,7 @@ joinConnectionsProb = 0.0
 changeComponentProb = 0.01
 swapComponentProb = 0.0
 
-recombineProb = 0.0
+recombineProb = 0.10
 
 timeLimit = 0
 logTimeInterval = 100

@@ -42,6 +42,7 @@ SET(SOURCE_FILES
     src/GridbrainRecombine.cpp
     src/GridbrainWrite.cpp
     src/Grid.cpp
+    src/GridCoord.cpp
     src/GridbrainComponent
     src/GridbrainComponentSet.cpp
     src/PopulationDynamics.cpp
@@ -105,6 +106,7 @@ SET(UNIT_TEST_FILES
         src/tests/TestSimulation.cpp
         src/tests/TestSimCont2D.cpp
         src/tests/TestGrid.cpp
+        src/tests/TestGridCoord.cpp
         src/tests/TestGridbrain.cpp
         src/tests/TestGridbrainMutations.cpp
         src/tests/TestGridbrainComponents.cpp

@@ -24,6 +24,7 @@
 #include "GridbrainComponentSet.h"
 #include "RandDistManager.h"
 #include "Orbit.h"
+#include "GridCoord.h"
 
 #include <vector>
 #include <list>
@@ -44,7 +45,7 @@ public:
 
     void init(Type type, unsigned int width, unsigned int height);
 
-    void crossoverColumn(Grid* grid2, int xoverCol1, int xoverCol2);
+    void crossover(Grid* gridA, Grid* gridB);
 
     int getType(){return mType;}
     unsigned int getWidth(){return mWidth;}
@@ -84,10 +85,10 @@ public:
 
     void addRowOrColumn();
 
-    unsigned long getColumnCode(unsigned int col){return mColumnCodes[col];}
-    unsigned long getRowCode(unsigned int row){return mRowCodes[row];}
-    int getColumnByCode(unsigned long code);
-    int getRowByCode(unsigned long code);
+    GridCoord getColumnCoord(unsigned int col){return mColumnCoords[col];}
+    GridCoord getRowCoord(unsigned int row){return mRowCoords[row];}
+    int getColumnByCoord(GridCoord coord);
+    int getRowByCoord(GridCoord coord);
 
     int mNewRow;
     int mNewColumn;
@@ -101,9 +102,8 @@ public:
     int init(lua_State* luaState);
 
 protected:
-    static unsigned long CURRENT_COLUMN_CODE;
-    static unsigned long CURRENT_ROW_CODE;
     static mt_distribution* mDistRowsAndColumns;
+    static mt_distribution* mDistXover;
 
     Type mType;
     unsigned int mWidth;
@@ -128,8 +128,8 @@ protected:
     unsigned int mWriteX;
     unsigned int mWriteY;
 
-    vector<unsigned long> mColumnCodes;
-    vector<unsigned long> mRowCodes;
+    vector<GridCoord> mColumnCoords;
+    vector<GridCoord> mRowCoords;
 };
 #endif
 
