@@ -145,3 +145,20 @@ string GridCoord::toString()
     return string(buf);
 }
 
+bool GridCoord::isValid()
+{
+    unsigned int maxBranch = 1;
+    for (unsigned int i = 0; i < mDepth; i++)
+    {
+        maxBranch *= 2;
+    }
+    maxBranch--;
+
+    if (mBranch > maxBranch)
+    {
+        return false;
+    }
+
+    return true;
+}
+

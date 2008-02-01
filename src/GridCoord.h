@@ -43,6 +43,8 @@ public:
 
     string toString();
 
+    bool isValid();
+
     int mXoverOrigin;
 
 protected:

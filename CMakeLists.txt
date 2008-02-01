@@ -109,6 +109,7 @@ SET(UNIT_TEST_FILES
         src/tests/TestGridCoord.cpp
         src/tests/TestGridbrain.cpp
         src/tests/TestGridbrainMutations.cpp
+        src/tests/TestGridbrainRecombine.cpp
         src/tests/TestGridbrainComponents.cpp
         src/tests/TestGridbrainComponentSet.cpp
         src/tests/TestSymbolBitString.cpp

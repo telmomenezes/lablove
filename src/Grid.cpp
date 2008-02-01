@@ -519,6 +519,39 @@ int Grid::getRowByCoord(GridCoord coord)
     return -1;
 }
 
+bool Grid::isValid()
+{
+    for (unsigned int i = 0; i < mWidth; i++)
+    {
+        if (!mColumnCoords[i].isValid())
+        {
+            return false;
+        }
+        if (i > 0)
+        {
+            if (mColumnCoords[i].position(mColumnCoords[i - 1]) != 1)
+            {
+                return false;
+            }
+        }
+    }
+    for (unsigned int i = 0; i < mHeight; i++)
+    {
+        if (!mRowCoords[i].isValid())
+        {
+            return false;
+        }
+        if (i > 0)
+        {
+            if (mRowCoords[i].position(mRowCoords[i - 1]) != 1)
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 const char Grid::mClassName[] = "Grid";
 
 Orbit<Grid>::MethodType Grid::mMethods[] = {

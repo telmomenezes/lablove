@@ -90,6 +90,8 @@ public:
     int getColumnByCoord(GridCoord coord);
     int getRowByCoord(GridCoord coord);
 
+    bool isValid();
+
     int mNewRow;
     int mNewColumn;
     bool mAddRowOrColumn;

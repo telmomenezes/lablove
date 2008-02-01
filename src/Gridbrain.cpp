@@ -1332,6 +1332,14 @@ bool Gridbrain::isValid()
         conn = (GridbrainConnection*)conn->mNextGlobalConnection;
     }
 
+    for (unsigned int i = 0; i < mGridsCount; i++)
+    {
+        if (!mGridsVec[i]->isValid())
+        {
+            return false;
+        }
+    }
+
     return true;
 }
 
