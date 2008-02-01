@@ -36,7 +36,13 @@ Brain* Gridbrain::recombine(Brain* brain)
         Grid* grid = gb1->mGridsVec[i];
         Grid* newGrid = new Grid(*grid);
 
-        newGrid->crossover(gb1->mGridsVec[i], gb2->mGridsVec[i]);
+        // If crossover is not possible in any grid, give up and return first brain's clone
+        if (!newGrid->crossover(gb1->mGridsVec[i], gb2->mGridsVec[i]))
+        {
+            delete newGrid;
+            delete gbNew;
+            return gb1->clone();
+        }
 
         gbNew->addGrid(newGrid, "");
     }

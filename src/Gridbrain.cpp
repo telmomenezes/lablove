@@ -263,6 +263,11 @@ void Gridbrain::addGrid(Grid* grid, string name)
     mChannels[name] = number;
 }
 
+Grid* Gridbrain::getGrid(string name)
+{
+    return mGridsVec[mChannels[name]];
+}
+
 void Gridbrain::init()
 {
     calcConnectionCounts();
@@ -1299,6 +1304,26 @@ bool Gridbrain::getFieldValue(string fieldName, float& value)
     else if (fieldName == "gb_components")
     {
         value = mNumberOfComponents;
+        return true;
+    }
+    else if (fieldName.substr(0,  14) == "gb_grid_width_")
+    {
+        string gridName = fieldName.substr(14, fieldName.size() - 14);
+        Grid* grid = getGrid(gridName);
+        if (grid)
+        {
+            value = grid->getWidth();
+        }
+        return true;
+    }
+    else if (fieldName.substr(0,  15) == "gb_grid_height_")
+    {
+        string gridName = fieldName.substr(15, fieldName.size() - 15);
+        Grid* grid = getGrid(gridName);
+        if (grid)
+        {
+            value = grid->getHeight();
+        }
         return true;
     }
 

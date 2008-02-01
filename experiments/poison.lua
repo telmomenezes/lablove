@@ -64,6 +64,8 @@ swapComponentProb = 0.0
 
 recombineProb = 0.0
 
+minimumFreeComponentRatio = 0.0
+
 timeLimit = 0
 logTimeInterval = 100
 logBrains = true
@@ -115,8 +117,21 @@ recombineProb = getNumberParameter("recombineprob", recombineProb, "rec")
 bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
 compCount = getNumberParameter("compcount", compCount, "cc")
 fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")
+minimumFreeComponentRatio = getNumberParameter("minfree", minimumFreeComponentRatio, "free")
 
-logSuffix = "_poison_"
+fromScratch = getBoolParameter("scratch", true)
+
+logBaseName = "_poison_"
+
+if fromScratch == true then
+    logBaseName = "_poison_from_scratch_"
+    alphaWidth = 0
+    betaWidth = 0
+    alphaHeight = 0
+    betaHeight = 0
+end
+
+logSuffix = logBaseName
             .. parameterString
             .. "s"
             .. seedIndex
@@ -210,6 +225,7 @@ brain:setMutateSplitConnectionProb(splitConnectionProb)
 brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
 brain:setMutateSwapComponentProb(swapComponentProb)
+brain:setMinimumFreeComponentRatio(minimumFreeComponentRatio)
 
 alphaSet = GridbrainComponentSet()
 for i, comp in pairs(alphaComponents) do
@@ -368,6 +384,10 @@ stats:setFile("log" .. logSuffix .. ".csv")
 stats:addField("fitness")
 stats:addField("energy")
 stats:addField("gb_connections")
+stats:addField("gb_grid_width_objects")
+stats:addField("gb_grid_height_objects")
+stats:addField("gb_grid_width_beta")
+stats:addField("gb_grid_height_beta")
 popDyn:addDeathLog(agentSpeciesIndex, stats)
 
 if logBrains then

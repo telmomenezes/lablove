@@ -45,7 +45,7 @@ public:
 
     void init(Type type, unsigned int width, unsigned int height);
 
-    void crossover(Grid* gridA, Grid* gridB);
+    bool crossover(Grid* gridA, Grid* gridB);
 
     int getType(){return mType;}
     unsigned int getWidth(){return mWidth;}

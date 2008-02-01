@@ -107,8 +107,16 @@ Grid::~Grid()
     }
 }
 
-void Grid::crossover(Grid* gridA, Grid* gridB)
+bool Grid::crossover(Grid* gridA, Grid* gridB)
 {
+    if ((gridA->mWidth == 0)
+        || (gridA->mHeight == 0)
+        || (gridB->mWidth == 0)
+        || (gridB->mHeight == 0))
+    {
+        return false;
+    }
+
     int xoverType = mDistXover->iuniform(0, 2);
 
     Grid* grid1;
@@ -154,8 +162,8 @@ void Grid::crossover(Grid* gridA, Grid* gridB)
     }
 
     i = 0;
-    while ((grid2->mColumnCoords[i].position(xoverColCoord) == -1)
-            && (i < grid2->mWidth))
+    while ((i < grid2->mWidth)
+            && (grid2->mColumnCoords[i].position(xoverColCoord) == -1))
     {
         i++;
     }
@@ -187,8 +195,8 @@ void Grid::crossover(Grid* gridA, Grid* gridB)
 
     mRowCoords.clear();
     i = 0;
-    while ((grid1->mRowCoords[i].position(xoverRowCoord) == -1)
-            && (i < grid1->mHeight))
+    while ((i < grid1->mHeight)
+            && (grid1->mRowCoords[i].position(xoverRowCoord) == -1))
     {
         GridCoord gc = grid1->mRowCoords[i];
         gc.mXoverOrigin = 0;
@@ -201,8 +209,8 @@ void Grid::crossover(Grid* gridA, Grid* gridB)
     }
 
     i = 0;
-    while ((grid2->mRowCoords[i].position(xoverRowCoord) == -1)
-            && (i < grid2->mHeight))
+    while ((i < grid2->mHeight)
+            && (grid2->mRowCoords[i].position(xoverRowCoord) == -1))
     {
         i++;
     }
@@ -227,6 +235,8 @@ void Grid::crossover(Grid* gridA, Grid* gridB)
     {
         mColumnsConnectionsCountVec.push_back(0);
     }
+
+    return true;
 }
 
 void Grid::init(Type type, unsigned int width, unsigned int height)
@@ -420,7 +430,7 @@ void Grid::addRowOrColumn()
         }
         else if (mNewColumn == (mWidth - 1))
         {
-            gc = mColumnCoords[mWidth - 1].rightOf();
+            gc = mColumnCoords[mWidth - 2].rightOf();
         }
         else
         {
@@ -472,7 +482,7 @@ void Grid::addRowOrColumn()
         }
         else if (mNewRow == (mHeight - 1))
         {
-            gc = mRowCoords[mHeight - 1].rightOf();
+            gc = mRowCoords[mHeight - 2].rightOf();
         }
         else
         {

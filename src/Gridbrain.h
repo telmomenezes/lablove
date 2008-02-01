@@ -103,6 +103,7 @@ public:
     void cycle();
     
     Grid* getGrid(unsigned int number);
+    Grid* getGrid(string name);
 
     unsigned int getConnectionsCount(){return mConnectionsCount;}
 
