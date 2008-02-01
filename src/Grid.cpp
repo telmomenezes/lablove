@@ -82,13 +82,13 @@ Grid::Grid(const Grid& grid)
     /*printf("column coords: ");
     for (unsigned int i = 0; i < mWidth; i++)
     {
-        printf("%d ", mColumnCoords[i]);
+        printf("%s ", mColumnCoords[i].toString().c_str());
     }
     printf("\n");
     printf("row coords: ");
     for (unsigned int i = 0; i < mHeight; i++)
     {
-        printf("%d ", mRowCoords[i]);
+        printf("%s ", mRowCoords[i].toString().c_str());
     }
     printf("\n");*/
 }
@@ -133,6 +133,8 @@ void Grid::crossover(Grid* gridA, Grid* gridB)
     int xoverCol = mDistXover->iuniform(0, grid1->mWidth);
     int xoverRow = mDistXover->iuniform(0, grid1->mHeight);
 
+    //printf("xoverCol: %d; xoverRow: %d\n", xoverCol, xoverRow);
+
     GridCoord xoverColCoord = grid1->mColumnCoords[xoverCol];
     GridCoord xoverRowCoord = grid1->mRowCoords[xoverRow];
 
@@ -142,6 +144,7 @@ void Grid::crossover(Grid* gridA, Grid* gridB)
             && (i < grid1->mWidth))
     {
         GridCoord gc = grid1->mColumnCoords[i];
+        gc.mXoverOrigin = 0;
         if (xoverType == 0)
         {
             gc.mXoverOrigin = firstGrid;
@@ -151,7 +154,7 @@ void Grid::crossover(Grid* gridA, Grid* gridB)
     }
 
     i = 0;
-    while ((grid2->mColumnCoords[i].position(xoverColCoord) == 1)
+    while ((grid2->mColumnCoords[i].position(xoverColCoord) == -1)
             && (i < grid2->mWidth))
     {
         i++;
@@ -159,6 +162,7 @@ void Grid::crossover(Grid* gridA, Grid* gridB)
     while (i < grid2->mWidth)
     {
         GridCoord gc = grid2->mColumnCoords[i];
+        gc.mXoverOrigin = 0;
         if (xoverType == 0)
         {
             gc.mXoverOrigin = secondGrid;
@@ -187,6 +191,7 @@ void Grid::crossover(Grid* gridA, Grid* gridB)
             && (i < grid1->mHeight))
     {
         GridCoord gc = grid1->mRowCoords[i];
+        gc.mXoverOrigin = 0;
         if (xoverType == 1)
         {
             gc.mXoverOrigin = firstGrid;
@@ -196,7 +201,7 @@ void Grid::crossover(Grid* gridA, Grid* gridB)
     }
 
     i = 0;
-    while ((grid2->mRowCoords[i].position(xoverRowCoord) == 1)
+    while ((grid2->mRowCoords[i].position(xoverRowCoord) == -1)
             && (i < grid2->mHeight))
     {
         i++;
@@ -204,6 +209,7 @@ void Grid::crossover(Grid* gridA, Grid* gridB)
     while (i < grid2->mHeight)
     {
         GridCoord gc = grid2->mRowCoords[i];
+        gc.mXoverOrigin = 0;
         if (xoverType == 1)
         {
             gc.mXoverOrigin = secondGrid;

@@ -62,7 +62,7 @@ joinConnectionsProb = 0.0
 changeComponentProb = 0.01
 swapComponentProb = 0.0
 
-recombineProb = 0.10
+recombineProb = 0.0
 
 timeLimit = 0
 logTimeInterval = 100
@@ -111,7 +111,7 @@ splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "
 joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb, "joi")
 changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, "chg")
 swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb, "swp")
-swapComponentProb = getNumberParameter("recombineprob", recombineProb, "rec")
+recombineProb = getNumberParameter("recombineprob", recombineProb, "rec")
 bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
 compCount = getNumberParameter("compcount", compCount, "cc")
 fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")

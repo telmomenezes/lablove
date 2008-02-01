@@ -20,6 +20,9 @@
 #ifndef __INCLUDE_GRID_COORD_H
 #define __INCLUDE_GRID_COORD_H
 
+#include <string>
+using std::string;
+
 class GridCoord
 {
 public:
@@ -38,7 +41,9 @@ public:
     unsigned int getDepth(){return mDepth;}
     unsigned int getBranch(){return mBranch;}
 
-    char mXoverOrigin;
+    string toString();
+
+    int mXoverOrigin;
 
 protected:
     unsigned int mDepth;

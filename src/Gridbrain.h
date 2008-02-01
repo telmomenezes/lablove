@@ -137,6 +137,7 @@ public:
     virtual bool getFieldValue(string fieldName, float& value);
 
     virtual string write(SimulationObject* obj, PopulationManager* pop);
+    void printDebug();
 
     bool isValid();
 

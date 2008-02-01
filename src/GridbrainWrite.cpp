@@ -233,3 +233,44 @@ string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
     return svg;
 }
 
+void Gridbrain::printDebug()
+{
+    printf("\n\n== GRIDBRAIN ==\n");
+    for (unsigned int i = 0; i < mGridsCount; i++)
+    {
+        printf("Grid: %d\n", i);
+        Grid* grid = mGridsVec[i];
+        for (unsigned int y = 0; y < grid->getHeight(); y++)
+        {
+            for (unsigned int x = 0; x < grid->getWidth(); x++)
+            {
+                GridbrainComponent* comp = getComponent(x, y, i);
+                printf("%s\t", comp->getName().c_str());
+            }
+            printf("\n");
+        }
+    }
+
+    printf("CONNECTIONS:\n");
+
+    GridbrainConnection* conn = mConnections;
+    while (conn != NULL)
+    {
+        Grid* gridOrig = mGridsVec[conn->mGridOrig];
+        Grid* gridTarg = mGridsVec[conn->mGridTarg];
+        unsigned int comp1X = conn->mColumnOrig;
+        unsigned int comp1Y = conn->mRowOrig;
+        unsigned int comp2X = conn->mColumnTarg;
+        unsigned int comp2Y = conn->mRowTarg;
+
+        printf("(%d, %d, %d)->(%d, %d, %d)\n",
+                conn->mColumnOrig,
+                conn->mRowOrig,
+                conn->mGridOrig,
+                conn->mColumnTarg,
+                conn->mRowTarg,
+                conn->mGridTarg);
+
+        conn = (GridbrainConnection*)(conn->mNextGlobalConnection);
+    }
+}

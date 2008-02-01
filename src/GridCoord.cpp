@@ -37,7 +37,7 @@ GridCoord::GridCoord(const GridCoord& coord)
 {
     mDepth = coord.mDepth;
     mBranch = coord.mBranch;
-    mXoverOrigin = 0;
+    mXoverOrigin = coord.mXoverOrigin;
 }
 
 GridCoord::~GridCoord()
@@ -136,5 +136,12 @@ int GridCoord::position(GridCoord gc)
     result *= inversor;
 
     return result;
+}
+
+string GridCoord::toString()
+{
+    char buf[255];
+    sprintf(buf, "(%d, %d)", mDepth, mBranch);
+    return string(buf);
 }
 

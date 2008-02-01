@@ -21,9 +21,14 @@
 
 Brain* Gridbrain::recombine(Brain* brain)
 {
+    //printf("RECOMBINE\n");
+
     Gridbrain* gb1 = this;
     Gridbrain* gb2 = (Gridbrain*)brain;
     Gridbrain* gbNew = gb1->baseClone();
+
+    //gb1->printDebug();
+    //gb2->printDebug();
 
     // Crossover grids from parents to offspring
     for (unsigned int i = 0; i < gb1->mGridsCount; i++)
@@ -31,7 +36,7 @@ Brain* Gridbrain::recombine(Brain* brain)
         Grid* grid = gb1->mGridsVec[i];
         Grid* newGrid = new Grid(*grid);
 
-        newGrid->crossover(grid, gb2->mGridsVec[i]);
+        newGrid->crossover(gb1->mGridsVec[i], gb2->mGridsVec[i]);
 
         gbNew->addGrid(newGrid, "");
     }
@@ -70,20 +75,23 @@ Brain* Gridbrain::recombine(Brain* brain)
                 int y1 = grid1->getRowByCoord(rowCoord);
                 int y2 = grid2->getRowByCoord(rowCoord);
                 
-                char orig = colCoord.mXoverOrigin + rowCoord.mXoverOrigin;
+                int orig = colCoord.mXoverOrigin + rowCoord.mXoverOrigin;
 
                 if (orig == 1)
                 {
                     if ((x1 >= 0) && (y1 >= 0))
                     {
+                        //printf("1");
                         originComp = gb1->getComponent(x1, y1, gridIndex);
                     }
                     else if ((x2 >= 0) && (y2 >= 0))
                     {
+                        //printf("2");
                         originComp = gb2->getComponent(x2, y2, gridIndex);
                     }
                     else
                     {
+                        //printf("3");
                         originComp = newGrid->getRandomComponent();
                     }
                 }
@@ -91,14 +99,17 @@ Brain* Gridbrain::recombine(Brain* brain)
                 {
                     if ((x2 >= 0) && (y2 >= 0))
                     {
+                        //printf("4");
                         originComp = gb2->getComponent(x2, y2, gridIndex);
                     }
                     else if ((x1 >= 0) && (y1 >= 0))
                     {
+                        //printf("5");
                         originComp = gb1->getComponent(x1, y1, gridIndex);
                     }
                     else
                     {
+                        //printf("6");
                         originComp = newGrid->getRandomComponent();
                     }
                 }
@@ -112,6 +123,7 @@ Brain* Gridbrain::recombine(Brain* brain)
 
                 index++;
             }
+            //printf("\n");
         }
     }
 
@@ -227,6 +239,8 @@ Brain* Gridbrain::recombine(Brain* brain)
             }
         }
     }
+    
+    //gbNew->printDebug();
 
     return gbNew;
 }
