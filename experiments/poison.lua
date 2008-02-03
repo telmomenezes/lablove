@@ -124,7 +124,7 @@ fromScratch = getBoolParameter("scratch", true)
 logBaseName = "_poison_"
 
 if fromScratch == true then
-    logBaseName = "_poison_from_scratch_"
+    logBaseName = "_poison0_"
     alphaWidth = 0
     betaWidth = 0
     alphaHeight = 0
