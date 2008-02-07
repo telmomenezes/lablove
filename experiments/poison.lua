@@ -63,8 +63,8 @@ changeComponentProb = 0.01
 swapComponentProb = 0.0
 
 recombineProb = 0.0
-
 minimumFreeComponentRatio = 0.0
+subSpecies = 4
 
 timeLimit = 0
 logTimeInterval = 100
@@ -119,7 +119,7 @@ compCount = getNumberParameter("compcount", compCount, "cc")
 fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")
 minimumFreeComponentRatio = getNumberParameter("minfree", minimumFreeComponentRatio, "free")
 
-fromScratch = getBoolParameter("scratch", true)
+fromScratch = getBoolParameter("scratch", false)
 
 logBaseName = "_poison_"
 
@@ -308,7 +308,7 @@ sim:setPopulationDynamics(popDyn)
 popDyn:setCompCount(compCount)
 popDyn:setFitnessAging(fitnessAging)
 popDyn:setRecombineProb(recombineProb)
-agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize)
+agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize, subSpecies)
 popDyn:addSpecies(plant, numberOfPlants, 1)
 
 -- Human Agent

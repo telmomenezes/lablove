@@ -53,9 +53,12 @@ void PopDynSpeciesBuffers::init(PopulationManager* popManager)
     {
         unsigned int speciesID = (*iterSpecies).first;
         SpeciesData* species = &((*iterSpecies).second);
+        unsigned int subSpecSize = species->mBufferSize / species->mSubSpecies;
+        species->mBufferSize = subSpecSize * species->mSubSpecies;
         for (unsigned int i = 0; i < species->mBufferSize; i++)
         {
             SimulationObject* org = species->mBaseOrganism->clone(species->mDiversify);
+            org->setSubSpeciesID(i / subSpecSize);
             species->mOrganismVector.push_back(org);
         }
         for (unsigned int i = 0; i < species->mPopulation; i++)
@@ -65,13 +68,99 @@ void PopDynSpeciesBuffers::init(PopulationManager* popManager)
     }
 }
 
-unsigned int PopDynSpeciesBuffers::addSpecies(SimulationObject* org, unsigned int population, unsigned int bufferSize, bool diversify)
+unsigned int PopDynSpeciesBuffers::addSpecies(SimulationObject* org,
+                                                unsigned int population,
+                                                unsigned int bufferSize,
+                                                unsigned int subSpecies,
+                                                bool diversify)
 {
-    unsigned int speciesID = PopDynSpecies::addSpecies(org, population);
+    unsigned int speciesID = CURRENT_SPECIES_ID++;
+    org->setSpeciesID(speciesID);
+
+    SpeciesData species;
+    mSpecies[speciesID] = species;
+    mSpecies[speciesID].mBaseOrganism = org;
+    mSpecies[speciesID].mPopulation = population;
     mSpecies[speciesID].mBufferSize = bufferSize;
+    mSpecies[speciesID].mSubSpecies = subSpecies;
     mSpecies[speciesID].mDiversify = diversify;
 
     return speciesID;
+}
+
+void PopDynSpeciesBuffers::onCycle(unsigned long time, double realTime)
+{
+    PopDynSpecies::onCycle(time, realTime);
+
+    if ((time % 1000) == 0)
+    {
+        for (map<unsigned int, SpeciesData>::iterator iterSpecies = mSpecies.begin();
+            iterSpecies != mSpecies.end();
+            iterSpecies++)
+        {
+            SpeciesData* species = &((*iterSpecies).second);
+
+            if (species->mSubSpecies > 1)
+            {
+                unsigned int subSpecSize = species->mBufferSize / species->mSubSpecies;
+
+                unsigned int subSpecies1 = mDistOrganism->iuniform(0, species->mSubSpecies);
+                unsigned int subSpecies2 = mDistOrganism->iuniform(0, species->mSubSpecies - 1);
+
+                if (subSpecies2 >= subSpecies1)
+                {
+                    subSpecies2++;
+                }
+
+                unsigned int rangeStart1 = subSpecies1 * subSpecSize;
+                unsigned int rangeEnd1 = rangeStart1 + subSpecSize;
+                unsigned int rangeStart2 = subSpecies2 * subSpecSize;
+                unsigned int rangeEnd2 = rangeStart2 + subSpecSize;
+
+                float avgFit1 = 0.0f;
+                float avgFit2 = 0.0f;
+
+                for (unsigned int i = rangeStart1; i < rangeEnd1; i++)
+                {
+                    SimulationObject* org = species->mOrganismVector[i];
+                    avgFit1 += org->mFitness;
+                }
+                for (unsigned int i = rangeStart2; i < rangeEnd2; i++)
+                {
+                    SimulationObject* org = species->mOrganismVector[i];
+                    avgFit2 += org->mFitness;
+                }
+
+                avgFit1 /= (float)subSpecSize;
+                avgFit2 /= (float)subSpecSize;
+
+                float fitRatio = avgFit1 / avgFit2;
+                float mSubIsolation = 1.0f;
+                float transfProb = 1.0f - (fitRatio * mSubIsolation);
+                if ((avgFit1 == 0) || (avgFit2 == 0))
+                {
+                    transfProb = 0.0f;
+                }
+
+
+                if (transfProb > 0.0f)
+                {
+                    if (mDistOrganism->uniform(0, 1.0f) < transfProb)
+                    {
+                        printf("Sub species transference: %d -> %d (%f)\n", subSpecies1, subSpecies2, transfProb);
+                        unsigned int orgNumber1 = mDistOrganism->iuniform(rangeStart1, rangeEnd1);
+                        unsigned int orgNumber2 = mDistOrganism->iuniform(rangeStart2, rangeEnd2);
+                        SimulationObject* org2 = species->mOrganismVector[orgNumber2];
+                        SimulationObject* newOrg = org2->clone();
+                        newOrg->mFitness = org2->mFitness;
+
+                        delete species->mOrganismVector[orgNumber1];
+                        species->mOrganismVector[orgNumber1] = newOrg;
+                    }
+                }
+            }
+        }
+    }
 }
 
 void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init)
@@ -108,13 +197,16 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
     PopDynSpecies::onOrganismDeath(org);
 
     unsigned int speciesID = org->getSpeciesID();
+    unsigned int subSpecies = org->getSubSpeciesID();
     if (speciesID == 0)
     {
         return;
     }
     SpeciesData* species = &(mSpecies[speciesID]);
 
-    vector<SimulationObject*>::iterator iterOrg;
+    unsigned int subSpecSize = species->mBufferSize / species->mSubSpecies;
+    unsigned int rangeStart = subSpecies * subSpecSize;
+    unsigned int rangeEnd = rangeStart + subSpecSize;
 
     bool deleteObj = true;
     bool keepComparing = true;
@@ -122,8 +214,7 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
     // Buffer replacements
     for (unsigned int i = 0; (i < mCompCount) && keepComparing; i++)
     {
-        unsigned int organismNumber = mDistOrganism->iuniform(0, species->mBufferSize);
-
+        unsigned int organismNumber = mDistOrganism->iuniform(rangeStart, rangeEnd);
         SimulationObject* org2 = species->mOrganismVector[organismNumber];
 
         if (org->mFitness >= org2->mFitness)
@@ -187,12 +278,13 @@ int PopDynSpeciesBuffers::addSpecies(lua_State* luaState)
     SimulationObject* obj = (SimulationObject*)Orbit<PopDynSpeciesBuffers>::pointer(luaState, 1);
     unsigned int population = luaL_checkint(luaState, 2);
     unsigned int bufferSize = luaL_checkint(luaState, 3);
+    unsigned int subSpecies = luaL_optint(luaState, 4, 1);
     bool diversify = true;
-    if (lua_gettop(luaState) > 3)
+    if (lua_gettop(luaState) > 4)
     {
-        diversify = luaL_checkbool(luaState, 4);
+        diversify = luaL_checkbool(luaState, 5);
     }
-    unsigned int id = addSpecies(obj, population, bufferSize, diversify);
+    unsigned int id = addSpecies(obj, population, bufferSize, subSpecies, diversify);
     lua_pushinteger(luaState, id);
     return 1;
 }

@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -23,6 +23,7 @@
 #include "PopulationDynamics.h"
 #include "Log.h"
 #include "RandDistManager.h"
+#include "SpeciesData.h"
 
 #include <map>
 #include <vector>
@@ -34,18 +35,6 @@ using std::list;
 
 class PopDynSpecies : public PopulationDynamics
 {
-protected:
-typedef struct
-{
-    SimulationObject* mBaseOrganism;
-    vector<SimulationObject*> mOrganismVector;
-    list<Log*> mDeathLogs;
-    list<Log*> mSampleLogs;
-    unsigned int mPopulation;
-    unsigned int mBufferSize;
-    bool mDiversify;
-} SpeciesData;
-
 public:
     static unsigned int CURRENT_SPECIES_ID;
 

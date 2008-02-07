@@ -27,10 +27,16 @@ class PopDynSpeciesBuffers : public PopDynSpecies
 public:
     PopDynSpeciesBuffers(lua_State* luaState=NULL);
     virtual ~PopDynSpeciesBuffers();
+
+    virtual void onCycle(unsigned long time, double realTime);
     virtual void init(PopulationManager* popManager);
     virtual void onOrganismDeath(SimulationObject* org);
 
-    virtual unsigned int addSpecies(SimulationObject* org, unsigned int population, unsigned int bufferSize, bool diversify=true);
+    virtual unsigned int addSpecies(SimulationObject* org,
+                                    unsigned int population,
+                                    unsigned int bufferSize,
+                                    unsigned int subSpecies=1,
+                                    bool diversify=true);
 
     void setCompCount(unsigned int count){mCompCount = count;}
     void setFitnessAging(float aging){mFitnessAging = aging;}

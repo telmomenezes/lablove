@@ -62,7 +62,9 @@ public:
     virtual void draw(){}
 
     unsigned int getSpeciesID(){return mSpeciesID;}
+    unsigned int getSubSpeciesID(){return mSubSpeciesID;}
     void setSpeciesID(unsigned int id){mSpeciesID = id;}
+    void setSubSpeciesID(unsigned int id){mSubSpeciesID = id;}
 
     unsigned long getCreationTime(){return mCreationTime;}
     void setCreationTime(unsigned long time){mCreationTime = time;}
@@ -129,6 +131,7 @@ protected:
     map<string, int> mNamedULDataIndexes;
 
     unsigned int mSpeciesID;
+    unsigned int mSubSpeciesID;
 };
 #endif
 

@@ -32,6 +32,7 @@ SimulationObject::SimulationObject(lua_State* luaState)
     mDeleted = false;
 
     mSpeciesID = 0;
+    mSubSpeciesID = 0;
     mCreationTime = 0;
 
     mInitialized = false;
@@ -58,6 +59,7 @@ SimulationObject::SimulationObject(SimulationObject* obj)
     mDeleted = false;
 
     mSpeciesID = obj->mSpeciesID;
+    mSubSpeciesID = obj->mSubSpeciesID;
     mCreationTime = 0;
 
     map<int, SymbolTable*>::iterator iterTables;
