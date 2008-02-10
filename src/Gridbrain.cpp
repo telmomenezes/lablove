@@ -32,7 +32,7 @@ mt_distribution* Gridbrain::mDistRecombine = gDistManager.getNewDistribution();
 
 Gridbrain::Gridbrain(lua_State* luaState)
 {
-    mMaxInputDepth = 50;
+    mMaxInputDepth = 10;
     mComponents = NULL;
     mNumberOfComponents = 0;
     mConnections = NULL;
@@ -390,21 +390,28 @@ void Gridbrain::initGridsIO()
             interface = new list<InterfaceItem*>();
             mInputInterfacesVector.push_back(interface);
 
+            int maxPerPos = -1;
+
             for (unsigned int j = 0;
                 j < grid->getSize();
                 j++)
             {
                 if (mComponents[pos].mType == GridbrainComponent::PER)
                 {
-                    mComponents[pos].mPerceptionPosition = grid->addPerception(&mComponents[pos]);
-                    InterfaceItem* item = new InterfaceItem();
-                    item->mType = mComponents[pos].mSubType;
-                    item->mOrigSymTable = mComponents[pos].mOrigSymTable;
-                    item->mTargetSymTable = mComponents[pos].mTargetSymTable;
-                    item->mOrigSymIndex = mComponents[pos].mOrigSymIndex;
-                    item->mTargetSymIndex = mComponents[pos].mTargetSymIndex;
-                    item->mTableLinkType = mComponents[pos].mTableLinkType;
-                    interface->push_back(item);
+                    int perPos = grid->addPerception(&mComponents[pos]);
+                    mComponents[pos].mPerceptionPosition = perPos;
+                    if (perPos > maxPerPos)
+                    {
+                        maxPerPos = perPos;
+                        InterfaceItem* item = new InterfaceItem();
+                        item->mType = mComponents[pos].mSubType;
+                        item->mOrigSymTable = mComponents[pos].mOrigSymTable;
+                        item->mTargetSymTable = mComponents[pos].mTargetSymTable;
+                        item->mOrigSymIndex = mComponents[pos].mOrigSymIndex;
+                        item->mTargetSymIndex = mComponents[pos].mTargetSymIndex;
+                        item->mTableLinkType = mComponents[pos].mTableLinkType;
+                        interface->push_back(item);
+                    }
                 }
 
                 pos++;

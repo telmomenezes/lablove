@@ -101,6 +101,7 @@ public:
     virtual void addObject(SimulationObject* object, bool init=false);
     virtual void removeObject(SimulationObject* obj, bool deleteObj=true);
     virtual void placeRandom(SimulationObject* obj);
+    virtual void placeNear(SimulationObject* obj, SimulationObject* ref);
 
     void setPos(SimulationObject* obj, float x, float y);
     void setRot(SimulationObject* obj, float rot);

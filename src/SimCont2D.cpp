@@ -290,7 +290,7 @@ void SimCont2D::addObject(SimulationObject* object, bool init)
 
     if (init)
     {
-        object->mULData[UL_MAX_AGE] = mDistAge->iuniform(0, object->mULData[UL_MAX_AGE]);
+        object->mULData[UL_MAX_AGE] = mDistAge->iuniform(1, object->mULData[UL_MAX_AGE]);
     }
 
     if (object->mType == SimulationObject::TYPE_AGENT)
@@ -348,12 +348,47 @@ void SimCont2D::removeObject(SimulationObject* obj, bool deleteObj)
 
 void SimCont2D::placeRandom(SimulationObject* obj)
 {
-    unsigned int worldWidth = (unsigned int)mWorldWidth;
-    unsigned int worldLength = (unsigned int)mWorldLength;
-
     setPos(obj,
-            mDistPosition->iuniform(0, worldWidth),
-            mDistPosition->iuniform(0, worldLength));
+            mDistPosition->uniform(0, mWorldWidth),
+            mDistPosition->uniform(0, mWorldLength));
+    setRot(obj, mDistPosition->uniform(0, M_PI * 2));
+}
+
+void SimCont2D::placeNear(SimulationObject* obj, SimulationObject* ref)
+{
+    if (obj->getBirthRadius() == 0.0f)
+    {
+        placeRandom(obj);
+        return;
+    }
+
+    float origX = ref->mFloatData[FLOAT_X];
+    float origY = ref->mFloatData[FLOAT_Y];
+
+    float distance = mDistPosition->uniform(0, obj->getBirthRadius());
+    float angle = mDistPosition->uniform(0, M_PI * 2);
+
+    float targX = origX + (sinf(angle) * distance);
+    float targY = origY + (cosf(angle) * distance);
+
+    if (targX < 0.0f)
+    {
+        targX = 0.0f;
+    }
+    if (targY < 0.0f)
+    {
+        targY = 0.0f;
+    }
+    if (targX > mWorldWidth)
+    {
+        targX = mWorldWidth;
+    }
+    if (targY > mWorldLength)
+    {
+        targY = mWorldLength;
+    }
+
+    setPos(obj, targX, targY);
     setRot(obj, mDistPosition->uniform(0, M_PI * 2));
 }
 
@@ -642,6 +677,12 @@ void SimCont2D::onScanObject(Agent* orig,
                 float distance,
                 float angle)
 {
+    float* inBuffer = orig->getBrain()->getInputBuffer(orig->mIntData[INT_CHANNEL_OBJECTS]);
+    if (inBuffer == NULL)
+    {
+        return;
+    }
+
     bool isTarget = false;
 
     // TODO: use the nearest to angle 0 instead of the closest distance?
@@ -658,7 +699,6 @@ void SimCont2D::onScanObject(Agent* orig,
     float normalizedValue;
 
     list<InterfaceItem*>* interface = orig->getBrain()->getInputInterface(orig->mIntData[INT_CHANNEL_OBJECTS]);
-    float* inBuffer = orig->getBrain()->getInputBuffer(orig->mIntData[INT_CHANNEL_OBJECTS]);
     unsigned int pos = 0;
 
     for (list<InterfaceItem*>::iterator iterItem = interface->begin();
@@ -992,6 +1032,12 @@ void SimCont2D::drawAfterObjects()
 
 SimulationObject* SimCont2D::getObjectByScreenPos(int x, int y)
 {
+    /*list<SimulationObject*>::iterator iterObj;
+    for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
+    {
+        SimulationObject* obj = *iterObj;
+    }*/
+
     return NULL;
 }
 

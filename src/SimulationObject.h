@@ -93,6 +93,9 @@ public:
     int getNamedIntDataIndex(string name);
     int getNamedULDataIndex(string name);
 
+    void setBirthRadius(float rad){mBirthRadius = rad;}
+    float getBirthRadius(){return mBirthRadius;}
+
     bool mDeleted;
 
     Type mType;
@@ -119,6 +122,7 @@ public:
     int addSymbolTable(lua_State* luaState);
     int setSize(lua_State* luaState);
     int setSymbolName(lua_State* luaState);
+    int setBirthRadius(lua_State* luaState);
 
 protected:
     unsigned long mID;
@@ -132,6 +136,8 @@ protected:
 
     unsigned int mSpeciesID;
     unsigned int mSubSpeciesID;
+
+    float mBirthRadius;
 };
 #endif
 

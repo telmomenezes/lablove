@@ -64,7 +64,7 @@ swapComponentProb = 0.0
 
 recombineProb = 0.0
 minimumFreeComponentRatio = 0.0
-subSpecies = 4
+subSpecies = 1
 
 timeLimit = 0
 logTimeInterval = 100
@@ -264,6 +264,7 @@ brain:addRandomConnections(initialConnections)
 --------------------------------------------------------------------------------
 
 plant = GraphicalObject()
+--plant:setBirthRadius(50.0)
 
 symSize = SymbolFloat(plantSize)
 symTable = SymbolTable(symSize, sizeTableCode)
@@ -309,7 +310,7 @@ popDyn:setCompCount(compCount)
 popDyn:setFitnessAging(fitnessAging)
 popDyn:setRecombineProb(recombineProb)
 agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize, subSpecies)
-popDyn:addSpecies(plant, numberOfPlants, 1)
+popDyn:addSpecies(plant, numberOfPlants, 1, 1)
 
 -- Human Agent
 --------------------------------------------------------------------------------

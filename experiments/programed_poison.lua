@@ -227,7 +227,7 @@ plant:addGraphic(graphic)
 popDyn = PopDynSpeciesBuffers()
 sim:setPopulationDynamics(popDyn)
 
-agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, 1, false)
+agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, 1, 1, false)
 popDyn:addSpecies(plant, numberOfPlants, 1)
 
 human = Agent()

@@ -50,6 +50,8 @@ SimulationObject::SimulationObject(lua_State* luaState)
     mFitness = 0.0f;
 
     mDataInitialized = false;
+
+    mBirthRadius = 0.0f;
 }
 
 SimulationObject::SimulationObject(SimulationObject* obj)
@@ -131,6 +133,8 @@ SimulationObject::SimulationObject(SimulationObject* obj)
     mDataInitialized = obj->mDataInitialized;
 
     mFitness = 0.0f;
+
+    mBirthRadius = obj->mBirthRadius;
 }
 
 SimulationObject::~SimulationObject()
@@ -390,6 +394,7 @@ const char SimulationObject::mClassName[] = "SimulationObject";
 Orbit<SimulationObject>::MethodType SimulationObject::mMethods[] = {
 	{"addSymbolTable", &SimulationObject::addSymbolTable},
 	{"setSymbolName", &SimulationObject::setSymbolName},
+	{"setBirthRadius", &SimulationObject::setBirthRadius},
     {0,0}
 };
 
@@ -408,6 +413,13 @@ int SimulationObject::setSymbolName(lua_State* luaState)
     int table = luaL_checkint(luaState, 2);
     int pos = luaL_checkint(luaState, 3);
     setSymbolName(name, table, pos);
+    return 0;
+}
+
+int SimulationObject::setBirthRadius(lua_State* luaState)
+{
+    float rad = luaL_checknumber(luaState, 1);
+    setBirthRadius(rad);
     return 0;
 }
 

@@ -114,6 +114,7 @@ Orbit<Agent>::MethodType Agent::mMethods[] = {
     {"addSymbolTable", &SimulationObject::addSymbolTable},
     {"addGraphic", &GraphicalObject::addGraphic},
 	{"setSymbolName", &SimulationObject::setSymbolName},
+	{"setBirthRadius", &SimulationObject::setBirthRadius},
     {"setBrain", &Agent::setBrain},
     {0,0}
 };

@@ -163,7 +163,7 @@ void PopDynSpeciesBuffers::onCycle(unsigned long time, double realTime)
     }
 }
 
-void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init)
+void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, SimulationObject* nearObj)
 {
     SpeciesData* species = &(mSpecies[speciesID]);
     unsigned int organismNumber = mDistOrganism->iuniform(0, species->mBufferSize);
@@ -189,7 +189,15 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init)
     newOrganism->mutate();
 
     mPopManager->addObject(newOrganism, init);
-    mPopManager->placeRandom(newOrganism);
+    
+    if (nearObj == NULL)
+    {
+        mPopManager->placeRandom(newOrganism);
+    }
+    else
+    {
+        mPopManager->placeNear(newOrganism, nearObj);
+    }
 }
 
 void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
@@ -233,8 +241,26 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
     // Remove
     mPopManager->removeObject(org, deleteObj);
 
+    // Find organism to place near
+    unsigned int refOrgNumber = mDistOrganism->iuniform(0, species->mPopulation - 1);
+
+    list<SimulationObject*>* objects = mPopManager->getObjectList();
+
+    list<SimulationObject*>::iterator iterObj = objects->begin();
+    SimulationObject* refObj;
+    unsigned int pos = 0;
+    while (pos <= refOrgNumber)
+    {
+        refObj = (*iterObj);
+        if (refObj->getSpeciesID() == speciesID)
+        {
+            pos++;
+        }
+        iterObj++;
+    }
+
     // Replace
-    xoverMutateSend(speciesID);
+    xoverMutateSend(speciesID, false, refObj);
 }
 
 const char PopDynSpeciesBuffers::mClassName[] = "PopDynSpeciesBuffers";

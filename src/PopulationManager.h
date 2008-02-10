@@ -36,8 +36,10 @@ public:
 
     virtual void addObject(SimulationObject* object, bool init=false);
     virtual void removeObject(SimulationObject* obj, bool deleteObj=true);
+    list<SimulationObject*>* getObjectList(){return &mObjects;}
 
     virtual void placeRandom(SimulationObject* obj){}
+    virtual void placeNear(SimulationObject* obj, SimulationObject* ref){}
 
     virtual void killOrganism(SimulationObject* org);
 

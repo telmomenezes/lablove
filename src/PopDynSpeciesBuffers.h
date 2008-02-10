@@ -52,7 +52,7 @@ public:
     int setRecombineProb(lua_State* luaState);
 
 protected:
-    void xoverMutateSend(unsigned int speciesID, bool init=false);
+    void xoverMutateSend(unsigned int speciesID, bool init=false, SimulationObject* nearObj=NULL);
 
     static mt_distribution* mDistRecombine;
 

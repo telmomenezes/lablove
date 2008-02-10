@@ -328,7 +328,7 @@ void Grid::initInputMatrix(unsigned int maxInputDepth)
     mMaxInputDepth = maxInputDepth;
     unsigned int inputSize = mPerceptionsCount * mMaxInputDepth;
 
-    if (inputSize >  0)
+    if (inputSize > 0)
     {
         mInputMatrix = (float*)malloc(inputSize * sizeof(float));
     }
@@ -387,11 +387,13 @@ unsigned int Grid::getXByOffset(unsigned int offset)
 
 float* Grid::getInputBuffer()
 {
-    float* buffer = mInputMatrix + (mInputDepth * mPerceptionsCount);
-    if (mInputDepth < (mMaxInputDepth - 1))
+    if (mInputDepth >= mMaxInputDepth)
     {
-        mInputDepth++;
+        return NULL;
     }
+    float* buffer = mInputMatrix + (mInputDepth * mPerceptionsCount);
+    mInputDepth++;
+
     return buffer;
 }
 
