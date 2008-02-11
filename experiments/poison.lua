@@ -64,7 +64,6 @@ swapComponentProb = 0.0
 
 recombineProb = 0.0
 minimumFreeComponentRatio = 0.0
-subSpecies = 1
 
 timeLimit = 0
 logTimeInterval = 100
@@ -309,7 +308,7 @@ sim:setPopulationDynamics(popDyn)
 popDyn:setCompCount(compCount)
 popDyn:setFitnessAging(fitnessAging)
 popDyn:setRecombineProb(recombineProb)
-agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize, subSpecies)
+agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize)
 popDyn:addSpecies(plant, numberOfPlants, 1, 1)
 
 -- Human Agent

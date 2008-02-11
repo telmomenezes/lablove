@@ -108,7 +108,7 @@ float SymbolBitString::getBinding(Symbol* sym)
     }
 
     float binding = ((float)match) / ((float)maxLength);
-    return 1.0f - binding;
+    return binding;
 }
 
 int SymbolBitString::getRandomBit()

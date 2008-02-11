@@ -61,7 +61,7 @@ TEST(TestSymbolBitStringBinding1)
     SymbolBitString sym1("0000");
     SymbolBitString sym2("0000");
     float binding = sym1.getBinding(&sym2);
-    CHECK_CLOSE(binding, 0.0f, 0.0001f);
+    CHECK_CLOSE(binding, 1.0f, 0.0001f);
 }
 
 TEST(TestSymbolBitStringBinding2)
@@ -69,7 +69,7 @@ TEST(TestSymbolBitStringBinding2)
     SymbolBitString sym1("1111");
     SymbolBitString sym2("1111");
     float binding = sym1.getBinding(&sym2);
-    CHECK_CLOSE(binding, 0.0f, 0.0001f);
+    CHECK_CLOSE(binding, 1.0f, 0.0001f);
 }
 
 TEST(TestSymbolBitStringBinding3)
@@ -77,7 +77,7 @@ TEST(TestSymbolBitStringBinding3)
     SymbolBitString sym1("0000");
     SymbolBitString sym2("1111");
     float binding = sym1.getBinding(&sym2);
-    CHECK_CLOSE(binding, 1.0f, 0.0001f);
+    CHECK_CLOSE(binding, 0.0f, 0.0001f);
 }
 
 TEST(TestSymbolBitStringBinding4)
@@ -85,7 +85,7 @@ TEST(TestSymbolBitStringBinding4)
     SymbolBitString sym1("0011");
     SymbolBitString sym2("1100");
     float binding = sym1.getBinding(&sym2);
-    CHECK_CLOSE(binding, 1.0f, 0.0001f);
+    CHECK_CLOSE(binding, 0.0f, 0.0001f);
 }
 
 TEST(TestSymbolBitStringBinding5)
@@ -93,7 +93,7 @@ TEST(TestSymbolBitStringBinding5)
     SymbolBitString sym1("0101");
     SymbolBitString sym2("1010");
     float binding = sym1.getBinding(&sym2);
-    CHECK_CLOSE(binding, 1.0f, 0.0001f);
+    CHECK_CLOSE(binding, 0.0f, 0.0001f);
 }
 
 TEST(TestSymbolBitStringBinding6)
@@ -109,7 +109,7 @@ TEST(TestSymbolBitStringBinding7)
     SymbolBitString sym1("010101");
     SymbolBitString sym2("******");
     float binding = sym1.getBinding(&sym2);
-    CHECK_CLOSE(binding, 0.0f, 0.0001f);
+    CHECK_CLOSE(binding, 1.0f, 0.0001f);
 }
 
 TEST(TestSymbolBitStringBinding8)
@@ -117,7 +117,7 @@ TEST(TestSymbolBitStringBinding8)
     SymbolBitString sym1("010101");
     SymbolBitString sym2("1010**");
     float binding = sym1.getBinding(&sym2);
-    CHECK_CLOSE(binding, 0.666666f, 0.0001f);
+    CHECK_CLOSE(binding, 0.333333f, 0.0001f);
 }
 
 TEST(TestSymbolBitStringBinding9)

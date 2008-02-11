@@ -794,7 +794,7 @@ void SimCont2D::act(Agent* agent)
         }
         if (mHumanEat)
         {
-            actionEat = ACTION_EATB;
+            actionEat = ACTION_EAT;
         }
     }
     else
@@ -898,7 +898,7 @@ void SimCont2D::eat(Agent* agent, Action actionType)
         switch (actionType)
         {
         case ACTION_EAT:
-            if (sym1->getBinding(sym2) > 0.5f)
+            if (sym1->getBinding(sym2) > mFeedCenter)
             {
                 float energy = mTargetObject->mFloatData[FLOAT_ENERGY];
                 deltaEnergy(agent, energy);

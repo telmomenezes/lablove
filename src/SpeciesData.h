@@ -30,7 +30,6 @@ public:
     unsigned int mPopulation;
     bool mDiversify;
     unsigned int mBufferSize;
-    unsigned int mSubSpecies;
 };
 #endif
 
