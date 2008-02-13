@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -22,11 +22,13 @@
 Symbol::Symbol()
 {
     mAlwaysRandom = false;
+    mFixed = true;
 }
 
 Symbol::Symbol(Symbol* sym)
 {
     mAlwaysRandom = sym->mAlwaysRandom;
+    mFixed = sym->mFixed;
 }
 
 Symbol::~Symbol()

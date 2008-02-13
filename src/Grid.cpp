@@ -279,11 +279,11 @@ void Grid::setComponentSet(GridbrainComponentSet* componentSet)
     mComponentSet = componentSet;
 }
 
-GridbrainComponent* Grid::getRandomComponent()
+GridbrainComponent* Grid::getRandomComponent(SimulationObject* obj)
 {
     if (mComponentSet)
     {
-        return mComponentSet->getRandom();
+        return mComponentSet->getRandom(obj);
     }
     else
     {
@@ -305,8 +305,8 @@ unsigned int Grid::addPerception(GridbrainComponent* per)
         if ((curPer->mSubType == per->mSubType)
             && (curPer->mOrigSymTable == per->mOrigSymTable)
             && (curPer->mTargetSymTable == per->mTargetSymTable)
-            && (curPer->mOrigSymIndex == per->mOrigSymIndex)
-            && (curPer->mTargetSymIndex == per->mTargetSymIndex))
+            && (curPer->mOrigSymID == per->mOrigSymID)
+            && (curPer->mTargetSymID == per->mTargetSymID))
         {
             return i;
         }

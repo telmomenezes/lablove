@@ -21,6 +21,7 @@
 
 Brain::Brain()
 {
+    mOwner = NULL;
 }
 
 Brain::~Brain()

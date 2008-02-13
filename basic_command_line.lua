@@ -29,6 +29,21 @@ function getBoolParameter(paramName, paramDefault)
     end
 end
 
+function getStringParameter(paramName, paramDefault, shortName)
+    param = getCommandLineParameter(paramName)
+
+    paramOut = 0.0
+    if param == "" then
+        paramOut = paramDefault
+    end
+
+    if ((shortName ~= nil) and (paramOut ~= "")) then
+        parameterString = parameterString .. shortName .. paramOut
+    end
+
+    return paramOut
+end
+
 screenWidth = getNumberParameter("swidth", 800)
 screenHeight = getNumberParameter("sheight", 600)
 fullScreen = getBoolParameter("fullscreen", false)

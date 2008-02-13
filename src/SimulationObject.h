@@ -62,9 +62,7 @@ public:
     virtual void draw(){}
 
     unsigned int getSpeciesID(){return mSpeciesID;}
-    unsigned int getSubSpeciesID(){return mSubSpeciesID;}
     void setSpeciesID(unsigned int id){mSpeciesID = id;}
-    void setSubSpeciesID(unsigned int id){mSubSpeciesID = id;}
 
     unsigned long getCreationTime(){return mCreationTime;}
     void setCreationTime(unsigned long time){mCreationTime = time;}
@@ -74,6 +72,7 @@ public:
 
     void addSymbolTable(SymbolTable* table);
     SymbolTable* getSymbolTable(int id);
+    SymbolTable* getSymbolTableByName(string name);
 
     void setSymbolName(string name, int table, unsigned int pos);
     Symbol* getSymbolByName(string name);
@@ -95,6 +94,9 @@ public:
 
     void setBirthRadius(float rad){mBirthRadius = rad;}
     float getBirthRadius(){return mBirthRadius;}
+
+    void setFitnessMeasure(int measure){mFitnessMeasure = measure;}
+    int getFitnessMeasure(){return mFitnessMeasure;}
 
     bool mDeleted;
 
@@ -123,6 +125,7 @@ public:
     int setSize(lua_State* luaState);
     int setSymbolName(lua_State* luaState);
     int setBirthRadius(lua_State* luaState);
+    int setFitnessMeasure(lua_State* luaState);
 
 protected:
     unsigned long mID;
@@ -135,9 +138,9 @@ protected:
     map<string, int> mNamedULDataIndexes;
 
     unsigned int mSpeciesID;
-    unsigned int mSubSpeciesID;
 
     float mBirthRadius;
+    int mFitnessMeasure;
 };
 #endif
 

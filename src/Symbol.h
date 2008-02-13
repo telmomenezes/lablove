@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -39,7 +39,7 @@ public:
     int setAlwaysRandom(lua_State* luaState);
 
     bool mAlwaysRandom;
-
+    bool mFixed;
 };
 #endif
 

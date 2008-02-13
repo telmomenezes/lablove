@@ -155,6 +155,7 @@ sim:setFeedCenter(feedCenter)
 
 agent = Agent()
 
+agent:setFitnessMeasure(SimCont2D.FITNESS_ENERGY_SUM_ABOVE_INIT)
 agent:addGraphic(GraphicTriangle())
 
 symSize = SymbolFloat(agentSize)

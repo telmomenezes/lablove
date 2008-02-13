@@ -28,7 +28,7 @@ void GridbrainComponentSet::addComponent(GridbrainComponent* component)
     mSize++;
 }
 
-GridbrainComponent* GridbrainComponentSet::getRandom()
+GridbrainComponent* GridbrainComponentSet::getRandom(SimulationObject* obj)
 {
     if (mSize <= 0)
     {
@@ -36,24 +36,33 @@ GridbrainComponent* GridbrainComponentSet::getRandom()
     }
 
     unsigned int pos = mDistComponentSet->iuniform(0, mSize);
-    return mComponentVec[pos];
+
+    GridbrainComponent* comp = mComponentVec[pos]; 
+
+    if (comp->mTableLinkType == InterfaceItem::TAB_TO_SYM)
+    {
+        SymbolTable* table = obj->getSymbolTable(comp->mOrigSymTable);
+        comp->mOrigSymID = table->getRandomSymbolID();
+    }
+
+    return comp;
 }
 
 void GridbrainComponentSet::addComponent(GridbrainComponent::Type type,
                         int subType,
                         InterfaceItem::TableLinkType linkType,
                         int origSymTable,
-                        int origSymIndex,
+                        unsigned long origSymID,
                         int targetSymTable,
-                        int targetSymIndex)
+                        unsigned long targetSymID)
 {
     GridbrainComponent* comp = new GridbrainComponent();
     comp->mType = type;
     comp->mSubType = subType;
     comp->mOrigSymTable = origSymTable;
     comp->mTargetSymTable = targetSymTable;
-    comp->mOrigSymIndex = origSymIndex;
-    comp->mTargetSymIndex = targetSymIndex;
+    comp->mOrigSymID = origSymID;
+    comp->mTargetSymID = targetSymID;
     comp->mTableLinkType = linkType;
     addComponent(comp);
 }

@@ -88,8 +88,8 @@ protected:
                             SimulationObject* targetObj,
                             int origSymTable,
                             int targetSymTable,
-                            int origSymIndex,
-                            int targetSymIndex);
+                            unsigned long origSymID,
+                            unsigned long targetSymID);
     void drawTimes();
 
     static RandDistManager mDistManager;

@@ -111,16 +111,16 @@ void DummyBrain::addPerception(string name,
                                 unsigned int channel,
                                 unsigned int type,
                                 int origSymTable,
-                                int origSymIndex,
+                                unsigned long origSymID,
                                 int targetSymTable,
-                                int targetSymIndex)
+                                unsigned long targetSymID)
 {
     InterfaceItem* item = new InterfaceItem();
     item->mType = type;
     item->mOrigSymTable = origSymTable;
     item->mTargetSymTable = targetSymTable;
-    item->mOrigSymIndex = origSymIndex;
-    item->mTargetSymIndex = targetSymIndex;
+    item->mOrigSymID = origSymID;
+    item->mTargetSymID = targetSymID;
     mInputInterfacesVector[channel]->push_back(item);
     mInputInterfacesNames[channel]->push_back(name);
 }

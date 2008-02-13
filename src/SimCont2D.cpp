@@ -29,6 +29,7 @@ using std::list;
 
 mt_distribution* SimCont2D::mDistAge = gDistManager.getNewDistribution();
 mt_distribution* SimCont2D::mDistPosition = gDistManager.getNewDistribution();
+mt_distribution* SimCont2D::mDistFitnessRandom = gDistManager.getNewDistribution();
 
 SimCont2D::SimCont2D(lua_State* luaState)
 {
@@ -94,8 +95,6 @@ SimCont2D::SimCont2D(lua_State* luaState)
     mZoom = 1.0f;
 
     mFeedCenter = 0.5f;
-
-    mFitnessMeasure = FITNESS_ENERGY_SUM_ABOVE_INIT;
 }
 
 SimCont2D::~SimCont2D()
@@ -589,7 +588,7 @@ void SimCont2D::process(SimulationObject* obj)
     setRot(obj, newRot);
 
     // Update fitness
-    switch (mFitnessMeasure)
+    switch (obj->getFitnessMeasure())
     {
     case FITNESS_ENERGY:
         obj->mFitness = obj->mFloatData[FLOAT_ENERGY];
@@ -612,6 +611,11 @@ void SimCont2D::process(SimulationObject* obj)
             obj->mFitness += energy;
         }
         break;
+    case FITNESS_RANDOM:
+        if ((mSimulationTime % 1000) == 0)
+        {
+            obj->mFitness = mDistFitnessRandom->uniform(0.0f, 1.0f);
+        }
     }
 }
 
@@ -752,8 +756,8 @@ void SimCont2D::onScanObject(Agent* orig,
                                                     targ,
                                                     item->mOrigSymTable,
                                                     item->mTargetSymTable,
-                                                    item->mOrigSymIndex,
-                                                    item->mTargetSymIndex);
+                                                    item->mOrigSymID,
+                                                    item->mTargetSymID);
                 inBuffer[pos] = normalizedValue;
                 break;
         }
@@ -1281,6 +1285,10 @@ Orbit<SimCont2D>::NumberGlobalType SimCont2D::mNumberGlobals[] = {
     {"ACTION_ROTATE", ACTION_ROTATE},
     {"ACTION_EAT", ACTION_EAT},
     {"ACTION_EATB", ACTION_EATB},
+    {"FITNESS_ENERGY", FITNESS_ENERGY},
+    {"FITNESS_ENERGY_SUM", FITNESS_ENERGY_SUM},
+    {"FITNESS_ENERGY_SUM_ABOVE_INIT", FITNESS_ENERGY_SUM_ABOVE_INIT},
+    {"FITNESS_RANDOM", FITNESS_RANDOM},
     {0,0}
 };
 

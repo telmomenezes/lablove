@@ -58,15 +58,20 @@ public:
 
     virtual void draw()=0;
 
+    void setOwner(SimulationObject* obj){mOwner = obj;}
+
     virtual bool getFieldValue(string fieldName, float& value);
 
     int getChannelByName(string name);
     virtual string write(SimulationObject* obj, PopulationManager* pop){return "";}
 
+    virtual bool symbolUsed(int tableID, unsigned long symbolID){return false;}
+
 protected:
     vector<list<InterfaceItem*>*> mInputInterfacesVector;
     list<InterfaceItem*> mOutputInterface;
     map<string, int> mChannels;
+    SimulationObject* mOwner;
 };
 #endif
 

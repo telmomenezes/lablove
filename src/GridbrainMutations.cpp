@@ -518,7 +518,7 @@ void Gridbrain::mutateChangeComponent()
         unsigned int gridNumber = mComponents[pos].mGrid;
         Grid* grid = mGridsVec[gridNumber];
 
-        GridbrainComponent* comp = grid->getRandomComponent();
+        GridbrainComponent* comp = grid->getRandomComponent(mOwner);
         mComponents[pos].copyDefinitions(comp);
     }
 }

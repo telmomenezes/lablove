@@ -53,9 +53,9 @@ public:
                         unsigned int channel,
                         unsigned int type,
                         int origSymTable=-1,
-                        int originSymIndex=-1,
+                        unsigned long originSymID=0,
                         int targetSymTable=-1,
-                        int targetSymIndex=-1);
+                        unsigned long targetSymID=0);
 
     void setChannelName(int channel, string name){mChannels[name] = channel;}
 

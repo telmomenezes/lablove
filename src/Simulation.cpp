@@ -62,7 +62,8 @@ void Simulation::initGraphics(unsigned int width,
                                 bool fullScreen,
                                 bool noGraphics)
 {
-    art_initSimple(width, height, fullScreen);
+    art_init(width, height, fullScreen, 0, 0, 1, 0);
+    art_setBackgroundColor(0, 50, 0);
 
     mLogo = art_loadImage("media/lablove_small.png");
 
@@ -223,8 +224,8 @@ float Simulation::calcSymbolsBinding(SimulationObject* origObj,
                                     SimulationObject* targetObj,
                                     int origSymTable,
                                     int targetSymTable,
-                                    int origSymIndex,
-                                    int targetSymIndex)
+                                    unsigned long origSymID,
+                                    unsigned long targetSymID)
 {
     SymbolTable* origTable = origObj->getSymbolTable(origSymTable);
     SymbolTable* targetTable = targetObj->getSymbolTable(targetSymTable);
@@ -234,8 +235,8 @@ float Simulation::calcSymbolsBinding(SimulationObject* origObj,
         return 0.0f;
     }
 
-    Symbol* origSym = origTable->getSymbol(origSymIndex);
-    Symbol* targetSym = targetTable->getSymbol(targetSymIndex);
+    Symbol* origSym = origTable->getSymbol(origSymID);
+    Symbol* targetSym = targetTable->getSymbol(targetSymID);
 
     if ((origSym == NULL) || (targetSym == NULL))
     {

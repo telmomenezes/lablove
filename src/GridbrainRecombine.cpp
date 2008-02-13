@@ -98,7 +98,7 @@ Brain* Gridbrain::recombine(Brain* brain)
                     else
                     {
                         //printf("3");
-                        originComp = newGrid->getRandomComponent();
+                        originComp = newGrid->getRandomComponent(mOwner);
                     }
                 }
                 else
@@ -116,7 +116,7 @@ Brain* Gridbrain::recombine(Brain* brain)
                     else
                     {
                         //printf("6");
-                        originComp = newGrid->getRandomComponent();
+                        originComp = newGrid->getRandomComponent(mOwner);
                     }
                 }
                 
@@ -175,7 +175,7 @@ Brain* Gridbrain::recombine(Brain* brain)
                     }
                     else
                     {
-                        originComp = newGrid->getRandomComponent();
+                        originComp = newGrid->getRandomComponent(mOwner);
                         origBrain = gbNew;
                     }
                 }
@@ -193,7 +193,7 @@ Brain* Gridbrain::recombine(Brain* brain)
                     }
                     else
                     {
-                        originComp = newGrid->getRandomComponent();
+                        originComp = newGrid->getRandomComponent(mOwner);
                         origBrain = gbNew;
                     }
                 }

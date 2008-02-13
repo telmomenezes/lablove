@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -93,8 +93,8 @@ public:
 
     int mOrigSymTable;
     int mTargetSymTable;
-    int mOrigSymIndex;
-    int mTargetSymIndex;
+    unsigned long mOrigSymID;
+    unsigned long mTargetSymID;
     InterfaceItem::TableLinkType mTableLinkType;
 };
 

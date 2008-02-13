@@ -81,7 +81,8 @@ public:
 
     enum FitnessMeasure {FITNESS_ENERGY,
                         FITNESS_ENERGY_SUM,
-                        FITNESS_ENERGY_SUM_ABOVE_INIT
+                        FITNESS_ENERGY_SUM_ABOVE_INIT,
+                        FITNESS_RANDOM
     };
 
     SimCont2D(lua_State* luaState=NULL);
@@ -146,9 +147,6 @@ public:
 
     virtual string getInterfaceName(bool input, int type);
 
-    void setFitnessMeasure(FitnessMeasure measure){mFitnessMeasure = measure;}
-    FitnessMeasure getFitnessMeasure(){return mFitnessMeasure;}
-
     static const char mClassName[];
     static Orbit<SimCont2D>::MethodType mMethods[];
     static Orbit<SimCont2D>::NumberGlobalType mNumberGlobals[];
@@ -180,6 +178,7 @@ protected:
         
     static mt_distribution* mDistAge;
     static mt_distribution* mDistPosition;
+    static mt_distribution* mDistFitnessRandom;
 
     float mWorldWidth;
     float mWorldLength;
@@ -243,8 +242,6 @@ protected:
     float mZoom;
 
     float mFeedCenter;
-
-    FitnessMeasure mFitnessMeasure;
 };
 #endif
 

@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -24,9 +24,11 @@
 #include "Orbit.h"
 #include "RandDistManager.h"
 
-#include <vector>
+#include <map>
+#include <string>
 
-using std::vector;
+using std::map;
+using std::string;
 
 class SymbolTable
 {
@@ -36,17 +38,26 @@ public:
     SymbolTable(SymbolTable* table);
     virtual ~SymbolTable();
 
-    Symbol* getSymbol(unsigned int index);
-    unsigned int addSymbol(Symbol* sym);
+    Symbol* getSymbol(unsigned long id);
+    unsigned long addSymbol(Symbol* sym);
+    unsigned long addRandomSymbol();
     int getID(){return mID;}
+    unsigned long getRandomSymbolID();
 
-    void mutate();
+    map<unsigned long, Symbol*>* getSymbolMap(){return &mSymbols;}
 
-    void setMutateSymbolProb(float prob){mMutateSymbolProb = prob;}
+    void setDynamic(bool dyn){mDynamic = dyn;}
+    bool isDynamic(){return mDynamic;}
+
+    void setName(string name){mName = name;}
+    string getName(){return mName;}
+
+    unsigned int getSize(){return mSymbols.size();}
 
     int addSymbol(lua_State* luaState);
     int getID(lua_State* luaState);
-    int setMutateSymbolProb(lua_State* luaState);
+    int setDynamic(lua_State* luaState);
+    int setName(lua_State* luaState);
 
     static const char mClassName[];
     static Orbit<SymbolTable>::MethodType mMethods[];
@@ -58,13 +69,13 @@ protected:
 
     static int NEXT_SYMBOL_TABLE_ID;
     static mt_distribution* mDistIndex;
-    static mt_distribution* mDistMutationsProb;
 
     int mID;
     Symbol* mReferenceSymbol;
-    vector<Symbol*> mSymbols;
-
-    float mMutateSymbolProb;
+    map<unsigned long, Symbol*> mSymbols;
+    unsigned long mLastSymbolID;
+    bool mDynamic;
+    string mName;
 };
 #endif
 

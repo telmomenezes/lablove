@@ -79,7 +79,7 @@ dofile("basic_command_line.lua")
 
 expLabel = getNumberParameter("label", "", "_")
 
-logBaseName = "_predprey_"
+logBaseName = "_alifeXI_"
 
 logSuffix = logBaseName
             .. parameterString

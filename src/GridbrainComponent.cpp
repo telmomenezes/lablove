@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -46,8 +46,9 @@ void GridbrainComponent::clearDefinitions()
     mActionPosition = 0;
     mOrigSymTable = -1;
     mTargetSymTable = -1;
-    mOrigSymIndex = -1;
-    mTargetSymIndex = InterfaceItem::NO_LINK;
+    mOrigSymID = 0;
+    mTargetSymID = 0;
+    mTableLinkType = InterfaceItem::NO_LINK;
 }
 
 void GridbrainComponent::clearPosition()
@@ -75,8 +76,8 @@ void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)
     mSubType = comp->mSubType;
     mOrigSymTable = comp->mOrigSymTable;
     mTargetSymTable = comp->mTargetSymTable;
-    mOrigSymIndex = comp->mOrigSymIndex;
-    mTargetSymIndex = comp->mTargetSymIndex;
+    mOrigSymID = comp->mOrigSymID;
+    mTargetSymID = comp->mTargetSymID;
     mTableLinkType = comp->mTableLinkType;
 ;}
 

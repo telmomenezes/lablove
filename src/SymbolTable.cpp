@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -22,7 +22,6 @@
 
 int SymbolTable::NEXT_SYMBOL_TABLE_ID = 0;
 mt_distribution* SymbolTable::mDistIndex = gDistManager.getNewDistribution();
-mt_distribution* SymbolTable::mDistMutationsProb = gDistManager.getNewDistribution();
 
 SymbolTable::SymbolTable(Symbol* refSymbol, int id)
 {
@@ -41,33 +40,35 @@ SymbolTable::SymbolTable(SymbolTable* table)
 {
     mReferenceSymbol = table->mReferenceSymbol->clone();
 
-    vector<Symbol*>::iterator iterSymbol;
-
+    map<unsigned long, Symbol*>::iterator iterSymbol;
     for (iterSymbol = table->mSymbols.begin();
         iterSymbol != table->mSymbols.end();
         iterSymbol++)
     {
-        Symbol* sym = (*iterSymbol)->clone();
+        Symbol* origSym = (*iterSymbol).second;
+        Symbol* sym = origSym->clone();
 
-        if ((*iterSymbol)->mAlwaysRandom)
+        if (origSym->mAlwaysRandom)
         {
-            sym->initRandom();
+            origSym->initRandom();
         }
-        mSymbols.push_back(sym);
+        mSymbols[(*iterSymbol).first] = sym;
     }
-
-    mMutateSymbolProb = table->mMutateSymbolProb;
+    
+    mID = table->mID;
+    mLastSymbolID = table->mLastSymbolID;
+    mDynamic = table->mDynamic;
+    mName = table->mName;
 }
 
 SymbolTable::~SymbolTable()
 {
-    vector<Symbol*>::iterator iterSymbol;
-
+    map<unsigned long, Symbol*>::iterator iterSymbol;
     for (iterSymbol = mSymbols.begin();
         iterSymbol != mSymbols.end();
         iterSymbol++)
     {
-        delete (*iterSymbol);
+        delete (*iterSymbol).second;
     }
 
     mSymbols.clear();
@@ -76,7 +77,8 @@ SymbolTable::~SymbolTable()
 void SymbolTable::create(Symbol* refSymbol, int id)
 {
     mReferenceSymbol = refSymbol;
-    mSymbols.push_back(mReferenceSymbol);
+    mLastSymbolID = 0;
+    mSymbols[mLastSymbolID] = mReferenceSymbol;
 
     if (id < 0)
     {
@@ -87,47 +89,49 @@ void SymbolTable::create(Symbol* refSymbol, int id)
         mID = id;
     }
 
-    mMutateSymbolProb = 0.0f;
+    mDynamic = false;
+    mName = "";
 }
 
-Symbol* SymbolTable::getSymbol(unsigned int index)
+Symbol* SymbolTable::getSymbol(unsigned long id)
 {
-    return mSymbols[index];
+    return mSymbols[id];
 }
 
-unsigned int SymbolTable::addSymbol(Symbol* sym)
+unsigned long SymbolTable::addSymbol(Symbol* sym)
 {
-    unsigned int pos = mSymbols.size();
-    mSymbols.push_back(sym);
-    return pos;
+    mLastSymbolID++;
+    mSymbols[mLastSymbolID] = sym;
+    return mLastSymbolID;
 }
 
-void SymbolTable::mutate()
+unsigned long SymbolTable::addRandomSymbol()
 {
-    float nonSelectionProb = 1.0f - mMutateSymbolProb;
-    if (nonSelectionProb == 1.0f)
-    {
-        return;
-    }
-    float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
-    double nextPos = trunc(log(prob) / log(nonSelectionProb));
+    Symbol* sym = mReferenceSymbol->clone();
+    sym->initRandom();
+    sym->mFixed = false;
+    return addSymbol(sym);
+}
+
+unsigned long SymbolTable::getRandomSymbolID()
+{
+    unsigned int index = mDistIndex->iuniform(0, mSymbols.size());
     
-    unsigned int symbolPos = 0;
-    unsigned int symbolCount = mSymbols.size();
+    map<unsigned long, Symbol*>::iterator iterSymbol = mSymbols.begin();
 
-    while (nextPos < symbolCount) 
+    for (unsigned int i = 0; i < index; i++)
     {
-        mSymbols[nextPos]->mutate();
-        prob = mDistMutationsProb->uniform(0.0f, 1.0f);
-        nextPos += trunc(log(prob) / log(nonSelectionProb));
+        iterSymbol++;
     }
+
+    return (*iterSymbol).first;
 }
 
 int SymbolTable::addSymbol(lua_State* luaState)
 {
     Symbol* sym = (Symbol*)Orbit<SymbolTable>::pointer(luaState, 1);
-    unsigned int index = addSymbol(sym);
-    lua_pushnumber(luaState, index);
+    unsigned long id = addSymbol(sym);
+    lua_pushnumber(luaState, id);
     return 1;
 }
 
@@ -137,10 +141,17 @@ int SymbolTable::getID(lua_State* luaState)
     return 1;
 }
 
-int SymbolTable::setMutateSymbolProb(lua_State* luaState)
+int SymbolTable::setDynamic(lua_State* luaState)
 {
-    float prob = luaL_checknumber(luaState, 1);
-    setMutateSymbolProb(prob);
+    bool dyn = luaL_checkbool(luaState, 1);
+    setDynamic(dyn);
+    return 0;
+}
+
+int SymbolTable::setName(lua_State* luaState)
+{
+    string name = luaL_checkstring(luaState, 1);
+    setName(name);
     return 0;
 }
 
@@ -149,7 +160,8 @@ const char SymbolTable::mClassName[] = "SymbolTable";
 Orbit<SymbolTable>::MethodType SymbolTable::mMethods[] = {
     {"addSymbol", &SymbolTable::addSymbol},
     {"getID", &SymbolTable::getID},
-    {"setMutateSymbolProb", &SymbolTable::setMutateSymbolProb},
+    {"setDynamic", &SymbolTable::setDynamic},
+    {"setName", &SymbolTable::setName},
     {0,0}
 };
 

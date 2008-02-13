@@ -20,6 +20,10 @@
 #if !defined(__INCLUDE_SPECIES_DATA_H)
 #define __INCLUDE_SPECIES_DATA_H
 
+#include <vector>
+
+using std::vector;
+
 class SpeciesData
 {
 public:

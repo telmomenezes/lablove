@@ -119,9 +119,9 @@ public:
                 int subType=-1,
                 InterfaceItem::TableLinkType linkType=InterfaceItem::NO_LINK,
                 int origSymTable=-1,
-                int origSymIndex=-1,
+                unsigned long origSymID=0,
                 int targetSymTalbe=-1,
-                int targetSymIndex=-1);
+                unsigned long targetSymID=0);
 
     void setMutateAddConnectionProb(float prob){mMutateAddConnectionProb = prob;}
     void setMutateRemoveConnectionProb(float prob){mMutateRemoveConnectionProb = prob;}
@@ -141,6 +141,8 @@ public:
     void printDebug();
 
     bool isValid();
+
+    virtual bool symbolUsed(int tableID, unsigned long symbolID);
 
     static const char mClassName[];
     static Orbit<Gridbrain>::MethodType mMethods[];
@@ -177,7 +179,6 @@ public:
     static void debugMutationsCount();
 
 protected:
-
     Gridbrain* baseClone();
     void initGridsIO();
     void calcConnectionCounts();

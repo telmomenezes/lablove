@@ -1,4 +1,4 @@
-experiment = "experiments/poison.lua"
+experiment = "experiments/alifeXI.lua"
 
 expParam = getCommandLineParameter("exp");
 if expParam ~= "" then experiment = expParam end

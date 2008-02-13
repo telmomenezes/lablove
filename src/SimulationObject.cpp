@@ -32,7 +32,6 @@ SimulationObject::SimulationObject(lua_State* luaState)
     mDeleted = false;
 
     mSpeciesID = 0;
-    mSubSpeciesID = 0;
     mCreationTime = 0;
 
     mInitialized = false;
@@ -52,6 +51,7 @@ SimulationObject::SimulationObject(lua_State* luaState)
     mDataInitialized = false;
 
     mBirthRadius = 0.0f;
+    mFitnessMeasure = 0;
 }
 
 SimulationObject::SimulationObject(SimulationObject* obj)
@@ -61,7 +61,6 @@ SimulationObject::SimulationObject(SimulationObject* obj)
     mDeleted = false;
 
     mSpeciesID = obj->mSpeciesID;
-    mSubSpeciesID = obj->mSubSpeciesID;
     mCreationTime = 0;
 
     map<int, SymbolTable*>::iterator iterTables;
@@ -133,6 +132,7 @@ SimulationObject::SimulationObject(SimulationObject* obj)
     mDataInitialized = obj->mDataInitialized;
 
     mFitness = 0.0f;
+    mFitnessMeasure = obj->mFitnessMeasure;
 
     mBirthRadius = obj->mBirthRadius;
 }
@@ -237,7 +237,22 @@ SymbolTable* SimulationObject::getSymbolTable(int id)
     return mSymbolTables[id];
 }
 
+SymbolTable* SimulationObject::getSymbolTableByName(string name)
+{
+    map<int, SymbolTable*>::iterator iterTables;
 
+    for (iterTables = mSymbolTables.begin();
+        iterTables != mSymbolTables.end();
+        iterTables++)
+    {
+        if ((*iterTables).second->getName() == name)
+        {
+            return (*iterTables).second;
+        }
+    }
+
+    return NULL;
+}
 
 void SimulationObject::setSymbolName(string name, int table, unsigned int pos)
 {
@@ -286,6 +301,21 @@ bool SimulationObject::getFieldValue(string fieldName, float& value)
     if (fieldName == "fitness")
     {
         value = mFitness;
+        return true;
+    }
+    else if (fieldName.substr(0,  14) == "symtable_size_")
+    {
+        string tableName = fieldName.substr(14, fieldName.size() - 14);
+
+        SymbolTable* table = getSymbolTableByName(tableName);
+        if (table)
+        {
+            value = table->getSize();
+        }
+        else
+        {
+            value = 0.0f;
+        }
         return true;
     }
     else
@@ -380,13 +410,6 @@ int SimulationObject::getNamedULDataIndex(string name)
 
 void SimulationObject::mutate()
 {
-    map<int, SymbolTable*>::iterator iterTables;
-    for (iterTables = mSymbolTables.begin();
-        iterTables != mSymbolTables.end();
-        iterTables++)
-    {
-        (*iterTables).second->mutate();
-    }
 }
 
 const char SimulationObject::mClassName[] = "SimulationObject";
@@ -395,6 +418,7 @@ Orbit<SimulationObject>::MethodType SimulationObject::mMethods[] = {
 	{"addSymbolTable", &SimulationObject::addSymbolTable},
 	{"setSymbolName", &SimulationObject::setSymbolName},
 	{"setBirthRadius", &SimulationObject::setBirthRadius},
+	{"setFitnessMeasure", &SimulationObject::setFitnessMeasure},
     {0,0}
 };
 
@@ -420,6 +444,13 @@ int SimulationObject::setBirthRadius(lua_State* luaState)
 {
     float rad = luaL_checknumber(luaState, 1);
     setBirthRadius(rad);
+    return 0;
+}
+
+int SimulationObject::setFitnessMeasure(lua_State* luaState)
+{
+    int measure = luaL_checkint(luaState, 1);
+    setFitnessMeasure(measure);
     return 0;
 }
 

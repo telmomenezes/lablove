@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -33,8 +33,8 @@ public:
     int mType;
     int mOrigSymTable;
     int mTargetSymTable;
-    int mOrigSymIndex;
-    int mTargetSymIndex;
+    unsigned long mOrigSymID;
+    unsigned long mTargetSymID;
     TableLinkType mTableLinkType;
 
     static const char mClassName[];

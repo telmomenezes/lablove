@@ -164,14 +164,14 @@ Brain* Gridbrain::clone(bool randomize)
                 if ((x == newGrid->mNewColumn)
                     || (y == newGrid->mNewRow))
                 {
-                    GridbrainComponent* comp = grid->getRandomComponent();
+                    GridbrainComponent* comp = grid->getRandomComponent(mOwner);
                     gb->mComponents[newIndex].copyDefinitions(comp);
                 }
                 else
                 {
                     if (randomize)
                     {
-                        GridbrainComponent* comp = grid->getRandomComponent();
+                        GridbrainComponent* comp = grid->getRandomComponent(mOwner);
                         gb->mComponents[newIndex].copyDefinitions(comp);
                     }
                     else
@@ -293,7 +293,7 @@ void Gridbrain::init()
                 {
                     mComponents[pos].clearConnections();
                     mComponents[pos].clearMetrics();
-                    GridbrainComponent* comp = grid->getRandomComponent();
+                    GridbrainComponent* comp = grid->getRandomComponent(mOwner);
                     mComponents[pos].copyDefinitions(comp);
 
                     mComponents[pos].mOffset = pos;
@@ -358,9 +358,9 @@ void Gridbrain::setComponent(unsigned int x,
                 int subType,
                 InterfaceItem::TableLinkType linkType,
                 int origSymTable,
-                int origSymIndex,
+                unsigned long origSymID,
                 int targetSymTable,
-                int targetSymIndex)
+                unsigned long targetSymID)
 {
     GridbrainComponent* comp = getComponent(x, y, gridNumber);
 
@@ -368,8 +368,8 @@ void Gridbrain::setComponent(unsigned int x,
     comp->mSubType = subType;
     comp->mOrigSymTable = origSymTable;
     comp->mTargetSymTable = targetSymTable;
-    comp->mOrigSymIndex = origSymIndex;
-    comp->mTargetSymIndex = targetSymIndex;
+    comp->mOrigSymID = origSymID;
+    comp->mTargetSymID = targetSymID;
     comp->mTableLinkType = linkType;
 }
 
@@ -407,8 +407,8 @@ void Gridbrain::initGridsIO()
                         item->mType = mComponents[pos].mSubType;
                         item->mOrigSymTable = mComponents[pos].mOrigSymTable;
                         item->mTargetSymTable = mComponents[pos].mTargetSymTable;
-                        item->mOrigSymIndex = mComponents[pos].mOrigSymIndex;
-                        item->mTargetSymIndex = mComponents[pos].mTargetSymIndex;
+                        item->mOrigSymID = mComponents[pos].mOrigSymID;
+                        item->mTargetSymID = mComponents[pos].mTargetSymID;
                         item->mTableLinkType = mComponents[pos].mTableLinkType;
                         interface->push_back(item);
                     }
@@ -1373,6 +1373,21 @@ bool Gridbrain::isValid()
     }
 
     return true;
+}
+
+bool Gridbrain::symbolUsed(int tableID, unsigned long symbolID)
+{
+    for (unsigned int i = 0; i < mNumberOfComponents; i++)
+    {
+        GridbrainComponent* comp = &mComponents[i];
+
+        if ((comp->mOrigSymTable == tableID)
+            && (comp->mOrigSymID == symbolID))
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 const char Gridbrain::mClassName[] = "Gridbrain";

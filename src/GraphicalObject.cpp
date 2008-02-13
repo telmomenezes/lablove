@@ -71,6 +71,7 @@ const char GraphicalObject::mClassName[] = "GraphicalObject";
 Orbit<GraphicalObject>::MethodType GraphicalObject::mMethods[] = {
 	{"addSymbolTable", &SimulationObject::addSymbolTable},
 	{"setBirthRadius", &SimulationObject::setBirthRadius},
+	{"setFitnessMeasure", &SimulationObject::setFitnessMeasure},
 	{"addGraphic", &GraphicalObject::addGraphic},
 	{"setSymbolName", &SimulationObject::setSymbolName},
     {0,0}

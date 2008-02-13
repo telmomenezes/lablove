@@ -30,7 +30,40 @@ Agent::Agent(lua_State* luaState) : GraphicalObject()
 Agent::Agent(Agent* agent, bool randomize) : GraphicalObject(agent)
 {
     mBrain = agent->mBrain->clone(randomize);
+    mBrain->setOwner(this);
     mBrain->init();
+
+    map<int, SymbolTable*>::iterator iterTables;
+    for (iterTables = mSymbolTables.begin();
+        iterTables != mSymbolTables.end();
+        iterTables++)
+    {
+        SymbolTable* table = (*iterTables).second;
+
+        if (table->isDynamic())
+        {
+            int tableID = (*iterTables).first;
+
+            map<unsigned long, Symbol*>::iterator iterSymbol;
+            for (iterSymbol = table->getSymbolMap()->begin();
+                iterSymbol != table->getSymbolMap()->end();
+                iterSymbol++)
+            {
+                unsigned long symbolID = (*iterSymbol).first;
+                Symbol* sym = (*iterSymbol).second;
+
+                if ((!sym->mFixed) && 
+                    (!mBrain->symbolUsed(tableID, symbolID)))
+                {
+                    iterSymbol++;
+                    table->getSymbolMap()->erase(symbolID);
+                    delete sym;
+                }
+            }
+
+            table->addRandomSymbol();
+        }
+    }
 }
 
 Agent::~Agent()
@@ -62,6 +95,7 @@ Brain* Agent::setBrain(Brain* brain)
         delete mBrain;
     }
     mBrain = brain;
+    mBrain->setOwner(this);
     mBrain->init();
 }
 
@@ -115,6 +149,7 @@ Orbit<Agent>::MethodType Agent::mMethods[] = {
     {"addGraphic", &GraphicalObject::addGraphic},
 	{"setSymbolName", &SimulationObject::setSymbolName},
 	{"setBirthRadius", &SimulationObject::setBirthRadius},
+	{"setFitnessMeasure", &SimulationObject::setFitnessMeasure},
     {"setBrain", &Agent::setBrain},
     {0,0}
 };
