@@ -279,11 +279,41 @@ void Grid::setComponentSet(GridbrainComponentSet* componentSet)
     mComponentSet = componentSet;
 }
 
-GridbrainComponent* Grid::getRandomComponent(SimulationObject* obj)
+GridbrainComponent* Grid::getRandomComponent(SimulationObject* obj, GridbrainComponent* components)
 {
     if (mComponentSet)
     {
-        return mComponentSet->getRandom(obj);
+        bool found = false;
+
+        GridbrainComponent* comp;
+        while(!found)
+        {
+            comp = mComponentSet->getRandom(obj);
+
+            found = true;
+            if ((comp->mType == GridbrainComponent::PER)
+                || (comp->mType == GridbrainComponent::ACT))
+            {
+                for (unsigned int pos = mOffset;
+                        found && (pos < (mOffset + mSize));
+                        pos++)
+                {
+                    GridbrainComponent* comp2 = &components[pos];
+
+                    if ((comp->mType == comp2->mType)
+                        && (comp->mSubType == comp2->mSubType)
+                        && (comp->mOrigSymTable == comp2->mOrigSymTable)
+                        && (comp->mTargetSymTable == comp2->mTargetSymTable)
+                        && (comp->mOrigSymID == comp2->mOrigSymID)
+                        && (comp->mTargetSymID == comp2->mTargetSymID))
+                    {
+                        found = false;
+                    }
+                }
+            }   
+        }
+
+        return comp;
     }
     else
     {

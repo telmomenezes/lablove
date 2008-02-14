@@ -164,14 +164,14 @@ Brain* Gridbrain::clone(bool randomize)
                 if ((x == newGrid->mNewColumn)
                     || (y == newGrid->mNewRow))
                 {
-                    GridbrainComponent* comp = grid->getRandomComponent(mOwner);
+                    GridbrainComponent* comp = grid->getRandomComponent(mOwner, mComponents);
                     gb->mComponents[newIndex].copyDefinitions(comp);
                 }
                 else
                 {
                     if (randomize)
                     {
-                        GridbrainComponent* comp = grid->getRandomComponent(mOwner);
+                        GridbrainComponent* comp = grid->getRandomComponent(mOwner, mComponents);
                         gb->mComponents[newIndex].copyDefinitions(comp);
                     }
                     else
@@ -293,7 +293,7 @@ void Gridbrain::init()
                 {
                     mComponents[pos].clearConnections();
                     mComponents[pos].clearMetrics();
-                    GridbrainComponent* comp = grid->getRandomComponent(mOwner);
+                    GridbrainComponent* comp = grid->getRandomComponent(mOwner, mComponents);
                     mComponents[pos].copyDefinitions(comp);
 
                     mComponents[pos].mOffset = pos;
@@ -1387,6 +1387,7 @@ bool Gridbrain::symbolUsed(int tableID, unsigned long symbolID)
             return true;
         }
     }
+
     return false;
 }
 

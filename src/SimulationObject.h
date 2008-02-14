@@ -77,6 +77,7 @@ public:
     void setSymbolName(string name, int table, unsigned int pos);
     Symbol* getSymbolByName(string name);
     string getSymbolName(int table, unsigned int pos);
+    string getTableName(int table);
 
     void setFloatDataFromSymbol(string symbolName, unsigned int dataIndex);
     void setULDataFromSymbol(string symbolName, unsigned int dataIndex);

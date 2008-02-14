@@ -296,6 +296,23 @@ string SimulationObject::getSymbolName(int table, unsigned int pos)
     return "?";
 }
 
+string SimulationObject::getTableName(int table)
+{
+    SymbolTable* t = getSymbolTable(table);
+
+    if (t == NULL)
+    {
+        return "?";
+    }
+
+    if (t->getName() != "")
+    {
+        return t->getName();
+    }
+
+    return "?";
+}
+
 bool SimulationObject::getFieldValue(string fieldName, float& value)
 {
     if (fieldName == "fitness")
