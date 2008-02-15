@@ -436,6 +436,11 @@ void Gridbrain::mutateSplitConnection()
             addConnection(x1, y1, g1, x3, y3, g3, weight1);
             // create 3->2 connection
             addConnection(x3, y3, g3, x2, y2, g2, weight2);
+
+            //printf("SPLIT\n");
+            //printf("remove: (%d, %d, %d)->(%d, %d, %d)\n", x1, y1, g1, x2, y2, g2);
+            //printf("add: (%d, %d, %d)->(%d, %d, %d)\n", x1, y1, g1, x3, y3, g3);
+            //printf("add: (%d, %d, %d)->(%d, %d, %d)\n", x3, y3, g3, x2, y2, g2);
         }
     }
 }
@@ -557,45 +562,48 @@ void Gridbrain::mutateSwapComponent()
             GridbrainConnection* conn = mConnections;
             while (valid && (conn != NULL))
             {
-                unsigned int connX1 = conn->mColumnOrig;
-                unsigned int connY1 = conn->mRowOrig;
-                unsigned int connX2 = conn->mColumnTarg;
-                unsigned int connY2 = conn->mRowTarg;
-                unsigned int connG1 = conn->mGridOrig;
-                unsigned int connG2 = conn->mGridTarg;
+                if (!conn->mInterGrid)
+                {
+                    unsigned int connX1 = conn->mColumnOrig;
+                    unsigned int connY1 = conn->mRowOrig;
+                    unsigned int connX2 = conn->mColumnTarg;
+                    unsigned int connY2 = conn->mRowTarg;
+                    unsigned int connG1 = conn->mGridOrig;
+                    unsigned int connG2 = conn->mGridTarg;
 
-                if ((connX1 == x1) 
-                    && (connY1 == y1)
-                    && (connG1 == gridNumber))
-                {
-                    connX1 = x2;
-                    connY1 = y2;
-                }
-                else if ((connX1 == x2)
-                    && (connY1 == y2)
-                    && (connG1 == gridNumber))
-                {
-                    connX1 = x1;
-                    connY1 = y1;
-                }
-                if ((connX2 == x1)
-                    && (connY2 == y1)
-                    && (connG2 == gridNumber))
-                {
-                    connX2 = x2;
-                    connY2 = y2;
-                }
-                else if ((connX2 == x2)
-                    && (connY2 == y2)
-                    && (connG2 == gridNumber))
-                {
-                    connX2 = x1;
-                    connY2 = y1;
-                }
+                    if ((connX1 == x1) 
+                        && (connY1 == y1)
+                        && (connG1 == gridNumber))
+                    {
+                        connX1 = x2;
+                        connY1 = y2;
+                    }
+                    else if ((connX1 == x2)
+                        && (connY1 == y2)
+                        && (connG1 == gridNumber))
+                    {
+                        connX1 = x1;
+                        connY1 = y1;
+                    }
+                    if ((connX2 == x1)
+                        && (connY2 == y1)
+                        && (connG2 == gridNumber))
+                    {
+                        connX2 = x2;
+                        connY2 = y2;
+                    }
+                    else if ((connX2 == x2)
+                        && (connY2 == y2)
+                        && (connG2 == gridNumber))
+                    {
+                        connX2 = x1;
+                        connY2 = y1;
+                    }
 
-                if (connX1 >= connX2)
-                {
-                    valid = false;
+                    if (connX1 >= connX2)
+                    {
+                        valid = false;
+                    }
                 }
                 conn = (GridbrainConnection*)conn->mNextGlobalConnection;
             }
@@ -637,6 +645,8 @@ void Gridbrain::mutateSwapComponent()
 
                     conn = (GridbrainConnection*)conn->mNextGlobalConnection;
                 }
+
+                //printf("SWAP (%d, %d, %d) / (%d, %d, %d)\n", x1, y1, gridNumber, x2, y2, gridNumber);
 
                 GridbrainComponent auxComp;
                 auxComp.copyDefinitions(comp1);

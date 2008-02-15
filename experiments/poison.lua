@@ -52,15 +52,15 @@ bufferSize = 100
 fitnessAging = 0.1
 
 addConnectionProb = 0.01
-removeConnectionProb = 0.01
+removeConnectionProb = 0.02
 changeWeightProb = 0.0
 weightMutationStanDev = 0.0--1.0
 newWeightProb = 0.0
 moveConnectionOrigProb = 0.0
-splitConnectionProb = 0.0
+splitConnectionProb = 0.01
 joinConnectionsProb = 0.0
 changeComponentProb = 0.01
-swapComponentProb = 0.0
+swapComponentProb = 0.1
 
 recombineProb = 0.0
 minimumFreeComponentRatio = 0.0

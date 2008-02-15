@@ -134,6 +134,11 @@ string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
                     if (subName == "?")
                     {
                         subName = obj->getSymbolName(comp->mOrigSymTable, comp->mOrigSymID);
+
+                        if (subName == "?")
+                        {
+                            subName = obj->getTableName(comp->mOrigSymTable);
+                        }
                     }
                     sprintf(buffer, "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"7\" fill=\"black\">%s</text>\n", compX, labelY, subName.c_str());
                     svg += buffer;
