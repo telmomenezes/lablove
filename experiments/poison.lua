@@ -45,7 +45,7 @@ rotDrag = 0.05
 
 feedCenter = 0.25
 
-initialConnections = 0
+initialConnections = 10
 
 compCount = 1
 bufferSize = 100
@@ -53,8 +53,8 @@ fitnessAging = 0.1
 
 addConnectionProb = 0.01
 removeConnectionProb = 0.02
-changeWeightProb = 0.0
-weightMutationStanDev = 0.0--1.0
+changeWeightProb = 0.01
+weightMutationStanDev = 1.0--1.0
 newWeightProb = 0.0
 moveConnectionOrigProb = 0.0
 splitConnectionProb = 0.01
@@ -77,31 +77,6 @@ humanAgent = false
 
 dofile("basic_command_line.lua")
 
-if random then
-    r = randomZeroToOne()
-    r = r * r * 0.05
-    addConnectionProb = 0.01
-    removeConnectionProb = 0.01
-    r = randomZeroToOne()
-    r = r * r * 0.05
-    changeWeightProb = r
-    r = randomZeroToOne()
-    r = r * 5.0
-    weightMutationStanDev = r
-    r = randomZeroToOne()
-    r = r * r * 0.05
-    moveConnectionOrigProb = r
-    r = randomZeroToOne()
-    r = r * r * 0.05
-    changeComponentProb = r
-    r = randomZeroToOne()
-    r = r * r * 0.1
-    swapComponentProb = r
-    r = randomZeroToOne()
-    r = r * r * 0.1
-    recombineProb = r
-end
-
 addConnectionProb = getNumberParameter("addconnprob", addConnectionProb, "con+")
 removeConnectionProb = getNumberParameter("removeconnprob", removeConnectionProb, "con-")
 changeWeightProb = getNumberParameter("changeweightprob", changeWeightProb, "wgt")
@@ -117,6 +92,7 @@ bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
 compCount = getNumberParameter("compcount", compCount, "cc")
 fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")
 minimumFreeComponentRatio = getNumberParameter("minfree", minimumFreeComponentRatio, "free")
+initialConnections = getNumberParameter("initconn", initialConnections, "ico")
 
 fromScratch = getBoolParameter("scratch", false)
 

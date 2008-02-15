@@ -315,6 +315,85 @@ void Gridbrain::mutateMoveConnectionOrigin()
     }
 }
 
+/*
+void Gridbrain::mutateForkConnection()
+{
+    // WARNING: This code assume one beta grid in the end
+
+    initRandomConnectionSequence(mMutateForkConnectionProb);
+
+    while (nextRandomConnection() != NULL) 
+    {
+        GridbrainConnection* conn = mConnSeqCurrent;
+
+        Grid* gridTarg = mGridsVec[conn->mGridTarg];
+
+        int sameGridOrigins = gridTarg->getHeight() * conn->mColumnTarg;
+        int possibleOrigins = sameGridOrigins;
+
+        if (gridTarg->getType() == Grid::BETA)
+        {
+            for (unsigned int i = 0; i < mGridsCount - 1; i++)
+            {
+                possibleOrigins += mGridsVec[i]->getSize();
+            }
+        }
+
+        int pos = mDistConnections->iuniform(0, possibleOrigins);
+
+        unsigned int newX;
+        unsigned int newY;
+        unsigned int newG;
+       
+        if (gridTarg->getType() == Grid::BETA)
+        {
+            unsigned int i = 0;
+            unsigned int currentLimit = mGridsVec[i]->getSize();
+
+            while (pos >= currentLimit)
+            {
+                i++;    
+                currentLimit += mGridsVec[i]->getSize();
+            }
+
+            newG = i;
+            pos = pos - currentLimit + mGridsVec[i]->getSize();
+        }
+        else
+        {
+            newG = conn->mGridTarg;
+        }
+
+        gridTarg = mGridsVec[newG];
+
+        newX = pos / gridTarg->getHeight();
+        newY = pos - (newX * gridTarg->getHeight());
+
+        if (!connectionExists(newX,
+                                newY,
+                                newG,
+                                conn->mColumnTarg,
+                                conn->mRowTarg,
+                                conn->mGridTarg))
+        {
+            MUTATIONS_FRK++;
+
+            //printf("move connection: \nfrom: %d, %d, %d -> %d, %d, %d\n", newX, newY, newG, conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg);
+            //printf("  to: %d, %d, %d -> %d, %d, %d\n", conn->mColumnOrig, conn->mRowOrig, conn->mGridOrig, conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg);
+
+            addConnection(newX,
+                            newY,
+                            newG,
+                            conn->mColumnTarg,
+                            conn->mRowTarg,
+                            conn->mGridTarg,
+                            conn->mWeight,
+                            conn->mAge);
+        }
+    }
+}
+*/
+
 void Gridbrain::mutateSplitConnection()
 {
     initRandomConnectionSequence(mMutateSplitConnectionProb);
