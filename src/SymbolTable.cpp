@@ -48,9 +48,9 @@ SymbolTable::SymbolTable(SymbolTable* table)
         Symbol* origSym = (*iterSymbol).second;
         Symbol* sym = origSym->clone();
 
-        if (origSym->mAlwaysRandom)
+        if (sym->mAlwaysRandom)
         {
-            origSym->initRandom();
+            sym->initRandom();
         }
         mSymbols[(*iterSymbol).first] = sym;
     }
