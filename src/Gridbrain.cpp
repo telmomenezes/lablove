@@ -135,9 +135,13 @@ Brain* Gridbrain::clone(bool randomize)
         Grid* grid = mGridsVec[i];
         Grid* newGrid = new Grid(*grid);
 
-        if (grid->mAddRowOrColumn)
+        if (grid->mAddColumn)
         {
-            newGrid->addRowOrColumn();
+            newGrid->addColumn();
+        }
+        if (grid->mAddRow)
+        {
+            newGrid->addRow();
         }
 
         gb->addGrid(newGrid, "");
@@ -557,7 +561,7 @@ void Gridbrain::addConnection(unsigned int xOrig,
         conn->mInterGrid = true;
     }
 
-    // Insert in component list, ordered by relative offset
+    // Insert in component's connection list, ordered by relative offset
     if (comp->mConnectionsCount == 0)
     {
         comp->mFirstConnection = conn;
@@ -605,6 +609,7 @@ void Gridbrain::addConnection(unsigned int xOrig,
     }
 
     (comp->mConnectionsCount)++;
+    (targComp->mInboundConnections)++;
 
     GridbrainConnection* nextConn = mConnections;
     conn->mNextGlobalConnection = nextConn;
@@ -1534,13 +1539,6 @@ void Gridbrain::calcConnectionDensities()
 {
     GridbrainConnection* conn = mConnections;
 
-    // Calc inbound connections for every component
-    while (conn != NULL)
-    {
-        (getComponent(conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg)->mInboundConnections) += 1;
-        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
-    }
-
     for (unsigned int i = 0; i < mGridsCount; i++)
     {
         Grid* grid = mGridsVec[i];
@@ -1575,7 +1573,7 @@ void Gridbrain::calcConnectionDensities()
 
         if (freeComponentRatio < mMinimumFreeComponentRatio)
         {
-            grid->mAddRowOrColumn = true;
+            //grid->mAddRowOrColumn = true;
         }
         //printf("freeComponentRatio[%d] => %f (free: %f; width: %d; height: %d)\n", i, freeComponentRatio, freeComponents, grid->getWidth(), grid->getHeight());
     }

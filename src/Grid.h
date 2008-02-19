@@ -83,7 +83,8 @@ public:
     unsigned int getWriteY(){return mWriteY;}
     void setWritePos(unsigned int x, unsigned int y){mWriteX = x; mWriteY = y;}
 
-    void addRowOrColumn();
+    void addColumn();
+    void addRow();
 
     GridCoord getColumnCoord(unsigned int col){return mColumnCoords[col];}
     GridCoord getRowCoord(unsigned int row){return mRowCoords[row];}
@@ -94,7 +95,8 @@ public:
 
     int mNewRow;
     int mNewColumn;
-    bool mAddRowOrColumn;
+    bool mAddRow;
+    bool mAddColumn;
 
     static const char mClassName[];
     static Orbit<Grid>::MethodType mMethods[];
