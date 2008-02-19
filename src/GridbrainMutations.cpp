@@ -291,7 +291,7 @@ void Gridbrain::mutateMoveConnectionOrigin()
         newX = pos / gridTarg->getHeight();
         newY = pos - (newX * gridTarg->getHeight());
 
-        if (!connectionExists(newX,
+        if (canCreateConnection(newX,
                                 newY,
                                 newG,
                                 conn->mColumnTarg,
@@ -371,7 +371,7 @@ void Gridbrain::mutateForkConnection()
         newX = pos / gridTarg->getHeight();
         newY = pos - (newX * gridTarg->getHeight());
 
-        if (!connectionExists(newX,
+        if (canCreateConnection(newX,
                                 newY,
                                 newG,
                                 conn->mColumnTarg,
@@ -484,9 +484,9 @@ void Gridbrain::mutateSplitConnection()
             valid = true;
 
             // test 1->3 connection
-            valid &= !connectionExists(x1, y1, g1, x3, y3, g3);
+            valid &= isConnectionValid(x1, y1, g1, x3, y3, g3);
             // test 2->3 connection
-            valid &= !connectionExists(x3, y3, g3, x2, y2, g2);
+            valid &= isConnectionValid(x3, y3, g3, x2, y2, g2);
         }
 
         if (valid)
@@ -561,7 +561,7 @@ void Gridbrain::mutateJoinConnections()
             unsigned int y2 = iterConn->mRowTarg;
             unsigned int g2 = iterConn->mGridTarg;
 
-            if (!connectionExists(x1, y1, g1, x2, y2, g2))
+            if (canCreateConnection(x1, y1, g1, x2, y2, g2))
             {
                 float weight = 0;
                 unsigned int weightSelector = mDistWeights->iuniform(0, 3);

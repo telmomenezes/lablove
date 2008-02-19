@@ -146,6 +146,12 @@ public:
                 unsigned int xTarg,
                 unsigned int yTarg,
                 unsigned int gTarg);
+    bool canCreateConnection(unsigned int xOrig,
+                unsigned int yOrig,
+                unsigned int gOrig,
+                unsigned int xTarg,
+                unsigned int yTarg,
+                unsigned int gTarg);
     void cleanInvalidConnections();
     bool isValid();
 

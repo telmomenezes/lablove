@@ -517,7 +517,10 @@ void Gridbrain::addConnection(unsigned int xOrig,
 
     if (connectionExists(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg))
     {
-        printf("EXISTS\n");
+        return;
+    }
+    if (!isConnectionValid(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg))
+    {
         return;
     }
 
@@ -1462,6 +1465,24 @@ bool Gridbrain::isConnectionValid(unsigned int xOrig,
     }
     GridbrainComponent* compTarg = getComponent(xTarg, yTarg, gTarg);
     if (compTarg->getConnectorType() == GridbrainComponent::CONN_OUT)
+    {
+        return false;
+    }
+    return true;
+}
+
+bool Gridbrain::canCreateConnection(unsigned int xOrig,
+                unsigned int yOrig,
+                unsigned int gOrig,
+                unsigned int xTarg,
+                unsigned int yTarg,
+                unsigned int gTarg)
+{
+    if (!isConnectionValid(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg))
+    {
+        return false;
+    }
+    if (connectionExists(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg))
     {
         return false;
     }
