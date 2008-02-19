@@ -50,6 +50,7 @@ class GridbrainComponent
 public:
     enum Type {NUL, PER, ACT, THR, MAX, MUL, NOT, MMAX, AND, TAND, TNAND};
     enum InputType {IN_SUM, IN_MUL, IN_TMUL};
+    enum ConnType {CONN_IN, CONN_OUT, CONN_INOUT};
 
     GridbrainComponent(lua_State* luaState=NULL);
     virtual ~GridbrainComponent();
@@ -64,8 +65,8 @@ public:
     void copyPosition(GridbrainComponent* comp);
 
     bool isAggregator();
-
     string getName();
+    ConnType getConnectorType();
 
     static const char mClassName[];
     static Orbit<GridbrainComponent>::MethodType mMethods[];
@@ -96,6 +97,8 @@ public:
     unsigned long mOrigSymID;
     unsigned long mTargetSymID;
     InterfaceItem::TableLinkType mTableLinkType;
+
+    unsigned int mPossibleConnections;
 };
 
 #endif

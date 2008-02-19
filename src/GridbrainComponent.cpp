@@ -79,7 +79,7 @@ void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)
     mOrigSymID = comp->mOrigSymID;
     mTargetSymID = comp->mTargetSymID;
     mTableLinkType = comp->mTableLinkType;
-;}
+}
 
 void GridbrainComponent::copyPosition(GridbrainComponent* comp)
 {
@@ -123,6 +123,19 @@ string GridbrainComponent::getName()
         return "TNAND";
     default:
         return "?";
+    }
+}
+
+GridbrainComponent::ConnType GridbrainComponent::getConnectorType()
+{
+    switch(mType)
+    {
+    case PER:
+        return CONN_OUT;
+    case ACT:
+        return CONN_IN;
+    default:
+        return CONN_INOUT;
     }
 }
 

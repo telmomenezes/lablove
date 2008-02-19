@@ -75,8 +75,8 @@ public:
     float getOutput(unsigned int number);
     unsigned int getXByOffset(unsigned int offset);
     void removeInputOutput();
-    unsigned int getColConnCount(unsigned int col){return mColumnsConnectionsCountVec[col];}
-    void setColConnCount(unsigned int col, unsigned int count){mColumnsConnectionsCountVec[col] = count;}
+    unsigned int getColTargCount(unsigned int col){return mColumnTargetCountVec[col];}
+    void setColTargCount(unsigned int col, unsigned int count){mColumnTargetCountVec[col] = count;}
     float* getInputBuffer();
 
     unsigned int getWriteX(){return mWriteX;}
@@ -125,7 +125,7 @@ protected:
     vector<GridbrainComponent*> mPerceptionsVec;
     vector<GridbrainComponent*> mActionsVec;
 
-    vector<unsigned int> mColumnsConnectionsCountVec;
+    vector<unsigned int> mColumnTargetCountVec;
 
     unsigned int mWriteX;
     unsigned int mWriteY;

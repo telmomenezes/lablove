@@ -53,12 +53,14 @@ void Gridbrain::mutate()
     mutateAddConnection(connCount);
     mutateRemoveConnection(connCount);
 
+    mutateChangeComponent();
+    mutateSwapComponent();
+
     mutateMoveConnectionOrigin();
     mutateSplitConnection();
     mutateJoinConnections();
 
-    mutateChangeComponent();
-    mutateSwapComponent();
+    
 }
 
 void Gridbrain::initRandomConnectionSequence(float selectionProb)
@@ -605,6 +607,8 @@ void Gridbrain::mutateChangeComponent()
         GridbrainComponent* comp = grid->getRandomComponent(mOwner, mComponents);
         mComponents[pos].copyDefinitions(comp);
     }
+
+    cleanInvalidConnections();
 }
 
 void Gridbrain::mutateSwapComponent()

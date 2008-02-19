@@ -47,8 +47,6 @@ Brain* Gridbrain::recombine(Brain* brain)
         gbNew->addGrid(newGrid, "");
     }
 
-    gbNew->calcConnectionCounts();
-
     // Copy components from parents
     gbNew->mComponents = (GridbrainComponent*)malloc(gbNew->mNumberOfComponents * sizeof(GridbrainComponent));
 
@@ -132,6 +130,8 @@ Brain* Gridbrain::recombine(Brain* brain)
             //printf("\n");
         }
     }
+
+    gbNew->calcConnectionCounts();
 
     // Copy connections from parents
     for (unsigned int gridIndex = 0; gridIndex < mGridsCount; gridIndex++)

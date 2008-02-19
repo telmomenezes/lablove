@@ -140,6 +140,13 @@ public:
     virtual string write(SimulationObject* obj, PopulationManager* pop);
     void printDebug();
 
+    bool isConnectionValid(unsigned int xOrig,
+                unsigned int yOrig,
+                unsigned int gOrig,
+                unsigned int xTarg,
+                unsigned int yTarg,
+                unsigned int gTarg);
+    void cleanInvalidConnections();
     bool isValid();
 
     virtual bool symbolUsed(int tableID, unsigned long symbolID);
@@ -214,6 +221,7 @@ protected:
                                             unsigned int targX,
                                             unsigned int targY,
                                             unsigned int targG);
+    GridbrainComponent* getCompByRelativeOffset(GridbrainComponent* compOrig, unsigned int offset);
 
     static mt_distribution* mDistConnections;
     static mt_distribution* mDistMutationsProb;

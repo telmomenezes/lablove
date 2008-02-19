@@ -71,7 +71,7 @@ Grid::Grid(const Grid& grid)
 
     for (unsigned int i = 0; i < mWidth; i++)
     {
-        mColumnsConnectionsCountVec.push_back(grid.mColumnsConnectionsCountVec[i]);
+        mColumnTargetCountVec.push_back(grid.mColumnTargetCountVec[i]);
         mColumnCoords.push_back(grid.mColumnCoords[i]);
     }
     for (unsigned int i = 0; i < mHeight; i++)
@@ -230,10 +230,10 @@ bool Grid::crossover(Grid* gridA, Grid* gridB)
     mHeight = mRowCoords.size();
     mSize = mWidth * mHeight;
 
-    mColumnsConnectionsCountVec.clear();
+    mColumnTargetCountVec.clear();
     for (unsigned int i = 0; i < mWidth; i++)
     {
-        mColumnsConnectionsCountVec.push_back(0);
+        mColumnTargetCountVec.push_back(0);
     }
 
     return true;
@@ -247,7 +247,7 @@ void Grid::init(Type type, unsigned int width, unsigned int height)
 
     for (unsigned int i = 0; i < mWidth; i++)
     {
-        mColumnsConnectionsCountVec.push_back(0);
+        mColumnTargetCountVec.push_back(0);
 
         if (i == 0)
         {
@@ -442,7 +442,7 @@ void Grid::addRowOrColumn()
         mWidth++;
         mSize = mWidth * mHeight;
         mNewColumn = mDistRowsAndColumns->iuniform(0, mWidth);
-        mColumnsConnectionsCountVec.push_back(0);
+        mColumnTargetCountVec.push_back(0);
 
         vector<GridCoord>::iterator iterCoord = mColumnCoords.begin();
         for (unsigned int i = 0; i < mNewColumn; i++)
@@ -488,7 +488,7 @@ void Grid::addRowOrColumn()
         {
             mWidth = 1;
             mNewColumn = 0;
-            mColumnsConnectionsCountVec.push_back(0);
+            mColumnTargetCountVec.push_back(0);
             mColumnCoords.push_back(GridCoord());
         }
 

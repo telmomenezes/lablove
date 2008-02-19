@@ -139,6 +139,41 @@ TEST_FIXTURE(GridbrainFixture2, GridbrainAddRandomConnections6)
     CHECK(mGridbrain.isValid());
 }
 
+TEST_FIXTURE(GridbrainFixture, GridbrainAddRandomConnections7)
+{
+    GridbrainComponent* comp1 = mGridbrain.getComponent(1, 1, 0);
+    comp1->mType = GridbrainComponent::ACT;
+    mGridbrain.init();
+    CHECK_EQUAL(mGridbrain.getConnectionsCount(), 0);
+    mGridbrain.addRandomConnections(27);
+    CHECK_EQUAL(mGridbrain.getConnectionsCount(), 24);
+    CHECK(mGridbrain.isValid());
+}
+
+TEST_FIXTURE(GridbrainFixture, GridbrainAddRandomConnections8)
+{
+    GridbrainComponent* comp1 = mGridbrain.getComponent(1, 1, 0);
+    comp1->mType = GridbrainComponent::PER;
+    mGridbrain.init();
+    CHECK_EQUAL(mGridbrain.getConnectionsCount(), 0);
+    mGridbrain.addRandomConnections(27);
+    CHECK_EQUAL(mGridbrain.getConnectionsCount(), 24);
+    CHECK(mGridbrain.isValid());
+}
+
+TEST_FIXTURE(GridbrainFixture, GridbrainAddRandomConnections9)
+{
+    GridbrainComponent* comp1 = mGridbrain.getComponent(1, 1, 0);
+    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 2, 0);
+    comp1->mType = GridbrainComponent::PER;
+    comp2->mType = GridbrainComponent::ACT;
+    mGridbrain.init();
+    CHECK_EQUAL(mGridbrain.getConnectionsCount(), 0);
+    mGridbrain.addRandomConnections(27);
+    CHECK_EQUAL(mGridbrain.getConnectionsCount(), 21);
+    CHECK(mGridbrain.isValid());
+}
+
 TEST_FIXTURE(GridbrainFixture, GridbrainGetComponent)
 {
     GridbrainComponent* comp = mGridbrain.getComponent(0, 0, 0);
