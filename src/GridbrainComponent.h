@@ -99,6 +99,8 @@ public:
     InterfaceItem::TableLinkType mTableLinkType;
 
     unsigned int mPossibleConnections;
+
+    unsigned int mDepth;
 };
 
 #endif

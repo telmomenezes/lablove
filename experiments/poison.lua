@@ -51,9 +51,9 @@ compCount = 1
 bufferSize = 100
 fitnessAging = 0.1
 
-addConnectionProb = 0.01
-addDoubleConnectionProb = 0.0
-removeConnectionProb = 0.02
+addConnectionProb = 0.0
+addDoubleConnectionProb = 0.01
+removeConnectionProb = 0.03
 changeWeightProb = 0.01
 weightMutationStanDev = 1.0--1.0
 newWeightProb = 0.0
@@ -66,7 +66,7 @@ changeComponentProb = 0.01
 swapComponentProb = 0.1
 
 recombineProb = 0.0
-minimumFreeComponentRatio = 0.0
+expandGrids = false
 
 timeLimit = 0
 logTimeInterval = 100
@@ -97,7 +97,6 @@ recombineProb = getNumberParameter("recombineprob", recombineProb, "rec")
 bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
 compCount = getNumberParameter("compcount", compCount, "cc")
 fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")
-minimumFreeComponentRatio = getNumberParameter("minfree", minimumFreeComponentRatio, "free")
 initialConnections = getNumberParameter("initconn", initialConnections, "ico")
 
 fromScratch = getBoolParameter("scratch", false)
@@ -110,6 +109,7 @@ if fromScratch == true then
     betaWidth = 0
     alphaHeight = 0
     betaHeight = 0
+    expandGrids = true
 end
 
 logSuffix = logBaseName
@@ -210,7 +210,7 @@ brain:setMutateSplitConnectionProb(splitConnectionProb)
 brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
 brain:setMutateSwapComponentProb(swapComponentProb)
-brain:setMinimumFreeComponentRatio(minimumFreeComponentRatio)
+brain:setExpandGrids(expandGrids)
 
 alphaSet = GridbrainComponentSet()
 for i, comp in pairs(alphaComponents) do

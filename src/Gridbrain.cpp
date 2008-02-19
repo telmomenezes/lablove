@@ -56,7 +56,7 @@ Gridbrain::Gridbrain(lua_State* luaState)
     mMutateChangeComponentProb = 0.0f;
     mMutateSwapComponentProb = 0.0f;
 
-    mMinimumFreeComponentRatio = 0.0f;
+    mExpandGrids = false;
 
     mConnSeqProb = 1.0f;
     mConnSeqCurrent = NULL;
@@ -114,7 +114,7 @@ Gridbrain* Gridbrain::baseClone()
     gb->mMutateChangeComponentProb = mMutateChangeComponentProb;
     gb->mMutateSwapComponentProb = mMutateSwapComponentProb;
 
-    gb->mMinimumFreeComponentRatio = mMinimumFreeComponentRatio;
+    gb->mExpandGrids = mExpandGrids;
 
     for (map<string, int>::iterator iterChannel = mChannels.begin();
             iterChannel != mChannels.end();
@@ -169,13 +169,8 @@ Brain* Gridbrain::clone(bool randomize)
                 gb->mComponents[newIndex].clearConnections();
                 gb->mComponents[newIndex].clearMetrics();
                 
-                if ((x == newGrid->mNewColumn)
-                    || (y == newGrid->mNewRow))
-                {
-                    GridbrainComponent* comp = grid->getRandomComponent(mOwner, mComponents);
-                    gb->mComponents[newIndex].copyDefinitions(comp);
-                }
-                else
+                if ((x != newGrid->mNewColumn)
+                    && (y != newGrid->mNewRow))
                 {
                     if (randomize)
                     {
@@ -193,6 +188,30 @@ Brain* Gridbrain::clone(bool randomize)
                 gb->mComponents[newIndex].mColumn = x;
                 gb->mComponents[newIndex].mRow = y;
                 gb->mComponents[newIndex].mGrid = i;
+                newIndex++;
+            }
+        }
+    }
+
+    newIndex = 0;
+    for (unsigned int i = 0; i < mGridsCount; i++)
+    {
+        Grid* newGrid = gb->mGridsVec[i];
+
+        for (unsigned int x = 0;
+            x < newGrid->getWidth();
+            x++)
+        {
+            for (unsigned int y = 0;
+                y < newGrid->getHeight();
+                y++)
+            {
+                if ((x == newGrid->mNewColumn)
+                    || (y == newGrid->mNewRow))
+                {
+                    GridbrainComponent* comp = newGrid->getRandomComponent(mOwner, gb->mComponents);
+                    gb->mComponents[newIndex].copyDefinitions(comp);
+                }
                 newIndex++;
             }
         }
@@ -316,7 +335,10 @@ void Gridbrain::onAdd()
 {
     initGridsIO();
     initGridWritePositions();
-    calcConnectionDensities();
+    if (mExpandGrids)
+    {
+        calcExpansion();
+    }
 }
 
 void Gridbrain::initEmpty()
@@ -1535,47 +1557,70 @@ void Gridbrain::calcConnectionCounts()
     }
 }
 
-void Gridbrain::calcConnectionDensities()
+void Gridbrain::calcExpansion()
 {
     GridbrainConnection* conn = mConnections;
 
-    for (unsigned int i = 0; i < mGridsCount; i++)
+    for (unsigned int g = 0; g < mGridsCount; g++)
     {
-        Grid* grid = mGridsVec[i];
+        Grid* grid = mGridsVec[g];
+        unsigned int maxDepth = 1;
 
-        unsigned int startOffset = grid->getOffset();
-        unsigned int endOffset = startOffset + grid->getSize();
-
-        float freeComponents = 0.0f;
-
-        for (unsigned int pos = startOffset;
-            pos < endOffset;
-            pos++)
+        if (grid->getWidth() == 0)
         {
-            unsigned int totalConns = mComponents[pos].mConnectionsCount + mComponents[pos].mInboundConnections;
-            if (totalConns == 0)
+            grid->mAddColumn = true;
+        }
+        if (grid->getHeight() == 0)
+        {
+            grid->mAddRow = true;
+        }
+
+        for (unsigned int x = 0; x < grid->getWidth(); x++)
+        {
+            unsigned int freeComponents = 0;
+            for (unsigned int y = 0; y < grid->getHeight(); y++)
             {
-                freeComponents += 1.0f;
+                GridbrainComponent* comp = getComponent(x, y, g);
+                unsigned int totalConns = comp->mConnectionsCount + comp->mInboundConnections;
+                if (totalConns == 0)
+                {
+                    freeComponents++;
+                }
+
+                GridbrainConnection* conn = comp->mFirstConnection;
+                while (conn != NULL)
+                {
+                    // Only propagate depth inside grid
+                    if (conn->mGridTarg == g)
+                    {
+                        unsigned int nextDepth = comp->mDepth + 1;
+                        GridbrainComponent* targetComp = getComponent(conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg);
+
+                        if (targetComp->mDepth < nextDepth)
+                        {
+                            targetComp->mDepth = nextDepth;
+                        }
+
+                        if (nextDepth > maxDepth)
+                        {
+                            maxDepth = nextDepth;
+                        }
+                    }
+                    conn = (GridbrainConnection*)conn->mNextConnection;
+                }
+            }
+
+            // Column is full
+            if (freeComponents == 0)
+            {
+                grid->mAddRow = true;
             }
         }
-
-        float freeComponentRatio;
-        float gridSize = (float)grid->getSize();
-
-        if (gridSize == 0.0f)
+        // Row is full
+        if (maxDepth == grid->getWidth())
         {
-            freeComponentRatio = 0.0f;
+            grid->mAddColumn = true;
         }
-        else
-        {
-            freeComponentRatio = freeComponents / ((float)grid->getSize());
-        }
-
-        if (freeComponentRatio < mMinimumFreeComponentRatio)
-        {
-            //grid->mAddRowOrColumn = true;
-        }
-        //printf("freeComponentRatio[%d] => %f (free: %f; width: %d; height: %d)\n", i, freeComponentRatio, freeComponents, grid->getWidth(), grid->getHeight());
     }
 }
 
@@ -1779,7 +1824,7 @@ Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
     {"setMutateJoinConnectionsProb", &Gridbrain::setMutateJoinConnectionsProb},
     {"setMutateChangeComponentProb", &Gridbrain::setMutateChangeComponentProb},
     {"setMutateSwapComponentProb", &Gridbrain::setMutateSwapComponentProb},
-    {"setMinimumFreeComponentRatio", &Gridbrain::setMinimumFreeComponentRatio},
+    {"setExpandGrids", &Gridbrain::setExpandGrids},
     {0,0}
 };
 
@@ -1942,10 +1987,10 @@ int Gridbrain::setWeightMutationStanDev(lua_State* luaState)
     return 0;
 }
 
-int Gridbrain::setMinimumFreeComponentRatio(lua_State* luaState)
+int Gridbrain::setExpandGrids(lua_State* luaState)
 {
-    float rate = luaL_checknumber(luaState, 1);
-    setMinimumFreeComponentRatio(rate);
+    bool expand = luaL_checkbool(luaState, 1);
+    setExpandGrids(expand);
     return 0;
 }
 

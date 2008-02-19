@@ -63,11 +63,12 @@ void GridbrainComponent::clearConnections()
 {
     mConnectionsCount = 0;
     mFirstConnection = NULL;
+    mInboundConnections = 0;
 }
 
 void GridbrainComponent::clearMetrics()
 {
-    mInboundConnections = 0;
+    mDepth = 1;
 }
 
 void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)
