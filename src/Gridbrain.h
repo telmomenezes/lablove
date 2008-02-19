@@ -97,6 +97,18 @@ public:
                 unsigned int &x2,
                 unsigned int &y2,
                 unsigned int &g2);
+    bool selectRandomOrigin(unsigned int &x1,
+                unsigned int &y1,
+                unsigned int &g1,
+                unsigned int x2,
+                unsigned int y2,
+                unsigned int g2);
+    bool selectRandomTarget(unsigned int x1,
+                unsigned int y1,
+                unsigned int g1,
+                unsigned int &x2,
+                unsigned int &y2,
+                unsigned int &g2);
     void addRandomConnections(unsigned int count);
     void setMaxInputDepth(unsigned int maxInputDepth){mMaxInputDepth = maxInputDepth;}
 
@@ -124,11 +136,14 @@ public:
                 unsigned long targetSymID=0);
 
     void setMutateAddConnectionProb(float prob){mMutateAddConnectionProb = prob;}
+    void setMutateAddDoubleConnectionProb(float prob){mMutateAddDoubleConnectionProb = prob;}
     void setMutateRemoveConnectionProb(float prob){mMutateRemoveConnectionProb = prob;}
     void setMutateChangeConnectionWeightProb(float prob){mMutateChangeConnectionWeightProb = prob;}
     void setWeightMutationStanDev(float sd){mWeightMutationStanDev = sd;}
     void setMutateNewConnectionWeightProb(float prob){mMutateNewConnectionWeightProb = prob;}
     void setMutateMoveConnectionOriginProb(float prob){mMutateMoveConnectionOriginProb = prob;}
+    void setMutateForkConnectionProb(float prob){mMutateForkConnectionProb = prob;}
+    void setMutateForkDoubleConnectionProb(float prob){mMutateForkDoubleConnectionProb = prob;}
     void setMutateSplitConnectionProb(float prob){mMutateSplitConnectionProb = prob;}
     void setMutateJoinConnectionsProb(float prob){mMutateJoinConnectionsProb = prob;}
     void setMutateChangeComponentProb(float prob){mMutateChangeComponentProb = prob;}
@@ -168,10 +183,13 @@ public:
     int addConnectionReal(lua_State* luaState);
     int addRandomConnections(lua_State* luaState);
     int setMutateAddConnectionProb(lua_State* luaState);
+    int setMutateAddDoubleConnectionProb(lua_State* luaState);
     int setMutateRemoveConnectionProb(lua_State* luaState);
     int setMutateChangeConnectionWeightProb(lua_State* luaState);
     int setMutateNewConnectionWeightProb(lua_State* luaState);
     int setMutateMoveConnectionOriginProb(lua_State* luaState);
+    int setMutateForkConnectionProb(lua_State* luaState);
+    int setMutateForkDoubleConnectionProb(lua_State* luaState);
     int setMutateSplitConnectionProb(lua_State* luaState);
     int setMutateJoinConnectionsProb(lua_State* luaState);
     int setMutateChangeComponentProb(lua_State* luaState);
@@ -180,10 +198,13 @@ public:
     int setMinimumFreeComponentRatio(lua_State* luaState);
 
     static long MUTATIONS_ADD_CONN;
+    static long MUTATIONS_ADD_DBL_CONN;
     static long MUTATIONS_REM_CONN;
     static long MUTATIONS_CHG_WGT;
     static long MUTATIONS_NEW_WGT;
     static long MUTATIONS_MOV_ORI;
+    static long MUTATIONS_FRK_CONN;
+    static long MUTATIONS_FRK_DBL_CONN;
     static long MUTATIONS_SPLIT_CONN;
     static long MUTATIONS_JOIN_CONN;
     static long MUTATIONS_CHG_COMP;
@@ -199,11 +220,16 @@ protected:
 
     void applyWeight(GridbrainConnection* conn);
 
+    void addDoubleConnection();
+
     void mutateAddConnection(unsigned int popSize);
+    void mutateAddDoubleConnection(unsigned int popSize);
     void mutateRemoveConnection(unsigned int popSize);
     void mutateChangeConnectionWeight();
     void mutateNewConnectionWeight();
     void mutateMoveConnectionOrigin();
+    void mutateForkConnection();
+    void mutateForkDoubleConnection();
     void mutateSplitConnection();
     void mutateJoinConnections();
     void mutateChangeComponent();
@@ -248,11 +274,14 @@ protected:
     unsigned int mBetaComponentsCount;
 
     float mMutateAddConnectionProb;
+    float mMutateAddDoubleConnectionProb;
     float mMutateRemoveConnectionProb;
     float mMutateChangeConnectionWeightProb;
     float mMutateNewConnectionWeightProb;
     float mWeightMutationStanDev;
     float mMutateMoveConnectionOriginProb;
+    float mMutateForkConnectionProb;
+    float mMutateForkDoubleConnectionProb;
     float mMutateSplitConnectionProb;
     float mMutateJoinConnectionsProb;
     float mMutateChangeComponentProb;

@@ -52,11 +52,14 @@ bufferSize = 100
 fitnessAging = 0.1
 
 addConnectionProb = 0.01
+addDoubleConnectionProb = 0.0
 removeConnectionProb = 0.02
 changeWeightProb = 0.01
 weightMutationStanDev = 1.0--1.0
 newWeightProb = 0.0
 moveConnectionOrigProb = 0.0
+forkConnectionProb = 0.0
+forkDoubleConnectionProb = 0.0
 splitConnectionProb = 0.01
 joinConnectionsProb = 0.0
 changeComponentProb = 0.01
@@ -78,11 +81,14 @@ humanAgent = false
 dofile("basic_command_line.lua")
 
 addConnectionProb = getNumberParameter("addconnprob", addConnectionProb, "con+")
+addDoubleConnectionProb = getNumberParameter("add2connprob", addDoubleConnectionProb, "con2+")
 removeConnectionProb = getNumberParameter("removeconnprob", removeConnectionProb, "con-")
 changeWeightProb = getNumberParameter("changeweightprob", changeWeightProb, "wgt")
 weightMutationStanDev = getNumberParameter("weightmutstandev", weightMutationStanDev, "wsd")
 newWeightProb = getNumberParameter("newweightprob", newWeightProb, "new")
 moveConnectionOrigProb = getNumberParameter("moveconnorigprob", moveConnectionOrigProb, "mor")
+forkConnectionProb = getNumberParameter("forkconnprob", forkConnectionProb, "frk")
+forkDoubleConnectionProb = getNumberParameter("fork2connprob", forkDoubleConnectionProb, "frk2")
 splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "spl")
 joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb, "joi")
 changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, "chg")
@@ -192,11 +198,14 @@ agent:setSymbolName("feed", feedTableCode, 0)
 brain = Gridbrain()
 
 brain:setMutateAddConnectionProb(addConnectionProb)
+brain:setMutateAddDoubleConnectionProb(addDoubleConnectionProb)
 brain:setMutateRemoveConnectionProb(removeConnectionProb)
 brain:setMutateChangeConnectionWeightProb(changeWeightProb)
 brain:setWeightMutationStanDev(weightMutationStanDev)
 brain:setMutateNewConnectionWeightProb(newWeightProb)
 brain:setMutateMoveConnectionOriginProb(moveConnectionOrigProb)
+brain:setMutateForkConnectionProb(forkConnectionProb)
+brain:setMutateForkDoubleConnectionProb(forkDoubleConnectionProb)
 brain:setMutateSplitConnectionProb(splitConnectionProb)
 brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeComponentProb(changeComponentProb)

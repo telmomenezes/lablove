@@ -72,6 +72,19 @@ TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateAddConnection)
     CHECK(conn1 <= conn2);
 }
 
+TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateAddDoubleConnection)
+{
+    mGridbrain.setMutateAddDoubleConnectionProb(0.1f);
+    mGridbrain.mutate();
+    CHECK(mGridbrain.isValid());
+    mGridbrain.addRandomConnections(100);
+    unsigned int conn1 = mGridbrain.getConnectionsCount();
+    mGridbrain.mutate();
+    CHECK(mGridbrain.isValid());
+    unsigned int conn2 = mGridbrain.getConnectionsCount();
+    CHECK(conn1 <= conn2);
+}
+
 TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateRemoveConnection)
 {
     mGridbrain.setMutateRemoveConnectionProb(0.1f);
@@ -109,6 +122,32 @@ TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateMoveConnectionOrigin)
     CHECK(mGridbrain.isValid());
     unsigned int conn2 = mGridbrain.getConnectionsCount();
     CHECK(conn1 == conn2);
+}
+
+TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateForkConnection)
+{
+    mGridbrain.setMutateForkConnectionProb(0.1f);
+    mGridbrain.mutate();
+    CHECK(mGridbrain.isValid());
+    mGridbrain.addRandomConnections(100);
+    unsigned int conn1 = mGridbrain.getConnectionsCount();
+    mGridbrain.mutate();
+    CHECK(mGridbrain.isValid());
+    unsigned int conn2 = mGridbrain.getConnectionsCount();
+    CHECK(conn1 <= conn2);
+}
+
+TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateForkDblConnection)
+{
+    mGridbrain.setMutateForkDoubleConnectionProb(0.1f);
+    mGridbrain.mutate();
+    CHECK(mGridbrain.isValid());
+    mGridbrain.addRandomConnections(100);
+    unsigned int conn1 = mGridbrain.getConnectionsCount();
+    mGridbrain.mutate();
+    CHECK(mGridbrain.isValid());
+    unsigned int conn2 = mGridbrain.getConnectionsCount();
+    CHECK(conn1 <= conn2);
 }
 
 TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateSplitConnection)
