@@ -169,6 +169,12 @@ bool GridbrainComponent::isConsumer()
 
 void GridbrainComponent::calcProducer(bool prod)
 {
+    if (mProducer)
+    {
+        // This branch is already calculated
+        return;
+    }
+
     if (prod || (isProducer()))
     {
         mProducer = true;
@@ -215,7 +221,7 @@ bool GridbrainComponent::calcActive()
 {
     calcProducer();
     calcConsumer();
-    mActive = mConsumer & mProducer;
+    mActive = mConsumer && mProducer;
     return mActive;
 }
 

@@ -28,7 +28,6 @@ typedef struct
     unsigned long mColumnTarg;
     unsigned long mRowTarg;
     unsigned int mGridTarg;
-    unsigned int mTarget;
     bool mInterGrid;
     float mWeight;
     float mRealWeight;

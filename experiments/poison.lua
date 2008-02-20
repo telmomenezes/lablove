@@ -45,7 +45,7 @@ rotDrag = 0.05
 
 feedCenter = 0.25
 
-initialConnections = 0
+initialConnections = 10
 
 compCount = 1
 bufferSize = 100
@@ -370,6 +370,7 @@ stats:setFile("log" .. logSuffix .. ".csv")
 stats:addField("fitness")
 stats:addField("energy")
 stats:addField("gb_connections")
+stats:addField("gb_active_components")
 stats:addField("gb_grid_width_objects")
 stats:addField("gb_grid_height_objects")
 stats:addField("gb_grid_width_beta")

@@ -62,6 +62,8 @@ Gridbrain::Gridbrain(lua_State* luaState)
     mConnSeqCurrent = NULL;
     mCompSeqProb = 1.0f;
     mCompSeqPos = -1;
+
+    mActiveComponents = 0;
 }
 
 Gridbrain::~Gridbrain()
@@ -99,6 +101,7 @@ Gridbrain* Gridbrain::baseClone()
     gb->mFirstBetaIndex = 0;
     gb->mTotalPossibleConnections = 0;
     gb->mBetaComponentsCount = 0;
+    gb->mActiveComponents = 0;
 
     gb->mMutateAddConnectionProb = mMutateAddConnectionProb;
     gb->mMutateAddDoubleConnectionProb = mMutateAddDoubleConnectionProb;
@@ -335,6 +338,7 @@ void Gridbrain::onAdd()
 {
     initGridsIO();
     initGridWritePositions();
+    calcActive();
     if (mExpandGrids)
     {
         calcExpansion();
@@ -568,7 +572,6 @@ void Gridbrain::addConnection(unsigned int xOrig,
     conn->mColumnTarg = targComp->mColumn;
     conn->mRowTarg = targComp->mRow;
     conn->mGridTarg = targComp->mGrid;
-    conn->mTarget = target;
     conn->mWeight = weight;
     conn->mAge = age;
     applyWeight(conn);
@@ -731,7 +734,6 @@ GridbrainConnection* Gridbrain::getConnection(unsigned int xOrig,
     Grid* grid = mGridsVec[gOrig];
     unsigned int orig = (xOrig * grid->getHeight()) + yOrig + grid->getOffset();
     grid = mGridsVec[gTarg];
-    unsigned int target = (xTarg * grid->getHeight()) + yTarg + grid->getOffset();
 
     GridbrainComponent* comp = &(mComponents[orig]);
     GridbrainConnection* conn = comp->mFirstConnection;
@@ -739,7 +741,9 @@ GridbrainConnection* Gridbrain::getConnection(unsigned int xOrig,
     unsigned int i = 0;
     while ((conn) && (i < comp->mConnectionsCount))
     {
-        if (conn->mTarget == target)
+        if ((conn->mColumnTarg == xTarg)
+            && (conn->mRowTarg == yTarg)
+            && (conn->mGridTarg == gTarg))
         {
             return conn;
         }
@@ -1412,7 +1416,7 @@ void Gridbrain::cycle()
                     {
                         if ((!firstAlpha) || (!conn->mInterGrid))
                         {
-                            GridbrainComponent* targetComp = &(mComponents[conn->mTarget]);
+                            GridbrainComponent* targetComp = (GridbrainComponent*)conn->mTargComponent;
                             float input = output * conn->mRealWeight;
 
                             COMPONENT_INPUT_TYPE(targetComp->mType, inputType)
@@ -1558,10 +1562,30 @@ void Gridbrain::calcConnectionCounts()
     }
 }
 
+void Gridbrain::calcActive()
+{
+    mActiveComponents = 0;
+    for (unsigned int g = 0; g < mGridsCount; g++)
+    {
+        Grid* grid = mGridsVec[g];
+
+        for (unsigned int x = 0; x < grid->getWidth(); x++)
+        {
+            for (unsigned int y = 0; y < grid->getHeight(); y++)
+            {
+                GridbrainComponent* comp = getComponent(x, y, g);
+                bool active = comp->calcActive();
+                if (active)
+                {
+                    mActiveComponents++;
+                }
+            }
+        }
+    }
+}
+
 void Gridbrain::calcExpansion()
 {
-    GridbrainConnection* conn = mConnections;
-
     for (unsigned int g = 0; g < mGridsCount; g++)
     {
         Grid* grid = mGridsVec[g];
@@ -1582,8 +1606,7 @@ void Gridbrain::calcExpansion()
             for (unsigned int y = 0; y < grid->getHeight(); y++)
             {
                 GridbrainComponent* comp = getComponent(x, y, g);
-                bool active = comp->calcActive();
-                if (!active)
+                if (!comp->mActive)
                 {
                     freeComponents++;
                     comp->mDepth = 1;
@@ -1666,6 +1689,11 @@ bool Gridbrain::getFieldValue(string fieldName, float& value)
     else if (fieldName == "gb_components")
     {
         value = mNumberOfComponents;
+        return true;
+    }
+    else if (fieldName == "gb_active_components")
+    {
+        value = mActiveComponents;
         return true;
     }
     else if (fieldName.substr(0,  14) == "gb_grid_width_")
@@ -1774,6 +1802,19 @@ bool Gridbrain::isValid()
         {
             return false;
         }
+
+        GridbrainComponent* compOrig = getComponent(conn->mColumnOrig, conn->mRowOrig, conn->mGridOrig);
+        GridbrainComponent* compTarg = getComponent(conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg);
+
+        if (conn->mOrigComponent != compOrig)
+        {
+            return false;
+        }
+        if (conn->mTargComponent != compTarg)
+        {
+            return false;
+        }
+
         conn = (GridbrainConnection*)conn->mNextGlobalConnection;
     }
 

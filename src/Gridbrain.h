@@ -216,6 +216,7 @@ protected:
     Gridbrain* baseClone();
     void initGridsIO();
     void calcConnectionCounts();
+    void calcActive();
     void calcExpansion();
 
     void applyWeight(GridbrainConnection* conn);
@@ -293,6 +294,8 @@ protected:
     GridbrainConnection* mConnSeqCurrent;
     float mCompSeqProb;
     unsigned int mCompSeqPos;
+
+    unsigned int mActiveComponents;
 };
 
 #endif

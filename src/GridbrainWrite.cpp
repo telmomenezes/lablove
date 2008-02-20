@@ -101,6 +101,10 @@ string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
     string svg;
     char buffer[1000];
 
+    char* black = "black";
+    char* gray = "#707070";
+    char* color = black;
+
     svg = "<?xml version=\"1.0\" standalone=\"no\"?>\n";
     svg += "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n";
     svg += "<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\n";
@@ -112,17 +116,26 @@ string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
         {
             for (unsigned int y = 0; y < grid->getHeight(); y++)
             {
+                GridbrainComponent* comp = getComponent(x, y, i);
+                if (comp->mActive)
+                {
+                    color = black;
+                }
+                else
+                {
+                    color = gray;
+                }
+
                 unsigned int compX; 
                 unsigned int compY; 
                 getComponentWritePos(compX, compY, x, y, i);
                 sprintf(buffer,
-                        "<circle cx=\"%d\" cy=\"%d\" r=\"%d\" fill=\"white\" stroke=\"black\" stroke-width=\"3\"/>\n",
+                        "<circle cx=\"%d\" cy=\"%d\" r=\"%d\" fill=\"white\" stroke=\"%s\" stroke-width=\"3\"/>\n",
                         compX,
                         compY,
-                        COMPONENT_SIDE / 2);
+                        COMPONENT_SIDE / 2,
+                        color);
                 svg += buffer;
-
-                GridbrainComponent* comp = getComponent(x, y, i);
 
                 int labelY = compY + 3;
 
@@ -140,12 +153,12 @@ string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
                             subName = obj->getTableName(comp->mOrigSymTable);
                         }
                     }
-                    sprintf(buffer, "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"7\" fill=\"black\">%s</text>\n", compX, labelY, subName.c_str());
+                    sprintf(buffer, "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"7\" fill=\"%s\">%s</text>\n", compX, labelY, color, subName.c_str());
                     svg += buffer;
                     labelY -= 10;
                 }
 
-                sprintf(buffer, "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"10\" fill=\"black\">%s</text>\n", compX, labelY, comp->getName().c_str());
+                sprintf(buffer, "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"10\" fill=\"%s\">%s</text>\n", compX, labelY, color, comp->getName().c_str());
                 svg += buffer;
             }
         }
@@ -155,6 +168,17 @@ string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
 
     while (conn != NULL)
     {
+        GridbrainComponent* origComp = (GridbrainComponent*)conn->mOrigComponent;
+        GridbrainComponent* targComp = (GridbrainComponent*)conn->mTargComponent;
+        if (origComp->mActive && targComp->mActive)
+        {
+            color = black;
+        }
+        else
+        {
+            color = gray;
+        }
+
         Grid* gridOrig = mGridsVec[conn->mGridOrig];
         Grid* gridTarg = mGridsVec[conn->mGridTarg];
         unsigned int comp1X = conn->mColumnOrig;
@@ -183,11 +207,11 @@ string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
 
         if (fabs(conn->mWeight >= 0.5f))
         {
-            sprintf(buffer, "<line x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" stroke=\"black\" stroke-width=\"2\"/>\n", x1, y1, x2, y2);
+            sprintf(buffer, "<line x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" stroke=\"%s\" stroke-width=\"2\"/>\n", x1, y1, x2, y2, color);
         }
         else
         {
-            sprintf(buffer, "<line x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" stroke=\"black\" stroke-width=\"2\" stroke-dasharray=\"9, 5\"/>\n", x1, y1, x2, y2);
+            sprintf(buffer, "<line x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" stroke=\"%s\" stroke-width=\"2\" stroke-dasharray=\"9, 5\"/>\n", x1, y1, x2, y2, color);
         }
         svg += buffer;
 
@@ -207,8 +231,8 @@ string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
             float ay2 = y2 - (sinf(arrowAngle2) * arrowLength);
 
             sprintf(buffer,
-                "<polygon fill=\"black\" stroke=\"black\" stroke-width=\"1\" points=\"%f,%f %f,%f %f,%f\" />\n",
-                x2, y2, ax1, ay1, ax2, ay2);
+                "<polygon fill=\"%s\" stroke=\"%s\" stroke-width=\"1\" points=\"%f,%f %f,%f %f,%f\" />\n",
+                color, color, x2, y2, ax1, ay1, ax2, ay2);
             svg += buffer;
         }
         else
@@ -217,10 +241,12 @@ string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
             y2 = centerY2 - (sinAngle * (radius + (arrowLength / 3.0f)));
 
             sprintf(buffer,
-                        "<circle cx=\"%f\" cy=\"%f\" r=\"%f\" fill=\"black\" stroke=\"black\" stroke-width=\"1\"/>\n",
+                        "<circle cx=\"%f\" cy=\"%f\" r=\"%f\" fill=\"%s\" stroke=\"%s\" stroke-width=\"1\"/>\n",
                         x2,
                         y2,
-                        arrowLength / 3.0f);
+                        arrowLength / 3.0f,
+                        color,
+                        color);
             svg += buffer;
         }
         

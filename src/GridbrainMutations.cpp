@@ -49,6 +49,12 @@ void Gridbrain::mutate()
     mMutateChangeComponentProb,
     mMutateSwapComponentProb);*/
 
+    mutateSwapComponent();
+    mutateChangeComponent();
+    
+    // targets per column may have changed
+    calcConnectionCounts();
+
     mutateChangeConnectionWeight();
     mutateNewConnectionWeight();
 
@@ -59,9 +65,6 @@ void Gridbrain::mutate()
 
     mutateForkConnection();
     mutateForkDoubleConnection();
-
-    mutateChangeComponent();
-    mutateSwapComponent();
 
     mutateMoveConnectionOrigin();
     mutateSplitConnection();
@@ -767,8 +770,39 @@ void Gridbrain::mutateSwapComponent()
 
             GridbrainComponent* comp2 = getComponent(x2, y2, gridNumber);
 
-            // Check if swap is possible
             bool valid = true;
+
+            // These swaps are not desirable
+            if (comp1->getConnectorType() == GridbrainComponent::CONN_IN)
+            {
+                if (x1 > x2)
+                {
+                    valid = false;
+                }
+            }
+            if (comp2->getConnectorType() == GridbrainComponent::CONN_IN)
+            {
+                if (x1 < x2)
+                {
+                    valid = false;
+                }
+            }
+            if (comp1->getConnectorType() == GridbrainComponent::CONN_OUT)
+            {
+                if (x1 < x2)
+                {
+                    valid = false;
+                }
+            }
+            if (comp2->getConnectorType() == GridbrainComponent::CONN_OUT)
+            {
+                if (x1 > x2)
+                {
+                    valid = false;
+                }
+            }
+
+            // Check if swap is possible
             GridbrainConnection* conn = mConnections;
             while (valid && (conn != NULL))
             {
@@ -824,36 +858,57 @@ void Gridbrain::mutateSwapComponent()
                 conn = mConnections;
                 while (conn != NULL)
                 {
+                    unsigned int newX1 = conn->mColumnOrig;
+                    unsigned int newY1 = conn->mRowOrig;
+                    unsigned int newG1 = conn->mGridOrig;
+                    unsigned int newX2 = conn->mColumnTarg;
+                    unsigned int newY2 = conn->mRowTarg;
+                    unsigned int newG2 = conn->mGridTarg;
+                    float newWeight = conn->mWeight;
+                    double newAge = conn->mAge;
+                    bool change = false;
+                    GridbrainConnection* curConn = conn;
+
                     if ((conn->mColumnOrig == x1) 
                         && (conn->mRowOrig == y1)
                         && (conn->mGridOrig == gridNumber))
                     {
-                        conn->mColumnOrig = x2;
-                        conn->mRowOrig = y2;
+                        newX1 = x2;
+                        newY1 = y2;
+                        change = true;
                     }
                     else if ((conn->mColumnOrig == x2)
                         && (conn->mRowOrig == y2)
                         && (conn->mGridOrig == gridNumber))
                     {
-                        conn->mColumnOrig = x1;
-                        conn->mRowOrig = y1;
+                        newX1 = x1;
+                        newY1 = y1;
+                        change = true;
                     }
                     if ((conn->mColumnTarg == x1)
                         && (conn->mRowTarg == y1)
                         && (conn->mGridTarg == gridNumber))
                     {
-                        conn->mColumnTarg = x2;
-                        conn->mRowTarg = y2;
+                        newX2 = x2;
+                        newY2 = y2;
+                        change = true;
                     }
                     else if ((conn->mColumnTarg == x2)
                         && (conn->mRowTarg == y2)
                         && (conn->mGridTarg == gridNumber))
                     {
-                        conn->mColumnTarg = x1;
-                        conn->mRowTarg = y1;
+                        newX2 = x1;
+                        newY2 = y1;
+                        change = true;
                     }
 
                     conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+
+                    if (change)
+                    {
+                        removeConnection(curConn);
+                        addConnection(newX1, newY1, newG1, newX2, newY2, newG2, newWeight, newAge);
+                    }
                 }
 
                 //printf("SWAP (%d, %d, %d) / (%d, %d, %d)\n", x1, y1, gridNumber, x2, y2, gridNumber);
