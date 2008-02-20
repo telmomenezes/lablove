@@ -69,6 +69,9 @@ void GridbrainComponent::clearConnections()
 void GridbrainComponent::clearMetrics()
 {
     mDepth = 1;
+    mProducer = false;
+    mConsumer = false;
+    mActive = false;
 }
 
 void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)
@@ -138,6 +141,82 @@ GridbrainComponent::ConnType GridbrainComponent::getConnectorType()
     default:
         return CONN_INOUT;
     }
+}
+
+bool GridbrainComponent::isProducer()
+{
+    switch(mType)
+    {
+    case PER:
+    case NOT:
+    case TNAND:
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool GridbrainComponent::isConsumer()
+{
+    switch(mType)
+    {
+    case ACT:
+        return true;
+    default:
+        return false;
+    }
+}
+
+void GridbrainComponent::calcProducer(bool prod)
+{
+    if (prod || (isProducer()))
+    {
+        mProducer = true;
+
+        GridbrainConnection* conn = mFirstConnection;
+
+        while (conn != NULL)
+        {
+            GridbrainComponent* targComp = (GridbrainComponent*)conn->mTargComponent;
+            targComp->calcProducer(true);
+
+            conn = (GridbrainConnection*)conn->mNextConnection;
+        }
+    }
+}
+
+bool GridbrainComponent::calcConsumer()
+{
+    if (mConsumer || isConsumer())
+    {
+        mConsumer = true;
+        return true;
+    }
+
+    GridbrainConnection* conn = mFirstConnection;
+
+    while (conn != NULL)
+    {
+        GridbrainComponent* targComp = (GridbrainComponent*)conn->mTargComponent;
+        if (targComp->calcConsumer())
+        {
+            mConsumer = true;
+            return true;
+        }
+
+        conn = (GridbrainConnection*)conn->mNextConnection;
+    }
+
+    mConsumer = false;
+    return false;
+}
+
+bool GridbrainComponent::calcActive()
+{
+    calcProducer();
+    calcConsumer();
+    mActive = mConsumer & mProducer;
+    return mActive;
 }
 
 const char GridbrainComponent::mClassName[] = "GridbrainComponent";

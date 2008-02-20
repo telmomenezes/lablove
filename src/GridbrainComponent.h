@@ -67,6 +67,11 @@ public:
     bool isAggregator();
     string getName();
     ConnType getConnectorType();
+    bool isProducer();
+    bool isConsumer();
+    void calcProducer(bool prod=false);
+    bool calcConsumer();
+    bool calcActive();
 
     static const char mClassName[];
     static Orbit<GridbrainComponent>::MethodType mMethods[];
@@ -101,6 +106,9 @@ public:
     unsigned int mPossibleConnections;
 
     unsigned int mDepth;
+    bool mProducer;
+    bool mConsumer;
+    bool mActive;
 };
 
 #endif

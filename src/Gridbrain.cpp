@@ -573,6 +573,7 @@ void Gridbrain::addConnection(unsigned int xOrig,
     conn->mAge = age;
     applyWeight(conn);
     conn->mOrigComponent = comp;
+    conn->mTargComponent = targComp;
 
     if (conn->mGridOrig == conn->mGridTarg)
     {
@@ -1581,10 +1582,11 @@ void Gridbrain::calcExpansion()
             for (unsigned int y = 0; y < grid->getHeight(); y++)
             {
                 GridbrainComponent* comp = getComponent(x, y, g);
-                unsigned int totalConns = comp->mConnectionsCount + comp->mInboundConnections;
-                if (totalConns == 0)
+                bool active = comp->calcActive();
+                if (!active)
                 {
                     freeComponents++;
+                    comp->mDepth = 1;
                 }
 
                 GridbrainConnection* conn = comp->mFirstConnection;
@@ -1601,9 +1603,9 @@ void Gridbrain::calcExpansion()
                             targetComp->mDepth = nextDepth;
                         }
 
-                        if (nextDepth > maxDepth)
+                        if (comp->mDepth > maxDepth)
                         {
-                            maxDepth = nextDepth;
+                            maxDepth = comp->mDepth;
                         }
                     }
                     conn = (GridbrainConnection*)conn->mNextConnection;
