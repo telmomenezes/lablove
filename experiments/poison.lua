@@ -18,10 +18,10 @@ plantSize = 10.0
 worldWidth = 3000
 worldHeight = 3000
 
-alphaWidth = 4
-betaWidth = 2
-alphaHeight = 3
-betaHeight = 3
+alphaWidth = 0--4
+betaWidth = 0--2
+alphaHeight = 0--3
+betaHeight = 0--3
 
 alphaComponents = {TAND, TNAND, NOT, MMAX}
 betaComponents = {TAND, TNAND, NOT}
@@ -51,22 +51,22 @@ compCount = 1
 bufferSize = 100
 fitnessAging = 0.1
 
-addConnectionProb = 0.0
-addDoubleConnectionProb = 0.01
-removeConnectionProb = 0.03
+addConnectionProb = 0.0--1
+addDoubleConnectionProb = 0.0
+removeConnectionProb = 0.02
 changeWeightProb = 0.01
 weightMutationStanDev = 1.0--1.0
 newWeightProb = 0.0
 moveConnectionOrigProb = 0.0
 forkConnectionProb = 0.0
 forkDoubleConnectionProb = 0.0
-splitConnectionProb = 0.01
+splitConnectionProb = 0.0--1
 joinConnectionsProb = 0.0
-changeComponentProb = 0.01
+changeComponentProb = 0.0--1
 swapComponentProb = 0.1
 
 recombineProb = 0.0
-expandGrids = false
+expandGrids = true
 
 timeLimit = 0
 logTimeInterval = 100
@@ -99,18 +99,7 @@ compCount = getNumberParameter("compcount", compCount, "cc")
 fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")
 initialConnections = getNumberParameter("initconn", initialConnections, "ico")
 
-fromScratch = getBoolParameter("scratch", false)
-
 logBaseName = "_poison_"
-
-if fromScratch == true then
-    logBaseName = "_poison0_"
-    alphaWidth = 0
-    betaWidth = 0
-    alphaHeight = 0
-    betaHeight = 0
-    expandGrids = true
-end
 
 logSuffix = logBaseName
             .. parameterString
