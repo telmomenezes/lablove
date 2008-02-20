@@ -45,7 +45,7 @@ rotDrag = 0.05
 
 feedCenter = 0.25
 
-initialConnections = 10
+initialConnections = 0
 
 compCount = 1
 bufferSize = 100

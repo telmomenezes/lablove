@@ -1612,6 +1612,11 @@ void Gridbrain::calcExpansion()
                     comp->mDepth = 1;
                 }
 
+                if (comp->mDepth > maxDepth)
+                {
+                    maxDepth = comp->mDepth;
+                }
+
                 GridbrainConnection* conn = comp->mFirstConnection;
                 while (conn != NULL)
                 {
@@ -1624,11 +1629,6 @@ void Gridbrain::calcExpansion()
                         if (targetComp->mDepth < nextDepth)
                         {
                             targetComp->mDepth = nextDepth;
-                        }
-
-                        if (comp->mDepth > maxDepth)
-                        {
-                            maxDepth = comp->mDepth;
                         }
                     }
                     conn = (GridbrainConnection*)conn->mNextConnection;
