@@ -55,14 +55,14 @@ addConnectionProb = 0.0--1
 addDoubleConnectionProb = 0.0
 removeConnectionProb = 0.02
 changeWeightProb = 0.01
-weightMutationStanDev = 1.0--1.0
+weightMutationStanDev = 1.0
 newWeightProb = 0.0
-moveConnectionOrigProb = 0.0
+moveConnectionOrigProb = 0.0--1
 forkConnectionProb = 0.0
 forkDoubleConnectionProb = 0.0
 splitConnectionProb = 0.0--1
 joinConnectionsProb = 0.0
-changeComponentProb = 0.0--1
+changeComponentProb = 0.01
 swapComponentProb = 0.1
 
 recombineProb = 0.0

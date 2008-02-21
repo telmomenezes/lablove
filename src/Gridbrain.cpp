@@ -274,6 +274,8 @@ Brain* Gridbrain::clone(bool randomize)
 
     gb->calcConnectionCounts();
 
+    unsigned int lostConnections = 0;
+
     GridbrainConnection* conn = mConnections;
     while (conn != NULL)
     {
@@ -319,9 +321,15 @@ Brain* Gridbrain::clone(bool randomize)
                     conn->mWeight,
                     conn->mAge + 1.0f);
             }
+            else
+            {
+                lostConnections++;
+            }
         }
         conn = (GridbrainConnection*)conn->mNextGlobalConnection;
     }
+
+    gb->addRandomConnections(lostConnections);
 
     return gb;
 }
