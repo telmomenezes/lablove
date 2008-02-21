@@ -202,7 +202,7 @@ TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateChangeComponent)
 
 TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateSwapComponent)
 {
-    mGridbrain.setMutateSwapComponentProb(0.1f);
+    mGridbrain.setMutateSwapComponentProb(0.9f);
     mGridbrain.mutate();
     CHECK(mGridbrain.isValid());
     mGridbrain.addRandomConnections(100);

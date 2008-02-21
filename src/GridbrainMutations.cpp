@@ -855,7 +855,14 @@ void Gridbrain::mutateSwapComponent()
             // If valid, do swap
             if (valid)
             {
+                GridbrainComponent auxComp;
+                auxComp.copyDefinitions(comp1);
+                comp1->copyDefinitions(comp2);
+                comp2->copyDefinitions(&auxComp);
                 conn = mConnections;
+
+                list<GridbrainConnection*> addInTheEnd;
+
                 while (conn != NULL)
                 {
                     unsigned int newX1 = conn->mColumnOrig;
@@ -907,16 +914,50 @@ void Gridbrain::mutateSwapComponent()
                     if (change)
                     {
                         removeConnection(curConn);
-                        addConnection(newX1, newY1, newG1, newX2, newY2, newG2, newWeight, newAge);
+
+                        if (connectionExists(newX1, newY1, newG1, newX2, newY2, newG2))
+                        {
+                            GridbrainConnection* addConn = new GridbrainConnection();
+                            addConn->mColumnOrig = newX1;
+                            addConn->mRowOrig = newY1;
+                            addConn->mGridOrig = newG1;
+                            addConn->mColumnTarg = newX2;
+                            addConn->mRowTarg = newY2;
+                            addConn->mGridTarg = newG2;
+                            addConn->mWeight = newWeight;
+                            addConn->mAge = newAge;
+                            addInTheEnd.push_back(addConn);
+                        }
+                        else
+                        {
+                            addConnection(newX1, newY1, newG1, newX2, newY2, newG2, newWeight, newAge);
+                        }
                     }
                 }
 
-                //printf("SWAP (%d, %d, %d) / (%d, %d, %d)\n", x1, y1, gridNumber, x2, y2, gridNumber);
+                list<GridbrainConnection*>::iterator iterConn;
 
-                GridbrainComponent auxComp;
-                auxComp.copyDefinitions(comp1);
-                comp1->copyDefinitions(comp2);
-                comp2->copyDefinitions(&auxComp);
+                for (iterConn = addInTheEnd.begin();
+                        iterConn != addInTheEnd.end();
+                        iterConn++)
+                {
+                    GridbrainConnection* addConn = (*iterConn);
+                    
+                    addConnection(addConn->mColumnOrig,
+                                    addConn->mRowOrig,
+                                    addConn->mGridOrig,
+                                    addConn->mColumnTarg,
+                                    addConn->mRowTarg,
+                                    addConn->mGridTarg,
+                                    addConn->mWeight,
+                                    addConn->mAge);
+
+                    delete addConn;
+                }
+
+                addInTheEnd.clear();
+
+                //printf("SWAP (%d, %d, %d) / (%d, %d, %d)\n", x1, y1, gridNumber, x2, y2, gridNumber);
             }
         }
     }
