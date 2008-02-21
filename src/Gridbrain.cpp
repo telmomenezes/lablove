@@ -56,8 +56,6 @@ Gridbrain::Gridbrain(lua_State* luaState)
     mMutateChangeComponentProb = 0.0f;
     mMutateSwapComponentProb = 0.0f;
 
-    mExpandGrids = false;
-
     mConnSeqProb = 1.0f;
     mConnSeqCurrent = NULL;
     mCompSeqProb = 1.0f;
@@ -117,8 +115,6 @@ Gridbrain* Gridbrain::baseClone()
     gb->mMutateChangeComponentProb = mMutateChangeComponentProb;
     gb->mMutateSwapComponentProb = mMutateSwapComponentProb;
 
-    gb->mExpandGrids = mExpandGrids;
-
     for (map<string, int>::iterator iterChannel = mChannels.begin();
             iterChannel != mChannels.end();
             iterChannel++)
@@ -131,75 +127,132 @@ Gridbrain* Gridbrain::baseClone()
 
 Brain* Gridbrain::clone(bool randomize)
 {
+    calcActive();
     Gridbrain* gb = baseClone();
 
-    for (unsigned int i = 0; i < mGridsCount; i++)
+    for (unsigned int g = 0; g < mGridsCount; g++)
     {
-        Grid* grid = mGridsVec[i];
-        Grid* newGrid = new Grid(*grid);
+        Grid* oldGrid = mGridsVec[g];
+        Grid* newGrid = new Grid(*oldGrid);
 
-        if (grid->mAddColumn)
+        unsigned int col = 0;
+
+        for (unsigned int x = 0;
+            x < oldGrid->getWidth();
+            x++)
         {
-            newGrid->addColumn();
+            bool deleteCol = true;
+
+            for (unsigned int y = 0;
+                y < oldGrid->getHeight();
+                y++)
+            {
+                GridbrainComponent* comp = getComponent(x, y, g);
+                if (comp->mActive)
+                {
+                    deleteCol = false;
+                }
+            }
+
+            if (deleteCol)
+            {
+                newGrid->deleteColumn(col);
+            }
+            else
+            {
+                col++;
+            }
         }
-        if (grid->mAddRow)
+
+        unsigned int row = 0;
+
+        for (unsigned int y = 0;
+            y < oldGrid->getHeight();
+            y++)
         {
-            newGrid->addRow();
+
+            bool deleteRow = true;
+
+            for (unsigned int x = 0;
+                x < oldGrid->getWidth();
+                x++)
+            {
+                GridbrainComponent* comp = getComponent(x, y, g);
+                if (comp->mActive)
+                {
+                    deleteRow = false;
+                }
+            }
+
+            if (deleteRow)
+            {
+                newGrid->deleteRow(row);
+            }
+            else
+            {
+                row++;
+            }
         }
+
+        newGrid->addColumn();
+        newGrid->addRow();
 
         gb->addGrid(newGrid, "");
     }
 
     gb->mComponents = (GridbrainComponent*)malloc(gb->mNumberOfComponents * sizeof(GridbrainComponent));
 
-    unsigned int newIndex = 0;
-    unsigned int oldIndex = 0;
+    unsigned int offset = 0;
 
-    for (unsigned int i = 0; i < mGridsCount; i++)
+    for (unsigned int g = 0; g < mGridsCount; g++)
     {
-        Grid* grid = mGridsVec[i];
-        Grid* newGrid = gb->mGridsVec[i];
+        Grid* oldGrid = mGridsVec[g];
+        Grid* newGrid = gb->mGridsVec[g];
 
         for (unsigned int x = 0;
             x < newGrid->getWidth();
             x++)
         {
+            GridCoord xCoord = newGrid->getColumnCoord(x);
+            int oldX = oldGrid->getColumnByCoord(xCoord);
+
             for (unsigned int y = 0;
                 y < newGrid->getHeight();
                 y++)
             {
-                gb->mComponents[newIndex].clearDefinitions();
-                gb->mComponents[newIndex].clearConnections();
-                gb->mComponents[newIndex].clearMetrics();
-                
-                if ((x != newGrid->mNewColumn)
-                    && (y != newGrid->mNewRow))
-                {
-                    if (randomize)
-                    {
-                        GridbrainComponent* comp = grid->getRandomComponent(mOwner, gb->mComponents);
-                        gb->mComponents[newIndex].copyDefinitions(comp);
-                    }
-                    else
-                    {
-                        gb->mComponents[newIndex].copyDefinitions(&mComponents[oldIndex]);
-                    }
+                GridCoord yCoord = newGrid->getRowCoord(y);
+                int oldY = oldGrid->getRowByCoord(yCoord);
 
-                    oldIndex++;
+                GridbrainComponent* oldComponent = NULL;
+                if ((oldX >= 0) && (oldY >= 0))
+                {
+                    oldComponent = getComponent(oldX, oldY, g);
                 }
-                gb->mComponents[newIndex].mOffset = newIndex;
-                gb->mComponents[newIndex].mColumn = x;
-                gb->mComponents[newIndex].mRow = y;
-                gb->mComponents[newIndex].mGrid = i;
-                newIndex++;
+
+                GridbrainComponent* newComponent = gb->getComponent(x, y, g);
+
+                newComponent->clearDefinitions();
+                newComponent->clearConnections();
+                newComponent->clearMetrics();
+                
+                if ((!randomize) && (oldComponent != NULL))
+                {
+                    newComponent->copyDefinitions(oldComponent);
+                }
+
+                newComponent->mOffset = offset;
+                newComponent->mColumn = x;
+                newComponent->mRow = y;
+                newComponent->mGrid = g;
+
+                offset++;
             }
         }
     }
 
-    newIndex = 0;
-    for (unsigned int i = 0; i < mGridsCount; i++)
+    for (unsigned int g = 0; g < mGridsCount; g++)
     {
-        Grid* newGrid = gb->mGridsVec[i];
+        Grid* newGrid = gb->mGridsVec[g];
 
         for (unsigned int x = 0;
             x < newGrid->getWidth();
@@ -209,13 +262,12 @@ Brain* Gridbrain::clone(bool randomize)
                 y < newGrid->getHeight();
                 y++)
             {
-                if ((x == newGrid->mNewColumn)
-                    || (y == newGrid->mNewRow))
+                GridbrainComponent* comp = gb->getComponent(x, y, g);
+                if (comp->mType == GridbrainComponent::NUL)
                 {
-                    GridbrainComponent* comp = newGrid->getRandomComponent(mOwner, gb->mComponents);
-                    gb->mComponents[newIndex].copyDefinitions(comp);
+                    GridbrainComponent* newComp = newGrid->getRandomComponent(mOwner, gb->mComponents);
+                    comp->copyDefinitions(newComp);
                 }
-                newIndex++;
             }
         }
     }
@@ -231,43 +283,42 @@ Brain* Gridbrain::clone(bool randomize)
         }
         else
         {
-            int rowOrig = conn->mRowOrig;
-            int rowTarg = conn->mRowTarg;
-            int columnOrig = conn->mColumnOrig;
-            int columnTarg = conn->mColumnTarg;
+            int x1 = conn->mColumnOrig;
+            int y1 = conn->mRowOrig;
+            int g1 = conn->mGridOrig;
+            int x2 = conn->mColumnTarg;
+            int y2 = conn->mRowTarg;
+            int g2 = conn->mGridTarg;
 
-            Grid* gridOrig = gb->mGridsVec[conn->mGridOrig];
-            Grid* gridTarg = gb->mGridsVec[conn->mGridTarg];
+            Grid* oldGridOrig = mGridsVec[g1];
+            Grid* oldGridTarg = mGridsVec[g2];
+            Grid* newGridOrig = gb->mGridsVec[g1];
+            Grid* newGridTarg = gb->mGridsVec[g2];
 
-            if ((gridOrig->mNewColumn >= 0)
-                && (columnOrig >= gridOrig->mNewColumn))
-            {
-                columnOrig++;
-            }
-            if ((gridTarg->mNewColumn >= 0)
-                && (columnTarg >= gridTarg->mNewColumn))
-            {
-                columnTarg++;
-            }
-            if ((gridOrig->mNewRow >= 0)
-                && (rowOrig >= gridOrig->mNewRow))
-            {
-                rowOrig++;
-            }
-            if ((gridTarg->mNewRow >= 0)
-                && (rowTarg >= gridTarg->mNewRow))
-            {
-                rowTarg++;
-            }
+            GridCoord x1Coord = oldGridOrig->getColumnCoord(x1);
+            GridCoord y1Coord = oldGridOrig->getRowCoord(y1);
+            GridCoord x2Coord = oldGridTarg->getColumnCoord(x2);
+            GridCoord y2Coord = oldGridTarg->getRowCoord(y2);
 
-            gb->addConnection(columnOrig,
-                rowOrig,
-                conn->mGridOrig,
-                columnTarg,
-                rowTarg,
-                conn->mGridTarg,
-                conn->mWeight,
-                conn->mAge + 1.0f);
+            x1 = newGridOrig->getColumnByCoord(x1Coord);
+            y1 = newGridOrig->getRowByCoord(y1Coord);
+            x2 = newGridTarg->getColumnByCoord(x2Coord);
+            y2 = newGridTarg->getRowByCoord(y2Coord);
+
+            if ((x1 >= 0)
+                && (y1 >= 0)
+                && (x2 >= 0)
+                && (y2 >= 0))
+            {
+                gb->addConnection(x1,
+                    y1,
+                    g1,
+                    x2,
+                    y2,
+                    g2,
+                    conn->mWeight,
+                    conn->mAge + 1.0f);
+            }
         }
         conn = (GridbrainConnection*)conn->mNextGlobalConnection;
     }
@@ -339,10 +390,6 @@ void Gridbrain::onAdd()
     initGridsIO();
     initGridWritePositions();
     calcActive();
-    if (mExpandGrids)
-    {
-        calcExpansion();
-    }
 }
 
 void Gridbrain::initEmpty()
@@ -1584,71 +1631,6 @@ void Gridbrain::calcActive()
     }
 }
 
-void Gridbrain::calcExpansion()
-{
-    for (unsigned int g = 0; g < mGridsCount; g++)
-    {
-        Grid* grid = mGridsVec[g];
-        unsigned int maxDepth = 1;
-
-        if (grid->getWidth() == 0)
-        {
-            grid->mAddColumn = true;
-        }
-        if (grid->getHeight() == 0)
-        {
-            grid->mAddRow = true;
-        }
-
-        for (unsigned int x = 0; x < grid->getWidth(); x++)
-        {
-            unsigned int freeComponents = 0;
-            for (unsigned int y = 0; y < grid->getHeight(); y++)
-            {
-                GridbrainComponent* comp = getComponent(x, y, g);
-                if (!comp->mActive)
-                {
-                    freeComponents++;
-                    comp->mDepth = 1;
-                }
-
-                if (comp->mDepth > maxDepth)
-                {
-                    maxDepth = comp->mDepth;
-                }
-
-                GridbrainConnection* conn = comp->mFirstConnection;
-                while (conn != NULL)
-                {
-                    // Only propagate depth inside grid
-                    if (conn->mGridTarg == g)
-                    {
-                        unsigned int nextDepth = comp->mDepth + 1;
-                        GridbrainComponent* targetComp = getComponent(conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg);
-
-                        if (targetComp->mDepth < nextDepth)
-                        {
-                            targetComp->mDepth = nextDepth;
-                        }
-                    }
-                    conn = (GridbrainConnection*)conn->mNextConnection;
-                }
-            }
-
-            // Column is full
-            if (freeComponents == 0)
-            {
-                grid->mAddRow = true;
-            }
-        }
-        // Row is full
-        if (maxDepth == grid->getWidth())
-        {
-            grid->mAddColumn = true;
-        }
-    }
-}
-
 float* Gridbrain::getInputBuffer(unsigned int channel)
 {
     return mGridsVec[channel]->getInputBuffer();
@@ -1867,7 +1849,6 @@ Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
     {"setMutateJoinConnectionsProb", &Gridbrain::setMutateJoinConnectionsProb},
     {"setMutateChangeComponentProb", &Gridbrain::setMutateChangeComponentProb},
     {"setMutateSwapComponentProb", &Gridbrain::setMutateSwapComponentProb},
-    {"setExpandGrids", &Gridbrain::setExpandGrids},
     {0,0}
 };
 
@@ -2027,13 +2008,6 @@ int Gridbrain::setWeightMutationStanDev(lua_State* luaState)
 {
     float sd = luaL_checknumber(luaState, 1);
     setWeightMutationStanDev(sd);
-    return 0;
-}
-
-int Gridbrain::setExpandGrids(lua_State* luaState)
-{
-    bool expand = luaL_checkbool(luaState, 1);
-    setExpandGrids(expand);
     return 0;
 }
 

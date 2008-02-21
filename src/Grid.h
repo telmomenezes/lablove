@@ -85,6 +85,8 @@ public:
 
     void addColumn();
     void addRow();
+    void deleteColumn(unsigned int col);
+    void deleteRow(unsigned int row);
 
     GridCoord getColumnCoord(unsigned int col){return mColumnCoords[col];}
     GridCoord getRowCoord(unsigned int row){return mRowCoords[row];}
@@ -92,11 +94,6 @@ public:
     int getRowByCoord(GridCoord coord);
 
     bool isValid();
-
-    int mNewRow;
-    int mNewColumn;
-    bool mAddRow;
-    bool mAddColumn;
 
     static const char mClassName[];
     static Orbit<Grid>::MethodType mMethods[];

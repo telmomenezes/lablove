@@ -37,10 +37,6 @@ Grid::Grid(lua_State* luaState)
     mActionsCount = 0;
     mWriteX = 0;
     mWriteY = 0;
-    mNewRow = -1;
-    mNewColumn = -1;
-    mAddRow = false;
-    mAddColumn = false;
 
     mComponentSet = NULL;
 
@@ -64,10 +60,6 @@ Grid::Grid(const Grid& grid)
     mOutputVector = NULL;
     mWriteX = 0;
     mWriteY = 0;
-    mNewRow = -1;
-    mNewColumn = -1;
-    mAddRow = false;
-    mAddColumn = false;
 
     mComponentSet = grid.mComponentSet;
 
@@ -431,21 +423,13 @@ float* Grid::getInputBuffer()
 
 void Grid::addColumn()
 {
-    // If height is 0, also create new row
-    if (mHeight == 0)
-    {
-        mHeight = 1;
-        mNewRow = 0;
-        mRowCoords.push_back(GridCoord());
-    }
-
     mWidth++;
     mSize = mWidth * mHeight;
-    mNewColumn = mDistRowsAndColumns->iuniform(0, mWidth);
+    int newColumn = mDistRowsAndColumns->iuniform(0, mWidth);
     mColumnTargetCountVec.push_back(0);
 
     vector<GridCoord>::iterator iterCoord = mColumnCoords.begin();
-    for (unsigned int i = 0; i < mNewColumn; i++)
+    for (unsigned int i = 0; i < newColumn; i++)
     {
         iterCoord++;
     }
@@ -456,26 +440,26 @@ void Grid::addColumn()
     {
         gc = GridCoord();
     }
-    else if (mNewColumn == 0)
+    else if (newColumn == 0)
     {
         gc = mColumnCoords[0].leftOf();
     }
-    else if (mNewColumn == (mWidth - 1))
+    else if (newColumn == (mWidth - 1))
     {
         gc = mColumnCoords[mWidth - 2].rightOf();
     }
     else
     {
-        unsigned int d1 = mColumnCoords[mNewColumn - 1].getDepth();
-        unsigned int d2 = mColumnCoords[mNewColumn].getDepth();
+        unsigned int d1 = mColumnCoords[newColumn - 1].getDepth();
+        unsigned int d2 = mColumnCoords[newColumn].getDepth();
 
         if (d1 > d2)
         {
-            gc = mColumnCoords[mNewColumn - 1].rightOf();
+            gc = mColumnCoords[newColumn - 1].rightOf();
         }
         else
         {
-            gc = mColumnCoords[mNewColumn].leftOf();
+            gc = mColumnCoords[newColumn].leftOf();
         }
     }
 
@@ -484,21 +468,12 @@ void Grid::addColumn()
 
 void Grid::addRow()
 {
-    // If width is 0, also create new column
-    if (mWidth == 0)
-    {
-        mWidth = 1;
-        mNewColumn = 0;
-        mColumnTargetCountVec.push_back(0);
-        mColumnCoords.push_back(GridCoord());
-    }
-
     mHeight++;
     mSize = mWidth * mHeight;
-    mNewRow = mDistRowsAndColumns->iuniform(0, mHeight);
+    int newRow = mDistRowsAndColumns->iuniform(0, mHeight);
 
     vector<GridCoord>::iterator iterCoord = mRowCoords.begin();
-    for (unsigned int i = 0; i < mNewRow; i++)
+    for (unsigned int i = 0; i < newRow; i++)
     {
         iterCoord++;
     }
@@ -509,30 +484,77 @@ void Grid::addRow()
     {
         gc = GridCoord();
     }
-    else if (mNewRow == 0)
+    else if (newRow == 0)
     {
         gc = mRowCoords[0].leftOf();
     }
-    else if (mNewRow == (mHeight - 1))
+    else if (newRow == (mHeight - 1))
     {
         gc = mRowCoords[mHeight - 2].rightOf();
     }
     else
     {
-        unsigned int d1 = mRowCoords[mNewRow - 1].getDepth();
-        unsigned int d2 = mRowCoords[mNewRow].getDepth();
+        unsigned int d1 = mRowCoords[newRow - 1].getDepth();
+        unsigned int d2 = mRowCoords[newRow].getDepth();
 
         if (d1 > d2)
         {
-            gc = mRowCoords[mNewRow - 1].rightOf();
+            gc = mRowCoords[newRow - 1].rightOf();
         }
         else
         {
-            gc = mRowCoords[mNewRow].leftOf();
+            gc = mRowCoords[newRow].leftOf();
         }
     }
 
     mRowCoords.insert(iterCoord, gc);
+}
+
+void Grid::deleteColumn(unsigned int col)
+{
+    if (mWidth == 0)
+    {
+        return;
+    }
+
+    vector<GridCoord>::iterator iterCol = mColumnCoords.begin();
+    vector<unsigned int>::iterator iterColTarg = mColumnTargetCountVec.begin();
+    
+    for (unsigned int i = 0;
+            i < col;
+            i++)
+    {
+        iterCol++;
+        iterColTarg++;
+    }
+
+    mColumnCoords.erase(iterCol);
+    mColumnTargetCountVec.erase(iterColTarg);
+
+    mWidth--;
+    mSize = mWidth * mHeight;
+}
+
+void Grid::deleteRow(unsigned int row)
+{
+    if (mHeight == 0)
+    {
+        return;
+    }
+
+    vector<GridCoord>::iterator iterRow = mRowCoords.begin();
+    
+    for (unsigned int i = 0;
+            i < row;
+            i++)
+    {
+        iterRow++;
+    }
+
+    mRowCoords.erase(iterRow);
+
+    mHeight--;
+    mSize = mWidth * mHeight;
 }
 
 int Grid::getColumnByCoord(GridCoord coord)

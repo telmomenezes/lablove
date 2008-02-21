@@ -66,7 +66,6 @@ changeComponentProb = 0.0--1
 swapComponentProb = 0.1
 
 recombineProb = 0.0
-expandGrids = true
 
 timeLimit = 0
 logTimeInterval = 100
@@ -199,7 +198,6 @@ brain:setMutateSplitConnectionProb(splitConnectionProb)
 brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
 brain:setMutateSwapComponentProb(swapComponentProb)
-brain:setExpandGrids(expandGrids)
 
 alphaSet = GridbrainComponentSet()
 for i, comp in pairs(alphaComponents) do
