@@ -38,7 +38,6 @@ SymbolTable::SymbolTable(lua_State* luaState)
 
 SymbolTable::SymbolTable(SymbolTable* table)
 {
-    mReferenceSymbol = table->mReferenceSymbol->clone();
 
     map<unsigned long, Symbol*>::iterator iterSymbol;
     for (iterSymbol = table->mSymbols.begin();
@@ -54,6 +53,8 @@ SymbolTable::SymbolTable(SymbolTable* table)
         }
         mSymbols[(*iterSymbol).first] = sym;
     }
+
+    mReferenceSymbol = mSymbols[0];
     
     mID = table->mID;
     mLastSymbolID = table->mLastSymbolID;
