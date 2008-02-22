@@ -532,7 +532,6 @@ void Gridbrain::mutateSplitConnection()
 
     while (nextRandomConnection() != NULL) 
     {
-        MUTATIONS_SPLIT_CONN++;
         GridbrainConnection* conn = mConnSeqCurrent;
 
         unsigned int g1 = conn->mGridOrig;
@@ -621,6 +620,7 @@ void Gridbrain::mutateSplitConnection()
 
         if (valid)
         {
+            MUTATIONS_SPLIT_CONN++;
             float weight = conn->mWeight;
 
             // Current connection is going to be delted, advance to next one
@@ -648,10 +648,10 @@ void Gridbrain::mutateSplitConnection()
             // create 3->2 connection
             addConnection(x3, y3, g3, x2, y2, g2, weight2);
 
-            //printf("SPLIT\n");
-            //printf("remove: (%d, %d, %d)->(%d, %d, %d)\n", x1, y1, g1, x2, y2, g2);
-            //printf("add: (%d, %d, %d)->(%d, %d, %d)\n", x1, y1, g1, x3, y3, g3);
-            //printf("add: (%d, %d, %d)->(%d, %d, %d)\n", x3, y3, g3, x2, y2, g2);
+            /*printf("SPLIT\n");
+            printf("remove: (%d, %d, %d)->(%d, %d, %d)\n", x1, y1, g1, x2, y2, g2);
+            printf("add: (%d, %d, %d)->(%d, %d, %d)\n", x1, y1, g1, x3, y3, g3);
+            printf("add: (%d, %d, %d)->(%d, %d, %d)\n", x3, y3, g3, x2, y2, g2);*/
         }
     }
 }
@@ -662,7 +662,6 @@ void Gridbrain::mutateJoinConnections()
 
     while (nextRandomConnection() != NULL) 
     {
-        MUTATIONS_JOIN_CONN++;
         GridbrainConnection* conn = mConnSeqCurrent;
 
         GridbrainComponent* pivot = getComponent(conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg);
@@ -691,8 +690,9 @@ void Gridbrain::mutateJoinConnections()
             unsigned int y2 = iterConn->mRowTarg;
             unsigned int g2 = iterConn->mGridTarg;
 
-            if (canCreateConnection(x1, y1, g1, x2, y2, g2))
+            if (isConnectionValid(x1, y1, g1, x2, y2, g2))
             {
+                MUTATIONS_JOIN_CONN++;
                 float weight = 0;
                 unsigned int weightSelector = mDistWeights->iuniform(0, 3);
                 switch (weightSelector)
@@ -711,6 +711,11 @@ void Gridbrain::mutateJoinConnections()
                 {
                     nextConn = (GridbrainConnection*)nextConn->mNextGlobalConnection;
                 }
+
+                /*printf("JOIN\n");
+                printf("add: (%d, %d, %d)->(%d, %d, %d)\n", x1, y1, g1, x2, y2, g2);
+                printf("remove: (%d, %d, %d)->(%d, %d, %d)\n", conn->mColumnOrig, conn->mRowOrig, conn->mGridOrig, conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg);
+                printf("remove: (%d, %d, %d)->(%d, %d, %d)\n", iterConn->mColumnOrig, iterConn->mRowOrig, iterConn->mGridOrig, iterConn->mColumnTarg, iterConn->mRowTarg, iterConn->mGridTarg);*/
 
                 removeConnection(conn);
                 removeConnection(iterConn);
