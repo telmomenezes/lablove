@@ -51,16 +51,17 @@ compCount = 1
 bufferSize = 100
 fitnessAging = 0.1
 
-addConnectionProb = 0.0--1
+addConnectionProb = 0.0
 addDoubleConnectionProb = 0.0
-removeConnectionProb = 0.02
+removeConnectionProb = 0.0
+removeDoubleConnectionProb = 0.0
 changeWeightProb = 0.01
 weightMutationStanDev = 1.0
 newWeightProb = 0.0
-moveConnectionOrigProb = 0.0--1
+moveConnectionOrigProb = 0.0
 forkConnectionProb = 0.0
 forkDoubleConnectionProb = 0.0
-splitConnectionProb = 0.0--1
+splitConnectionProb = 0.0
 joinConnectionsProb = 0.0
 changeComponentProb = 0.01
 swapComponentProb = 0.1
@@ -82,6 +83,7 @@ dofile("basic_command_line.lua")
 addConnectionProb = getNumberParameter("addconnprob", addConnectionProb, "con+")
 addDoubleConnectionProb = getNumberParameter("add2connprob", addDoubleConnectionProb, "con2+")
 removeConnectionProb = getNumberParameter("removeconnprob", removeConnectionProb, "con-")
+removeDoubleConnectionProb = getNumberParameter("remove2connprob", removeDoubleConnectionProb, "con2-")
 changeWeightProb = getNumberParameter("changeweightprob", changeWeightProb, "wgt")
 weightMutationStanDev = getNumberParameter("weightmutstandev", weightMutationStanDev, "wsd")
 newWeightProb = getNumberParameter("newweightprob", newWeightProb, "new")
@@ -188,6 +190,7 @@ brain = Gridbrain()
 brain:setMutateAddConnectionProb(addConnectionProb)
 brain:setMutateAddDoubleConnectionProb(addDoubleConnectionProb)
 brain:setMutateRemoveConnectionProb(removeConnectionProb)
+brain:setMutateRemoveDoubleConnectionProb(removeDoubleConnectionProb)
 brain:setMutateChangeConnectionWeightProb(changeWeightProb)
 brain:setWeightMutationStanDev(weightMutationStanDev)
 brain:setMutateNewConnectionWeightProb(newWeightProb)

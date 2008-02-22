@@ -45,6 +45,7 @@ Gridbrain::Gridbrain(lua_State* luaState)
     mMutateAddConnectionProb = 0.0f;
     mMutateAddDoubleConnectionProb = 0.0f;
     mMutateRemoveConnectionProb = 0.0f;
+    mMutateRemoveDoubleConnectionProb = 0.0f;
     mMutateChangeConnectionWeightProb = 0.0f;
     mWeightMutationStanDev = 0.0f;
     mMutateNewConnectionWeightProb = 0.0f;
@@ -104,6 +105,7 @@ Gridbrain* Gridbrain::baseClone()
     gb->mMutateAddConnectionProb = mMutateAddConnectionProb;
     gb->mMutateAddDoubleConnectionProb = mMutateAddDoubleConnectionProb;
     gb->mMutateRemoveConnectionProb = mMutateRemoveConnectionProb;
+    gb->mMutateRemoveDoubleConnectionProb = mMutateRemoveDoubleConnectionProb;
     gb->mMutateChangeConnectionWeightProb = mMutateChangeConnectionWeightProb;
     gb->mWeightMutationStanDev = mWeightMutationStanDev;
     gb->mMutateNewConnectionWeightProb = mMutateNewConnectionWeightProb;
@@ -1847,6 +1849,7 @@ Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
     {"setMutateAddConnectionProb", &Gridbrain::setMutateAddConnectionProb},
     {"setMutateAddDoubleConnectionProb", &Gridbrain::setMutateAddDoubleConnectionProb},
     {"setMutateRemoveConnectionProb", &Gridbrain::setMutateRemoveConnectionProb},
+    {"setMutateRemoveDoubleConnectionProb", &Gridbrain::setMutateRemoveDoubleConnectionProb},
     {"setMutateChangeConnectionWeightProb", &Gridbrain::setMutateChangeConnectionWeightProb},
     {"setWeightMutationStanDev", &Gridbrain::setWeightMutationStanDev},
     {"setMutateNewConnectionWeightProb", &Gridbrain::setMutateNewConnectionWeightProb},
@@ -1946,6 +1949,13 @@ int Gridbrain::setMutateRemoveConnectionProb(lua_State* luaState)
 {
     float prob = luaL_checknumber(luaState, 1);
     setMutateRemoveConnectionProb(prob);
+    return 0;
+}
+
+int Gridbrain::setMutateRemoveDoubleConnectionProb(lua_State* luaState)
+{
+    float prob = luaL_checknumber(luaState, 1);
+    setMutateRemoveDoubleConnectionProb(prob);
     return 0;
 }
 

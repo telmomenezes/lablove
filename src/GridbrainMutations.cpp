@@ -27,6 +27,7 @@
 long Gridbrain::MUTATIONS_ADD_CONN = 0;
 long Gridbrain::MUTATIONS_ADD_DBL_CONN = 0;
 long Gridbrain::MUTATIONS_REM_CONN = 0;
+long Gridbrain::MUTATIONS_REM_DBL_CONN = 0;
 long Gridbrain::MUTATIONS_CHG_WGT = 0;
 long Gridbrain::MUTATIONS_NEW_WGT = 0;
 long Gridbrain::MUTATIONS_MOV_ORI = 0;
@@ -62,6 +63,7 @@ void Gridbrain::mutate()
     mutateAddConnection(connCount);
     mutateAddDoubleConnection(connCount);
     mutateRemoveConnection(connCount);
+    mutateRemoveDoubleConnection(connCount);
 
     mutateForkConnection();
     mutateForkDoubleConnection();
@@ -180,6 +182,117 @@ void Gridbrain::removeRandomConnection()
     removeConnection(conn);
 }
 
+void Gridbrain::removeRandomDoubleConnection()
+{
+    if (mConnectionsCount == 0)
+    {
+        return;
+    }
+
+    unsigned int pos = mDistConnections->iuniform(0, mConnectionsCount);
+    GridbrainConnection* conn = mConnections;
+    unsigned int i = 0;
+    while (i < pos)
+    {
+        conn = (GridbrainConnection*)(conn->mNextGlobalConnection);
+        i++;
+    }
+
+    unsigned int x1 = conn->mColumnOrig;
+    unsigned int y1 = conn->mRowOrig;
+    unsigned int g1 = conn->mGridOrig;
+    unsigned int x2 = conn->mColumnTarg;
+    unsigned int y2 = conn->mRowTarg;
+    unsigned int g2 = conn->mGridTarg;
+
+    removeConnection(conn);
+
+    unsigned int dir = mDistConnections->iuniform(0, 2);
+
+    if (dir == 0)
+    {
+        if (!removeRandomConnectionWithOrigin(x2, y2, g2))
+        {
+            removeRandomConnectionWithTarget(x1, y1, g1);
+        }
+    }
+    else
+    {
+        if (!removeRandomConnectionWithTarget(x1, y1, g1))
+        {
+            removeRandomConnectionWithOrigin(x2, y2, g2);
+        }
+    }
+}
+
+bool Gridbrain::removeRandomConnectionWithOrigin(unsigned int x, unsigned int y, unsigned int g)
+{
+    GridbrainComponent* comp = getComponent(x, y, g);
+
+    if (comp->mConnectionsCount == 0)
+    {
+        return false;
+    }
+
+    unsigned int pos = mDistConnections->iuniform(0, comp->mConnectionsCount);
+
+    GridbrainConnection* conn = comp->mFirstConnection;
+    unsigned int i = 0;
+    while (i < pos)
+    {
+        conn = (GridbrainConnection*)(conn->mNextConnection);
+        i++;
+    }
+
+    removeConnection(conn);
+
+    return true;
+}
+
+bool Gridbrain::removeRandomConnectionWithTarget(unsigned int x, unsigned int y, unsigned int g)
+{
+    GridbrainConnection* conn = mConnections;
+    unsigned int count = 0;
+    while (conn != NULL)
+    {
+        if ((conn->mColumnTarg == x)
+            && (conn->mRowTarg == y)
+            && (conn->mGridTarg == g))
+        {
+            count++;
+        }
+        conn = (GridbrainConnection*)(conn->mNextGlobalConnection);
+    }
+    
+    if (count == 0)
+    {
+        return false;
+    }
+
+    unsigned int pos = mDistConnections->iuniform(0, count);
+
+    conn = mConnections;
+    unsigned int i = 0;
+    while (i <= pos)
+    {
+        if ((conn->mColumnTarg == x)
+            && (conn->mRowTarg == y)
+            && (conn->mGridTarg == g))
+        {
+            i++;
+        }
+
+        if (i <= pos)
+        {
+            conn = (GridbrainConnection*)(conn->mNextGlobalConnection);
+        }
+    }
+
+    removeConnection(conn);
+
+    return true;
+}
+
 void Gridbrain::addDoubleConnection()
 {
     // If all grids has 0 size, no connection can be created
@@ -283,6 +396,18 @@ void Gridbrain::mutateRemoveConnection(unsigned int popSize)
     for (unsigned int i = 0; i < count; i++)
     {
         removeRandomConnection();
+    }
+}
+
+void Gridbrain::mutateRemoveDoubleConnection(unsigned int popSize)
+{
+    unsigned int count = generateEventCount(mMutateRemoveDoubleConnectionProb, popSize);
+
+    MUTATIONS_REM_DBL_CONN += count;
+
+    for (unsigned int i = 0; i < count; i++)
+    {
+        removeRandomDoubleConnection();
     }
 }
 

@@ -138,6 +138,7 @@ public:
     void setMutateAddConnectionProb(float prob){mMutateAddConnectionProb = prob;}
     void setMutateAddDoubleConnectionProb(float prob){mMutateAddDoubleConnectionProb = prob;}
     void setMutateRemoveConnectionProb(float prob){mMutateRemoveConnectionProb = prob;}
+    void setMutateRemoveDoubleConnectionProb(float prob){mMutateRemoveDoubleConnectionProb = prob;}
     void setMutateChangeConnectionWeightProb(float prob){mMutateChangeConnectionWeightProb = prob;}
     void setWeightMutationStanDev(float sd){mWeightMutationStanDev = sd;}
     void setMutateNewConnectionWeightProb(float prob){mMutateNewConnectionWeightProb = prob;}
@@ -184,6 +185,7 @@ public:
     int setMutateAddConnectionProb(lua_State* luaState);
     int setMutateAddDoubleConnectionProb(lua_State* luaState);
     int setMutateRemoveConnectionProb(lua_State* luaState);
+    int setMutateRemoveDoubleConnectionProb(lua_State* luaState);
     int setMutateChangeConnectionWeightProb(lua_State* luaState);
     int setMutateNewConnectionWeightProb(lua_State* luaState);
     int setMutateMoveConnectionOriginProb(lua_State* luaState);
@@ -198,6 +200,7 @@ public:
     static long MUTATIONS_ADD_CONN;
     static long MUTATIONS_ADD_DBL_CONN;
     static long MUTATIONS_REM_CONN;
+    static long MUTATIONS_REM_DBL_CONN;
     static long MUTATIONS_CHG_WGT;
     static long MUTATIONS_NEW_WGT;
     static long MUTATIONS_MOV_ORI;
@@ -221,9 +224,14 @@ protected:
 
     void addDoubleConnection();
 
+    bool removeRandomConnectionWithOrigin(unsigned int x, unsigned int y, unsigned int g);
+    bool removeRandomConnectionWithTarget(unsigned int x, unsigned int y, unsigned int g);
+    void removeRandomDoubleConnection();
+
     void mutateAddConnection(unsigned int popSize);
     void mutateAddDoubleConnection(unsigned int popSize);
     void mutateRemoveConnection(unsigned int popSize);
+    void mutateRemoveDoubleConnection(unsigned int popSize);
     void mutateChangeConnectionWeight();
     void mutateNewConnectionWeight();
     void mutateMoveConnectionOrigin();
@@ -275,6 +283,7 @@ protected:
     float mMutateAddConnectionProb;
     float mMutateAddDoubleConnectionProb;
     float mMutateRemoveConnectionProb;
+    float mMutateRemoveDoubleConnectionProb;
     float mMutateChangeConnectionWeightProb;
     float mMutateNewConnectionWeightProb;
     float mWeightMutationStanDev;
