@@ -14,7 +14,7 @@ ELSE(PROFILE)
     IF(DEBUG)
         SET(CMAKE_CXX_FLAGS "-Wno-deprecated -g")
     ELSE(DEBUG)
-        SET(CMAKE_CXX_FLAGS "-Wno-deprecated -O3")
+        SET(CMAKE_CXX_FLAGS "-O3 -march=nocona")
     ENDIF(DEBUG)
 ENDIF(PROFILE)
 
