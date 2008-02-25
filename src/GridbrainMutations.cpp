@@ -65,7 +65,7 @@ void Gridbrain::mutate()
     mutateRemoveConnection(connCount);
     mutateRemoveDoubleConnection(connCount);
 
-    mutateForkConnection();
+    mutateForkConnection(connCount);
     mutateForkDoubleConnection();
 
     mutateMoveConnectionOrigin();
@@ -649,14 +649,19 @@ void Gridbrain::mutateMoveConnectionOrigin()
     }
 }
 
-void Gridbrain::mutateForkConnection()
+void Gridbrain::mutateForkConnection(unsigned int popSize)
 {
-    initRandomConnectionSequence(mMutateForkConnectionProb);
+    unsigned int count = generateEventCount(mMutateForkConnectionProb, popSize);
 
-    while (nextRandomConnection() != NULL) 
+    for (unsigned int i = 0; i < count; i++)
     {
-        MUTATIONS_FRK_CONN++;
-        GridbrainConnection* conn = mConnSeqCurrent;
+        int pos = mDistConnections->iuniform(0, mConnectionsCount);
+        GridbrainConnection* conn = mConnections;
+
+        for (unsigned int j = 0; j < pos; j++)
+        {
+            conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+        }
 
         unsigned int x1 = conn->mColumnOrig;
         unsigned int x2 = conn->mColumnTarg;
@@ -677,10 +682,12 @@ void Gridbrain::mutateForkConnection()
             if (selectRandomOrigin(x3, y3, g3, x2, y2, g2))
             {
                 addConnection(x3, y3, g3, x2, y2, g2, weight);
+                MUTATIONS_FRK_CONN++;
             }
             else if (selectRandomTarget(x1, y1, g1, x3, y3, g3))
             {
                 addConnection(x1, y1, g1, x3, y3, g3, weight);
+                MUTATIONS_FRK_CONN++;
             }
         }
         else
@@ -688,10 +695,12 @@ void Gridbrain::mutateForkConnection()
             if (selectRandomTarget(x1, y1, g1, x3, y3, g3))
             {
                 addConnection(x1, y1, g1, x3, y3, g3, weight);
+                MUTATIONS_FRK_CONN++;
             }
             else if (selectRandomOrigin(x3, y3, g3, x2, y2, g2))
             {
                 addConnection(x3, y3, g3, x2, y2, g2, weight);
+                MUTATIONS_FRK_CONN++;
             }
             
         }

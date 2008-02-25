@@ -239,7 +239,7 @@ protected:
     void mutateChangeConnectionWeight();
     void mutateNewConnectionWeight();
     void mutateMoveConnectionOrigin();
-    void mutateForkConnection();
+    void mutateForkConnection(unsigned int popSize);
     void mutateForkDoubleConnection();
     void mutateSplitConnection(unsigned int popSize);
     void mutateJoinConnections(unsigned int popSize);
