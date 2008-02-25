@@ -190,75 +190,18 @@ void Gridbrain::removeRandomDoubleConnection()
         return;
     }
 
-    unsigned int pos = mDistConnections->iuniform(0, mConnectionsCount);
     GridbrainConnection* conn = mConnections;
-    unsigned int i = 0;
-    while (i < pos)
-    {
-        conn = (GridbrainConnection*)(conn->mNextGlobalConnection);
-        i++;
-    }
-
-    unsigned int x1 = conn->mColumnOrig;
-    unsigned int y1 = conn->mRowOrig;
-    unsigned int g1 = conn->mGridOrig;
-    unsigned int x2 = conn->mColumnTarg;
-    unsigned int y2 = conn->mRowTarg;
-    unsigned int g2 = conn->mGridTarg;
-
-    removeConnection(conn);
-
-    unsigned int dir = mDistConnections->iuniform(0, 2);
-
-    if (dir == 0)
-    {
-        if (!removeRandomConnectionWithOrigin(x2, y2, g2))
-        {
-            removeRandomConnectionWithTarget(x1, y1, g1);
-        }
-    }
-    else
-    {
-        if (!removeRandomConnectionWithTarget(x1, y1, g1))
-        {
-            removeRandomConnectionWithOrigin(x2, y2, g2);
-        }
-    }
-}
-
-bool Gridbrain::removeRandomConnectionWithOrigin(unsigned int x, unsigned int y, unsigned int g)
-{
-    GridbrainComponent* comp = getComponent(x, y, g);
-
-    if (comp->mConnectionsCount == 0)
-    {
-        return false;
-    }
-
-    unsigned int pos = mDistConnections->iuniform(0, comp->mConnectionsCount);
-
-    GridbrainConnection* conn = comp->mFirstConnection;
-    unsigned int i = 0;
-    while (i < pos)
-    {
-        conn = (GridbrainConnection*)(conn->mNextConnection);
-        i++;
-    }
-
-    removeConnection(conn);
-
-    return true;
-}
-
-bool Gridbrain::removeRandomConnectionWithTarget(unsigned int x, unsigned int y, unsigned int g)
-{
-    GridbrainConnection* conn = mConnections;
+    GridbrainComponent* comp;
     unsigned int count = 0;
     while (conn != NULL)
     {
-        if ((conn->mColumnTarg == x)
-            && (conn->mRowTarg == y)
-            && (conn->mGridTarg == g))
+        unsigned int x = conn->mColumnTarg;
+        unsigned int y = conn->mRowTarg;
+        unsigned int g = conn->mGridTarg;
+
+        comp = getComponent(x, y, g);
+
+        if (comp->mConnectionsCount > 0)
         {
             count++;
         }
@@ -267,7 +210,8 @@ bool Gridbrain::removeRandomConnectionWithTarget(unsigned int x, unsigned int y,
     
     if (count == 0)
     {
-        return false;
+        removeRandomConnection();
+        return;
     }
 
     unsigned int pos = mDistConnections->iuniform(0, count);
@@ -276,9 +220,13 @@ bool Gridbrain::removeRandomConnectionWithTarget(unsigned int x, unsigned int y,
     unsigned int i = 0;
     while (i <= pos)
     {
-        if ((conn->mColumnTarg == x)
-            && (conn->mRowTarg == y)
-            && (conn->mGridTarg == g))
+        unsigned int x = conn->mColumnTarg;
+        unsigned int y = conn->mRowTarg;
+        unsigned int g = conn->mGridTarg;
+
+        comp = getComponent(x, y, g);
+
+        if (comp->mConnectionsCount > 0)
         {
             i++;
         }
@@ -289,9 +237,17 @@ bool Gridbrain::removeRandomConnectionWithTarget(unsigned int x, unsigned int y,
         }
     }
 
-    removeConnection(conn);
+    pos = mDistConnections->iuniform(0, comp->mConnectionsCount);
+    GridbrainConnection* conn2 = comp->mFirstConnection;
+    i = 0;
+    while (i < pos)
+    {
+        conn2 = (GridbrainConnection*)(conn2->mNextConnection);
+        i++;
+    }
 
-    return true;
+    removeConnection(conn);
+    removeConnection(conn2);
 }
 
 bool Gridbrain::isSplitable(GridbrainConnection* conn)
@@ -1215,10 +1171,11 @@ void Gridbrain::mutateSwapComponent()
 
 void Gridbrain::debugMutationsCount()
 {
-    printf("CON+:%d CON-:%d CON2+:%d CWG:%d NWG:%d MOR:%d FRK: %d FRK2: %d SPL:%d JOI: %d CHG:%d SWP:%d\n",
+    printf("CON+:%d CON-:%d CON2+:%d CON2-:%d CWG:%d NWG:%d MOR:%d FRK: %d FRK2: %d SPL:%d JOI: %d CHG:%d SWP:%d\n",
             MUTATIONS_ADD_CONN,
             MUTATIONS_REM_CONN,
             MUTATIONS_ADD_DBL_CONN,
+            MUTATIONS_REM_DBL_CONN,
             MUTATIONS_CHG_WGT,
             MUTATIONS_NEW_WGT,
             MUTATIONS_MOV_ORI,

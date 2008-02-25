@@ -224,8 +224,6 @@ protected:
 
     void addDoubleConnection();
 
-    bool removeRandomConnectionWithOrigin(unsigned int x, unsigned int y, unsigned int g);
-    bool removeRandomConnectionWithTarget(unsigned int x, unsigned int y, unsigned int g);
     void removeRandomDoubleConnection();
 
     bool isSplitable(GridbrainConnection* conn);
