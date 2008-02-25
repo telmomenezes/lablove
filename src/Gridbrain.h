@@ -228,6 +228,10 @@ protected:
     bool removeRandomConnectionWithTarget(unsigned int x, unsigned int y, unsigned int g);
     void removeRandomDoubleConnection();
 
+    bool isSplitable(GridbrainConnection* conn);
+    GridbrainConnection* selectSplitableConnection();
+    GridbrainConnection* selectJoinableConnection();
+
     void mutateAddConnection(unsigned int popSize);
     void mutateAddDoubleConnection(unsigned int popSize);
     void mutateRemoveConnection(unsigned int popSize);
@@ -237,8 +241,8 @@ protected:
     void mutateMoveConnectionOrigin();
     void mutateForkConnection();
     void mutateForkDoubleConnection();
-    void mutateSplitConnection();
-    void mutateJoinConnections();
+    void mutateSplitConnection(unsigned int popSize);
+    void mutateJoinConnections(unsigned int popSize);
     void mutateChangeComponent();
     void mutateSwapComponent();
 

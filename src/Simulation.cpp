@@ -22,7 +22,7 @@
 #include "Symbol.h"
 #include "SymbolTable.h"
 #include "GraphicalObject.h"
-//#include "Gridbrain.h"
+#include "Gridbrain.h"
 
 #include <math.h>
 #include <stdexcept>
@@ -93,7 +93,7 @@ void Simulation::run()
 
 void Simulation::cycle()
 {
-    //if ((mSimulationTime % 1000) == 0) Gridbrain::debugMutationsCount();
+    if ((mSimulationTime % 1000) == 0) Gridbrain::debugMutationsCount();
 
     bool drawThisCycle = false;
 

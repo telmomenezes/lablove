@@ -17,32 +17,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef _INCLUDE_GRIDBRAIN_CONNECTION_H
-#define _INCLUDE_GRIDBRAIN_CONNECTION_H
+#include "GridbrainConnection.h"
 
-class GridbrainConnection
+GridbrainConnection::GridbrainConnection()
 {
-public:
-    GridbrainConnection();
-    virtual ~GridbrainConnection();
+}
 
-    unsigned long mColumnOrig;
-    unsigned long mRowOrig;
-    unsigned int mGridOrig;
-    unsigned long mColumnTarg;
-    unsigned long mRowTarg;
-    unsigned int mGridTarg;
-    bool mInterGrid;
-    float mWeight;
-    float mRealWeight;
-    void* mPrevConnection;
-    void* mNextConnection;
-    void* mPrevGlobalConnection;
-    void* mNextGlobalConnection;
-    void* mOrigComponent;
-    void* mTargComponent;
-    double mAge;
-};
-
-#endif
+GridbrainConnection::~GridbrainConnection()
+{
+}
 
