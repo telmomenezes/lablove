@@ -774,6 +774,8 @@ void Gridbrain::mutateSplitConnection(unsigned int popSize)
 {
     unsigned int count = generateEventCount(mMutateSplitConnectionProb, popSize);
 
+    MUTATIONS_SPLIT_CONN += count;
+
     for (unsigned int i = 0; i < count; i++)
     {
         GridbrainConnection* conn = selectSplitableConnection();
@@ -867,9 +869,9 @@ void Gridbrain::mutateSplitConnection(unsigned int popSize)
             valid &= isConnectionValid(x3, y3, g3, x2, y2, g2);
         }
 
+
         if (valid)
         {
-            MUTATIONS_SPLIT_CONN++;
             float weight = conn->mWeight;
 
             // Current connection is going to be delted, advance to next one
@@ -909,6 +911,8 @@ void Gridbrain::mutateJoinConnections(unsigned int popSize)
 {
     unsigned int count = generateEventCount(mMutateJoinConnectionsProb, popSize);
 
+    MUTATIONS_JOIN_CONN += count;
+
     for (unsigned int i = 0; i < count; i++)
     {
         GridbrainConnection* conn1 = selectJoinableConnection();
@@ -933,7 +937,6 @@ void Gridbrain::mutateJoinConnections(unsigned int popSize)
             conn2 = (GridbrainConnection*)conn2->mNextConnection;
         }
 
-        MUTATIONS_JOIN_CONN++;
         float weight = 0;
         unsigned int weightSelector = mDistWeights->iuniform(0, 3);
         switch (weightSelector)
