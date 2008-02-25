@@ -66,7 +66,7 @@ void Gridbrain::mutate()
     mutateRemoveDoubleConnection(connCount);
 
     mutateForkConnection(connCount);
-    mutateForkDoubleConnection();
+    mutateForkDoubleConnection(connCount);
 
     mutateMoveConnectionOrigin();
     mutateSplitConnection(connCount);
@@ -663,14 +663,24 @@ void Gridbrain::mutateForkConnection(unsigned int popSize)
     }
 }
 
-void Gridbrain::mutateForkDoubleConnection()
+void Gridbrain::mutateForkDoubleConnection(unsigned int popSize)
 {
-    initRandomConnectionSequence(mMutateForkDoubleConnectionProb);
-
-    while (nextRandomConnection() != NULL)
+    if (mConnectionsCount == 0)
     {
-        MUTATIONS_FRK_DBL_CONN++;
-        GridbrainConnection* conn = mConnSeqCurrent;
+        return;
+    }
+
+    unsigned int count = generateEventCount(mMutateForkDoubleConnectionProb, popSize);
+
+    for (unsigned int i = 0; i < count; i++)
+    {
+        int pos = mDistConnections->iuniform(0, mConnectionsCount);
+        GridbrainConnection* conn = mConnections;
+
+        for (unsigned int j = 0; j < pos; j++)
+        {
+            conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+        }
 
         unsigned int x1 = conn->mColumnOrig;
         unsigned int x2 = conn->mColumnTarg;
@@ -693,6 +703,7 @@ void Gridbrain::mutateForkDoubleConnection()
         {
             if (selectRandomOrigin(x3, y3, g3, x2, y2, g2))
             {
+                MUTATIONS_FRK_DBL_CONN++;
                 addConnection(x3, y3, g3, x2, y2, g2, weight);
                 if (selectRandomOrigin(x4, y4, g4, x3, y3, g3))
                 {
@@ -702,6 +713,7 @@ void Gridbrain::mutateForkDoubleConnection()
             }
             else if (selectRandomTarget(x1, y1, g1, x3, y3, g3))
             {
+                MUTATIONS_FRK_DBL_CONN++;
                 addConnection(x1, y1, g1, x3, y3, g3, weight);
                 if (selectRandomTarget(x3, y3, g3, x4, y4, g4))
                 {
@@ -714,6 +726,7 @@ void Gridbrain::mutateForkDoubleConnection()
         {
             if (selectRandomTarget(x1, y1, g1, x3, y3, g3))
             {
+                MUTATIONS_FRK_DBL_CONN++;
                 addConnection(x1, y1, g1, x3, y3, g3, weight);
                 if (selectRandomTarget(x3, y3, g3, x4, y4, g4))
                 {
@@ -723,6 +736,7 @@ void Gridbrain::mutateForkDoubleConnection()
             }
             else if (selectRandomOrigin(x3, y3, g3, x2, y2, g2))
             {
+                MUTATIONS_FRK_DBL_CONN++;
                 addConnection(x3, y3, g3, x2, y2, g2, weight);
                 if (selectRandomOrigin(x4, y4, g4, x3, y3, g3))
                 {
