@@ -26,6 +26,11 @@ Brain::Brain()
 
 Brain::~Brain()
 {
+   clearInterfaces(); 
+}
+
+void Brain::clearInterfaces()
+{
     for (vector<list<InterfaceItem*>*>::iterator iterInterface = mInputInterfacesVector.begin();
         iterInterface != mInputInterfacesVector.end();
         iterInterface++)

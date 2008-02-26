@@ -50,8 +50,6 @@ public:
     virtual ~SimulationObject();
     virtual SimulationObject* clone(bool randomize=false);
 
-    virtual void onAdd(){}
-
     void initFloatData(unsigned int size);
     void initBoolData(unsigned int size);
     void initIntData(unsigned int size);

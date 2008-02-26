@@ -147,7 +147,7 @@ grid2 = Grid()
 grid2:init(Grid.BETA, 2, 3)
 brain:addGrid(grid2, "beta")
 
-brain:initEmpty()
+brain:init()
 
 brain:setComponent(0, 0, 0, PER, SimCont2D.PERCEPTION_POSITION)
 brain:setComponent(0, 1, 0, PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, 0, foodTableCode, 0)
@@ -163,8 +163,6 @@ brain:setComponent(0, 0, 1, NOT)
 brain:setComponent(1, 0, 1, ACT, SimCont2D.ACTION_ROTATE)
 brain:setComponent(1, 1, 1, ACT, SimCont2D.ACTION_GO)
 brain:setComponent(1, 2, 1, ACT, SimCont2D.ACTION_EATB)
-
-agent:setBrain(brain)
 
 brain:addConnectionReal(0, 0, 0, 3, 0, 0, 1.0)
 brain:addConnectionReal(0, 0, 0, 2, 1, 0, 1.0)
@@ -182,6 +180,8 @@ brain:addConnectionReal(3, 0, 0, 1, 0, 1, -1.0)
 brain:addConnectionReal(3, 1, 0, 1, 1, 1, 1.0)
 brain:addConnectionReal(3, 2, 0, 1, 2, 1, 1.0)
 brain:addConnectionReal(0, 0, 1, 1, 0, 1, 1.0)
+
+agent:setBrain(brain)
 
 -- Plants
 --------------------------------------------------------------------------------

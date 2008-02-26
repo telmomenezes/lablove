@@ -31,7 +31,6 @@ Agent::Agent(Agent* agent, bool randomize) : GraphicalObject(agent)
 {
     mBrain = agent->mBrain->clone(randomize);
     mBrain->setOwner(this);
-    mBrain->init();
 
     map<int, SymbolTable*>::iterator iterTables;
     for (iterTables = mSymbolTables.begin();
@@ -78,14 +77,6 @@ Agent::~Agent()
 SimulationObject* Agent::clone(bool randomize)
 {
     return new Agent(this, randomize);
-}
-
-void Agent::onAdd()
-{
-    if (mBrain != NULL)
-    {
-        mBrain->onAdd();
-    }
 }
 
 Brain* Agent::setBrain(Brain* brain)

@@ -95,6 +95,9 @@ public:
 
     bool isValid();
 
+    GridbrainComponent** mComponentSequence;
+    unsigned int mComponentSequenceSize;
+
     static const char mClassName[];
     static Orbit<Grid>::MethodType mMethods[];
     static Orbit<Grid>::NumberGlobalType mNumberGlobals[];

@@ -47,8 +47,6 @@ public:
 
     void addGrid(Grid* grid, string name);
     virtual void init();
-    virtual void onAdd();
-    void initEmpty();
 
     virtual float* getInputBuffer(unsigned int channel);
     virtual float* getOutputBuffer();
@@ -172,11 +170,13 @@ public:
 
     virtual bool symbolUsed(int tableID, unsigned long symbolID);
 
+    void setAllActive(bool active){mAllActive = active;}
+
     static const char mClassName[];
     static Orbit<Gridbrain>::MethodType mMethods[];
     static Orbit<Gridbrain>::NumberGlobalType mNumberGlobals[];
 
-    int initEmpty(lua_State* luaState);
+    int init(lua_State* luaState);
     int setComponent(lua_State* luaState);
     int addGrid(lua_State* luaState);
     int addConnection(lua_State* luaState);
@@ -215,6 +215,8 @@ public:
 
 protected:
     Gridbrain* baseClone();
+    void update();
+
     void initGridsIO();
     void calcConnectionCounts();
     void calcActive();
@@ -303,6 +305,8 @@ protected:
     unsigned int mCompSeqPos;
 
     unsigned int mActiveComponents;
+    bool mAllActive;
+    unsigned int mActiveConnections;
 };
 
 #endif

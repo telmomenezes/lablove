@@ -45,7 +45,6 @@ public:
     virtual Brain* clone(bool randomize=false)=0;
 
     virtual void init()=0;
-    virtual void onAdd(){}
 
     list<InterfaceItem*>* getInputInterface(unsigned int channel);
     list<InterfaceItem*>* getOutputInterface();
@@ -68,6 +67,8 @@ public:
     virtual bool symbolUsed(int tableID, unsigned long symbolID){return false;}
 
 protected:
+    void clearInterfaces();
+
     vector<list<InterfaceItem*>*> mInputInterfacesVector;
     list<InterfaceItem*> mOutputInterface;
     map<string, int> mChannels;

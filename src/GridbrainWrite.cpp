@@ -294,13 +294,15 @@ void Gridbrain::printDebug()
         unsigned int comp2X = conn->mColumnTarg;
         unsigned int comp2Y = conn->mRowTarg;
 
-        printf("(%d, %d, %d)->(%d, %d, %d)\n",
+        printf("(%d, %d, %d)->(%d, %d, %d) [%f][%f]\n",
                 conn->mColumnOrig,
                 conn->mRowOrig,
                 conn->mGridOrig,
                 conn->mColumnTarg,
                 conn->mRowTarg,
-                conn->mGridTarg);
+                conn->mGridTarg,
+                conn->mWeight,
+                conn->mRealWeight);
 
         conn = (GridbrainConnection*)(conn->mNextGlobalConnection);
     }

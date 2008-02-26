@@ -812,6 +812,7 @@ void SimCont2D::act(Agent* agent)
             iterItem++)
         {
             float output = outBuffer[pos];
+
             Action actionType = (Action)(*iterItem)->mType;
 
             if (output != 0.0f)

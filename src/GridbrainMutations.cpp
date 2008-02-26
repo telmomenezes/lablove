@@ -72,7 +72,7 @@ void Gridbrain::mutate()
     mutateSplitConnection(connCount);
     mutateJoinConnections(connCount);
 
-    
+    update(); 
 }
 
 void Gridbrain::initRandomConnectionSequence(float selectionProb)

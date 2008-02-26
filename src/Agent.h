@@ -32,8 +32,6 @@ public:
     virtual ~Agent();
     virtual SimulationObject* clone(bool randomize=false);
 
-    virtual void onAdd();
-
     Brain* setBrain(Brain* brain);
     Brain* getBrain(){return mBrain;}
 

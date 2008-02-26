@@ -37,6 +37,8 @@ Grid::Grid(lua_State* luaState)
     mActionsCount = 0;
     mWriteX = 0;
     mWriteY = 0;
+    mComponentSequence = NULL;
+    mComponentSequenceSize = 0;
 
     mComponentSet = NULL;
 
@@ -60,6 +62,8 @@ Grid::Grid(const Grid& grid)
     mOutputVector = NULL;
     mWriteX = 0;
     mWriteY = 0;
+    mComponentSequence = NULL;
+    mComponentSequenceSize = 0;
 
     mComponentSet = grid.mComponentSet;
 
@@ -98,6 +102,11 @@ Grid::~Grid()
     {
         free(mOutputVector);
         mOutputVector = NULL;
+    }
+    if (mComponentSequence != NULL)
+    {
+        free(mComponentSequence);
+        mComponentSequence = NULL;
     }
 }
 

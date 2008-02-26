@@ -63,6 +63,8 @@ Gridbrain::Gridbrain(lua_State* luaState)
     mCompSeqPos = -1;
 
     mActiveComponents = 0;
+    mActiveConnections = 0;
+    mAllActive = false;
 }
 
 Gridbrain::~Gridbrain()
@@ -101,6 +103,8 @@ Gridbrain* Gridbrain::baseClone()
     gb->mTotalPossibleConnections = 0;
     gb->mBetaComponentsCount = 0;
     gb->mActiveComponents = 0;
+    gb->mActiveConnections = 0;
+    gb->mAllActive = mAllActive;
 
     gb->mMutateAddConnectionProb = mMutateAddConnectionProb;
     gb->mMutateAddDoubleConnectionProb = mMutateAddDoubleConnectionProb;
@@ -129,7 +133,6 @@ Gridbrain* Gridbrain::baseClone()
 
 Brain* Gridbrain::clone(bool randomize)
 {
-    calcActive();
     Gridbrain* gb = baseClone();
 
     for (unsigned int g = 0; g < mGridsCount; g++)
@@ -332,6 +335,7 @@ Brain* Gridbrain::clone(bool randomize)
     }
 
     gb->addRandomConnections(lostConnections);
+    gb->update();
 
     return gb;
 }
@@ -363,13 +367,41 @@ Grid* Gridbrain::getGrid(string name)
 
 void Gridbrain::init()
 {
-
     if (mComponents == NULL)
     {
-        initEmpty();
+        mComponents = (GridbrainComponent*)malloc(mNumberOfComponents * sizeof(GridbrainComponent));
+
+        // Init grids with NUL components
+        unsigned int pos = 0;
+
+        for (unsigned int i = 0; i < mGridsCount; i++)
+        {
+            Grid* grid = mGridsVec[i];
+
+            for (unsigned int x = 0;
+                x < grid->getWidth();
+                x++)
+            {
+                for (unsigned int y = 0;
+                    y < grid->getHeight();
+                    y++)
+                {
+                    mComponents[pos].clearConnections();
+                    mComponents[pos].clearDefinitions();
+                    mComponents[pos].clearMetrics();
+
+                    mComponents[pos].mOffset = pos;
+                    mComponents[pos].mColumn = x;
+                    mComponents[pos].mRow = y;
+                    mComponents[pos].mGrid = i;
+
+                    pos++;
+                }
+            }
+        }
 
         // Init grids with random components
-        unsigned int pos = 0;
+        pos = 0;
 
         for (unsigned int i = 0; i < mGridsCount; i++)
         {
@@ -392,50 +424,15 @@ void Gridbrain::init()
         }
     }
 
-    calcConnectionCounts();
+    update(); 
 }
 
-void Gridbrain::onAdd()
+void Gridbrain::update()
 {
+    calcActive();
+    calcConnectionCounts();
     initGridsIO();
     initGridWritePositions();
-    calcActive();
-}
-
-void Gridbrain::initEmpty()
-{
-    mComponents = (GridbrainComponent*)malloc(mNumberOfComponents * sizeof(GridbrainComponent));
-
-    // Init grids with NUL components
-    unsigned int pos = 0;
-
-    for (unsigned int i = 0; i < mGridsCount; i++)
-    {
-        Grid* grid = mGridsVec[i];
-
-        for (unsigned int x = 0;
-            x < grid->getWidth();
-            x++)
-        {
-            for (unsigned int y = 0;
-                y < grid->getHeight();
-                y++)
-            {
-                mComponents[pos].clearConnections();
-                mComponents[pos].clearDefinitions();
-                mComponents[pos].clearMetrics();
-
-                mComponents[pos].mOffset = pos;
-                mComponents[pos].mColumn = x;
-                mComponents[pos].mRow = y;
-                mComponents[pos].mGrid = i;
-
-                pos++;
-            }
-        }
-    }
-
-    calcConnectionCounts();
 }
 
 void Gridbrain::setComponent(unsigned int x,
@@ -462,13 +459,13 @@ void Gridbrain::setComponent(unsigned int x,
 
 void Gridbrain::initGridsIO()
 {
+    clearInterfaces();
+
     for (unsigned int i = 0; i < mGridsCount; i++)
     {
         Grid* grid = mGridsVec[i];
 
         grid->removeInputOutput();
-        unsigned int pos = grid->getOffset();
-
     
         if (grid->getType() == Grid::ALPHA)
         {
@@ -477,31 +474,24 @@ void Gridbrain::initGridsIO()
             interface = new list<InterfaceItem*>();
             mInputInterfacesVector.push_back(interface);
 
-            int maxPerPos = -1;
-
             for (unsigned int j = 0;
-                j < grid->getSize();
+                j < grid->mComponentSequenceSize;
                 j++)
             {
-                if (mComponents[pos].mType == GridbrainComponent::PER)
+                GridbrainComponent* comp = grid->mComponentSequence[j];
+                if (comp->mType == GridbrainComponent::PER)
                 {
-                    int perPos = grid->addPerception(&mComponents[pos]);
-                    mComponents[pos].mPerceptionPosition = perPos;
-                    if (perPos > maxPerPos)
-                    {
-                        maxPerPos = perPos;
-                        InterfaceItem* item = new InterfaceItem();
-                        item->mType = mComponents[pos].mSubType;
-                        item->mOrigSymTable = mComponents[pos].mOrigSymTable;
-                        item->mTargetSymTable = mComponents[pos].mTargetSymTable;
-                        item->mOrigSymID = mComponents[pos].mOrigSymID;
-                        item->mTargetSymID = mComponents[pos].mTargetSymID;
-                        item->mTableLinkType = mComponents[pos].mTableLinkType;
-                        interface->push_back(item);
-                    }
+                    int perPos = grid->addPerception(comp);
+                    comp->mPerceptionPosition = perPos;
+                    InterfaceItem* item = new InterfaceItem();
+                    item->mType = comp->mSubType;
+                    item->mOrigSymTable = comp->mOrigSymTable;
+                    item->mTargetSymTable = comp->mTargetSymTable;
+                    item->mOrigSymID = comp->mOrigSymID;
+                    item->mTargetSymID = comp->mTargetSymID;
+                    item->mTableLinkType = comp->mTableLinkType;
+                    interface->push_back(item);
                 }
-
-                pos++;
             }
 
             grid->initInputMatrix(mMaxInputDepth);
@@ -509,18 +499,18 @@ void Gridbrain::initGridsIO()
         else
         {
             for (unsigned int j = 0;
-                j < grid->getSize();
+                j < grid->mComponentSequenceSize;
                 j++)
             {
-                if (mComponents[pos].mType == GridbrainComponent::ACT)
+                GridbrainComponent* comp = grid->mComponentSequence[j];
+
+                if (comp->mType == GridbrainComponent::ACT)
                 {
-                    mComponents[pos].mActionPosition = grid->addAction(&mComponents[pos]);
+                    comp->mActionPosition = grid->addAction(comp);
                     InterfaceItem* item = new InterfaceItem();
-                    item->mType = mComponents[pos].mSubType;
+                    item->mType = comp->mSubType;
                     mOutputInterface.push_back(item);
                 }
-
-                pos++;
             }
 
             grid->initOutputVector();
@@ -1262,15 +1252,23 @@ void Gridbrain::cycle()
     GridbrainComponent::InputType inputType;
 
     // Reset all components
-    for (unsigned int i = 0; i < mNumberOfComponents; i++)
+    for (unsigned int gridNumber = 0; gridNumber < mGridsCount; gridNumber++)
     {
-        comp = &(mComponents[i]);
+        //printf("----> GRID: %d\n", gridNumber);
+        Grid* grid = mGridsVec[gridNumber];
 
-        comp->mInput = 0;
-        comp->mOutput = 0;
-        comp->mState = 0;
-        comp->mCycleFlag = false;
-        comp->mForwardFlag = false;
+        unsigned int endIndex = grid->mComponentSequenceSize;
+
+        for (unsigned int i = 0; i < endIndex; i++)
+        {
+            comp = grid->mComponentSequence[i];
+
+            comp->mInput = 0;
+            comp->mOutput = 0;
+            comp->mState = 0;
+            comp->mCycleFlag = false;
+            comp->mForwardFlag = false;
+        }
     }
 
     // Evaluate grids
@@ -1278,6 +1276,8 @@ void Gridbrain::cycle()
     {
         //printf("----> GRID: %d\n", gridNumber);
         Grid* grid = mGridsVec[gridNumber];
+
+        unsigned int endIndex = grid->mComponentSequenceSize;
 
         unsigned int inputDepth = 1;
         int passCount = 1;
@@ -1289,11 +1289,6 @@ void Gridbrain::cycle()
             inputDepth = grid->getInputDepth();
         }
 
-        unsigned int startIndex;
-        unsigned int endIndex;
-
-        startIndex = grid->getOffset();
-        endIndex = startIndex + grid->getSize();
 
         float* inputMatrix = grid->getInputMatrix();
         float* outputVector = grid->getOutputVector();
@@ -1314,9 +1309,9 @@ void Gridbrain::cycle()
                 if (grid->getType() == Grid::ALPHA)
                 {
                     // reset alpha components except aggregators
-                    for (unsigned int i = startIndex; i < endIndex; i++)
+                    for (unsigned int i = 0; i < endIndex; i++)
                     {
-                        comp = &(mComponents[i]);
+                        comp = grid->mComponentSequence[i];
 
                         if (!comp->isAggregator())
                         {
@@ -1337,9 +1332,9 @@ void Gridbrain::cycle()
                     }
                 }
 
-                for (unsigned int j = startIndex; j < endIndex; j++)
+                for (unsigned int j = 0; j < endIndex; j++)
                 {
-                    comp = &(mComponents[j]);
+                    comp = grid->mComponentSequence[j];
                     conn = comp->mFirstConnection;
 
                     // compute component output
@@ -1625,19 +1620,66 @@ void Gridbrain::calcActive()
     for (unsigned int g = 0; g < mGridsCount; g++)
     {
         Grid* grid = mGridsVec[g];
+        unsigned int sequenceSize = 0;
 
         for (unsigned int x = 0; x < grid->getWidth(); x++)
         {
             for (unsigned int y = 0; y < grid->getHeight(); y++)
             {
                 GridbrainComponent* comp = getComponent(x, y, g);
-                bool active = comp->calcActive();
-                if (active)
+                if (mAllActive)
+                {
+                    comp->mActive = true;
+                }
+                else
+                {
+                    comp->calcActive();
+                }
+                if (comp->mActive)
                 {
                     mActiveComponents++;
+                    sequenceSize++;
                 }
             }
         }
+
+        if (grid->mComponentSequence != NULL)
+        {
+            free(grid->mComponentSequence);
+            grid->mComponentSequence = NULL;
+        }
+        grid->mComponentSequence = (GridbrainComponent**)malloc(sequenceSize * sizeof(GridbrainComponent*));
+        grid->mComponentSequenceSize = sequenceSize;
+
+        unsigned int pos = 0;
+        for (unsigned int x = 0; x < grid->getWidth(); x++)
+        {
+            for (unsigned int y = 0; y < grid->getHeight(); y++)
+            {
+                GridbrainComponent* comp = getComponent(x, y, g);
+                if (comp->mActive)
+                {
+                    grid->mComponentSequence[pos] = comp;
+                    pos++;
+                }
+            }
+        }
+    }
+
+    GridbrainConnection* conn = mConnections;
+
+    mActiveConnections = 0;
+    while (conn != NULL)
+    {
+        GridbrainComponent* origComp = (GridbrainComponent*)conn->mOrigComponent;
+        GridbrainComponent* targComp = (GridbrainComponent*)conn->mTargComponent;
+
+        if (origComp->mActive && targComp->mActive)
+        {
+            mActiveConnections++;
+        }
+
+        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
     }
 }
 
@@ -1686,6 +1728,11 @@ bool Gridbrain::getFieldValue(string fieldName, float& value)
     else if (fieldName == "gb_active_components")
     {
         value = mActiveComponents;
+        return true;
+    }
+    else if (fieldName == "gb_active_connections")
+    {
+        value = mActiveConnections;
         return true;
     }
     else if (fieldName.substr(0,  14) == "gb_grid_width_")
@@ -1840,7 +1887,7 @@ bool Gridbrain::symbolUsed(int tableID, unsigned long symbolID)
 const char Gridbrain::mClassName[] = "Gridbrain";
 
 Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
-    {"initEmpty", &Gridbrain::initEmpty},
+    {"init", &Gridbrain::init},
     {"setComponent", &Gridbrain::setComponent},
     {"addGrid", &Gridbrain::addGrid},
     {"addConnection", &Gridbrain::addConnection},
@@ -1865,9 +1912,9 @@ Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
 
 Orbit<Gridbrain>::NumberGlobalType Gridbrain::mNumberGlobals[] = {{0,0}};
 
-int Gridbrain::initEmpty(lua_State* luaState)
+int Gridbrain::init(lua_State* luaState)
 {
-        initEmpty();
+        init();
         return 0;
 }
 

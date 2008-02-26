@@ -30,6 +30,7 @@ struct GridbrainCompFixture
         mGrid = new Grid();
         mGrid->init(Grid::BETA, 2, 2);
         mGridbrain.addGrid(mGrid, "test");
+        mGridbrain.setAllActive(true);
         mGridbrain.init();
     }
 
@@ -1145,7 +1146,8 @@ struct GridbrainCompFixture2
         act1->mSubType = 0;
         act2->mSubType = 1;
         act3->mSubType = 2;
-        mGridbrain.onAdd();
+        mGridbrain.setAllActive(true);
+        mGridbrain.init();
     }
 
     ~GridbrainCompFixture2(){}
