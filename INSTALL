@@ -1,7 +1,16 @@
-LOVE SIMULATION INSTALLATION INSTRUCTIONS
+This is a developer release so installation is not yet friendly.
 
-BINARY INSTALLATION
-TBD
+You will need to compile LabLOVE yourself. To do this you will need
+the following:
 
-COMPILATION FROM SOURCE
-TBD
+* CMake (http://www.cmake.org)
+* Lua (http://www.lua.org)
+* Artist (http://sourceforge.net/projects/artist)
+
+Then do:
+
+$ cmake .
+$ make
+$ ./lablove
+
+Edit default.lua to change the experiment to be run.

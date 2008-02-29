@@ -337,7 +337,6 @@ int Simulation::addObject(lua_State *luaState)
 
 int Simulation::initGraphics(lua_State* luaState)
 {
-    printf("init graphics!\n");
     int width = luaL_checkint(luaState, 1);
     int height = luaL_checkint(luaState, 2);
     bool fullScreen = luaL_checkbool(luaState, 3);

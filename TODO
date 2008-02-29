@@ -1,29 +1,3 @@
 #
 # To do list for LabLOVE
 # 
-
-General:
-========
-
-- Predator and prey predefined brains
-- Number of cases in stats
-- ...
-
-
-Genetic Operators:
-==================
-
-- GB: originSymIndex mutation
-- GB: component parameter mutation?
-- GB: crossover
-- GB: delete/add row/column
-- GB: clone row/column set
-- GB: divide connection
-- Mutation and crossover for symbol tables
-
-Gridbrain:
-==========
-
-- Sigmoid threshold
-- ...
-

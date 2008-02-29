@@ -1,2 +1,13 @@
-0.1 [2007-x-x]
-...
+0.1 alpha release
+29-Feb-2008
+
+    * Work is being done on LabLOVE for about a year but this is the first file relase
+    * Basic structure: Simulation, PopulationDynamics, SimulationObject, Agent, Brain, Statistics, Symbol, SymbolTable
+    * Simulations: SimCont2D
+    * Brains: Gridbrain, DummyBrain
+    * Symbols: BitString, FixedString, Float, FloatVector, RGB, UnsignedLong(UL)
+    * Population Dynamics: FixedSpecies, Generations, SpeciesBuffers
+    * Statistics: Common, Time, Best Brain
+    * Lua scripting
+    * Unit testing
+    * Some experiments defined
