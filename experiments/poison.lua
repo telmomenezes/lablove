@@ -53,13 +53,13 @@ fitnessAging = 0.1
 
 addConnectionProb = 0.0
 addDoubleConnectionProb = 0.0
-removeConnectionProb = 0.0
+removeConnectionProb = 0.01
 removeDoubleConnectionProb = 0.0
 changeWeightProb = 0.01
 weightMutationStanDev = 1.0
 newWeightProb = 0.0
 moveConnectionOrigProb = 0.0
-forkConnectionProb = 0.0
+forkConnectionProb = 0.01
 forkDoubleConnectionProb = 0.0
 splitConnectionProb = 0.0
 joinConnectionsProb = 0.0

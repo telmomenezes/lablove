@@ -607,6 +607,11 @@ void Gridbrain::mutateMoveConnectionOrigin()
 
 void Gridbrain::mutateForkConnection(unsigned int popSize)
 {
+    if (mConnectionsCount == 0)
+    {
+        return;
+    }
+
     unsigned int count = generateEventCount(mMutateForkConnectionProb, popSize);
 
     for (unsigned int i = 0; i < count; i++)
