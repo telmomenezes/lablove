@@ -49,19 +49,17 @@ bufferSize = 100
 fitnessAging = 0.1
 
 addConnectionProb = 0.01
-removeConnectionProb = 0.015
+removeConnectionProb = 0.02
 changeWeightProb = 0.01
 weightMutationStanDev = 1.0
-newWeightProb = 0.0
-moveConnectionOrigProb = 0.0
 splitConnectionProb = 0.01
-joinConnectionsProb = 0.015
 changeComponentProb = 0.01
 swapComponentProb = 0.1
 
 recombineProb = 0.0
 
-minimumFreeComponentRatio = 0.25
+evoPred = true
+evoPrey = true
 
 timeLimit = 0
 logTimeInterval = 100
@@ -77,7 +75,8 @@ birthRadius = 0.0
 
 dofile("basic_command_line.lua")
 
-expLabel = getNumberParameter("label", "", "_")
+evoPred = getBoolParameter("evopred", evoPred, "evopred")
+evoPrey = getBoolParameter("evoprey", evoPrey, "evoprey")
 
 logBaseName = "_predprey_"
 
@@ -122,11 +121,15 @@ ageTableCode = 3
 colorTableCode = 4
 feedTableCode = 5
 
-function addAgentSpecies(name, pop, red, green, blue, feed, food)
+function addAgentSpecies(name, pop, red, green, blue, feed, food, evo)
     agent = Agent()
     agent:setBirthRadius(birthRadius)
-    agent:setFitnessMeasure(SimCont2D.FITNESS_ENERGY_SUM_ABOVE_INIT)
-    --agent:setFitnessMeasure(SimCont2D.FITNESS_RANDOM)
+
+    if evo then
+        agent:setFitnessMeasure(SimCont2D.FITNESS_ENERGY_SUM_ABOVE_INIT)
+    else
+        agent:setFitnessMeasure(SimCont2D.FITNESS_RANDOM)
+    end
 
     agent:addGraphic(GraphicTriangle())
 
@@ -186,13 +189,9 @@ function addAgentSpecies(name, pop, red, green, blue, feed, food)
     brain:setMutateRemoveConnectionProb(removeConnectionProb)
     brain:setMutateChangeConnectionWeightProb(changeWeightProb)
     brain:setWeightMutationStanDev(weightMutationStanDev)
-    brain:setMutateNewConnectionWeightProb(newWeightProb)
-    brain:setMutateMoveConnectionOriginProb(moveConnectionOrigProb)
     brain:setMutateSplitConnectionProb(splitConnectionProb)
-    brain:setMutateJoinConnectionsProb(joinConnectionsProb)
     brain:setMutateChangeComponentProb(changeComponentProb)
     brain:setMutateSwapComponentProb(swapComponentProb)
-    brain:setMinimumFreeComponentRatio(minimumFreeComponentRatio)
 
     alphaSet = GridbrainComponentSet()
     for i, comp in pairs(alphaComponents) do
@@ -236,6 +235,7 @@ function addAgentSpecies(name, pop, red, green, blue, feed, food)
     stats:addField("fitness")
     stats:addField("energy")
     stats:addField("gb_connections")
+    stats:addField("gb_active_connections")
     stats:addField("gb_grid_width_objects")
     stats:addField("gb_grid_height_objects")
     stats:addField("gb_grid_width_beta")
@@ -300,8 +300,8 @@ end
 -- Create Species
 --------------------------------------------------------------------------------
 
-addAgentSpecies("pred", numberOfPreds, 255, 0, 0, "11", "01")
-addAgentSpecies("prey", numberOfPreys, 0, 0, 255, "00", "11")
+addAgentSpecies("pred", numberOfPreds, 255, 0, 0, "11", "01", evoPred)
+addAgentSpecies("prey", numberOfPreys, 0, 0, 255, "00", "11", evoPrey)
 addPlantSpecies(numberOfPlants, 0, 255, 0, "00", "00")
 
 -- Human Agent

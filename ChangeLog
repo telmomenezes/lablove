@@ -1,6 +1,7 @@
 0.2
 
     * Bug in Gridbrain::mutateForkConnection() - closed
+    * predprey experiment reorganized
     * ...
 
 0.1 alpha release

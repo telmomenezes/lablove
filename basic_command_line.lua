@@ -17,16 +17,25 @@ function getNumberParameter(paramName, paramDefault, shortName)
     return paramOut
 end
 
-function getBoolParameter(paramName, paramDefault)
+function getBoolParameter(paramName, paramDefault, shortName)
     param = getCommandLineParameter(paramName)
+    
+    result = false
 
     if param == "" then
-        return paramDefault
-    elseif param == "true" then
-        return true
+        result = paramDefault
     else
-        return false
+        if param == "true" then
+            result = true
+        else
+            result = false
+        end
     end
+
+    if result then
+        parameterString = parameterString .. "_" .. shortName .. "_"
+    end
+    return result
 end
 
 function getStringParameter(paramName, paramDefault, shortName)
