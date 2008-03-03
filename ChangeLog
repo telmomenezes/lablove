@@ -2,6 +2,7 @@
 
     * Bug in Gridbrain::mutateForkConnection() - closed
     * predprey experiment reorganized
+    * active actions & active perceptions field value for the gridbrain
     * ...
 
 0.1 alpha release

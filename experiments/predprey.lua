@@ -241,6 +241,7 @@ function addAgentSpecies(name, pop, red, green, blue, feed, food, evo)
     stats:addField("gb_grid_width_beta")
     stats:addField("gb_grid_height_beta")
     stats:addField("symtable_size_color")
+    stats:addField("gb_active_perceptions")
     popDyn:addDeathLog(agentSpeciesIndex, stats)
 
     if logBrains then

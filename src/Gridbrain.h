@@ -304,9 +304,11 @@ protected:
     float mCompSeqProb;
     unsigned int mCompSeqPos;
 
-    unsigned int mActiveComponents;
     bool mAllActive;
     unsigned int mActiveConnections;
+    unsigned int mActiveComponents;
+    unsigned int mActivePerceptions;
+    unsigned int mActiveActions;
 };
 
 #endif

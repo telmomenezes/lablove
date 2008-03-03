@@ -63,6 +63,8 @@ Gridbrain::Gridbrain(lua_State* luaState)
     mCompSeqPos = -1;
 
     mActiveComponents = 0;
+    mActivePerceptions = 0;
+    mActiveActions = 0;
     mActiveConnections = 0;
     mAllActive = false;
 }
@@ -103,6 +105,8 @@ Gridbrain* Gridbrain::baseClone()
     gb->mTotalPossibleConnections = 0;
     gb->mBetaComponentsCount = 0;
     gb->mActiveComponents = 0;
+    gb->mActivePerceptions = 0;
+    gb->mActiveActions = 0;
     gb->mActiveConnections = 0;
     gb->mAllActive = mAllActive;
 
@@ -1617,6 +1621,8 @@ void Gridbrain::calcConnectionCounts()
 void Gridbrain::calcActive()
 {
     mActiveComponents = 0;
+    mActivePerceptions = 0;
+    mActiveActions = 0;
     for (unsigned int g = 0; g < mGridsCount; g++)
     {
         Grid* grid = mGridsVec[g];
@@ -1637,6 +1643,14 @@ void Gridbrain::calcActive()
                 }
                 if (comp->mActive)
                 {
+                    if (comp->mType == GridbrainComponent::PER)
+                    {
+                        mActivePerceptions++;
+                    }
+                    else if (comp->mType == GridbrainComponent::ACT)
+                    {
+                        mActiveActions++;
+                    }
                     mActiveComponents++;
                     sequenceSize++;
                 }
@@ -1725,14 +1739,19 @@ bool Gridbrain::getFieldValue(string fieldName, float& value)
         value = mNumberOfComponents;
         return true;
     }
-    else if (fieldName == "gb_active_components")
-    {
-        value = mActiveComponents;
-        return true;
-    }
     else if (fieldName == "gb_active_connections")
     {
         value = mActiveConnections;
+        return true;
+    }
+    else if (fieldName == "gb_active_perceptions")
+    {
+        value = mActivePerceptions;
+        return true;
+    }
+    else if (fieldName == "gb_active_actions")
+    {
+        value = mActiveActions;
         return true;
     }
     else if (fieldName.substr(0,  14) == "gb_grid_width_")
