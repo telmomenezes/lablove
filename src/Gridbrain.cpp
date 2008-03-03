@@ -1754,6 +1754,25 @@ bool Gridbrain::getFieldValue(string fieldName, float& value)
         value = mActiveActions;
         return true;
     }
+    else if (fieldName.substr(0,  28) == "gb_active_perceptions_table_")
+    {
+        string strTableCode = fieldName.substr(28, fieldName.size() - 28);
+        int tableCode;
+        sscanf(strTableCode.c_str(), "%d", &tableCode);
+
+        value = 0;
+        for (unsigned int i = 0; i < mNumberOfComponents; i++)
+        {
+            if (mComponents[i].mActive
+                && (mComponents[i].mType == GridbrainComponent::PER)
+                && (mComponents[i].mOrigSymTable == tableCode))
+            {
+                value++;
+            }
+        }
+
+        return true;
+    }
     else if (fieldName.substr(0,  14) == "gb_grid_width_")
     {
         string gridName = fieldName.substr(14, fieldName.size() - 14);
