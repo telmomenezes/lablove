@@ -1,12 +1,19 @@
+########### Project name ###########
+
 PROJECT(lablove)
+SET(LABLOVE_MAJOR "0")
+SET(LABLOVE_MINOR "2")
+SET(VERSION "${LABLOVE_MAJOR}.${LABLOVE_MINOR}")
+SET(PACKAGE lablove)
+
+########### Global settings ###########
 
 OPTION(DEBUG "Debug settings" OFF)
 OPTION(PROFILE "Profile settings" OFF)
+SET(CMAKE_VERBOSE_MAKEFILE "OFF")
 
-#SET(CMAKE_VERBOSE_MAKEFILE "ON")
 
-INCLUDE(CMakeModules/FindLua.cmake)
-INCLUDE(CMakeModules/FindArtist.cmake)
+########### Compiler settings ###########
 
 IF(PROFILE)
     SET(CMAKE_CXX_FLAGS "-Wno-deprecated -g -pg")
@@ -18,6 +25,8 @@ ELSE(PROFILE)
     ENDIF(DEBUG)
 ENDIF(PROFILE)
 
+########### System defines ###########
+
 IF(UNIX)
     ADD_DEFINITIONS(-D__UNIX)
 ENDIF(UNIX)
@@ -25,6 +34,8 @@ ENDIF(UNIX)
 IF(WIN32)
     ADD_DEFINITIONS(-D__WIN32)
 ENDIF(WIN32)
+
+########### Sources ###########
 
 SET(SOURCE_FILES
     src/PopulationManager.cpp
@@ -122,11 +133,18 @@ IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     SET(EXTRA_SRC_FILES ${EXTRA_SRC_FILES} src/MacOSXSDL/SDLMain.m)
 ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
+########### Include dirs ###########
+
+INCLUDE(CMakeModules/FindLua.cmake)
+INCLUDE(CMakeModules/FindArtist.cmake)
+
 INCLUDE_DIRECTORIES("src")
 INCLUDE_DIRECTORIES("src/UnitTest++")
 INCLUDE_DIRECTORIES("src/mtwist")
 INCLUDE_DIRECTORIES(${Lua_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${Artist_INCLUDE_DIR})
+
+########### Targets ###########
 
 ADD_LIBRARY(llove SHARED ${SOURCE_FILES})
 TARGET_LINK_LIBRARIES(llove llove ${Artist_LIBRARIES} ${Lua_LIBRARIES})

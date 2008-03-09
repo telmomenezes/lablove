@@ -1,10 +1,11 @@
-0.2
+0.2 alpha release
+9-Mar-2008
 
     * Bug in Gridbrain::mutateForkConnection() - closed
     * predprey experiment reorganized
     * active actions & active perceptions - field values for the gridbrain
     * active symbolic perceptions for a table - field value for the gridbrain
-    * ...
+    * CMakeLists.txt reorganized
 
 0.1 alpha release
 29-Feb-2008
