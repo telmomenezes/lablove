@@ -46,6 +46,9 @@ Grid::Grid(lua_State* luaState)
     {
         mCreatedByScript = true;
     }
+
+    mMaxDepth = 0;
+    mMaxActiveCol = 0;
 }
 
 Grid::Grid(const Grid& grid)
@@ -76,6 +79,9 @@ Grid::Grid(const Grid& grid)
     {
         mRowCoords.push_back(grid.mRowCoords[i]);
     }
+
+    mMaxDepth = 0;
+    mMaxActiveCol = 0;
 
     /*printf("column coords: ");
     for (unsigned int i = 0; i < mWidth; i++)

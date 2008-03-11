@@ -293,7 +293,7 @@ GridbrainConnection* Gridbrain::selectSplitableConnection()
         }
         conn = (GridbrainConnection*)(conn->mNextGlobalConnection);
     }
-    
+
     if (count == 0)
     {
         return NULL;

@@ -98,6 +98,9 @@ public:
     GridbrainComponent** mComponentSequence;
     unsigned int mComponentSequenceSize;
 
+    unsigned int mMaxDepth;
+    unsigned int mMaxActiveCol;
+
     static const char mClassName[];
     static Orbit<Grid>::MethodType mMethods[];
     static Orbit<Grid>::NumberGlobalType mNumberGlobals[];

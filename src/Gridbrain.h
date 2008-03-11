@@ -220,6 +220,7 @@ protected:
     void initGridsIO();
     void calcConnectionCounts();
     void calcActive();
+    void calcDensityMetrics();
     void calcExpansion();
 
     void applyWeight(GridbrainConnection* conn);

@@ -68,7 +68,7 @@ void GridbrainComponent::clearConnections()
 
 void GridbrainComponent::clearMetrics()
 {
-    mDepth = 1;
+    mDepth = 0;
     mProducer = false;
     mConsumer = false;
     mActive = false;

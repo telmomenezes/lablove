@@ -203,8 +203,14 @@ Brain* Gridbrain::clone(bool randomize)
             }
         }
 
-        newGrid->addColumn();
-        newGrid->addRow();
+        if (oldGrid->mMaxDepth == newGrid->getWidth())
+        {
+            newGrid->addColumn();
+        }
+        if (oldGrid->mMaxActiveCol == newGrid->getHeight())
+        {
+            newGrid->addRow();
+        }
 
         gb->addGrid(newGrid, "");
     }
@@ -434,6 +440,7 @@ void Gridbrain::init()
 void Gridbrain::update()
 {
     calcActive();
+    calcDensityMetrics();
     calcConnectionCounts();
     initGridsIO();
     initGridWritePositions();
@@ -1620,6 +1627,22 @@ void Gridbrain::calcConnectionCounts()
 
 void Gridbrain::calcActive()
 {
+    for (unsigned int g = 0; g < mGridsCount; g++)
+    {
+        Grid* grid = mGridsVec[g];
+
+        for (unsigned int x = 0; x < grid->getWidth(); x++)
+        {
+            for (unsigned int y = 0; y < grid->getHeight(); y++)
+            {
+                GridbrainComponent* comp = getComponent(x, y, g);
+                comp->mActive = false;
+                comp->mProducer = false;
+                comp->mConsumer = false;
+            }
+        }
+    }
+
     mActiveComponents = 0;
     mActivePerceptions = 0;
     mActiveActions = 0;
@@ -1694,6 +1717,91 @@ void Gridbrain::calcActive()
         }
 
         conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+    }
+}
+
+void Gridbrain::calcDensityMetrics()
+{
+    // calc component depths
+    for (unsigned int g = 0; g < mGridsCount; g++)
+    {
+        Grid* grid = mGridsVec[g];
+
+        for (unsigned int x = 0; x < grid->getWidth(); x++)
+        {
+            for (unsigned int y = 0; y < grid->getHeight(); y++)
+            {
+                GridbrainComponent* origComp = getComponent(x, y, g);
+
+                GridbrainConnection* conn = origComp->mFirstConnection;
+
+                while (conn != NULL)
+                {
+                    GridbrainComponent* targComp = (GridbrainComponent*)conn->mTargComponent;
+
+                    if (origComp->mActive && targComp->mActive)
+                    {
+                        if (origComp->mDepth == 0)
+                        {
+                            origComp->mDepth = 1;
+                        }
+
+                        unsigned int newDepth = 1;
+
+                        if (conn->mGridOrig == conn->mGridTarg)
+                        {
+                            newDepth = origComp->mDepth + 1;
+                        }
+
+                        if (targComp->mDepth < newDepth)
+                        {
+                            targComp->mDepth = newDepth;
+                        }
+                    }
+
+                    conn = (GridbrainConnection*)conn->mNextConnection;
+                }
+            }
+        }
+    }
+
+    // Calc max depth & max active column per grid
+    for (unsigned int g = 0; g < mGridsCount; g++)
+    {
+        Grid* grid = mGridsVec[g];
+
+        unsigned int maxDepth = 0;
+        unsigned int maxActiveCol = 0;
+
+        for (unsigned int x = 0; x < grid->getWidth(); x++)
+        {
+            unsigned int rowActive = 0;
+
+            for (unsigned int y = 0; y < grid->getHeight(); y++)
+            {
+                GridbrainComponent* comp = getComponent(x, y, g);
+
+                if (comp->mDepth > maxDepth)
+                {
+                    maxDepth = comp->mDepth;
+                }
+
+                if (comp->mActive)
+                {
+                    rowActive++;
+                }
+            }
+
+            if (rowActive > maxActiveCol)
+            {
+                maxActiveCol = rowActive;
+            }
+        }
+
+        printf("g: %d; maxDepth: %d; maxActiveCol: %d\n", g, maxDepth, maxActiveCol);
+
+        grid->mMaxDepth = maxDepth;
+        grid->mMaxActiveCol = maxActiveCol;
     }
 }
 
