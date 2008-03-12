@@ -28,9 +28,9 @@ class Agent : public GraphicalObject
 {
 public:
     Agent(lua_State* luaState=NULL);
-    Agent(Agent* agent, bool randomize=false);
+    Agent(Agent* agent);
     virtual ~Agent();
-    virtual SimulationObject* clone(bool randomize=false);
+    virtual SimulationObject* clone();
 
     Brain* setBrain(Brain* brain);
     Brain* getBrain(){return mBrain;}

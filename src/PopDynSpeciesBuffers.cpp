@@ -55,7 +55,7 @@ void PopDynSpeciesBuffers::init(PopulationManager* popManager)
         SpeciesData* species = &((*iterSpecies).second);
         for (unsigned int i = 0; i < species->mBufferSize; i++)
         {
-            SimulationObject* org = species->mBaseOrganism->clone(species->mDiversify);
+            SimulationObject* org = species->mBaseOrganism->clone();
             species->mOrganismVector.push_back(org);
         }
         for (unsigned int i = 0; i < species->mPopulation; i++)
@@ -67,8 +67,7 @@ void PopDynSpeciesBuffers::init(PopulationManager* popManager)
 
 unsigned int PopDynSpeciesBuffers::addSpecies(SimulationObject* org,
                                                 unsigned int population,
-                                                unsigned int bufferSize,
-                                                bool diversify)
+                                                unsigned int bufferSize)
 {
     unsigned int speciesID = CURRENT_SPECIES_ID++;
     org->setSpeciesID(speciesID);
@@ -78,7 +77,6 @@ unsigned int PopDynSpeciesBuffers::addSpecies(SimulationObject* org,
     mSpecies[speciesID].mBaseOrganism = org;
     mSpecies[speciesID].mPopulation = population;
     mSpecies[speciesID].mBufferSize = bufferSize;
-    mSpecies[speciesID].mDiversify = diversify;
 
     return speciesID;
 }
@@ -224,7 +222,7 @@ int PopDynSpeciesBuffers::addSpecies(lua_State* luaState)
     {
         diversify = luaL_checkbool(luaState, 4);
     }
-    unsigned int id = addSpecies(obj, population, bufferSize, diversify);
+    unsigned int id = addSpecies(obj, population, bufferSize);
     lua_pushinteger(luaState, id);
     return 1;
 }

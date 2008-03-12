@@ -66,7 +66,7 @@ DummyBrain::~DummyBrain()
     }
 }
 
-Brain* DummyBrain::clone(bool randomize)
+Brain* DummyBrain::clone()
 {
     DummyBrain* db = new DummyBrain(mChannelCount);
 

@@ -33,8 +33,7 @@ public:
 
     virtual unsigned int addSpecies(SimulationObject* org,
                                     unsigned int population,
-                                    unsigned int bufferSize,
-                                    bool diversify=true);
+                                    unsigned int bufferSize);
 
     void setCompCount(unsigned int count){mCompCount = count;}
     void setFitnessAging(float aging){mFitnessAging = aging;}

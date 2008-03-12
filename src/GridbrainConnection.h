@@ -42,6 +42,7 @@ public:
     void* mOrigComponent;
     void* mTargComponent;
     double mAge;
+    bool mActive;
 };
 
 #endif

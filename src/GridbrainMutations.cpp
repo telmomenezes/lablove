@@ -60,6 +60,9 @@ void Gridbrain::mutate()
     mutateNewConnectionWeight();
 
     unsigned int connCount = mConnectionsCount;
+
+    mutateAddInactiveConnections();
+
     mutateAddConnection(connCount);
     mutateAddDoubleConnection(connCount);
     mutateRemoveConnection(connCount);
@@ -164,15 +167,76 @@ int Gridbrain::nextRandomComponent()
     return mCompSeqPos;
 }
 
-void Gridbrain::removeRandomConnection()
+GridbrainConnection* Gridbrain::getFirstMutableConnection(unsigned int initialPop)
+{
+    GridbrainConnection* conn = mConnections;
+
+    if (mMutationScope == MS_ALL)
+    {
+        return conn;
+    }
+
+    unsigned int offset = mConnectionsCount - initialPop;
+
+    for (unsigned int i = 0; i < offset; i++)
+    {
+        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+    }
+}
+
+unsigned int Gridbrain::getMutableConnectionsCount(unsigned int initialPop)
+{
+    if (mMutationScope == MS_ALL)
+    {
+        return mConnectionsCount;
+    }
+    else
+    {
+        return initialPop;
+    }
+}
+
+void Gridbrain::addRandomInactiveConnection()
+{
+    // If all grids has 0 size, no connection can be created
+    if (mTotalPossibleConnections == 0)
+    {
+        return;
+    }
+
+    unsigned int x1;
+    unsigned int x2;
+    unsigned int y1;
+    unsigned int y2;
+    unsigned int g1;
+    unsigned int g2;
+    float weight;
+
+    if (selectRandomConnection(x1, y1, g1, x2, y2, g2))
+    {
+        GridbrainComponent* compOrig = getComponent(x1, y1, g1);
+        GridbrainComponent* compTarg = getComponent(x2, y2, g2);
+
+        // Only add if innactive
+        if ((!compOrig->mProducer) || (!compOrig->mConsumer))
+        {
+            weight = mDistWeights->uniform(-1.0f, 1.0f);
+            addConnection(x1, y1, g1, x2, y2, g2, weight);
+        }
+    }
+}
+
+void Gridbrain::removeRandomConnection(unsigned int initialPop)
 {
     if (mConnectionsCount == 0)
     {
         return;
     }
 
-    unsigned int pos = mDistConnections->iuniform(0, mConnectionsCount);
-    GridbrainConnection* conn = mConnections;
+    unsigned int pos;
+    GridbrainConnection* conn = getFirstMutableConnection(initialPop);
+    pos = mDistConnections->iuniform(0, getMutableConnectionsCount(initialPop));
+    
     unsigned int i = 0;
     while (i < pos)
     {
@@ -210,7 +274,7 @@ void Gridbrain::removeRandomDoubleConnection()
     
     if (count == 0)
     {
-        removeRandomConnection();
+        removeRandomConnection(mConnectionsCount);
         return;
     }
 
@@ -281,9 +345,9 @@ bool Gridbrain::isSplitable(GridbrainConnection* conn)
     return false;
 }
 
-GridbrainConnection* Gridbrain::selectSplitableConnection()
+GridbrainConnection* Gridbrain::selectSplitableConnection(unsigned int initialPop)
 {
-    GridbrainConnection* conn = mConnections;
+    GridbrainConnection* conn = getFirstMutableConnection(initialPop);
     unsigned int count = 0;
     while (conn != NULL)
     {
@@ -301,7 +365,7 @@ GridbrainConnection* Gridbrain::selectSplitableConnection()
 
     unsigned int pos = mDistConnections->iuniform(0, count);
 
-    conn = mConnections;
+    conn = getFirstMutableConnection(initialPop);
     unsigned int i = 0;
     while (i <= pos)
     {
@@ -318,9 +382,9 @@ GridbrainConnection* Gridbrain::selectSplitableConnection()
     return conn;
 }
 
-GridbrainConnection* Gridbrain::selectJoinableConnection()
+GridbrainConnection* Gridbrain::selectJoinableConnection(unsigned int initialPop)
 {
-    GridbrainConnection* conn = mConnections;
+    GridbrainConnection* conn = getFirstMutableConnection(initialPop);
     unsigned int count = 0;
     while (conn != NULL)
     {
@@ -344,7 +408,7 @@ GridbrainConnection* Gridbrain::selectJoinableConnection()
 
     unsigned int pos = mDistConnections->iuniform(0, count);
 
-    conn = mConnections;
+    conn = getFirstMutableConnection(initialPop);
     unsigned int i = 0;
     while (i <= pos)
     {
@@ -443,6 +507,23 @@ void Gridbrain::mutateAddConnection(unsigned int popSize)
     addRandomConnections(count);
 }
 
+void Gridbrain::mutateAddInactiveConnections()
+{
+    if (mMutateAddInactiveRatio == 0.0f)
+    {
+        return;
+    }
+
+    unsigned int count = (unsigned int)(ceilf(mMutateAddInactiveRatio * (float)mTotalPossibleConnections));
+
+    printf("inactive count: %d\n", count);
+    
+    for (unsigned int i = 0; i < count; i++)
+    {
+        addRandomInactiveConnection();
+    }
+}
+
 void Gridbrain::mutateAddDoubleConnection(unsigned int popSize)
 {
     // Allways create a connection if none exist
@@ -470,7 +551,7 @@ void Gridbrain::mutateRemoveConnection(unsigned int popSize)
 
     for (unsigned int i = 0; i < count; i++)
     {
-        removeRandomConnection();
+        removeRandomConnection(popSize);
     }
 }
 
@@ -760,7 +841,7 @@ void Gridbrain::mutateSplitConnection(unsigned int popSize)
 
     for (unsigned int i = 0; i < count; i++)
     {
-        GridbrainConnection* conn = selectSplitableConnection();
+        GridbrainConnection* conn = selectSplitableConnection(popSize);
 
         if (conn == NULL)
         {
@@ -895,7 +976,7 @@ void Gridbrain::mutateJoinConnections(unsigned int popSize)
 
     for (unsigned int i = 0; i < count; i++)
     {
-        GridbrainConnection* conn1 = selectJoinableConnection();
+        GridbrainConnection* conn1 = selectJoinableConnection(popSize);
 
         if (conn1 == NULL)
         {

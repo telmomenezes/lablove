@@ -41,7 +41,7 @@ end
 function getStringParameter(paramName, paramDefault, shortName)
     param = getCommandLineParameter(paramName)
 
-    paramOut = 0.0
+    paramOut = param
     if param == "" then
         paramOut = paramDefault
     end

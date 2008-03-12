@@ -54,7 +54,7 @@ TEST_FIXTURE(GridbrainMutFixture, GridbrainRemoveRandomConn)
 {
     mGridbrain.addRandomConnections(100);
     unsigned int count = mGridbrain.getConnectionsCount();
-    mGridbrain.removeRandomConnection();
+    mGridbrain.removeRandomConnection(count);
     count--;
     CHECK_EQUAL(mGridbrain.getConnectionsCount(), count);
 }

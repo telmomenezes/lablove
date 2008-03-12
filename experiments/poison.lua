@@ -51,9 +51,9 @@ compCount = 1
 bufferSize = 100
 fitnessAging = 0.1
 
-addConnectionProb = 0.01
+addConnectionProb = 0.0
 addDoubleConnectionProb = 0.0
-removeConnectionProb = 0.02
+removeConnectionProb = 0.0
 removeDoubleConnectionProb = 0.0
 changeWeightProb = 0.01
 weightMutationStanDev = 1.0
@@ -61,12 +61,16 @@ newWeightProb = 0.0
 moveConnectionOrigProb = 0.0
 forkConnectionProb = 0.0
 forkDoubleConnectionProb = 0.0
-splitConnectionProb = 0.01
+splitConnectionProb = 0.0
 joinConnectionsProb = 0.0
 changeComponentProb = 0.01
 swapComponentProb = 0.1
 
 recombineProb = 0.0
+
+growMethod = "pressure"
+cloneConnectionsMode = "all_plus"
+mutationScope = "all"
 
 timeLimit = 0
 logTimeInterval = 100
@@ -99,6 +103,9 @@ bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
 compCount = getNumberParameter("compcount", compCount, "cc")
 fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")
 initialConnections = getNumberParameter("initconn", initialConnections, "ico")
+growMethod = getStringParameter("growmethod", growMethod, "gm")
+cloneConnectionsMode = getStringParameter("cloneconnmode", cloneConnectionsMode, "ccm")
+mutationScope = getStringParameter("mutationscope", mutationScope, "ms")
 
 logBaseName = "_poison_"
 
@@ -106,6 +113,31 @@ logSuffix = logBaseName
             .. parameterString
             .. "s"
             .. seedIndex
+
+growMethodCode = 0
+if growMethod == "pressure" then
+    growMethodCode = Gridbrain.GM_PRESSURE
+elseif growMethod == "free" then
+    growMetodCode = Gridbrain.GM_FREE
+end
+
+cloneConnectionsModeCode = 0
+if cloneConnectionsMode == "all" then
+    cloneConnectionsModeCode = Gridbrain.CC_ALL
+elseif cloneConnectionsMode == "all_plus" then
+    cloneConnectionsModeCode = Gridbrain.CC_ALL_PLUS
+elseif cloneConnectionsMode == "active" then
+    cloneConnectionsModeCode = Gridbrain.CC_ACTIVE
+end
+
+mutationScopeCode = 0
+if mutationScope == "all" then
+    mutationScopeCode = Gridbrain.MS_ALL
+elseif mutationScope == "active" then
+    mutationScopeCode = Gridbrain.MS_ACTIVE
+end
+
+
 
 -- Simulation
 --------------------------------------------------------------------------------
@@ -201,6 +233,10 @@ brain:setMutateSplitConnectionProb(splitConnectionProb)
 brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
 brain:setMutateSwapComponentProb(swapComponentProb)
+
+brain:setGrowMethod(growMethodCode)
+brain:setCloneConnectionsMode(cloneConnectionsModeCode)
+brain:setMutationScope(mutationScopeCode)
 
 alphaSet = GridbrainComponentSet()
 for i, comp in pairs(alphaComponents) do

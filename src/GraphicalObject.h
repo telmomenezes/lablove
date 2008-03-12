@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -35,7 +35,7 @@ public:
     GraphicalObject(lua_State* luaState=NULL);
     GraphicalObject(GraphicalObject* obj);
     virtual ~GraphicalObject();
-    virtual SimulationObject* clone(bool randomize=false);
+    virtual SimulationObject* clone();
 
     void draw();
 

@@ -32,7 +32,6 @@ public:
     list<Log*> mDeathLogs;
     list<Log*> mSampleLogs;
     unsigned int mPopulation;
-    bool mDiversify;
     unsigned int mBufferSize;
 };
 #endif

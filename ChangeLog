@@ -1,6 +1,12 @@
 0.3
 
     * Gridbrain::calcDensityMetrics()
+    * Gridbrain grow modes: FREE, PRESSURE
+    * Gridbrain clone connections modes: ALL, ALL_PLUS, ACTIVE
+    * Gridbrain mutation scopes: ALL, ACTIVE
+    * Removal of obsolete clone randomize API
+    * Removal of obsolete "diversify" flag in SpeciesData
+    * Gridbrain::mutateAddInactiveConnections
     * ...
 
 0.2 alpha release

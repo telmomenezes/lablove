@@ -40,10 +40,14 @@ using std::string;
 class Gridbrain : public Brain
 {
 public:
+    enum GrowMethod {GM_FREE, GM_PRESSURE};
+    enum CloneConnectionsMode {CC_ALL, CC_ALL_PLUS, CC_ACTIVE};
+    enum MutationScope {MS_ALL, MS_ACTIVE};
+
     Gridbrain(lua_State* luaState=NULL);
     virtual ~Gridbrain();
 
-    virtual Brain* clone(bool randomize=false);
+    virtual Brain* clone();
 
     void addGrid(Grid* grid, string name);
     virtual void init();
@@ -76,7 +80,7 @@ public:
                 unsigned int xTarg,
                 unsigned int yTarg,
                 unsigned int gTarg);
-    void removeRandomConnection();
+    void removeRandomConnection(unsigned int initialPop);
     GridbrainConnection* getConnection(unsigned int xOrig,
                 unsigned int yOrig,
                 unsigned int gOrig,
@@ -133,6 +137,10 @@ public:
                 int targetSymTalbe=-1,
                 unsigned long targetSymID=0);
 
+    void setGrowMethod(GrowMethod val){mGrowMethod = val;}
+    void setCloneConnectionsMode(CloneConnectionsMode val){mCloneConnectionsMode = val;}
+    void setMutationScope(MutationScope val){mMutationScope = val;}
+
     void setMutateAddConnectionProb(float prob){mMutateAddConnectionProb = prob;}
     void setMutateAddDoubleConnectionProb(float prob){mMutateAddDoubleConnectionProb = prob;}
     void setMutateRemoveConnectionProb(float prob){mMutateRemoveConnectionProb = prob;}
@@ -182,6 +190,9 @@ public:
     int addConnection(lua_State* luaState);
     int addConnectionReal(lua_State* luaState);
     int addRandomConnections(lua_State* luaState);
+    int setGrowMethod(lua_State* luaState);
+    int setCloneConnectionsMode(lua_State* luaState);
+    int setMutationScope(lua_State* luaState);
     int setMutateAddConnectionProb(lua_State* luaState);
     int setMutateAddDoubleConnectionProb(lua_State* luaState);
     int setMutateRemoveConnectionProb(lua_State* luaState);
@@ -225,16 +236,21 @@ protected:
 
     void applyWeight(GridbrainConnection* conn);
 
-    void addDoubleConnection();
+    void addRandomInactiveConnection();
 
+    void addDoubleConnection();
     void removeRandomDoubleConnection();
 
     bool isSplitable(GridbrainConnection* conn);
-    GridbrainConnection* selectSplitableConnection();
-    GridbrainConnection* selectJoinableConnection();
+    GridbrainConnection* selectSplitableConnection(unsigned int initialPop);
+    GridbrainConnection* selectJoinableConnection(unsigned int initialPop);
+
+    GridbrainConnection* getFirstMutableConnection(unsigned int initialPop);
+    unsigned int getMutableConnectionsCount(unsigned int initialPop);
 
     void mutateAddConnection(unsigned int popSize);
     void mutateAddDoubleConnection(unsigned int popSize);
+    void mutateAddInactiveConnections();
     void mutateRemoveConnection(unsigned int popSize);
     void mutateRemoveDoubleConnection(unsigned int popSize);
     void mutateChangeConnectionWeight();
@@ -287,6 +303,7 @@ protected:
 
     float mMutateAddConnectionProb;
     float mMutateAddDoubleConnectionProb;
+    float mMutateAddInactiveRatio;
     float mMutateRemoveConnectionProb;
     float mMutateRemoveDoubleConnectionProb;
     float mMutateChangeConnectionWeightProb;
@@ -310,6 +327,10 @@ protected:
     unsigned int mActiveComponents;
     unsigned int mActivePerceptions;
     unsigned int mActiveActions;
+
+    GrowMethod mGrowMethod;
+    CloneConnectionsMode mCloneConnectionsMode;
+    MutationScope mMutationScope;
 };
 
 #endif

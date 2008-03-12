@@ -30,7 +30,7 @@ public:
     virtual void init(PopulationManager* popManager);
     virtual void onOrganismDeath(SimulationObject* org);
 
-    virtual unsigned int addSpecies(SimulationObject* org, unsigned int population, bool diversify=true);
+    virtual unsigned int addSpecies(SimulationObject* org, unsigned int population);
 
     void setTournamentSize(unsigned int size){mTournamentSize = size;}
 

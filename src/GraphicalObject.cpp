@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -46,7 +46,7 @@ GraphicalObject::~GraphicalObject()
     mGraphics.clear();
 }
 
-SimulationObject* GraphicalObject::clone(bool randomize)
+SimulationObject* GraphicalObject::clone()
 {
     return new GraphicalObject(this);
 }

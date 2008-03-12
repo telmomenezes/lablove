@@ -174,7 +174,7 @@ SimulationObject::~SimulationObject()
     }
 }
 
-SimulationObject* SimulationObject::clone(bool randomize)
+SimulationObject* SimulationObject::clone()
 {
     return new SimulationObject(this);
 }

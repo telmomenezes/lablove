@@ -27,9 +27,9 @@ Agent::Agent(lua_State* luaState) : GraphicalObject()
     mBrain = NULL;
 }
 
-Agent::Agent(Agent* agent, bool randomize) : GraphicalObject(agent)
+Agent::Agent(Agent* agent) : GraphicalObject(agent)
 {
-    mBrain = agent->mBrain->clone(randomize);
+    mBrain = agent->mBrain->clone();
     mBrain->setOwner(this);
 
     map<int, SymbolTable*>::iterator iterTables;
@@ -74,9 +74,9 @@ Agent::~Agent()
     }
 }
 
-SimulationObject* Agent::clone(bool randomize)
+SimulationObject* Agent::clone()
 {
-    return new Agent(this, randomize);
+    return new Agent(this);
 }
 
 Brain* Agent::setBrain(Brain* brain)
