@@ -83,6 +83,7 @@ void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)
     mOrigSymID = comp->mOrigSymID;
     mTargetSymID = comp->mTargetSymID;
     mTableLinkType = comp->mTableLinkType;
+    mID = comp->mID;
 }
 
 void GridbrainComponent::copyPosition(GridbrainComponent* comp)
@@ -223,6 +224,20 @@ bool GridbrainComponent::calcActive()
     calcConsumer();
     mActive = mConsumer && mProducer;
     return mActive;
+}
+
+bool GridbrainComponent::isUsed()
+{
+    if (mConnectionsCount > 0)
+    {
+        return true;
+    }
+    if (mInboundConnections > 0)
+    {
+        return true;
+    }
+
+    return false;
 }
 
 const char GridbrainComponent::mClassName[] = "GridbrainComponent";

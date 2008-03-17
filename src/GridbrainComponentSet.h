@@ -55,6 +55,7 @@ public:
 
 protected:
     static mt_distribution* mDistComponentSet;
+    static unsigned long COMPONENT_ID_SEQUENCE;
 };
 #endif
 

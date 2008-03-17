@@ -8,6 +8,8 @@
 
 mt_distribution* GridbrainComponentSet::mDistComponentSet = gDistManager.getNewDistribution();
 
+unsigned long GridbrainComponentSet::COMPONENT_ID_SEQUENCE = 0;
+
 GridbrainComponentSet::GridbrainComponentSet(lua_State* luaState)
 {
     mSize = 0;
@@ -30,20 +32,26 @@ void GridbrainComponentSet::addComponent(GridbrainComponent* component)
 
 GridbrainComponent* GridbrainComponentSet::getRandom(SimulationObject* obj)
 {
+    GridbrainComponent* comp;
+
     if (mSize <= 0)
     {
-        return GridbrainComponent::getNullComponent();
+        comp = GridbrainComponent::getNullComponent();
     }
-
-    unsigned int pos = mDistComponentSet->iuniform(0, mSize);
-
-    GridbrainComponent* comp = mComponentVec[pos]; 
-
-    if (comp->mTableLinkType == InterfaceItem::TAB_TO_SYM)
+    else
     {
-        SymbolTable* table = obj->getSymbolTable(comp->mOrigSymTable);
-        comp->mOrigSymID = table->getRandomSymbolID();
+        unsigned int pos = mDistComponentSet->iuniform(0, mSize);
+
+        comp = mComponentVec[pos]; 
+
+        if (comp->mTableLinkType == InterfaceItem::TAB_TO_SYM)
+        {
+            SymbolTable* table = obj->getSymbolTable(comp->mOrigSymTable);
+            comp->mOrigSymID = table->getRandomSymbolID();
+        }
     }
+
+    comp->mID = COMPONENT_ID_SEQUENCE++;
 
     return comp;
 }

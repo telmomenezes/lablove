@@ -45,8 +45,6 @@ public:
 
     void init(Type type, unsigned int width, unsigned int height);
 
-    bool crossover(Grid* gridA, Grid* gridB);
-
     int getType(){return mType;}
     unsigned int getWidth(){return mWidth;}
     unsigned int getHeight(){return mHeight;}
@@ -83,7 +81,7 @@ public:
     unsigned int getWriteY(){return mWriteY;}
     void setWritePos(unsigned int x, unsigned int y){mWriteX = x; mWriteY = y;}
 
-    void addColumn();
+    void addColumn(bool addInEnd=false);
     void addRow();
     void deleteColumn(unsigned int col);
     void deleteRow(unsigned int row);

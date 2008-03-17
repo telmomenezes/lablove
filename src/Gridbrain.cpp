@@ -147,84 +147,103 @@ Gridbrain* Gridbrain::baseClone()
 
 Brain* Gridbrain::clone()
 {
+    return clone(true, ET_NONE);
+}
+
+Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion)
+{
     Gridbrain* gb = baseClone();
 
     for (unsigned int g = 0; g < mGridsCount; g++)
     {
         Grid* oldGrid = mGridsVec[g];
         Grid* newGrid = new Grid(*oldGrid);
-
-        unsigned int col = 0;
-
-        for (unsigned int x = 0;
-            x < oldGrid->getWidth();
-            x++)
+    
+        if (grow)
         {
-            bool deleteCol = true;
-
-            for (unsigned int y = 0;
-                y < oldGrid->getHeight();
-                y++)
-            {
-                GridbrainComponent* comp = getComponent(x, y, g);
-                if (comp->mActive)
-                {
-                    deleteCol = false;
-                }
-            }
-
-            if (deleteCol)
-            {
-                newGrid->deleteColumn(col);
-            }
-            else
-            {
-                col++;
-            }
-        }
-
-        unsigned int row = 0;
-
-        for (unsigned int y = 0;
-            y < oldGrid->getHeight();
-            y++)
-        {
-
-            bool deleteRow = true;
+            unsigned int col = 0;
 
             for (unsigned int x = 0;
                 x < oldGrid->getWidth();
                 x++)
             {
-                GridbrainComponent* comp = getComponent(x, y, g);
-                if (comp->mActive)
+                bool deleteCol = true;
+
+                for (unsigned int y = 0;
+                    y < oldGrid->getHeight();
+                    y++)
                 {
-                    deleteRow = false;
+                    GridbrainComponent* comp = getComponent(x, y, g);
+                    if (comp->mActive)
+                    {
+                        deleteCol = false;
+                    }
+                }
+
+                if (deleteCol)
+                {
+                    newGrid->deleteColumn(col);
+                }
+                else
+                {
+                    col++;
                 }
             }
 
-            if (deleteRow)
-            {
-                newGrid->deleteRow(row);
-            }
-            else
-            {
-                row++;
-            }
-        }
+            unsigned int row = 0;
 
-        if (mGrowMethod == GM_FREE)
-        {
-            newGrid->addColumn();
-            newGrid->addRow();
-        }
-        else if (mGrowMethod == GM_PRESSURE)
-        {
-            if (oldGrid->mMaxDepth == newGrid->getWidth())
+            for (unsigned int y = 0;
+                y < oldGrid->getHeight();
+                y++)
+            {
+
+                bool deleteRow = true;
+
+                for (unsigned int x = 0;
+                    x < oldGrid->getWidth();
+                    x++)
+                {
+                    GridbrainComponent* comp = getComponent(x, y, g);
+                    if (comp->mActive)
+                    {
+                        deleteRow = false;
+                    }
+                }
+
+                if (deleteRow)
+                {
+                    newGrid->deleteRow(row);
+                }
+                else
+                {
+                    row++;
+                }
+            }
+
+            if (mGrowMethod == GM_FREE)
             {
                 newGrid->addColumn();
+                newGrid->addRow();
             }
-            if (oldGrid->mMaxActiveCol == newGrid->getHeight())
+            else if (mGrowMethod == GM_PRESSURE)
+            {
+                if (oldGrid->mMaxDepth == newGrid->getWidth())
+                {
+                    newGrid->addColumn();
+                }
+                if (oldGrid->mMaxActiveCol == newGrid->getHeight())
+                {
+                    newGrid->addRow();
+                }
+            }
+        }
+        else
+        {
+            if (expansion == ET_COLUMN)
+            {
+                newGrid->addColumn(true);
+            }
+            else if (expansion == ET_ROW)
             {
                 newGrid->addRow();
             }

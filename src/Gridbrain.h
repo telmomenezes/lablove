@@ -43,11 +43,13 @@ public:
     enum GrowMethod {GM_FREE, GM_PRESSURE};
     enum CloneConnectionsMode {CC_ALL, CC_ALL_PLUS, CC_ACTIVE};
     enum MutationScope {MS_ALL, MS_ACTIVE};
+    enum ExpansionType {ET_NONE, ET_COLUMN, ET_ROW};
 
     Gridbrain(lua_State* luaState=NULL);
     virtual ~Gridbrain();
 
     virtual Brain* clone();
+    Gridbrain* clone(bool grow, ExpansionType expansion);
 
     void addGrid(Grid* grid, string name);
     virtual void init();
@@ -261,7 +263,7 @@ protected:
     void mutateSplitConnection(unsigned int popSize);
     void mutateJoinConnections(unsigned int popSize);
     void mutateChangeComponent();
-    void mutateSwapComponent();
+    void mutateSwapComponent(float prob=0.0f);
 
     void initGridWritePositions();
     void getComponentWritePos(unsigned int& posX,
@@ -282,6 +284,11 @@ protected:
                                             unsigned int targY,
                                             unsigned int targG);
     GridbrainComponent* getCompByRelativeOffset(GridbrainComponent* compOrig, unsigned int offset);
+
+    GridbrainComponent* findEquivalent(GridbrainComponent* comp, Gridbrain* gb);
+    void clearRecombineInfo(bool selected);
+    void spreadSelected(GridbrainComponent* comp, bool selected);
+    Gridbrain* crossoverComp(Gridbrain* gb, GridbrainComponent* pivot, unsigned int &failed);
 
     static mt_distribution* mDistConnections;
     static mt_distribution* mDistMutationsProb;

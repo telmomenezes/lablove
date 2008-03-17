@@ -73,6 +73,8 @@ public:
     bool calcConsumer();
     bool calcActive();
 
+    bool isUsed();
+
     static const char mClassName[];
     static Orbit<GridbrainComponent>::MethodType mMethods[];
     static Orbit<GridbrainComponent>::NumberGlobalType mNumberGlobals[];
@@ -109,6 +111,11 @@ public:
     bool mProducer;
     bool mConsumer;
     bool mActive;
+
+    unsigned long mID;
+
+    GridbrainComponent* mEquivalent;
+    bool mSelected;
 };
 
 #endif

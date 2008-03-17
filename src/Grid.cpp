@@ -116,138 +116,6 @@ Grid::~Grid()
     }
 }
 
-bool Grid::crossover(Grid* gridA, Grid* gridB)
-{
-    if ((gridA->mWidth == 0)
-        || (gridA->mHeight == 0)
-        || (gridB->mWidth == 0)
-        || (gridB->mHeight == 0))
-    {
-        return false;
-    }
-
-    int xoverType = mDistXover->iuniform(0, 2);
-
-    Grid* grid1;
-    Grid* grid2;
-    char firstGrid;
-    char secondGrid;
-
-    firstGrid = mDistXover->iuniform(1, 3);
-    if (firstGrid == 1)
-    {
-        grid1 = gridA;
-        grid2 = gridB;
-        secondGrid = 2;
-    }
-    else
-    {
-        grid1 = gridB;
-        grid2 = gridA;
-        secondGrid = 1;
-    }
-
-    int xoverCol = mDistXover->iuniform(0, grid1->mWidth);
-    int xoverRow = mDistXover->iuniform(0, grid1->mHeight);
-
-    //printf("xoverCol: %d; xoverRow: %d\n", xoverCol, xoverRow);
-
-    GridCoord xoverColCoord = grid1->mColumnCoords[xoverCol];
-    GridCoord xoverRowCoord = grid1->mRowCoords[xoverRow];
-
-    mColumnCoords.clear();
-    unsigned int i = 0;
-    while ((grid1->mColumnCoords[i].position(xoverColCoord) == -1)
-            && (i < grid1->mWidth))
-    {
-        GridCoord gc = grid1->mColumnCoords[i];
-        gc.mXoverOrigin = 0;
-        if (xoverType == 0)
-        {
-            gc.mXoverOrigin = firstGrid;
-        }
-        mColumnCoords.push_back(gc);
-        i++;
-    }
-
-    i = 0;
-    while ((i < grid2->mWidth)
-            && (grid2->mColumnCoords[i].position(xoverColCoord) == -1))
-    {
-        i++;
-    }
-    while (i < grid2->mWidth)
-    {
-        GridCoord gc = grid2->mColumnCoords[i];
-        gc.mXoverOrigin = 0;
-        if (xoverType == 0)
-        {
-            gc.mXoverOrigin = secondGrid;
-        }
-        mColumnCoords.push_back(gc);
-        i++;
-    }
-
-    firstGrid = mDistXover->iuniform(1, 3);
-    if (firstGrid == 1)
-    {
-        grid1 = gridA;
-        grid2 = gridB;
-        secondGrid = 2;
-    }
-    else
-    {
-        grid1 = gridB;
-        grid2 = gridA;
-        secondGrid = 1;
-    }
-
-    mRowCoords.clear();
-    i = 0;
-    while ((i < grid1->mHeight)
-            && (grid1->mRowCoords[i].position(xoverRowCoord) == -1))
-    {
-        GridCoord gc = grid1->mRowCoords[i];
-        gc.mXoverOrigin = 0;
-        if (xoverType == 1)
-        {
-            gc.mXoverOrigin = firstGrid;
-        }
-        mRowCoords.push_back(gc);
-        i++;
-    }
-
-    i = 0;
-    while ((i < grid2->mHeight)
-            && (grid2->mRowCoords[i].position(xoverRowCoord) == -1))
-    {
-        i++;
-    }
-    while (i < grid2->mHeight)
-    {
-        GridCoord gc = grid2->mRowCoords[i];
-        gc.mXoverOrigin = 0;
-        if (xoverType == 1)
-        {
-            gc.mXoverOrigin = secondGrid;
-        }
-        mRowCoords.push_back(gc);
-        i++;
-    }
-
-    mWidth = mColumnCoords.size();
-    mHeight = mRowCoords.size();
-    mSize = mWidth * mHeight;
-
-    mColumnTargetCountVec.clear();
-    for (unsigned int i = 0; i < mWidth; i++)
-    {
-        mColumnTargetCountVec.push_back(0);
-    }
-
-    return true;
-}
-
 void Grid::init(Type type, unsigned int width, unsigned int height)
 {
     mType = type;
@@ -436,11 +304,20 @@ float* Grid::getInputBuffer()
     return buffer;
 }
 
-void Grid::addColumn()
+void Grid::addColumn(bool addInEnd)
 {
     mWidth++;
     mSize = mWidth * mHeight;
-    int newColumn = mDistRowsAndColumns->iuniform(0, mWidth);
+    int newColumn;
+
+    if (addInEnd)
+    {
+        newColumn = mWidth - 1;
+    }
+    else
+    {
+        newColumn = mDistRowsAndColumns->iuniform(0, mWidth);
+    }
     mColumnTargetCountVec.push_back(0);
 
     vector<GridCoord>::iterator iterCoord = mColumnCoords.begin();

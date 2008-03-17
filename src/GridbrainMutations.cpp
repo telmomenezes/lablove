@@ -1047,9 +1047,16 @@ void Gridbrain::mutateChangeComponent()
     cleanInvalidConnections();
 }
 
-void Gridbrain::mutateSwapComponent()
+void Gridbrain::mutateSwapComponent(float prob)
 {
-    initRandomComponentSequence(mMutateSwapComponentProb);
+    float swapProb = prob;
+
+    if (swapProb == 0.0f)
+    {
+        swapProb = mMutateSwapComponentProb;
+    }
+
+    initRandomComponentSequence(swapProb);
 
     while (nextRandomComponent() >= 0)
     {
