@@ -18,6 +18,7 @@
  */
 
 #include "Agent.h"
+#include "types.h"
 
 #include <math.h>
 
@@ -27,7 +28,7 @@ Agent::Agent(lua_State* luaState) : GraphicalObject()
     mBrain = NULL;
 }
 
-Agent::Agent(Agent* agent) : GraphicalObject(agent)
+Agent::Agent(Agent* agent, bool copyTables) : GraphicalObject(agent, copyTables)
 {
     mBrain = agent->mBrain->clone();
     mBrain->setOwner(this);
@@ -43,12 +44,12 @@ Agent::Agent(Agent* agent) : GraphicalObject(agent)
         {
             int tableID = (*iterTables).first;
 
-            map<unsigned long, Symbol*>::iterator iterSymbol;
+            map<llULINT, Symbol*>::iterator iterSymbol;
             for (iterSymbol = table->getSymbolMap()->begin();
                 iterSymbol != table->getSymbolMap()->end();
                 iterSymbol++)
             {
-                unsigned long symbolID = (*iterSymbol).first;
+                llULINT symbolID = (*iterSymbol).first;
                 Symbol* sym = (*iterSymbol).second;
 
                 if ((!sym->mFixed) && 
@@ -74,9 +75,9 @@ Agent::~Agent()
     }
 }
 
-SimulationObject* Agent::clone()
+SimulationObject* Agent::clone(bool copyTables)
 {
-    return new Agent(this);
+    return new Agent(this, copyTables);
 }
 
 Brain* Agent::setBrain(Brain* brain)
@@ -113,9 +114,12 @@ void Agent::mutate()
 SimulationObject* Agent::recombine(SimulationObject* otherParent)
 {
     Agent* agent2 = (Agent*)otherParent;
-    Agent* newAgent = (Agent*)clone();
     Brain* newBrain = mBrain->recombine(agent2->mBrain);
+
+    Agent* newAgent = (Agent*)(SimulationObject::recombine(agent2));
+
     newAgent->setBrain(newBrain);
+
     return newAgent;
 }
 

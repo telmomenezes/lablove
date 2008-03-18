@@ -23,6 +23,7 @@
 #include "Brain.h"
 #include "InterfaceItem.h"
 #include "Orbit.h"
+#include "types.h"
 
 #include <list>
 #include <vector>
@@ -53,9 +54,9 @@ public:
                         unsigned int channel,
                         unsigned int type,
                         int origSymTable=-1,
-                        unsigned long originSymID=0,
+                        llULINT originSymID=0,
                         int targetSymTable=-1,
-                        unsigned long targetSymID=0);
+                        llULINT targetSymID=0);
 
     void setChannelName(int channel, string name){mChannels[name] = channel;}
 

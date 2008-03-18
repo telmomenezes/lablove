@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -23,12 +23,13 @@
 #include "Symbol.h"
 #include "Orbit.h"
 #include "RandDistManager.h"
+#include "types.h"
 
 class SymbolUL : public Symbol
 {
 public:
     SymbolUL(lua_State* luaState);
-    SymbolUL(unsigned long value, unsigned long min=0.0f, unsigned long max=1.0f);
+    SymbolUL(llULINT value, llULINT min=0, llULINT max=1);
     SymbolUL(SymbolUL* sym);
     virtual ~SymbolUL();
     virtual Symbol* clone();
@@ -37,9 +38,9 @@ public:
     virtual void initRandom();
     virtual void mutate();
 
-    unsigned long getUL(){return mUL;}
-    unsigned long getMin(){return mMin;}
-    unsigned long getMax(){return mMax;}
+    llULINT getUL(){return mUL;}
+    llULINT getMin(){return mMin;}
+    llULINT getMax(){return mMax;}
 
     static const char mClassName[];
     static Orbit<SymbolUL>::MethodType mMethods[];
@@ -48,9 +49,9 @@ public:
 protected:
     static mt_distribution* mDistUL;
 
-    unsigned long mUL;
-    unsigned long mMax;
-    unsigned long mMin;
+    llULINT mUL;
+    llULINT mMax;
+    llULINT mMin;
 };
 #endif
 

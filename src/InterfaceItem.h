@@ -21,6 +21,7 @@
 #define __INCLUDE_INTERFACE_ITEM_H
 
 #include "Orbit.h"
+#include "types.h"
 
 class InterfaceItem
 {
@@ -33,8 +34,8 @@ public:
     int mType;
     int mOrigSymTable;
     int mTargetSymTable;
-    unsigned long mOrigSymID;
-    unsigned long mTargetSymID;
+    llULINT mOrigSymID;
+    llULINT mTargetSymID;
     TableLinkType mTableLinkType;
 
     static const char mClassName[];

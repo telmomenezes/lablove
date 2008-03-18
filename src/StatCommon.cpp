@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -71,7 +71,7 @@ void StatCommon::process(SimulationObject* obj, PopulationManager* popManager)
     mCount++;
 }
 
-void StatCommon::dump(unsigned long time, double realTime)
+void StatCommon::dump(llULINT time, double realTime)
 {
     fprintf(mFile, "%d,%d", time / 1000, mCount);
 

@@ -24,6 +24,7 @@
 #include "InterfaceItem.h"
 #include "SimulationObject.h"
 #include "Orbit.h"
+#include "types.h"
 
 #include <string>
 using std::string;
@@ -95,14 +96,14 @@ public:
     unsigned int mPerceptionPosition;
     unsigned int mActionPosition;
 
-    unsigned long mColumn;
-    unsigned long mRow;
+    unsigned int mColumn;
+    unsigned int mRow;
     unsigned int mGrid;
 
     int mOrigSymTable;
     int mTargetSymTable;
-    unsigned long mOrigSymID;
-    unsigned long mTargetSymID;
+    llULINT mOrigSymID;
+    llULINT mTargetSymID;
     InterfaceItem::TableLinkType mTableLinkType;
 
     unsigned int mPossibleConnections;
@@ -112,7 +113,7 @@ public:
     bool mConsumer;
     bool mActive;
 
-    unsigned long mID;
+    llULINT mID;
 
     GridbrainComponent* mEquivalent;
     bool mSelected;

@@ -23,6 +23,7 @@
 #include "Symbol.h"
 #include "Orbit.h"
 #include "RandDistManager.h"
+#include "types.h"
 
 #include <map>
 #include <string>
@@ -33,18 +34,21 @@ using std::string;
 class SymbolTable
 {
 public:
+    SymbolTable();
     SymbolTable(lua_State* luaState);
     SymbolTable(Symbol* refSymbol, int id=-1);
     SymbolTable(SymbolTable* table);
     virtual ~SymbolTable();
 
-    Symbol* getSymbol(unsigned long id);
-    unsigned long addSymbol(Symbol* sym);
-    unsigned long addRandomSymbol();
-    int getID(){return mID;}
-    unsigned long getRandomSymbolID();
+    SymbolTable* recombine(SymbolTable* table2);
 
-    map<unsigned long, Symbol*>* getSymbolMap(){return &mSymbols;}
+    Symbol* getSymbol(llULINT id);
+    llULINT addSymbol(Symbol* sym);
+    llULINT addRandomSymbol();
+    int getID(){return mID;}
+    llULINT getRandomSymbolId();
+
+    map<llULINT, Symbol*>* getSymbolMap(){return &mSymbols;}
 
     void setDynamic(bool dyn){mDynamic = dyn;}
     bool isDynamic(){return mDynamic;}
@@ -66,16 +70,18 @@ public:
 
 protected:
     void create(Symbol* refSymbol, int id=-1);
+    Symbol* selectSymbol(Symbol* sym, SymbolTable* table2);
 
     static int NEXT_SYMBOL_TABLE_ID;
     static mt_distribution* mDistIndex;
+    static mt_distribution* mDistRecombine;
 
     int mID;
     Symbol* mReferenceSymbol;
-    map<unsigned long, Symbol*> mSymbols;
-    unsigned long mLastSymbolID;
+    map<llULINT, Symbol*> mSymbols;
     bool mDynamic;
     string mName;
+    llULINT mNextFixedSymbolID;
 };
 #endif
 

@@ -49,7 +49,7 @@ void LogBestBrain::process(SimulationObject* obj, PopulationManager* popManager)
     }
 }
 
-void LogBestBrain::dump(unsigned long time, double realTime)
+void LogBestBrain::dump(llULINT time, double realTime)
 {
     char fileName[255];
     if (mLogOnlyLast)

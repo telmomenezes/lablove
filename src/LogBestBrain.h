@@ -38,7 +38,7 @@ public:
     virtual void init(){}
 
     virtual void process(SimulationObject* obj, PopulationManager* popManager);
-    virtual void dump(unsigned long time, double realTime);
+    virtual void dump(llULINT time, double realTime);
 
     void setFileNamePrefix(string prefix){mFileNamePrefix = prefix;}
     void setFileNameSuffix(string suffix){mFileNameSuffix = suffix;}

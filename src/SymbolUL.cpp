@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -31,7 +31,7 @@ SymbolUL::SymbolUL(lua_State* luaState)
     mMax = luaL_optint(luaState, 3, 100);
 }
 
-SymbolUL::SymbolUL(unsigned long value, unsigned long min, unsigned long max)
+SymbolUL::SymbolUL(llULINT value, llULINT min, llULINT max)
 {
     mUL = value;
     mMin = min;
@@ -89,6 +89,7 @@ const char SymbolUL::mClassName[] = "SymbolUL";
 
 Orbit<SymbolUL>::MethodType SymbolUL::mMethods[] = {
     {"setAlwaysRandom", &Symbol::setAlwaysRandom},
+    {"getID", &Symbol::getID},
     {0,0}
 };
 

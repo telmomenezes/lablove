@@ -22,6 +22,11 @@
 
 int SymbolTable::NEXT_SYMBOL_TABLE_ID = 0;
 mt_distribution* SymbolTable::mDistIndex = gDistManager.getNewDistribution();
+mt_distribution* SymbolTable::mDistRecombine = gDistManager.getNewDistribution();
+
+SymbolTable::SymbolTable()
+{
+}
 
 SymbolTable::SymbolTable(Symbol* refSymbol, int id)
 {
@@ -38,8 +43,7 @@ SymbolTable::SymbolTable(lua_State* luaState)
 
 SymbolTable::SymbolTable(SymbolTable* table)
 {
-
-    map<unsigned long, Symbol*>::iterator iterSymbol;
+    map<llULINT, Symbol*>::iterator iterSymbol;
     for (iterSymbol = table->mSymbols.begin();
         iterSymbol != table->mSymbols.end();
         iterSymbol++)
@@ -54,17 +58,18 @@ SymbolTable::SymbolTable(SymbolTable* table)
         mSymbols[(*iterSymbol).first] = sym;
     }
 
-    mReferenceSymbol = mSymbols[0];
+    iterSymbol = mSymbols.begin();
+    mReferenceSymbol = (*iterSymbol).second;
     
     mID = table->mID;
-    mLastSymbolID = table->mLastSymbolID;
     mDynamic = table->mDynamic;
     mName = table->mName;
+    mNextFixedSymbolID = table->mNextFixedSymbolID;
 }
 
 SymbolTable::~SymbolTable()
 {
-    map<unsigned long, Symbol*>::iterator iterSymbol;
+    map<llULINT, Symbol*>::iterator iterSymbol;
     for (iterSymbol = mSymbols.begin();
         iterSymbol != mSymbols.end();
         iterSymbol++)
@@ -78,8 +83,9 @@ SymbolTable::~SymbolTable()
 void SymbolTable::create(Symbol* refSymbol, int id)
 {
     mReferenceSymbol = refSymbol;
-    mLastSymbolID = 0;
-    mSymbols[mLastSymbolID] = mReferenceSymbol;
+    refSymbol->mID = 0; 
+    mSymbols[0] = mReferenceSymbol;
+    mNextFixedSymbolID = 1;
 
     if (id < 0)
     {
@@ -94,31 +100,141 @@ void SymbolTable::create(Symbol* refSymbol, int id)
     mName = "";
 }
 
-Symbol* SymbolTable::getSymbol(unsigned long id)
+SymbolTable* SymbolTable::recombine(SymbolTable* table2)
 {
+    SymbolTable* table = new SymbolTable();
+
+    // Scan first parent
+    map<llULINT, Symbol*>::iterator iterSymbol;
+    for (iterSymbol = mSymbols.begin();
+        iterSymbol != mSymbols.end();
+        iterSymbol++)
+    {
+        Symbol* origSym = (*iterSymbol).second;
+        Symbol* sym = selectSymbol(origSym, table2);
+
+        if (sym != NULL)
+        {
+            if (sym->mAlwaysRandom)
+            {
+                sym->initRandom();
+            }
+
+            table->mSymbols[sym->mID] = sym;
+        }
+    }
+
+    // Scan second parent
+    for (iterSymbol = table2->mSymbols.begin();
+        iterSymbol != table2->mSymbols.end();
+        iterSymbol++)
+    {
+        Symbol* origSym = (*iterSymbol).second;
+
+        // Fixed symbols must be the same in both tables
+        if (!origSym->mFixed)
+        {
+            Symbol* sym = table2->selectSymbol(origSym, this);
+
+            if (sym != NULL)
+            {
+                if (sym->mAlwaysRandom)
+                {
+                    sym->initRandom();
+                }
+
+                table->mSymbols[sym->mID] = sym;
+            }
+        }
+    }
+
+    iterSymbol = table->mSymbols.begin();
+    table->mReferenceSymbol = (*iterSymbol).second;
+    
+    table->mID = mID;
+    table->mDynamic = mDynamic;
+    table->mName = mName;
+    table->mNextFixedSymbolID = mNextFixedSymbolID;
+
+    return table;
+}
+
+Symbol* SymbolTable::selectSymbol(Symbol* sym, SymbolTable* table2)
+{
+    Symbol* sym1 = sym;
+    Symbol* sym2 = table2->getSymbol(sym->mID);
+
+    if (sym2 == NULL)
+    {
+        if (sym1->mFixed || sym1->mSelected)
+        {
+            return sym1->clone();
+        }
+        return NULL;
+    }
+
+    if (sym1->mSelected && (!sym2->mSelected))
+    {
+        return sym1->clone();
+    }
+    if (sym2->mSelected && (!sym1->mSelected))
+    {
+        return sym2->clone();
+    }
+    if ((!sym1->mSelected)
+        && (!sym2->mSelected)
+        && (!sym1->mFixed))
+    {
+        return NULL;
+    }
+
+    unsigned int select = mDistRecombine->iuniform(0, 2);
+
+    if (select == 0)
+    {
+        return sym1->clone();
+    }
+    else
+    {
+        return sym2->clone();
+    }
+}
+
+Symbol* SymbolTable::getSymbol(llULINT id)
+{
+    if (mSymbols.count(id) == 0)
+    {
+        return NULL;
+    }
     return mSymbols[id];
 }
 
-unsigned long SymbolTable::addSymbol(Symbol* sym)
+llULINT SymbolTable::addSymbol(Symbol* sym)
 {
-    mLastSymbolID++;
-    mSymbols[mLastSymbolID] = sym;
-    return mLastSymbolID;
+    if (sym->mFixed)
+    {
+        sym->mID = mNextFixedSymbolID;
+        mNextFixedSymbolID++;
+    }
+
+    mSymbols[sym->mID] = sym;
+    return sym->mID;
 }
 
-unsigned long SymbolTable::addRandomSymbol()
+llULINT SymbolTable::addRandomSymbol()
 {
     Symbol* sym = mReferenceSymbol->clone();
     sym->initRandom();
     sym->mFixed = false;
+    sym->newDynamicID();
     return addSymbol(sym);
 }
 
-unsigned long SymbolTable::getRandomSymbolID()
+llULINT SymbolTable::getRandomSymbolId()
 {
     unsigned int index = mDistIndex->iuniform(0, mSymbols.size());
     
-    map<unsigned long, Symbol*>::iterator iterSymbol = mSymbols.begin();
+    map<llULINT, Symbol*>::iterator iterSymbol = mSymbols.begin();
 
     for (unsigned int i = 0; i < index; i++)
     {
@@ -131,7 +247,7 @@ unsigned long SymbolTable::getRandomSymbolID()
 int SymbolTable::addSymbol(lua_State* luaState)
 {
     Symbol* sym = (Symbol*)Orbit<SymbolTable>::pointer(luaState, 1);
-    unsigned long id = addSymbol(sym);
+    llULINT id = addSymbol(sym);
     lua_pushnumber(luaState, id);
     return 1;
 }

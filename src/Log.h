@@ -22,6 +22,7 @@
 
 #include "SimulationObject.h"
 #include "PopulationManager.h"
+#include "types.h"
 
 class Log
 {
@@ -32,7 +33,7 @@ public:
     virtual void init(){}
 
     virtual void process(SimulationObject* obj, PopulationManager* popManager)=0;
-    virtual void dump(unsigned long time, double realTime)=0;
+    virtual void dump(llULINT time, double realTime)=0;
 };
 #endif
 

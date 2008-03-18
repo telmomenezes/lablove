@@ -140,6 +140,7 @@ const char SymbolBitString::mClassName[] = "SymbolBitString";
 
 Orbit<SymbolBitString>::MethodType SymbolBitString::mMethods[] = {
     {"setAlwaysRandom", &Symbol::setAlwaysRandom},
+    {"getID", &Symbol::getID},
     {0,0}
 };
 

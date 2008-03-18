@@ -492,9 +492,9 @@ void Gridbrain::setComponent(unsigned int x,
                 int subType,
                 InterfaceItem::TableLinkType linkType,
                 int origSymTable,
-                unsigned long origSymID,
+                llULINT origSymID,
                 int targetSymTable,
-                unsigned long targetSymID)
+                llULINT targetSymID)
 {
     GridbrainComponent* comp = getComponent(x, y, gridNumber);
 
@@ -2058,7 +2058,7 @@ bool Gridbrain::isValid()
     return true;
 }
 
-bool Gridbrain::symbolUsed(int tableID, unsigned long symbolID)
+bool Gridbrain::symbolUsed(int tableID, llULINT symbolID)
 {
     for (unsigned int i = 0; i < mNumberOfComponents; i++)
     {

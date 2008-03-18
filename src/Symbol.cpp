@@ -19,25 +19,43 @@
 
 #include "Symbol.h"
 
+llULINT Symbol::NEXT_SYMBOL_ID = 1000000;
+
 Symbol::Symbol()
 {
     mAlwaysRandom = false;
     mFixed = true;
+    mID = 0;
+    mSelected = false;
 }
 
 Symbol::Symbol(Symbol* sym)
 {
     mAlwaysRandom = sym->mAlwaysRandom;
     mFixed = sym->mFixed;
+    mID = sym->mID;
+    mSelected = false;
 }
 
 Symbol::~Symbol()
 {   
 }
 
+void Symbol::newDynamicID()
+{
+    mID = NEXT_SYMBOL_ID;
+    NEXT_SYMBOL_ID++;
+}
+
 int Symbol::setAlwaysRandom(lua_State* luaState)
 {
     setAlwaysRandom();
     return 0;
+}
+
+int Symbol::getID(lua_State* luaState)
+{
+    lua_pushinteger(luaState, mID);
+    return 1;
 }
 

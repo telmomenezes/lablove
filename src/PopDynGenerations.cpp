@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -19,6 +19,7 @@
 
 #include "PopDynGenerations.h"
 #include "SimulationObject.h"
+#include "types.h"
 
 unsigned int PopDynGenerations::CURRENT_SPECIES_ID = 0;
 mt_distribution* PopDynGenerations::mDistOrganism = gDistManager.getNewDistribution();
@@ -71,7 +72,7 @@ void PopDynGenerations::init(PopulationManager* popManager)
     }
 }
 
-void PopDynGenerations::onCycle(unsigned long time, double realTime)
+void PopDynGenerations::onCycle(llULINT time, double realTime)
 {
     if (((time % mGenerationTime) == 0)
         && (time != 0))

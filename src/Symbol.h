@@ -21,6 +21,7 @@
 #define __INCLUDE_SYMBOL_H
 
 #include "Orbit.h"
+#include "types.h"
 
 class Symbol
 {
@@ -36,10 +37,20 @@ public:
     virtual void mutate() = 0;
 
     void setAlwaysRandom(){mAlwaysRandom = true;}
+    void newDynamicID();
+
     int setAlwaysRandom(lua_State* luaState);
+    int getID(lua_State* luaState);
 
     bool mAlwaysRandom;
     bool mFixed;
+
+    // for recombination purposes
+    bool mSelected;
+    llULINT mID;
+
+protected:
+    static llULINT NEXT_SYMBOL_ID;
 };
 #endif
 

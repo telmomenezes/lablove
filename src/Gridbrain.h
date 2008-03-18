@@ -30,6 +30,7 @@
 #include "GridbrainConnection.h"
 #include "GridbrainComponentSet.h"
 #include "RandDistManager.h"
+#include "types.h"
 
 #include <vector>
 #include <string>
@@ -135,9 +136,9 @@ public:
                 int subType=-1,
                 InterfaceItem::TableLinkType linkType=InterfaceItem::NO_LINK,
                 int origSymTable=-1,
-                unsigned long origSymID=0,
+                llULINT origSymID=0,
                 int targetSymTalbe=-1,
-                unsigned long targetSymID=0);
+                llULINT targetSymID=0);
 
     void setGrowMethod(GrowMethod val){mGrowMethod = val;}
     void setCloneConnectionsMode(CloneConnectionsMode val){mCloneConnectionsMode = val;}
@@ -178,7 +179,7 @@ public:
     void cleanInvalidConnections();
     bool isValid();
 
-    virtual bool symbolUsed(int tableID, unsigned long symbolID);
+    virtual bool symbolUsed(int tableID, llULINT symbolID);
 
     void setAllActive(bool active){mAllActive = active;}
 

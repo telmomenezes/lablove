@@ -22,7 +22,7 @@
 #include "SymbolUL.h"
 #include <stdlib.h>
 
-unsigned long SimulationObject::CURRENT_ID = 0;
+llULINT SimulationObject::CURRENT_ID = 0;
 
 SimulationObject::SimulationObject(lua_State* luaState)
 {
@@ -54,7 +54,7 @@ SimulationObject::SimulationObject(lua_State* luaState)
     mFitnessMeasure = 0;
 }
 
-SimulationObject::SimulationObject(SimulationObject* obj)
+SimulationObject::SimulationObject(SimulationObject* obj, bool copyTables)
 {
     mID = CURRENT_ID++;
 
@@ -62,14 +62,6 @@ SimulationObject::SimulationObject(SimulationObject* obj)
 
     mSpeciesID = obj->mSpeciesID;
     mCreationTime = 0;
-
-    map<int, SymbolTable*>::iterator iterTables;
-    for (iterTables = obj->mSymbolTables.begin();
-        iterTables != obj->mSymbolTables.end();
-        iterTables++)
-    {
-        mSymbolTables[(*iterTables).first] = new SymbolTable((*iterTables).second);
-    }
 
     map<string, SymbolPointer>::iterator iterSymPointers;
     for (iterSymPointers = obj->mNamedSymbols.begin();
@@ -120,8 +112,8 @@ SimulationObject::SimulationObject(SimulationObject* obj)
     }
     if (obj->mULDataSize > 0)
     {
-        unsigned int size = mULDataSize * sizeof(unsigned long);
-        mULData = (unsigned long*)malloc(size);
+        unsigned int size = mULDataSize * sizeof(llULINT);
+        mULData = (llULINT*)malloc(size);
         memcpy(mULData, obj->mULData, size);
     }
     else
@@ -135,6 +127,17 @@ SimulationObject::SimulationObject(SimulationObject* obj)
     mFitnessMeasure = obj->mFitnessMeasure;
 
     mBirthRadius = obj->mBirthRadius;
+
+    if (copyTables)
+    {
+        map<int, SymbolTable*>::iterator iterTables;
+        for (iterTables = obj->mSymbolTables.begin();
+            iterTables != obj->mSymbolTables.end();
+            iterTables++)
+        {
+            mSymbolTables[(*iterTables).first] = new SymbolTable((*iterTables).second);
+        }
+    }
 }
 
 SimulationObject::~SimulationObject()
@@ -174,9 +177,9 @@ SimulationObject::~SimulationObject()
     }
 }
 
-SimulationObject* SimulationObject::clone()
+SimulationObject* SimulationObject::clone(bool copyTables)
 {
-    return new SimulationObject(this);
+    return new SimulationObject(this, copyTables);
 }
 
 void SimulationObject::initFloatData(unsigned int size)
@@ -215,7 +218,7 @@ void SimulationObject::initIntData(unsigned int size)
 void SimulationObject::initULData(unsigned int size)
 {
     mULDataSize = size;
-    mULData = (unsigned long*)malloc(size * sizeof(unsigned long));
+    mULData = (llULINT*)malloc(size * sizeof(llULINT));
 
     for (unsigned int i = 0; i < size; i++)
     {
@@ -254,11 +257,11 @@ SymbolTable* SimulationObject::getSymbolTableByName(string name)
     return NULL;
 }
 
-void SimulationObject::setSymbolName(string name, int table, unsigned int pos)
+void SimulationObject::setSymbolName(string name, int table, llULINT id)
 {
     SymbolPointer sp;
     sp.mTable = table;
-    sp.mPos = pos;
+    sp.mID = id;
     mNamedSymbols[name] = sp;
 }
 
@@ -277,17 +280,17 @@ Symbol* SimulationObject::getSymbolByName(string name)
         return NULL;
     }
 
-    return symTab->getSymbol(sp.mPos);
+    return symTab->getSymbol(sp.mID);
 }
 
-string SimulationObject::getSymbolName(int table, unsigned int pos)
+string SimulationObject::getSymbolName(int table, llULINT id)
 {
     for (map<string, SymbolPointer>::iterator iterName = mNamedSymbols.begin();
             iterName != mNamedSymbols.end();
             iterName++)
     {
         if (((*iterName).second.mTable == table)
-            && ((*iterName).second.mPos == pos))
+            && ((*iterName).second.mID == id))
         {
             return (*iterName).first;
         }
@@ -344,7 +347,21 @@ bool SimulationObject::getFieldValue(string fieldName, float& value)
 
 SimulationObject* SimulationObject::recombine(SimulationObject* otherParent)
 {
-    return clone();
+    SimulationObject* child = clone(false);
+
+    map<int, SymbolTable*>::iterator iterTables;
+    for (iterTables = mSymbolTables.begin();
+        iterTables != mSymbolTables.end();
+        iterTables++)
+    {
+        int tableID = (*iterTables).first;
+        SymbolTable* table1 = (*iterTables).second;
+        SymbolTable* table2 = otherParent->getSymbolTable(tableID);
+
+        child->mSymbolTables[tableID] = table1->recombine(table2);
+    }
+
+    return child;
 }
 
 void SimulationObject::setFloatDataFromSymbol(string symbolName, unsigned int dataIndex)

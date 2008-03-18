@@ -57,7 +57,7 @@ void PopDynSpecies::addDeathLog(unsigned int speciesID, Log* log)
     mSpecies[speciesID].mDeathLogs.push_back(log);
 }
 
-void PopDynSpecies::onCycle(unsigned long time, double realTime)
+void PopDynSpecies::onCycle(llULINT time, double realTime)
 {
     if ((time % mLogTimeInterval) == 0)
     {
@@ -127,7 +127,7 @@ int PopDynSpecies::addDeathLog(lua_State* luaState)
 
 int PopDynSpecies::setLogTimeInterval(lua_State* luaState)
 {
-    unsigned long interval = luaL_checkint(luaState, 1);
+    llULINT interval = luaL_checkint(luaState, 1);
     setLogTimeInterval(interval);
     return 0;
 }

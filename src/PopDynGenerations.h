@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -23,6 +23,7 @@
 #include "PopulationDynamics.h"
 #include "Log.h"
 #include "RandDistManager.h"
+#include "types.h"
 
 #include <list>
 #include <vector>
@@ -48,7 +49,7 @@ public:
     PopDynGenerations(lua_State* luaState=NULL);
     virtual ~PopDynGenerations();
     virtual void init(PopulationManager* popManager);
-    virtual void onCycle(unsigned long time, double realTime);
+    virtual void onCycle(llULINT time, double realTime);
     virtual void onOrganismDeath(SimulationObject* org);
 
     unsigned int addSpecies(SimulationObject* org, long population, bool isStatic);
@@ -69,7 +70,7 @@ protected:
     static mt_distribution* mDistOrganism;
 
     unsigned int mGenerationTime;
-    unsigned long mGeneration;
+    llULINT mGeneration;
 };
 #endif
 

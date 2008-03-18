@@ -23,6 +23,7 @@
 #include "SymbolTable.h"
 #include "Symbol.h"
 #include "SymbolPointer.h"
+#include "types.h"
 
 #include "Orbit.h"
 
@@ -43,27 +44,27 @@ public:
             TYPE_GRAPHICAL_OBJECT,
             TYPE_AGENT};
 
-    static unsigned long CURRENT_ID;
+    static llULINT CURRENT_ID;
 
     SimulationObject(lua_State* luaState=NULL);
-    SimulationObject(SimulationObject* obj);
+    SimulationObject(SimulationObject* obj, bool copyTables=true);
     virtual ~SimulationObject();
-    virtual SimulationObject* clone();
+    virtual SimulationObject* clone(bool copyTables=true);
 
     void initFloatData(unsigned int size);
     void initBoolData(unsigned int size);
     void initIntData(unsigned int size);
     void initULData(unsigned int size);
 
-    unsigned long getID(){return mID;}
+    llULINT getID(){return mID;}
 
     virtual void draw(){}
 
     unsigned int getSpeciesID(){return mSpeciesID;}
     void setSpeciesID(unsigned int id){mSpeciesID = id;}
 
-    unsigned long getCreationTime(){return mCreationTime;}
-    void setCreationTime(unsigned long time){mCreationTime = time;}
+    llULINT getCreationTime(){return mCreationTime;}
+    void setCreationTime(llULINT time){mCreationTime = time;}
 
     virtual SimulationObject* recombine(SimulationObject* otherParent);
     virtual void mutate();
@@ -72,9 +73,9 @@ public:
     SymbolTable* getSymbolTable(int id);
     SymbolTable* getSymbolTableByName(string name);
 
-    void setSymbolName(string name, int table, unsigned int pos);
+    void setSymbolName(string name, int table, llULINT id);
     Symbol* getSymbolByName(string name);
-    string getSymbolName(int table, unsigned int pos);
+    string getSymbolName(int table, llULINT id);
     string getTableName(int table);
 
     void setFloatDataFromSymbol(string symbolName, unsigned int dataIndex);
@@ -101,7 +102,7 @@ public:
 
     Type mType;
 
-    unsigned long mCreationTime;
+    llULINT mCreationTime;
     bool mInitialized;
     bool mDataInitialized;
 
@@ -110,7 +111,7 @@ public:
     float* mFloatData;
     bool* mBoolData;
     int* mIntData;
-    unsigned long* mULData;
+    llULINT* mULData;
     unsigned int mFloatDataSize;
     unsigned int mBoolDataSize;
     unsigned int mIntDataSize;
@@ -127,7 +128,7 @@ public:
     int setFitnessMeasure(lua_State* luaState);
 
 protected:
-    unsigned long mID;
+    llULINT mID;
 
     map<int, SymbolTable*> mSymbolTables;
     map<string, SymbolPointer> mNamedSymbols;

@@ -22,6 +22,7 @@
 
 #include "PopulationManager.h"
 #include "SimulationObject.h"
+#include "types.h"
 
 class PopulationDynamics
 {
@@ -30,7 +31,7 @@ public:
     virtual ~PopulationDynamics();
 
     virtual void init(PopulationManager* popManager);
-    virtual void onCycle(unsigned long time, double realTime)=0;
+    virtual void onCycle(llULINT time, double realTime)=0;
     virtual void onOrganismDeath(SimulationObject* org)=0;
 
 protected:

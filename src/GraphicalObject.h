@@ -33,9 +33,9 @@ class GraphicalObject : public SimulationObject
 {
 public:
     GraphicalObject(lua_State* luaState=NULL);
-    GraphicalObject(GraphicalObject* obj);
+    GraphicalObject(GraphicalObject* obj, bool copyTables=true);
     virtual ~GraphicalObject();
-    virtual SimulationObject* clone();
+    virtual SimulationObject* clone(bool copyTables=true);
 
     void draw();
 

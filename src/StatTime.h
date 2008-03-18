@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -33,14 +33,14 @@ public:
     virtual void init();
 
     virtual void process(SimulationObject* obj, PopulationManager* popManager){}
-    virtual void dump(unsigned long time, double realTime);
+    virtual void dump(llULINT time, double realTime);
 
     static const char mClassName[];
     static Orbit<StatTime>::MethodType mMethods[];
     static Orbit<StatTime>::NumberGlobalType mNumberGlobals[];
 
 protected:
-    unsigned long mLastSimTime;
+    llULINT mLastSimTime;
     double mLastRealTime;
 };
 #endif

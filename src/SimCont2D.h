@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -231,7 +231,7 @@ protected:
     list<SimulationObject*>* mCurrentCellList;
     list<SimulationObject*>::iterator mCurrentCellListIterator;
 
-    unsigned long mCollisionDetectionIteration;
+    llULINT mCollisionDetectionIteration;
 
     Agent* mHumanAgent;
     bool mHumanGo;

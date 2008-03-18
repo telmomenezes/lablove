@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -224,8 +224,8 @@ float Simulation::calcSymbolsBinding(SimulationObject* origObj,
                                     SimulationObject* targetObj,
                                     int origSymTable,
                                     int targetSymTable,
-                                    unsigned long origSymID,
-                                    unsigned long targetSymID)
+                                    llULINT origSymID,
+                                    llULINT targetSymID)
 {
     SymbolTable* origTable = origObj->getSymbolTable(origSymTable);
     SymbolTable* targetTable = targetObj->getSymbolTable(targetSymTable);
@@ -323,7 +323,7 @@ bool Simulation::onKeyDown(Art_KeyCode keycode)
     }
 }
 
-void Simulation::setTimeLimit(unsigned long limit)
+void Simulation::setTimeLimit(llULINT limit)
 {
     mTimeLimit = limit * 1000;
 }

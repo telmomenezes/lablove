@@ -23,6 +23,7 @@
 #include "GridbrainComponent.h"
 #include "Orbit.h"
 #include "RandDistManager.h"
+#include "types.h"
 
 #include <vector>
 
@@ -39,9 +40,9 @@ public:
                 int subType=-1,
                 InterfaceItem::TableLinkType linkType=InterfaceItem::NO_LINK,
                 int origSymTable=-1,
-                unsigned long origSymID=0,
+                llULINT origSymID=0,
                 int targetSymTable=-1,
-                unsigned long targetSymID=0);
+                llULINT targetSymID=0);
     GridbrainComponent* getRandom(SimulationObject* obj=NULL);
 
     static const char mClassName[];
@@ -55,7 +56,7 @@ public:
 
 protected:
     static mt_distribution* mDistComponentSet;
-    static unsigned long COMPONENT_ID_SEQUENCE;
+    static llULINT COMPONENT_ID_SEQUENCE;
 };
 #endif
 

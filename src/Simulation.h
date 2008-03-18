@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -26,6 +26,7 @@
 #include "PopulationDynamics.h"
 #include "Orbit.h"
 #include "RandDistManager.h"
+#include "types.h"
 
 #include "art.h"
 
@@ -60,7 +61,7 @@ public:
     void setPopulationDynamics(PopulationDynamics* popDyn){mPopulationDynamics = popDyn;}
     PopulationDynamics* getPopulationDynamics(){return mPopulationDynamics;}
 
-    unsigned long getTime(){return mSimulationTime;}
+    llULINT getTime(){return mSimulationTime;}
 
     void setSeedIndex(int index=-1);
 
@@ -71,7 +72,7 @@ public:
     virtual bool onMouseMove(int x, int y){return false;}
     virtual bool onMouseWheel(bool up){return false;}
 
-    void setTimeLimit(unsigned long limit);
+    void setTimeLimit(llULINT limit);
 
     int addObject(lua_State* luaState);
     int run(lua_State* luaState);
@@ -88,13 +89,13 @@ protected:
                             SimulationObject* targetObj,
                             int origSymTable,
                             int targetSymTable,
-                            unsigned long origSymID,
-                            unsigned long targetSymID);
+                            llULINT origSymID,
+                            llULINT targetSymID);
     void drawTimes();
 
     static RandDistManager mDistManager;
 
-    unsigned long mSimulationTime;
+    llULINT mSimulationTime;
     PopulationDynamics* mPopulationDynamics;
 
     bool mStop;
@@ -102,7 +103,7 @@ protected:
     Art_Layer* mLogo;
 
     double mInitialRealTime;
-    unsigned long mLastSimulationTime;
+    llULINT mLastSimulationTime;
     double mLastRealTime;
     double mCPS;
     string mSimulationTimeText;
@@ -111,7 +112,7 @@ protected:
 
     Art_Font* mFont;
 
-    unsigned long mTimeLimit;
+    llULINT mTimeLimit;
 
     bool mDrawGraphics;
 

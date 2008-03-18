@@ -20,25 +20,27 @@
 #if !defined(__INCLUDE_SYMBOL_POINTER_H)
 #define __INCLUDE_SYMBOL_POINTER_H
 
+#include "types.h"
+
 class SymbolPointer
 {
 public:
     SymbolPointer()
     {
         mTable = 0;
-        mPos = 0;
+        mID = 0;
     }
 
     SymbolPointer(const SymbolPointer& sp)
     {
         mTable = sp.mTable;
-        mPos = sp.mPos;
+        mID = sp.mID;
     }
 
     virtual ~SymbolPointer(){}
 
     int mTable;
-    unsigned int mPos;
+    llULINT mID;
 };
 #endif
 

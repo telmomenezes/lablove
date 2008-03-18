@@ -24,6 +24,7 @@
 #include "Log.h"
 #include "RandDistManager.h"
 #include "SpeciesData.h"
+#include "types.h"
 
 #include <map>
 #include <vector>
@@ -40,14 +41,14 @@ public:
 
     PopDynSpecies(lua_State* luaState=NULL);
     virtual ~PopDynSpecies();
-    virtual void onCycle(unsigned long time, double realTime);
+    virtual void onCycle(llULINT time, double realTime);
     virtual void onOrganismDeath(SimulationObject* org);
 
     virtual unsigned int addSpecies(SimulationObject* org, unsigned int population);
 
     void addSampleLog(unsigned int speciesIndex, Log* log);
     void addDeathLog(unsigned int speciesIndex, Log* log);
-    void setLogTimeInterval(unsigned long interval){mLogTimeInterval = interval * 1000;}
+    void setLogTimeInterval(llULINT interval){mLogTimeInterval = interval * 1000;}
 
     int addSampleLog(lua_State* luaState);
     int addDeathLog(lua_State* luaState);
@@ -56,7 +57,7 @@ public:
 protected:
     static mt_distribution* mDistOrganism;
     map<unsigned int, SpeciesData> mSpecies;
-    unsigned long mLogTimeInterval;
+    llULINT mLogTimeInterval;
 };
 #endif
 

@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -35,13 +35,13 @@ void StatTime::init()
     fflush(mFile);
 }
 
-void StatTime::dump(unsigned long time, double realTime)
+void StatTime::dump(llULINT time, double realTime)
 {
     double cps = 0.0f;
 
     if (time != 0)
     {
-        unsigned long deltaSim = time - mLastSimTime;
+        llULINT deltaSim = time - mLastSimTime;
         double deltaReal = realTime - mLastRealTime;
         cps = ((double)deltaSim) / deltaReal;
     }

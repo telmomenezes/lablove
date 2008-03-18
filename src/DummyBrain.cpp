@@ -111,9 +111,9 @@ void DummyBrain::addPerception(string name,
                                 unsigned int channel,
                                 unsigned int type,
                                 int origSymTable,
-                                unsigned long origSymID,
+                                llULINT origSymID,
                                 int targetSymTable,
-                                unsigned long targetSymID)
+                                llULINT targetSymID)
 {
     InterfaceItem* item = new InterfaceItem();
     item->mType = type;

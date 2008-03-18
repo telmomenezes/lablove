@@ -26,11 +26,11 @@ public:
     GridbrainConnection();
     virtual ~GridbrainConnection();
 
-    unsigned long mColumnOrig;
-    unsigned long mRowOrig;
+    unsigned int mColumnOrig;
+    unsigned int mRowOrig;
     unsigned int mGridOrig;
-    unsigned long mColumnTarg;
-    unsigned long mRowTarg;
+    unsigned int mColumnTarg;
+    unsigned int mRowTarg;
     unsigned int mGridTarg;
     bool mInterGrid;
     float mWeight;

@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -23,6 +23,7 @@
 #include "Log.h"
 #include "SimulationObject.h"
 #include "PopulationManager.h"
+#include "types.h"
 
 #include "Orbit.h"
 
@@ -45,7 +46,7 @@ public:
     void addField(string fieldName);
     void setFile(string filePath);
     virtual void process(SimulationObject* obj, PopulationManager* popManager)=0;
-    virtual void dump(unsigned long time, double realTime)=0;
+    virtual void dump(llULINT time, double realTime)=0;
 
     int addField(lua_State* luaState);
     int setFile(lua_State* luaState);

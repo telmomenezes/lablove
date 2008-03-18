@@ -8,7 +8,7 @@
 
 mt_distribution* GridbrainComponentSet::mDistComponentSet = gDistManager.getNewDistribution();
 
-unsigned long GridbrainComponentSet::COMPONENT_ID_SEQUENCE = 0;
+llULINT GridbrainComponentSet::COMPONENT_ID_SEQUENCE = 0;
 
 GridbrainComponentSet::GridbrainComponentSet(lua_State* luaState)
 {
@@ -47,7 +47,7 @@ GridbrainComponent* GridbrainComponentSet::getRandom(SimulationObject* obj)
         if (comp->mTableLinkType == InterfaceItem::TAB_TO_SYM)
         {
             SymbolTable* table = obj->getSymbolTable(comp->mOrigSymTable);
-            comp->mOrigSymID = table->getRandomSymbolID();
+            comp->mOrigSymID = table->getRandomSymbolId();
         }
     }
 
@@ -60,9 +60,9 @@ void GridbrainComponentSet::addComponent(GridbrainComponent::Type type,
                         int subType,
                         InterfaceItem::TableLinkType linkType,
                         int origSymTable,
-                        unsigned long origSymID,
+                        llULINT origSymID,
                         int targetSymTable,
-                        unsigned long targetSymID)
+                        llULINT targetSymID)
 {
     GridbrainComponent* comp = new GridbrainComponent();
     comp->mType = type;
