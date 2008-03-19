@@ -50,7 +50,7 @@ public:
     virtual ~Gridbrain();
 
     virtual Brain* clone();
-    Gridbrain* clone(bool grow, ExpansionType expansion);
+    Gridbrain* clone(bool grow, ExpansionType expansion, unsigned int targetGrid);
 
     void addGrid(Grid* grid, string name);
     virtual void init();

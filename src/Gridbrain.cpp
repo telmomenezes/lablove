@@ -147,10 +147,10 @@ Gridbrain* Gridbrain::baseClone()
 
 Brain* Gridbrain::clone()
 {
-    return clone(true, ET_NONE);
+    return clone(true, ET_NONE, 0);
 }
 
-Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion)
+Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int targetGrid)
 {
     Gridbrain* gb = baseClone();
 
@@ -237,7 +237,7 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion)
                 }
             }
         }
-        else
+        else if (targetGrid == g)
         {
             if (expansion == ET_COLUMN)
             {

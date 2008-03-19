@@ -244,6 +244,18 @@ llULINT SymbolTable::getRandomSymbolId()
     return (*iterSymbol).first;
 }
 
+void SymbolTable::printDebug()
+{
+    printf("Table %d '%s'\n", mID, mName.c_str());
+    map<llULINT, Symbol*>::iterator iterSymbol;
+    for (iterSymbol = mSymbols.begin();
+        iterSymbol != mSymbols.end();
+        iterSymbol++)
+    {
+        printf("%d: %s\n", (*iterSymbol).first, ((*iterSymbol).second)->toString());
+    }
+}
+
 int SymbolTable::addSymbol(lua_State* luaState)
 {
     Symbol* sym = (Symbol*)Orbit<SymbolTable>::pointer(luaState, 1);

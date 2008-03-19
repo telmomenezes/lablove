@@ -66,7 +66,7 @@ joinConnectionsProb = 0.0
 changeComponentProb = 0.01
 swapComponentProb = 0.1
 
-recombineProb = 0.0
+recombineProb = 1.0
 
 growMethod = "pressure"
 cloneConnectionsMode = "all_plus"
@@ -298,7 +298,6 @@ plant:setSymbolName("high_age_limit", ageTableCode, 1)
 plantFood = SymbolFloat(0.0)
 plantFood:setAlwaysRandom()
 plantFoodTable = SymbolTable(plantFood, foodTableCode)
-plantFoodTable:addSymbol(plantFood)
 plant:addSymbolTable(plantFoodTable)
 plant:setSymbolName("food", foodTableCode, 0)
 

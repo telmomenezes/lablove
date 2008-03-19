@@ -115,8 +115,9 @@ public:
 
     llULINT mID;
 
-    GridbrainComponent* mEquivalent;
+    bool mPivotCandidate;
     bool mSelected;
+    bool mUsed;
 };
 
 #endif

@@ -66,8 +66,9 @@ void Gridbrain::clearRecombineInfo(bool selected)
 {
     for (unsigned int i = 0; i < mNumberOfComponents; i++)
     {
-        mComponents[i].mEquivalent = NULL;
+        mComponents[i].mPivotCandidate = false;
         mComponents[i].mSelected = selected;
+        mComponents[i].mUsed = false;
     }
 }
 
@@ -98,18 +99,24 @@ Gridbrain* Gridbrain::crossoverComp(Gridbrain* gb, GridbrainComponent* pivot, un
     {
         GridbrainComponent* targ = (GridbrainComponent*)(conn->mTargComponent);
 
-        GridbrainComponent* eqOrig = findEquivalent(orig, gb);
-        GridbrainComponent* eqTarg = findEquivalent(targ, gb);
+        GridbrainComponent* eqOrig = findEquivalent(orig, brain);
+        GridbrainComponent* eqTarg = findEquivalent(targ, brain);
 
         if (eqTarg == NULL)
         {
+            unsigned int origGrid = orig->mGrid;
             unsigned int targetGrid = targ->mGrid;
-            unsigned int targetColumn = eqOrig->mColumn + 1;
+            unsigned int targetColumn = 0;
+
+            if (origGrid == targetGrid)
+            {
+                targetColumn = eqOrig->mColumn + 1;
+            }
 
             // Grid width needs to be expanded?
             if (brain->mGridsVec[targetGrid]->getWidth() == targetColumn)
             {
-                Gridbrain* newBrain = brain->clone(targetGrid, ET_COLUMN);
+                Gridbrain* newBrain = brain->clone(false, ET_COLUMN, targetGrid);
                 delete brain;
                 brain = newBrain;
             }
@@ -133,13 +140,11 @@ Gridbrain* Gridbrain::crossoverComp(Gridbrain* gb, GridbrainComponent* pivot, un
                 // Grid height needs to be expanded?
                 if (eqTarg == NULL)
                 {
-                    Gridbrain* newBrain = brain->clone(targetGrid, ET_ROW);
+                    Gridbrain* newBrain = brain->clone(false, ET_ROW, targetGrid);
                     delete brain;
                     brain = newBrain;
                 }
             }
-
-            targ->mEquivalent = eqTarg;
         }
 
         unsigned int x1 = eqOrig->mColumn;
@@ -150,15 +155,17 @@ Gridbrain* Gridbrain::crossoverComp(Gridbrain* gb, GridbrainComponent* pivot, un
         unsigned int g2 = eqTarg->mGrid;
         float weight = conn->mWeight;
 
-        if (brain->isConnectionValid(x1, y1, g1, x2, y2, g2))
+        if ((brain->isConnectionValid(x1, y1, g1, x2, y2, g2))
+            && ((g1 != g2) || (x1 < x2)))
         {
-            addConnection(x1, y1, g1, x2, y2, g2, weight);
+            brain->addConnection(x1, y1, g1, x2, y2, g2, weight);
         }
         else
         {
             failed++;
         }
 
+        targ->mUsed = true;
         brain = crossoverComp(brain, targ, failed);
 
         conn = (GridbrainConnection*)(conn->mNextConnection);
@@ -169,13 +176,13 @@ Gridbrain* Gridbrain::crossoverComp(Gridbrain* gb, GridbrainComponent* pivot, un
 
 Brain* Gridbrain::recombine(Brain* brain)
 {
-    //printf("RECOMBINE\n");
+    //printf("\n\n========== PARENT 1 ==========\n");
+    //printDebug();
+    //printf("\n\n========== PARENT 2 ==========\n");
+    //((Gridbrain*)brain)->printDebug();
 
     Gridbrain* gbNew = (Gridbrain*)(this->clone());
     Gridbrain* gb2 = (Gridbrain*)(brain->clone());
-
-    //gbNew->printDebug();
-    //gb2->printDebug();
 
     gbNew->clearRecombineInfo(true);
     gb2->clearRecombineInfo(false);
@@ -188,11 +195,11 @@ Brain* Gridbrain::recombine(Brain* brain)
         GridbrainComponent* comp = &(gbNew->mComponents[i]);
         GridbrainComponent* eqComp = gbNew->findEquivalent(comp, gb2);
 
-        if (eqComp != NULL)
+        if ((eqComp != NULL)
+            && (comp->mActive || eqComp->mActive))
         {
             possiblePivots++;
-            comp->mEquivalent = eqComp;
-            eqComp->mEquivalent = comp;
+            comp->mPivotCandidate = true;
         }
     }
 
@@ -213,14 +220,14 @@ Brain* Gridbrain::recombine(Brain* brain)
     {
         pivot1 = &(gbNew->mComponents[i]);
 
-        if (pivot1->mEquivalent != NULL)
+        if (pivot1->mPivotCandidate)
         {
             curPos++;
         }
         i++;
     }
 
-    GridbrainComponent* pivot2 = pivot1->mEquivalent;
+    GridbrainComponent* pivot2 = findEquivalent(pivot1, gb2);
 
     gbNew->spreadSelected(pivot1, false);
     gb2->spreadSelected(pivot2, true);
@@ -266,12 +273,13 @@ Brain* Gridbrain::recombine(Brain* brain)
         gbNew->update();
     }
 
-    //gbNew->printDebug();
-
     delete gb2;
 
     Brain* child = gbNew->clone();
     delete gbNew;
+
+    //printf("\n\n==========  CHILD   ==========\n");
+    //((Gridbrain*)child)->printDebug();
 
     return child;
 }

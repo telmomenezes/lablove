@@ -98,6 +98,8 @@ public:
     void setFitnessMeasure(int measure){mFitnessMeasure = measure;}
     int getFitnessMeasure(){return mFitnessMeasure;}
 
+    virtual void printDebug();
+
     bool mDeleted;
 
     Type mType;

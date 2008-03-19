@@ -58,6 +58,8 @@ public:
 
     unsigned int getSize(){return mSymbols.size();}
 
+    void printDebug();
+
     int addSymbol(lua_State* luaState);
     int getID(lua_State* luaState);
     int setDynamic(lua_State* luaState);

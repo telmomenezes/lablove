@@ -361,6 +361,7 @@ SimulationObject* SimulationObject::recombine(SimulationObject* otherParent)
         child->mSymbolTables[tableID] = table1->recombine(table2);
     }
 
+    //child->printDebug();
     return child;
 }
 
@@ -444,6 +445,17 @@ int SimulationObject::getNamedULDataIndex(string name)
 
 void SimulationObject::mutate()
 {
+}
+
+void SimulationObject::printDebug()
+{
+    map<int, SymbolTable*>::iterator iterTables;
+    for (iterTables = mSymbolTables.begin();
+        iterTables != mSymbolTables.end();
+        iterTables++)
+    {
+        ((*iterTables).second)->printDebug();
+    }
 }
 
 const char SimulationObject::mClassName[] = "SimulationObject";

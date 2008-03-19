@@ -49,6 +49,9 @@ void GridbrainComponent::clearDefinitions()
     mOrigSymID = 0;
     mTargetSymID = 0;
     mTableLinkType = InterfaceItem::NO_LINK;
+    mPivotCandidate = false;
+    mSelected = false;
+    mUsed = false;
 }
 
 void GridbrainComponent::clearPosition()
@@ -84,6 +87,9 @@ void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)
     mTargetSymID = comp->mTargetSymID;
     mTableLinkType = comp->mTableLinkType;
     mID = comp->mID;
+    mPivotCandidate = comp->mPivotCandidate;
+    mSelected = comp->mSelected;
+    mUsed = comp->mUsed;
 }
 
 void GridbrainComponent::copyPosition(GridbrainComponent* comp)
@@ -228,6 +234,10 @@ bool GridbrainComponent::calcActive()
 
 bool GridbrainComponent::isUsed()
 {
+    if (mUsed)
+    {
+        return true;
+    }
     if (mConnectionsCount > 0)
     {
         return true;

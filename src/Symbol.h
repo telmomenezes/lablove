@@ -42,6 +42,8 @@ public:
     int setAlwaysRandom(lua_State* luaState);
     int getID(lua_State* luaState);
 
+    virtual char* toString(){return "?";}
+
     bool mAlwaysRandom;
     bool mFixed;
 
