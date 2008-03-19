@@ -55,6 +55,8 @@ public:
     virtual void mutate()=0;
     virtual Brain* recombine(Brain* brain)=0;
 
+    virtual void setSelectedSymbols(SimulationObject* obj){}
+
     virtual void draw()=0;
 
     void setOwner(SimulationObject* obj){mOwner = obj;}

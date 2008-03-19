@@ -116,6 +116,9 @@ SimulationObject* Agent::recombine(SimulationObject* otherParent)
     Agent* agent2 = (Agent*)otherParent;
     Brain* newBrain = mBrain->recombine(agent2->mBrain);
 
+    newBrain->setSelectedSymbols(this);
+    newBrain->setSelectedSymbols(agent2);
+
     Agent* newAgent = (Agent*)(SimulationObject::recombine(agent2));
 
     newAgent->setBrain(newBrain);

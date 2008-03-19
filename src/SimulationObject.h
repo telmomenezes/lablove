@@ -117,6 +117,8 @@ public:
     unsigned int mIntDataSize;
     unsigned int mULDataSize;
 
+    map<int, SymbolTable*> mSymbolTables;
+
     static const char mClassName[];
     static Orbit<SimulationObject>::MethodType mMethods[];
     static Orbit<SimulationObject>::NumberGlobalType mNumberGlobals[];
@@ -130,7 +132,6 @@ public:
 protected:
     llULINT mID;
 
-    map<int, SymbolTable*> mSymbolTables;
     map<string, SymbolPointer> mNamedSymbols;
     map<string, int> mNamedFloatDataIndexes;
     map<string, int> mNamedBoolDataIndexes;

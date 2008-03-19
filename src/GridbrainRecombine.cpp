@@ -270,6 +270,48 @@ Brain* Gridbrain::recombine(Brain* brain)
 
     delete gb2;
 
-    return gbNew;
+    Brain* child = gbNew->clone();
+    delete gbNew;
+
+    return child;
+}
+
+void Gridbrain::setSelectedSymbols(SimulationObject* obj)
+{
+    map<int, SymbolTable*>::iterator iterTables;
+    for (iterTables = obj->mSymbolTables.begin();
+        iterTables != obj->mSymbolTables.end();
+        iterTables++)
+    {
+        SymbolTable* table = (*iterTables).second;
+        int tableID = table->getID();
+
+        map<llULINT, Symbol*>::iterator iterSymbol;
+        for (iterSymbol = table->getSymbolMap()->begin();
+            iterSymbol != table->getSymbolMap()->end();
+            iterSymbol++)
+        {
+            Symbol* sym = (*iterSymbol).second;
+            llULINT symID = sym->mID;
+
+            if (!sym->mFixed)
+            {
+                sym->mSelected = false;
+
+                for (unsigned int i = 0;
+                    (i < mNumberOfComponents) && (!sym->mSelected);
+                    i++)
+                {
+                    GridbrainComponent* comp = &mComponents[i];
+
+                    if ((tableID == comp->mOrigSymTable)
+                        && (symID == comp->mOrigSymID))
+                    {
+                        sym->mSelected = true;
+                    }
+                }
+            }
+        }
+    }
 }
 

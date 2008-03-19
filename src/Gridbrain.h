@@ -129,6 +129,8 @@ public:
     virtual void mutate();
     virtual Brain* recombine(Brain* brain);
 
+    virtual void setSelectedSymbols(SimulationObject* obj);
+
     void setComponent(unsigned int x,
                 unsigned int y,
                 unsigned int gridNumber,
