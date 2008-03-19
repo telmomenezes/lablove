@@ -61,7 +61,7 @@ void Gridbrain::mutate()
 
     unsigned int connCount = mConnectionsCount;
 
-    mutateAddInactiveConnections();
+    mutateAddInactiveConnections(connCount);
 
     mutateAddConnection(connCount);
     mutateAddDoubleConnection(connCount);
@@ -507,17 +507,15 @@ void Gridbrain::mutateAddConnection(unsigned int popSize)
     addRandomConnections(count);
 }
 
-void Gridbrain::mutateAddInactiveConnections()
+void Gridbrain::mutateAddInactiveConnections(unsigned int popSize)
 {
     if (mMutateAddInactiveRatio == 0.0f)
     {
         return;
     }
 
-    unsigned int count = (unsigned int)(ceilf(mMutateAddInactiveRatio * (float)mTotalPossibleConnections));
+    unsigned int count = (unsigned int)(ceilf(mMutateAddInactiveRatio * (float)popSize));
 
-    printf("inactive count: %d\n", count);
-    
     for (unsigned int i = 0; i < count; i++)
     {
         addRandomInactiveConnection();

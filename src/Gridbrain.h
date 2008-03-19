@@ -255,7 +255,7 @@ protected:
 
     void mutateAddConnection(unsigned int popSize);
     void mutateAddDoubleConnection(unsigned int popSize);
-    void mutateAddInactiveConnections();
+    void mutateAddInactiveConnections(unsigned int popSize);
     void mutateRemoveConnection(unsigned int popSize);
     void mutateRemoveDoubleConnection(unsigned int popSize);
     void mutateChangeConnectionWeight();
