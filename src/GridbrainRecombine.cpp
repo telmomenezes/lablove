@@ -102,6 +102,8 @@ Gridbrain* Gridbrain::crossoverComp(Gridbrain* gb, GridbrainComponent* pivot, un
         GridbrainComponent* eqOrig = findEquivalent(orig, brain);
         GridbrainComponent* eqTarg = findEquivalent(targ, brain);
 
+        bool recalcOrig = false;
+
         if (eqTarg == NULL)
         {
             unsigned int origGrid = orig->mGrid;
@@ -119,6 +121,7 @@ Gridbrain* Gridbrain::crossoverComp(Gridbrain* gb, GridbrainComponent* pivot, un
                 Gridbrain* newBrain = brain->clone(false, ET_COLUMN, targetGrid);
                 delete brain;
                 brain = newBrain;
+                recalcOrig = true;
             }
 
             while (eqTarg == NULL)
@@ -143,8 +146,14 @@ Gridbrain* Gridbrain::crossoverComp(Gridbrain* gb, GridbrainComponent* pivot, un
                     Gridbrain* newBrain = brain->clone(false, ET_ROW, targetGrid);
                     delete brain;
                     brain = newBrain;
+                    recalcOrig = true;
                 }
             }
+        }
+
+        if (recalcOrig)
+        {
+            eqOrig = findEquivalent(orig, brain);
         }
 
         unsigned int x1 = eqOrig->mColumn;
