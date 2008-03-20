@@ -174,7 +174,8 @@ Gridbrain* Gridbrain::crossoverComp(Gridbrain* gb, GridbrainComponent* pivot, un
             failed++;
         }
 
-        targ->mUsed = true;
+        eqOrig->mUsed = true;
+        eqTarg->mUsed = true;
         brain = crossoverComp(brain, targ, failed);
 
         conn = (GridbrainConnection*)(conn->mNextConnection);
