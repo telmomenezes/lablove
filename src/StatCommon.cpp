@@ -73,7 +73,8 @@ void StatCommon::process(SimulationObject* obj, PopulationManager* popManager)
 
 void StatCommon::dump(llULINT time, double realTime)
 {
-    fprintf(mFile, "%d,%d", time / 1000, mCount);
+    fprintf(mFile, "%d", time / 1000);
+    fprintf(mFile, ",%d", mCount);
 
     for (list<list<float> >::iterator iterValueList = mValueLists.begin();
         iterValueList != mValueLists.end();
