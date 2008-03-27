@@ -51,9 +51,9 @@ compCount = 1
 bufferSize = 100
 fitnessAging = 0.1
 
-addConnectionProb = 0.01
+addConnectionProb = 0.005
 addDoubleConnectionProb = 0.0
-removeConnectionProb = 0.01
+removeConnectionProb = 0.005
 removeDoubleConnectionProb = 0.0
 changeWeightProb = 0.01
 weightMutationStanDev = 1.0
@@ -66,7 +66,7 @@ joinConnectionsProb = 0.0
 changeComponentProb = 0.01
 swapComponentProb = 0.1
 
-recombineProb = 1.0
+recombineProb = 0.0
 
 growMethod = "pressure"
 cloneConnectionsMode = "all_plus"
