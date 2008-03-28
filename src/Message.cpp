@@ -17,5 +17,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#define LABLOVE_VERSION "0.3"
+#include "Message.h"
+
+#include <stdlib.h>
+
+Message::Message()
+{
+    mSymbol = NULL;
+    mType = 0;
+    mData = NULL;
+}
+
+Message::~Message()
+{
+    if (mSymbol != NULL)
+    {
+        delete mSymbol;
+        mSymbol = NULL;
+    }
+    if (mData != NULL)
+    {
+        free(mData);
+        mData = NULL;
+    }
+}
 

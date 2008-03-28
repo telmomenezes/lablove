@@ -69,8 +69,8 @@ swapComponentProb = 0.1
 recombineProb = 0.0
 
 growMethod = "pressure"
-cloneConnectionsMode = "all_plus"
-mutationScope = "all"
+cloneConnectionsMode = "active"
+mutationScope = "active"
 
 timeLimit = 0
 logTimeInterval = 100

@@ -176,12 +176,19 @@ GridbrainConnection* Gridbrain::getFirstMutableConnection(unsigned int initialPo
         return conn;
     }
 
-    unsigned int offset = mConnectionsCount - initialPop;
+    unsigned int offset = 0;
+
+    if (mConnectionsCount > initialPop)
+    {
+        offset = mConnectionsCount - initialPop;
+    }
 
     for (unsigned int i = 0; i < offset; i++)
     {
         conn = (GridbrainConnection*)conn->mNextGlobalConnection;
     }
+
+    return conn;
 }
 
 unsigned int Gridbrain::getMutableConnectionsCount(unsigned int initialPop)

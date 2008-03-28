@@ -81,6 +81,7 @@ SET(SOURCE_FILES
     src/GraphicGradient.cpp
     src/GraphicBiomorph.cpp
     src/RandDistManager.cpp
+    src/Message.cpp
     src/mtwist/mtwist.c
     src/mtwist/randistrs.c)
 
