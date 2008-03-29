@@ -199,7 +199,14 @@ unsigned int Gridbrain::getMutableConnectionsCount(unsigned int initialPop)
     }
     else
     {
-        return initialPop;
+        if (mConnectionsCount < initialPop)
+        {
+            return mConnectionsCount;
+        }
+        else
+        {
+            return initialPop;
+        }
     }
 }
 
