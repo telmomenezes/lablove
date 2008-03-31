@@ -752,6 +752,7 @@ void SimCont2D::perceive(Agent* agent)
         float* inBuffer = agent->getBrain()->getInputBuffer(agent->mIntData[INT_CHANNEL_SELF]);
         unsigned int pos = 0;
         float normalizedValue;
+        float ratio;
 
         for (list<InterfaceItem*>::iterator iterItem = interface->begin();
             iterItem != interface->end();
@@ -762,7 +763,7 @@ void SimCont2D::perceive(Agent* agent)
             switch (type)
             {
                 case PERCEPTION_ENERGY:
-                    float ratio = agent->mFloatData[FLOAT_ENERGY] / agent->mFloatData[FLOAT_INITIAL_ENERGY];
+                    ratio = agent->mFloatData[FLOAT_ENERGY] / agent->mFloatData[FLOAT_INITIAL_ENERGY];
                     normalizedValue = 1.0f - (1.0f / (ratio + 1.0f));
                     inBuffer[pos] = normalizedValue;
                     break;
