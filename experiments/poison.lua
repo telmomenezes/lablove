@@ -51,9 +51,9 @@ compCount = 1
 bufferSize = 100
 fitnessAging = 0.1
 
-addConnectionProb = 0.0
+addConnectionProb = 0.1
 addDoubleConnectionProb = 0.0
-removeConnectionProb = 0.0
+removeConnectionProb = 0.1
 removeDoubleConnectionProb = 0.0
 changeWeightProb = 0.01
 weightMutationStanDev = 1.0
@@ -65,6 +65,7 @@ splitConnectionProb = 0.0
 joinConnectionsProb = 0.0
 changeComponentProb = 0.01
 swapComponentProb = 0.1
+inactiveRatio = 0.0
 
 recombineProb = 0.0
 
@@ -106,6 +107,7 @@ initialConnections = getNumberParameter("initconn", initialConnections, "ico")
 growMethod = getStringParameter("growmethod", growMethod, "gm")
 cloneConnectionsMode = getStringParameter("cloneconnmode", cloneConnectionsMode, "ccm")
 mutationScope = getStringParameter("mutationscope", mutationScope, "ms")
+inactiveRatio = getStringParameter("inactiveratio", inactiveRatio, "ir")
 
 logBaseName = "_poison_"
 
@@ -233,6 +235,7 @@ brain:setMutateSplitConnectionProb(splitConnectionProb)
 brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
 brain:setMutateSwapComponentProb(swapComponentProb)
+brain:setAddInactiveRatio(inactiveRatio)
 
 brain:setGrowMethod(growMethodCode)
 brain:setCloneConnectionsMode(cloneConnectionsModeCode)

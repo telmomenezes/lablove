@@ -73,6 +73,15 @@ Agent::~Agent()
         delete mBrain;
         mBrain = NULL;
     }
+
+    for (list<Message*>::iterator iterMessage = mMessageList.begin();
+            iterMessage != mMessageList.end();
+            iterMessage++)
+    {
+        delete (*iterMessage);
+    }
+
+    mMessageList.clear();
 }
 
 SimulationObject* Agent::clone(bool copyTables)

@@ -66,7 +66,7 @@ logTimeInterval = 100
 logBrains = true
 logOnlyLastBrain = true
 
-humanAgent = false
+humanAgent = true
 
 birthRadius = 0.0
 

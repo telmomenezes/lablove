@@ -2100,6 +2100,7 @@ Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
     {"setMutateJoinConnectionsProb", &Gridbrain::setMutateJoinConnectionsProb},
     {"setMutateChangeComponentProb", &Gridbrain::setMutateChangeComponentProb},
     {"setMutateSwapComponentProb", &Gridbrain::setMutateSwapComponentProb},
+    {"setAddInactiveRatio", &Gridbrain::setAddInactiveRatio},
     {0,0}
 };
 
@@ -2295,6 +2296,13 @@ int Gridbrain::setWeightMutationStanDev(lua_State* luaState)
 {
     float sd = luaL_checknumber(luaState, 1);
     setWeightMutationStanDev(sd);
+    return 0;
+}
+
+int Gridbrain::setAddInactiveRatio(lua_State* luaState)
+{
+    float ratio = luaL_checknumber(luaState, 1);
+    setAddInactiveRatio(ratio);
     return 0;
 }
 

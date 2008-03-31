@@ -8,7 +8,9 @@
     * Removal of obsolete "diversify" flag in SpeciesData
     * Gridbrain::mutateAddInactiveConnections
     * Gridbrain::recombine implemented
-    * 
+    * SimCont2D speak actions and perceptions
+    * SimCont2D self perceptions
+    * ...
 
 0.2 alpha release
 9-Mar-2008

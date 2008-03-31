@@ -23,6 +23,11 @@
 #include "GraphicalObject.h"
 #include "Brain.h"
 #include "Orbit.h"
+#include "Message.h"
+
+#include <list>
+
+using std::list;
 
 class Agent : public GraphicalObject
 {
@@ -42,6 +47,9 @@ public:
 
     virtual bool getFieldValue(string fieldName, float& value);
 
+    void addMessage(Message* msg){mMessageList.push_back(msg);}
+    list<Message*>* getMessageList(){return &mMessageList;}
+
     static const char mClassName[];
     static Orbit<Agent>::MethodType mMethods[];
     static Orbit<Agent>::NumberGlobalType mNumberGlobals[];
@@ -50,6 +58,7 @@ public:
 
 protected:
     Brain* mBrain;
+    list<Message*> mMessageList;
 };
 #endif
 

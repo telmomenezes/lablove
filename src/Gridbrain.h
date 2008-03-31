@@ -160,6 +160,7 @@ public:
     void setMutateJoinConnectionsProb(float prob){mMutateJoinConnectionsProb = prob;}
     void setMutateChangeComponentProb(float prob){mMutateChangeComponentProb = prob;}
     void setMutateSwapComponentProb(float prob){mMutateSwapComponentProb = prob;}
+    void setAddInactiveRatio(float ratio){mMutateAddInactiveRatio = ratio;}
 
     virtual bool getFieldValue(string fieldName, float& value);
 
@@ -212,6 +213,7 @@ public:
     int setMutateChangeComponentProb(lua_State* luaState);
     int setMutateSwapComponentProb(lua_State* luaState);
     int setWeightMutationStanDev(lua_State* luaState);
+    int setAddInactiveRatio(lua_State* luaState);
 
     static long MUTATIONS_ADD_CONN;
     static long MUTATIONS_ADD_DBL_CONN;

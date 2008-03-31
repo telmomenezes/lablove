@@ -40,13 +40,16 @@ public:
                     PERCEPTION_TARGET,
                     PERCEPTION_IN_CONTACT,
                     PERCEPTION_SYMBOL,
+                    PERCEPTION_ENERGY,
+                    PERCEPTION_CAN_SPEAK
                     };
 
     enum Action {ACTION_NULL,
                 ACTION_GO,
                 ACTION_ROTATE,
                 ACTION_EAT,
-                ACTION_EATB
+                ACTION_EATB,
+                ACTION_SPEAK
                 };
 
     enum FloatData {FLOAT_X,
@@ -72,10 +75,13 @@ public:
     enum ULData {UL_MAX_AGE,
                 UL_LOW_AGE_LIMIT,
                 UL_HIGH_AGE_LIMIT,
-                UL_COLLISION_DETECTION_ITERATION
+                UL_COLLISION_DETECTION_ITERATION,
+                UL_LAST_SPEAK_TIME
                 };
 
     enum IntData {INT_CHANNEL_OBJECTS,
+                INT_CHANNEL_SOUNDS,
+                INT_CHANNEL_SELF,
                 INT_CHANNEL_BETA
                 };
 
@@ -84,6 +90,21 @@ public:
                         FITNESS_ENERGY_SUM_ABOVE_INIT,
                         FITNESS_RANDOM
     };
+
+    enum VisualEventType {VE_SPEAK
+    };
+
+    typedef struct
+    {
+        VisualEventType mType;
+        float mX;
+        float mY;
+        llULINT mStartTime;
+        llULINT mEndTime;
+        int mRed;
+        int mGreen;
+        int mBlue;
+    } VisualEvent;
 
     SimCont2D(lua_State* luaState=NULL);
     virtual ~SimCont2D();
@@ -146,6 +167,9 @@ public:
     void setSize(SimulationObject* obj, float size);
 
     virtual string getInterfaceName(bool input, int type);
+    
+    void setSoundRange(float range){mSoundRange = range;}
+    void setSpeakInterval(unsigned int interval){mSpeakInterval = interval;}
 
     static const char mClassName[];
     static Orbit<SimCont2D>::MethodType mMethods[];
@@ -162,6 +186,8 @@ public:
     int setRot(lua_State* luaState);
     int setHuman(lua_State* luaState);
     int setFeedCenter(lua_State* luaState);
+    int setSoundRange(lua_State* luaState);
+    int setSpeakInterval(lua_State* luaState);
 
 protected:
     virtual void process(SimulationObject* obj);
@@ -175,6 +201,8 @@ protected:
     void rotate(Agent* agent, float force);
     void eat(Agent* agent, Action actionType);
     float normalizeAngle(float angle);
+
+    void speak(Agent* agent, Symbol* sym);
         
     static mt_distribution* mDistAge;
     static mt_distribution* mDistPosition;
@@ -238,10 +266,16 @@ protected:
     bool mHumanRotateLeft;
     bool mHumanRotateRight;
     bool mHumanEat;
+    bool mHumanSpeak;
 
     float mZoom;
 
     float mFeedCenter;
+
+    float mSoundRange;
+    unsigned int mSpeakInterval;
+
+    list<VisualEvent*> mVisualEvents;
 };
 #endif
 

@@ -21,6 +21,7 @@
 #include "SimulationObject.h"
 #include "PopulationDynamics.h"
 #include "SymbolFloat.h"
+#include "SymbolRGB.h"
 
 #include <math.h>
 #include <list>
@@ -91,10 +92,14 @@ SimCont2D::SimCont2D(lua_State* luaState)
     mHumanRotateLeft = false;
     mHumanRotateRight = false;
     mHumanEat = false;
+    mHumanSpeak = false;
 
     mZoom = 1.0f;
 
     mFeedCenter = 0.5f;
+
+    mSoundRange = 250.0f;
+    mSpeakInterval = 2500;
 }
 
 SimCont2D::~SimCont2D()
@@ -111,6 +116,14 @@ SimCont2D::~SimCont2D()
         free(mCellGrid);
         mCellGrid = NULL;
     }
+
+    for (list<VisualEvent*>::iterator iterEvent = mVisualEvents.begin();
+            iterEvent != mVisualEvents.end();
+            iterEvent++)
+    {
+        free(*iterEvent);
+    }
+    mVisualEvents.clear();
 }
 
 void SimCont2D::setWorldDimensions(float worldWidth,
@@ -237,8 +250,8 @@ void SimCont2D::setRot(SimulationObject* obj, float rot)
 void SimCont2D::initializeData(SimulationObject* obj)
 {
     obj->initFloatData(18);
-    obj->initULData(4);
-    obj->initIntData(2);
+    obj->initULData(5);
+    obj->initIntData(4);
 }
 
 void SimCont2D::addObject(SimulationObject* object, bool init)
@@ -292,13 +305,19 @@ void SimCont2D::addObject(SimulationObject* object, bool init)
         object->mULData[UL_MAX_AGE] = mDistAge->iuniform(1, object->mULData[UL_MAX_AGE]);
     }
 
+    object->mULData[UL_LAST_SPEAK_TIME] = 0;
+
     if (object->mType == SimulationObject::TYPE_AGENT)
     {
         Agent* agent = (Agent*)object;
         int channelObjects = agent->getBrain()->getChannelByName("objects");
+        int channelSounds = agent->getBrain()->getChannelByName("sounds");
+        int channelSelf = agent->getBrain()->getChannelByName("self");
         int channelBeta = agent->getBrain()->getChannelByName("beta");
 
         object->mIntData[INT_CHANNEL_OBJECTS] = channelObjects;
+        object->mIntData[INT_CHANNEL_SOUNDS] = channelSounds;
+        object->mIntData[INT_CHANNEL_SELF] = channelSelf;
         object->mIntData[INT_CHANNEL_BETA] = channelBeta;
     }
 
@@ -621,6 +640,7 @@ void SimCont2D::process(SimulationObject* obj)
 
 void SimCont2D::perceive(Agent* agent)
 {
+    // Perceive visible objects
     mTargetObject = NULL;
     mDistanceToTargetObject = 9999999999.9f;
     mCurrentTargetInputBuffer = NULL;
@@ -672,6 +692,93 @@ void SimCont2D::perceive(Agent* agent)
                                 distance,
                                 normalizeAngle(agent->mFloatData[FLOAT_ROT] - angle));
             }
+        }
+    }
+
+    // Perceive sounds
+    list<Message*>* messageList = agent->getMessageList();
+
+    if (agent->mIntData[INT_CHANNEL_SOUNDS] >= 0)
+    {
+        for (list<Message*>::iterator iterMessage = messageList->begin();
+                iterMessage != messageList->end();
+                iterMessage++)
+        {
+            Message* msg = (*iterMessage);
+
+            list<InterfaceItem*>* interface = agent->getBrain()->getInputInterface(agent->mIntData[INT_CHANNEL_SOUNDS]);
+            float* inBuffer = agent->getBrain()->getInputBuffer(agent->mIntData[INT_CHANNEL_SOUNDS]);
+            unsigned int pos = 0;
+            float normalizedValue;
+
+            for (list<InterfaceItem*>::iterator iterItem = interface->begin();
+                iterItem != interface->end();
+                iterItem++)
+            {
+                unsigned int type = (*iterItem)->mType;
+
+                switch (type)
+                {
+                    case PERCEPTION_POSITION:
+                        normalizedValue = msg->mData[1] / M_PI;
+                        inBuffer[pos] = normalizedValue;
+                        break;
+
+                    case PERCEPTION_DISTANCE:
+                        normalizedValue = msg->mData[0] / mSoundRange;
+                        inBuffer[pos] = normalizedValue;
+                        break;
+
+                    case PERCEPTION_SYMBOL:
+                        InterfaceItem* item = (*iterItem);
+                        normalizedValue = calcSymbolsBinding(agent,
+                                                    item->mOrigSymTable,
+                                                    item->mOrigSymID,
+                                                    msg->mSymbol);
+                        inBuffer[pos] = normalizedValue;
+                        break;
+                }
+
+                pos++;
+            }
+        }
+    }
+    messageList->clear();
+
+    // Perceive self
+    if (agent->mIntData[INT_CHANNEL_SELF] >= 0)
+    {
+        list<InterfaceItem*>* interface = agent->getBrain()->getInputInterface(agent->mIntData[INT_CHANNEL_SELF]);
+        float* inBuffer = agent->getBrain()->getInputBuffer(agent->mIntData[INT_CHANNEL_SELF]);
+        unsigned int pos = 0;
+        float normalizedValue;
+
+        for (list<InterfaceItem*>::iterator iterItem = interface->begin();
+            iterItem != interface->end();
+            iterItem++)
+        {
+            unsigned int type = (*iterItem)->mType;
+
+            switch (type)
+            {
+                case PERCEPTION_ENERGY:
+                    float ratio = agent->mFloatData[FLOAT_ENERGY] / agent->mFloatData[FLOAT_INITIAL_ENERGY];
+                    normalizedValue = 1.0f - (1.0f / (ratio + 1.0f));
+                    inBuffer[pos] = normalizedValue;
+                    break;
+
+                case PERCEPTION_CAN_SPEAK:
+                    normalizedValue = 0.0f;
+
+                    if ((mSimulationTime - agent->mULData[UL_LAST_SPEAK_TIME]) > mSpeakInterval)
+                    {
+                        normalizedValue = 1.0f;
+                    }
+                    inBuffer[pos] = normalizedValue;
+                    break;
+            }
+
+            pos++;
         }
     }
 }
@@ -776,8 +883,10 @@ void SimCont2D::act(Agent* agent)
     bool actionGo = false;
     bool actionRotate = false;
     Action actionEat = ACTION_NULL;
+    Symbol* actionSpeakSymbol = NULL;
     float actionGoParam = 0.0f;
     float actionRotateParam = 0.0f;
+    float actionSpeakParam = -99999999.9f;
 
     if (agent == mHumanAgent)
     {
@@ -799,6 +908,11 @@ void SimCont2D::act(Agent* agent)
         if (mHumanEat)
         {
             actionEat = ACTION_EAT;
+        }
+        if (mHumanSpeak)
+        {
+            actionSpeakSymbol = new SymbolRGB(255, 0, 0);
+            actionSpeakParam = 1.0f;
         }
     }
     else
@@ -830,6 +944,23 @@ void SimCont2D::act(Agent* agent)
                     case ACTION_EAT:
                     case ACTION_EATB:
                         actionEat = actionType;
+                        break;
+                    case ACTION_SPEAK:
+                        if (output > actionSpeakParam)
+                        {
+                            SymbolTable* table = agent->getSymbolTable((*iterItem)->mOrigSymTable);
+
+                            if (table != NULL)
+                            {
+                                Symbol* sym = table->getSymbol((*iterItem)->mOrigSymID);
+
+                                if (sym != NULL)
+                                {
+                                    actionSpeakParam = output;
+                                    actionSpeakSymbol = sym;
+                                }
+                            }
+                        }
                         break;
                 }
             }
@@ -866,6 +997,10 @@ void SimCont2D::act(Agent* agent)
     if (actionEat != ACTION_NULL)
     {
         eat(agent, actionEat);
+    }
+    if (actionSpeakSymbol != NULL)
+    {
+        speak(agent, actionSpeakSymbol);
     }
 }
 
@@ -943,7 +1078,8 @@ void SimCont2D::drawBeforeObjects()
         int viewX = (int)mViewX;
         int viewY = (int)mViewY;
 
-        art_setColor(200, 200, 200, 255);
+        art_setColor(0, 0, 0, 255);
+        art_setLineWidth(0.5f);
 
         unsigned int division = cellSide;
         while (division < mWorldWidth)
@@ -993,6 +1129,35 @@ void SimCont2D::drawBeforeObjects()
                                 beginAngle,
                                 endAngle);
             }
+        }
+    }
+
+    list<VisualEvent*>::iterator iterEvent = mVisualEvents.begin();
+
+    while (iterEvent != mVisualEvents.end())
+    {
+        VisualEvent* ve = (*iterEvent);
+
+        if (ve->mEndTime < mSimulationTime)
+        {
+            list<VisualEvent*>::iterator iterRemove = iterEvent;
+            iterEvent++;
+            mVisualEvents.erase(iterRemove);
+            free(ve);
+        }
+        else
+        {
+            switch (ve->mType)
+            {
+            case VE_SPEAK:
+                unsigned int deltaTime = ve->mEndTime - ve->mStartTime;
+                unsigned int curTime = mSimulationTime - ve->mStartTime;
+                float alpha = (1.0f - (((float)curTime) / ((float)deltaTime))) * 255.0f;
+                art_setColor(ve->mRed, ve->mGreen, ve->mBlue, (unsigned int)alpha);
+                art_fillCircle(ve->mX, ve->mY, mSoundRange);
+                break;
+            }
+            iterEvent++;
         }
     }
 }
@@ -1080,6 +1245,9 @@ bool SimCont2D::onKeyDown(Art_KeyCode key)
     case ART_KEY_E:
         mHumanEat = true;
         return true;
+    case ART_KEY_S:
+        mHumanSpeak = true;
+        return true;
     default:
         return false;
     }
@@ -1117,6 +1285,9 @@ bool SimCont2D::onKeyUp(Art_KeyCode key)
         return true;
     case ART_KEY_E:
         mHumanEat = false;
+        return true;
+    case ART_KEY_S:
+        mHumanSpeak = false;
         return true;
     default:
         return false;
@@ -1229,6 +1400,10 @@ string SimCont2D::getInterfaceName(bool input, int type)
             return "position";
         case PERCEPTION_DISTANCE:
             return "distance";
+        case PERCEPTION_ENERGY:
+            return "energy";
+        case PERCEPTION_CAN_SPEAK:
+            return "canspeak";
         default:
             return "?";
         }
@@ -1245,10 +1420,58 @@ string SimCont2D::getInterfaceName(bool input, int type)
             return "eat";
         case ACTION_EATB:
             return "eatB";
+        case ACTION_SPEAK:
+            return "speak";
         default:
             return "?";
         }
     }
+}
+
+void SimCont2D::speak(Agent* agent, Symbol* sym)
+{
+    if (((mSimulationTime - agent->mULData[UL_LAST_SPEAK_TIME]) <= mSpeakInterval)
+        && (agent->mULData[UL_LAST_SPEAK_TIME] != 0))
+    {
+        delete sym;
+        return;
+    }
+
+    agent->mULData[UL_LAST_SPEAK_TIME] = mSimulationTime;
+
+    startCollisionDetection(agent->mFloatData[FLOAT_X], agent->mFloatData[FLOAT_Y], mSoundRange);
+
+    SimulationObject* target;
+    float distance;
+    float angle;
+
+    while (target = nextCollision(distance, angle))
+    {
+        if ((target->mType == SimulationObject::TYPE_AGENT)
+            && (agent != target))
+        {
+            Agent* targAgent = (Agent*)target;
+            Message* msg = new Message();
+            msg->mSymbol = sym->clone();
+            msg->mType = 0; // Only one message type for now (sound message)
+            float* msgData = (float*)malloc(2 * sizeof(float));
+            msgData[0] = distance;
+            msgData[1] = normalizeAngle(angle + M_PI);
+            msg->mData = msgData;
+            targAgent->addMessage(msg);
+        }
+    }
+
+    VisualEvent* ve = (VisualEvent*)malloc(sizeof(VisualEvent));
+    ve->mType = VE_SPEAK;
+    ve->mX = agent->mFloatData[FLOAT_X];
+    ve->mY = agent->mFloatData[FLOAT_Y];
+    ve->mRed = sym->getRed();
+    ve->mGreen = sym->getGreen();
+    ve->mBlue = sym->getBlue();
+    ve->mStartTime = mSimulationTime;
+    ve->mEndTime = mSimulationTime + mSpeakInterval;
+    mVisualEvents.push_back(ve);
 }
 
 const char SimCont2D::mClassName[] = "SimCont2D";
@@ -1271,6 +1494,8 @@ Orbit<SimCont2D>::MethodType SimCont2D::mMethods[] = {
     {"setRot", &SimCont2D::setRot},
     {"setHuman", &SimCont2D::setHuman},
     {"setFeedCenter", &SimCont2D::setFeedCenter},
+    {"setSoundRange", &SimCont2D::setSoundRange},
+    {"setSpeakInterval", &SimCont2D::setSpeakInterval},
     {0,0}
 };
 
@@ -1372,6 +1597,20 @@ int SimCont2D::setFeedCenter(lua_State* luaState)
 {
     float center = luaL_checknumber(luaState, 1);
     setFeedCenter(center);
+    return 0;
+}
+
+int SimCont2D::setSoundRange(lua_State* luaState)
+{
+    float range = luaL_checknumber(luaState, 1);
+    setSoundRange(range);
+    return 0;
+}
+
+int SimCont2D::setSpeakInterval(lua_State* luaState)
+{
+    unsigned int speakInterval = luaL_checkint(luaState, 1);
+    setSpeakInterval(speakInterval);
     return 0;
 }
 

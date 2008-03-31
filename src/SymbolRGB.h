@@ -37,6 +37,10 @@ public:
     virtual void initRandom();
     virtual void mutate();
 
+    virtual int getRed(){return mRed;}
+    virtual int getGreen(){return mGreen;}
+    virtual int getBlue(){return mBlue;}
+
     int initRandom(lua_State* luaState);
 
     static const char mClassName[];

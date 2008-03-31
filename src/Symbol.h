@@ -44,6 +44,10 @@ public:
 
     virtual char* toString(){return "?";}
 
+    virtual int getRed(){return 0;}
+    virtual int getGreen(){return 0;}
+    virtual int getBlue(){return 0;}
+
     bool mAlwaysRandom;
     bool mFixed;
 

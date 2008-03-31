@@ -243,8 +243,31 @@ float Simulation::calcSymbolsBinding(SimulationObject* origObj,
         return 0.0f;
     }
 
-
     float distance = origSym->getBinding(targetSym);
+
+    return distance;
+}
+
+float Simulation::calcSymbolsBinding(SimulationObject* obj,
+                                    int symTable,
+                                    llULINT symID,
+                                    Symbol* symbol)
+{
+    SymbolTable* table = obj->getSymbolTable(symTable);
+
+    if (table == NULL)
+    {
+        return 0.0f;
+    }
+
+    Symbol* sym = table->getSymbol(symID);
+
+    if (sym == NULL)
+    {
+        return 0.0f;
+    }
+
+    float distance = sym->getBinding(symbol);
 
     return distance;
 }

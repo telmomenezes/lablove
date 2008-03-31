@@ -28,7 +28,6 @@ public:
     Message();
     virtual ~Message();
 
-protected:
     Symbol* mSymbol;
     unsigned int mType;
     float* mData;

@@ -236,6 +236,9 @@ void Gridbrain::addRandomInactiveConnection()
         {
             weight = mDistWeights->uniform(-1.0f, 1.0f);
             addConnection(x1, y1, g1, x2, y2, g2, weight);
+
+            // update producer/consumer status...
+            calcActive();
         }
     }
 }

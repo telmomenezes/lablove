@@ -91,6 +91,10 @@ protected:
                             int targetSymTable,
                             llULINT origSymID,
                             llULINT targetSymID);
+    float calcSymbolsBinding(SimulationObject* obj,
+                                    int symTable,
+                                    llULINT symID,
+                                    Symbol* symbol);
     void drawTimes();
 
     static RandDistManager mDistManager;
