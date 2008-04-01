@@ -56,7 +56,7 @@ splitConnectionProb = 0.01
 changeComponentProb = 0.01
 swapComponentProb = 0.1
 
-recombineProb = 0.0
+recombineProb = 1.0
 
 evoPred = true
 evoPrey = true
@@ -192,6 +192,10 @@ function addAgentSpecies(name, pop, red, green, blue, feed, food, evo)
     brain:setMutateSplitConnectionProb(splitConnectionProb)
     brain:setMutateChangeComponentProb(changeComponentProb)
     brain:setMutateSwapComponentProb(swapComponentProb)
+
+    brain:setGrowMethod(Gridbrain.GM_PRESSURE)
+    brain:setCloneConnectionsMode(Gridbrain.CC_ALL_PLUS)
+    brain:setMutationScope(Gridbrain.MS_ALL)
 
     alphaSet = GridbrainComponentSet()
     for i, comp in pairs(alphaComponents) do

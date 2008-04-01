@@ -85,6 +85,13 @@ void SymbolUL::mutate()
     // TODO
 }
 
+string SymbolUL::toString()
+{
+    char str[255];
+    sprintf(str, "%d", mUL);
+    return str;
+}
+
 const char SymbolUL::mClassName[] = "SymbolUL";
 
 Orbit<SymbolUL>::MethodType SymbolUL::mMethods[] = {

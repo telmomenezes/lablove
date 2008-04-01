@@ -165,7 +165,7 @@ public:
     virtual bool getFieldValue(string fieldName, float& value);
 
     virtual string write(SimulationObject* obj, PopulationManager* pop);
-    void printDebug();
+    virtual void printDebug();
 
     bool isConnectionValid(unsigned int xOrig,
                 unsigned int yOrig,

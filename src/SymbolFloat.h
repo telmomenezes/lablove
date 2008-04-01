@@ -44,6 +44,8 @@ public:
     
     int initRandom(lua_State* luaState);
 
+    virtual string toString();
+
     static const char mClassName[];
     static Orbit<SymbolFloat>::MethodType mMethods[];
     static Orbit<SymbolFloat>::NumberGlobalType mNumberGlobals[];

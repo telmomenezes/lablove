@@ -136,6 +136,24 @@ void SymbolBitString::mutate()
     mBits[replacePos] = getRandomBit();
 }
 
+string SymbolBitString::toString()
+{
+    string str = "";
+    for (unsigned int i = 0; i < mLength; i++)
+    {
+        if (mBits[i] == 0)
+        {
+            str += "0";
+        }
+        else
+        {
+            str += "1";
+        }
+    }
+
+    return str;
+}
+
 const char SymbolBitString::mClassName[] = "SymbolBitString";
 
 Orbit<SymbolBitString>::MethodType SymbolBitString::mMethods[] = {

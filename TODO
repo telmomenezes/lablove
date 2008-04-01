@@ -1,3 +1,7 @@
 #
 # To do list for LabLOVE
 # 
+
+- PopDynSpeciesBuffer: place near kin
+- Memory cells in gridbrains
+- Make sure gridbrain svg writer supports several alpha grids

@@ -68,6 +68,8 @@ public:
 
     virtual bool symbolUsed(int tableID, unsigned long symbolID){return false;}
 
+    virtual void printDebug(){}
+
 protected:
     void clearInterfaces();
 

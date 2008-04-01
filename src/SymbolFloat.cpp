@@ -104,6 +104,13 @@ int SymbolFloat::initRandom(lua_State* luaState)
     return 0;
 }
 
+string SymbolFloat::toString()
+{
+    char str[255];
+    sprintf(str, "%f", mFloat);
+    return str;
+}
+
 const char SymbolFloat::mClassName[] = "SymbolFloat";
 
 Orbit<SymbolFloat>::MethodType SymbolFloat::mMethods[] =

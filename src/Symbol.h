@@ -23,6 +23,10 @@
 #include "Orbit.h"
 #include "types.h"
 
+#include <string>
+
+using std::string;
+
 class Symbol
 {
 public:
@@ -42,7 +46,7 @@ public:
     int setAlwaysRandom(lua_State* luaState);
     int getID(lua_State* luaState);
 
-    virtual char* toString(){return "?";}
+    virtual string toString(){return "?";}
 
     virtual int getRed(){return 0;}
     virtual int getGreen(){return 0;}

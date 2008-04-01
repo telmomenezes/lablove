@@ -247,12 +247,14 @@ llULINT SymbolTable::getRandomSymbolId()
 void SymbolTable::printDebug()
 {
     printf("Table %d '%s'\n", mID, mName.c_str());
+
     map<llULINT, Symbol*>::iterator iterSymbol;
     for (iterSymbol = mSymbols.begin();
         iterSymbol != mSymbols.end();
         iterSymbol++)
     {
-        printf("%d: %s\n", (*iterSymbol).first, ((*iterSymbol).second)->toString());
+        printf("%d: ", (*iterSymbol).first);
+        printf("%s\n", ((*iterSymbol).second)->toString().c_str());
     }
 }
 

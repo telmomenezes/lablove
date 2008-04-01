@@ -143,6 +143,13 @@ int SymbolRGB::initRandom(lua_State* luaState)
     return 0;
 }
 
+string SymbolRGB::toString()
+{
+    char str[255];
+    sprintf(str, "(%d, %d, %d)", mRed, mGreen, mBlue);
+    return str;
+}
+
 const char SymbolRGB::mClassName[] = "SymbolRGB";
 
 Orbit<SymbolRGB>::MethodType SymbolRGB::mMethods[] =

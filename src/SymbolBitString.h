@@ -46,6 +46,8 @@ public:
 
     void setAllowWildcards(bool allow){mAllowWildcards = allow;}
 
+    virtual string toString();
+
     static const char mClassName[];
     static Orbit<SymbolBitString>::MethodType mMethods[];
     static Orbit<SymbolBitString>::NumberGlobalType mNumberGlobals[];

@@ -122,7 +122,17 @@ void Agent::mutate()
 
 SimulationObject* Agent::recombine(SimulationObject* otherParent)
 {
+    //printf("==> START RECOMBINE\n\n");
+    //printf("\nPARENT 1\n");
+    //printf("========\n");
+    //printDebug();
+
     Agent* agent2 = (Agent*)otherParent;
+
+    //printf("\nPARENT 2\n");
+    //printf("========\n");
+    //agent2->printDebug();
+
     Brain* newBrain = mBrain->recombine(agent2->mBrain);
 
     newBrain->setSelectedSymbols(this);
@@ -132,7 +142,14 @@ SimulationObject* Agent::recombine(SimulationObject* otherParent)
 
     newAgent->setBrain(newBrain);
 
-    return newAgent;
+    Agent* finalAgent = (Agent*)newAgent->clone();
+    delete newAgent;
+
+    //printf("\nCHILD\n");
+    //printf("=====\n");
+    //finalAgent->printDebug();
+
+    return finalAgent;
 }
 
 bool Agent::getFieldValue(string fieldName, float& value)
@@ -147,6 +164,12 @@ bool Agent::getFieldValue(string fieldName, float& value)
     {
         return mBrain->getFieldValue(fieldName, value);
     }
+}
+
+void Agent::printDebug()
+{
+    SimulationObject::printDebug();
+    mBrain->printDebug();
 }
 
 const char Agent::mClassName[] = "Agent";

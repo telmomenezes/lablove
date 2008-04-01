@@ -56,6 +56,8 @@ public:
 
     int setBrain(lua_State* luaState);
 
+    virtual void printDebug();
+
 protected:
     Brain* mBrain;
     list<Message*> mMessageList;

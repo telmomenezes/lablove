@@ -142,6 +142,8 @@ Gridbrain* Gridbrain::baseClone()
     gb->mCloneConnectionsMode = mCloneConnectionsMode;
     gb->mMutationScope = mMutationScope;
 
+    gb->mOwner = mOwner;
+
     return gb;
 }
 

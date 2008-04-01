@@ -42,6 +42,8 @@ public:
     llULINT getMin(){return mMin;}
     llULINT getMax(){return mMax;}
 
+    virtual string toString();
+
     static const char mClassName[];
     static Orbit<SymbolUL>::MethodType mMethods[];
     static Orbit<SymbolUL>::NumberGlobalType mNumberGlobals[];
