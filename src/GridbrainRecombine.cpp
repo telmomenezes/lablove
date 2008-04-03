@@ -469,7 +469,6 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb, GridbrainConnection* conn,
                 delete brain;
                 brain = newBrain;
                 recalcTarg = true;
-                grid = brain->mGridsVec[origGrid];
             }
             else
             {
@@ -479,6 +478,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb, GridbrainConnection* conn,
 
         while (eqOrig == NULL)
         {
+            grid = brain->mGridsVec[origGrid];
             unsigned int y = 0;
             while ((eqOrig == NULL) && (y < grid->getHeight()))
             {
