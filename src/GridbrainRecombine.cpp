@@ -576,7 +576,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb, GridbrainConnection* conn,
     else
     {
         failed++;
-        printf("-> Import failed (2)\n");
+        //printf("-> Import failed (2)\n");
     }
 
     eqOrig->mUsed = true;
@@ -674,11 +674,6 @@ Gridbrain* Gridbrain::uniformRecombine(Gridbrain* brain)
     int iteration = 0;
     while (iteration < 10)
     {
-        if (iteration != 0)
-        {
-            printf("itaration: %d\n", iteration);
-        }
-
         unsigned int failed = 0;
         conn = gb2->mConnections;
 
