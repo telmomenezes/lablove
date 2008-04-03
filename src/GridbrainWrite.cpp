@@ -267,7 +267,8 @@ string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
 void Gridbrain::printDebug()
 {
     printf("\n\n== GRIDBRAIN ==\n");
-    for (unsigned int i = 0; i < mGridsCount; i++)
+
+    /*for (unsigned int i = 0; i < mGridsCount; i++)
     {
         printf("Grid: %d\n", i);
         Grid* grid = mGridsVec[i];
@@ -282,25 +283,23 @@ void Gridbrain::printDebug()
         }
     }
 
-    printf("CONNECTIONS:\n");
+    printf("CONNECTIONS:\n");*/
 
     GridbrainConnection* conn = mConnections;
     while (conn != NULL)
     {
         Grid* gridOrig = mGridsVec[conn->mGridOrig];
         Grid* gridTarg = mGridsVec[conn->mGridTarg];
-        unsigned int comp1X = conn->mColumnOrig;
-        unsigned int comp1Y = conn->mRowOrig;
-        unsigned int comp2X = conn->mColumnTarg;
-        unsigned int comp2Y = conn->mRowTarg;
 
-        printf("(%d, %d, %d)->(%d, %d, %d) [%f][%f]\n",
-                conn->mColumnOrig,
-                conn->mRowOrig,
-                conn->mGridOrig,
-                conn->mColumnTarg,
-                conn->mRowTarg,
-                conn->mGridTarg,
+        GridbrainComponent* comp1 = (GridbrainComponent*)conn->mOrigComponent;
+        GridbrainComponent* comp2 = (GridbrainComponent*)conn->mTargComponent;
+
+        printf("%s(%d)", comp1->getName().c_str(), comp1->mID);
+        printf("(%d) -> ", comp1->mSubType);
+        printf("%s(%d)", comp2->getName().c_str(), comp2->mID);
+        printf("(%d) ", comp2->mSubType);
+
+        printf("[%f][%f]\n",
                 conn->mWeight,
                 conn->mRealWeight);
 

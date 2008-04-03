@@ -44,7 +44,8 @@ public:
     enum GrowMethod {GM_FREE, GM_PRESSURE};
     enum CloneConnectionsMode {CC_ALL, CC_ALL_PLUS, CC_ACTIVE};
     enum MutationScope {MS_ALL, MS_ACTIVE};
-    enum ExpansionType {ET_NONE, ET_COLUMN, ET_ROW};
+    enum ExpansionType {ET_NONE, ET_COLUMN_RANDOM, ET_COLUMN_FIRST, ET_COLUMN_LAST, ET_ROW};
+    enum RecombinationType {RT_TREE, RT_UNIFORM};
 
     Gridbrain(lua_State* luaState=NULL);
     virtual ~Gridbrain();
@@ -61,6 +62,7 @@ public:
     GridbrainComponent* getComponent(unsigned int x,
                 unsigned int y,
                 unsigned int gridNumber);
+    GridbrainComponent* getComponentByID(llULINT id);
     void addConnection(unsigned int xOrig,
                 unsigned int yOrig,
                 unsigned int gOrig,
@@ -146,6 +148,8 @@ public:
     void setCloneConnectionsMode(CloneConnectionsMode val){mCloneConnectionsMode = val;}
     void setMutationScope(MutationScope val){mMutationScope = val;}
 
+    void setRecombinationType(RecombinationType type){mRecombinationType = type;}
+
     void setMutateAddConnectionProb(float prob){mMutateAddConnectionProb = prob;}
     void setMutateAddDoubleConnectionProb(float prob){mMutateAddDoubleConnectionProb = prob;}
     void setMutateRemoveConnectionProb(float prob){mMutateRemoveConnectionProb = prob;}
@@ -199,6 +203,7 @@ public:
     int setGrowMethod(lua_State* luaState);
     int setCloneConnectionsMode(lua_State* luaState);
     int setMutationScope(lua_State* luaState);
+    int setRecombinationType(lua_State* luaState);
     int setMutateAddConnectionProb(lua_State* luaState);
     int setMutateAddDoubleConnectionProb(lua_State* luaState);
     int setMutateRemoveConnectionProb(lua_State* luaState);
@@ -290,10 +295,16 @@ protected:
                                             unsigned int targG);
     GridbrainComponent* getCompByRelativeOffset(GridbrainComponent* compOrig, unsigned int offset);
 
-    GridbrainComponent* findEquivalent(GridbrainComponent* comp, Gridbrain* gb);
-    void clearRecombineInfo(bool selected);
+    Gridbrain* treeRecombine(Gridbrain* brain);
+    GridbrainComponent* findEquivalentComponent(GridbrainComponent* comp);
+    void clearCompRecombineInfo(bool selected);
     void spreadSelected(GridbrainComponent* comp, bool selected);
     Gridbrain* crossoverComp(Gridbrain* gb, GridbrainComponent* pivot, unsigned int &failed);
+
+    Gridbrain* uniformRecombine(Gridbrain* brain);
+    void clearConnRecombineInfo(bool selected);
+    GridbrainConnection* findEquivalentConnection(GridbrainConnection* conn);
+    Gridbrain* importConnection(Gridbrain* gb, GridbrainConnection* conn, unsigned int &failed);
 
     static mt_distribution* mDistConnections;
     static mt_distribution* mDistMutationsProb;
@@ -343,6 +354,8 @@ protected:
     GrowMethod mGrowMethod;
     CloneConnectionsMode mCloneConnectionsMode;
     MutationScope mMutationScope;
+
+    RecombinationType mRecombinationType;
 };
 
 #endif

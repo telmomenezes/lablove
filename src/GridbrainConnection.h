@@ -43,6 +43,7 @@ public:
     void* mTargComponent;
     double mAge;
     bool mActive;
+    bool mSelected;
 };
 
 #endif

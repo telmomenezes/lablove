@@ -304,19 +304,23 @@ float* Grid::getInputBuffer()
     return buffer;
 }
 
-void Grid::addColumn(bool addInEnd)
+void Grid::addColumn(ColumnPlacement place)
 {
     mWidth++;
     mSize = mWidth * mHeight;
     int newColumn;
 
-    if (addInEnd)
+    switch (place)
     {
+    case CP_FIRST:
+        newColumn = 0;
+        break;
+    case CP_LAST:
         newColumn = mWidth - 1;
-    }
-    else
-    {
+        break;
+    case CP_RANDOM:
         newColumn = mDistRowsAndColumns->iuniform(0, mWidth);
+        break;
     }
     mColumnTargetCountVec.push_back(0);
 

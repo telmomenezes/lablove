@@ -101,7 +101,10 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
     {
         // Simple clone
         newOrganism = org->clone();
+
     }
+
+    newOrganism->setKinID(org->getID());
             
     // Mutate
     newOrganism->mutate();

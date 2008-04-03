@@ -51,9 +51,9 @@ compCount = 1
 bufferSize = 100
 fitnessAging = 0.1
 
-addConnectionProb = 0.0
+addConnectionProb = 0.05
 addDoubleConnectionProb = 0.0
-removeConnectionProb = 0.0
+removeConnectionProb = 0.05
 removeDoubleConnectionProb = 0.0
 changeWeightProb = 0.01
 weightMutationStanDev = 1.0
@@ -67,11 +67,13 @@ changeComponentProb = 0.01
 swapComponentProb = 0.1
 inactiveRatio = 0.0
 
-recombineProb = 0.0
+recombineProb = 1.0
 
 growMethod = "pressure"
 cloneConnectionsMode = "all_plus"
 mutationScope = "all"
+
+recType = "uniform"
 
 timeLimit = 0
 logTimeInterval = 100
@@ -104,10 +106,11 @@ bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
 compCount = getNumberParameter("compcount", compCount, "cc")
 fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")
 initialConnections = getNumberParameter("initconn", initialConnections, "ico")
+inactiveRatio = getNumberParameter("inactiveratio", inactiveRatio, "ir")
 growMethod = getStringParameter("growmethod", growMethod, "gm")
 cloneConnectionsMode = getStringParameter("cloneconnmode", cloneConnectionsMode, "ccm")
 mutationScope = getStringParameter("mutationscope", mutationScope, "ms")
-inactiveRatio = getStringParameter("inactiveratio", inactiveRatio, "ir")
+recType = getStringParameter("rectype", recType, "rt")
 
 logBaseName = "_poison_"
 
@@ -139,6 +142,12 @@ elseif mutationScope == "active" then
     mutationScopeCode = Gridbrain.MS_ACTIVE
 end
 
+recTypeCode = 0
+if recType == "uniform" then
+    recTypeCode = Gridbrain.RT_UNIFORM
+elseif recType == "tree" then
+    recTypeCode = Gridbrain.RT_TREE
+end
 
 
 -- Simulation
@@ -240,6 +249,8 @@ brain:setAddInactiveRatio(inactiveRatio)
 brain:setGrowMethod(growMethodCode)
 brain:setCloneConnectionsMode(cloneConnectionsModeCode)
 brain:setMutationScope(mutationScopeCode)
+
+brain:setRecombinationType(recTypeCode)
 
 alphaSet = GridbrainComponentSet()
 for i, comp in pairs(alphaComponents) do

@@ -38,6 +38,7 @@ class Grid : public ScriptableObject
 {
 public:
     enum Type {ALPHA, BETA};
+    enum ColumnPlacement {CP_RANDOM, CP_FIRST, CP_LAST};
 
     Grid(lua_State* luaState=NULL);
     Grid(const Grid& grid);
@@ -81,7 +82,7 @@ public:
     unsigned int getWriteY(){return mWriteY;}
     void setWritePos(unsigned int x, unsigned int y){mWriteX = x; mWriteY = y;}
 
-    void addColumn(bool addInEnd=false);
+    void addColumn(ColumnPlacement place=CP_RANDOM);
     void addRow();
     void deleteColumn(unsigned int col);
     void deleteRow(unsigned int row);

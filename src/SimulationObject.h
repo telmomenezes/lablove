@@ -98,6 +98,9 @@ public:
     void setFitnessMeasure(int measure){mFitnessMeasure = measure;}
     int getFitnessMeasure(){return mFitnessMeasure;}
 
+    void setKinID(llULINT id){mKinID = id;}
+    llULINT getKinID(){return mKinID;}
+
     virtual void printDebug();
 
     bool mDeleted;
@@ -133,6 +136,7 @@ public:
 
 protected:
     llULINT mID;
+    llULINT mKinID;
 
     map<string, SymbolPointer> mNamedSymbols;
     map<string, int> mNamedFloatDataIndexes;
