@@ -306,6 +306,10 @@ protected:
     GridbrainConnection* findEquivalentConnection(GridbrainConnection* conn);
     Gridbrain* importConnection(Gridbrain* gb, GridbrainConnection* conn, unsigned int &failed);
 
+    bool isRedundant(GridbrainComponent* comp1, GridbrainComponent* comp2);
+    void calcRedundancyTags();
+    void cleanRedundant();
+
     static mt_distribution* mDistConnections;
     static mt_distribution* mDistMutationsProb;
     static mt_distribution* mDistWeights;

@@ -37,6 +37,8 @@ public:
     float mRealWeight;
     void* mPrevConnection;
     void* mNextConnection;
+    void* mPrevInConnection;
+    void* mNextInConnection;
     void* mPrevGlobalConnection;
     void* mNextGlobalConnection;
     void* mOrigComponent;

@@ -76,6 +76,8 @@ public:
 
     bool isUsed();
 
+    bool isEqual(GridbrainComponent* comp);
+
     static const char mClassName[];
     static Orbit<GridbrainComponent>::MethodType mMethods[];
     static Orbit<GridbrainComponent>::NumberGlobalType mNumberGlobals[];
@@ -89,6 +91,7 @@ public:
     unsigned int mConnectionsCount;
     unsigned int mInboundConnections;
     GridbrainConnection* mFirstConnection;
+    GridbrainConnection* mFirstInConnection;
     float mState;
     bool mCycleFlag;
     bool mForwardFlag;
@@ -118,6 +121,8 @@ public:
     bool mPivotCandidate;
     bool mSelected;
     bool mUsed;
+
+    int mRedTag;
 };
 
 #endif

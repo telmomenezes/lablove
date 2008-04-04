@@ -67,7 +67,7 @@ changeComponentProb = 0.01
 swapComponentProb = 0.1
 inactiveRatio = 0.0
 
-recombineProb = 1.0
+recombineProb = 0.0
 
 growMethod = "pressure"
 cloneConnectionsMode = "all_plus"

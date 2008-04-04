@@ -52,6 +52,7 @@ void GridbrainComponent::clearDefinitions()
     mPivotCandidate = false;
     mSelected = false;
     mUsed = false;
+    mRedTag = -1;
 }
 
 void GridbrainComponent::clearPosition()
@@ -67,6 +68,7 @@ void GridbrainComponent::clearConnections()
     mConnectionsCount = 0;
     mFirstConnection = NULL;
     mInboundConnections = 0;
+    mFirstInConnection = NULL;
 }
 
 void GridbrainComponent::clearMetrics()
@@ -90,6 +92,7 @@ void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)
     mPivotCandidate = comp->mPivotCandidate;
     mSelected = comp->mSelected;
     mUsed = comp->mUsed;
+    mRedTag = -1;
 }
 
 void GridbrainComponent::copyPosition(GridbrainComponent* comp)
@@ -248,6 +251,16 @@ bool GridbrainComponent::isUsed()
     }
 
     return false;
+}
+
+bool GridbrainComponent::isEqual(GridbrainComponent* comp)
+{
+    return ((mType == comp->mType)
+            && (mSubType == comp->mSubType)
+            && (mOrigSymTable == comp->mOrigSymTable)
+            && (mTargetSymTable == comp->mTargetSymTable)
+            && (mOrigSymID == comp->mOrigSymID)
+            && (mTargetSymID == comp->mTargetSymID));
 }
 
 const char GridbrainComponent::mClassName[] = "GridbrainComponent";

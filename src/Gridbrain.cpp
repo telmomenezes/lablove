@@ -397,6 +397,7 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
         gb->addRandomConnections(lostConnections);
     }
 
+    gb->cleanRedundant();
     gb->update();
 
     return gb;
@@ -758,10 +759,22 @@ void Gridbrain::addConnection(unsigned int xOrig,
     }
 
     (comp->mConnectionsCount)++;
+
+    // Insert in the beginning of the target's incoming connections list
+    GridbrainConnection* nextConn = targComp->mFirstInConnection;
+    conn->mNextInConnection = nextConn;
+    conn->mPrevInConnection = NULL;
+    targComp->mFirstInConnection = conn;
+
+    if (nextConn != NULL)
+    {
+        nextConn->mPrevInConnection = conn;
+    }
+
     (targComp->mInboundConnections)++;
 
     // Insert in the beginning of the global connections list
-    GridbrainConnection* nextConn = mConnections;
+    nextConn = mConnections;
     conn->mNextGlobalConnection = nextConn;
     conn->mPrevGlobalConnection = NULL;
     mConnections = conn;
@@ -799,6 +812,8 @@ void Gridbrain::addConnectionReal(unsigned int xOrig,
 void Gridbrain::removeConnection(GridbrainConnection* conn)
 {
     GridbrainComponent* comp = (GridbrainComponent*)conn->mOrigComponent;
+    GridbrainComponent* targComp = (GridbrainComponent*)conn->mTargComponent;
+
     comp->mConnectionsCount--;
 
     if (conn->mPrevConnection)
@@ -812,6 +827,21 @@ void Gridbrain::removeConnection(GridbrainConnection* conn)
     if (conn->mNextConnection)
     {
         ((GridbrainConnection*)conn->mNextConnection)->mPrevConnection = conn->mPrevConnection;
+    }
+
+    targComp->mInboundConnections--;
+
+    if (conn->mPrevInConnection)
+    {
+        ((GridbrainConnection*)conn->mPrevInConnection)->mNextInConnection = conn->mNextInConnection;
+    }
+    else
+    {
+        targComp->mFirstInConnection = (GridbrainConnection*)conn->mNextInConnection;
+    }
+    if (conn->mNextInConnection)
+    {
+        ((GridbrainConnection*)conn->mNextInConnection)->mPrevInConnection = conn->mPrevInConnection;
     }
 
     mConnectionsCount--;
