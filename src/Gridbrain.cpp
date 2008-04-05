@@ -397,7 +397,6 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
         gb->addRandomConnections(lostConnections);
     }
 
-    gb->cleanRedundant();
     gb->update();
 
     return gb;
