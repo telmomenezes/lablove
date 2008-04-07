@@ -51,12 +51,12 @@ SET(SOURCE_FILES
     src/Gridbrain.cpp
     src/GridbrainMutations.cpp
     src/GridbrainRecombine.cpp
-    src/GridbrainClean.cpp
     src/GridbrainWrite.cpp
     src/Grid.cpp
     src/GridCoord.cpp
     src/GridbrainComponent
     src/GridbrainConnection.cpp
+    src/GridbrainConnTag.cpp
     src/GridbrainComponentSet.cpp
     src/PopulationDynamics.cpp
     src/PopDynGenerations.cpp

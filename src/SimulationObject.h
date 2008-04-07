@@ -32,10 +32,12 @@
 #include <map>
 #include <string>
 #include <list>
+#include <vector>
 
 using std::map;
 using std::string;
 using std::list;
+using std::vector;
 
 class SimulationObject
 {
@@ -100,6 +102,8 @@ public:
 
     void setKinID(llULINT id){mKinID = id;}
     llULINT getKinID(){return mKinID;}
+
+    virtual void popAdjust(vector<SimulationObject*>* popVec){}
 
     virtual void printDebug();
 

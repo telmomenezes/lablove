@@ -147,6 +147,8 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
             species->mOrganismVector[organismNumber] = org;
             deleteObj = false;
             keepComparing = false;
+
+            org->popAdjust(&species->mOrganismVector);
         }
         else
         {

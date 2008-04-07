@@ -693,8 +693,7 @@ void Gridbrain::mutateMoveConnectionOrigin()
                             conn->mColumnTarg,
                             conn->mRowTarg,
                             conn->mGridTarg,
-                            conn->mWeight,
-                            conn->mAge);
+                            conn->mWeight);
 
             removeConnection(conn);
         }
@@ -950,6 +949,7 @@ void Gridbrain::mutateSplitConnection(unsigned int popSize)
         if (valid)
         {
             MUTATIONS_SPLIT_CONN++;
+            GridbrainConnTag tag1 = conn->mTag;
             float weight = conn->mWeight;
 
             // Current connection is going to be delted, advance to next one
@@ -972,10 +972,22 @@ void Gridbrain::mutateSplitConnection(unsigned int popSize)
                 weight2 = mDistWeights->uniform(-1.0f, 1.0f);
             }
 
+            GridbrainConnTag tag2;
+            GridbrainConnTag tag3;
+
+            tag2.generateID();
+            tag3.generateID();
+            tag2.mGroupID = tag1.mGroupID;
+            tag3.mGroupID = tag1.mGroupID;
+            tag2.mPrevID = tag1.mPrevID;
+            tag3.mNextID = tag1.mNextID;
+            tag2.mNextID = tag3.mID;
+            tag3.mPrevID = tag2.mID;
+
             // create 1->3 connection
-            addConnection(x1, y1, g1, x3, y3, g3, weight1);
+            addConnection(x1, y1, g1, x3, y3, g3, weight1, tag2);
             // create 3->2 connection
-            addConnection(x3, y3, g3, x2, y2, g2, weight2);
+            addConnection(x3, y3, g3, x2, y2, g2, weight2, tag3);
 
             /*printf("SPLIT\n");
             printf("remove: (%d, %d, %d)->(%d, %d, %d)\n", x1, y1, g1, x2, y2, g2);
@@ -1026,6 +1038,12 @@ void Gridbrain::mutateJoinConnections(unsigned int popSize)
             weight = mDistWeights->uniform(-1.0f, 1.0f);
         }
 
+        // This is too simple
+        // Must considered group joining
+        GridbrainConnTag tag;
+        tag.generateID();
+        tag.mGroupID = tag.mID;
+
         /*printf("JOIN\n");
         printf("add: (%d, %d, %d)->(%d, %d, %d)\n", x1, y1, g1, x2, y2, g2);
         printf("remove: (%d, %d, %d)->(%d, %d, %d)\n", conn->mColumnOrig, conn->mRowOrig, conn->mGridOrig, conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg);
@@ -1037,7 +1055,8 @@ void Gridbrain::mutateJoinConnections(unsigned int popSize)
                         conn2->mColumnTarg,
                         conn2->mRowTarg,
                         conn2->mGridTarg,
-                        weight);
+                        weight,
+                        tag);
         removeConnection(conn1);
         removeConnection(conn2);
     }
@@ -1200,7 +1219,6 @@ void Gridbrain::mutateSwapComponent(float prob)
                     unsigned int newY2 = conn->mRowTarg;
                     unsigned int newG2 = conn->mGridTarg;
                     float newWeight = conn->mWeight;
-                    double newAge = conn->mAge;
                     bool change = false;
                     GridbrainConnection* curConn = conn;
 
@@ -1241,6 +1259,7 @@ void Gridbrain::mutateSwapComponent(float prob)
 
                     if (change)
                     {
+                        GridbrainConnTag tag = curConn->mTag;
                         removeConnection(curConn);
 
                         if (connectionExists(newX1, newY1, newG1, newX2, newY2, newG2))
@@ -1253,12 +1272,12 @@ void Gridbrain::mutateSwapComponent(float prob)
                             addConn->mRowTarg = newY2;
                             addConn->mGridTarg = newG2;
                             addConn->mWeight = newWeight;
-                            addConn->mAge = newAge;
+                            addConn->mTag = tag;
                             addInTheEnd.push_back(addConn);
                         }
                         else
                         {
-                            addConnection(newX1, newY1, newG1, newX2, newY2, newG2, newWeight, newAge);
+                            addConnection(newX1, newY1, newG1, newX2, newY2, newG2, newWeight, tag);
                         }
                     }
                 }
@@ -1278,7 +1297,7 @@ void Gridbrain::mutateSwapComponent(float prob)
                                     addConn->mRowTarg,
                                     addConn->mGridTarg,
                                     addConn->mWeight,
-                                    addConn->mAge);
+                                    addConn->mTag);
 
                     delete addConn;
                 }

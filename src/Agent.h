@@ -50,6 +50,8 @@ public:
     void addMessage(Message* msg){mMessageList.push_back(msg);}
     list<Message*>* getMessageList(){return &mMessageList;}
 
+    virtual void popAdjust(vector<SimulationObject*>* popVec);
+
     static const char mClassName[];
     static Orbit<Agent>::MethodType mMethods[];
     static Orbit<Agent>::NumberGlobalType mNumberGlobals[];

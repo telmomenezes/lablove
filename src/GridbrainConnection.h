@@ -20,9 +20,14 @@
 #ifndef _INCLUDE_GRIDBRAIN_CONNECTION_H
 #define _INCLUDE_GRIDBRAIN_CONNECTION_H
 
+#include "types.h"
+#include "GridbrainConnTag.h"
+
 class GridbrainConnection
 {
 public:
+    enum SelectionState {SS_UNKNOWN, SS_SELECTED, SS_UNSELECTED};
+    
     GridbrainConnection();
     virtual ~GridbrainConnection();
 
@@ -43,9 +48,10 @@ public:
     void* mNextGlobalConnection;
     void* mOrigComponent;
     void* mTargComponent;
-    double mAge;
     bool mActive;
-    bool mSelected;
+
+    SelectionState mSelectionState;
+    GridbrainConnTag mTag;
 };
 
 #endif

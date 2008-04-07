@@ -202,11 +202,3 @@ TEST_FIXTURE(GridbrainFixture, GridbrainCycleOnEmptyGrid)
     CHECK(mGridbrain.isValid());
 }
 
-TEST_FIXTURE(GridbrainFixture, GridbrainConnectionAge1)
-{
-    mGridbrain.addConnection(0, 0, 0, 1, 1, 0, 0.5);
-    GridbrainConnection* conn = mGridbrain.getConnection(0, 0, 0, 1, 1, 0);
-    CHECK_CLOSE(conn->mAge, 0.0f, 0.0001f);
-    CHECK(mGridbrain.isValid());
-}
-

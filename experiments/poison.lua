@@ -53,7 +53,7 @@ fitnessAging = 0.1
 
 addConnectionProb = 0.005
 addDoubleConnectionProb = 0.0
-removeConnectionProb = 0.005
+removeConnectionProb = 0.01
 removeDoubleConnectionProb = 0.0
 changeWeightProb = 0.01
 weightMutationStanDev = 1.0
@@ -61,13 +61,13 @@ newWeightProb = 0.0
 moveConnectionOrigProb = 0.0
 forkConnectionProb = 0.0
 forkDoubleConnectionProb = 0.0
-splitConnectionProb = 0.0
+splitConnectionProb = 0.005
 joinConnectionsProb = 0.0
 changeComponentProb = 0.01
 swapComponentProb = 0.1
 inactiveRatio = 0.0
 
-recombineProb = 0.0
+recombineProb = 1.0
 
 growMethod = "pressure"
 cloneConnectionsMode = "all_plus"

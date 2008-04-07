@@ -68,6 +68,8 @@ public:
 
     virtual bool symbolUsed(int tableID, unsigned long symbolID){return false;}
 
+    virtual void popAdjust(vector<SimulationObject*>* popVec){}
+
     virtual void printDebug(){}
 
 protected:

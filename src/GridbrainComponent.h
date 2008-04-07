@@ -66,6 +66,7 @@ public:
     void copyPosition(GridbrainComponent* comp);
 
     bool isAggregator();
+    bool isUnique();
     string getName();
     ConnType getConnectorType();
     bool isProducer();
@@ -77,6 +78,7 @@ public:
     bool isUsed();
 
     bool isEqual(GridbrainComponent* comp);
+
 
     static const char mClassName[];
     static Orbit<GridbrainComponent>::MethodType mMethods[];
@@ -118,11 +120,7 @@ public:
 
     llULINT mID;
 
-    bool mPivotCandidate;
-    bool mSelected;
     bool mUsed;
-
-    int mRedTag;
 };
 
 #endif

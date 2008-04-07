@@ -166,6 +166,11 @@ bool Agent::getFieldValue(string fieldName, float& value)
     }
 }
 
+void Agent::popAdjust(vector<SimulationObject*>* popVec)
+{
+    mBrain->popAdjust(popVec);
+}
+
 void Agent::printDebug()
 {
     SimulationObject::printDebug();

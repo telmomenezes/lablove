@@ -46,6 +46,7 @@ public:
     enum MutationScope {MS_ALL, MS_ACTIVE};
     enum ExpansionType {ET_NONE, ET_COLUMN_RANDOM, ET_COLUMN_FIRST, ET_COLUMN_LAST, ET_ROW};
     enum RecombinationType {RT_TREE, RT_UNIFORM};
+    enum CompEquivalenceType {CET_ORIGIN, CET_TARGET, CET_NEW_ORIGIN, CET_NEW_TARGET};
 
     Gridbrain(lua_State* luaState=NULL);
     virtual ~Gridbrain();
@@ -70,14 +71,15 @@ public:
                 unsigned int yTarg,
                 unsigned int gTarg,
                 float weight,
-                double age=0.0f);
+                GridbrainConnTag tag=GridbrainConnTag());
     void addConnectionReal(unsigned int xOrig,
                 unsigned int yOrig,
                 unsigned int gOrig,
                 unsigned int xTarg,
                 unsigned int yTarg,
                 unsigned int gTarg,
-                float realWeight);
+                float realWeight,
+                GridbrainConnTag tag=GridbrainConnTag());
     void removeConnection(GridbrainConnection* conn);
     void removeConnection(unsigned int xOrig,
                 unsigned int yOrig,
@@ -296,19 +298,23 @@ protected:
     GridbrainComponent* getCompByRelativeOffset(GridbrainComponent* compOrig, unsigned int offset);
 
     Gridbrain* treeRecombine(Gridbrain* brain);
-    GridbrainComponent* findEquivalentComponent(GridbrainComponent* comp);
-    void clearCompRecombineInfo(bool selected);
-    void spreadSelected(GridbrainComponent* comp, bool selected);
-    Gridbrain* crossoverComp(Gridbrain* gb, GridbrainComponent* pivot, unsigned int &failed);
 
     Gridbrain* uniformRecombine(Gridbrain* brain);
     void clearConnRecombineInfo(bool selected);
-    GridbrainConnection* findEquivalentConnection(GridbrainConnection* conn);
-    Gridbrain* importConnection(Gridbrain* gb, GridbrainConnection* conn, unsigned int &failed);
+    GridbrainComponent* findEquivalentComponent(GridbrainComponent* comp, CompEquivalenceType eqType);
+    Gridbrain* importConnection(Gridbrain* gb,
+                                GridbrainConnection* conn,
+                                bool &canAddComponent,
+                                bool &success,
+                                unsigned int &failsOrder,
+                                unsigned int &failsComp);
 
-    bool isRedundant(GridbrainComponent* comp1, GridbrainComponent* comp2);
-    void calcRedundancyTags();
-    void cleanRedundant();
+    bool checkTagGroup(llULINT group);
+    bool selectTagGroup(llULINT group, bool select);
+
+    bool isCompEquivalent(GridbrainComponent* comp1, GridbrainComponent* comp2, CompEquivalenceType eqType);
+    GridbrainConnTag findConnTag(GridbrainConnection* conn);
+    virtual void popAdjust(vector<SimulationObject*>* popVec);
 
     static mt_distribution* mDistConnections;
     static mt_distribution* mDistMutationsProb;

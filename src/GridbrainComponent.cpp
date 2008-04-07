@@ -49,10 +49,7 @@ void GridbrainComponent::clearDefinitions()
     mOrigSymID = 0;
     mTargetSymID = 0;
     mTableLinkType = InterfaceItem::NO_LINK;
-    mPivotCandidate = false;
-    mSelected = false;
     mUsed = false;
-    mRedTag = -1;
 }
 
 void GridbrainComponent::clearPosition()
@@ -89,10 +86,7 @@ void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)
     mTargetSymID = comp->mTargetSymID;
     mTableLinkType = comp->mTableLinkType;
     mID = comp->mID;
-    mPivotCandidate = comp->mPivotCandidate;
-    mSelected = comp->mSelected;
     mUsed = comp->mUsed;
-    mRedTag = -1;
 }
 
 void GridbrainComponent::copyPosition(GridbrainComponent* comp)
@@ -107,6 +101,12 @@ bool GridbrainComponent::isAggregator()
 {
     return ((mType == GridbrainComponent::MAX)
         || (mType == GridbrainComponent::MMAX));
+}
+
+bool GridbrainComponent::isUnique()
+{
+    return ((mType == GridbrainComponent::PER)
+        || (mType == GridbrainComponent::ACT));
 }
 
 string GridbrainComponent::getName()
@@ -257,6 +257,7 @@ bool GridbrainComponent::isEqual(GridbrainComponent* comp)
 {
     return ((mType == comp->mType)
             && (mSubType == comp->mSubType)
+            && (mGrid == comp->mGrid)
             && (mOrigSymTable == comp->mOrigSymTable)
             && (mTargetSymTable == comp->mTargetSymTable)
             && (mOrigSymID == comp->mOrigSymID)

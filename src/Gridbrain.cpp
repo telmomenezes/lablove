@@ -382,7 +382,7 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                     y2,
                     g2,
                     conn->mWeight,
-                    conn->mAge + 1.0f);
+                    conn->mTag);
             }
             else
             {
@@ -594,11 +594,11 @@ GridbrainComponent* Gridbrain::getComponent(unsigned int x,
 
     if (x >= grid->getWidth())
     {
-        throw std::runtime_error("Trying to get component from invalid grid position");
+        throw std::runtime_error("Trying to get component from invalid grid column");
     }
     if (y >= grid->getHeight())
     {
-        throw std::runtime_error("Trying to get component from invalid grid position");
+        throw std::runtime_error("Trying to get component from invalid grid row");
     }
 
     unsigned int pos = (x * grid->getHeight()) + y + grid->getOffset();
@@ -625,7 +625,7 @@ void Gridbrain::addConnection(unsigned int xOrig,
                 unsigned int yTarg,
                 unsigned int gTarg,
                 float weight,
-                double age)
+                GridbrainConnTag tag)
 {
     /*printf("add connection: %d,%d,%d -> %d,%d,%d [%f]\n",
             xOrig,
@@ -696,10 +696,10 @@ void Gridbrain::addConnection(unsigned int xOrig,
     conn->mRowTarg = targComp->mRow;
     conn->mGridTarg = targComp->mGrid;
     conn->mWeight = weight;
-    conn->mAge = age;
     applyWeight(conn);
     conn->mOrigComponent = comp;
     conn->mTargComponent = targComp;
+    conn->mTag = tag;
 
     if (conn->mGridOrig == conn->mGridTarg)
     {
@@ -792,7 +792,8 @@ void Gridbrain::addConnectionReal(unsigned int xOrig,
                 unsigned int xTarg,
                 unsigned int yTarg,
                 unsigned int gTarg,
-                float realWeight)
+                float realWeight,
+                GridbrainConnTag tag)
 {
     float weight;
 
@@ -805,7 +806,7 @@ void Gridbrain::addConnectionReal(unsigned int xOrig,
         weight = -(1.0f / (realWeight + 1.0f)) + 1.0f;
     }
 
-    addConnection(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg, weight);
+    addConnection(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg, weight, tag);
 }
 
 void Gridbrain::removeConnection(GridbrainConnection* conn)

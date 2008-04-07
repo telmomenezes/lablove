@@ -18,6 +18,7 @@
  */
 
 #include "Gridbrain.h"
+#include "Agent.h"
 
 Brain* Gridbrain::recombine(Brain* brain)
 {
@@ -30,273 +31,6 @@ Brain* Gridbrain::recombine(Brain* brain)
         return uniformRecombine((Gridbrain*)brain);
         break;
     }
-}
-
-GridbrainComponent* Gridbrain::findEquivalentComponent(GridbrainComponent* comp)
-{
-    GridbrainComponent* eqComp = NULL;
-
-    Grid* grid = mGridsVec[comp->mGrid];
-    unsigned int start = grid->getOffset();
-    unsigned int end = start + grid->getSize();
-
-    for (unsigned int i = start; i < end; i++)
-    {
-        GridbrainComponent* curComp = &(mComponents[i]);
-
-        if ((comp->mType == GridbrainComponent::PER) || (comp->mType == GridbrainComponent::ACT))
-        {
-            if ((comp->mType == curComp->mType)
-                && (comp->mSubType == curComp->mSubType)
-                && (comp->mOrigSymTable == curComp->mOrigSymTable)
-                && (comp->mTargetSymTable == curComp->mTargetSymTable)
-                && (comp->mOrigSymID == curComp->mOrigSymID)
-                && (comp->mTargetSymID == curComp->mTargetSymID))
-            {
-                return curComp;
-            }
-            else
-            {
-                if (comp->mID == curComp->mID)
-                {
-                    eqComp = curComp;
-                }
-            }
-        }
-        else
-        {
-            if (comp->mID == curComp->mID)
-            {
-                return curComp;
-            }
-        }
-    }
-
-    return eqComp;
-}
-
-void Gridbrain::clearCompRecombineInfo(bool selected)
-{
-    for (unsigned int i = 0; i < mNumberOfComponents; i++)
-    {
-        mComponents[i].mPivotCandidate = false;
-        mComponents[i].mSelected = selected;
-        mComponents[i].mUsed = false;
-    }
-}
-
-void Gridbrain::spreadSelected(GridbrainComponent* comp, bool selected)
-{
-    if (comp->mSelected != selected)
-    {
-        comp->mSelected = selected;
-
-        GridbrainConnection* conn = comp->mFirstConnection;
-
-        while (conn != NULL)
-        {
-            GridbrainComponent* targComp = (GridbrainComponent*)conn->mTargComponent;
-            spreadSelected(targComp, selected);
-            conn = (GridbrainConnection*)conn->mNextConnection;
-        }
-    }
-}
-
-Gridbrain* Gridbrain::crossoverComp(Gridbrain* gb, GridbrainComponent* pivot, unsigned int &failed)
-{
-    Gridbrain* brain = gb;
-    GridbrainComponent* orig = pivot;
-    GridbrainConnection* conn = orig->mFirstConnection;
-
-    while (conn != NULL)
-    {
-        GridbrainComponent* targ = (GridbrainComponent*)(conn->mTargComponent);
-
-        GridbrainComponent* eqOrig = brain->findEquivalentComponent(orig);
-        GridbrainComponent* eqTarg = brain->findEquivalentComponent(targ);
-
-        bool recalcOrig = false;
-
-        if (eqTarg == NULL)
-        {
-            unsigned int origGrid = orig->mGrid;
-            unsigned int targetGrid = targ->mGrid;
-            unsigned int targetColumn = 0;
-
-            if (origGrid == targetGrid)
-            {
-                targetColumn = eqOrig->mColumn + 1;
-            }
-
-            // Grid width needs to be expanded?
-            if (brain->mGridsVec[targetGrid]->getWidth() == targetColumn)
-            {
-                Gridbrain* newBrain = brain->clone(false, ET_COLUMN_LAST, targetGrid);
-                delete brain;
-                brain = newBrain;
-                recalcOrig = true;
-            }
-
-            while (eqTarg == NULL)
-            {
-                Grid* grid = brain->mGridsVec[targetGrid];
-
-                unsigned int y = 0;
-                while ((eqTarg == NULL) && (y < grid->getHeight()))
-                {
-                    GridbrainComponent* curComp = brain->getComponent(targetColumn, y, targetGrid);
-                    y++;
-                    if (!curComp->isUsed())
-                    {
-                        curComp->copyDefinitions(targ);
-                        eqTarg = curComp;
-                    }
-                }
-
-                // Grid height needs to be expanded?
-                if (eqTarg == NULL)
-                {
-                    Gridbrain* newBrain = brain->clone(false, ET_ROW, targetGrid);
-                    delete brain;
-                    brain = newBrain;
-                    recalcOrig = true;
-                }
-            }
-        }
-
-        if (recalcOrig)
-        {
-            eqOrig = brain->findEquivalentComponent(orig);
-        }
-
-        unsigned int x1 = eqOrig->mColumn;
-        unsigned int y1 = eqOrig->mRow;
-        unsigned int g1 = eqOrig->mGrid;
-        unsigned int x2 = eqTarg->mColumn;
-        unsigned int y2 = eqTarg->mRow;
-        unsigned int g2 = eqTarg->mGrid;
-        float weight = conn->mWeight;
-
-        if ((brain->isConnectionValid(x1, y1, g1, x2, y2, g2))
-            && ((g1 != g2) || (x1 < x2)))
-        {
-            brain->addConnection(x1, y1, g1, x2, y2, g2, weight);
-        }
-        else
-        {
-            failed++;
-        }
-
-        eqOrig->mUsed = true;
-        eqTarg->mUsed = true;
-        brain = crossoverComp(brain, targ, failed);
-
-        conn = (GridbrainConnection*)(conn->mNextConnection);
-    }
-
-    return brain;
-}
-
-Gridbrain* Gridbrain::treeRecombine(Gridbrain* brain)
-{
-    Gridbrain* gbNew = (Gridbrain*)(this->clone());
-    Gridbrain* gb2 = (Gridbrain*)(brain->clone());
-
-    gbNew->clearCompRecombineInfo(true);
-    gb2->clearCompRecombineInfo(false);
-
-    // find initial equivalents and pivot candidates
-    unsigned int possiblePivots = 0;
-
-    for (unsigned int i = 0; i < gbNew->mNumberOfComponents; i++)
-    {
-        GridbrainComponent* comp = &(gbNew->mComponents[i]);
-        GridbrainComponent* eqComp = gb2->findEquivalentComponent(comp);
-
-        if ((eqComp != NULL)
-            && (comp->mActive || eqComp->mActive))
-        {
-            possiblePivots++;
-            comp->mPivotCandidate = true;
-        }
-    }
-
-    if (possiblePivots == 0)
-    {
-        delete gb2;
-        return gbNew;
-    }
-
-    // find pivot
-    unsigned int pivotPos = mDistRecombine->iuniform(0, possiblePivots);
-
-    unsigned int i = 0;
-    unsigned int curPos = 0;
-    GridbrainComponent* pivot1;
-
-    while (curPos <= pivotPos)
-    {
-        pivot1 = &(gbNew->mComponents[i]);
-
-        if (pivot1->mPivotCandidate)
-        {
-            curPos++;
-        }
-        i++;
-    }
-
-    GridbrainComponent* pivot2 = gb2->findEquivalentComponent(pivot1);
-
-    gbNew->spreadSelected(pivot1, false);
-    gb2->spreadSelected(pivot2, true);
-
-    // Remove unselected connections
-    for (unsigned int i = 0; i < gbNew->mNumberOfComponents; i++)
-    {
-        GridbrainComponent* comp = &(gbNew->mComponents[i]);
-
-        if (!comp->mSelected)
-        {
-            GridbrainConnection* conn = comp->mFirstConnection;
-
-            while (conn != NULL)
-            {
-                GridbrainConnection* remConn = conn;
-                conn = (GridbrainConnection*)(conn->mNextConnection);
-                gbNew->removeConnection(remConn);
-            }
-        }
-    } 
-    gbNew->update();
-
-    // Insert second brain's connections and components
-    // Use swap operator to reorder components and attempt to add more
-    // connections from second parent if needed
-    int iteration = 0;
-    while (iteration < 10)
-    {
-        unsigned int failed = 0;
-        gbNew = gbNew->crossoverComp(gbNew, pivot2, failed);
-
-        if (failed > 0)
-        {
-            iteration++;
-            gbNew->mutateSwapComponent(0.5f);
-        }
-        else
-        {
-            iteration = 999999;
-        }
-
-        gbNew->update();
-    }
-
-    delete gb2;
-
-    Gridbrain* child = (Gridbrain*)gbNew->clone();
-    delete gbNew;
-
-    return child;
 }
 
 void Gridbrain::setSelectedSymbols(SimulationObject* obj)
@@ -338,65 +72,74 @@ void Gridbrain::setSelectedSymbols(SimulationObject* obj)
     }
 }
 
+Gridbrain* Gridbrain::treeRecombine(Gridbrain* brain)
+{
+    // TBD...
+    Gridbrain* gbNew = (Gridbrain*)(this->clone());
+
+    Gridbrain* child = (Gridbrain*)gbNew->clone();
+    delete gbNew;
+
+    return child;
+}
+
 void Gridbrain::clearConnRecombineInfo(bool selected)
 {
     GridbrainConnection* conn = mConnections;
 
     while (conn != NULL)
     {
-        conn->mSelected = selected;
+        conn->mSelectionState = GridbrainConnection::SS_UNKNOWN;
         conn = (GridbrainConnection*)conn->mNextGlobalConnection;
     }
 }
 
-GridbrainConnection* Gridbrain::findEquivalentConnection(GridbrainConnection* conn)
+GridbrainComponent* Gridbrain::findEquivalentComponent(GridbrainComponent* comp, CompEquivalenceType eqType)
 {
-    GridbrainComponent* origComp = findEquivalentComponent((GridbrainComponent*)conn->mOrigComponent);
-    if (origComp == NULL)
+    for (unsigned int i = 0; i < mNumberOfComponents; i++)
     {
-        return NULL;
-    }
-    GridbrainComponent* targComp = findEquivalentComponent((GridbrainComponent*)conn->mTargComponent);
-    if (targComp == NULL)
-    {
-        return NULL;
-    }
-    
-    llULINT origID = origComp->mID;
-    llULINT targID = targComp->mID;
+        GridbrainComponent* comp2 = &mComponents[i];
 
-    GridbrainConnection* conn2 = mConnections;
-
-    while (conn2 != NULL)
-    {
-        llULINT origID2 = ((GridbrainComponent*)conn2->mOrigComponent)->mID;
-        llULINT targID2 = ((GridbrainComponent*)conn2->mTargComponent)->mID;
-
-        if ((origID == origID2)
-            && (targID == targID2))
+        if (isCompEquivalent(comp, comp2, eqType))
         {
-            return conn2;
+            return comp2;
         }
-   
-        conn2 = (GridbrainConnection*)conn2->mNextGlobalConnection;
     }
 
     return NULL;
 }
 
-Gridbrain* Gridbrain::importConnection(Gridbrain* gb, GridbrainConnection* conn, unsigned int &failed)
+Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
+                                        GridbrainConnection* conn,
+                                        bool &canAddComponent,
+                                        bool &success,
+                                        unsigned int &failsOrder,
+                                        unsigned int &failsComp)
 {
     Gridbrain* brain = gb;
 
     GridbrainComponent* orig = (GridbrainComponent*)(conn->mOrigComponent);
     GridbrainComponent* targ = (GridbrainComponent*)(conn->mTargComponent);
 
-    GridbrainComponent* eqOrig = brain->findEquivalentComponent(orig);
-    GridbrainComponent* eqTarg = brain->findEquivalentComponent(targ);
+    GridbrainComponent* eqOrig = brain->findEquivalentComponent(orig, CET_NEW_ORIGIN);
+    GridbrainComponent* eqTarg = brain->findEquivalentComponent(targ, CET_NEW_TARGET);
+
+    if ((eqOrig == NULL) || (eqTarg == NULL))
+    {
+        if (canAddComponent)
+        {
+            canAddComponent = false;
+        }
+        else
+        {
+            failsComp++;
+            success = false;
+            return brain;
+        }
+    }
 
     unsigned int origGrid = orig->mGrid;
     unsigned int targetGrid = targ->mGrid;
-
 
     if ((eqOrig == NULL)
         && (eqTarg == NULL))
@@ -503,7 +246,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb, GridbrainConnection* conn,
 
         if (recalcTarg)
         {
-            eqTarg = brain->findEquivalentComponent(targ);
+            eqTarg = brain->findEquivalentComponent(targ, CET_NEW_TARGET);
         }
     }
 
@@ -555,7 +298,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb, GridbrainConnection* conn,
 
         if (recalcOrig)
         {
-            eqOrig = brain->findEquivalentComponent(orig);
+            eqOrig = brain->findEquivalentComponent(orig, CET_NEW_ORIGIN);
         }
     }
 
@@ -571,11 +314,13 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb, GridbrainConnection* conn,
         && ((g1 != g2) || (x1 < x2)))
     {
         brain->addConnection(x1, y1, g1, x2, y2, g2, weight);
+        success = true;
         //printf("-> Conn imported (2)\n");
     }
     else
     {
-        failed++;
+        failsOrder++;
+        success = false;
         //printf("-> Import failed (2)\n");
     }
 
@@ -585,6 +330,45 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb, GridbrainConnection* conn,
     return brain;
 }
 
+bool Gridbrain::checkTagGroup(llULINT group)
+{
+    GridbrainConnection* conn = mConnections;
+
+    while (conn != NULL)
+    {
+        if (conn->mTag.mGroupID == group)
+        {
+            return true;
+        }
+
+        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+    }
+
+    return false;
+}
+
+bool Gridbrain::selectTagGroup(llULINT group, bool select)
+{
+    GridbrainConnection* conn = mConnections;
+
+    while (conn != NULL)
+    {
+        if (conn->mTag.mGroupID == group)
+        {
+            if (select)
+            {
+                conn->mSelectionState = GridbrainConnection::SS_SELECTED;
+            }
+            else
+            {
+                conn->mSelectionState = GridbrainConnection::SS_UNSELECTED;
+            }
+        }
+
+        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+    }
+}
+
 Gridbrain* Gridbrain::uniformRecombine(Gridbrain* brain)
 {
     //printf("\n\n=== START RECOMBINE ===\n");
@@ -592,117 +376,284 @@ Gridbrain* Gridbrain::uniformRecombine(Gridbrain* brain)
     Gridbrain* gbNew = (Gridbrain*)(this->clone());
     Gridbrain* gb2 = brain;
 
-    gb2->clearConnRecombineInfo(true);
+    gbNew->clearConnRecombineInfo(false);
+    gb2->clearConnRecombineInfo(false);
 
-    // Crossover components in first brain
-    for (unsigned int i = 0; i < gbNew->mNumberOfComponents; i++)
-    {
-        GridbrainComponent* comp2 = gb2->getComponentByID(gbNew->mComponents[i].mID);
-
-        if ((comp2 != NULL)
-            && (mDistRecombine->iuniform(0, 2) == 0))
-        {
-            gbNew->mComponents[i].copyDefinitions(comp2);
-        }
-    }
-
-    // Crossover connections, parent 1
+    // Select connections, parent 1
     GridbrainConnection* conn = gbNew->mConnections;
-    bool nextConn;
-
     while (conn != NULL)
     {
-        nextConn = true;
-
-        GridbrainConnection* conn2 = gb2->findEquivalentConnection(conn);
-       
-        if (conn2 == NULL)
+        if (conn->mSelectionState == GridbrainConnection::SS_UNKNOWN)
         {
-            if (mDistRecombine->iuniform(0, 2) == 0)
+            if (gb2->checkTagGroup(conn->mTag.mGroupID))
             {
-                //printf("-> Remove conn (1)\n");
-                GridbrainConnection* rmConn = conn;
-                conn = (GridbrainConnection*)conn->mNextGlobalConnection;
-                gbNew->removeConnection(rmConn);
-                nextConn = false;
+                if (mDistRecombine->iuniform(0, 2) == 0)
+                {
+                    gbNew->selectTagGroup(conn->mTag.mGroupID, true);
+                    gb2->selectTagGroup(conn->mTag.mGroupID, false);
+                }
+                else
+                {
+                    gbNew->selectTagGroup(conn->mTag.mGroupID, false);
+                    gb2->selectTagGroup(conn->mTag.mGroupID, true);
+                }
             }
             else
             {
-                //printf("-> Keep conn (1)\n");
-            }
-        }
-        else
-        {
-            conn2->mSelected = false;
-
-            if (mDistRecombine->iuniform(0, 2) == 0)
-            {
-                conn->mWeight = conn2->mWeight;
-                conn->mRealWeight = conn2->mRealWeight;
-                //printf("-> Use other conn weights (1)\n");
-            }
-            else
-            {
-                //printf("-> Keep conn weight (1)\n");
-            }
-        }
-
-        if (nextConn)
-        {
-            conn = (GridbrainConnection*)conn->mNextGlobalConnection;
-        }
-    }
-
-    // Crossover connections, parent 2
-    conn = gb2->mConnections;
-
-    // Connections that only exist on parent2 have a 50% chance of being selected
-    while (conn != NULL)
-    {
-        if (conn->mSelected)
-        {
-            if (mDistRecombine->iuniform(0, 2) == 0)
-            {
-                //printf("-> Do no include conn (2)\n");
-                conn->mSelected = false;
+                if (mDistRecombine->iuniform(0, 2) == 0)
+                {
+                    gbNew->selectTagGroup(conn->mTag.mGroupID, true);
+                }
+                else
+                {
+                    gbNew->selectTagGroup(conn->mTag.mGroupID, false);
+                }
             }
         }
 
         conn = (GridbrainConnection*)conn->mNextGlobalConnection;
     }
 
-    int iteration = 0;
-    while (iteration < 10)
+    // Select connections, parent 2
+    conn = gb2->mConnections;
+    while (conn != NULL)
     {
-        unsigned int failed = 0;
-        conn = gb2->mConnections;
+        if (conn->mSelectionState == GridbrainConnection::SS_UNKNOWN)
+        {
+            if (mDistRecombine->iuniform(0, 2) == 0)
+            {
+                gbNew->selectTagGroup(conn->mTag.mGroupID, true);
+            }
+            else
+            {
+                gbNew->selectTagGroup(conn->mTag.mGroupID, false);
+            }
+        }
 
+        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+    }
+
+    // Remove unselected connections from child
+    conn = gbNew->mConnections;
+    while (conn != NULL)
+    {
+        GridbrainConnection* nextConn = (GridbrainConnection*)conn->mNextGlobalConnection;
+
+        if (conn->mSelectionState == GridbrainConnection::SS_UNSELECTED)
+        {
+            gbNew->removeConnection(conn);
+        }
+
+        conn = nextConn;
+    }
+
+    // Import selected connections from parent 2
+    bool done = false;
+    unsigned int iteration = 0;
+    bool canAddComponent = false;
+
+    while (!done)
+    {
+        unsigned int failsOrder = 0;
+        unsigned int failsComp = 0;
+
+        conn = gb2->mConnections;
         while (conn != NULL)
         {
-            if (conn->mSelected)
+            if (conn->mSelectionState == GridbrainConnection::SS_SELECTED)
             {
-                gbNew = importConnection(gbNew, conn, failed);
+                bool success;
+                gbNew = gbNew->importConnection(gbNew, conn, canAddComponent, success, failsOrder, failsComp);
+
+                if (success)
+                {
+                    conn->mSelectionState = GridbrainConnection::SS_UNSELECTED;
+                    iteration = 0;
+                }
             }
 
             conn = (GridbrainConnection*)conn->mNextGlobalConnection;
         }
 
-        if (failed > 0)
+        unsigned int fails = failsOrder + failsComp;
+
+        if (fails > 0)
         {
-            iteration++;
-            gbNew->mutateSwapComponent(0.5f);
+            if ((failsOrder > 0) && (iteration < 10))
+            {
+                // Shuffle grid and retry
+                iteration++;
+                gbNew->mutateSwapComponent(0.5f);
+            }
+            else if (!canAddComponent)
+            {
+                canAddComponent = true;
+            }
+            else
+            {
+                // OK, we give up...
+                //printf("give up!\n");
+                done = true;
+            }
         }
         else
         {
-            iteration = 999999;
+            // It's done!
+            done = true;
         }
-
-        gbNew->update();
     }
-    
+
     Gridbrain* child = (Gridbrain*)gbNew->clone();
     delete gbNew;
 
     return child;
+}
+
+bool Gridbrain::isCompEquivalent(GridbrainComponent* comp1, GridbrainComponent* comp2, CompEquivalenceType eqType)
+{
+    if (comp1->isUnique())
+    {
+        return comp1->isEqual(comp2);
+    }
+
+    switch (eqType)
+    {
+    case CET_ORIGIN:
+        if ((comp1->mInboundConnections == 0)
+            && (comp2->mInboundConnections == 0)
+            && (comp1->mConnectionsCount == 1)
+            && (comp2->mConnectionsCount == 1)
+            && comp1->isEqual(comp2))
+        {
+            return true;
+        }
+        break;
+    case CET_TARGET:
+        if ((comp1->mInboundConnections == 1)
+            && (comp2->mInboundConnections == 1)
+            && (comp1->mConnectionsCount == 0)
+            && (comp2->mConnectionsCount == 0)
+            && comp1->isEqual(comp2))
+        {
+            return true;
+        }
+        break;
+    case CET_NEW_ORIGIN:
+        if ((comp1->mInboundConnections == 0)
+            && (comp2->mInboundConnections == 0)
+            && (comp1->mConnectionsCount == 1)
+            && (comp2->mConnectionsCount == 0)
+            && comp1->isEqual(comp2))
+        {
+            return true;
+        }
+        break;
+    case CET_NEW_TARGET:
+        if ((comp1->mInboundConnections == 1)
+            && (comp2->mInboundConnections == 0)
+            && (comp1->mConnectionsCount == 0)
+            && (comp2->mConnectionsCount == 0)
+            && comp1->isEqual(comp2))
+        {
+            return true;
+        }
+        break;
+    }
+
+    GridbrainConnection* conn1 = (GridbrainConnection*)comp1->mFirstInConnection;
+    while (conn1 != NULL)
+    {
+        GridbrainConnection* conn2 = (GridbrainConnection*)comp2->mFirstInConnection;
+        while (conn2 != NULL)
+        {
+            if (conn1->mTag.isEquivalentOrigin(&(conn2->mTag)))
+            {
+                return true;
+            }
+
+            conn2 = (GridbrainConnection*)conn2->mNextInConnection;
+        }
+        conn1 = (GridbrainConnection*)conn1->mNextInConnection;
+    }
+
+    conn1 = (GridbrainConnection*)comp1->mFirstConnection;
+    while (conn1 != NULL)
+    {
+        GridbrainConnection* conn2 = (GridbrainConnection*)comp2->mFirstConnection;
+        while (conn2 != NULL)
+        {
+            if (conn1->mTag.isEquivalentTarget(&(conn2->mTag)))
+            {
+                return true;
+            }
+
+            conn2 = (GridbrainConnection*)conn2->mNextConnection;
+        }
+        conn1 = (GridbrainConnection*)conn1->mNextConnection;
+    }
+
+    return false;
+}
+
+GridbrainConnTag Gridbrain::findConnTag(GridbrainConnection* conn)
+{
+    GridbrainConnection* conn2 = mConnections;
+
+    while (conn2 != NULL)
+    {
+        if (conn != conn2)
+        {
+            GridbrainComponent* orig1 = (GridbrainComponent*)conn->mOrigComponent;
+            GridbrainComponent* targ1 = (GridbrainComponent*)conn->mTargComponent;
+            GridbrainComponent* orig2 = (GridbrainComponent*)conn2->mOrigComponent;
+            GridbrainComponent* targ2 = (GridbrainComponent*)conn2->mTargComponent;
+
+            if (isCompEquivalent(orig1, orig2, CET_ORIGIN) && isCompEquivalent(targ1, targ2, CET_TARGET))
+            {
+                return conn2->mTag;
+            }
+        }
+
+        conn2 = (GridbrainConnection*)conn2->mNextGlobalConnection;
+    }
+
+    return GridbrainConnTag();
+}
+
+void Gridbrain::popAdjust(vector<SimulationObject*>* popVec)
+{
+    for (unsigned int pos = 0; pos < mNumberOfComponents; pos++)
+    {
+        GridbrainComponent* comp = &mComponents[pos];
+
+        GridbrainConnection* conn = comp->mFirstConnection;
+        while (conn != NULL)
+        {
+            // If no tag assigned, look for equivalent connection
+            if (conn->mTag.mID == 0)
+            {
+                conn->mTag = findConnTag(conn);
+
+                unsigned int vecPos = 0;
+                while ((conn->mTag.mID == 0) && (vecPos < popVec->size()))
+                {
+                    SimulationObject* obj = (*popVec)[vecPos];
+                    Agent* agent = (Agent*)obj;
+                    Gridbrain* gb = (Gridbrain*)agent->getBrain();
+                    conn->mTag = gb->findConnTag(conn);
+                    vecPos++;
+                }
+            }
+
+            // If still no tag assigned, generate new one
+            if (conn->mTag.mID == 0)
+            {
+                conn->mTag.generateID();
+                conn->mTag.mGroupID = conn->mTag.mID;
+            }
+
+            conn = (GridbrainConnection*)conn->mNextConnection;
+        }
+    }
 }
 
