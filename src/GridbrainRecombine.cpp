@@ -22,15 +22,19 @@
 
 Brain* Gridbrain::recombine(Brain* brain)
 {
+    Gridbrain* child;
+
     switch (mRecombinationType)
     {
     case RT_TREE:
-        return treeRecombine((Gridbrain*)brain);
+        child = treeRecombine((Gridbrain*)brain);
         break;
     case RT_UNIFORM:
-        return uniformRecombine((Gridbrain*)brain);
+        child = uniformRecombine((Gridbrain*)brain);
         break;
     }
+
+    return child;
 }
 
 void Gridbrain::setSelectedSymbols(SimulationObject* obj)
@@ -83,7 +87,7 @@ Gridbrain* Gridbrain::treeRecombine(Gridbrain* brain)
     return child;
 }
 
-void Gridbrain::clearConnRecombineInfo(bool selected)
+void Gridbrain::clearConnRecombineInfo()
 {
     GridbrainConnection* conn = mConnections;
 
@@ -138,6 +142,18 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
         }
     }
 
+    llULINT origID;
+    llULINT targID;
+
+    if (eqOrig != NULL)
+    {
+        origID = eqOrig->mID;
+    }
+    if (eqTarg != NULL)
+    {
+        targID = eqTarg->mID;
+    }
+
     unsigned int origGrid = orig->mGrid;
     unsigned int targetGrid = targ->mGrid;
 
@@ -174,6 +190,8 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
                 brain = newBrain;
             }
         }
+
+        origID = eqOrig->mID;
     }
 
     if (eqOrig == NULL)
@@ -244,9 +262,11 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
             }
         }
 
+        origID = eqOrig->mID;
+
         if (recalcTarg)
         {
-            eqTarg = brain->findEquivalentComponent(targ, CET_NEW_TARGET);
+            eqTarg = brain->getComponentByID(targID);
         }
     }
 
@@ -296,9 +316,11 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
             }
         }
 
+        targID = eqTarg->mID;
+
         if (recalcOrig)
         {
-            eqOrig = brain->findEquivalentComponent(orig, CET_NEW_ORIGIN);
+            eqOrig = brain->getComponentByID(origID);
         }
     }
 
@@ -313,7 +335,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
     if ((brain->isConnectionValid(x1, y1, g1, x2, y2, g2))
         && ((g1 != g2) || (x1 < x2)))
     {
-        brain->addConnection(x1, y1, g1, x2, y2, g2, weight);
+        brain->addConnection(x1, y1, g1, x2, y2, g2, weight, conn->mTag);
         success = true;
         //printf("-> Conn imported (2)\n");
     }
@@ -373,11 +395,16 @@ Gridbrain* Gridbrain::uniformRecombine(Gridbrain* brain)
 {
     //printf("\n\n=== START RECOMBINE ===\n");
 
-    Gridbrain* gbNew = (Gridbrain*)(this->clone());
+    Gridbrain* gbNew = (Gridbrain*)(this->clone(false, ET_NONE, 0));
     Gridbrain* gb2 = brain;
 
-    gbNew->clearConnRecombineInfo(false);
-    gb2->clearConnRecombineInfo(false);
+    //printf("\n>>>> PARENT1\n");
+    //gbNew->printDebug();
+    //printf("\n>>>> PARENT2\n");
+    //gb2->printDebug();
+
+    gbNew->clearConnRecombineInfo();
+    gb2->clearConnRecombineInfo();
 
     // Select connections, parent 1
     GridbrainConnection* conn = gbNew->mConnections;
@@ -422,11 +449,11 @@ Gridbrain* Gridbrain::uniformRecombine(Gridbrain* brain)
         {
             if (mDistRecombine->iuniform(0, 2) == 0)
             {
-                gbNew->selectTagGroup(conn->mTag.mGroupID, true);
+                gb2->selectTagGroup(conn->mTag.mGroupID, true);
             }
             else
             {
-                gbNew->selectTagGroup(conn->mTag.mGroupID, false);
+                gb2->selectTagGroup(conn->mTag.mGroupID, false);
             }
         }
 
@@ -505,6 +532,9 @@ Gridbrain* Gridbrain::uniformRecombine(Gridbrain* brain)
 
     Gridbrain* child = (Gridbrain*)gbNew->clone();
     delete gbNew;
+    
+    //printf("\n>>>> CHILD\n");
+    //child->printDebug();
 
     return child;
 }

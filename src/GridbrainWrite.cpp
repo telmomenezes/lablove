@@ -266,7 +266,7 @@ string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
 
 void Gridbrain::printDebug()
 {
-    printf("\n\n== GRIDBRAIN ==\n");
+    //printf("\n\n== GRIDBRAIN ==\n");
 
     /*for (unsigned int i = 0; i < mGridsCount; i++)
     {
@@ -299,10 +299,17 @@ void Gridbrain::printDebug()
         printf("%s(%d)", comp2->getName().c_str(), comp2->mID);
         printf("(%d) ", comp2->mSubType);
 
-        printf("[%f][%f]\n",
+        printf("[%f][%f]",
                 conn->mWeight,
                 conn->mRealWeight);
+
+        printf(" t:%d", conn->mTag.mID);
+        printf(" g:%d", conn->mTag.mGroupID);
+        printf(" p:%d", conn->mTag.mPrevID);
+        printf(" n:%d", conn->mTag.mNextID);
+        printf("\n");
 
         conn = (GridbrainConnection*)(conn->mNextGlobalConnection);
     }
 }
+

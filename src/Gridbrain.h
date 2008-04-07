@@ -300,7 +300,7 @@ protected:
     Gridbrain* treeRecombine(Gridbrain* brain);
 
     Gridbrain* uniformRecombine(Gridbrain* brain);
-    void clearConnRecombineInfo(bool selected);
+    void clearConnRecombineInfo();
     GridbrainComponent* findEquivalentComponent(GridbrainComponent* comp, CompEquivalenceType eqType);
     Gridbrain* importConnection(Gridbrain* gb,
                                 GridbrainConnection* conn,

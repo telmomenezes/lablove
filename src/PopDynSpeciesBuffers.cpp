@@ -19,6 +19,7 @@
 
 #include "PopDynSpeciesBuffers.h"
 #include "SimulationObject.h"
+#include "Agent.h"
 
 mt_distribution* PopDynSpeciesBuffers::mDistRecombine = gDistManager.getNewDistribution();
 
@@ -95,7 +96,38 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
         // Recombine
         organismNumber = mDistOrganism->iuniform(0, species->mBufferSize);
         SimulationObject* org2 = species->mOrganismVector[organismNumber];
+
+        /*unsigned int r = mDistRecombine->iuniform(0, 100);
+        if (speciesID == 1)
+        {
+        Agent* agent1 = (Agent*)org;
+        Agent* agent2 = (Agent*)org2;
+        char fileName1[255];
+        char fileName2[255];
+        sprintf(fileName1, "%d_P1.svg", r);
+        sprintf(fileName2, "%d_P2.svg", r);
+        FILE* file1 = fopen(fileName1, "w");
+        FILE* file2 = fopen(fileName2, "w");
+        fprintf(file1, agent1->getBrain()->write(agent1, mPopManager).c_str());
+        fprintf(file2, agent2->getBrain()->write(agent2, mPopManager).c_str());
+        fflush(file1);
+        fflush(file2);
+        fclose(file1);
+        fclose(file2);
+        }*/
+
         newOrganism = org->recombine(org2);
+
+        /*if (speciesID == 1)
+        {
+        char fileName3[255];
+        sprintf(fileName3, "%d_CH.svg", r);
+        FILE* file3 = fopen(fileName3, "w");
+        Agent* agent3 = (Agent*)newOrganism;
+        fprintf(file3, agent3->getBrain()->write(agent3, mPopManager).c_str());
+        fflush(file3);
+        fclose(file3);
+        }*/
     }
     else
     {
