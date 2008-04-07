@@ -346,9 +346,6 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
         //printf("-> Import failed (2)\n");
     }
 
-    eqOrig->mUsed = true;
-    eqTarg->mUsed = true;
-
     return brain;
 }
 
@@ -519,7 +516,13 @@ Gridbrain* Gridbrain::uniformRecombine(Gridbrain* brain)
             else
             {
                 // OK, we give up...
-                //printf("give up!\n");
+                printf("=>>>>give up!\n\n");
+                printf(">>> PARENT 1\n");
+                printDebug();
+                printf(">>> PARENT 2\n");
+                gb2->printDebug();
+                printf(">>> CHILD\n");
+                gbNew->printDebug();
                 done = true;
             }
         }

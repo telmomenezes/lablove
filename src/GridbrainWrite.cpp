@@ -299,14 +299,25 @@ void Gridbrain::printDebug()
         printf("%s(%d)", comp2->getName().c_str(), comp2->mID);
         printf("(%d) ", comp2->mSubType);
 
-        printf("[%f][%f]",
+        printf("[%f][%f] ",
                 conn->mWeight,
                 conn->mRealWeight);
 
-        printf(" t:%d", conn->mTag.mID);
-        printf(" g:%d", conn->mTag.mGroupID);
-        printf(" p:%d", conn->mTag.mPrevID);
-        printf(" n:%d", conn->mTag.mNextID);
+        conn->mTag.print();
+
+        switch (conn->mSelectionState)
+        {
+        case GridbrainConnection::SS_UNKNOWN:
+            printf(" *UNKNOWN*");
+            break;
+        case GridbrainConnection::SS_SELECTED:
+            printf(" *SELECTED*");
+            break;
+        case GridbrainConnection::SS_UNSELECTED:
+            printf(" *UNSELECTED*");
+            break;
+        }
+
         printf("\n");
 
         conn = (GridbrainConnection*)(conn->mNextGlobalConnection);

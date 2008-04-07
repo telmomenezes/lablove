@@ -33,6 +33,8 @@ public:
     bool isEquivalentOrigin(GridbrainConnTag* tag);
     bool isEquivalentTarget(GridbrainConnTag* tag);
 
+    void print();
+
     static llULINT ID_SEQ;
 
     llULINT mID;

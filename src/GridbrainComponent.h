@@ -119,8 +119,6 @@ public:
     bool mActive;
 
     llULINT mID;
-
-    bool mUsed;
 };
 
 #endif

@@ -19,6 +19,8 @@
 
 #include "GridbrainConnTag.h"
 
+#include <stdio.h>
+
 llULINT GridbrainConnTag::ID_SEQ = 0;
 
 GridbrainConnTag::GridbrainConnTag()
@@ -55,5 +57,13 @@ bool GridbrainConnTag::isEquivalentOrigin(GridbrainConnTag* tag)
 bool GridbrainConnTag::isEquivalentTarget(GridbrainConnTag* tag)
 {
     return ((mGroupID == tag->mGroupID) && (mPrevID == tag->mPrevID));
+}
+
+void GridbrainConnTag::print()
+{
+    printf("t: %d", mID);
+    printf(" g: %d", mGroupID);
+    printf(" n: %d", mNextID);
+    printf(" p: %d", mPrevID);
 }
 
