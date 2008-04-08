@@ -296,18 +296,14 @@ void Gridbrain::printDebug()
 
 void Gridbrain::printConnection(GridbrainConnection* conn)
 {
-    Grid* gridOrig = mGridsVec[conn->mGridOrig];
-    Grid* gridTarg = mGridsVec[conn->mGridTarg];
-
     GridbrainComponent* comp1 = (GridbrainComponent*)conn->mOrigComponent;
     GridbrainComponent* comp2 = (GridbrainComponent*)conn->mTargComponent;
 
-    printf("%s(%d)", comp1->getName().c_str(), comp1->mID);
-    printf("(%d) -> ", comp1->mSubType);
-    printf("%s(%d)", comp2->getName().c_str(), comp2->mID);
-    printf("(%d) ", comp2->mSubType);
+    printComponent(comp1);
+    printf(" -> ");
+    printComponent(comp2);
 
-    printf("[%f][%f] ",
+    printf(" [%f][%f] ",
             conn->mWeight,
             conn->mRealWeight);
 
@@ -327,5 +323,15 @@ void Gridbrain::printConnection(GridbrainConnection* conn)
     }
 
     printf("\n");
+}
+
+void Gridbrain::printComponent(GridbrainComponent* comp, bool coords)
+{
+    printf("%s(%d)", comp->getName().c_str(), comp->mID);
+    printf("(%d)", comp->mSubType);
+    if (coords)
+    {
+        printf("  [%d, %d, %d]", comp->mColumn, comp->mRow, comp->mGrid);
+    }
 }
 

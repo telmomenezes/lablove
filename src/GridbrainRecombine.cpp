@@ -145,10 +145,16 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
     if (eqOrig != NULL)
     {
         origID = eqOrig->mID;
+        //printf("origin exists: ");
+        //printComponent(eqOrig, true);
+        //printf("\n");
     }
     if (eqTarg != NULL)
     {
         targID = eqTarg->mID;
+        //printf("target exists: ");
+        //printComponent(eqTarg, true);
+        //printf("\n");
     }
 
     unsigned int origGrid = orig->mGrid;
@@ -344,6 +350,11 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
     {
         failsOrder++;
         success = false;
+
+        if (g1 == g2)
+        {
+            brain = brain->clone(false, ET_COLUMN_RANDOM, g1);
+        }
         //printf("FAILURE\n");
     }
 
@@ -510,6 +521,7 @@ Gridbrain* Gridbrain::uniformRecombine(Gridbrain* brain)
             {
                 // Shuffle grid and retry
                 iteration++;
+                gbNew->update();
                 gbNew->mutateSwapComponent(0.5f);
             }
             else if (!canAddComponent)
@@ -547,9 +559,16 @@ Gridbrain* Gridbrain::uniformRecombine(Gridbrain* brain)
 
 bool Gridbrain::isCompEquivalent(GridbrainComponent* comp1, GridbrainComponent* comp2, CompEquivalenceType eqType)
 {
-    if (comp1->isUnique())
+    if (comp1->isEqual(comp2))
     {
-        return comp1->isEqual(comp2);
+        if (comp1->isUnique())
+        {
+            return true;
+        }
+    }
+    else
+    {
+        return false;
     }
 
     switch (eqType)

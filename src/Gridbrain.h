@@ -173,6 +173,7 @@ public:
     virtual string write(SimulationObject* obj, PopulationManager* pop);
     virtual void printDebug();
     void printConnection(GridbrainConnection* conn);
+    void printComponent(GridbrainComponent* comp, bool coords=false);
 
     bool isConnectionValid(unsigned int xOrig,
                 unsigned int yOrig,
