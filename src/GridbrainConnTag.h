@@ -29,7 +29,7 @@ public:
     GridbrainConnTag(const GridbrainConnTag& tag);
     virtual ~GridbrainConnTag();
 
-    void generateID();
+    static llULINT generateID();
     bool isEquivalentOrigin(GridbrainConnTag* tag);
     bool isEquivalentTarget(GridbrainConnTag* tag);
 
@@ -37,10 +37,9 @@ public:
 
     static llULINT ID_SEQ;
 
-    llULINT mID;
     llULINT mGroupID;
-    llULINT mPrevID;
-    llULINT mNextID;
+    llULINT mOrigID;
+    llULINT mTargID;
 };
 
 #endif

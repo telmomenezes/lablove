@@ -25,45 +25,42 @@ llULINT GridbrainConnTag::ID_SEQ = 0;
 
 GridbrainConnTag::GridbrainConnTag()
 {
-    mID = 0;
     mGroupID = 0;
-    mPrevID = 0;
-    mNextID = 0;
+    mOrigID = 0;
+    mTargID = 0;
 }
 
 GridbrainConnTag::GridbrainConnTag(const GridbrainConnTag& tag)
 {
-    mID = tag.mID;
     mGroupID = tag.mGroupID;
-    mPrevID = tag.mPrevID;
-    mNextID = tag.mNextID;
+    mOrigID = tag.mOrigID;
+    mTargID = tag.mTargID;
 }
 
 GridbrainConnTag::~GridbrainConnTag()
 {
 }
 
-void GridbrainConnTag::generateID()
+llULINT GridbrainConnTag::generateID()
 {
     ID_SEQ++;
-    mID = ID_SEQ;
+    return ID_SEQ;
 }
 
 bool GridbrainConnTag::isEquivalentOrigin(GridbrainConnTag* tag)
 {
-    return ((mGroupID == tag->mGroupID) && (mNextID == tag->mNextID));
+    return ((mGroupID == tag->mGroupID) && (mTargID == tag->mTargID));
 }
 
 bool GridbrainConnTag::isEquivalentTarget(GridbrainConnTag* tag)
 {
-    return ((mGroupID == tag->mGroupID) && (mPrevID == tag->mPrevID));
+    return ((mGroupID == tag->mGroupID) && (mOrigID == tag->mOrigID));
 }
 
 void GridbrainConnTag::print()
 {
-    printf("t: %d", mID);
     printf(" g: %d", mGroupID);
-    printf(" n: %d", mNextID);
-    printf(" p: %d", mPrevID);
+    printf(" o: %d", mOrigID);
+    printf(" t: %d", mTargID);
 }
 

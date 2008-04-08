@@ -665,12 +665,12 @@ void Gridbrain::popAdjust(vector<SimulationObject*>* popVec)
         while (conn != NULL)
         {
             // If no tag assigned, look for equivalent connection
-            if (conn->mTag.mID == 0)
+            if (conn->mTag.mGroupID == 0)
             {
                 conn->mTag = findConnTag(conn);
 
                 unsigned int vecPos = 0;
-                while ((conn->mTag.mID == 0) && (vecPos < popVec->size()))
+                while ((conn->mTag.mGroupID == 0) && (vecPos < popVec->size()))
                 {
                     SimulationObject* obj = (*popVec)[vecPos];
                     Agent* agent = (Agent*)obj;
@@ -680,11 +680,51 @@ void Gridbrain::popAdjust(vector<SimulationObject*>* popVec)
                 }
             }
 
-            // If still no tag assigned, generate new one
-            if (conn->mTag.mID == 0)
+            // If no tag assigned, try to associate with an existing tag group
+            if (conn->mTag.mGroupID == 0)
             {
-                conn->mTag.generateID();
-                conn->mTag.mGroupID = conn->mTag.mID;
+                GridbrainComponent* orig = (GridbrainComponent*)conn->mOrigComponent;
+                GridbrainComponent* targ = (GridbrainComponent*)conn->mTargComponent;
+
+                unsigned int count = orig->mInboundConnections + targ->mConnectionsCount;
+
+                if (count > 0)
+                {
+                    unsigned int pos = mDistRecombine->iuniform(0, count);
+
+                    GridbrainConnection* conn2;
+
+                    if (pos < orig->mInboundConnections)
+                    {
+                        conn2 = orig->mFirstInConnection;
+                        for (unsigned int i = 0; i < pos; i++)
+                        {
+                            conn2 = (GridbrainConnection*)conn2->mNextInConnection;
+                        }
+                    }
+                    else
+                    {
+                        pos -= orig->mInboundConnections;
+
+                        conn2 = targ->mFirstConnection;
+                        for (unsigned int i = 0; i < pos; i++)
+                        {
+                            conn2 = (GridbrainConnection*)conn2->mNextConnection;
+                        }
+                    }
+
+                    conn->mTag.mGroupID = conn2->mTag.mGroupID;
+                    conn->mTag.mOrigID = GridbrainConnTag::generateID();
+                    conn->mTag.mTargID = GridbrainConnTag::generateID();
+                }
+            }
+
+            // If still no tag assigned, generate new one
+            if (conn->mTag.mGroupID == 0)
+            {
+                conn->mTag.mGroupID = GridbrainConnTag::generateID();
+                conn->mTag.mOrigID = GridbrainConnTag::generateID();
+                conn->mTag.mTargID = GridbrainConnTag::generateID();
             }
 
             conn = (GridbrainConnection*)conn->mNextConnection;

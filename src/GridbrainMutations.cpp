@@ -982,15 +982,15 @@ void Gridbrain::mutateSplitConnection(unsigned int popSize)
 
             if (groupID == 0)
             {
-                groupID = tag2.mID;
+                groupID = GridbrainConnTag::generateID();
             }
 
             tag2.mGroupID = groupID;
             tag3.mGroupID = groupID;
-            tag2.mPrevID = tag1.mPrevID;
-            tag3.mNextID = tag1.mNextID;
-            tag2.mNextID = tag3.mID;
-            tag3.mPrevID = tag2.mID;
+            tag2.mOrigID = tag1.mOrigID;
+            tag3.mTargID = tag1.mTargID;
+            tag2.mTargID = GridbrainConnTag::generateID();
+            tag3.mOrigID = GridbrainConnTag::generateID();
 
             /*printf(">>> split tags!\n");
             tag2.print();
@@ -1052,12 +1052,6 @@ void Gridbrain::mutateJoinConnections(unsigned int popSize)
             weight = mDistWeights->uniform(-1.0f, 1.0f);
         }
 
-        // This is too simple
-        // Must considered group joining
-        GridbrainConnTag tag;
-        tag.generateID();
-        tag.mGroupID = tag.mID;
-
         /*printf("JOIN\n");
         printf("add: (%d, %d, %d)->(%d, %d, %d)\n", x1, y1, g1, x2, y2, g2);
         printf("remove: (%d, %d, %d)->(%d, %d, %d)\n", conn->mColumnOrig, conn->mRowOrig, conn->mGridOrig, conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg);
@@ -1069,8 +1063,7 @@ void Gridbrain::mutateJoinConnections(unsigned int popSize)
                         conn2->mColumnTarg,
                         conn2->mRowTarg,
                         conn2->mGridTarg,
-                        weight,
-                        tag);
+                        weight);
         removeConnection(conn1);
         removeConnection(conn2);
     }
