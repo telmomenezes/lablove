@@ -288,39 +288,44 @@ void Gridbrain::printDebug()
     GridbrainConnection* conn = mConnections;
     while (conn != NULL)
     {
-        Grid* gridOrig = mGridsVec[conn->mGridOrig];
-        Grid* gridTarg = mGridsVec[conn->mGridTarg];
-
-        GridbrainComponent* comp1 = (GridbrainComponent*)conn->mOrigComponent;
-        GridbrainComponent* comp2 = (GridbrainComponent*)conn->mTargComponent;
-
-        printf("%s(%d)", comp1->getName().c_str(), comp1->mID);
-        printf("(%d) -> ", comp1->mSubType);
-        printf("%s(%d)", comp2->getName().c_str(), comp2->mID);
-        printf("(%d) ", comp2->mSubType);
-
-        printf("[%f][%f] ",
-                conn->mWeight,
-                conn->mRealWeight);
-
-        conn->mTag.print();
-
-        switch (conn->mSelectionState)
-        {
-        case GridbrainConnection::SS_UNKNOWN:
-            printf(" *UNKNOWN*");
-            break;
-        case GridbrainConnection::SS_SELECTED:
-            printf(" *SELECTED*");
-            break;
-        case GridbrainConnection::SS_UNSELECTED:
-            printf(" *UNSELECTED*");
-            break;
-        }
-
-        printf("\n");
+        printConnection(conn);
 
         conn = (GridbrainConnection*)(conn->mNextGlobalConnection);
     }
+}
+
+void Gridbrain::printConnection(GridbrainConnection* conn)
+{
+    Grid* gridOrig = mGridsVec[conn->mGridOrig];
+    Grid* gridTarg = mGridsVec[conn->mGridTarg];
+
+    GridbrainComponent* comp1 = (GridbrainComponent*)conn->mOrigComponent;
+    GridbrainComponent* comp2 = (GridbrainComponent*)conn->mTargComponent;
+
+    printf("%s(%d)", comp1->getName().c_str(), comp1->mID);
+    printf("(%d) -> ", comp1->mSubType);
+    printf("%s(%d)", comp2->getName().c_str(), comp2->mID);
+    printf("(%d) ", comp2->mSubType);
+
+    printf("[%f][%f] ",
+            conn->mWeight,
+            conn->mRealWeight);
+
+    conn->mTag.print();
+
+    switch (conn->mSelectionState)
+    {
+    case GridbrainConnection::SS_UNKNOWN:
+        printf(" *UNKNOWN*");
+        break;
+    case GridbrainConnection::SS_SELECTED:
+        printf(" *SELECTED*");
+        break;
+    case GridbrainConnection::SS_UNSELECTED:
+        printf(" *UNSELECTED*");
+        break;
+    }
+
+    printf("\n");
 }
 

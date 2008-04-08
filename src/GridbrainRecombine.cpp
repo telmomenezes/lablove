@@ -125,17 +125,14 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
     GridbrainComponent* orig = (GridbrainComponent*)(conn->mOrigComponent);
     GridbrainComponent* targ = (GridbrainComponent*)(conn->mTargComponent);
 
-    GridbrainComponent* eqOrig = brain->findEquivalentComponent(orig, CET_NEW_ORIGIN);
-    GridbrainComponent* eqTarg = brain->findEquivalentComponent(targ, CET_NEW_TARGET);
+    GridbrainComponent* eqOrig = brain->findEquivalentComponent(orig, CET_NEW);
+    GridbrainComponent* eqTarg = brain->findEquivalentComponent(targ, CET_NEW);
 
     if ((eqOrig == NULL) || (eqTarg == NULL))
     {
-        if (canAddComponent)
+        if (!canAddComponent)
         {
-            canAddComponent = false;
-        }
-        else
-        {
+            //printf("* components missing\n");
             failsComp++;
             success = false;
             return brain;
@@ -160,6 +157,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
     if ((eqOrig == NULL)
         && (eqTarg == NULL))
     {
+        //printf("* insert orig and target\n");
         while (eqOrig == NULL)
         {
             Grid* grid = brain->mGridsVec[origGrid];
@@ -196,6 +194,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
 
     if (eqOrig == NULL)
     {
+        //printf("* insert orig\n");
         Grid* grid = brain->mGridsVec[origGrid];
 
         bool recalcTarg = false;
@@ -272,6 +271,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
 
     if (eqTarg == NULL)
     {
+        //printf("* insert target\n");
         bool recalcOrig = false;
         
         unsigned int targetColumn = 0;
@@ -337,13 +337,14 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
     {
         brain->addConnection(x1, y1, g1, x2, y2, g2, weight, conn->mTag);
         success = true;
-        //printf("-> Conn imported (2)\n");
+        canAddComponent = false;
+        //printf("SUCCESS\n");
     }
     else
     {
         failsOrder++;
         success = false;
-        //printf("-> Import failed (2)\n");
+        //printf("FAILURE\n");
     }
 
     return brain;
@@ -487,6 +488,8 @@ Gridbrain* Gridbrain::uniformRecombine(Gridbrain* brain)
             if (conn->mSelectionState == GridbrainConnection::SS_SELECTED)
             {
                 bool success;
+                //printf("-> Import connection: ");
+                //gb2->printConnection(conn);
                 gbNew = gbNew->importConnection(gbNew, conn, canAddComponent, success, failsOrder, failsComp);
 
                 if (success)
@@ -516,13 +519,13 @@ Gridbrain* Gridbrain::uniformRecombine(Gridbrain* brain)
             else
             {
                 // OK, we give up...
-                printf("=>>>>give up!\n\n");
+                /*printf("=>>>>give up!\n");
                 printf(">>> PARENT 1\n");
                 printDebug();
                 printf(">>> PARENT 2\n");
                 gb2->printDebug();
                 printf(">>> CHILD\n");
-                gbNew->printDebug();
+                gbNew->printDebug();*/
                 done = true;
             }
         }
@@ -564,26 +567,6 @@ bool Gridbrain::isCompEquivalent(GridbrainComponent* comp1, GridbrainComponent* 
     case CET_TARGET:
         if ((comp1->mInboundConnections == 1)
             && (comp2->mInboundConnections == 1)
-            && (comp1->mConnectionsCount == 0)
-            && (comp2->mConnectionsCount == 0)
-            && comp1->isEqual(comp2))
-        {
-            return true;
-        }
-        break;
-    case CET_NEW_ORIGIN:
-        if ((comp1->mInboundConnections == 0)
-            && (comp2->mInboundConnections == 0)
-            && (comp1->mConnectionsCount == 1)
-            && (comp2->mConnectionsCount == 0)
-            && comp1->isEqual(comp2))
-        {
-            return true;
-        }
-        break;
-    case CET_NEW_TARGET:
-        if ((comp1->mInboundConnections == 1)
-            && (comp2->mInboundConnections == 0)
             && (comp1->mConnectionsCount == 0)
             && (comp2->mConnectionsCount == 0)
             && comp1->isEqual(comp2))

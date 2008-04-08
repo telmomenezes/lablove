@@ -977,18 +977,26 @@ void Gridbrain::mutateSplitConnection(unsigned int popSize)
 
             tag2.generateID();
             tag3.generateID();
-            tag2.mGroupID = tag1.mGroupID;
-            tag3.mGroupID = tag1.mGroupID;
+
+            llULINT groupID = tag1.mGroupID;
+
+            if (groupID == 0)
+            {
+                groupID = tag2.mID;
+            }
+
+            tag2.mGroupID = groupID;
+            tag3.mGroupID = groupID;
             tag2.mPrevID = tag1.mPrevID;
             tag3.mNextID = tag1.mNextID;
             tag2.mNextID = tag3.mID;
             tag3.mPrevID = tag2.mID;
 
-            printf(">>> split tags!\n");
+            /*printf(">>> split tags!\n");
             tag2.print();
             printf("\n");
             tag3.print();
-            printf("\n");
+            printf("\n");*/
 
             // create 1->3 connection
             addConnection(x1, y1, g1, x3, y3, g3, weight1, tag2);

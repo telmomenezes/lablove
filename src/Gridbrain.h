@@ -46,7 +46,7 @@ public:
     enum MutationScope {MS_ALL, MS_ACTIVE};
     enum ExpansionType {ET_NONE, ET_COLUMN_RANDOM, ET_COLUMN_FIRST, ET_COLUMN_LAST, ET_ROW};
     enum RecombinationType {RT_TREE, RT_UNIFORM};
-    enum CompEquivalenceType {CET_ORIGIN, CET_TARGET, CET_NEW_ORIGIN, CET_NEW_TARGET};
+    enum CompEquivalenceType {CET_ORIGIN, CET_TARGET, CET_NEW};
 
     Gridbrain(lua_State* luaState=NULL);
     virtual ~Gridbrain();
@@ -172,6 +172,7 @@ public:
 
     virtual string write(SimulationObject* obj, PopulationManager* pop);
     virtual void printDebug();
+    void printConnection(GridbrainConnection* conn);
 
     bool isConnectionValid(unsigned int xOrig,
                 unsigned int yOrig,
