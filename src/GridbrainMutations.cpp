@@ -975,9 +975,6 @@ void Gridbrain::mutateSplitConnection(unsigned int popSize)
             GridbrainConnTag tag2;
             GridbrainConnTag tag3;
 
-            tag2.generateID();
-            tag3.generateID();
-
             llULINT groupID = tag1.mGroupID;
 
             if (groupID == 0)

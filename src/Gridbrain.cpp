@@ -2081,6 +2081,7 @@ bool Gridbrain::isValid()
         {
             if (mGridsVec[conn->mGridOrig]->getType() != Grid::ALPHA)
             {
+                printConnection(conn);
                 return false;
             }
             if (mGridsVec[conn->mGridTarg]->getType() != Grid::BETA)

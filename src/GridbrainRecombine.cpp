@@ -625,17 +625,21 @@ Gridbrain* Gridbrain::uniformRecombine(Gridbrain* brain)
         }
     }
 
-    Gridbrain* child = (Gridbrain*)gbNew->clone();
-    delete gbNew;
+    gbNew->update();
     
     //printf("\n>>>> CHILD\n");
     //child->printDebug();
 
-    return child;
+    return gbNew;
 }
 
 bool Gridbrain::isCompEquivalent(GridbrainComponent* comp1, GridbrainComponent* comp2, CompEquivalenceType eqType)
 {
+    if (comp1->mGrid != comp2->mGrid)
+    {
+        return false;
+    }
+
     if (comp1->isEqual(comp2))
     {
         if (comp1->isUnique())
