@@ -325,13 +325,10 @@ void Gridbrain::printConnection(GridbrainConnection* conn)
     printf("\n");
 }
 
-void Gridbrain::printComponent(GridbrainComponent* comp, bool coords)
+void Gridbrain::printComponent(GridbrainComponent* comp)
 {
     printf("%s(%d)", comp->getName().c_str(), comp->mID);
     printf("(%d)", comp->mSubType);
-    if (coords)
-    {
-        printf("  [%d, %d, %d]", comp->mColumn, comp->mRow, comp->mGrid);
-    }
+    printf("  [%d, %d, %d]", comp->mColumn, comp->mRow, comp->mGrid);
 }
 

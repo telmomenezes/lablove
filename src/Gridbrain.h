@@ -44,7 +44,13 @@ public:
     enum GrowMethod {GM_FREE, GM_PRESSURE};
     enum CloneConnectionsMode {CC_ALL, CC_ALL_PLUS, CC_ACTIVE};
     enum MutationScope {MS_ALL, MS_ACTIVE};
-    enum ExpansionType {ET_NONE, ET_COLUMN_RANDOM, ET_COLUMN_FIRST, ET_COLUMN_LAST, ET_ROW};
+    enum ExpansionType {ET_NONE,
+                        ET_COLUMN_RANDOM,
+                        ET_COLUMN_FIRST,
+                        ET_COLUMN_LAST,
+                        ET_COLUMN_BEFORE,
+                        ET_COLUMN_AFTER,
+                        ET_ROW};
     enum RecombinationType {RT_TREE, RT_UNIFORM};
     enum CompEquivalenceType {CET_ORIGIN, CET_TARGET, CET_NEW};
 
@@ -52,7 +58,7 @@ public:
     virtual ~Gridbrain();
 
     virtual Brain* clone();
-    Gridbrain* clone(bool grow, ExpansionType expansion, unsigned int targetGrid);
+    Gridbrain* clone(bool grow, ExpansionType expansion, unsigned int targetGrid, unsigned int pos=0);
 
     void addGrid(Grid* grid, string name);
     virtual void init();
@@ -173,7 +179,7 @@ public:
     virtual string write(SimulationObject* obj, PopulationManager* pop);
     virtual void printDebug();
     void printConnection(GridbrainConnection* conn);
-    void printComponent(GridbrainComponent* comp, bool coords=false);
+    void printComponent(GridbrainComponent* comp);
 
     bool isConnectionValid(unsigned int xOrig,
                 unsigned int yOrig,
@@ -252,6 +258,8 @@ protected:
 
     void applyWeight(GridbrainConnection* conn);
 
+    bool swapComponents(GridbrainComponent* comp1, GridbrainComponent* comp2);
+
     void addRandomInactiveConnection();
 
     void addDoubleConnection();
@@ -310,6 +318,7 @@ protected:
                                 bool &success,
                                 unsigned int &failsOrder,
                                 unsigned int &failsComp);
+    bool correctOrder(int& x1, int& y1, int& x2, int& y2, int g);
 
     bool checkTagGroup(llULINT group);
     bool selectTagGroup(llULINT group, bool select);

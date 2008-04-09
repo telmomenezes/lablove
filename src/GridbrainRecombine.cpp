@@ -113,6 +113,57 @@ GridbrainComponent* Gridbrain::findEquivalentComponent(GridbrainComponent* comp,
     return NULL;
 }
 
+bool Gridbrain::correctOrder(int& x1, int& y1, int& x2, int& y2, int g)
+{
+    GridbrainComponent* comp1 = getComponent(x1, y1, g);
+    GridbrainComponent* comp2 = getComponent(x2, y2, g);
+
+    if ((x1 != x2) && (swapComponents(comp1, comp2)))
+    {
+        unsigned int tx = x1;
+        unsigned int ty = y1;
+        x1 = x2;
+        y1 = y2;
+        x2 = tx;
+        y2 = ty;
+        return true;
+    }
+
+    Grid* grid = mGridsVec[g];
+
+    for (unsigned int x = x1 + 1; x < grid->getWidth(); x++)
+    {
+        for (unsigned int y = 0; y < grid->getHeight(); y++)
+        {
+            GridbrainComponent* compSwap = getComponent(x, y, g);
+
+            if (swapComponents(comp2, compSwap))
+            {
+                x2 = x;
+                y2 = y;
+                return true;
+            }
+        }
+    }
+
+    for (int x = x2 - 1; x >= 0; x--)
+    {
+        for (unsigned int y = 0; y < grid->getHeight(); y++)
+        {
+            GridbrainComponent* compSwap = getComponent(x, y, g);
+
+            if (swapComponents(comp1, compSwap))
+            {
+                x1 = x;
+                y1 = y;
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
                                         GridbrainConnection* conn,
                                         bool &canAddComponent,
@@ -146,14 +197,14 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
     {
         origID = eqOrig->mID;
         //printf("origin exists: ");
-        //printComponent(eqOrig, true);
+        //printComponent(eqOrig);
         //printf("\n");
     }
     if (eqTarg != NULL)
     {
         targID = eqTarg->mID;
         //printf("target exists: ");
-        //printComponent(eqTarg, true);
+        //printComponent(eqTarg);
         //printf("\n");
     }
 
@@ -330,32 +381,61 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
         }
     }
 
-    unsigned int x1 = eqOrig->mColumn;
-    unsigned int y1 = eqOrig->mRow;
-    unsigned int g1 = eqOrig->mGrid;
-    unsigned int x2 = eqTarg->mColumn;
-    unsigned int y2 = eqTarg->mRow;
-    unsigned int g2 = eqTarg->mGrid;
+    bool fail = false;
+
+    int x1 = eqOrig->mColumn;
+    int y1 = eqOrig->mRow;
+    int g1 = eqOrig->mGrid;
+    int x2 = eqTarg->mColumn;
+    int y2 = eqTarg->mRow;
+    int g2 = eqTarg->mGrid;
     float weight = conn->mWeight;
 
-    if ((brain->isConnectionValid(x1, y1, g1, x2, y2, g2))
-        && ((g1 != g2) || (x1 < x2)))
+    if (brain->isConnectionValid(x1, y1, g1, x2, y2, g2))
     {
-        brain->addConnection(x1, y1, g1, x2, y2, g2, weight, conn->mTag);
-        success = true;
-        canAddComponent = false;
-        //printf("SUCCESS\n");
+        if ((g1 == g2) && (x1 >= x2))
+        {
+            //printf("* reverse order\n");
+            if (!brain->correctOrder(x1, y1, x2, y2, g1))
+            {
+                Gridbrain* newBrain = brain->clone(false, ET_COLUMN_BEFORE, g1, x2);
+                delete brain;
+                brain = newBrain;
+                x1++;
+                x2++;
+                if (!brain->correctOrder(x1, y1, x2, y2, g1))
+                {
+                    Gridbrain* newBrain = brain->clone(false, ET_COLUMN_AFTER, g1, x1);
+                    delete brain;
+                    brain = newBrain;
+                    
+                    if (!brain->correctOrder(x1, y1, x2, y2, g1))
+                    {
+                        fail = true;
+                    }
+                }
+            }
+        }
     }
     else
+    {
+        fail = true;
+    }
+
+    if (fail)
     {
         failsOrder++;
         success = false;
 
-        if (g1 == g2)
-        {
-            brain = brain->clone(false, ET_COLUMN_RANDOM, g1);
-        }
         //printf("FAILURE\n");
+    }
+    else
+    {
+        brain->addConnection(x1, y1, g1, x2, y2, g2, weight, conn->mTag);
+        canAddComponent = false;
+        success = true;
+
+        //printf("SUCCESS\n");
     }
 
     return brain;
@@ -485,13 +565,13 @@ Gridbrain* Gridbrain::uniformRecombine(Gridbrain* brain)
 
     // Import selected connections from parent 2
     bool done = false;
-    unsigned int iteration = 0;
     bool canAddComponent = false;
 
     while (!done)
     {
         unsigned int failsOrder = 0;
         unsigned int failsComp = 0;
+        unsigned int imports = 0;
 
         conn = gb2->mConnections;
         while (conn != NULL)
@@ -506,7 +586,7 @@ Gridbrain* Gridbrain::uniformRecombine(Gridbrain* brain)
                 if (success)
                 {
                     conn->mSelectionState = GridbrainConnection::SS_UNSELECTED;
-                    iteration = 0;
+                    imports++;
                 }
             }
 
@@ -515,30 +595,27 @@ Gridbrain* Gridbrain::uniformRecombine(Gridbrain* brain)
 
         unsigned int fails = failsOrder + failsComp;
 
+        bool addComponent = false;
         if (fails > 0)
         {
-            if ((failsOrder > 0) && (iteration < 10))
+            if (imports == 0)
             {
-                // Shuffle grid and retry
-                iteration++;
-                gbNew->update();
-                gbNew->mutateSwapComponent(0.5f);
-            }
-            else if (!canAddComponent)
-            {
-                canAddComponent = true;
-            }
-            else
-            {
-                // OK, we give up...
-                /*printf("=>>>>give up!\n");
-                printf(">>> PARENT 1\n");
-                printDebug();
-                printf(">>> PARENT 2\n");
-                gb2->printDebug();
-                printf(">>> CHILD\n");
-                gbNew->printDebug();*/
-                done = true;
+                if (failsComp > 0)
+                {
+                    canAddComponent = true;
+                }
+                else
+                {
+                    // OK, we give up...
+                    /*printf("=>>>>give up!\n");
+                    printf(">>> PARENT 1\n");
+                    printDebug();
+                    printf(">>> PARENT 2\n");
+                    gb2->printDebug();
+                    printf(">>> CHILD\n");
+                    gbNew->printDebug();*/
+                    done = true;
+                }
             }
         }
         else
@@ -681,7 +758,7 @@ void Gridbrain::popAdjust(vector<SimulationObject*>* popVec)
             }
 
             // If no tag assigned, try to associate with an existing tag group
-            if (conn->mTag.mGroupID == 0)
+            /*if (conn->mTag.mGroupID == 0)
             {
                 GridbrainComponent* orig = (GridbrainComponent*)conn->mOrigComponent;
                 GridbrainComponent* targ = (GridbrainComponent*)conn->mTargComponent;
@@ -717,7 +794,7 @@ void Gridbrain::popAdjust(vector<SimulationObject*>* popVec)
                     conn->mTag.mOrigID = GridbrainConnTag::generateID();
                     conn->mTag.mTargID = GridbrainConnTag::generateID();
                 }
-            }
+            }*/
 
             // If still no tag assigned, generate new one
             if (conn->mTag.mGroupID == 0)
