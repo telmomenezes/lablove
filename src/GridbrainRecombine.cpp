@@ -391,7 +391,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
     int g2 = eqTarg->mGrid;
     float weight = conn->mWeight;
 
-    if (brain->isConnectionValid(x1, y1, g1, x2, y2, g2))
+    if (brain->isConnectionValid(x1, y1, g1, x2, y2, g2) && (g1 <= g2))
     {
         if ((g1 == g2) && (x1 >= x2))
         {
@@ -581,7 +581,7 @@ Gridbrain* Gridbrain::uniformRecombine(Gridbrain* brain)
                 bool success;
                 //printf("-> Import connection: ");
                 //gb2->printConnection(conn);
-                gbNew = gbNew->importConnection(gbNew, conn, canAddComponent, success, failsOrder, failsComp);
+                gbNew = importConnection(gbNew, conn, canAddComponent, success, failsOrder, failsComp);
 
                 if (success)
                 {
