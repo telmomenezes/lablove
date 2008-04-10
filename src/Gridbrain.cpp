@@ -65,6 +65,8 @@ Gridbrain::Gridbrain(lua_State* luaState)
     mGrowMethod = GM_PRESSURE;
     mCloneConnectionsMode = CC_ALL_PLUS;
     mMutationScope = MS_ALL;
+
+    mGeneGrouping = false;
 }
 
 Gridbrain::~Gridbrain()
@@ -129,6 +131,8 @@ Gridbrain* Gridbrain::baseClone()
     gb->mMutationScope = mMutationScope;
 
     gb->mOwner = mOwner;
+
+    gb->mGeneGrouping = mGeneGrouping;
 
     return gb;
 }
@@ -2297,6 +2301,7 @@ Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
     {"setMutateJoinConnectionsProb", &Gridbrain::setMutateJoinConnectionsProb},
     {"setMutateChangeComponentProb", &Gridbrain::setMutateChangeComponentProb},
     {"setMutateSwapComponentProb", &Gridbrain::setMutateSwapComponentProb},
+    {"setGeneGrouping", &Gridbrain::setGeneGrouping},
     {0,0}
 };
 
@@ -2450,6 +2455,13 @@ int Gridbrain::setWeightMutationStanDev(lua_State* luaState)
 {
     float sd = luaL_checknumber(luaState, 1);
     setWeightMutationStanDev(sd);
+    return 0;
+}
+
+int Gridbrain::setGeneGrouping(lua_State* luaState)
+{
+    bool val = luaL_checkbool(luaState, 1);
+    setGeneGrouping(val);
     return 0;
 }
 

@@ -68,11 +68,6 @@ void Gridbrain::clearRecombineInfo()
         conn->mSelectionState = GridbrainConnection::SS_UNKNOWN;
         conn = (GridbrainConnection*)conn->mNextGlobalConnection;
     }
-
-    for (unsigned int i = 0; i < mNumberOfComponents; i++)
-    {
-        mComponents[i].mRecombined = false;
-    }
 }
 
 GridbrainComponent* Gridbrain::findEquivalentComponent(GridbrainComponent* comp, CompEquivalenceType eqType)
@@ -92,7 +87,7 @@ GridbrainComponent* Gridbrain::findEquivalentComponent(GridbrainComponent* comp,
             eqComp = comp2;
         }
 
-        if (bestEq == 3)
+        if (bestEq == 2)
         {
             return eqComp;
         }
@@ -150,37 +145,6 @@ bool Gridbrain::correctOrder(int& x1, int& y1, int& x2, int& y2, int g)
     }
 
     return false;
-}
-
-void Gridbrain::recombineComponents(GridbrainComponent* newComp, GridbrainComponent* parentComp)
-{
-    if (newComp->mRecombined)
-    {
-        return;
-    }
-
-    newComp->mRecombined = true;
-
-    if (newComp->isEqual(parentComp))
-    {
-        return;
-    }
-
-    bool copy = false;
-
-    if ((newComp->mConnectionsCount + newComp->mInboundConnections) == 0)
-    {
-        copy = true;
-    }
-    else if (mDistRecombine->iuniform(0, 2) == 0)
-    {
-        copy = true;
-    }
-
-    if (copy)
-    {
-        newComp->copyDefinitions(parentComp);
-    }
 }
 
 Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
@@ -467,8 +431,6 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
         brain->addConnection(x1, y1, g1, x2, y2, g2, weight, conn->mGeneTag);
         eqOrig = brain->getComponent(x1, y1, g1);
         eqTarg = brain->getComponent(x2, y2, g2);
-        brain->recombineComponents(eqOrig, orig);
-        brain->recombineComponents(eqTarg, targ);
         canAddComponent = false;
         success = true;
 
@@ -664,22 +626,48 @@ Brain* Gridbrain::recombine(Brain* brain)
 
     gbNew->update();
     
-    //printf("\n>>>> CHILD\n");
-    //child->printDebug();
+    /*printf(">>> PARENT 1\n");
+    printDebug();
+    printf(">>> PARENT 2\n");
+    gb2->printDebug();
+    printf(">>> CHILD\n");
+    gbNew->printDebug();*/
 
     return gbNew;
 }
 
 int Gridbrain::compEquivalence(GridbrainComponent* comp1, GridbrainComponent* comp2, CompEquivalenceType eqType)
 {
-    if (comp1->mGrid != comp2->mGrid)
+    if (!comp1->isEqual(comp2))
     {
         return 0;
     }
 
-    if (comp1->isUnique() && comp1->isEqual(comp2))
+    if (comp1->isUnique())
     {
-        return 3;
+        return 2;
+    }
+
+    switch (eqType)
+    {
+    case CET_ORIGIN:
+        if ((comp1->mInboundConnections == 0)
+            && (comp2->mInboundConnections == 0)
+            && (comp1->mConnectionsCount == 1)
+            && (comp2->mConnectionsCount == 1))
+        {
+            return 1;
+        }
+        break;
+    case CET_TARGET:
+        if ((comp1->mInboundConnections == 1)
+            && (comp2->mInboundConnections == 1)
+            && (comp1->mConnectionsCount == 0)
+            && (comp2->mConnectionsCount == 0))
+        {
+            return 1;
+        }
+        break;
     }
 
     GridbrainConnection* conn1 = (GridbrainConnection*)comp1->mFirstInConnection;
@@ -690,7 +678,7 @@ int Gridbrain::compEquivalence(GridbrainComponent* comp1, GridbrainComponent* co
         {
             if (conn1->mGeneTag.isEquivalentOrigin(&(conn2->mGeneTag)))
             {
-                return 2;
+                return 1;
             }
 
             conn2 = (GridbrainConnection*)conn2->mNextInConnection;
@@ -706,36 +694,12 @@ int Gridbrain::compEquivalence(GridbrainComponent* comp1, GridbrainComponent* co
         {
             if (conn1->mGeneTag.isEquivalentTarget(&(conn2->mGeneTag)))
             {
-                return 2;
+                return 1;
             }
 
             conn2 = (GridbrainConnection*)conn2->mNextConnection;
         }
         conn1 = (GridbrainConnection*)conn1->mNextConnection;
-    }
-
-    switch (eqType)
-    {
-    case CET_ORIGIN:
-        if ((comp1->mInboundConnections == 0)
-            && (comp2->mInboundConnections == 0)
-            && (comp1->mConnectionsCount == 1)
-            && (comp2->mConnectionsCount == 1)
-            && comp1->isEqual(comp2))
-        {
-            return 1;
-        }
-        break;
-    case CET_TARGET:
-        if ((comp1->mInboundConnections == 1)
-            && (comp2->mInboundConnections == 1)
-            && (comp1->mConnectionsCount == 0)
-            && (comp2->mConnectionsCount == 0)
-            && comp1->isEqual(comp2))
-        {
-            return 1;
-        }
-        break;
     }
 
     return 0;
@@ -765,7 +729,7 @@ GridbrainGeneTag Gridbrain::findGeneTag(GridbrainConnection* conn)
                 tag = conn2->mGeneTag;
             }
 
-            if (bestEq == 6)
+            if (bestEq == 4)
             {
                 return tag;
             }
@@ -802,8 +766,8 @@ void Gridbrain::popAdjust(vector<SimulationObject*>* popVec)
                 }
             }
 
-            // If no tag assigned, try to associate with an existing tag group
-            /*if (conn->mTag.mGroupID == 0)
+            // If no tag assigned, try to associate with an existing gene
+            if (mGeneGrouping && (conn->mGeneTag.mGeneID == 0))
             {
                 GridbrainComponent* orig = (GridbrainComponent*)conn->mOrigComponent;
                 GridbrainComponent* targ = (GridbrainComponent*)conn->mTargComponent;
@@ -835,11 +799,11 @@ void Gridbrain::popAdjust(vector<SimulationObject*>* popVec)
                         }
                     }
 
-                    conn->mTag.mGroupID = conn2->mTag.mGroupID;
-                    conn->mTag.mOrigID = GridbrainConnTag::generateID();
-                    conn->mTag.mTargID = GridbrainConnTag::generateID();
+                    conn->mGeneTag.mGeneID = conn2->mGeneTag.mGeneID;
+                    conn->mGeneTag.mOrigID = GridbrainGeneTag::generateID();
+                    conn->mGeneTag.mTargID = GridbrainGeneTag::generateID();
                 }
-            }*/
+            }
 
             // If still no tag assigned, generate new gene
             if (conn->mGeneTag.mGeneID == 0)

@@ -61,6 +61,7 @@ changeComponentProb = 0.01
 swapComponentProb = 0.1
 
 recombineProb = 1.0
+geneGrouping = false
 
 growMethod = "pressure"
 cloneConnectionsMode = "all_plus"
@@ -94,6 +95,7 @@ initialConnections = getNumberParameter("initconn", initialConnections, "ico")
 growMethod = getStringParameter("growmethod", growMethod, "gm")
 cloneConnectionsMode = getStringParameter("cloneconnmode", cloneConnectionsMode, "ccm")
 mutationScope = getStringParameter("mutationscope", mutationScope, "ms")
+geneGrouping = getBoolParameter("genegrouping", geneGrouping, "gg")
 
 logBaseName = "_poison_"
 
@@ -217,6 +219,8 @@ brain:setMutateSwapComponentProb(swapComponentProb)
 brain:setGrowMethod(growMethodCode)
 brain:setCloneConnectionsMode(cloneConnectionsModeCode)
 brain:setMutationScope(mutationScopeCode)
+
+brain:setGeneGrouping(geneGrouping)
 
 alphaSet = GridbrainComponentSet()
 for i, comp in pairs(alphaComponents) do

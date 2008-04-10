@@ -163,6 +163,8 @@ public:
     void setMutateChangeComponentProb(float prob){mMutateChangeComponentProb = prob;}
     void setMutateSwapComponentProb(float prob){mMutateSwapComponentProb = prob;}
 
+    void setGeneGrouping(bool val){mGeneGrouping = val;}
+
     virtual bool getFieldValue(string fieldName, float& value);
 
     virtual string write(SimulationObject* obj, PopulationManager* pop);
@@ -210,6 +212,7 @@ public:
     int setMutateChangeComponentProb(lua_State* luaState);
     int setMutateSwapComponentProb(lua_State* luaState);
     int setWeightMutationStanDev(lua_State* luaState);
+    int setGeneGrouping(lua_State* luaState);
 
     static long MUTATIONS_ADD_CONN;
     static long MUTATIONS_REM_CONN;
@@ -272,7 +275,6 @@ protected:
 
     void clearRecombineInfo();
     GridbrainComponent* findEquivalentComponent(GridbrainComponent* comp, CompEquivalenceType eqType);
-    void recombineComponents(GridbrainComponent* newComp, GridbrainComponent* parentComp);
     Gridbrain* importConnection(Gridbrain* gb,
                                 GridbrainConnection* conn,
                                 bool &canAddComponent,
@@ -329,6 +331,8 @@ protected:
     GrowMethod mGrowMethod;
     CloneConnectionsMode mCloneConnectionsMode;
     MutationScope mMutationScope;
+
+    bool mGeneGrouping;
 };
 
 #endif

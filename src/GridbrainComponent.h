@@ -117,8 +117,6 @@ public:
     bool mProducer;
     bool mConsumer;
     bool mActive;
-
-    bool mRecombined;
 };
 
 #endif
