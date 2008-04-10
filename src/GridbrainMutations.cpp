@@ -25,14 +25,8 @@
 #include <float.h>
 
 long Gridbrain::MUTATIONS_ADD_CONN = 0;
-long Gridbrain::MUTATIONS_ADD_DBL_CONN = 0;
 long Gridbrain::MUTATIONS_REM_CONN = 0;
-long Gridbrain::MUTATIONS_REM_DBL_CONN = 0;
 long Gridbrain::MUTATIONS_CHG_WGT = 0;
-long Gridbrain::MUTATIONS_NEW_WGT = 0;
-long Gridbrain::MUTATIONS_MOV_ORI = 0;
-long Gridbrain::MUTATIONS_FRK_CONN = 0;
-long Gridbrain::MUTATIONS_FRK_DBL_CONN = 0;
 long Gridbrain::MUTATIONS_SPLIT_CONN = 0;
 long Gridbrain::MUTATIONS_JOIN_CONN = 0;
 long Gridbrain::MUTATIONS_CHG_COMP = 0;
@@ -57,21 +51,12 @@ void Gridbrain::mutate()
     calcConnectionCounts();
 
     mutateChangeConnectionWeight();
-    mutateNewConnectionWeight();
 
     unsigned int connCount = mConnectionsCount;
 
-    mutateAddInactiveConnections(connCount);
-
     mutateAddConnection(connCount);
-    mutateAddDoubleConnection(connCount);
     mutateRemoveConnection(connCount);
-    mutateRemoveDoubleConnection(connCount);
 
-    mutateForkConnection(connCount);
-    mutateForkDoubleConnection(connCount);
-
-    mutateMoveConnectionOrigin();
     mutateSplitConnection(connCount);
     mutateJoinConnections(connCount);
 
@@ -210,39 +195,6 @@ unsigned int Gridbrain::getMutableConnectionsCount(unsigned int initialPop)
     }
 }
 
-void Gridbrain::addRandomInactiveConnection()
-{
-    // If all grids has 0 size, no connection can be created
-    if (mTotalPossibleConnections == 0)
-    {
-        return;
-    }
-
-    unsigned int x1;
-    unsigned int x2;
-    unsigned int y1;
-    unsigned int y2;
-    unsigned int g1;
-    unsigned int g2;
-    float weight;
-
-    if (selectRandomConnection(x1, y1, g1, x2, y2, g2))
-    {
-        GridbrainComponent* compOrig = getComponent(x1, y1, g1);
-        GridbrainComponent* compTarg = getComponent(x2, y2, g2);
-
-        // Only add if innactive
-        if ((!compOrig->mProducer) || (!compOrig->mConsumer))
-        {
-            weight = mDistWeights->uniform(-1.0f, 1.0f);
-            addConnection(x1, y1, g1, x2, y2, g2, weight);
-
-            // update producer/consumer status...
-            calcActive();
-        }
-    }
-}
-
 void Gridbrain::removeRandomConnection(unsigned int initialPop)
 {
     if (mConnectionsCount == 0)
@@ -262,73 +214,6 @@ void Gridbrain::removeRandomConnection(unsigned int initialPop)
     }
 
     removeConnection(conn);
-}
-
-void Gridbrain::removeRandomDoubleConnection()
-{
-    if (mConnectionsCount == 0)
-    {
-        return;
-    }
-
-    GridbrainConnection* conn = mConnections;
-    GridbrainComponent* comp;
-    unsigned int count = 0;
-    while (conn != NULL)
-    {
-        unsigned int x = conn->mColumnTarg;
-        unsigned int y = conn->mRowTarg;
-        unsigned int g = conn->mGridTarg;
-
-        comp = getComponent(x, y, g);
-
-        if (comp->mConnectionsCount > 0)
-        {
-            count++;
-        }
-        conn = (GridbrainConnection*)(conn->mNextGlobalConnection);
-    }
-    
-    if (count == 0)
-    {
-        removeRandomConnection(mConnectionsCount);
-        return;
-    }
-
-    unsigned int pos = mDistConnections->iuniform(0, count);
-
-    conn = mConnections;
-    unsigned int i = 0;
-    while (i <= pos)
-    {
-        unsigned int x = conn->mColumnTarg;
-        unsigned int y = conn->mRowTarg;
-        unsigned int g = conn->mGridTarg;
-
-        comp = getComponent(x, y, g);
-
-        if (comp->mConnectionsCount > 0)
-        {
-            i++;
-        }
-
-        if (i <= pos)
-        {
-            conn = (GridbrainConnection*)(conn->mNextGlobalConnection);
-        }
-    }
-
-    pos = mDistConnections->iuniform(0, comp->mConnectionsCount);
-    GridbrainConnection* conn2 = comp->mFirstConnection;
-    i = 0;
-    while (i < pos)
-    {
-        conn2 = (GridbrainConnection*)(conn2->mNextConnection);
-        i++;
-    }
-
-    removeConnection(conn);
-    removeConnection(conn2);
 }
 
 bool Gridbrain::isSplitable(GridbrainConnection* conn)
@@ -449,65 +334,6 @@ GridbrainConnection* Gridbrain::selectJoinableConnection(unsigned int initialPop
     return conn;
 }
 
-void Gridbrain::addDoubleConnection()
-{
-    // If all grids has 0 size, no connection can be created
-    if (mTotalPossibleConnections == 0)
-    {
-        return;
-    }
-
-    unsigned int x1;
-    unsigned int x2;
-    unsigned int x3;
-    unsigned int y1;
-    unsigned int y2;
-    unsigned int y3;
-    unsigned int g1;
-    unsigned int g2;
-    unsigned int g3;
-    float weight;
-
-    if (selectRandomConnection(x1, y1, g1, x2, y2, g2))
-    {
-        weight = mDistWeights->uniform(-1.0f, 1.0f);
-        addConnection(x1, y1, g1, x2, y2, g2, weight);
-
-        //printf("conn1: %d,%d,%d -> %d,%d,%d [%f]\n", x1, y1, g1, x2, y2, g2, weight);
-
-        unsigned int dir = mDistConnections->iuniform(0, 2);
-        weight = mDistWeights->uniform(-1.0f, 1.0f);
-
-        if (dir == 0)
-        {
-            if (selectRandomOrigin(x3, y3, g3, x1, y1, g1))
-            {
-                addConnection(x3, y3, g3, x1, y1, g1, weight);
-                //printf("conn2A: %d,%d,%d -> %d,%d,%d [%f]\n", x3, y3, g3, x1, y1, g1, weight);
-            }
-            else if (selectRandomTarget(x2, y2, g2, x3, y3, g3))
-            {
-                addConnection(x2, y2, g2, x3, y3, g3, weight);
-                //printf("conn2B: %d,%d,%d -> %d,%d,%d [%f]\n", x2, y2, g2, x3, y3, g3, weight);
-            }
-        }
-        else
-        {
-            if (selectRandomTarget(x2, y2, g2, x3, y3, g3))
-            {
-                addConnection(x2, y2, g2, x3, y3, g3, weight);
-                //printf("conn2C: %d,%d,%d -> %d,%d,%d [%f]\n", x2, y2, g2, x3, y3, g3, weight);
-            }
-            else if (selectRandomOrigin(x3, y3, g3, x1, y1, g1))
-            {
-                addConnection(x3, y3, g3, x1, y1, g1, weight);
-                //printf("conn2D: %d,%d,%d -> %d,%d,%d [%f]\n", x3, y3, g3, x1, y1, g1, weight);
-            }
-            
-        }
-    }
-}
-
 void Gridbrain::mutateAddConnection(unsigned int popSize)
 {
     // Allways create a connection if none exist
@@ -524,40 +350,6 @@ void Gridbrain::mutateAddConnection(unsigned int popSize)
     addRandomConnections(count);
 }
 
-void Gridbrain::mutateAddInactiveConnections(unsigned int popSize)
-{
-    if (mMutateAddInactiveRatio == 0.0f)
-    {
-        return;
-    }
-
-    unsigned int count = (unsigned int)(ceilf(mMutateAddInactiveRatio * (float)popSize));
-
-    for (unsigned int i = 0; i < count; i++)
-    {
-        addRandomInactiveConnection();
-    }
-}
-
-void Gridbrain::mutateAddDoubleConnection(unsigned int popSize)
-{
-    // Allways create a connection if none exist
-    // otherwise a 0 connections grid is an evolutionary dead-end
-    if (mConnectionsCount == 0)
-    {
-        addDoubleConnection();
-        return;
-    }
-
-    unsigned int count = generateEventCount(mMutateAddDoubleConnectionProb, popSize);
-
-    MUTATIONS_ADD_DBL_CONN += count;
-    for (unsigned int i = 0; i < count; i++)
-    {
-        addDoubleConnection();
-    }
-}
-
 void Gridbrain::mutateRemoveConnection(unsigned int popSize)
 {
     unsigned int count = generateEventCount(mMutateRemoveConnectionProb, popSize);
@@ -567,18 +359,6 @@ void Gridbrain::mutateRemoveConnection(unsigned int popSize)
     for (unsigned int i = 0; i < count; i++)
     {
         removeRandomConnection(popSize);
-    }
-}
-
-void Gridbrain::mutateRemoveDoubleConnection(unsigned int popSize)
-{
-    unsigned int count = generateEventCount(mMutateRemoveDoubleConnectionProb, popSize);
-
-    MUTATIONS_REM_DBL_CONN += count;
-
-    for (unsigned int i = 0; i < count; i++)
-    {
-        removeRandomDoubleConnection();
     }
 }
 
@@ -604,248 +384,6 @@ void Gridbrain::mutateChangeConnectionWeight()
 
         conn->mWeight = newWeight;
         applyWeight(conn);
-    }
-}
-
-void Gridbrain::mutateNewConnectionWeight()
-{
-    initRandomConnectionSequence(mMutateNewConnectionWeightProb);
-
-    while (nextRandomConnection() != NULL) 
-    {
-        MUTATIONS_NEW_WGT++;
-        GridbrainConnection* conn = mConnSeqCurrent;
-
-        float newWeight = mDistWeights->uniform(-1.0f, 1.0f);
-        conn->mWeight = newWeight;
-        applyWeight(conn);
-    }
-}
-
-void Gridbrain::mutateMoveConnectionOrigin()
-{
-    // WARNING: This code assume one beta grid in the end
-
-    initRandomConnectionSequence(mMutateMoveConnectionOriginProb);
-
-    while (nextRandomConnection() != NULL) 
-    {
-        GridbrainConnection* conn = mConnSeqCurrent;
-
-        Grid* gridTarg = mGridsVec[conn->mGridTarg];
-
-        int sameGridOrigins = gridTarg->getHeight() * conn->mColumnTarg;
-        int possibleOrigins = sameGridOrigins;
-
-        if (gridTarg->getType() == Grid::BETA)
-        {
-            for (unsigned int i = 0; i < mGridsCount - 1; i++)
-            {
-                possibleOrigins += mGridsVec[i]->getSize();
-            }
-        }
-
-        int pos = mDistConnections->iuniform(0, possibleOrigins);
-
-        unsigned int newX;
-        unsigned int newY;
-        unsigned int newG;
-       
-        if (gridTarg->getType() == Grid::BETA)
-        {
-            unsigned int i = 0;
-            unsigned int currentLimit = mGridsVec[i]->getSize();
-
-            while (pos >= currentLimit)
-            {
-                i++;    
-                currentLimit += mGridsVec[i]->getSize();
-            }
-
-            newG = i;
-            pos = pos - currentLimit + mGridsVec[i]->getSize();
-        }
-        else
-        {
-            newG = conn->mGridTarg;
-        }
-
-        gridTarg = mGridsVec[newG];
-
-        newX = pos / gridTarg->getHeight();
-        newY = pos - (newX * gridTarg->getHeight());
-
-        if (canCreateConnection(newX,
-                                newY,
-                                newG,
-                                conn->mColumnTarg,
-                                conn->mRowTarg,
-                                conn->mGridTarg))
-        {
-            MUTATIONS_MOV_ORI++;
-
-            //printf("move connection: \nfrom: %d, %d, %d -> %d, %d, %d\n", newX, newY, newG, conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg);
-            //printf("  to: %d, %d, %d -> %d, %d, %d\n", conn->mColumnOrig, conn->mRowOrig, conn->mGridOrig, conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg);
-
-            addConnection(newX,
-                            newY,
-                            newG,
-                            conn->mColumnTarg,
-                            conn->mRowTarg,
-                            conn->mGridTarg,
-                            conn->mWeight);
-
-            removeConnection(conn);
-        }
-    }
-}
-
-void Gridbrain::mutateForkConnection(unsigned int popSize)
-{
-    if (mConnectionsCount == 0)
-    {
-        return;
-    }
-
-    unsigned int count = generateEventCount(mMutateForkConnectionProb, popSize);
-
-    for (unsigned int i = 0; i < count; i++)
-    {
-        int pos = mDistConnections->iuniform(0, mConnectionsCount);
-        GridbrainConnection* conn = mConnections;
-
-        for (unsigned int j = 0; j < pos; j++)
-        {
-            conn = (GridbrainConnection*)conn->mNextGlobalConnection;
-        }
-
-        unsigned int x1 = conn->mColumnOrig;
-        unsigned int x2 = conn->mColumnTarg;
-        unsigned int x3;
-        unsigned int y1 = conn->mRowOrig;
-        unsigned int y2 = conn->mRowTarg;
-        unsigned int y3;
-        unsigned int g1 = conn->mGridOrig;
-        unsigned int g2 = conn->mGridTarg;
-        unsigned int g3;
-        float weight;
-
-        unsigned int dir = mDistConnections->iuniform(0, 2);
-        weight = mDistWeights->uniform(-1.0f, 1.0f);
-
-        if (dir == 0)
-        {
-            if (selectRandomOrigin(x3, y3, g3, x2, y2, g2))
-            {
-                addConnection(x3, y3, g3, x2, y2, g2, weight);
-                MUTATIONS_FRK_CONN++;
-            }
-            else if (selectRandomTarget(x1, y1, g1, x3, y3, g3))
-            {
-                addConnection(x1, y1, g1, x3, y3, g3, weight);
-                MUTATIONS_FRK_CONN++;
-            }
-        }
-        else
-        {
-            if (selectRandomTarget(x1, y1, g1, x3, y3, g3))
-            {
-                addConnection(x1, y1, g1, x3, y3, g3, weight);
-                MUTATIONS_FRK_CONN++;
-            }
-            else if (selectRandomOrigin(x3, y3, g3, x2, y2, g2))
-            {
-                addConnection(x3, y3, g3, x2, y2, g2, weight);
-                MUTATIONS_FRK_CONN++;
-            }
-            
-        }
-    }
-}
-
-void Gridbrain::mutateForkDoubleConnection(unsigned int popSize)
-{
-    if (mConnectionsCount == 0)
-    {
-        return;
-    }
-
-    unsigned int count = generateEventCount(mMutateForkDoubleConnectionProb, popSize);
-
-    for (unsigned int i = 0; i < count; i++)
-    {
-        int pos = mDistConnections->iuniform(0, mConnectionsCount);
-        GridbrainConnection* conn = mConnections;
-
-        for (unsigned int j = 0; j < pos; j++)
-        {
-            conn = (GridbrainConnection*)conn->mNextGlobalConnection;
-        }
-
-        unsigned int x1 = conn->mColumnOrig;
-        unsigned int x2 = conn->mColumnTarg;
-        unsigned int x3;
-        unsigned int x4;
-        unsigned int y1 = conn->mRowOrig;
-        unsigned int y2 = conn->mRowTarg;
-        unsigned int y3;
-        unsigned int y4;
-        unsigned int g1 = conn->mGridOrig;
-        unsigned int g2 = conn->mGridTarg;
-        unsigned int g3;
-        unsigned int g4;
-        float weight;
-
-        unsigned int dir = mDistConnections->iuniform(0, 2);
-        weight = mDistWeights->uniform(-1.0f, 1.0f);
-
-        if (dir == 0)
-        {
-            if (selectRandomOrigin(x3, y3, g3, x2, y2, g2))
-            {
-                MUTATIONS_FRK_DBL_CONN++;
-                addConnection(x3, y3, g3, x2, y2, g2, weight);
-                if (selectRandomOrigin(x4, y4, g4, x3, y3, g3))
-                {
-                    weight = mDistWeights->uniform(-1.0f, 1.0f);
-                    addConnection(x4, y4, g4, x3, y3, g3, weight);
-                }
-            }
-            else if (selectRandomTarget(x1, y1, g1, x3, y3, g3))
-            {
-                MUTATIONS_FRK_DBL_CONN++;
-                addConnection(x1, y1, g1, x3, y3, g3, weight);
-                if (selectRandomTarget(x3, y3, g3, x4, y4, g4))
-                {
-                    weight = mDistWeights->uniform(-1.0f, 1.0f);
-                    addConnection(x3, y3, g3, x4, y4, g4, weight);
-                }
-            }
-        }
-        else
-        {
-            if (selectRandomTarget(x1, y1, g1, x3, y3, g3))
-            {
-                MUTATIONS_FRK_DBL_CONN++;
-                addConnection(x1, y1, g1, x3, y3, g3, weight);
-                if (selectRandomTarget(x3, y3, g3, x4, y4, g4))
-                {
-                    weight = mDistWeights->uniform(-1.0f, 1.0f);
-                    addConnection(x3, y3, g3, x4, y4, g4, weight);
-                }
-            }
-            else if (selectRandomOrigin(x3, y3, g3, x2, y2, g2))
-            {
-                MUTATIONS_FRK_DBL_CONN++;
-                addConnection(x3, y3, g3, x2, y2, g2, weight);
-                if (selectRandomOrigin(x4, y4, g4, x3, y3, g3))
-                {
-                    weight = mDistWeights->uniform(-1.0f, 1.0f);
-                    addConnection(x4, y4, g4, x3, y3, g3, weight);
-                }
-            }
-            
-        }
     }
 }
 
@@ -1165,16 +703,10 @@ void Gridbrain::mutateSwapComponent(float prob)
 
 void Gridbrain::debugMutationsCount()
 {
-    printf("CON+:%d CON-:%d CON2+:%d CON2-:%d CWG:%d NWG:%d MOR:%d FRK: %d FRK2: %d SPL:%d JOI: %d CHG:%d SWP:%d\n",
+    printf("CON+:%d CON-:%d CWG:%d SPL:%d JOI: %d CHG:%d SWP:%d\n",
             MUTATIONS_ADD_CONN,
             MUTATIONS_REM_CONN,
-            MUTATIONS_ADD_DBL_CONN,
-            MUTATIONS_REM_DBL_CONN,
             MUTATIONS_CHG_WGT,
-            MUTATIONS_NEW_WGT,
-            MUTATIONS_MOV_ORI,
-            MUTATIONS_FRK_CONN,
-            MUTATIONS_FRK_DBL_CONN,
             MUTATIONS_SPLIT_CONN,
             MUTATIONS_JOIN_CONN,
             MUTATIONS_CHG_COMP,

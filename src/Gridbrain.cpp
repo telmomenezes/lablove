@@ -43,16 +43,9 @@ Gridbrain::Gridbrain(lua_State* luaState)
     mGridsCount = 0;
 
     mMutateAddConnectionProb = 0.0f;
-    mMutateAddDoubleConnectionProb = 0.0f;
-    mMutateAddInactiveRatio = 0.0f;
     mMutateRemoveConnectionProb = 0.0f;
-    mMutateRemoveDoubleConnectionProb = 0.0f;
     mMutateChangeConnectionWeightProb = 0.0f;
     mWeightMutationStanDev = 0.0f;
-    mMutateNewConnectionWeightProb = 0.0f;
-    mMutateMoveConnectionOriginProb = 0.0f;
-    mMutateForkConnectionProb = 0.0f;
-    mMutateForkDoubleConnectionProb = 0.0f;
     mMutateSplitConnectionProb = 0.0f;
     mMutateJoinConnectionsProb = 0.0f;
     mMutateChangeComponentProb = 0.0f;
@@ -118,16 +111,9 @@ Gridbrain* Gridbrain::baseClone()
     gb->mAllActive = mAllActive;
 
     gb->mMutateAddConnectionProb = mMutateAddConnectionProb;
-    gb->mMutateAddDoubleConnectionProb = mMutateAddDoubleConnectionProb;
-    gb->mMutateAddInactiveRatio = mMutateAddInactiveRatio;
     gb->mMutateRemoveConnectionProb = mMutateRemoveConnectionProb;
-    gb->mMutateRemoveDoubleConnectionProb = mMutateRemoveDoubleConnectionProb;
     gb->mMutateChangeConnectionWeightProb = mMutateChangeConnectionWeightProb;
     gb->mWeightMutationStanDev = mWeightMutationStanDev;
-    gb->mMutateNewConnectionWeightProb = mMutateNewConnectionWeightProb;
-    gb->mMutateMoveConnectionOriginProb = mMutateMoveConnectionOriginProb;
-    gb->mMutateForkConnectionProb = mMutateForkConnectionProb;
-    gb->mMutateForkDoubleConnectionProb = mMutateForkDoubleConnectionProb;
     gb->mMutateSplitConnectionProb = mMutateSplitConnectionProb;
     gb->mMutateJoinConnectionsProb = mMutateJoinConnectionsProb;
     gb->mMutateChangeComponentProb = mMutateChangeComponentProb;
@@ -2322,20 +2308,13 @@ Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
     {"setMutationScope", &Gridbrain::setMutationScope},
     {"setRecombinationType", &Gridbrain::setRecombinationType},
     {"setMutateAddConnectionProb", &Gridbrain::setMutateAddConnectionProb},
-    {"setMutateAddDoubleConnectionProb", &Gridbrain::setMutateAddDoubleConnectionProb},
     {"setMutateRemoveConnectionProb", &Gridbrain::setMutateRemoveConnectionProb},
-    {"setMutateRemoveDoubleConnectionProb", &Gridbrain::setMutateRemoveDoubleConnectionProb},
     {"setMutateChangeConnectionWeightProb", &Gridbrain::setMutateChangeConnectionWeightProb},
     {"setWeightMutationStanDev", &Gridbrain::setWeightMutationStanDev},
-    {"setMutateNewConnectionWeightProb", &Gridbrain::setMutateNewConnectionWeightProb},
-    {"setMutateMoveConnectionOriginProb", &Gridbrain::setMutateMoveConnectionOriginProb},
-    {"setMutateForkConnectionProb", &Gridbrain::setMutateForkConnectionProb},
-    {"setMutateForkDoubleConnectionProb", &Gridbrain::setMutateForkDoubleConnectionProb},
     {"setMutateSplitConnectionProb", &Gridbrain::setMutateSplitConnectionProb},
     {"setMutateJoinConnectionsProb", &Gridbrain::setMutateJoinConnectionsProb},
     {"setMutateChangeComponentProb", &Gridbrain::setMutateChangeComponentProb},
     {"setMutateSwapComponentProb", &Gridbrain::setMutateSwapComponentProb},
-    {"setAddInactiveRatio", &Gridbrain::setAddInactiveRatio},
     {0,0}
 };
 
@@ -2452,13 +2431,6 @@ int Gridbrain::setMutateAddConnectionProb(lua_State* luaState)
     return 0;
 }
 
-int Gridbrain::setMutateAddDoubleConnectionProb(lua_State* luaState)
-{
-    float prob = luaL_checknumber(luaState, 1);
-    setMutateAddDoubleConnectionProb(prob);
-    return 0;
-}
-
 int Gridbrain::setMutateRemoveConnectionProb(lua_State* luaState)
 {
     float prob = luaL_checknumber(luaState, 1);
@@ -2466,45 +2438,10 @@ int Gridbrain::setMutateRemoveConnectionProb(lua_State* luaState)
     return 0;
 }
 
-int Gridbrain::setMutateRemoveDoubleConnectionProb(lua_State* luaState)
-{
-    float prob = luaL_checknumber(luaState, 1);
-    setMutateRemoveDoubleConnectionProb(prob);
-    return 0;
-}
-
 int Gridbrain::setMutateChangeConnectionWeightProb(lua_State* luaState)
 {
     float prob = luaL_checknumber(luaState, 1);
     setMutateChangeConnectionWeightProb(prob);
-    return 0;
-}
-
-int Gridbrain::setMutateNewConnectionWeightProb(lua_State* luaState)
-{
-    float prob = luaL_checknumber(luaState, 1);
-    setMutateNewConnectionWeightProb(prob);
-    return 0;
-}
-
-int Gridbrain::setMutateMoveConnectionOriginProb(lua_State* luaState)
-{
-    float prob = luaL_checknumber(luaState, 1);
-    setMutateMoveConnectionOriginProb(prob);
-    return 0;
-}
-
-int Gridbrain::setMutateForkConnectionProb(lua_State* luaState)
-{
-    float prob = luaL_checknumber(luaState, 1);
-    setMutateForkConnectionProb(prob);
-    return 0;
-}
-
-int Gridbrain::setMutateForkDoubleConnectionProb(lua_State* luaState)
-{
-    float prob = luaL_checknumber(luaState, 1);
-    setMutateForkDoubleConnectionProb(prob);
     return 0;
 }
 
@@ -2540,13 +2477,6 @@ int Gridbrain::setWeightMutationStanDev(lua_State* luaState)
 {
     float sd = luaL_checknumber(luaState, 1);
     setWeightMutationStanDev(sd);
-    return 0;
-}
-
-int Gridbrain::setAddInactiveRatio(lua_State* luaState)
-{
-    float ratio = luaL_checknumber(luaState, 1);
-    setAddInactiveRatio(ratio);
     return 0;
 }
 

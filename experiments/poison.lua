@@ -52,20 +52,13 @@ bufferSize = 100
 fitnessAging = 0.1
 
 addConnectionProb = 0.005
-addDoubleConnectionProb = 0.0
 removeConnectionProb = 0.01
-removeDoubleConnectionProb = 0.0
 changeWeightProb = 0.01
 weightMutationStanDev = 1.0
-newWeightProb = 0.0
-moveConnectionOrigProb = 0.0
-forkConnectionProb = 0.0
-forkDoubleConnectionProb = 0.0
 splitConnectionProb = 0.005
 joinConnectionsProb = 0.0
 changeComponentProb = 0.01
 swapComponentProb = 0.1
-inactiveRatio = 0.0
 
 recombineProb = 1.0
 
@@ -88,15 +81,9 @@ humanAgent = false
 dofile("basic_command_line.lua")
 
 addConnectionProb = getNumberParameter("addconnprob", addConnectionProb, "con+")
-addDoubleConnectionProb = getNumberParameter("add2connprob", addDoubleConnectionProb, "con2+")
 removeConnectionProb = getNumberParameter("removeconnprob", removeConnectionProb, "con-")
-removeDoubleConnectionProb = getNumberParameter("remove2connprob", removeDoubleConnectionProb, "con2-")
 changeWeightProb = getNumberParameter("changeweightprob", changeWeightProb, "wgt")
 weightMutationStanDev = getNumberParameter("weightmutstandev", weightMutationStanDev, "wsd")
-newWeightProb = getNumberParameter("newweightprob", newWeightProb, "new")
-moveConnectionOrigProb = getNumberParameter("moveconnorigprob", moveConnectionOrigProb, "mor")
-forkConnectionProb = getNumberParameter("forkconnprob", forkConnectionProb, "frk")
-forkDoubleConnectionProb = getNumberParameter("fork2connprob", forkDoubleConnectionProb, "frk2")
 splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "spl")
 joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb, "joi")
 changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, "chg")
@@ -106,7 +93,6 @@ bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
 compCount = getNumberParameter("compcount", compCount, "cc")
 fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")
 initialConnections = getNumberParameter("initconn", initialConnections, "ico")
-inactiveRatio = getNumberParameter("inactiveratio", inactiveRatio, "ir")
 growMethod = getStringParameter("growmethod", growMethod, "gm")
 cloneConnectionsMode = getStringParameter("cloneconnmode", cloneConnectionsMode, "ccm")
 mutationScope = getStringParameter("mutationscope", mutationScope, "ms")
@@ -231,20 +217,13 @@ agent:setSymbolName("feed", feedTableCode, 0)
 brain = Gridbrain()
 
 brain:setMutateAddConnectionProb(addConnectionProb)
-brain:setMutateAddDoubleConnectionProb(addDoubleConnectionProb)
 brain:setMutateRemoveConnectionProb(removeConnectionProb)
-brain:setMutateRemoveDoubleConnectionProb(removeDoubleConnectionProb)
 brain:setMutateChangeConnectionWeightProb(changeWeightProb)
 brain:setWeightMutationStanDev(weightMutationStanDev)
-brain:setMutateNewConnectionWeightProb(newWeightProb)
-brain:setMutateMoveConnectionOriginProb(moveConnectionOrigProb)
-brain:setMutateForkConnectionProb(forkConnectionProb)
-brain:setMutateForkDoubleConnectionProb(forkDoubleConnectionProb)
 brain:setMutateSplitConnectionProb(splitConnectionProb)
 brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
 brain:setMutateSwapComponentProb(swapComponentProb)
-brain:setAddInactiveRatio(inactiveRatio)
 
 brain:setGrowMethod(growMethodCode)
 brain:setCloneConnectionsMode(cloneConnectionsModeCode)
