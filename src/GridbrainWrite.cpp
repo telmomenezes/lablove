@@ -327,7 +327,7 @@ void Gridbrain::printConnection(GridbrainConnection* conn)
 
 void Gridbrain::printComponent(GridbrainComponent* comp)
 {
-    printf("%s(%d)", comp->getName().c_str(), comp->mID);
+    printf("%s", comp->getName().c_str());
     printf("(%d)", comp->mSubType);
     printf("  [%d, %d, %d]", comp->mColumn, comp->mRow, comp->mGrid);
 }

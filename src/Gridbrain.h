@@ -51,7 +51,6 @@ public:
                         ET_COLUMN_BEFORE,
                         ET_COLUMN_AFTER,
                         ET_ROW};
-    enum RecombinationType {RT_TREE, RT_UNIFORM};
     enum CompEquivalenceType {CET_ORIGIN, CET_TARGET, CET_NEW};
 
     Gridbrain(lua_State* luaState=NULL);
@@ -69,7 +68,6 @@ public:
     GridbrainComponent* getComponent(unsigned int x,
                 unsigned int y,
                 unsigned int gridNumber);
-    GridbrainComponent* getComponentByID(llULINT id);
     void addConnection(unsigned int xOrig,
                 unsigned int yOrig,
                 unsigned int gOrig,
@@ -156,8 +154,6 @@ public:
     void setCloneConnectionsMode(CloneConnectionsMode val){mCloneConnectionsMode = val;}
     void setMutationScope(MutationScope val){mMutationScope = val;}
 
-    void setRecombinationType(RecombinationType type){mRecombinationType = type;}
-
     void setMutateAddConnectionProb(float prob){mMutateAddConnectionProb = prob;}
     void setMutateRemoveConnectionProb(float prob){mMutateRemoveConnectionProb = prob;}
     void setMutateChangeConnectionWeightProb(float prob){mMutateChangeConnectionWeightProb = prob;}
@@ -206,7 +202,6 @@ public:
     int setGrowMethod(lua_State* luaState);
     int setCloneConnectionsMode(lua_State* luaState);
     int setMutationScope(lua_State* luaState);
-    int setRecombinationType(lua_State* luaState);
     int setMutateAddConnectionProb(lua_State* luaState);
     int setMutateRemoveConnectionProb(lua_State* luaState);
     int setMutateChangeConnectionWeightProb(lua_State* luaState);
@@ -275,11 +270,9 @@ protected:
                                             unsigned int targG);
     GridbrainComponent* getCompByRelativeOffset(GridbrainComponent* compOrig, unsigned int offset);
 
-    Gridbrain* treeRecombine(Gridbrain* brain);
-
-    Gridbrain* uniformRecombine(Gridbrain* brain);
-    void clearConnRecombineInfo();
+    void clearRecombineInfo();
     GridbrainComponent* findEquivalentComponent(GridbrainComponent* comp, CompEquivalenceType eqType);
+    void recombineComponents(GridbrainComponent* newComp, GridbrainComponent* parentComp);
     Gridbrain* importConnection(Gridbrain* gb,
                                 GridbrainConnection* conn,
                                 bool &canAddComponent,
@@ -291,7 +284,7 @@ protected:
     bool checkGene(llULINT geneID);
     bool selectGene(llULINT geneID, bool select);
 
-    bool isCompEquivalent(GridbrainComponent* comp1, GridbrainComponent* comp2, CompEquivalenceType eqType);
+    int compEquivalence(GridbrainComponent* comp1, GridbrainComponent* comp2, CompEquivalenceType eqType);
     GridbrainGeneTag findGeneTag(GridbrainConnection* conn);
     virtual void popAdjust(vector<SimulationObject*>* popVec);
 
@@ -336,8 +329,6 @@ protected:
     GrowMethod mGrowMethod;
     CloneConnectionsMode mCloneConnectionsMode;
     MutationScope mMutationScope;
-
-    RecombinationType mRecombinationType;
 };
 
 #endif

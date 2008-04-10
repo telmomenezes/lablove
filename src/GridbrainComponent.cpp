@@ -49,6 +49,7 @@ void GridbrainComponent::clearDefinitions()
     mOrigSymID = 0;
     mTargetSymID = 0;
     mTableLinkType = InterfaceItem::NO_LINK;
+    mRecombined = false;
 }
 
 void GridbrainComponent::clearPosition()
@@ -84,7 +85,7 @@ void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)
     mOrigSymID = comp->mOrigSymID;
     mTargetSymID = comp->mTargetSymID;
     mTableLinkType = comp->mTableLinkType;
-    mID = comp->mID;
+    mRecombined = comp->mRecombined;
 }
 
 void GridbrainComponent::copyPosition(GridbrainComponent* comp)

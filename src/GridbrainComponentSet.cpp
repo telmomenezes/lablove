@@ -8,8 +8,6 @@
 
 mt_distribution* GridbrainComponentSet::mDistComponentSet = gDistManager.getNewDistribution();
 
-llULINT GridbrainComponentSet::COMPONENT_ID_SEQUENCE = 0;
-
 GridbrainComponentSet::GridbrainComponentSet(lua_State* luaState)
 {
     mSize = 0;
@@ -50,8 +48,6 @@ GridbrainComponent* GridbrainComponentSet::getRandom(SimulationObject* obj)
             comp->mOrigSymID = table->getRandomSymbolId();
         }
     }
-
-    comp->mID = COMPONENT_ID_SEQUENCE++;
 
     return comp;
 }

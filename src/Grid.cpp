@@ -370,9 +370,9 @@ void Grid::addColumn(ColumnPlacement place, unsigned int pos)
 
 void Grid::addRow()
 {
+    int newRow = mHeight;
     mHeight++;
     mSize = mWidth * mHeight;
-    int newRow = mDistRowsAndColumns->iuniform(0, mHeight);
 
     vector<GridCoord>::iterator iterCoord = mRowCoords.begin();
     for (unsigned int i = 0; i < newRow; i++)
@@ -382,33 +382,14 @@ void Grid::addRow()
 
     GridCoord gc;
 
-    if (mHeight == 1)
+    if (newRow == 0)
     {
         gc = GridCoord();
     }
-    else if (newRow == 0)
-    {
-        gc = mRowCoords[0].leftOf();
-    }
-    else if (newRow == (mHeight - 1))
-    {
-        gc = mRowCoords[mHeight - 2].rightOf();
-    }
     else
     {
-        unsigned int d1 = mRowCoords[newRow - 1].getDepth();
-        unsigned int d2 = mRowCoords[newRow].getDepth();
-
-        if (d1 > d2)
-        {
-            gc = mRowCoords[newRow - 1].rightOf();
-        }
-        else
-        {
-            gc = mRowCoords[newRow].leftOf();
-        }
+        gc = mRowCoords[newRow - 1].rightOf();
     }
-
     mRowCoords.insert(iterCoord, gc);
 }
 

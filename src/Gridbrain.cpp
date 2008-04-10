@@ -65,8 +65,6 @@ Gridbrain::Gridbrain(lua_State* luaState)
     mGrowMethod = GM_PRESSURE;
     mCloneConnectionsMode = CC_ALL_PLUS;
     mMutationScope = MS_ALL;
-
-    mRecombinationType = RT_UNIFORM;
 }
 
 Gridbrain::~Gridbrain()
@@ -129,8 +127,6 @@ Gridbrain* Gridbrain::baseClone()
     gb->mGrowMethod = mGrowMethod;
     gb->mCloneConnectionsMode = mCloneConnectionsMode;
     gb->mMutationScope = mMutationScope;
-
-    gb->mRecombinationType = mRecombinationType;
 
     gb->mOwner = mOwner;
 
@@ -595,19 +591,6 @@ GridbrainComponent* Gridbrain::getComponent(unsigned int x,
 
     unsigned int pos = (x * grid->getHeight()) + y + grid->getOffset();
     return &(mComponents[pos]);
-}
-
-GridbrainComponent* Gridbrain::getComponentByID(llULINT id)
-{
-    for (unsigned int i = 0; i < mNumberOfComponents; i++)
-    {
-        if (mComponents[i].mID == id)
-        {
-            return &mComponents[i];
-        }
-    }
-
-    return NULL;
 }
 
 void Gridbrain::addConnection(unsigned int xOrig,
@@ -2306,7 +2289,6 @@ Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
     {"setGrowMethod", &Gridbrain::setGrowMethod},
     {"setCloneConnectionsMode", &Gridbrain::setCloneConnectionsMode},
     {"setMutationScope", &Gridbrain::setMutationScope},
-    {"setRecombinationType", &Gridbrain::setRecombinationType},
     {"setMutateAddConnectionProb", &Gridbrain::setMutateAddConnectionProb},
     {"setMutateRemoveConnectionProb", &Gridbrain::setMutateRemoveConnectionProb},
     {"setMutateChangeConnectionWeightProb", &Gridbrain::setMutateChangeConnectionWeightProb},
@@ -2326,8 +2308,6 @@ Orbit<Gridbrain>::NumberGlobalType Gridbrain::mNumberGlobals[] = {
     {"CC_ACTIVE", CC_ACTIVE},
     {"MS_ALL", MS_ALL},
     {"MS_ACTIVE", MS_ACTIVE},
-    {"RT_UNIFORM", RT_UNIFORM},
-    {"RT_FREE", RT_TREE},
     {0,0}};
 
 int Gridbrain::init(lua_State* luaState)
@@ -2414,13 +2394,6 @@ int Gridbrain::setMutationScope(lua_State* luaState)
 {
     unsigned int val = luaL_checkint(luaState, 1);
     setMutationScope((MutationScope)val);
-    return 0;
-}
-
-int Gridbrain::setRecombinationType(lua_State* luaState)
-{
-    unsigned int type = luaL_checkint(luaState, 1);
-    setRecombinationType((RecombinationType)type);
     return 0;
 }
 

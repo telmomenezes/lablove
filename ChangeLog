@@ -7,9 +7,10 @@
     * Removal of obsolete clone randomize API
     * Removal of obsolete "diversify" flag in SpeciesData
     * Gridbrain::mutateAddInactiveConnections
-    * Gridbrain recombination implemented - uniform and tree
+    * Gridbrain recombination implemented
     * SimCont2D speak actions and perceptions
     * SimCont2D self perceptions
+    * Removal of obsolete mutation operators in the Gridbrain
     * ...
 
 0.2 alpha release

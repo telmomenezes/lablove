@@ -66,8 +66,6 @@ growMethod = "pressure"
 cloneConnectionsMode = "all_plus"
 mutationScope = "all"
 
-recType = "uniform"
-
 timeLimit = 0
 logTimeInterval = 100
 logBrains = true
@@ -96,7 +94,6 @@ initialConnections = getNumberParameter("initconn", initialConnections, "ico")
 growMethod = getStringParameter("growmethod", growMethod, "gm")
 cloneConnectionsMode = getStringParameter("cloneconnmode", cloneConnectionsMode, "ccm")
 mutationScope = getStringParameter("mutationscope", mutationScope, "ms")
-recType = getStringParameter("rectype", recType, "rt")
 
 logBaseName = "_poison_"
 
@@ -127,14 +124,6 @@ if mutationScope == "all" then
 elseif mutationScope == "active" then
     mutationScopeCode = Gridbrain.MS_ACTIVE
 end
-
-recTypeCode = 0
-if recType == "uniform" then
-    recTypeCode = Gridbrain.RT_UNIFORM
-elseif recType == "tree" then
-    recTypeCode = Gridbrain.RT_TREE
-end
-
 
 -- Simulation
 --------------------------------------------------------------------------------
@@ -228,8 +217,6 @@ brain:setMutateSwapComponentProb(swapComponentProb)
 brain:setGrowMethod(growMethodCode)
 brain:setCloneConnectionsMode(cloneConnectionsModeCode)
 brain:setMutationScope(mutationScopeCode)
-
-brain:setRecombinationType(recTypeCode)
 
 alphaSet = GridbrainComponentSet()
 for i, comp in pairs(alphaComponents) do

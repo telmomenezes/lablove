@@ -118,7 +118,7 @@ public:
     bool mConsumer;
     bool mActive;
 
-    llULINT mID;
+    bool mRecombined;
 };
 
 #endif
