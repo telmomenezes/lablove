@@ -949,7 +949,7 @@ void Gridbrain::mutateSplitConnection(unsigned int popSize)
         if (valid)
         {
             MUTATIONS_SPLIT_CONN++;
-            GridbrainConnTag tag1 = conn->mTag;
+            GridbrainGeneTag tag1 = conn->mGeneTag;
             float weight = conn->mWeight;
 
             // Current connection is going to be delted, advance to next one
@@ -972,22 +972,22 @@ void Gridbrain::mutateSplitConnection(unsigned int popSize)
                 weight2 = mDistWeights->uniform(-1.0f, 1.0f);
             }
 
-            GridbrainConnTag tag2;
-            GridbrainConnTag tag3;
+            GridbrainGeneTag tag2;
+            GridbrainGeneTag tag3;
 
-            llULINT groupID = tag1.mGroupID;
+            llULINT geneID = tag1.mGeneID;
 
-            if (groupID == 0)
+            if (geneID == 0)
             {
-                groupID = GridbrainConnTag::generateID();
+                geneID = GridbrainGeneTag::generateID();
             }
 
-            tag2.mGroupID = groupID;
-            tag3.mGroupID = groupID;
+            tag2.mGeneID = geneID;
+            tag3.mGeneID = geneID;
             tag2.mOrigID = tag1.mOrigID;
             tag3.mTargID = tag1.mTargID;
-            tag2.mTargID = GridbrainConnTag::generateID();
-            tag3.mOrigID = GridbrainConnTag::generateID();
+            tag2.mTargID = GridbrainGeneTag::generateID();
+            tag3.mOrigID = GridbrainGeneTag::generateID();
 
             /*printf(">>> split tags!\n");
             tag2.print();

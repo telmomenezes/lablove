@@ -307,7 +307,7 @@ void Gridbrain::printConnection(GridbrainConnection* conn)
             conn->mWeight,
             conn->mRealWeight);
 
-    conn->mTag.print();
+    conn->mGeneTag.print();
 
     switch (conn->mSelectionState)
     {

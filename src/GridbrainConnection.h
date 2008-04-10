@@ -21,7 +21,7 @@
 #define _INCLUDE_GRIDBRAIN_CONNECTION_H
 
 #include "types.h"
-#include "GridbrainConnTag.h"
+#include "GridbrainGeneTag.h"
 
 class GridbrainConnection
 {
@@ -51,7 +51,7 @@ public:
     bool mActive;
 
     SelectionState mSelectionState;
-    GridbrainConnTag mTag;
+    GridbrainGeneTag mGeneTag;
 };
 
 #endif

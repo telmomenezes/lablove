@@ -388,7 +388,7 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                     y2,
                     g2,
                     conn->mWeight,
-                    conn->mTag);
+                    conn->mGeneTag);
             }
             else
             {
@@ -631,7 +631,7 @@ void Gridbrain::addConnection(unsigned int xOrig,
                 unsigned int yTarg,
                 unsigned int gTarg,
                 float weight,
-                GridbrainConnTag tag)
+                GridbrainGeneTag tag)
 {
     /*printf("add connection: %d,%d,%d -> %d,%d,%d [%f]\n",
             xOrig,
@@ -705,7 +705,7 @@ void Gridbrain::addConnection(unsigned int xOrig,
     applyWeight(conn);
     conn->mOrigComponent = comp;
     conn->mTargComponent = targComp;
-    conn->mTag = tag;
+    conn->mGeneTag = tag;
 
     if (conn->mGridOrig == conn->mGridTarg)
     {
@@ -799,7 +799,7 @@ void Gridbrain::addConnectionReal(unsigned int xOrig,
                 unsigned int yTarg,
                 unsigned int gTarg,
                 float realWeight,
-                GridbrainConnTag tag)
+                GridbrainGeneTag tag)
 {
     float weight;
 
@@ -2260,7 +2260,7 @@ bool Gridbrain::swapComponents(GridbrainComponent* comp1, GridbrainComponent* co
 
         if (change)
         {
-            GridbrainConnTag tag = curConn->mTag;
+            GridbrainGeneTag tag = curConn->mGeneTag;
             removeConnection(curConn);
 
             if (connectionExists(newX1, newY1, newG1, newX2, newY2, newG2))
@@ -2273,7 +2273,7 @@ bool Gridbrain::swapComponents(GridbrainComponent* comp1, GridbrainComponent* co
                 addConn->mRowTarg = newY2;
                 addConn->mGridTarg = newG2;
                 addConn->mWeight = newWeight;
-                addConn->mTag = tag;
+                addConn->mGeneTag = tag;
                 addInTheEnd.push_back(addConn);
             }
             else
@@ -2298,7 +2298,7 @@ bool Gridbrain::swapComponents(GridbrainComponent* comp1, GridbrainComponent* co
                         addConn->mRowTarg,
                         addConn->mGridTarg,
                         addConn->mWeight,
-                        addConn->mTag);
+                        addConn->mGeneTag);
 
         delete addConn;
     }

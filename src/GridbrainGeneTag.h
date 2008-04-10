@@ -17,27 +17,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef _INCLUDE_GRIDBRAIN_CONN_TAG_H
-#define _INCLUDE_GRIDBRAIN_CONN_TAG_H
+#ifndef _INCLUDE_GRIDBRAIN_GENE_TAG_H
+#define _INCLUDE_GRIDBRAIN_GENE_TAG_H
 
 #include "types.h"
 
-class GridbrainConnTag
+class GridbrainGeneTag
 {
 public:
-    GridbrainConnTag();
-    GridbrainConnTag(const GridbrainConnTag& tag);
-    virtual ~GridbrainConnTag();
+    GridbrainGeneTag();
+    GridbrainGeneTag(const GridbrainGeneTag& tag);
+    virtual ~GridbrainGeneTag();
 
     static llULINT generateID();
-    bool isEquivalentOrigin(GridbrainConnTag* tag);
-    bool isEquivalentTarget(GridbrainConnTag* tag);
+    bool isEquivalentOrigin(GridbrainGeneTag* tag);
+    bool isEquivalentTarget(GridbrainGeneTag* tag);
 
     void print();
 
     static llULINT ID_SEQ;
 
-    llULINT mGroupID;
+    llULINT mGeneID;
     llULINT mOrigID;
     llULINT mTargID;
 };

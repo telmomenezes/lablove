@@ -77,7 +77,7 @@ public:
                 unsigned int yTarg,
                 unsigned int gTarg,
                 float weight,
-                GridbrainConnTag tag=GridbrainConnTag());
+                GridbrainGeneTag tag=GridbrainGeneTag());
     void addConnectionReal(unsigned int xOrig,
                 unsigned int yOrig,
                 unsigned int gOrig,
@@ -85,7 +85,7 @@ public:
                 unsigned int yTarg,
                 unsigned int gTarg,
                 float realWeight,
-                GridbrainConnTag tag=GridbrainConnTag());
+                GridbrainGeneTag tag=GridbrainGeneTag());
     void removeConnection(GridbrainConnection* conn);
     void removeConnection(unsigned int xOrig,
                 unsigned int yOrig,
@@ -320,11 +320,11 @@ protected:
                                 unsigned int &failsComp);
     bool correctOrder(int& x1, int& y1, int& x2, int& y2, int g);
 
-    bool checkTagGroup(llULINT group);
-    bool selectTagGroup(llULINT group, bool select);
+    bool checkGene(llULINT geneID);
+    bool selectGene(llULINT geneID, bool select);
 
     bool isCompEquivalent(GridbrainComponent* comp1, GridbrainComponent* comp2, CompEquivalenceType eqType);
-    GridbrainConnTag findConnTag(GridbrainConnection* conn);
+    GridbrainGeneTag findGeneTag(GridbrainConnection* conn);
     virtual void popAdjust(vector<SimulationObject*>* popVec);
 
     static mt_distribution* mDistConnections;

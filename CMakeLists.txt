@@ -56,7 +56,7 @@ SET(SOURCE_FILES
     src/GridCoord.cpp
     src/GridbrainComponent
     src/GridbrainConnection.cpp
-    src/GridbrainConnTag.cpp
+    src/GridbrainGeneTag.cpp
     src/GridbrainComponentSet.cpp
     src/PopulationDynamics.cpp
     src/PopDynGenerations.cpp

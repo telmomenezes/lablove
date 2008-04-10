@@ -17,49 +17,49 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "GridbrainConnTag.h"
+#include "GridbrainGeneTag.h"
 
 #include <stdio.h>
 
-llULINT GridbrainConnTag::ID_SEQ = 0;
+llULINT GridbrainGeneTag::ID_SEQ = 0;
 
-GridbrainConnTag::GridbrainConnTag()
+GridbrainGeneTag::GridbrainGeneTag()
 {
-    mGroupID = 0;
+    mGeneID = 0;
     mOrigID = 0;
     mTargID = 0;
 }
 
-GridbrainConnTag::GridbrainConnTag(const GridbrainConnTag& tag)
+GridbrainGeneTag::GridbrainGeneTag(const GridbrainGeneTag& tag)
 {
-    mGroupID = tag.mGroupID;
+    mGeneID = tag.mGeneID;
     mOrigID = tag.mOrigID;
     mTargID = tag.mTargID;
 }
 
-GridbrainConnTag::~GridbrainConnTag()
+GridbrainGeneTag::~GridbrainGeneTag()
 {
 }
 
-llULINT GridbrainConnTag::generateID()
+llULINT GridbrainGeneTag::generateID()
 {
     ID_SEQ++;
     return ID_SEQ;
 }
 
-bool GridbrainConnTag::isEquivalentOrigin(GridbrainConnTag* tag)
+bool GridbrainGeneTag::isEquivalentOrigin(GridbrainGeneTag* tag)
 {
-    return ((mGroupID == tag->mGroupID) && (mTargID == tag->mTargID));
+    return ((mGeneID == tag->mGeneID) && (mTargID == tag->mTargID));
 }
 
-bool GridbrainConnTag::isEquivalentTarget(GridbrainConnTag* tag)
+bool GridbrainGeneTag::isEquivalentTarget(GridbrainGeneTag* tag)
 {
-    return ((mGroupID == tag->mGroupID) && (mOrigID == tag->mOrigID));
+    return ((mGeneID == tag->mGeneID) && (mOrigID == tag->mOrigID));
 }
 
-void GridbrainConnTag::print()
+void GridbrainGeneTag::print()
 {
-    printf(" g: %d", mGroupID);
+    printf(" g: %d", mGeneID);
     printf(" o: %d", mOrigID);
     printf(" t: %d", mTargID);
 }
