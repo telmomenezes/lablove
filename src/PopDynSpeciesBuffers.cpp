@@ -91,7 +91,7 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
     SimulationObject* newOrganism;
 
     float prob = mDistRecombine->uniform(0.0f, 1.0f);
-    if (prob < mRecombineProb)
+    if ((prob < mRecombineProb) && mEvolutionOn)
     {
         // Recombine
         organismNumber = mDistOrganism->iuniform(0, species->mBufferSize);
@@ -139,7 +139,10 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
     newOrganism->setKinID(org->getID());
             
     // Mutate
-    newOrganism->mutate();
+    if (mEvolutionOn)
+    {
+        newOrganism->mutate();
+    }
 
     mPopManager->addObject(newOrganism, init);
     
@@ -220,6 +223,7 @@ Orbit<PopDynSpeciesBuffers>::MethodType PopDynSpeciesBuffers::mMethods[] = {
     {"addSpecies", &PopDynSpeciesBuffers::addSpecies},
     {"addSampleLog", &PopDynSpecies::addSampleLog},
     {"addDeathLog", &PopDynSpecies::addDeathLog},
+    {"setEvolutionStopTime", &PopDynSpecies::setEvolutionStopTime},
     {"setCompCount", &PopDynSpeciesBuffers::setCompCount},
     {"setFitnessAging", &PopDynSpeciesBuffers::setFitnessAging},
     {"setRecombineProb", &PopDynSpeciesBuffers::setRecombineProb},

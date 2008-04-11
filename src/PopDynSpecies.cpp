@@ -26,6 +26,8 @@ mt_distribution* PopDynSpecies::mDistOrganism = gDistManager.getNewDistribution(
 PopDynSpecies::PopDynSpecies(lua_State* luaState)
 {
     mLogTimeInterval = 100 * 1000;
+    mEvolutionStopTime = 0;
+    mEvolutionOn = true;
 }
 
 PopDynSpecies::~PopDynSpecies()
@@ -59,6 +61,13 @@ void PopDynSpecies::addDeathLog(unsigned int speciesID, Log* log)
 
 void PopDynSpecies::onCycle(llULINT time, double realTime)
 {
+    if (mEvolutionOn
+        && (mEvolutionStopTime > 0)
+        && (time > mEvolutionStopTime))
+    {
+        mEvolutionOn = false;
+    }
+
     if ((time % mLogTimeInterval) == 0)
     {
         for (map<unsigned int, SpeciesData>::iterator iterSpecies = mSpecies.begin();
@@ -129,6 +138,13 @@ int PopDynSpecies::setLogTimeInterval(lua_State* luaState)
 {
     llULINT interval = luaL_checkint(luaState, 1);
     setLogTimeInterval(interval);
+    return 0;
+}
+
+int PopDynSpecies::setEvolutionStopTime(lua_State* luaState)
+{
+    unsigned int time = luaL_checkint(luaState, 1);
+    setEvolutionStopTime(time);
     return 0;
 }
 

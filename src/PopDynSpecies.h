@@ -49,15 +49,20 @@ public:
     void addSampleLog(unsigned int speciesIndex, Log* log);
     void addDeathLog(unsigned int speciesIndex, Log* log);
     void setLogTimeInterval(llULINT interval){mLogTimeInterval = interval * 1000;}
+    void setEvolutionStopTime(unsigned int time){mEvolutionStopTime = ((llULINT)time) * 1000;}
 
     int addSampleLog(lua_State* luaState);
     int addDeathLog(lua_State* luaState);
     int setLogTimeInterval(lua_State* luaState);
+    int setEvolutionStopTime(lua_State* luaState);
 
 protected:
     static mt_distribution* mDistOrganism;
     map<unsigned int, SpeciesData> mSpecies;
     llULINT mLogTimeInterval;
+
+    llULINT mEvolutionStopTime;
+    bool mEvolutionOn;
 };
 #endif
 

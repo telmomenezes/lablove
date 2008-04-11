@@ -74,6 +74,8 @@ logOnlyLastBrain = true
 
 humanAgent = false
 
+evolutionStopTime = 100000
+
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
 
@@ -305,6 +307,7 @@ popDyn:setFitnessAging(fitnessAging)
 popDyn:setRecombineProb(recombineProb)
 agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize)
 popDyn:addSpecies(plant, numberOfPlants, 1, 1)
+popDyn:setEvolutionStopTime(evolutionStopTime)
 
 -- Human Agent
 --------------------------------------------------------------------------------
