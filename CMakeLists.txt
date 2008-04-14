@@ -58,6 +58,7 @@ SET(SOURCE_FILES
     src/GridbrainConnection.cpp
     src/GridbrainGeneTag.cpp
     src/GridbrainComponentSet.cpp
+    src/GridbrainMemCell.cpp
     src/PopulationDynamics.cpp
     src/PopDynGenerations.cpp
     src/PopDynSpecies.cpp
