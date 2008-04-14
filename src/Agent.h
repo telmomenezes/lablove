@@ -37,7 +37,7 @@ public:
     virtual ~Agent();
     virtual SimulationObject* clone(bool copyTables=true);
 
-    Brain* setBrain(Brain* brain);
+    void setBrain(Brain* brain);
     Brain* getBrain(){return mBrain;}
 
     virtual void compute();

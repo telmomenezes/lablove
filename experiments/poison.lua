@@ -99,6 +99,7 @@ cloneConnectionsMode = getStringParameter("cloneconnmode", cloneConnectionsMode,
 mutationScope = getStringParameter("mutationscope", mutationScope, "ms")
 geneGrouping = getBoolParameter("genegrouping", geneGrouping, "gg")
 evolutionStopTime = getNumberParameter("evostop", evolutionStopTime, "est")
+viewRange = getNumberParameter("viewrange", viewRange, "vr")
 
 logBaseName = "_poison_"
 

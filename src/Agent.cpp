@@ -89,7 +89,7 @@ SimulationObject* Agent::clone(bool copyTables)
     return new Agent(this, copyTables);
 }
 
-Brain* Agent::setBrain(Brain* brain)
+void Agent::setBrain(Brain* brain)
 {
     if (mBrain != NULL)
     {
@@ -140,6 +140,7 @@ SimulationObject* Agent::recombine(SimulationObject* otherParent)
 
     Agent* newAgent = (Agent*)(SimulationObject::recombine(agent2));
 
+    newAgent->mBrain = NULL;
     newAgent->setBrain(newBrain);
 
     Agent* finalAgent = (Agent*)newAgent->clone();
