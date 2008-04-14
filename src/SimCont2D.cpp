@@ -126,6 +126,16 @@ SimCont2D::~SimCont2D()
     mVisualEvents.clear();
 }
 
+void SimCont2D::initGraphics(unsigned int width,
+                                unsigned int height,
+                                bool fullScreen,
+                                bool noGraphics)
+{
+    Simulation::initGraphics(width, height, fullScreen, noGraphics);
+
+    mBackgroundTexture = art_loadImage("media/grass.jpg");
+}
+
 void SimCont2D::setWorldDimensions(float worldWidth,
                                     float worldLength,
                                     unsigned int cellSide)
@@ -1071,6 +1081,11 @@ void SimCont2D::drawBeforeObjects()
 {
     art_setScale(mZoom, mZoom);
     art_setTranslation(mViewX, mViewY);
+
+    art_setColor(0, 255, 0, 255);
+    art_setTexture(mBackgroundTexture);
+    art_fillRectangle(0, 0, mWorldWidth, mWorldLength);
+    art_clearTexture();
 
     if (mShowGrid)
     {

@@ -109,6 +109,11 @@ public:
     SimCont2D(lua_State* luaState=NULL);
     virtual ~SimCont2D();
 
+    virtual void initGraphics(unsigned int width,
+                                unsigned int height,
+                                bool fullScreen,
+                                bool noGraphics=false);
+
     void setWorldDimensions(float worldWidth,
                             float worldLength,
                             unsigned int cellSide);
@@ -276,6 +281,8 @@ protected:
     unsigned int mSpeakInterval;
 
     list<VisualEvent*> mVisualEvents;
+
+    Art_Layer* mBackgroundTexture;
 };
 #endif
 

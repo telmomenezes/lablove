@@ -73,6 +73,8 @@ void Simulation::initGraphics(unsigned int width,
     {
         mDrawGraphics = false;
     }
+
+    mFont = art_loadFont("media/vera/Vera.ttf", 8);
 }
 
 void Simulation::run()
@@ -148,9 +150,9 @@ void Simulation::cycle()
 
     mPopulationDynamics->onCycle(mSimulationTime, art_getTime());
 
-    art_setColor(255, 255, 255, 200);
+    art_setColor(255, 255, 255, 180);
     art_drawLayer(mLogo, 0, 0);
-    art_fillRectangle(122, 0, art_getWinWidth() - 122, 50);
+    art_fillRectangle(122, 0, 200, 50);
     drawTimes();
 
     if (draw)
@@ -326,11 +328,9 @@ void Simulation::drawTimes()
     }
 
     art_setFont(mFont);
-    art_setColor(120, 0, 0, 255);
+    art_setColor(30, 30, 30, 255);
     art_drawText(140, 16, (char*)mSimulationTimeText.c_str());
-    art_setColor(0, 120, 0, 255);
     art_drawText(140, 31, (char*)mRealTimeText.c_str());
-    art_setColor(0, 0, 120, 255);
     art_drawText(140, 46, (char*)mCPSText.c_str());
 }
 
@@ -370,8 +370,6 @@ int Simulation::initGraphics(lua_State* luaState)
     }
 
     initGraphics(width, height, fullScreen, noGraphics);
-
-    mFont = art_loadFont("media/vera/Vera.ttf", 8);
 
     return 0;
 }

@@ -74,7 +74,7 @@ logOnlyLastBrain = true
 
 humanAgent = false
 
-evolutionStopTime = 100000
+evolutionStopTime = 0
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
@@ -98,6 +98,7 @@ growMethod = getStringParameter("growmethod", growMethod, "gm")
 cloneConnectionsMode = getStringParameter("cloneconnmode", cloneConnectionsMode, "ccm")
 mutationScope = getStringParameter("mutationscope", mutationScope, "ms")
 geneGrouping = getBoolParameter("genegrouping", geneGrouping, "gg")
+evolutionStopTime = getNumberParameter("evostop", evolutionStopTime, "est")
 
 logBaseName = "_poison_"
 
