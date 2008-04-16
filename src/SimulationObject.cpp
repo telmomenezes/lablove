@@ -345,23 +345,27 @@ bool SimulationObject::getFieldValue(string fieldName, float& value)
     }
 }
 
-SimulationObject* SimulationObject::recombine(SimulationObject* otherParent)
+void SimulationObject::recombine(SimulationObject* parent1, SimulationObject* parent2)
 {
-    SimulationObject* child = clone(false);
-
     map<int, SymbolTable*>::iterator iterTables;
-    for (iterTables = mSymbolTables.begin();
-        iterTables != mSymbolTables.end();
+    for (iterTables = parent1->mSymbolTables.begin();
+        iterTables != parent1->mSymbolTables.end();
         iterTables++)
     {
         int tableID = (*iterTables).first;
         SymbolTable* table1 = (*iterTables).second;
-        SymbolTable* table2 = otherParent->getSymbolTable(tableID);
+        SymbolTable* table2 = parent2->getSymbolTable(tableID);
 
-        child->mSymbolTables[tableID] = table1->recombine(table2);
+        mSymbolTables[tableID] = table1->recombine(table2);
     }
+}
 
-    //child->printDebug();
+SimulationObject* SimulationObject::recombine(SimulationObject* otherParent)
+{
+    SimulationObject* obj = clone(false);
+    obj->recombine(this, otherParent);
+    SimulationObject* child = obj->clone();
+    delete obj;
     return child;
 }
 

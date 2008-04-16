@@ -43,9 +43,8 @@ void Brain::clearInterfaces()
         {
             delete (*iterItem);
         }
-
+    
         interface->clear();
-
         delete interface;
     }
     mInputInterfacesVector.clear();

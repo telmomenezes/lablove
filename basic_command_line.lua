@@ -61,6 +61,3 @@ seedIndex = getNumberParameter("seedindex", -1)
 timeLimit = getNumberParameter("timelimit", 0)
 random = getBoolParameter("random", false)
 
-if (seedIndex >= 0) then
-    seedIndex = seedIndex % 30
-end

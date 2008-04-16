@@ -118,6 +118,8 @@ string GridbrainComponent::getName()
         return "ACT";
     case THR:
         return "THR";
+    case STHR:
+        return "STHR";
     case MAX:
         return "MAX";
     case MUL:
@@ -132,6 +134,20 @@ string GridbrainComponent::getName()
         return "TAND";
     case TNAND:
         return "TNAND";
+    case INV:
+        return "INV";
+    case RAND:
+        return "RAND";
+    case CLK:
+        return "CLK";
+    case MEMA:
+        return "MEMA";
+    case MEMC:
+        return "MEMC";
+    case MEMT:
+        return "MEMT";
+    case MEMW:
+        return "MEMW";
     default:
         return "?";
     }
@@ -142,6 +158,7 @@ GridbrainComponent::ConnType GridbrainComponent::getConnectorType()
     switch(mType)
     {
     case PER:
+    case RAND:
         return CONN_OUT;
     case ACT:
         return CONN_IN;
@@ -157,6 +174,11 @@ bool GridbrainComponent::isProducer()
     case PER:
     case NOT:
     case TNAND:
+    case RAND:
+    case MEMA:
+    case MEMC:
+    case MEMT:
+    case MEMW:
         return true;
     default:
         return false;
@@ -168,6 +190,10 @@ bool GridbrainComponent::isConsumer()
     switch(mType)
     {
     case ACT:
+    case MEMA:
+    case MEMC:
+    case MEMT:
+    case MEMW:
         return true;
     default:
         return false;
@@ -266,6 +292,7 @@ Orbit<GridbrainComponent>::NumberGlobalType GridbrainComponent::mNumberGlobals[]
     {"PER", PER},
     {"ACT", ACT},
     {"THR", THR},
+    {"STHR", STHR},
     {"MAX", MAX},
     {"MUL", MUL},
     {"NOT", NOT},
@@ -273,6 +300,13 @@ Orbit<GridbrainComponent>::NumberGlobalType GridbrainComponent::mNumberGlobals[]
     {"AND", AND},
     {"TAND", TAND},
     {"TNAND", TNAND},
+    {"INV", INV},
+    {"RAND", RAND},
+    {"CLK", CLK},
+    {"MEMA", MEMA},
+    {"MEMC", MEMC},
+    {"MEMT", MEMT},
+    {"MEMW", MEMW},
     {0,0}
 };
 

@@ -215,6 +215,7 @@ unsigned int Grid::addPerception(GridbrainComponent* per)
             && (curPer->mOrigSymID == per->mOrigSymID)
             && (curPer->mTargetSymID == per->mTargetSymID))
         {
+            printf("Anomaly!\n");
             return i;
         }
     }

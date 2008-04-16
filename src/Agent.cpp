@@ -33,6 +33,7 @@ Agent::Agent(Agent* agent, bool copyTables) : GraphicalObject(agent, copyTables)
     mBrain = agent->mBrain->clone();
     mBrain->setOwner(this);
 
+    // Clean and expand symbol tables
     map<int, SymbolTable*>::iterator iterTables;
     for (iterTables = mSymbolTables.begin();
         iterTables != mSymbolTables.end();
@@ -120,37 +121,32 @@ void Agent::mutate()
     }
 }
 
-SimulationObject* Agent::recombine(SimulationObject* otherParent)
+void Agent::recombine(SimulationObject* parent1, SimulationObject* parent2)
 {
     //printf("==> START RECOMBINE\n\n");
     //printf("\nPARENT 1\n");
     //printf("========\n");
-    //printDebug();
-
-    Agent* agent2 = (Agent*)otherParent;
+    //parent1->printDebug();
 
     //printf("\nPARENT 2\n");
     //printf("========\n");
-    //agent2->printDebug();
+    //parent2->printDebug();
 
-    Brain* newBrain = mBrain->recombine(agent2->mBrain);
+    Agent* agent1 = (Agent*)parent1;
+    Agent* agent2 = (Agent*)parent2;
 
-    newBrain->setSelectedSymbols(this);
+    Brain* newBrain = agent1->mBrain->recombine(agent2->mBrain);
+
+    newBrain->setSelectedSymbols(agent1);
     newBrain->setSelectedSymbols(agent2);
 
-    Agent* newAgent = (Agent*)(SimulationObject::recombine(agent2));
+    SimulationObject::recombine(parent1, parent2);
 
-    newAgent->mBrain = NULL;
-    newAgent->setBrain(newBrain);
-
-    Agent* finalAgent = (Agent*)newAgent->clone();
-    delete newAgent;
+    setBrain(newBrain);
 
     //printf("\nCHILD\n");
     //printf("=====\n");
-    //finalAgent->printDebug();
-
-    return finalAgent;
+    //printDebug();
 }
 
 bool Agent::getFieldValue(string fieldName, float& value)

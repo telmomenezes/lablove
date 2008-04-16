@@ -139,6 +139,8 @@ public:
     int setFitnessMeasure(lua_State* luaState);
 
 protected:
+    virtual void recombine(SimulationObject* parent1, SimulationObject* parent2);
+
     llULINT mID;
     llULINT mKinID;
 

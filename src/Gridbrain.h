@@ -29,6 +29,7 @@
 #include "GridbrainComponent.h"
 #include "GridbrainConnection.h"
 #include "GridbrainComponentSet.h"
+#include "GridbrainMemCell.h"
 #include "RandDistManager.h"
 #include "types.h"
 
@@ -295,6 +296,7 @@ protected:
     static mt_distribution* mDistWeights;
     static mt_distribution* mDistComponents;
     static mt_distribution* mDistRecombine;
+    static mt_distribution* mDistGridbrain;
 
     vector<Grid*> mGridsVec;
 
@@ -333,6 +335,8 @@ protected:
     MutationScope mMutationScope;
 
     bool mGeneGrouping;
+
+    map<llULINT, GridbrainMemCell*> mMemory;
 };
 
 #endif

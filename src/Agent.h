@@ -43,7 +43,6 @@ public:
     virtual void compute();
 
     virtual void mutate();
-    virtual SimulationObject* recombine(SimulationObject* otherParent);
 
     virtual bool getFieldValue(string fieldName, float& value);
 
@@ -61,6 +60,8 @@ public:
     virtual void printDebug();
 
 protected:
+    virtual void recombine(SimulationObject* parent1, SimulationObject* parent2);
+
     Brain* mBrain;
     list<Message*> mMessageList;
 };

@@ -29,6 +29,7 @@ mt_distribution* Gridbrain::mDistMutationsProb = gDistManager.getNewDistribution
 mt_distribution* Gridbrain::mDistWeights = gDistManager.getNewDistribution();
 mt_distribution* Gridbrain::mDistComponents = gDistManager.getNewDistribution();
 mt_distribution* Gridbrain::mDistRecombine = gDistManager.getNewDistribution();
+mt_distribution* Gridbrain::mDistGridbrain = gDistManager.getNewDistribution();
 
 Gridbrain::Gridbrain(lua_State* luaState)
 {
@@ -90,6 +91,15 @@ Gridbrain::~Gridbrain()
         }
     }
     mGridsCount = 0;
+
+    map<llULINT, GridbrainMemCell*>::iterator iterMemCell;
+    for (iterMemCell = mMemory.begin();
+        iterMemCell != mMemory.end();
+        iterMemCell++)
+    {
+        delete (*iterMemCell).second;
+    }
+    mMemory.clear();
 }
 
 Gridbrain* Gridbrain::baseClone()
@@ -538,14 +548,18 @@ void Gridbrain::initGridsIO()
                 {
                     int perPos = grid->addPerception(comp);
                     comp->mPerceptionPosition = perPos;
-                    InterfaceItem* item = new InterfaceItem();
-                    item->mType = comp->mSubType;
-                    item->mOrigSymTable = comp->mOrigSymTable;
-                    item->mTargetSymTable = comp->mTargetSymTable;
-                    item->mOrigSymID = comp->mOrigSymID;
-                    item->mTargetSymID = comp->mTargetSymID;
-                    item->mTableLinkType = comp->mTableLinkType;
-                    interface->push_back(item);
+
+                    if (perPos >= interface->size())
+                    {
+                        InterfaceItem* item = new InterfaceItem();
+                        item->mType = comp->mSubType;
+                        item->mOrigSymTable = comp->mOrigSymTable;
+                        item->mTargetSymTable = comp->mTargetSymTable;
+                        item->mOrigSymID = comp->mOrigSymID;
+                        item->mTargetSymID = comp->mTargetSymID;
+                        item->mTableLinkType = comp->mTableLinkType;
+                        interface->push_back(item);
+                    }
                 }
             }
 
@@ -1455,6 +1469,17 @@ void Gridbrain::cycle()
                         {
                             output = 1.0f;
                         }
+                        else
+                        {
+                            output = 0.0f;
+                        }
+                        break;
+                    case GridbrainComponent::STHR:
+                        //printf("STHR ");
+                        if (comp->mInput > GB_THRESHOLD)
+                        {
+                            output = 1.0f;
+                        }
                         else if (comp->mInput < -GB_THRESHOLD)
                         {
                             output = -1.0f;
@@ -1528,6 +1553,33 @@ void Gridbrain::cycle()
                         {
                             output = 0.0f;
                         }
+                        break;
+                    case GridbrainComponent::INV:
+                        //printf("INV ");
+                        output = comp->mInput;
+                        if (output > 1.0f)
+                        {
+                            output = 1.0f;
+                        }
+                        else if (output < -1.0f)
+                        {
+                            output = -1.0f;
+                        }
+
+                        if (output >= 0)
+                        {
+                            output = 1.0f - output;
+                        }
+                        else
+                        {
+                            output = -1.0f - output;
+                        }
+
+                        break;
+                    case GridbrainComponent::RAND:
+                        //printf("RAND ");
+                        output = mDistGridbrain->uniform(-1.0f, 1.0f);
+
                         break;
                     default:
                         // TODO: this is an error. how to inform?

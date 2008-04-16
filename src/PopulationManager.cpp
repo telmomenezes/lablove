@@ -45,9 +45,8 @@ void PopulationManager::removeObject(SimulationObject* obj, bool deleteObj)
         mSelectedObject = NULL;
     }
 
-    bool stop = false;
     list<SimulationObject*>::iterator iterObj;
-    for (iterObj = mObjects.begin(); (iterObj != mObjects.end()) && !stop; ++iterObj)
+    for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
     {
         if((*iterObj) == obj)
         {

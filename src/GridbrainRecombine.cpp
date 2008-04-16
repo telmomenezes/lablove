@@ -234,6 +234,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
                 Gridbrain* newBrain = brain->clone(false, ET_COLUMN_RANDOM, origGrid);
                 delete brain;
                 brain = newBrain;
+                eqOrig = brain->findEquivalentComponent(orig, CET_NEW);
             }
         }
 
@@ -266,6 +267,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
                 {
                     targX++;
                 }
+                eqOrig = brain->findEquivalentComponent(orig, CET_NEW);
             }
             else
             {
@@ -312,6 +314,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
                 delete brain;
                 brain = newBrain;
                 recalcTarg = true;
+                eqOrig = brain->findEquivalentComponent(orig, CET_NEW);
             }
         }
 
@@ -344,6 +347,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
             delete brain;
             brain = newBrain;
             recalcOrig = true;
+            eqTarg = brain->findEquivalentComponent(targ, CET_NEW);
         }
 
         while (eqTarg == NULL)
@@ -369,6 +373,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
                 delete brain;
                 brain = newBrain;
                 recalcOrig = true;
+                eqTarg = brain->findEquivalentComponent(targ, CET_NEW);
             }
         }
 
@@ -625,7 +630,7 @@ Brain* Gridbrain::recombine(Brain* brain)
     }
 
     gbNew->update();
-    
+
     /*printf(">>> PARENT 1\n");
     printDebug();
     printf(">>> PARENT 2\n");

@@ -94,8 +94,17 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
     if ((prob < mRecombineProb) && mEvolutionOn)
     {
         // Recombine
-        organismNumber = mDistOrganism->iuniform(0, species->mBufferSize);
-        SimulationObject* org2 = species->mOrganismVector[organismNumber];
+        unsigned int organismNumber2 = organismNumber;
+        
+        if (species->mBufferSize > 1)
+        {
+            organismNumber2 = mDistOrganism->iuniform(0, species->mBufferSize - 1);
+            if (organismNumber2 >= organismNumber)
+            {
+                organismNumber2++;
+            }
+        }
+        SimulationObject* org2 = species->mOrganismVector[organismNumber2];
 
         /*unsigned int r = mDistRecombine->iuniform(0, 100);
         if (speciesID == 1)
@@ -133,7 +142,6 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
     {
         // Simple clone
         newOrganism = org->clone();
-
     }
 
     newOrganism->setKinID(org->getID());
@@ -179,6 +187,7 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
         if (org->mFitness >= org2->mFitness)
         {
             delete species->mOrganismVector[organismNumber];
+
             species->mOrganismVector[organismNumber] = org;
             deleteObj = false;
             keepComparing = false;

@@ -530,8 +530,7 @@ void SimCont2D::process(SimulationObject* obj)
     {
         killOrganism(obj);
     }
-
-    if (obj->mULData[UL_MAX_AGE] > 0)
+    else if (obj->mULData[UL_MAX_AGE] > 0)
     {
         if (mSimulationTime - obj->mCreationTime >= obj->mULData[UL_MAX_AGE])
         {

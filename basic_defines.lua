@@ -10,6 +10,13 @@ MMAX = GridbrainComponent.MMAX
 AND = GridbrainComponent.AND
 TAND = GridbrainComponent.TAND
 TNAND = GridbrainComponent.TNAND
+INV = GridbrainComponent.INV
+RAND = GridbrainComponent.RAND
+CLK = GridbrainComponent.CLK
+MEMA = GridbrainComponent.MEMA
+MEMC = GridbrainComponent.MEMC
+MEMT = GridbrainComponent.MEMT
+MEMW = GridbrainComponent.MEMW
 
 NO_LINK = InterfaceItem.NO_LINK
 SYM_TO_SYM = InterfaceItem.SYM_TO_SYM

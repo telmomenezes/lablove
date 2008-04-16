@@ -49,7 +49,7 @@ default: \
 class GridbrainComponent
 {
 public:
-    enum Type {NUL, PER, ACT, THR, MAX, MUL, NOT, MMAX, AND, TAND, TNAND};
+    enum Type {NUL, PER, ACT, THR, STHR, MAX, MUL, NOT, MMAX, AND, TAND, TNAND, INV, RAND, CLK, MEMA, MEMC, MEMT, MEMW};
     enum InputType {IN_SUM, IN_MUL, IN_TMUL};
     enum ConnType {CONN_IN, CONN_OUT, CONN_INOUT};
 
