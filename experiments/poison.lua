@@ -60,7 +60,7 @@ joinConnectionsProb = 0.0
 changeComponentProb = 0.01
 swapComponentProb = 0.1
 
-recombineProb = 1.0
+recombineProb = 0.0
 geneGrouping = false
 
 growMethod = "pressure"
@@ -99,7 +99,7 @@ cloneConnectionsMode = getStringParameter("cloneconnmode", cloneConnectionsMode,
 mutationScope = getStringParameter("mutationscope", mutationScope, "ms")
 geneGrouping = getBoolParameter("genegrouping", geneGrouping, "gg")
 evolutionStopTime = getNumberParameter("evostop", evolutionStopTime, "est")
-viewRange = getNumberParameter("viewrange", viewRange, "vr")
+--viewRange = getNumberParameter("viewrange", viewRange, "vr")
 
 logBaseName = "_poison_"
 
