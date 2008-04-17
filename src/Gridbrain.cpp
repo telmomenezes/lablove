@@ -1581,6 +1581,46 @@ void Gridbrain::cycle()
                         output = mDistGridbrain->uniform(-1.0f, 1.0f);
 
                         break;
+                    case GridbrainComponent::CLK:
+                        //printf("CLK ");
+
+                        float input = comp->mInput;
+                        if (input < 0.0f)
+                        {
+                            input = -input;
+                        }
+                        if (input > 1.0f)
+                        {
+                            input = 1.0f;
+                        }
+
+                        if (input != comp->mLastInput)
+                        {
+                            comp->mLastInput = input;
+
+                            if (input > 0.0f)
+                            {
+                                comp->mTriggerInterval = (llULINT)(powf(5.0f, input * 10.0f)); 
+                                comp->mTimeToTrigger = 0;
+                            }
+                        }
+
+                        output = 0.0f;
+
+                        if (comp->mTriggerInterval > 0)
+                        {
+                            if (comp->mTimeToTrigger == 0)
+                            {
+                                output = 1.0f;
+                                comp->mTimeToTrigger = comp->mTriggerInterval;
+                            }
+                            else
+                            {
+                                comp->mTimeToTrigger--;
+                            }
+                        }
+
+                        break;
                     default:
                         // TODO: this is an error. how to inform?
                         output = 0.0f;

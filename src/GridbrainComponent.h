@@ -117,6 +117,10 @@ public:
     bool mProducer;
     bool mConsumer;
     bool mActive;
+
+    llULINT mTimeToTrigger;
+    llULINT mTriggerInterval;
+    float mLastInput;
 };
 
 #endif

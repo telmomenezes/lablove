@@ -11,6 +11,7 @@
     * SimCont2D speak actions and perceptions
     * SimCont2D self perceptions
     * Removal of obsolete mutation operators in the Gridbrain
+    * New Gridbrain components: STHR, INV, RAND, CLK, MEMA, MEMC, MEMT, MEMW
     * ...
 
 0.2 alpha release

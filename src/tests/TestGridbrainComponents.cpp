@@ -1635,6 +1635,67 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestRAND)
     CHECK(comp1->mOutput <= 1.0f);
 }
 
+TEST_FIXTURE(GridbrainCompFixture, GridbrainTestCLK1)
+{
+    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
+    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
+    comp1->mType = GridbrainComponent::NOT;
+    comp2->mType = GridbrainComponent::CLK;
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.1f);
+    mGridbrain.cycle();
+    CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
+    for (unsigned int i = 0; i < 5; i++)
+    {
+        mGridbrain.cycle();
+        CHECK_CLOSE(comp2->mOutput, 0.0f, 0.0f);
+    }
+    mGridbrain.cycle();
+    CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
+    for (unsigned int i = 0; i < 5; i++)
+    {
+        mGridbrain.cycle();
+        CHECK_CLOSE(comp2->mOutput, 0.0f, 0.0f);
+    }
+    mGridbrain.cycle();
+    CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
+}
+
+TEST_FIXTURE(GridbrainCompFixture, GridbrainTestCLK2)
+{
+    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
+    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
+    comp1->mType = GridbrainComponent::NOT;
+    comp2->mType = GridbrainComponent::CLK;
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.0f);
+    mGridbrain.cycle();
+    CHECK_CLOSE(comp2->mOutput, 0.0f, 0.0f);
+}
+
+TEST_FIXTURE(GridbrainCompFixture, GridbrainTestCLK3)
+{
+    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
+    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
+    comp1->mType = GridbrainComponent::NOT;
+    comp2->mType = GridbrainComponent::CLK;
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.1f);
+    mGridbrain.cycle();
+    CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
+    for (unsigned int i = 0; i < 5; i++)
+    {
+        mGridbrain.cycle();
+        CHECK_CLOSE(comp2->mOutput, 0.0f, 0.0f);
+    }
+    mGridbrain.cycle();
+    CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
+    for (unsigned int i = 0; i < 5; i++)
+    {
+        mGridbrain.cycle();
+        CHECK_CLOSE(comp2->mOutput, 0.0f, 0.0f);
+    }
+    mGridbrain.cycle();
+    CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
+}
+
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit1)
 {
     mGridbrain.addConnection(0, 0, 0, 2, 0, 1, 0.5);

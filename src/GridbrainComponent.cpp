@@ -49,6 +49,9 @@ void GridbrainComponent::clearDefinitions()
     mOrigSymID = 0;
     mTargetSymID = 0;
     mTableLinkType = InterfaceItem::NO_LINK;
+    mTimeToTrigger = 0;
+    mTriggerInterval = 0;
+    mLastInput = 0.0f;
 }
 
 void GridbrainComponent::clearPosition()
