@@ -25,6 +25,7 @@
 #include "SimulationObject.h"
 #include "Orbit.h"
 #include "types.h"
+#include "GridbrainMemCell.h"
 
 #include <string>
 using std::string;
@@ -121,6 +122,8 @@ public:
     llULINT mTimeToTrigger;
     llULINT mTriggerInterval;
     float mLastInput;
+
+    GridbrainMemCell* mMemCell;
 };
 
 #endif

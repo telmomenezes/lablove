@@ -1438,6 +1438,8 @@ void Gridbrain::cycle()
 
                     // compute component output
                     float output;
+                    float input;
+
                     switch(comp->mType)
                     {
                     case GridbrainComponent::NUL:
@@ -1584,7 +1586,7 @@ void Gridbrain::cycle()
                     case GridbrainComponent::CLK:
                         //printf("CLK ");
 
-                        float input = comp->mInput;
+                        input = comp->mInput;
                         if (input < 0.0f)
                         {
                             input = -input;
@@ -1619,6 +1621,67 @@ void Gridbrain::cycle()
                                 comp->mTimeToTrigger--;
                             }
                         }
+
+                        break;
+                    case GridbrainComponent::MEMA:
+                        //printf("MEMA ");
+                        input = comp->mInput;
+                        if (input > 1.0f)
+                        {
+                            input = 1.0f;
+                        }
+                        else if (input < -1.0f)
+                        {
+                            input = -1.0f;
+                        }
+
+                        comp->mMemCell->mAdd += input;
+
+                        output = comp->mMemCell->mValue;
+
+                        break;
+                    case GridbrainComponent::MEMC:
+                        //printf("MEMC ");
+                        if (comp->mInput != 0.0f)
+                        {
+                            comp->mMemCell->mClear = true;
+                        }
+
+                        output = comp->mMemCell->mValue;
+
+                        break;
+                    case GridbrainComponent::MEMT:
+                        //printf("MEMT ");
+                        input = comp->mInput;
+                        if (input > 1.0f)
+                        {
+                            input = 1.0f;
+                        }
+                        else if (input < -1.0f)
+                        {
+                            input = -1.0f;
+                        }
+
+                        comp->mMemCell->mToggle += input;
+
+                        output = comp->mMemCell->mValue;
+
+                        break;
+                    case GridbrainComponent::MEMW:
+                        //printf("MEMW ");
+                        input = comp->mInput;
+                        if (input > 1.0f)
+                        {
+                            input = 1.0f;
+                        }
+                        else if (input < -1.0f)
+                        {
+                            input = -1.0f;
+                        }
+
+                        comp->mMemCell->mWrite += input;
+
+                        output = comp->mMemCell->mValue;
 
                         break;
                     default:

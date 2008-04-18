@@ -22,12 +22,58 @@
 GridbrainMemCell::GridbrainMemCell()
 {
     mValue = 0.0f;
-    mNextValue = 0.0f;
+    mWrite = 0.0f;
+    mAdd = 0.0f;
     mClear = false;
-    mToggle = false;
+    mToggle = 0.0f;
 }
 
 GridbrainMemCell::~GridbrainMemCell()
 {
+}
+
+void GridbrainMemCell::cycle()
+{
+    if (mClear)
+    {
+        mValue = 0.0f;
+    }
+    else if (mWrite != 0.0f)
+    {
+        mValue = mWrite;
+    }
+    else if (mAdd != 0.0f)
+    {
+        mValue += mAdd;
+    }
+    else if (mToggle != 0.0f)
+    {
+        if (mValue != 0.0f)
+        {
+            mValue = 0.0f;
+        }
+        else if (mToggle > 0.0f)
+        {
+            mValue = 1.0f;
+        }
+        else
+        {
+            mValue = -1.0f;
+        }
+    }
+
+    if (mValue > 1.0f)
+    {
+        mValue = 1.0f;
+    }
+    else if (mValue < -1.0f)
+    {
+        mValue = -1.0f;
+    }
+
+    mWrite = 0.0f;
+    mAdd = 0.0f;
+    mClear = false;
+    mToggle = 0.0f;
 }
 

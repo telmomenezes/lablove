@@ -57,7 +57,7 @@ changeWeightProb = 0.01
 weightMutationStanDev = 1.0
 splitConnectionProb = 0.005
 joinConnectionsProb = 0.0
-changeComponentProb = 0.01
+changeComponentProb = 0.0
 swapComponentProb = 0.1
 
 recombineProb = 0.0

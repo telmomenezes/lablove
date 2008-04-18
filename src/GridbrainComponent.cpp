@@ -52,6 +52,7 @@ void GridbrainComponent::clearDefinitions()
     mTimeToTrigger = 0;
     mTriggerInterval = 0;
     mLastInput = 0.0f;
+    mMemCell = NULL;
 }
 
 void GridbrainComponent::clearPosition()

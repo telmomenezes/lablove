@@ -26,10 +26,13 @@ public:
     GridbrainMemCell();
     virtual ~GridbrainMemCell();
 
+    void cycle();
+
     float mValue;
-    float mNextValue;
+    float mWrite;
+    float mAdd;
     bool mClear;
-    bool mToggle;
+    float mToggle;
 };
 #endif
 
