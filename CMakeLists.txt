@@ -149,7 +149,7 @@ INCLUDE_DIRECTORIES(${Artist_INCLUDE_DIR})
 
 ########### Targets ###########
 
-ADD_LIBRARY(llove SHARED ${SOURCE_FILES})
+ADD_LIBRARY(llove STATIC ${SOURCE_FILES})
 TARGET_LINK_LIBRARIES(llove llove ${Artist_LIBRARIES} ${Lua_LIBRARIES})
 
 ADD_EXECUTABLE(lablove ${EXTRA_SRC_FILES} src/main.cpp)
