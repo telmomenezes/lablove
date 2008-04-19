@@ -58,6 +58,7 @@ weightMutationStanDev = 1.0
 splitConnectionProb = 0.005
 joinConnectionsProb = 0.0
 changeComponentProb = 0.0
+changeInactiveComponentProb = 0.01
 swapComponentProb = 0.1
 
 recombineProb = 0.0
@@ -88,6 +89,7 @@ weightMutationStanDev = getNumberParameter("weightmutstandev", weightMutationSta
 splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "spl")
 joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb, "joi")
 changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, "chg")
+changeInactiveComponentProb = getNumberParameter("changeincompprob", changeInactiveComponentProb, "chin")
 swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb, "swp")
 recombineProb = getNumberParameter("recombineprob", recombineProb, "rec")
 bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
@@ -218,6 +220,7 @@ brain:setWeightMutationStanDev(weightMutationStanDev)
 brain:setMutateSplitConnectionProb(splitConnectionProb)
 brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
+brain:setMutateChangeInactiveComponentProb(changeInactiveComponentProb)
 brain:setMutateSwapComponentProb(swapComponentProb)
 
 brain:setGrowMethod(growMethodCode)

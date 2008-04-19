@@ -30,6 +30,7 @@ long Gridbrain::MUTATIONS_CHG_WGT = 0;
 long Gridbrain::MUTATIONS_SPLIT_CONN = 0;
 long Gridbrain::MUTATIONS_JOIN_CONN = 0;
 long Gridbrain::MUTATIONS_CHG_COMP = 0;
+long Gridbrain::MUTATIONS_CHG_IN_COMP = 0;
 long Gridbrain::MUTATIONS_SWP_COMP = 0;
 
 void Gridbrain::mutate()
@@ -46,6 +47,7 @@ void Gridbrain::mutate()
 
     mutateSwapComponent();
     mutateChangeComponent();
+    mutateChangeInactiveComponent();
     
     // targets per column may have changed
     calcConnectionCounts();
@@ -623,6 +625,30 @@ void Gridbrain::mutateChangeComponent()
     cleanInvalidConnections();
 }
 
+void Gridbrain::mutateChangeInactiveComponent()
+{
+    initRandomComponentSequence(mMutateChangeInactiveComponentProb);
+
+    while (nextRandomComponent() >= 0)
+    {
+        MUTATIONS_CHG_IN_COMP++;
+        int pos = mCompSeqPos;
+
+        GridbrainComponent* comp = &mComponents[pos];
+
+        if (!comp->mActive)
+        {
+            unsigned int gridNumber = comp->mGrid;
+            Grid* grid = mGridsVec[gridNumber];
+
+            GridbrainComponent* comp2 = grid->getRandomComponent(mOwner, mComponents);
+            comp->copyDefinitions(comp2);
+        }
+    }
+
+    cleanInvalidConnections();
+}
+
 void Gridbrain::mutateSwapComponent(float prob)
 {
     float swapProb = prob;
@@ -703,13 +729,14 @@ void Gridbrain::mutateSwapComponent(float prob)
 
 void Gridbrain::debugMutationsCount()
 {
-    printf("CON+:%d CON-:%d CWG:%d SPL:%d JOI: %d CHG:%d SWP:%d\n",
+    printf("CON+:%d CON-:%d CWG:%d SPL:%d JOI:%d CHG:%d CHIN:%d SWP:%d\n",
             MUTATIONS_ADD_CONN,
             MUTATIONS_REM_CONN,
             MUTATIONS_CHG_WGT,
             MUTATIONS_SPLIT_CONN,
             MUTATIONS_JOIN_CONN,
             MUTATIONS_CHG_COMP,
+            MUTATIONS_CHG_IN_COMP,
             MUTATIONS_SWP_COMP);
     fflush(stdout);
 }

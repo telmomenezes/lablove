@@ -162,6 +162,7 @@ public:
     void setMutateSplitConnectionProb(float prob){mMutateSplitConnectionProb = prob;}
     void setMutateJoinConnectionsProb(float prob){mMutateJoinConnectionsProb = prob;}
     void setMutateChangeComponentProb(float prob){mMutateChangeComponentProb = prob;}
+    void setMutateChangeInactiveComponentProb(float prob){mMutateChangeInactiveComponentProb = prob;}
     void setMutateSwapComponentProb(float prob){mMutateSwapComponentProb = prob;}
 
     void setGeneGrouping(bool val){mGeneGrouping = val;}
@@ -211,6 +212,7 @@ public:
     int setMutateSplitConnectionProb(lua_State* luaState);
     int setMutateJoinConnectionsProb(lua_State* luaState);
     int setMutateChangeComponentProb(lua_State* luaState);
+    int setMutateChangeInactiveComponentProb(lua_State* luaState);
     int setMutateSwapComponentProb(lua_State* luaState);
     int setWeightMutationStanDev(lua_State* luaState);
     int setGeneGrouping(lua_State* luaState);
@@ -221,6 +223,7 @@ public:
     static long MUTATIONS_SPLIT_CONN;
     static long MUTATIONS_JOIN_CONN;
     static long MUTATIONS_CHG_COMP;
+    static long MUTATIONS_CHG_IN_COMP;
     static long MUTATIONS_SWP_COMP;
 
     static void debugMutationsCount();
@@ -252,6 +255,7 @@ protected:
     void mutateSplitConnection(unsigned int popSize);
     void mutateJoinConnections(unsigned int popSize);
     void mutateChangeComponent();
+    void mutateChangeInactiveComponent();
     void mutateSwapComponent(float prob=0.0f);
 
     void initGridWritePositions();
@@ -317,6 +321,7 @@ protected:
     float mMutateSplitConnectionProb;
     float mMutateJoinConnectionsProb;
     float mMutateChangeComponentProb;
+    float mMutateChangeInactiveComponentProb;
     float mMutateSwapComponentProb;
 
     float mConnSeqProb;

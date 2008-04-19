@@ -50,6 +50,7 @@ Gridbrain::Gridbrain(lua_State* luaState)
     mMutateSplitConnectionProb = 0.0f;
     mMutateJoinConnectionsProb = 0.0f;
     mMutateChangeComponentProb = 0.0f;
+    mMutateChangeInactiveComponentProb = 0.0f;
     mMutateSwapComponentProb = 0.0f;
 
     mConnSeqProb = 1.0f;
@@ -127,6 +128,7 @@ Gridbrain* Gridbrain::baseClone()
     gb->mMutateSplitConnectionProb = mMutateSplitConnectionProb;
     gb->mMutateJoinConnectionsProb = mMutateJoinConnectionsProb;
     gb->mMutateChangeComponentProb = mMutateChangeComponentProb;
+    gb->mMutateChangeInactiveComponentProb = mMutateChangeInactiveComponentProb;
     gb->mMutateSwapComponentProb = mMutateSwapComponentProb;
 
     for (map<string, int>::iterator iterChannel = mChannels.begin();
@@ -2455,6 +2457,7 @@ Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
     {"setMutateSplitConnectionProb", &Gridbrain::setMutateSplitConnectionProb},
     {"setMutateJoinConnectionsProb", &Gridbrain::setMutateJoinConnectionsProb},
     {"setMutateChangeComponentProb", &Gridbrain::setMutateChangeComponentProb},
+    {"setMutateChangeInactiveComponentProb", &Gridbrain::setMutateChangeInactiveComponentProb},
     {"setMutateSwapComponentProb", &Gridbrain::setMutateSwapComponentProb},
     {"setGeneGrouping", &Gridbrain::setGeneGrouping},
     {0,0}
@@ -2596,6 +2599,13 @@ int Gridbrain::setMutateChangeComponentProb(lua_State* luaState)
 {
     float prob = luaL_checknumber(luaState, 1);
     setMutateChangeComponentProb(prob);
+    return 0;
+}
+
+int Gridbrain::setMutateChangeInactiveComponentProb(lua_State* luaState)
+{
+    float prob = luaL_checknumber(luaState, 1);
+    setMutateChangeInactiveComponentProb(prob);
     return 0;
 }
 
