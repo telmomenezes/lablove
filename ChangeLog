@@ -12,6 +12,7 @@
     * SimCont2D self perceptions
     * Removal of obsolete mutation operators in the Gridbrain
     * New Gridbrain components: STHR, INV, RAND, CLK, MEMA, MEMC, MEMT, MEMW
+    * Gridbrain::mutateChangeInactiveComponent
     * ...
 
 0.2 alpha release

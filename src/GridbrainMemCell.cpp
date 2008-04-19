@@ -26,6 +26,17 @@ GridbrainMemCell::GridbrainMemCell()
     mAdd = 0.0f;
     mClear = false;
     mToggle = 0.0f;
+    mUsed = false;
+}
+
+GridbrainMemCell::GridbrainMemCell(const GridbrainMemCell& cell)
+{
+    mValue = cell.mValue;
+    mWrite = cell.mWrite;
+    mAdd = cell.mAdd;
+    mClear = cell.mClear;
+    mToggle = cell.mToggle;
+    mUsed = false;
 }
 
 GridbrainMemCell::~GridbrainMemCell()

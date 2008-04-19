@@ -66,19 +66,21 @@ public:
     void copyDefinitions(GridbrainComponent* comp);
     void copyPosition(GridbrainComponent* comp);
 
-    bool isAggregator();
-    bool isUnique();
+    
     string getName();
     ConnType getConnectorType();
+
+    bool isAggregator();
+    bool isUnique();
     bool isProducer();
     bool isConsumer();
+    bool isUsed();
+    bool isEqual(GridbrainComponent* comp);
+    bool isMemory();
+
     void calcProducer(bool prod=false);
     bool calcConsumer();
     bool calcActive();
-
-    bool isUsed();
-
-    bool isEqual(GridbrainComponent* comp);
 
 
     static const char mClassName[];

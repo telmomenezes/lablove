@@ -237,6 +237,7 @@ protected:
     void calcActive();
     void calcDensityMetrics();
     void calcExpansion();
+    void linkMemory();
 
     void applyWeight(GridbrainConnection* conn);
 
@@ -295,6 +296,8 @@ protected:
     GridbrainGeneTag findGeneTag(GridbrainConnection* conn);
     virtual void popAdjust(vector<SimulationObject*>* popVec);
 
+    static llULINT CURRENT_MEM_ID;
+
     static mt_distribution* mDistConnections;
     static mt_distribution* mDistMutationsProb;
     static mt_distribution* mDistWeights;
@@ -341,7 +344,7 @@ protected:
 
     bool mGeneGrouping;
 
-    map<llULINT, GridbrainMemCell*> mMemory;
+    map<llULINT, GridbrainMemCell> mMemory;
 };
 
 #endif

@@ -204,6 +204,20 @@ bool GridbrainComponent::isConsumer()
     }
 }
 
+bool GridbrainComponent::isMemory()
+{
+    switch(mType)
+    {
+    case MEMA:
+    case MEMC:
+    case MEMT:
+    case MEMW:
+        return true;
+    default:
+        return false;
+    }
+}
+
 void GridbrainComponent::calcProducer(bool prod)
 {
     if (mProducer)

@@ -24,6 +24,8 @@
 #include <stdexcept>
 #include <float.h>
 
+llULINT Gridbrain::CURRENT_MEM_ID = 1;
+
 mt_distribution* Gridbrain::mDistConnections = gDistManager.getNewDistribution();
 mt_distribution* Gridbrain::mDistMutationsProb = gDistManager.getNewDistribution();
 mt_distribution* Gridbrain::mDistWeights = gDistManager.getNewDistribution();
@@ -92,15 +94,6 @@ Gridbrain::~Gridbrain()
         }
     }
     mGridsCount = 0;
-
-    map<llULINT, GridbrainMemCell*>::iterator iterMemCell;
-    for (iterMemCell = mMemory.begin();
-        iterMemCell != mMemory.end();
-        iterMemCell++)
-    {
-        delete (*iterMemCell).second;
-    }
-    mMemory.clear();
 }
 
 Gridbrain* Gridbrain::baseClone()
@@ -401,6 +394,38 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
         gb->addRandomConnections(lostConnections);
     }
 
+    // Clone memory
+    for (map<llULINT, GridbrainMemCell>::iterator iterCell = mMemory.begin();
+            iterCell != mMemory.end();
+            iterCell++)
+    {
+        gb->mMemory[(*iterCell).first] = (*iterCell).second;
+    }
+
+    for (unsigned int i = 0; i < gb->mNumberOfComponents; i++)
+    {
+        GridbrainComponent* comp = &(gb->mComponents[i]);
+
+        if (comp->isMemory())
+        {
+            gb->mMemory[comp->mOrigSymID].mUsed = true;
+        }
+    }
+
+    map<llULINT, GridbrainMemCell>::iterator iterCell = gb->mMemory.begin();
+    while(iterCell != gb->mMemory.end())
+    {
+        map<llULINT, GridbrainMemCell>::iterator iterNext = iterCell;   
+        iterNext++;
+        if (!(*iterCell).second.mUsed)
+        {
+            gb->mMemory.erase(iterCell);
+        }
+        iterCell = iterNext;
+    }
+
+    gb->mMemory[CURRENT_MEM_ID++] = GridbrainMemCell();
+
     gb->update();
 
     return gb;
@@ -500,6 +525,7 @@ void Gridbrain::update()
     calcConnectionCounts();
     initGridsIO();
     initGridWritePositions();
+    linkMemory();
 }
 
 void Gridbrain::setComponent(unsigned int x,
@@ -1773,6 +1799,14 @@ void Gridbrain::cycle()
     {
         mGridsVec[gridNumber]->setInputDepth(0);
     }
+
+    // Process memory
+    for (map<llULINT, GridbrainMemCell>::iterator iterCell = mMemory.begin();
+            iterCell != mMemory.end();
+            iterCell++)
+    {
+        (*iterCell).second.cycle();
+    }
 }
 
 Grid* Gridbrain::getGrid(unsigned int number)
@@ -2436,6 +2470,34 @@ bool Gridbrain::swapComponents(GridbrainComponent* comp1, GridbrainComponent* co
     addInTheEnd.clear();
 
     return true;
+}
+
+void Gridbrain::linkMemory()
+{
+    for (unsigned int i = 0; i < mNumberOfComponents; i++)
+    {
+        GridbrainComponent* comp = &mComponents[i];
+
+        if (comp->isMemory())
+        {
+            if (comp->mOrigSymID == 0)
+            {
+                unsigned int pos = mDistComponents->iuniform(0, mMemory.size());           
+                map<llULINT, GridbrainMemCell>::iterator iterCell = mMemory.begin();
+                for (unsigned int j = 0; j < pos; j++)
+                {
+                    iterCell++;
+                }
+                
+                comp->mOrigSymID = (*iterCell).first;
+            }
+
+            if (comp->mMemCell == NULL)
+            {
+                comp->mMemCell = &mMemory[comp->mOrigSymID];
+            }
+        }
+    }
 }
 
 const char Gridbrain::mClassName[] = "Gridbrain";

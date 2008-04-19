@@ -24,6 +24,7 @@ class GridbrainMemCell
 {
 public:
     GridbrainMemCell();
+    GridbrainMemCell(const GridbrainMemCell& cell);
     virtual ~GridbrainMemCell();
 
     void cycle();
@@ -33,6 +34,7 @@ public:
     float mAdd;
     bool mClear;
     float mToggle;
+    bool mUsed;
 };
 #endif
 
