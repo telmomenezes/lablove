@@ -19,13 +19,8 @@ plantSize = 10.0
 worldWidth = 3000
 worldHeight = 3000
 
-alphaWidth = 0
-betaWidth = 0
-alphaHeight = 0
-betaHeight = 0
-
-alphaComponents = {TAND, TNAND, MMAX}
-betaComponents = {TAND, TNAND}
+alphaComponents = {TAND, TNAND, THR, STHR, INV, MMAX}
+betaComponents = {TAND, TNAND, THR, STHR, INV, RAND}
 
 viewRange = 150.0
 viewAngle = 170.0
@@ -34,7 +29,7 @@ maxAge = 5000
 
 initialEnergy = 1.0
 metabolism = 0.0
-goCost = 0.00--5
+goCost = 0.003
 rotateCost = 0.0
 goForceScale = 0.3
 rotateForceScale = 0.006
@@ -48,12 +43,12 @@ compCount = 1
 bufferSize = 100
 fitnessAging = 0.1
 
-addConnectionProb = 0.01
-removeConnectionProb = 0.02
+addConnectionProb = 0.005
+removeConnectionProb = 0.01
 changeWeightProb = 0.01
 weightMutationStanDev = 1.0
-splitConnectionProb = 0.01
-changeComponentProb = 0.01
+splitConnectionProb = 0.005
+changeInactiveComponentProb = 0.01
 swapComponentProb = 0.1
 
 recombineProb = 1.0
@@ -190,7 +185,7 @@ function addAgentSpecies(name, pop, red, green, blue, feed, food, evo)
     brain:setMutateChangeConnectionWeightProb(changeWeightProb)
     brain:setWeightMutationStanDev(weightMutationStanDev)
     brain:setMutateSplitConnectionProb(splitConnectionProb)
-    brain:setMutateChangeComponentProb(changeComponentProb)
+    brain:setMutateChangeInactiveComponentProb(changeInactiveComponentProb)
     brain:setMutateSwapComponentProb(swapComponentProb)
 
     brain:setGrowMethod(Gridbrain.GM_PRESSURE)
@@ -207,7 +202,7 @@ function addAgentSpecies(name, pop, red, green, blue, feed, food, evo)
     alphaSet:addComponent(PER, SimCont2D.PERCEPTION_SYMBOL, TAB_TO_SYM, colorTableCode, 0, colorTableCode, 0)
 
     grid = Grid()
-    grid:init(ALPHA, alphaWidth, alphaHeight)
+    grid:init(ALPHA, 0, 0)
     grid:setComponentSet(alphaSet)
 
     brain:addGrid(grid, "objects");
@@ -221,7 +216,7 @@ function addAgentSpecies(name, pop, red, green, blue, feed, food, evo)
     betaSet:addComponent(ACT, SimCont2D.ACTION_EAT)
     
     grid2 = Grid()
-    grid2:init(BETA, betaWidth, betaHeight)
+    grid2:init(BETA, 0, 0)
     grid2:setComponentSet(betaSet)
 
     brain:addGrid(grid2, "beta")
