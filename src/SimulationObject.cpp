@@ -54,7 +54,7 @@ SimulationObject::SimulationObject(lua_State* luaState)
     mFitnessMeasure = 0;
 }
 
-SimulationObject::SimulationObject(SimulationObject* obj, bool copyTables)
+SimulationObject::SimulationObject(SimulationObject* obj)
 {
     mID = CURRENT_ID++;
 
@@ -128,15 +128,12 @@ SimulationObject::SimulationObject(SimulationObject* obj, bool copyTables)
 
     mBirthRadius = obj->mBirthRadius;
 
-    if (copyTables)
+    map<int, SymbolTable*>::iterator iterTables;
+    for (iterTables = obj->mSymbolTables.begin();
+        iterTables != obj->mSymbolTables.end();
+        iterTables++)
     {
-        map<int, SymbolTable*>::iterator iterTables;
-        for (iterTables = obj->mSymbolTables.begin();
-            iterTables != obj->mSymbolTables.end();
-            iterTables++)
-        {
-            mSymbolTables[(*iterTables).first] = new SymbolTable((*iterTables).second);
-        }
+        mSymbolTables[(*iterTables).first] = new SymbolTable((*iterTables).second);
     }
 }
 
@@ -177,9 +174,9 @@ SimulationObject::~SimulationObject()
     }
 }
 
-SimulationObject* SimulationObject::clone(bool copyTables)
+SimulationObject* SimulationObject::clone()
 {
-    return new SimulationObject(this, copyTables);
+    return new SimulationObject(this);
 }
 
 void SimulationObject::initFloatData(unsigned int size)
@@ -348,6 +345,16 @@ bool SimulationObject::getFieldValue(string fieldName, float& value)
 void SimulationObject::recombine(SimulationObject* parent1, SimulationObject* parent2)
 {
     map<int, SymbolTable*>::iterator iterTables;
+
+    for (iterTables = mSymbolTables.begin();
+        iterTables != mSymbolTables.end();
+        iterTables++)
+    {
+        delete (*iterTables).second;
+    }
+
+    mSymbolTables.clear();
+
     for (iterTables = parent1->mSymbolTables.begin();
         iterTables != parent1->mSymbolTables.end();
         iterTables++)
@@ -362,10 +369,12 @@ void SimulationObject::recombine(SimulationObject* parent1, SimulationObject* pa
 
 SimulationObject* SimulationObject::recombine(SimulationObject* otherParent)
 {
-    SimulationObject* obj = clone(false);
+    SimulationObject* obj = clone();
+
     obj->recombine(this, otherParent);
     SimulationObject* child = obj->clone();
     delete obj;
+
     return child;
 }
 

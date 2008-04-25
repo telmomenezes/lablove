@@ -2287,6 +2287,9 @@ bool Gridbrain::isValid()
 
 bool Gridbrain::symbolUsed(int tableID, llULINT symbolID)
 {
+
+    printf("xixi %d\n", symbolID);
+
     for (unsigned int i = 0; i < mNumberOfComponents; i++)
     {
         GridbrainComponent* comp = &mComponents[i];
@@ -2294,6 +2297,7 @@ bool Gridbrain::symbolUsed(int tableID, llULINT symbolID)
         if ((comp->mOrigSymTable == tableID)
             && (comp->mOrigSymID == symbolID))
         {
+            
             return true;
         }
     }

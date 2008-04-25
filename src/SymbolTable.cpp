@@ -58,13 +58,11 @@ SymbolTable::SymbolTable(SymbolTable* table)
         mSymbols[(*iterSymbol).first] = sym;
     }
 
-    iterSymbol = mSymbols.begin();
-    mReferenceSymbol = (*iterSymbol).second;
+    mReferenceSymbolID = table->mReferenceSymbolID;
     
     mID = table->mID;
     mDynamic = table->mDynamic;
     mName = table->mName;
-    mNextFixedSymbolID = table->mNextFixedSymbolID;
 }
 
 SymbolTable::~SymbolTable()
@@ -82,10 +80,8 @@ SymbolTable::~SymbolTable()
 
 void SymbolTable::create(Symbol* refSymbol, int id)
 {
-    mReferenceSymbol = refSymbol;
-    refSymbol->mID = 0; 
-    mSymbols[0] = mReferenceSymbol;
-    mNextFixedSymbolID = 1;
+    mReferenceSymbolID = refSymbol->mID;
+    mSymbols[refSymbol->mID] = refSymbol;
 
     if (id < 0)
     {
@@ -148,13 +144,11 @@ SymbolTable* SymbolTable::recombine(SymbolTable* table2)
         }
     }
 
-    iterSymbol = table->mSymbols.begin();
-    table->mReferenceSymbol = (*iterSymbol).second;
+    table->mReferenceSymbolID = mReferenceSymbolID;
     
     table->mID = mID;
     table->mDynamic = mDynamic;
     table->mName = mName;
-    table->mNextFixedSymbolID = mNextFixedSymbolID;
 
     return table;
 }
@@ -211,22 +205,16 @@ Symbol* SymbolTable::getSymbol(llULINT id)
 
 llULINT SymbolTable::addSymbol(Symbol* sym)
 {
-    if (sym->mFixed)
-    {
-        sym->mID = mNextFixedSymbolID;
-        mNextFixedSymbolID++;
-    }
-
     mSymbols[sym->mID] = sym;
     return sym->mID;
 }
 
 llULINT SymbolTable::addRandomSymbol()
 {
-    Symbol* sym = mReferenceSymbol->clone();
+    Symbol* sym = mSymbols[mReferenceSymbolID]->clone();
     sym->initRandom();
     sym->mFixed = false;
-    sym->newDynamicID();
+    sym->generateNewID();
     return addSymbol(sym);
 }
 
@@ -242,6 +230,11 @@ llULINT SymbolTable::getRandomSymbolId()
     }
 
     return (*iterSymbol).first;
+}
+
+void SymbolTable::growTable()
+{
+    addRandomSymbol(); 
 }
 
 void SymbolTable::printDebug()

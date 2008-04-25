@@ -41,10 +41,12 @@ public:
     virtual void mutate() = 0;
 
     void setAlwaysRandom(){mAlwaysRandom = true;}
-    void newDynamicID();
+
+    void generateNewID();
 
     int setAlwaysRandom(lua_State* luaState);
     int getID(lua_State* luaState);
+    int setID(lua_State* luaState);
 
     virtual string toString(){return "?";}
 

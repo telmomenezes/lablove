@@ -118,6 +118,7 @@ Orbit<SymbolFloat>::MethodType SymbolFloat::mMethods[] =
     {"initRandom", &SymbolFloat::initRandom},
     {"setAlwaysRandom", &Symbol::setAlwaysRandom},
     {"getID", &Symbol::getID},
+    {"setID", &Symbol::setID},
     {0,0}
 };
 

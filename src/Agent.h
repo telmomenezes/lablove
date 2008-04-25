@@ -33,9 +33,9 @@ class Agent : public GraphicalObject
 {
 public:
     Agent(lua_State* luaState=NULL);
-    Agent(Agent* agent, bool copyTables=true);
+    Agent(Agent* agent);
     virtual ~Agent();
-    virtual SimulationObject* clone(bool copyTables=true);
+    virtual SimulationObject* clone();
 
     void setBrain(Brain* brain);
     Brain* getBrain(){return mBrain;}

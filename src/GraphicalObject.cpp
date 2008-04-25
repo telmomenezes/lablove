@@ -24,7 +24,7 @@ GraphicalObject::GraphicalObject(lua_State* luaState) : SimulationObject(luaStat
     mType = TYPE_GRAPHICAL_OBJECT;
 }
 
-GraphicalObject::GraphicalObject(GraphicalObject* obj, bool copyTables) : SimulationObject(obj, copyTables)
+GraphicalObject::GraphicalObject(GraphicalObject* obj) : SimulationObject(obj)
 {
     for (list<Graphic*>::iterator iterGraph = obj->mGraphics.begin();
             iterGraph != obj->mGraphics.end();
@@ -46,9 +46,9 @@ GraphicalObject::~GraphicalObject()
     mGraphics.clear();
 }
 
-SimulationObject* GraphicalObject::clone(bool copyTables)
+SimulationObject* GraphicalObject::clone()
 {
-    return new GraphicalObject(this, copyTables);
+    return new GraphicalObject(this);
 }
 
 void GraphicalObject::draw()

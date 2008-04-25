@@ -168,8 +168,7 @@ GridbrainComponent* Grid::getRandomComponent(SimulationObject* obj, GridbrainCom
             comp = mComponentSet->getRandom(obj);
 
             found = true;
-            if ((comp->mType == GridbrainComponent::PER)
-                || (comp->mType == GridbrainComponent::ACT))
+            if (comp->isUnique())
             {
                 for (unsigned int pos = mOffset;
                         found && (pos < (mOffset + mSize));
@@ -177,12 +176,7 @@ GridbrainComponent* Grid::getRandomComponent(SimulationObject* obj, GridbrainCom
                 {
                     GridbrainComponent* comp2 = &components[pos];
 
-                    if ((comp->mType == comp2->mType)
-                        && (comp->mSubType == comp2->mSubType)
-                        && (comp->mOrigSymTable == comp2->mOrigSymTable)
-                        && (comp->mTargetSymTable == comp2->mTargetSymTable)
-                        && (comp->mOrigSymID == comp2->mOrigSymID)
-                        && (comp->mTargetSymID == comp2->mTargetSymID))
+                    if (comp->isEqual(comp2))
                     {
                         found = false;
                     }

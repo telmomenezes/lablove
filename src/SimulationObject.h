@@ -49,9 +49,9 @@ public:
     static llULINT CURRENT_ID;
 
     SimulationObject(lua_State* luaState=NULL);
-    SimulationObject(SimulationObject* obj, bool copyTables=true);
+    SimulationObject(SimulationObject* obj);
     virtual ~SimulationObject();
-    virtual SimulationObject* clone(bool copyTables=true);
+    virtual SimulationObject* clone();
 
     void initFloatData(unsigned int size);
     void initBoolData(unsigned int size);

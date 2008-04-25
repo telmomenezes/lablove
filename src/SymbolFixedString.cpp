@@ -105,6 +105,7 @@ const char SymbolFixedString::mClassName[] = "SymbolFixedString";
 Orbit<SymbolFixedString>::MethodType SymbolFixedString::mMethods[] = {
     {"setAlwaysRandom", &Symbol::setAlwaysRandom},
     {"getID", &Symbol::getID},
+    {"setID", &Symbol::setID},
     {0,0}
 };
 

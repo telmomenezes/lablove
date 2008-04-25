@@ -140,6 +140,7 @@ Orbit<SymbolFloatVector>::MethodType SymbolFloatVector::mMethods[] =
     {"initRandom", &SymbolFloatVector::initRandom},
     {"setAlwaysRandom", &Symbol::setAlwaysRandom},
     {"getID", &Symbol::getID},
+    {"setID", &Symbol::setID},
     {0,0}
 };
 

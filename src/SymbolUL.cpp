@@ -97,6 +97,7 @@ const char SymbolUL::mClassName[] = "SymbolUL";
 Orbit<SymbolUL>::MethodType SymbolUL::mMethods[] = {
     {"setAlwaysRandom", &Symbol::setAlwaysRandom},
     {"getID", &Symbol::getID},
+    {"setID", &Symbol::setID},
     {0,0}
 };
 

@@ -28,7 +28,7 @@ Agent::Agent(lua_State* luaState) : GraphicalObject()
     mBrain = NULL;
 }
 
-Agent::Agent(Agent* agent, bool copyTables) : GraphicalObject(agent, copyTables)
+Agent::Agent(Agent* agent) : GraphicalObject(agent)
 {
     mBrain = agent->mBrain->clone();
     mBrain->setOwner(this);
@@ -51,6 +51,7 @@ Agent::Agent(Agent* agent, bool copyTables) : GraphicalObject(agent, copyTables)
                 iterSymbol++)
             {
                 llULINT symbolID = (*iterSymbol).first;
+
                 Symbol* sym = (*iterSymbol).second;
 
                 if ((!sym->mFixed) && 
@@ -62,7 +63,7 @@ Agent::Agent(Agent* agent, bool copyTables) : GraphicalObject(agent, copyTables)
                 }
             }
 
-            table->addRandomSymbol();
+            table->growTable();
         }
     }
 }
@@ -85,9 +86,9 @@ Agent::~Agent()
     mMessageList.clear();
 }
 
-SimulationObject* Agent::clone(bool copyTables)
+SimulationObject* Agent::clone()
 {
-    return new Agent(this, copyTables);
+    return new Agent(this);
 }
 
 void Agent::setBrain(Brain* brain)
@@ -123,14 +124,14 @@ void Agent::mutate()
 
 void Agent::recombine(SimulationObject* parent1, SimulationObject* parent2)
 {
-    //printf("==> START RECOMBINE\n\n");
-    //printf("\nPARENT 1\n");
-    //printf("========\n");
-    //parent1->printDebug();
+    /*printf("==> START RECOMBINE\n\n");
+    printf("\nPARENT 1\n");
+    printf("========\n");
+    parent1->printDebug();
 
-    //printf("\nPARENT 2\n");
-    //printf("========\n");
-    //parent2->printDebug();
+    printf("\nPARENT 2\n");
+    printf("========\n");
+    parent2->printDebug();*/
 
     Agent* agent1 = (Agent*)parent1;
     Agent* agent2 = (Agent*)parent2;
@@ -142,11 +143,25 @@ void Agent::recombine(SimulationObject* parent1, SimulationObject* parent2)
 
     SimulationObject::recombine(parent1, parent2);
 
+    map<int, SymbolTable*>::iterator iterTables;
+
+    for (iterTables = mSymbolTables.begin();
+        iterTables != mSymbolTables.end();
+        iterTables++)
+    {
+        SymbolTable* table = (*iterTables).second;
+
+        if (table->isDynamic())
+        {
+            table->growTable();
+        }
+    }
+
     setBrain(newBrain);
 
-    //printf("\nCHILD\n");
-    //printf("=====\n");
-    //printDebug();
+    /*printf("\nCHILD\n");
+    printf("=====\n");
+    printDebug();*/
 }
 
 bool Agent::getFieldValue(string fieldName, float& value)

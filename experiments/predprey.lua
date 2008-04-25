@@ -9,29 +9,30 @@ dofile("basic_defines.lua")
 -- Experiment Parameters
 --------------------------------------------------------------------------------
 
-numberOfPlants = 100
+numberOfPlants = 200
 numberOfPreds = 50
 numberOfPreys = 50
 
-agentSize = 10.0
+preySize = 10.0
+predSize = 5.0
 plantSize = 10.0
 
 worldWidth = 3000
 worldHeight = 3000
 
-alphaComponents = {TAND, TNAND, THR, STHR, INV, MMAX}
-betaComponents = {TAND, TNAND, THR, STHR, INV, RAND}
+alphaComponents = {TAND, TNAND, NOT, THR, STHR, INV, MMAX}
+betaComponents = {TAND, TNAND, NOT, THR, STHR, INV, RAND}
 
-viewRange = 150.0
+viewRange = 200.0
 viewAngle = 170.0
 
 maxAge = 5000
 
 initialEnergy = 1.0
 metabolism = 0.0
-goCost = 0.003
+goCost = 0.001
 rotateCost = 0.0
-goForceScale = 0.3
+goForceScale = 0.7
 rotateForceScale = 0.006
 
 friction = 0.0
@@ -61,9 +62,9 @@ logTimeInterval = 100
 logBrains = true
 logOnlyLastBrain = true
 
-humanAgent = true
+humanAgent = false
 
-birthRadius = 0.0
+birthRadius = 0--300.0
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
@@ -116,7 +117,10 @@ ageTableCode = 3
 colorTableCode = 4
 feedTableCode = 5
 
-function addAgentSpecies(name, pop, red, green, blue, feed, food, evo)
+dummyColorSym = SymbolRGB(0, 0, 0)
+colorID = dummyColorSym:getID()
+
+function addAgentSpecies(name, pop, red, green, blue, feed, food, evo, size)
     agent = Agent()
     agent:setBirthRadius(birthRadius)
 
@@ -128,10 +132,10 @@ function addAgentSpecies(name, pop, red, green, blue, feed, food, evo)
 
     agent:addGraphic(GraphicTriangle())
 
-    symSize = SymbolFloat(agentSize)
+    symSize = SymbolFloat(size)
     symTable = SymbolTable(symSize, sizeTableCode)
     agent:addSymbolTable(symTable)
-    agent:setSymbolName("size", sizeTableCode, 0)
+    agent:setSymbolName("size", sizeTableCode, symSize:getID())
 
     symFriction = SymbolFloat(friction)
     symDrag = SymbolFloat(drag)
@@ -142,39 +146,42 @@ function addAgentSpecies(name, pop, red, green, blue, feed, food, evo)
     symTable:addSymbol(symRotFriction)
     symTable:addSymbol(symRotDrag)
     agent:addSymbolTable(symTable)
-    agent:setSymbolName("friction", physicsTableCode, 0)
-    agent:setSymbolName("drag", physicsTableCode, 1)
-    agent:setSymbolName("rot_friction", physicsTableCode, 2)
-    agent:setSymbolName("rot_drag", physicsTableCode, 3)
+    agent:setSymbolName("friction", physicsTableCode, symFriction:getID())
+    agent:setSymbolName("drag", physicsTableCode, symDrag:getID())
+    agent:setSymbolName("rot_friction", physicsTableCode, symRotFriction:getID())
+    agent:setSymbolName("rot_drag", physicsTableCode, symRotDrag:getID())
 
     symInitialEnergy = SymbolFloat(initialEnergy)
     symMetabolism = SymbolFloat(metabolism)
     symTable = SymbolTable(symInitialEnergy, energyTableCode)
     symTable:addSymbol(symMetabolism)
     agent:addSymbolTable(symTable)
-    agent:setSymbolName("initial_energy", energyTableCode, 0)
-    agent:setSymbolName("metabolism", energyTableCode, 1)
+    agent:setSymbolName("initial_energy", energyTableCode, symInitialEnergy:getID())
+    agent:setSymbolName("metabolism", energyTableCode, symMetabolism:getID())
 
     symLowAgeLimit = SymbolUL(maxAge)
     symHighAgeLimit = SymbolUL(maxAge)
     symTable = SymbolTable(symLowAgeLimit, ageTableCode)
     symTable:addSymbol(symHighAgeLimit)
     agent:addSymbolTable(symTable)
-    agent:setSymbolName("low_age_limit", ageTableCode, 0)
-    agent:setSymbolName("high_age_limit", ageTableCode, 1)
-
+    agent:setSymbolName("low_age_limit", ageTableCode, symLowAgeLimit:getID())
+    agent:setSymbolName("high_age_limit", ageTableCode, symHighAgeLimit:getID())
+    
     agentColor = SymbolRGB(red, green, blue)
+    agentColor:setID(colorID)
     symTable = SymbolTable(agentColor, colorTableCode)
     symTable:setDynamic(true)
     symTable:setName("color")
     agent:addSymbolTable(symTable)
-    agent:setSymbolName("color", colorTableCode, 0)
+    agent:setSymbolName("color", colorTableCode, colorID)
 
-    agentFeedTable = SymbolTable(SymbolBitString(feed), feedTableCode)
-    agentFeedTable:addSymbol(SymbolBitString(food))
+    symFeed = SymbolBitString(feed)
+    symFood = SymbolBitString(food)
+    agentFeedTable = SymbolTable(symFeed, feedTableCode)
+    agentFeedTable:addSymbol(symFood)
     agent:addSymbolTable(agentFeedTable)
-    agent:setSymbolName("feed", feedTableCode, 0)
-    agent:setSymbolName("food", feedTableCode, 1)
+    agent:setSymbolName("feed", feedTableCode, symFeed:getID())
+    agent:setSymbolName("food", feedTableCode, symFood:getID())
 
     -- Agent Brain
 
@@ -199,7 +206,7 @@ function addAgentSpecies(name, pop, red, green, blue, feed, food, evo)
     alphaSet:addComponent(PER, SimCont2D.PERCEPTION_POSITION)
     alphaSet:addComponent(PER, SimCont2D.PERCEPTION_DISTANCE)
     alphaSet:addComponent(PER, SimCont2D.PERCEPTION_TARGET)
-    alphaSet:addComponent(PER, SimCont2D.PERCEPTION_SYMBOL, TAB_TO_SYM, colorTableCode, 0, colorTableCode, 0)
+    alphaSet:addComponent(PER, SimCont2D.PERCEPTION_SYMBOL, TAB_TO_SYM, colorTableCode, colorID, colorTableCode, colorID)
 
     grid = Grid()
     grid:init(ALPHA, 0, 0)
@@ -266,31 +273,34 @@ function addPlantSpecies(pop, red, green, blue, feed, food)
     symSize = SymbolFloat(plantSize)
     symTable = SymbolTable(symSize, sizeTableCode)
     plant:addSymbolTable(symTable)
-    plant:setSymbolName("size", sizeTableCode, 0)
+    plant:setSymbolName("size", sizeTableCode, symSize:getID())
 
     symPlantInitialEnergy = SymbolFloat(1.0)
     symTable = SymbolTable(symPlantInitialEnergy, energyTableCode)
     plant:addSymbolTable(symTable)
-    plant:setSymbolName("initial_energy", energyTableCode, 0)
+    plant:setSymbolName("initial_energy", energyTableCode, symPlantInitialEnergy:getID())
 
     symLowAgeLimit = SymbolUL(maxAge)
     symHighAgeLimit = SymbolUL(maxAge)
     symTable = SymbolTable(symLowAgeLimit, ageTableCode)
     symTable:addSymbol(symHighAgeLimit)
     plant:addSymbolTable(symTable)
-    plant:setSymbolName("low_age_limit", ageTableCode, 0)
-    plant:setSymbolName("high_age_limit", ageTableCode, 1)
+    plant:setSymbolName("low_age_limit", ageTableCode, symLowAgeLimit:getID())
+    plant:setSymbolName("high_age_limit", ageTableCode, symHighAgeLimit:getID())
 
     plantColor = SymbolRGB(red, green, blue)
+    plantColor:setID(colorID)
     symTable = SymbolTable(plantColor, colorTableCode)
     plant:addSymbolTable(symTable)
-    plant:setSymbolName("color", colorTableCode, 0)
+    plant:setSymbolName("color", colorTableCode, colorID)
 
-    plantFeedTable = SymbolTable(SymbolBitString(feed), feedTableCode)
-    plantFeedTable:addSymbol(SymbolBitString(food))
+    symFeed = SymbolBitString(feed)
+    symFood = SymbolBitString(food)
+    plantFeedTable = SymbolTable(symFeed, feedTableCode)
+    plantFeedTable:addSymbol(symFood)
     plant:addSymbolTable(plantFeedTable)
-    plant:setSymbolName("feed", feedTableCode, 0)
-    plant:setSymbolName("food", feedTableCode, 1)
+    plant:setSymbolName("feed", feedTableCode, symFeed:getID())
+    plant:setSymbolName("food", feedTableCode, symFood:getID())
 
     plant:addGraphic(GraphicSquare())
 
@@ -300,8 +310,8 @@ end
 -- Create Species
 --------------------------------------------------------------------------------
 
-addAgentSpecies("pred", numberOfPreds, 255, 0, 0, "11", "01", evoPred)
-addAgentSpecies("prey", numberOfPreys, 0, 0, 255, "00", "11", evoPrey)
+addAgentSpecies("pred", numberOfPreds, 255, 0, 0, "11", "01", evoPred, predSize)
+addAgentSpecies("prey", numberOfPreys, 0, 0, 255, "00", "11", evoPrey, preySize)
 addPlantSpecies(numberOfPlants, 0, 255, 0, "00", "00")
 
 -- Human Agent
@@ -313,16 +323,14 @@ if humanAgent then
     dummyBrain:setChannelName(0, "objects")
     dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
     dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
-    dummyBrain:addPerception("Feed", 0, SimCont2D.PERCEPTION_SYMBOL, feedTableCode, 0, feedTableCode, 1)
-    dummyBrain:addPerception("Food", 0, SimCont2D.PERCEPTION_SYMBOL, feedTableCode, 1, feedTableCode, 0)
     dummyBrain:addPerception("Target", 0, SimCont2D.PERCEPTION_TARGET)
 
     human:setBrain(dummyBrain)
 
-    symSize = SymbolFloat(agentSize)
+    symSize = SymbolFloat(preySize)
     symTable = SymbolTable(symSize, sizeTableCode)
     human:addSymbolTable(symTable)
-    human:setSymbolName("size", sizeTableCode, 0)
+    human:setSymbolName("size", sizeTableCode, symSize:getID())
 
     symHFriction = SymbolFloat(friction)
     symHDrag = SymbolFloat(drag)
@@ -333,39 +341,41 @@ if humanAgent then
     symTable:addSymbol(symHRotFriction)
     symTable:addSymbol(symHRotDrag)
     human:addSymbolTable(symTable)
-    human:setSymbolName("friction", physicsTableCode, 0)
-    human:setSymbolName("drag", physicsTableCode, 1)
-    human:setSymbolName("rot_friction", physicsTableCode, 2)
-    human:setSymbolName("rot_drag", physicsTableCode, 3)
+    human:setSymbolName("friction", physicsTableCode, symHFriction:getID())
+    human:setSymbolName("drag", physicsTableCode, symHDrag:getID())
+    human:setSymbolName("rot_friction", physicsTableCode, symHRotFriction:getID())
+    human:setSymbolName("rot_drag", physicsTableCode, symHRotDrag:getID())
 
     symHInitialEnergy = SymbolFloat(1.0)
     symHMetabolism = SymbolFloat(metabolism)
     symTable = SymbolTable(symHInitialEnergy, energyTableCode)
     symTable:addSymbol(symHMetabolism)
     human:addSymbolTable(symTable)
-    human:setSymbolName("initial_energy", energyTableCode, 0)
-    human:setSymbolName("metabolism", energyTableCode, 1)
+    human:setSymbolName("initial_energy", energyTableCode, symHInitialEnergy:getID())
+    human:setSymbolName("metabolism", energyTableCode, symHMetabolism:getID())
 
     symHLowAgeLimit = SymbolUL(maxAge)
     symHHighAgeLimit = SymbolUL(maxAge)
     symTable = SymbolTable(symHLowAgeLimit, ageTableCode)
     symTable:addSymbol(symHHighAgeLimit)
     human:addSymbolTable(symTable)
-    human:setSymbolName("low_age_limit", ageTableCode, 0)
-    human:setSymbolName("high_age_limit", ageTableCode, 1)
+    human:setSymbolName("low_age_limit", ageTableCode, symHLowAgeLimit:getID())
+    human:setSymbolName("high_age_limit", ageTableCode, symHHighAgeLimit:getID())
 
     humanColor = SymbolRGB(82, 228, 241)
     symTable = SymbolTable(humanColor, colorTableCode)
     human:addSymbolTable(symTable)
-    human:setSymbolName("color", colorTableCode, 0)
+    human:setSymbolName("color", colorTableCode, humanColor:getID())
 
     feed = "11"
     food = "01"
-    humanFeedTable = SymbolTable(SymbolBitString(feed), feedTableCode)
-    humanFeedTable:addSymbol(SymbolBitString(food))
+    symFeed = SymbolBitString(feed)
+    symFood = SymbolBitString(food)
+    humanFeedTable = SymbolTable(symFeed, feedTableCode)
+    humanFeedTable:addSymbol(symFood)
     human:addSymbolTable(humanFeedTable)
-    human:setSymbolName("feed", feedTableCode, 0)
-    human:setSymbolName("food", feedTableCode, 1)
+    human:setSymbolName("feed", feedTableCode, symFeed:getID())
+    human:setSymbolName("food", feedTableCode, symFood:getID())
 
     human:addGraphic(GraphicTriangle())
     sim:addObject(human)

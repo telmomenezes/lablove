@@ -46,6 +46,8 @@ GridbrainComponent* GridbrainComponentSet::getRandom(SimulationObject* obj)
         {
             SymbolTable* table = obj->getSymbolTable(comp->mOrigSymTable);
             comp->mOrigSymID = table->getRandomSymbolId();
+            //printf("size: %d\n", table->getSize());
+            //printf("id: %d\n", comp->mOrigSymID);
         }
     }
 

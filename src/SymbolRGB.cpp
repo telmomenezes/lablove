@@ -157,6 +157,7 @@ Orbit<SymbolRGB>::MethodType SymbolRGB::mMethods[] =
     {"initRandom", &SymbolRGB::initRandom},
     {"setAlwaysRandom", &Symbol::setAlwaysRandom},
     {"getID", &Symbol::getID},
+    {"setID", &Symbol::setID},
     {0,0}
 };
 

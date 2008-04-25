@@ -48,6 +48,8 @@ public:
     int getID(){return mID;}
     llULINT getRandomSymbolId();
 
+    void growTable();
+
     map<llULINT, Symbol*>* getSymbolMap(){return &mSymbols;}
 
     void setDynamic(bool dyn){mDynamic = dyn;}
@@ -79,11 +81,10 @@ protected:
     static mt_distribution* mDistRecombine;
 
     int mID;
-    Symbol* mReferenceSymbol;
+    llULINT mReferenceSymbolID;
     map<llULINT, Symbol*> mSymbols;
     bool mDynamic;
     string mName;
-    llULINT mNextFixedSymbolID;
 };
 #endif
 
