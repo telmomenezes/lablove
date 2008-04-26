@@ -41,9 +41,11 @@ public:
                 InterfaceItem::TableLinkType linkType=InterfaceItem::NO_LINK,
                 int origSymTable=-1,
                 llULINT origSymID=0,
-                int targetSymTable=-1,
-                llULINT targetSymID=0);
-    GridbrainComponent* getRandom(SimulationObject* obj=NULL);
+                int targetSymTable=-1);
+    GridbrainComponent* getRandom(SimulationObject* obj=NULL,
+                                    GridbrainComponent* components=NULL,
+                                    unsigned int startPos=0,
+                                    unsigned int endPos=0);
 
     static const char mClassName[];
     static Orbit<GridbrainComponentSet>::MethodType mMethods[];

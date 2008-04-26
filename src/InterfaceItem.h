@@ -26,7 +26,7 @@
 class InterfaceItem
 {
 public:
-    enum TableLinkType {NO_LINK, SYM_TO_SYM, TAB_TO_SYM, SYM_TO_TAB, TAB_TO_TAB};
+    enum TableLinkType {NO_LINK, SYM_TO_SYM, TAB_TO_SYM};
 
     InterfaceItem(lua_State* luaState=NULL);
     virtual ~InterfaceItem();
@@ -35,7 +35,6 @@ public:
     int mOrigSymTable;
     int mTargetSymTable;
     llULINT mOrigSymID;
-    llULINT mTargetSymID;
     TableLinkType mTableLinkType;
 
     static const char mClassName[];

@@ -89,8 +89,7 @@ protected:
                             SimulationObject* targetObj,
                             int origSymTable,
                             int targetSymTable,
-                            llULINT origSymID,
-                            llULINT targetSymID);
+                            llULINT origSymID);
     float calcSymbolsBinding(SimulationObject* obj,
                                     int symTable,
                                     llULINT symID,
@@ -123,6 +122,8 @@ protected:
     double mLastDrawTime;
     unsigned int mTargetFPS;
     double mFrameDuration;
+
+    unsigned int mSymAcquireInterval;
 };
 #endif
 

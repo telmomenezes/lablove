@@ -148,8 +148,7 @@ public:
                 InterfaceItem::TableLinkType linkType=InterfaceItem::NO_LINK,
                 int origSymTable=-1,
                 llULINT origSymID=0,
-                int targetSymTalbe=-1,
-                llULINT targetSymID=0);
+                int targetSymTable=-1);
 
     void setGrowMethod(GrowMethod val){mGrowMethod = val;}
     void setCloneConnectionsMode(CloneConnectionsMode val){mCloneConnectionsMode = val;}

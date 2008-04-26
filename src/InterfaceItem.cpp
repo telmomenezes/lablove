@@ -35,8 +35,6 @@ Orbit<InterfaceItem>::NumberGlobalType InterfaceItem::mNumberGlobals[] = {
     {"NO_LINK", NO_LINK},
     {"SYM_TO_SYM", SYM_TO_SYM},
     {"TAB_TO_SYM", TAB_TO_SYM},
-    {"SYM_TO_TAB", SYM_TO_TAB},
-    {"TAB_TO_TAB", TAB_TO_TAB},
     {0,0}
 };
 

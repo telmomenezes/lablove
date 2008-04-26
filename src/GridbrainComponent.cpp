@@ -47,7 +47,6 @@ void GridbrainComponent::clearDefinitions()
     mOrigSymTable = -1;
     mTargetSymTable = -1;
     mOrigSymID = 0;
-    mTargetSymID = 0;
     mTableLinkType = InterfaceItem::NO_LINK;
     mTimeToTrigger = 0;
     mTriggerInterval = 0;
@@ -86,7 +85,6 @@ void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)
     mOrigSymTable = comp->mOrigSymTable;
     mTargetSymTable = comp->mTargetSymTable;
     mOrigSymID = comp->mOrigSymID;
-    mTargetSymID = comp->mTargetSymID;
     mTableLinkType = comp->mTableLinkType;
 }
 
@@ -297,8 +295,7 @@ bool GridbrainComponent::isEqual(GridbrainComponent* comp)
             && (mGrid == comp->mGrid)
             && (mOrigSymTable == comp->mOrigSymTable)
             && (mTargetSymTable == comp->mTargetSymTable)
-            && (mOrigSymID == comp->mOrigSymID)
-            && (mTargetSymID == comp->mTargetSymID));
+            && (mOrigSymID == comp->mOrigSymID));
 }
 
 const char GridbrainComponent::mClassName[] = "GridbrainComponent";

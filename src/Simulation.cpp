@@ -51,6 +51,8 @@ Simulation::Simulation(lua_State* luaState)
     mTargetFPS = 60;
 
     mFrameDuration = 1.0f / (double)mTargetFPS;
+    
+    mSymAcquireInterval = 100;
 }
 
 Simulation::~Simulation()
@@ -226,28 +228,23 @@ float Simulation::calcSymbolsBinding(SimulationObject* origObj,
                                     SimulationObject* targetObj,
                                     int origSymTable,
                                     int targetSymTable,
-                                    llULINT origSymID,
-                                    llULINT targetSymID)
+                                    llULINT origSymID)
 {
-    SymbolTable* origTable = origObj->getSymbolTable(origSymTable);
     SymbolTable* targetTable = targetObj->getSymbolTable(targetSymTable);
 
-    if ((origTable == NULL) || (targetTable == NULL))
+    if (targetTable == NULL)
     {
         return 0.0f;
     }
 
-    Symbol* origSym = origTable->getSymbol(origSymID);
-    Symbol* targetSym = targetTable->getSymbol(targetSymID);
+    Symbol* targetSym = targetTable->getReferenceSymbol();
 
-    if ((origSym == NULL) || (targetSym == NULL))
+    if (targetSym == NULL)
     {
         return 0.0f;
     }
 
-    float distance = origSym->getBinding(targetSym);
-
-    return distance;
+    return calcSymbolsBinding(origObj, origSymTable, origSymID, targetSym);
 }
 
 float Simulation::calcSymbolsBinding(SimulationObject* obj,
@@ -269,9 +266,16 @@ float Simulation::calcSymbolsBinding(SimulationObject* obj,
         return 0.0f;
     }
 
-    float distance = sym->getBinding(symbol);
+    float binding = sym->getBinding(symbol);
 
-    return distance;
+    if ((binding < 1.0f)
+        && (table->isDynamic())
+        && (((mSimulationTime - obj->mCreationTime) % mSymAcquireInterval) == 0))
+    {
+        table->acquireSymbol(symbol);
+    }
+
+    return binding;
 }
 
 void Simulation::drawTimes()

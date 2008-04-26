@@ -160,31 +160,7 @@ GridbrainComponent* Grid::getRandomComponent(SimulationObject* obj, GridbrainCom
 {
     if (mComponentSet)
     {
-        bool found = false;
-
-        GridbrainComponent* comp;
-        while(!found)
-        {
-            comp = mComponentSet->getRandom(obj);
-
-            found = true;
-            if (comp->isUnique())
-            {
-                for (unsigned int pos = mOffset;
-                        found && (pos < (mOffset + mSize));
-                        pos++)
-                {
-                    GridbrainComponent* comp2 = &components[pos];
-
-                    if (comp->isEqual(comp2))
-                    {
-                        found = false;
-                    }
-                }
-            }   
-        }
-
-        return comp;
+        return mComponentSet->getRandom(obj, components, mOffset, mOffset + mSize);
     }
     else
     {
@@ -206,10 +182,8 @@ unsigned int Grid::addPerception(GridbrainComponent* per)
         if ((curPer->mSubType == per->mSubType)
             && (curPer->mOrigSymTable == per->mOrigSymTable)
             && (curPer->mTargetSymTable == per->mTargetSymTable)
-            && (curPer->mOrigSymID == per->mOrigSymID)
-            && (curPer->mTargetSymID == per->mTargetSymID))
+            && (curPer->mOrigSymID == per->mOrigSymID))
         {
-            printf("Anomaly!\n");
             return i;
         }
     }

@@ -28,7 +28,10 @@ void GridbrainComponentSet::addComponent(GridbrainComponent* component)
     mSize++;
 }
 
-GridbrainComponent* GridbrainComponentSet::getRandom(SimulationObject* obj)
+GridbrainComponent* GridbrainComponentSet::getRandom(SimulationObject* obj,
+                                                        GridbrainComponent* components,
+                                                        unsigned int startPos,
+                                                        unsigned int endPos)
 {
     GridbrainComponent* comp;
 
@@ -38,16 +41,51 @@ GridbrainComponent* GridbrainComponentSet::getRandom(SimulationObject* obj)
     }
     else
     {
-        unsigned int pos = mDistComponentSet->iuniform(0, mSize);
+        bool found = false;
+        bool tab2sym = false;
 
-        comp = mComponentVec[pos]; 
-
-        if (comp->mTableLinkType == InterfaceItem::TAB_TO_SYM)
+        while(!found)
         {
-            SymbolTable* table = obj->getSymbolTable(comp->mOrigSymTable);
-            comp->mOrigSymID = table->getRandomSymbolId();
-            //printf("size: %d\n", table->getSize());
-            //printf("id: %d\n", comp->mOrigSymID);
+            if (!tab2sym)
+            {
+                unsigned int pos = mDistComponentSet->iuniform(0, mSize);
+                comp = mComponentVec[pos];
+            }
+
+            if (comp->mTableLinkType == InterfaceItem::TAB_TO_SYM)
+            {
+                SymbolTable* table = obj->getSymbolTable(comp->mOrigSymTable);
+
+                if (tab2sym)
+                {
+                    table->grow();
+                }
+                else
+                {
+                    tab2sym = true;
+                }
+
+                comp->mOrigSymID = table->getRandomSymbolId();
+                //printf("size: %d\n", table->getSize());
+                //printf("id: %d\n", comp->mOrigSymID);
+            }
+
+            found = true;
+
+            if (components && (comp->isUnique()))
+            {
+                for (unsigned int pos = startPos;
+                        found && (pos < endPos);
+                        pos++)
+                {
+                    GridbrainComponent* comp2 = &components[pos];
+
+                    if (comp->isEqual(comp2))
+                    {
+                        found = false;
+                    }
+                }
+            }   
         }
     }
 
@@ -59,8 +97,7 @@ void GridbrainComponentSet::addComponent(GridbrainComponent::Type type,
                         InterfaceItem::TableLinkType linkType,
                         int origSymTable,
                         llULINT origSymID,
-                        int targetSymTable,
-                        llULINT targetSymID)
+                        int targetSymTable)
 {
     GridbrainComponent* comp = new GridbrainComponent();
     comp->mType = type;
@@ -68,7 +105,6 @@ void GridbrainComponentSet::addComponent(GridbrainComponent::Type type,
     comp->mOrigSymTable = origSymTable;
     comp->mTargetSymTable = targetSymTable;
     comp->mOrigSymID = origSymID;
-    comp->mTargetSymID = targetSymID;
     comp->mTableLinkType = linkType;
     addComponent(comp);
 }
@@ -90,15 +126,13 @@ int GridbrainComponentSet::addComponent(lua_State* luaState)
     int origSymTable = luaL_optint(luaState, 4, -1);
     int origSymIndex = luaL_optint(luaState, 5, -1);
     int targetSymTable = luaL_optint(luaState, 6, -1);
-    int targetSymIndex = luaL_optint(luaState, 7, -1);
 
     addComponent((GridbrainComponent::Type)type,
                     subType,
                     linkType,
                     origSymTable,
                     origSymIndex,
-                    targetSymTable,
-                    targetSymIndex);
+                    targetSymTable);
 
     return 0;
 }

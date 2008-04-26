@@ -58,6 +58,16 @@ SymbolTable::SymbolTable(SymbolTable* table)
         mSymbols[(*iterSymbol).first] = sym;
     }
 
+    for (iterSymbol = table->mAcquiredSymbols.begin();
+        iterSymbol != table->mAcquiredSymbols.end();
+        iterSymbol++)
+    {
+        Symbol* origSym = (*iterSymbol).second;
+        Symbol* sym = origSym->clone();
+
+        mAcquiredSymbols[(*iterSymbol).first] = sym;
+    }
+
     mReferenceSymbolID = table->mReferenceSymbolID;
     
     mID = table->mID;
@@ -76,6 +86,15 @@ SymbolTable::~SymbolTable()
     }
 
     mSymbols.clear();
+
+    for (iterSymbol = mAcquiredSymbols.begin();
+        iterSymbol != mAcquiredSymbols.end();
+        iterSymbol++)
+    {
+        delete (*iterSymbol).second;
+    }
+
+    mAcquiredSymbols.clear();
 }
 
 void SymbolTable::create(Symbol* refSymbol, int id)
@@ -144,6 +163,22 @@ SymbolTable* SymbolTable::recombine(SymbolTable* table2)
         }
     }
 
+    // Acquired symbols from both parents
+    for (iterSymbol = mAcquiredSymbols.begin();
+        iterSymbol != mAcquiredSymbols.end();
+        iterSymbol++)
+    {
+        Symbol* sym = (*iterSymbol).second;
+        table->acquireSymbol(sym);
+    }
+    for (iterSymbol = table2->mAcquiredSymbols.begin();
+        iterSymbol != table2->mAcquiredSymbols.end();
+        iterSymbol++)
+    {
+        Symbol* sym = (*iterSymbol).second;
+        table->acquireSymbol(sym);
+    }
+
     table->mReferenceSymbolID = mReferenceSymbolID;
     
     table->mID = mID;
@@ -203,6 +238,11 @@ Symbol* SymbolTable::getSymbol(llULINT id)
     return mSymbols[id];
 }
 
+Symbol* SymbolTable::getReferenceSymbol()
+{
+    return mSymbols[mReferenceSymbolID];
+}
+
 llULINT SymbolTable::addSymbol(Symbol* sym)
 {
     mSymbols[sym->mID] = sym;
@@ -232,9 +272,36 @@ llULINT SymbolTable::getRandomSymbolId()
     return (*iterSymbol).first;
 }
 
-void SymbolTable::growTable()
+void SymbolTable::grow()
 {
+    map<llULINT, Symbol*>::iterator iterSymbol;
+    for (iterSymbol = mAcquiredSymbols.begin();
+        iterSymbol != mAcquiredSymbols.end();
+        iterSymbol++)
+    {
+        Symbol* sym = (*iterSymbol).second;
+        addSymbol(sym);
+    }
+
+    mAcquiredSymbols.clear();
+
     addRandomSymbol(); 
+}
+
+void SymbolTable::acquireSymbol(Symbol* sym)
+{
+    llULINT id = sym->mID;
+
+    if (mSymbols.count(id) > 0)
+    {
+        return;
+    }
+    if (mAcquiredSymbols.count(id) > 0)
+    {
+        return;
+    }
+
+    mAcquiredSymbols[id] = sym->clone();
 }
 
 void SymbolTable::printDebug()

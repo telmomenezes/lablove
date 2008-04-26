@@ -117,9 +117,6 @@ ageTableCode = 3
 colorTableCode = 4
 feedTableCode = 5
 
-dummyColorSym = SymbolRGB(0, 0, 0)
-colorID = dummyColorSym:getID()
-
 function addAgentSpecies(name, pop, red, green, blue, feed, food, evo, size)
     agent = Agent()
     agent:setBirthRadius(birthRadius)
@@ -168,12 +165,11 @@ function addAgentSpecies(name, pop, red, green, blue, feed, food, evo, size)
     agent:setSymbolName("high_age_limit", ageTableCode, symHighAgeLimit:getID())
     
     agentColor = SymbolRGB(red, green, blue)
-    agentColor:setID(colorID)
     symTable = SymbolTable(agentColor, colorTableCode)
     symTable:setDynamic(true)
     symTable:setName("color")
     agent:addSymbolTable(symTable)
-    agent:setSymbolName("color", colorTableCode, colorID)
+    agent:setSymbolName("color", colorTableCode, agentColor:getID())
 
     symFeed = SymbolBitString(feed)
     symFood = SymbolBitString(food)
@@ -206,7 +202,7 @@ function addAgentSpecies(name, pop, red, green, blue, feed, food, evo, size)
     alphaSet:addComponent(PER, SimCont2D.PERCEPTION_POSITION)
     alphaSet:addComponent(PER, SimCont2D.PERCEPTION_DISTANCE)
     alphaSet:addComponent(PER, SimCont2D.PERCEPTION_TARGET)
-    alphaSet:addComponent(PER, SimCont2D.PERCEPTION_SYMBOL, TAB_TO_SYM, colorTableCode, colorID, colorTableCode, colorID)
+    alphaSet:addComponent(PER, SimCont2D.PERCEPTION_SYMBOL, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
 
     grid = Grid()
     grid:init(ALPHA, 0, 0)
@@ -289,10 +285,9 @@ function addPlantSpecies(pop, red, green, blue, feed, food)
     plant:setSymbolName("high_age_limit", ageTableCode, symHighAgeLimit:getID())
 
     plantColor = SymbolRGB(red, green, blue)
-    plantColor:setID(colorID)
     symTable = SymbolTable(plantColor, colorTableCode)
     plant:addSymbolTable(symTable)
-    plant:setSymbolName("color", colorTableCode, colorID)
+    plant:setSymbolName("color", colorTableCode, plantColor:getID())
 
     symFeed = SymbolBitString(feed)
     symFood = SymbolBitString(food)

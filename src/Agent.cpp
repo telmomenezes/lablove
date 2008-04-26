@@ -63,7 +63,7 @@ Agent::Agent(Agent* agent) : GraphicalObject(agent)
                 }
             }
 
-            table->growTable();
+            table->grow();
         }
     }
 }
@@ -153,7 +153,7 @@ void Agent::recombine(SimulationObject* parent1, SimulationObject* parent2)
 
         if (table->isDynamic())
         {
-            table->growTable();
+            table->grow();
         }
     }
 

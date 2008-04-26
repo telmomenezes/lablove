@@ -536,8 +536,7 @@ void Gridbrain::setComponent(unsigned int x,
                 InterfaceItem::TableLinkType linkType,
                 int origSymTable,
                 llULINT origSymID,
-                int targetSymTable,
-                llULINT targetSymID)
+                int targetSymTable)
 {
     GridbrainComponent* comp = getComponent(x, y, gridNumber);
 
@@ -546,7 +545,6 @@ void Gridbrain::setComponent(unsigned int x,
     comp->mOrigSymTable = origSymTable;
     comp->mTargetSymTable = targetSymTable;
     comp->mOrigSymID = origSymID;
-    comp->mTargetSymID = targetSymID;
     comp->mTableLinkType = linkType;
 }
 
@@ -584,7 +582,6 @@ void Gridbrain::initGridsIO()
                         item->mOrigSymTable = comp->mOrigSymTable;
                         item->mTargetSymTable = comp->mTargetSymTable;
                         item->mOrigSymID = comp->mOrigSymID;
-                        item->mTargetSymID = comp->mTargetSymID;
                         item->mTableLinkType = comp->mTableLinkType;
                         interface->push_back(item);
                     }
@@ -2556,9 +2553,8 @@ int Gridbrain::setComponent(lua_State* luaState)
     int origSymTable = luaL_optint(luaState, 7, -1);
     int origSymIndex = luaL_optint(luaState, 8, -1);
     int targetSymTable = luaL_optint(luaState, 9, -1);
-    int targetSymIndex = luaL_optint(luaState, 10, -1);
 
-    setComponent(x, y, gridNumber, type, subType, linkType, origSymTable, origSymIndex, targetSymTable, targetSymIndex);
+    setComponent(x, y, gridNumber, type, subType, linkType, origSymTable, origSymIndex, targetSymTable);
     return 0;
 }
 

@@ -873,8 +873,7 @@ void SimCont2D::onScanObject(Agent* orig,
                                                     targ,
                                                     item->mOrigSymTable,
                                                     item->mTargetSymTable,
-                                                    item->mOrigSymID,
-                                                    item->mTargetSymID);
+                                                    item->mOrigSymID);
                 inBuffer[pos] = normalizedValue;
                 break;
         }

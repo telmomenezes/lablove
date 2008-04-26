@@ -148,12 +148,6 @@ sim:setSeedIndex(seedIndex)
 sim:setTimeLimit(timeLimit)
 sim:setFeedCenter(feedCenter)
 
-dummyFeedSym = SymbolFloat(0)
-feedID = dummyFeedSym:getID()
-dummyFoodSym = SymbolFloat(0)
-foodID = dummyFoodSym:getID()
-
-
 -- Agents
 --------------------------------------------------------------------------------
 
@@ -208,13 +202,12 @@ colorTableCode = symTable:getID()
 agent:setSymbolName("color", colorTableCode, agentColor:getID())
 
 agentFeed = SymbolFloat(0.0)
-agentFeed:setID(feedID)
 agentFeedTable = SymbolTable(agentFeed)
 agent:addSymbolTable(agentFeedTable)
 feedTableCode = agentFeedTable:getID()
 dummyTable = SymbolTable(agentFeed)
 foodTableCode = dummyTable:getID()
-agent:setSymbolName("feed", feedTableCode, feedID)
+agent:setSymbolName("feed", feedTableCode, agentFeed:getID())
 
 -- Agent Brain
 
@@ -243,7 +236,7 @@ end
 alphaSet:addComponent(PER, SimCont2D.PERCEPTION_POSITION)
 alphaSet:addComponent(PER, SimCont2D.PERCEPTION_DISTANCE)
 alphaSet:addComponent(PER, SimCont2D.PERCEPTION_TARGET)
-alphaSet:addComponent(PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, feedID, foodTableCode, foodID)
+alphaSet:addComponent(PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, agentFeed:getID(), foodTableCode)
 
 grid = Grid()
 grid:init(ALPHA, alphaWidth, alphaHeight)
@@ -294,11 +287,10 @@ plant:setSymbolName("low_age_limit", ageTableCode, symLowAgeLimit:getID())
 plant:setSymbolName("high_age_limit", ageTableCode, symHighAgeLimit:getID())
 
 plantFood = SymbolFloat(0.0)
-plantFood:setID(foodID)
 plantFood:setAlwaysRandom()
 plantFoodTable = SymbolTable(plantFood, foodTableCode)
 plant:addSymbolTable(plantFoodTable)
-plant:setSymbolName("food", foodTableCode, foodID)
+plant:setSymbolName("food", foodTableCode, plantFood:getID())
 
 graphic = GraphicGradient()
 graphic:setSymbolName("food")
@@ -327,15 +319,7 @@ popDyn:setEvolutionStopTime(evolutionStopTime)
 
 if humanAgent then
     human = Agent()
-    dummyBrain = DummyBrain(1)
-    dummyBrain:setChannelName(0, "objects")
-    dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
-    dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
-    dummyBrain:addPerception("Feed", 0, SimCont2D.PERCEPTION_SYMBOL, feedTableCode, feedID, foodTableCode, foodID)
-    dummyBrain:addPerception("Target", 0, SimCont2D.PERCEPTION_TARGET)
-
-    human:setBrain(dummyBrain)
-
+    
     symSize = SymbolFloat(agentSize)
     symTable = SymbolTable(symSize, sizeTableCode)
     human:addSymbolTable(symTable)
@@ -377,10 +361,18 @@ if humanAgent then
     human:setSymbolName("color", colorTableCode, humanColor:getID())
 
     humanFeed = SymbolFloat(0.0)
-    humanFeed:setID(feedID)
     humanFeedTable = SymbolTable(humanFeed, feedTableCode)
     human:addSymbolTable(humanFeedTable)
-    human:setSymbolName("feed", feedTableCode, feedID)
+    human:setSymbolName("feed", feedTableCode, humanFeed:getID())
+
+    dummyBrain = DummyBrain(1)
+    dummyBrain:setChannelName(0, "objects")
+    dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
+    dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
+    dummyBrain:addPerception("Feed", 0, SimCont2D.PERCEPTION_SYMBOL, feedTableCode, humanFeed:getID(), foodTableCode)
+    dummyBrain:addPerception("Target", 0, SimCont2D.PERCEPTION_TARGET)
+
+    human:setBrain(dummyBrain)
 
     human:addGraphic(GraphicTriangle())
     sim:addObject(human)

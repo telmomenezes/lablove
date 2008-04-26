@@ -66,11 +66,6 @@ sim:setSeedIndex(seedIndex)
 sim:setTimeLimit(timeLimit)
 sim:setFeedCenter(feedCenter)
 
-dummyFeedSym = SymbolFloat(0)
-feedID = dummyFeedSym:getID()
-dummyFoodSym = SymbolFloat(0)
-foodID = dummyFoodSym:getID()
-
 -- Agents
 --------------------------------------------------------------------------------
 
@@ -125,13 +120,12 @@ colorTableCode = symTable:getID()
 agent:setSymbolName("color", colorTableCode, agentColor:getID())
 
 agentFeed = SymbolFloat(0.0)
-agentFeed:setID(feedID)
 agentFeedTable = SymbolTable(agentFeed)
 agent:addSymbolTable(agentFeedTable)
 feedTableCode = agentFeedTable:getID()
 dummyTable = SymbolTable(agentFeed)
 foodTableCode = dummyTable:getID()
-agent:setSymbolName("feed", feedTableCode, feedID)
+agent:setSymbolName("feed", feedTableCode, agentFeed:getID())
 
 -- Agent Brain
 
@@ -154,7 +148,7 @@ brain:addGrid(grid2, "beta")
 brain:init()
 
 brain:setComponent(0, 0, 0, PER, SimCont2D.PERCEPTION_POSITION)
-brain:setComponent(0, 1, 0, PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, feedID, foodTableCode, foodID)
+brain:setComponent(0, 1, 0, PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, agentFeed:getID(), foodTableCode)
 brain:setComponent(0, 2, 0, PER, SimCont2D.PERCEPTION_TARGET)
 brain:setComponent(1, 1, 0, TAND)
 brain:setComponent(2, 1, 0, TNAND)
@@ -211,12 +205,11 @@ plant:setSymbolName("low_age_limit", ageTableCode, symLowAgeLimit:getID())
 plant:setSymbolName("high_age_limit", ageTableCode, symHighAgeLimit:getID())
 
 plantFood = SymbolFloat(1.0)
-plantFood:setID(foodID)
 plantFood:setAlwaysRandom()
 plantFoodTable = SymbolTable(plantFood, foodTableCode)
 plantFoodTable:addSymbol(plantFood)
 plant:addSymbolTable(plantFoodTable)
-plant:setSymbolName("food", foodTableCode, foodID)
+plant:setSymbolName("food", foodTableCode, plantFood:getID())
 
 graphic = GraphicGradient()
 graphic:setSymbolName("food")
@@ -235,16 +228,6 @@ sim:setPopulationDynamics(popDyn)
 
 agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, 1, false)
 popDyn:addSpecies(plant, numberOfPlants, 1)
-
-human = Agent()
-dummyBrain = DummyBrain(1)
-dummyBrain:setChannelName(0, "objects")
-dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
-dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
-dummyBrain:addPerception("Contact", 0, SimCont2D.PERCEPTION_IN_CONTACT)
-dummyBrain:addPerception("Color", 0, SimCont2D.PERCEPTION_SYMBOL, colorTableCode, 0, colorTableCode, 0)
-dummyBrain:addPerception("Food", 0, SimCont2D.PERCEPTION_SYMBOL, feedTableCode, 0, feedTableCode, 1)
-dummyBrain:addPerception("Predator", 0, SimCont2D.PERCEPTION_SYMBOL, feedTableCode, 1, feedTableCode, 0)
 
 -- Logs and Statistics
 --------------------------------------------------------------------------------

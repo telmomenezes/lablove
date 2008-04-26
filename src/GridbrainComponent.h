@@ -109,9 +109,8 @@ public:
     unsigned int mGrid;
 
     int mOrigSymTable;
-    int mTargetSymTable;
     llULINT mOrigSymID;
-    llULINT mTargetSymID;
+    int mTargetSymTable;
     InterfaceItem::TableLinkType mTableLinkType;
 
     unsigned int mPossibleConnections;

@@ -43,12 +43,13 @@ public:
     SymbolTable* recombine(SymbolTable* table2);
 
     Symbol* getSymbol(llULINT id);
+    Symbol* getReferenceSymbol();
     llULINT addSymbol(Symbol* sym);
     llULINT addRandomSymbol();
     int getID(){return mID;}
     llULINT getRandomSymbolId();
 
-    void growTable();
+    void grow();
 
     map<llULINT, Symbol*>* getSymbolMap(){return &mSymbols;}
 
@@ -59,6 +60,8 @@ public:
     string getName(){return mName;}
 
     unsigned int getSize(){return mSymbols.size();}
+
+    void acquireSymbol(Symbol* sym);
 
     void printDebug();
 
@@ -83,6 +86,7 @@ protected:
     int mID;
     llULINT mReferenceSymbolID;
     map<llULINT, Symbol*> mSymbols;
+    map<llULINT, Symbol*> mAcquiredSymbols;
     bool mDynamic;
     string mName;
 };
