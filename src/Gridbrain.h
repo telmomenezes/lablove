@@ -22,6 +22,8 @@
 
 #define GB_THRESHOLD 0.1f
 
+//#define GB_VALIDATE
+
 #include <stdio.h>
 
 #include "Brain.h"
@@ -171,7 +173,6 @@ public:
     virtual string write(SimulationObject* obj, PopulationManager* pop);
     virtual void printDebug();
     void printConnection(GridbrainConnection* conn);
-    void printComponent(GridbrainComponent* comp);
 
     bool isConnectionValid(unsigned int xOrig,
                 unsigned int yOrig,

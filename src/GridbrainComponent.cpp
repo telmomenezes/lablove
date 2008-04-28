@@ -310,14 +310,21 @@ bool GridbrainComponent::isUsed()
     return false;
 }
 
-bool GridbrainComponent::isEqual(GridbrainComponent* comp)
+bool GridbrainComponent::isEqual(GridbrainComponent* comp, bool sameGrid)
 {
     return ((mType == comp->mType)
             && (mSubType == comp->mSubType)
-            && (mGrid == comp->mGrid)
+            && ((!sameGrid) || (mGrid == comp->mGrid))
             && (mOrigSymTable == comp->mOrigSymTable)
             && (mTargetSymTable == comp->mTargetSymTable)
             && (mOrigSymID == comp->mOrigSymID));
+}
+
+void GridbrainComponent::print()
+{
+    printf("%s", getName().c_str());
+    printf("(%d)", mSubType);
+    printf("  [%d, %d, %d]", mColumn, mRow, mGrid);
 }
 
 const char GridbrainComponent::mClassName[] = "GridbrainComponent";

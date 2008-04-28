@@ -5,6 +5,7 @@
  */
 
 #include "GridbrainComponentSet.h"
+#include "Gridbrain.h"
 
 mt_distribution* GridbrainComponentSet::mDistComponentSet = gDistManager.getNewDistribution();
 
@@ -95,7 +96,7 @@ GridbrainComponent* GridbrainComponentSet::getRandom(SimulationObject* obj,
                 {
                     GridbrainComponent* comp2 = &components[pos];
 
-                    if (comp->isEqual(comp2))
+                    if (comp->isEqual(comp2, false))
                     {
                         found = false;
                     }

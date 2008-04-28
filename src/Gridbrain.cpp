@@ -331,6 +331,9 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                 {
                     GridbrainComponent* newComp = newGrid->getRandomComponent(mOwner, gb->mComponents, &gb->mMemory);
                     comp->copyDefinitions(newComp);
+                    #ifdef GB_VALIDATE
+                    gb->isValid();
+                    #endif
                 }
             }
         }
@@ -508,6 +511,9 @@ void Gridbrain::init()
                 {
                     GridbrainComponent* comp = grid->getRandomComponent(mOwner, mComponents, &mMemory);
                     mComponents[pos].copyDefinitions(comp);
+                    #ifdef GB_VALIDATE
+                    isValid();
+                    #endif
 
                     pos++;
                 }
@@ -526,6 +532,10 @@ void Gridbrain::update()
     calcConnectionCounts();
     initGridsIO();
     initGridWritePositions();
+
+    #ifdef GB_VALIDATE
+    isValid();
+    #endif
 }
 
 void Gridbrain::setComponent(unsigned int x,
@@ -2320,6 +2330,7 @@ bool Gridbrain::isValid()
         {
             if (conn->mColumnOrig >= conn->mColumnTarg)
             {
+                throw("Invalid connection\n");
                 return false;
             }
         }
@@ -2328,16 +2339,19 @@ bool Gridbrain::isValid()
             if (mGridsVec[conn->mGridOrig]->getType() != Grid::ALPHA)
             {
                 printConnection(conn);
+                throw("Invalid connection\n");
                 return false;
             }
             if (mGridsVec[conn->mGridTarg]->getType() != Grid::BETA)
             {
+                throw("Invalid connection\n");
                 return false;
             }
         }
 
         if (!isConnectionValid(conn->mColumnOrig, conn->mRowOrig, conn->mGridOrig, conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg))
         {
+            throw("Invalid connection\n");
             return false;
         }
 
@@ -2346,10 +2360,12 @@ bool Gridbrain::isValid()
 
         if (conn->mOrigComponent != compOrig)
         {
+            throw("Invalid component\n");
             return false;
         }
         if (conn->mTargComponent != compTarg)
         {
+            throw("Invalid component\n");
             return false;
         }
 
@@ -2360,6 +2376,7 @@ bool Gridbrain::isValid()
     {
         if (!mGridsVec[i]->isValid())
         {
+            throw("Invalid grid\n");
             return false;
         }
     }
@@ -2378,6 +2395,12 @@ bool Gridbrain::isValid()
 
                     if (comp1->isEqual(comp2))
                     {
+                        printf("Repeated unique component: (%d) ", i);
+                        comp1->print();
+                        printf(" (%d) ", j);
+                        comp2->print();
+                        printf("\n");
+                        throw("Repeated unique component");
                         return false;
                     }
                 }
@@ -2390,8 +2413,6 @@ bool Gridbrain::isValid()
 
 bool Gridbrain::symbolUsed(int tableID, llULINT symbolID)
 {
-
-    printf("xixi %d\n", symbolID);
 
     for (unsigned int i = 0; i < mNumberOfComponents; i++)
     {

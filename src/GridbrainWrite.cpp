@@ -299,9 +299,9 @@ void Gridbrain::printConnection(GridbrainConnection* conn)
     GridbrainComponent* comp1 = (GridbrainComponent*)conn->mOrigComponent;
     GridbrainComponent* comp2 = (GridbrainComponent*)conn->mTargComponent;
 
-    printComponent(comp1);
+    comp1->print();
     printf(" -> ");
-    printComponent(comp2);
+    comp2->print();
 
     printf(" [%f][%f] ",
             conn->mWeight,
@@ -323,12 +323,5 @@ void Gridbrain::printConnection(GridbrainConnection* conn)
     }
 
     printf("\n");
-}
-
-void Gridbrain::printComponent(GridbrainComponent* comp)
-{
-    printf("%s", comp->getName().c_str());
-    printf("(%d)", comp->mSubType);
-    printf("  [%d, %d, %d]", comp->mColumn, comp->mRow, comp->mGrid);
 }
 

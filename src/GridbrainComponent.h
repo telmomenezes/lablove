@@ -76,13 +76,14 @@ public:
     bool isProducer(CalcActivePass pass);
     bool isConsumer(CalcActivePass pass);
     bool isUsed();
-    bool isEqual(GridbrainComponent* comp);
+    bool isEqual(GridbrainComponent* comp, bool sameGrid=true);
     bool isMemory();
 
     void calcProducer(bool prod, bool& memStable, CalcActivePass pass);
     bool calcConsumer(bool& memStable, CalcActivePass pass);
     bool calcActive(bool& memStable, CalcActivePass pass=CAP_NEUTRAL);
 
+    void print();
 
     static const char mClassName[];
     static Orbit<GridbrainComponent>::MethodType mMethods[];
