@@ -629,6 +629,7 @@ Brain* Gridbrain::recombine(Brain* brain)
         }
     }
 
+    gbNew->generateMemory();
     gbNew->update();
 
     /*printf(">>> PARENT 1\n");

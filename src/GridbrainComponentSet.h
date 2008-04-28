@@ -44,6 +44,7 @@ public:
                 int targetSymTable=-1);
     GridbrainComponent* getRandom(SimulationObject* obj=NULL,
                                     GridbrainComponent* components=NULL,
+                                    map<llULINT, GridbrainMemCell>* memory=NULL,
                                     unsigned int startPos=0,
                                     unsigned int endPos=0);
 

@@ -156,11 +156,13 @@ void Grid::setComponentSet(GridbrainComponentSet* componentSet)
     mComponentSet = componentSet;
 }
 
-GridbrainComponent* Grid::getRandomComponent(SimulationObject* obj, GridbrainComponent* components)
+GridbrainComponent* Grid::getRandomComponent(SimulationObject* obj,
+                                                GridbrainComponent* components,
+                                                map<llULINT, GridbrainMemCell>* memory)
 {
     if (mComponentSet)
     {
-        return mComponentSet->getRandom(obj, components, mOffset, mOffset + mSize);
+        return mComponentSet->getRandom(obj, components, memory, mOffset, mOffset + mSize);
     }
     else
     {

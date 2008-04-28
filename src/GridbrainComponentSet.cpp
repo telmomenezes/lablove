@@ -30,6 +30,7 @@ void GridbrainComponentSet::addComponent(GridbrainComponent* component)
 
 GridbrainComponent* GridbrainComponentSet::getRandom(SimulationObject* obj,
                                                         GridbrainComponent* components,
+                                                        map<llULINT, GridbrainMemCell>* memory,
                                                         unsigned int startPos,
                                                         unsigned int endPos)
 {
@@ -67,6 +68,20 @@ GridbrainComponent* GridbrainComponentSet::getRandom(SimulationObject* obj,
 
                 comp->mOrigSymID = table->getRandomSymbolId();
                 //printf("size: %d\n", table->getSize());
+                //printf("id: %d\n", comp->mOrigSymID);
+            }
+            else if (comp->isMemory())
+            {
+                unsigned int pos = mDistComponentSet->iuniform(0, memory->size());
+
+                map<llULINT, GridbrainMemCell>::iterator iterMem = memory->begin();
+                for (unsigned int i = 0; i < pos; i++)
+                {
+                    iterMem++;
+                }
+
+                comp->mOrigSymID = (*iterMem).first;
+                //printf("size: %d\n", memory->size());
                 //printf("id: %d\n", comp->mOrigSymID);
             }
 

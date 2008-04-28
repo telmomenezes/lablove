@@ -618,7 +618,7 @@ void Gridbrain::mutateChangeComponent()
         unsigned int gridNumber = mComponents[pos].mGrid;
         Grid* grid = mGridsVec[gridNumber];
 
-        GridbrainComponent* comp = grid->getRandomComponent(mOwner, mComponents);
+        GridbrainComponent* comp = grid->getRandomComponent(mOwner, mComponents, &mMemory);
         mComponents[pos].copyDefinitions(comp);
     }
 
@@ -641,7 +641,7 @@ void Gridbrain::mutateChangeInactiveComponent()
             unsigned int gridNumber = comp->mGrid;
             Grid* grid = mGridsVec[gridNumber];
 
-            GridbrainComponent* comp2 = grid->getRandomComponent(mOwner, mComponents);
+            GridbrainComponent* comp2 = grid->getRandomComponent(mOwner, mComponents, &mMemory);
             comp->copyDefinitions(comp2);
         }
     }

@@ -21,7 +21,7 @@ worldWidth = 3000
 worldHeight = 3000
 
 alphaComponents = {TAND, TNAND, NOT, THR, STHR, INV, MMAX}
-betaComponents = {TAND, TNAND, NOT, THR, STHR, INV, RAND}
+betaComponents = {TAND, TNAND, NOT, THR, STHR, INV, RAND, CLK, MEMA, MEMC, MEMT, MEMW}
 
 viewRange = 200.0
 viewAngle = 170.0
@@ -64,13 +64,19 @@ logOnlyLastBrain = true
 
 humanAgent = false
 
-birthRadius = 0--300.0
+birthRadius = 500.0
+
+soundRange = 500
+speakInterval = 250
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
 
 dofile("basic_command_line.lua")
 
+birthRadius = getNumberParameter("birthrad", birthRadius, "brad")
+soundRange = getNumberParameter("sndrange", soundRange, "srg")
+speakInterval = getNumberParameter("spkint", speakInterval, "spki")
 evoPred = getBoolParameter("evopred", evoPred, "evopred")
 evoPrey = getBoolParameter("evoprey", evoPrey, "evoprey")
 
@@ -95,6 +101,8 @@ sim:setRotateForceScale(rotateForceScale)
 sim:setSeedIndex(seedIndex)
 sim:setTimeLimit(timeLimit)
 sim:setFeedCenter(0.9)
+sim:setSoundRange(soundRange)
+sim:setSpeakInterval(speakInterval)
 
 -- Population Dynamics
 --------------------------------------------------------------------------------
@@ -210,6 +218,33 @@ function addAgentSpecies(name, pop, red, green, blue, feed, food, evo, size)
 
     brain:addGrid(grid, "objects");
 
+    soundSet = GridbrainComponentSet()
+    for i, comp in pairs(alphaComponents) do
+        soundSet:addComponent(comp)
+    end
+    soundSet:addComponent(PER, SimCont2D.PERCEPTION_POSITION)
+    soundSet:addComponent(PER, SimCont2D.PERCEPTION_DISTANCE)
+    soundSet:addComponent(PER, SimCont2D.PERCEPTION_SYMBOL, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
+
+    soundGrid = Grid()
+    soundGrid:init(ALPHA, 0, 0)
+    soundGrid:setComponentSet(soundSet)
+
+    brain:addGrid(soundGrid, "sounds");
+
+    selfSet = GridbrainComponentSet()
+    for i, comp in pairs(alphaComponents) do
+        selfSet:addComponent(comp)
+    end
+    selfSet:addComponent(PER, SimCont2D.PERCEPTION_ENERGY)
+    selfSet:addComponent(PER, SimCont2D.PERCEPTION_CAN_SPEAK)
+
+    selfGrid = Grid()
+    selfGrid:init(ALPHA, 0, 0)
+    selfGrid:setComponentSet(selfSet)
+
+    brain:addGrid(selfGrid, "self");
+
     betaSet = GridbrainComponentSet()
     for i, comp in pairs(betaComponents) do
         betaSet:addComponent(comp)
@@ -217,6 +252,7 @@ function addAgentSpecies(name, pop, red, green, blue, feed, food, evo, size)
     betaSet:addComponent(ACT, SimCont2D.ACTION_GO)
     betaSet:addComponent(ACT, SimCont2D.ACTION_ROTATE)
     betaSet:addComponent(ACT, SimCont2D.ACTION_EAT)
+    betaSet:addComponent(ACT, SimCont2D.ACTION_SPEAK, TAB_TO_SYM, colorTableCode, agentColor:getID())
     
     grid2 = Grid()
     grid2:init(BETA, 0, 0)

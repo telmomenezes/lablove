@@ -151,6 +151,8 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
 {
     Gridbrain* gb = baseClone();
 
+    gb->generateMemory(this);
+
     for (unsigned int g = 0; g < mGridsCount; g++)
     {
         Grid* oldGrid = mGridsVec[g];
@@ -327,7 +329,7 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                 GridbrainComponent* comp = gb->getComponent(x, y, g);
                 if (comp->mType == GridbrainComponent::NUL)
                 {
-                    GridbrainComponent* newComp = newGrid->getRandomComponent(mOwner, gb->mComponents);
+                    GridbrainComponent* newComp = newGrid->getRandomComponent(mOwner, gb->mComponents, &gb->mMemory);
                     comp->copyDefinitions(newComp);
                 }
             }
@@ -394,13 +396,27 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
         gb->addRandomConnections(lostConnections);
     }
 
-    // Clone memory
-    for (map<llULINT, GridbrainMemCell>::iterator iterCell = mMemory.begin();
-            iterCell != mMemory.end();
-            iterCell++)
+    gb->generateMemory();
+
+    gb->update();
+
+    return gb;
+}
+
+void Gridbrain::generateMemory(Gridbrain* originGB)
+{
+    Gridbrain* gb;
+
+    if (originGB == NULL)
     {
-        gb->mMemory[(*iterCell).first] = (*iterCell).second;
+        gb = this;
     }
+    else
+    {
+        gb = originGB;
+    }
+
+    mMemory.clear();
 
     for (unsigned int i = 0; i < gb->mNumberOfComponents; i++)
     {
@@ -408,27 +424,11 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
 
         if (comp->isMemory())
         {
-            gb->mMemory[comp->mOrigSymID].mUsed = true;
+            mMemory[comp->mOrigSymID] = GridbrainMemCell();
         }
     }
 
-    map<llULINT, GridbrainMemCell>::iterator iterCell = gb->mMemory.begin();
-    while(iterCell != gb->mMemory.end())
-    {
-        map<llULINT, GridbrainMemCell>::iterator iterNext = iterCell;   
-        iterNext++;
-        if (!(*iterCell).second.mUsed)
-        {
-            gb->mMemory.erase(iterCell);
-        }
-        iterCell = iterNext;
-    }
-
-    gb->mMemory[CURRENT_MEM_ID++] = GridbrainMemCell();
-
-    gb->update();
-
-    return gb;
+    mMemory[CURRENT_MEM_ID++] = GridbrainMemCell();
 }
 
 void Gridbrain::addGrid(Grid* grid, string name)
@@ -506,7 +506,7 @@ void Gridbrain::init()
                     y < grid->getHeight();
                     y++)
                 {
-                    GridbrainComponent* comp = grid->getRandomComponent(mOwner, mComponents);
+                    GridbrainComponent* comp = grid->getRandomComponent(mOwner, mComponents, &mMemory);
                     mComponents[pos].copyDefinitions(comp);
 
                     pos++;
@@ -520,12 +520,12 @@ void Gridbrain::init()
 
 void Gridbrain::update()
 {
+    linkMemory();
     calcActive();
     calcDensityMetrics();
     calcConnectionCounts();
     initGridsIO();
     initGridWritePositions();
-    linkMemory();
 }
 
 void Gridbrain::setComponent(unsigned int x,
@@ -603,6 +603,10 @@ void Gridbrain::initGridsIO()
                     comp->mActionPosition = grid->addAction(comp);
                     InterfaceItem* item = new InterfaceItem();
                     item->mType = comp->mSubType;
+                    item->mOrigSymTable = comp->mOrigSymTable;
+                    item->mTargetSymTable = comp->mTargetSymTable;
+                    item->mOrigSymID = comp->mOrigSymID;
+                    item->mTableLinkType = comp->mTableLinkType;
                     mOutputInterface.push_back(item);
                 }
             }
@@ -1889,6 +1893,7 @@ void Gridbrain::calcConnectionCounts()
 
 void Gridbrain::calcActive()
 {
+    // Reset component active/producer/consumer state
     for (unsigned int g = 0; g < mGridsCount; g++)
     {
         Grid* grid = mGridsVec[g];
@@ -1901,6 +1906,85 @@ void Gridbrain::calcActive()
                 comp->mActive = false;
                 comp->mProducer = false;
                 comp->mConsumer = false;
+            }
+        }
+    }
+
+    // Reset memory producer/consumer state
+    for (map<llULINT, GridbrainMemCell>::iterator iterMem = mMemory.begin();
+            iterMem != mMemory.end();
+            iterMem++)
+    {
+        GridbrainMemCell* cell = &((*iterMem).second);
+        cell->mProducer = false;
+        cell->mConsumer = false;
+    }
+
+    bool memStable = false;
+
+    while (!memStable)
+    {
+        memStable = true;
+        for (unsigned int g = 0; g < mGridsCount; g++)
+        {
+            Grid* grid = mGridsVec[g];
+
+            for (unsigned int x = 0; x < grid->getWidth(); x++)
+            {
+                for (unsigned int y = 0; y < grid->getHeight(); y++)
+                {
+                    GridbrainComponent* comp = getComponent(x, y, g);
+                    if (mAllActive)
+                    {
+                        comp->mActive = true;
+                    }
+                    else
+                    {
+                        bool stable;
+                        comp->calcActive(stable);
+                        memStable &= stable;
+                    }
+                }
+            }
+        }
+    }
+
+    // Reset component active/producer/consumer state
+    for (unsigned int g = 0; g < mGridsCount; g++)
+    {
+        Grid* grid = mGridsVec[g];
+
+        for (unsigned int x = 0; x < grid->getWidth(); x++)
+        {
+            for (unsigned int y = 0; y < grid->getHeight(); y++)
+            {
+                GridbrainComponent* comp = getComponent(x, y, g);
+                comp->mActive = false;
+                comp->mProducer = false;
+                comp->mConsumer = false;
+            }
+        }
+    }
+
+    for (unsigned int g = 0; g < mGridsCount; g++)
+    {
+        Grid* grid = mGridsVec[g];
+        unsigned int sequenceSize = 0;
+
+        for (unsigned int x = 0; x < grid->getWidth(); x++)
+        {
+            for (unsigned int y = 0; y < grid->getHeight(); y++)
+            {
+                GridbrainComponent* comp = getComponent(x, y, g);
+                if (mAllActive)
+                {
+                    comp->mActive = true;
+                }
+                else
+                {
+                    bool stable;
+                    comp->calcActive(stable, GridbrainComponent::CAP_NO_MEM_CONSUMER);
+                }
             }
         }
     }
@@ -1924,7 +2008,8 @@ void Gridbrain::calcActive()
                 }
                 else
                 {
-                    comp->calcActive();
+                    bool stable;
+                    comp->calcActive(stable, GridbrainComponent::CAP_NO_MEM_PRODUCER);
                 }
                 if (comp->mActive)
                 {
@@ -2276,6 +2361,27 @@ bool Gridbrain::isValid()
         if (!mGridsVec[i]->isValid())
         {
             return false;
+        }
+    }
+
+    for (unsigned int i = 0; i < mNumberOfComponents; i++)
+    {
+        GridbrainComponent* comp1 = &mComponents[i];
+
+        if (comp1->isUnique())
+        {
+            for (unsigned int j = 0; j < mNumberOfComponents; j++)
+            {
+                if (j != i)
+                {
+                    GridbrainComponent* comp2 = &mComponents[j];
+
+                    if (comp1->isEqual(comp2))
+                    {
+                        return false;
+                    }
+                }
+            }
         }
     }
 

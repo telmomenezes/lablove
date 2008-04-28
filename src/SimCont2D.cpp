@@ -99,7 +99,7 @@ SimCont2D::SimCont2D(lua_State* luaState)
     mFeedCenter = 0.5f;
 
     mSoundRange = 250.0f;
-    mSpeakInterval = 2500;
+    mSpeakInterval = 250;
 }
 
 SimCont2D::~SimCont2D()
@@ -962,6 +962,7 @@ void SimCont2D::act(Agent* agent)
                             if (table != NULL)
                             {
                                 Symbol* sym = table->getSymbol((*iterItem)->mOrigSymID);
+                                //printf("id: %d\n", (*iterItem)->mOrigSymID);
 
                                 if (sym != NULL)
                                 {
@@ -1447,7 +1448,6 @@ void SimCont2D::speak(Agent* agent, Symbol* sym)
     if (((mSimulationTime - agent->mULData[UL_LAST_SPEAK_TIME]) <= mSpeakInterval)
         && (agent->mULData[UL_LAST_SPEAK_TIME] != 0))
     {
-        delete sym;
         return;
     }
 
@@ -1520,11 +1520,14 @@ Orbit<SimCont2D>::NumberGlobalType SimCont2D::mNumberGlobals[] = {
     {"PERCEPTION_TARGET", PERCEPTION_TARGET},
     {"PERCEPTION_IN_CONTACT", PERCEPTION_IN_CONTACT},
     {"PERCEPTION_SYMBOL", PERCEPTION_SYMBOL},
+    {"PERCEPTION_ENERGY", PERCEPTION_ENERGY},
+    {"PERCEPTION_CAN_SPEAK", PERCEPTION_CAN_SPEAK},
     {"ACTION_NULL", ACTION_NULL},
     {"ACTION_GO", ACTION_GO},
     {"ACTION_ROTATE", ACTION_ROTATE},
     {"ACTION_EAT", ACTION_EAT},
     {"ACTION_EATB", ACTION_EATB},
+    {"ACTION_SPEAK", ACTION_SPEAK},
     {"FITNESS_ENERGY", FITNESS_ENERGY},
     {"FITNESS_ENERGY_SUM", FITNESS_ENERGY_SUM},
     {"FITNESS_ENERGY_SUM_ABOVE_INIT", FITNESS_ENERGY_SUM_ABOVE_INIT},

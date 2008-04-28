@@ -217,6 +217,10 @@ Symbol* SymbolTable::selectSymbol(Symbol* sym, SymbolTable* table2)
         return NULL;
     }
 
+    // Prevent these symbols from being selected again
+    sym1->mSelected = false;
+    sym2->mSelected = false;
+
     unsigned int select = mDistRecombine->iuniform(0, 2);
 
     if (select == 0)
@@ -245,8 +249,17 @@ Symbol* SymbolTable::getReferenceSymbol()
 
 llULINT SymbolTable::addSymbol(Symbol* sym)
 {
-    mSymbols[sym->mID] = sym;
-    return sym->mID;
+    llULINT id = sym->mID;
+
+    if (mSymbols.count(id) == 0)
+    {
+        mSymbols[id] = sym;
+    }
+    else
+    {
+        delete sym;
+    }
+    return id;
 }
 
 llULINT SymbolTable::addRandomSymbol()

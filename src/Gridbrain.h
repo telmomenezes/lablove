@@ -229,6 +229,9 @@ public:
 
 protected:
     Gridbrain* baseClone();
+    
+    void generateMemory(Gridbrain* originGB=NULL);
+
     void update();
 
     void initGridsIO();
