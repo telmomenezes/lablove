@@ -182,7 +182,7 @@ bool GridbrainComponent::isProducer(CalcActivePass pass)
     case MEMC:
     case MEMT:
     case MEMW:
-        if (pass = CAP_NO_MEM_PRODUCER)
+        return (pass == CAP_NO_MEM_PRODUCER)
         {
             return false;
         }
@@ -202,7 +202,7 @@ bool GridbrainComponent::isConsumer(CalcActivePass pass)
     case MEMC:
     case MEMT:
     case MEMW:
-        if (pass = CAP_NO_MEM_CONSUMER)
+        if (pass == CAP_NO_MEM_CONSUMER)
         {
             return false;
         }

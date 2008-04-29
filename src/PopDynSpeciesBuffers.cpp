@@ -260,7 +260,7 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
 
 unsigned int PopDynSpeciesBuffers::getQueenNeighbour(int pos, int size)
 {
-    int deltaPos = (int)(mDistOrganism->normal(0.0f, 10.0f));
+    int deltaPos = (int)(mDistOrganism->normal(0.0f, 1.0f));
 
     int newPos = pos - deltaPos;
 

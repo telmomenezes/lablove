@@ -22,6 +22,7 @@ worldHeight = 3000
 
 alphaComponents = {TAND, TNAND, NOT, THR, STHR, INV, MMAX}
 betaComponents = {TAND, TNAND, NOT, THR, STHR, INV, RAND, CLK, MEMA, MEMC, MEMT, MEMW}
+betaComponents = {TAND, TNAND, NOT, THR, STHR, INV, RAND, CLK}
 
 viewRange = 200.0
 viewAngle = 170.0
