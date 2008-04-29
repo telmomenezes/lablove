@@ -193,6 +193,8 @@ public:
 
     void setAllActive(bool active){mAllActive = active;}
 
+    void update();
+
     static const char mClassName[];
     static Orbit<Gridbrain>::MethodType mMethods[];
     static Orbit<Gridbrain>::NumberGlobalType mNumberGlobals[];
@@ -232,8 +234,6 @@ protected:
     Gridbrain* baseClone();
     
     void generateMemory(Gridbrain* originGB=NULL);
-
-    void update();
 
     void initGridsIO();
     void calcConnectionCounts();

@@ -18,6 +18,7 @@
  */
 
 #include "GridbrainMemCell.h"
+#include <stdio.h>
 
 GridbrainMemCell::GridbrainMemCell()
 {
@@ -26,8 +27,6 @@ GridbrainMemCell::GridbrainMemCell()
     mAdd = 0.0f;
     mClear = false;
     mToggle = 0.0f;
-    mProducer = false;
-    mConsumer = false;
 }
 
 GridbrainMemCell::GridbrainMemCell(const GridbrainMemCell& cell)
@@ -37,8 +36,6 @@ GridbrainMemCell::GridbrainMemCell(const GridbrainMemCell& cell)
     mAdd = cell.mAdd;
     mClear = cell.mClear;
     mToggle = cell.mToggle;
-    mProducer = false;
-    mConsumer = false;
 }
 
 GridbrainMemCell::~GridbrainMemCell()

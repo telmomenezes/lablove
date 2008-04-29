@@ -169,7 +169,7 @@ GridbrainComponent::ConnType GridbrainComponent::getConnectorType()
     }
 }
 
-bool GridbrainComponent::isProducer(CalcActivePass pass)
+bool GridbrainComponent::isProducer()
 {
     switch(mType)
     {
@@ -177,36 +177,26 @@ bool GridbrainComponent::isProducer(CalcActivePass pass)
     case NOT:
     case TNAND:
     case RAND:
-        return true;
     case MEMA:
     case MEMC:
     case MEMT:
     case MEMW:
-        if (pass == CAP_NO_MEM_PRODUCER)
-        {
-            return false;
-        }
-        return mMemCell->mProducer;
+        return true;
     default:
         return false;
     }
 }
 
-bool GridbrainComponent::isConsumer(CalcActivePass pass)
+bool GridbrainComponent::isConsumer()
 {
     switch(mType)
     {
     case ACT:
-        return true;
     case MEMA:
     case MEMC:
     case MEMT:
     case MEMW:
-        if (pass == CAP_NO_MEM_CONSUMER)
-        {
-            return false;
-        }
-        return mMemCell->mConsumer;
+        return true;
     default:
         return false;
     }
@@ -226,7 +216,7 @@ bool GridbrainComponent::isMemory()
     }
 }
 
-void GridbrainComponent::calcProducer(bool prod, bool& memStable, CalcActivePass pass)
+void GridbrainComponent::calcProducer(bool prod)
 {
     if (mProducer)
     {
@@ -234,14 +224,11 @@ void GridbrainComponent::calcProducer(bool prod, bool& memStable, CalcActivePass
         return;
     }
 
-    if (prod || (isProducer(pass)))
+    if (prod || (isProducer()))
     {
-        mProducer = true;
-
-        if (isMemory())
+        if (!isProducer())
         {
-            mMemCell->mProducer = true;
-            memStable = false;
+            mProducer = true;
         }
 
         GridbrainConnection* conn = mFirstConnection;
@@ -249,18 +236,17 @@ void GridbrainComponent::calcProducer(bool prod, bool& memStable, CalcActivePass
         while (conn != NULL)
         {
             GridbrainComponent* targComp = (GridbrainComponent*)conn->mTargComponent;
-            targComp->calcProducer(true, memStable, pass);
+            targComp->calcProducer(true);
 
             conn = (GridbrainConnection*)conn->mNextConnection;
         }
     }
 }
 
-bool GridbrainComponent::calcConsumer(bool& memStable, CalcActivePass pass)
+bool GridbrainComponent::calcConsumer()
 {
-    if (mConsumer || isConsumer(pass))
+    if (mConsumer || isConsumer())
     {
-        mConsumer = true;
         return true;
     }
 
@@ -269,13 +255,8 @@ bool GridbrainComponent::calcConsumer(bool& memStable, CalcActivePass pass)
     while (conn != NULL)
     {
         GridbrainComponent* targComp = (GridbrainComponent*)conn->mTargComponent;
-        if (targComp->calcConsumer(memStable, pass))
+        if (targComp->calcConsumer())
         {
-            if (isMemory())
-            {
-                mMemCell->mConsumer = true;
-                memStable = false;
-            }
             mConsumer = true;
             return true;
         }
@@ -287,12 +268,13 @@ bool GridbrainComponent::calcConsumer(bool& memStable, CalcActivePass pass)
     return false;
 }
 
-bool GridbrainComponent::calcActive(bool& memStable, CalcActivePass pass)
+bool GridbrainComponent::calcActive()
 {
-    memStable = true;
-    calcProducer(false, memStable, pass);
-    calcConsumer(memStable, pass);
-    mActive = mConsumer && mProducer;
+    calcProducer(false);
+    calcConsumer();
+    mActive = ((mConsumer && mProducer)
+                || (mConsumer && isProducer())
+                || (isConsumer() && mProducer));
     return mActive;
 }
 

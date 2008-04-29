@@ -1920,85 +1920,6 @@ void Gridbrain::calcActive()
         }
     }
 
-    // Reset memory producer/consumer state
-    for (map<llULINT, GridbrainMemCell>::iterator iterMem = mMemory.begin();
-            iterMem != mMemory.end();
-            iterMem++)
-    {
-        GridbrainMemCell* cell = &((*iterMem).second);
-        cell->mProducer = false;
-        cell->mConsumer = false;
-    }
-
-    bool memStable = false;
-
-    while (!memStable)
-    {
-        memStable = true;
-        for (unsigned int g = 0; g < mGridsCount; g++)
-        {
-            Grid* grid = mGridsVec[g];
-
-            for (unsigned int x = 0; x < grid->getWidth(); x++)
-            {
-                for (unsigned int y = 0; y < grid->getHeight(); y++)
-                {
-                    GridbrainComponent* comp = getComponent(x, y, g);
-                    if (mAllActive)
-                    {
-                        comp->mActive = true;
-                    }
-                    else
-                    {
-                        bool stable;
-                        comp->calcActive(stable);
-                        memStable &= stable;
-                    }
-                }
-            }
-        }
-    }
-
-    // Reset component active/producer/consumer state
-    for (unsigned int g = 0; g < mGridsCount; g++)
-    {
-        Grid* grid = mGridsVec[g];
-
-        for (unsigned int x = 0; x < grid->getWidth(); x++)
-        {
-            for (unsigned int y = 0; y < grid->getHeight(); y++)
-            {
-                GridbrainComponent* comp = getComponent(x, y, g);
-                comp->mActive = false;
-                comp->mProducer = false;
-                comp->mConsumer = false;
-            }
-        }
-    }
-
-    for (unsigned int g = 0; g < mGridsCount; g++)
-    {
-        Grid* grid = mGridsVec[g];
-        unsigned int sequenceSize = 0;
-
-        for (unsigned int x = 0; x < grid->getWidth(); x++)
-        {
-            for (unsigned int y = 0; y < grid->getHeight(); y++)
-            {
-                GridbrainComponent* comp = getComponent(x, y, g);
-                if (mAllActive)
-                {
-                    comp->mActive = true;
-                }
-                else
-                {
-                    bool stable;
-                    comp->calcActive(stable, GridbrainComponent::CAP_NO_MEM_CONSUMER);
-                }
-            }
-        }
-    }
-
     mActiveComponents = 0;
     mActivePerceptions = 0;
     mActiveActions = 0;
@@ -2018,8 +1939,7 @@ void Gridbrain::calcActive()
                 }
                 else
                 {
-                    bool stable;
-                    comp->calcActive(stable, GridbrainComponent::CAP_NO_MEM_PRODUCER);
+                    comp->calcActive();
                 }
                 if (comp->mActive)
                 {

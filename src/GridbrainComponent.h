@@ -53,7 +53,6 @@ public:
     enum Type {NUL, PER, ACT, THR, STHR, MAX, MUL, NOT, MMAX, AND, TAND, TNAND, INV, RAND, CLK, MEMA, MEMC, MEMT, MEMW};
     enum InputType {IN_SUM, IN_MUL, IN_TMUL};
     enum ConnType {CONN_IN, CONN_OUT, CONN_INOUT};
-    enum CalcActivePass {CAP_NEUTRAL, CAP_NO_MEM_PRODUCER, CAP_NO_MEM_CONSUMER};
 
     GridbrainComponent(lua_State* luaState=NULL);
     virtual ~GridbrainComponent();
@@ -73,15 +72,15 @@ public:
 
     bool isAggregator();
     bool isUnique();
-    bool isProducer(CalcActivePass pass);
-    bool isConsumer(CalcActivePass pass);
+    bool isProducer();
+    bool isConsumer();
     bool isUsed();
     bool isEqual(GridbrainComponent* comp, bool sameGrid=true);
     bool isMemory();
 
-    void calcProducer(bool prod, bool& memStable, CalcActivePass pass);
-    bool calcConsumer(bool& memStable, CalcActivePass pass);
-    bool calcActive(bool& memStable, CalcActivePass pass=CAP_NEUTRAL);
+    void calcProducer(bool prod);
+    bool calcConsumer();
+    bool calcActive();
 
     void print();
 

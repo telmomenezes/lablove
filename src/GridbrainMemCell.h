@@ -34,9 +34,6 @@ public:
     float mAdd;
     bool mClear;
     float mToggle;
-
-    float mProducer;
-    float mConsumer;
 };
 #endif
 
