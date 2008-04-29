@@ -66,7 +66,7 @@ humanAgent = false
 
 birthRadius = 500.0
 
-soundRange = 500
+soundRange = 1000
 speakInterval = 250
 
 -- Command line, log file names, etc
@@ -262,7 +262,7 @@ function addAgentSpecies(name, pop, red, green, blue, feed, food, evo, size)
 
     agent:setBrain(brain)
 
-    agentSpeciesIndex = popDyn:addSpecies(agent, pop, bufferSize)
+    agentSpeciesIndex = popDyn:addSpecies(agent, pop, bufferSize, true)
 
     -- Logs and Statistics
 

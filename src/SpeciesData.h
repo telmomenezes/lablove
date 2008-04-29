@@ -33,6 +33,10 @@ public:
     list<Log*> mSampleLogs;
     unsigned int mPopulation;
     unsigned int mBufferSize;
+
+    bool mQueen;
+    unsigned int mCurrentQueen;
+    unsigned int mQueenState;
 };
 #endif
 
