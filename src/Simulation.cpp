@@ -135,6 +135,7 @@ void Simulation::cycle()
         {
             Agent* agent = (Agent*)obj;
             perceive(agent);
+            agent->emptyMessageList();
             agent->compute();
             act(agent);
         }

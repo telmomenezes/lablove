@@ -183,6 +183,17 @@ void Agent::popAdjust(vector<SimulationObject*>* popVec)
     mBrain->popAdjust(popVec);
 }
 
+void Agent::emptyMessageList()
+{
+    for (list<Message*>::iterator iterMessage = mMessageList.begin();
+                iterMessage != mMessageList.end();
+                iterMessage++)
+    {
+        delete (*iterMessage);
+    }
+    mMessageList.clear();
+}
+
 void Agent::printDebug()
 {
     SimulationObject::printDebug();

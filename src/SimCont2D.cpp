@@ -719,7 +719,7 @@ void SimCont2D::perceive(Agent* agent)
             list<InterfaceItem*>* interface = agent->getBrain()->getInputInterface(agent->mIntData[INT_CHANNEL_SOUNDS]);
             float* inBuffer = agent->getBrain()->getInputBuffer(agent->mIntData[INT_CHANNEL_SOUNDS]);
 
-            if (inBuffer >= NULL)
+            if (inBuffer != NULL)
             {
                 unsigned int pos = 0;
                 float normalizedValue;
@@ -755,11 +755,8 @@ void SimCont2D::perceive(Agent* agent)
                     pos++;
                 }
             }
-
-            delete msg;
         }
     }
-    messageList->clear();
 
     // Perceive self
     if (agent->mIntData[INT_CHANNEL_SELF] >= 0)
@@ -1034,7 +1031,7 @@ void SimCont2D::rotate(Agent* agent, float force)
 {
     deltaEnergy(agent, -mRotateCost * fabsf(force));
 
-    agent->mFloatData[FLOAT_IMPULSE_ROT] += force;
+    agent->mFloatData[FLOAT_IMPULSE_ROT] -= force;
 }
 
 void SimCont2D::eat(Agent* agent, Action actionType)

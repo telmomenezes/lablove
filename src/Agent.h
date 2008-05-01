@@ -48,6 +48,7 @@ public:
 
     void addMessage(Message* msg){mMessageList.push_back(msg);}
     list<Message*>* getMessageList(){return &mMessageList;}
+    void emptyMessageList();
 
     virtual void popAdjust(vector<SimulationObject*>* popVec);
 

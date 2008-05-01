@@ -43,6 +43,12 @@ SymbolTable::SymbolTable(lua_State* luaState)
 
 SymbolTable::SymbolTable(SymbolTable* table)
 {
+    mReferenceSymbolID = table->mReferenceSymbolID;
+    
+    mID = table->mID;
+    mDynamic = table->mDynamic;
+    mName = table->mName;
+
     map<llULINT, Symbol*>::iterator iterSymbol;
     for (iterSymbol = table->mSymbols.begin();
         iterSymbol != table->mSymbols.end();
@@ -67,12 +73,6 @@ SymbolTable::SymbolTable(SymbolTable* table)
 
         mAcquiredSymbols[(*iterSymbol).first] = sym;
     }
-
-    mReferenceSymbolID = table->mReferenceSymbolID;
-    
-    mID = table->mID;
-    mDynamic = table->mDynamic;
-    mName = table->mName;
 }
 
 SymbolTable::~SymbolTable()
