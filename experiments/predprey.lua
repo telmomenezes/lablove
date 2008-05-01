@@ -66,10 +66,10 @@ humanAgent = false
 
 preyBirthRadius = 500.0
 predatorBirthRadius = 500.0
-plantBirthRadius = 250.0
+plantBirthRadius = 100.0
 
 preyComm = true
-predComm = true
+predComm = false
 
 soundRange = 1000
 speakInterval = 250
@@ -200,6 +200,7 @@ function addAgentSpecies(name, pop, red, green, blue, feed, food, evo, size, com
 
     brain = Gridbrain()
 
+    brain:setMaxInputDepth(50)
     brain:setMutateAddConnectionProb(addConnectionProb)
     brain:setMutateRemoveConnectionProb(removeConnectionProb)
     brain:setMutateChangeConnectionWeightProb(changeWeightProb)

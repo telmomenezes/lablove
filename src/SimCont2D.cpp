@@ -399,21 +399,22 @@ void SimCont2D::placeNear(SimulationObject* obj, SimulationObject* ref)
     float targX = origX + (sinf(angle) * distance);
     float targY = origY + (cosf(angle) * distance);
 
+    // Wrap around if limits are exceeded
     if (targX < 0.0f)
     {
-        targX = 0.0f;
+        targX = mWorldWidth + targX;
     }
     if (targY < 0.0f)
     {
-        targY = 0.0f;
+        targY = mWorldLength + targY;
     }
     if (targX > mWorldWidth)
     {
-        targX = mWorldWidth;
+        targX = targX - mWorldWidth;
     }
     if (targY > mWorldLength)
     {
-        targY = mWorldLength;
+        targY = targY - mWorldLength;
     }
 
     setPos(obj, targX, targY);
@@ -717,39 +718,45 @@ void SimCont2D::perceive(Agent* agent)
 
             list<InterfaceItem*>* interface = agent->getBrain()->getInputInterface(agent->mIntData[INT_CHANNEL_SOUNDS]);
             float* inBuffer = agent->getBrain()->getInputBuffer(agent->mIntData[INT_CHANNEL_SOUNDS]);
-            unsigned int pos = 0;
-            float normalizedValue;
 
-            for (list<InterfaceItem*>::iterator iterItem = interface->begin();
-                iterItem != interface->end();
-                iterItem++)
+            if (inBuffer >= NULL)
             {
-                unsigned int type = (*iterItem)->mType;
+                unsigned int pos = 0;
+                float normalizedValue;
 
-                switch (type)
+                for (list<InterfaceItem*>::iterator iterItem = interface->begin();
+                    iterItem != interface->end();
+                    iterItem++)
                 {
-                    case PERCEPTION_POSITION:
-                        normalizedValue = msg->mData[1] / M_PI;
-                        inBuffer[pos] = normalizedValue;
-                        break;
+                    unsigned int type = (*iterItem)->mType;
 
-                    case PERCEPTION_DISTANCE:
-                        normalizedValue = msg->mData[0] / mSoundRange;
-                        inBuffer[pos] = normalizedValue;
-                        break;
+                    switch (type)
+                    {
+                        case PERCEPTION_POSITION:
+                            normalizedValue = msg->mData[1] / M_PI;
+                            inBuffer[pos] = normalizedValue;
+                            break;
 
-                    case PERCEPTION_SYMBOL:
-                        InterfaceItem* item = (*iterItem);
-                        normalizedValue = calcSymbolsBinding(agent,
+                        case PERCEPTION_DISTANCE:
+                            normalizedValue = msg->mData[0] / mSoundRange;
+                            inBuffer[pos] = normalizedValue;
+                            break;
+
+                        case PERCEPTION_SYMBOL:
+                            InterfaceItem* item = (*iterItem);
+                            normalizedValue = calcSymbolsBinding(agent,
                                                     item->mOrigSymTable,
                                                     item->mOrigSymID,
                                                     msg->mSymbol);
-                        inBuffer[pos] = normalizedValue;
-                        break;
-                }
+                            inBuffer[pos] = normalizedValue;
+                            break;
+                    }
 
-                pos++;
+                    pos++;
+                }
             }
+
+            delete msg;
         }
     }
     messageList->clear();

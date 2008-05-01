@@ -2570,6 +2570,7 @@ Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
     {"setMutateChangeInactiveComponentProb", &Gridbrain::setMutateChangeInactiveComponentProb},
     {"setMutateSwapComponentProb", &Gridbrain::setMutateSwapComponentProb},
     {"setGeneGrouping", &Gridbrain::setGeneGrouping},
+    {"setMaxInputDepth", &Gridbrain::setMaxInputDepth},
     {0,0}
 };
 
@@ -2736,6 +2737,13 @@ int Gridbrain::setGeneGrouping(lua_State* luaState)
 {
     bool val = luaL_checkbool(luaState, 1);
     setGeneGrouping(val);
+    return 0;
+}
+
+int Gridbrain::setMaxInputDepth(lua_State* luaState)
+{
+    unsigned int depth = luaL_checkint(luaState, 1);
+    setMaxInputDepth(depth);
     return 0;
 }
 

@@ -218,6 +218,7 @@ public:
     int setMutateSwapComponentProb(lua_State* luaState);
     int setWeightMutationStanDev(lua_State* luaState);
     int setGeneGrouping(lua_State* luaState);
+    int setMaxInputDepth(lua_State* luaState);
 
     static long MUTATIONS_ADD_CONN;
     static long MUTATIONS_REM_CONN;
