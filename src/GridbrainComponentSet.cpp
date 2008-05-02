@@ -105,6 +105,8 @@ GridbrainComponent* GridbrainComponentSet::getRandom(SimulationObject* obj,
         }
     }
 
+    comp->mParam = mDistComponentSet->uniform(0.0f, 1.0f);
+
     return comp;
 }
 

@@ -26,20 +26,20 @@
 
 long Gridbrain::MUTATIONS_ADD_CONN = 0;
 long Gridbrain::MUTATIONS_REM_CONN = 0;
-long Gridbrain::MUTATIONS_CHG_WGT = 0;
 long Gridbrain::MUTATIONS_SPLIT_CONN = 0;
 long Gridbrain::MUTATIONS_JOIN_CONN = 0;
 long Gridbrain::MUTATIONS_CHG_COMP = 0;
 long Gridbrain::MUTATIONS_CHG_IN_COMP = 0;
+long Gridbrain::MUTATIONS_CHG_PARAM = 0;
 long Gridbrain::MUTATIONS_SWP_COMP = 0;
 
 void Gridbrain::mutate()
 {
-    /*printf("mMutateAddConnectionProb: %f; mMutateRemoveConnectionProb: %f; mMutateChangeConnectionWeightProb: %f; mWeightMutationStanDev: %f; mMutateSplitConnectionProb: %f; mMutateJoinConnectionsProb: %f; mMutateChangeComponentProb: %f; mMutateSwapComponentProb: %f\n",
+    /*printf("mMutateAddConnectionProb: %f; mMutateRemoveConnectionProb: %f; mMutateChangeParamProb: %f; mParamMutationStanDev: %f; mMutateSplitConnectionProb: %f; mMutateJoinConnectionsProb: %f; mMutateChangeComponentProb: %f; mMutateSwapComponentProb: %f\n",
     mMutateAddConnectionProb,
     mMutateRemoveConnectionProb,
-    mMutateChangeConnectionWeightProb,
-    mWeightMutationStanDev,
+    mMutateChangeParamProb,
+    mParamMutationStanDev,
     mMutateSplitConnectionProb,
     mMutateJoinConnectionsProb,
     mMutateChangeComponentProb,
@@ -51,8 +51,6 @@ void Gridbrain::mutate()
     
     // targets per column may have changed
     calcConnectionCounts();
-
-    mutateChangeConnectionWeight();
 
     unsigned int connCount = mConnectionsCount;
 
@@ -364,31 +362,6 @@ void Gridbrain::mutateRemoveConnection(unsigned int popSize)
     }
 }
 
-void Gridbrain::mutateChangeConnectionWeight()
-{
-    initRandomConnectionSequence(mMutateChangeConnectionWeightProb);
-
-    while (nextRandomConnection() != NULL) 
-    {
-        MUTATIONS_CHG_WGT++;
-        GridbrainConnection* conn = mConnSeqCurrent;
-
-        float newWeight = conn->mWeight;
-        newWeight += mDistWeights->normal(0.0f, mWeightMutationStanDev);
-        if (newWeight > 1.0f)
-        {
-            newWeight = 1.0f;
-        }
-        else if (newWeight < -1.0f)
-        {
-            newWeight = -1.0f;
-        }
-
-        conn->mWeight = newWeight;
-        applyWeight(conn);
-    }
-}
-
 void Gridbrain::mutateSplitConnection(unsigned int popSize)
 {
     unsigned int count = generateEventCount(mMutateSplitConnectionProb, popSize);
@@ -490,27 +463,12 @@ void Gridbrain::mutateSplitConnection(unsigned int popSize)
         {
             MUTATIONS_SPLIT_CONN++;
             GridbrainGeneTag tag1 = conn->mGeneTag;
-            float weight = conn->mWeight;
 
             // Current connection is going to be delted, advance to next one
             mConnSeqCurrent = (GridbrainConnection*)conn->mNextGlobalConnection;
 
             // remove 1->2 connection
             removeConnection(x1, y1, g1, x2, y2, g2);
-
-            float weight1 = weight;
-            float weight2 = weight;
-
-            unsigned int weightSelector = mDistWeights->iuniform(0, 2);
-            if (weightSelector == 0)
-            {
-                weight1 = mDistWeights->uniform(-1.0f, 1.0f);
-            }
-            weightSelector = mDistWeights->iuniform(0, 2);
-            if (weightSelector == 0)
-            {
-                weight2 = mDistWeights->uniform(-1.0f, 1.0f);
-            }
 
             GridbrainGeneTag tag2;
             GridbrainGeneTag tag3;
@@ -536,9 +494,9 @@ void Gridbrain::mutateSplitConnection(unsigned int popSize)
             printf("\n");*/
 
             // create 1->3 connection
-            addConnection(x1, y1, g1, x3, y3, g3, weight1, tag2);
+            addConnection(x1, y1, g1, x3, y3, g3, tag2);
             // create 3->2 connection
-            addConnection(x3, y3, g3, x2, y2, g2, weight2, tag3);
+            addConnection(x3, y3, g3, x2, y2, g2, tag3);
 
             /*printf("SPLIT\n");
             printf("remove: (%d, %d, %d)->(%d, %d, %d)\n", x1, y1, g1, x2, y2, g2);
@@ -567,7 +525,7 @@ void Gridbrain::mutateJoinConnections(unsigned int popSize)
 
         GridbrainComponent* comp = getComponent(x, y, g);
 
-        unsigned int pos = mDistWeights->iuniform(0, comp->mConnectionsCount);
+        unsigned int pos = mDistConnections->iuniform(0, comp->mConnectionsCount);
 
         GridbrainConnection* conn2 = comp->mFirstConnection;
 
@@ -577,17 +535,6 @@ void Gridbrain::mutateJoinConnections(unsigned int popSize)
         }
 
         MUTATIONS_JOIN_CONN++;
-        float weight = 0;
-        unsigned int weightSelector = mDistWeights->iuniform(0, 3);
-        switch (weightSelector)
-        {
-        case 0:
-            weight = conn1->mWeight;
-        case 1:
-            weight = conn2->mWeight;
-        default:
-            weight = mDistWeights->uniform(-1.0f, 1.0f);
-        }
 
         /*printf("JOIN\n");
         printf("add: (%d, %d, %d)->(%d, %d, %d)\n", x1, y1, g1, x2, y2, g2);
@@ -599,8 +546,7 @@ void Gridbrain::mutateJoinConnections(unsigned int popSize)
                         conn1->mGridOrig,
                         conn2->mColumnTarg,
                         conn2->mRowTarg,
-                        conn2->mGridTarg,
-                        weight);
+                        conn2->mGridTarg);
         removeConnection(conn1);
         removeConnection(conn2);
     }
@@ -647,6 +593,33 @@ void Gridbrain::mutateChangeInactiveComponent()
     }
 
     cleanInvalidConnections();
+}
+
+void Gridbrain::mutateChangeParam()
+{
+    initRandomComponentSequence(mMutateChangeParamProb);
+
+    while (nextRandomComponent() >= 0)
+    {
+        MUTATIONS_CHG_PARAM++;
+        int pos = mCompSeqPos;
+
+        unsigned int gridNumber = mComponents[pos].mGrid;
+        Grid* grid = mGridsVec[gridNumber];
+
+        GridbrainComponent* comp = &mComponents[pos];
+        float param = comp->mParam;
+        param += mDistComponents->normal(0.0f, mParamMutationStanDev);
+        if (param > 1.0f)
+        {
+            param = 1.0f;
+        }
+        else if (param < 0.0f)
+        {
+            param = 0.0f;
+        }
+        comp->mParam = param;
+    }
 }
 
 void Gridbrain::mutateSwapComponent(float prob)
@@ -729,10 +702,9 @@ void Gridbrain::mutateSwapComponent(float prob)
 
 void Gridbrain::debugMutationsCount()
 {
-    printf("CON+:%d CON-:%d CWG:%d SPL:%d JOI:%d CHG:%d CHIN:%d SWP:%d\n",
+    printf("CON+:%d CON-:%d SPL:%d JOI:%d CHG:%d CHIN:%d SWP:%d\n",
             MUTATIONS_ADD_CONN,
             MUTATIONS_REM_CONN,
-            MUTATIONS_CHG_WGT,
             MUTATIONS_SPLIT_CONN,
             MUTATIONS_JOIN_CONN,
             MUTATIONS_CHG_COMP,

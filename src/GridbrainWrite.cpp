@@ -139,11 +139,11 @@ string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
 
                 int labelY = compY + 3;
 
-                if ((comp->mType == GridbrainComponent::PER)
-                    || (comp->mType == GridbrainComponent::ACT))
+                if ((comp->mType == GridbrainComponent::IN)
+                    || (comp->mType == GridbrainComponent::OUT))
                 {
                     labelY += 5;
-                    string subName = pop->getInterfaceName(comp->mType == GridbrainComponent::PER, comp->mSubType);
+                    string subName = pop->getInterfaceName(comp->mType == GridbrainComponent::IN, comp->mSubType);
                     if (subName == "?")
                     {
                         subName = obj->getSymbolName(comp->mOrigSymTable, comp->mOrigSymID);
@@ -205,50 +205,27 @@ string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
         float x2 = centerX2 - (cosAngle * radius * 1.3f);
         float y2 = centerY2 - (sinAngle * radius * 1.3f);
 
-        if (fabs(conn->mWeight >= 0.5f))
-        {
-            sprintf(buffer, "<line x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" stroke=\"%s\" stroke-width=\"2\"/>\n", x1, y1, x2, y2, color);
-        }
-        else
-        {
-            sprintf(buffer, "<line x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" stroke=\"%s\" stroke-width=\"2\" stroke-dasharray=\"9, 5\"/>\n", x1, y1, x2, y2, color);
-        }
+        sprintf(buffer, "<line x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\" stroke=\"%s\" stroke-width=\"2\"/>\n", x1, y1, x2, y2, color);
+
         svg += buffer;
 
         float arrowLength = radius / 2;
 
-        if (conn->mWeight > 0)
-        {
-            float halfArrowAngle = 0.25;
-            float arrowAngle1 = angle - halfArrowAngle;
-            float arrowAngle2 = angle + halfArrowAngle;
+        float halfArrowAngle = 0.25;
+        float arrowAngle1 = angle - halfArrowAngle;
+        float arrowAngle2 = angle + halfArrowAngle;
         
-            x2 = centerX2 - (cosAngle * radius);
-            y2 = centerY2 - (sinAngle * radius);
-            float ax1 = x2 - (cosf(arrowAngle1) * arrowLength);
-            float ay1 = y2 - (sinf(arrowAngle1) * arrowLength);
-            float ax2 = x2 - (cosf(arrowAngle2) * arrowLength);
-            float ay2 = y2 - (sinf(arrowAngle2) * arrowLength);
+        x2 = centerX2 - (cosAngle * radius);
+        y2 = centerY2 - (sinAngle * radius);
+        float ax1 = x2 - (cosf(arrowAngle1) * arrowLength);
+        float ay1 = y2 - (sinf(arrowAngle1) * arrowLength);
+        float ax2 = x2 - (cosf(arrowAngle2) * arrowLength);
+        float ay2 = y2 - (sinf(arrowAngle2) * arrowLength);
 
-            sprintf(buffer,
-                "<polygon fill=\"%s\" stroke=\"%s\" stroke-width=\"1\" points=\"%f,%f %f,%f %f,%f\" />\n",
-                color, color, x2, y2, ax1, ay1, ax2, ay2);
-            svg += buffer;
-        }
-        else
-        {
-            x2 = centerX2 - (cosAngle * (radius + (arrowLength / 3.0f)));
-            y2 = centerY2 - (sinAngle * (radius + (arrowLength / 3.0f)));
-
-            sprintf(buffer,
-                        "<circle cx=\"%f\" cy=\"%f\" r=\"%f\" fill=\"%s\" stroke=\"%s\" stroke-width=\"1\"/>\n",
-                        x2,
-                        y2,
-                        arrowLength / 3.0f,
-                        color,
-                        color);
-            svg += buffer;
-        }
+        sprintf(buffer,
+            "<polygon fill=\"%s\" stroke=\"%s\" stroke-width=\"1\" points=\"%f,%f %f,%f %f,%f\" />\n",
+            color, color, x2, y2, ax1, ay1, ax2, ay2);
+        svg += buffer;
         
         /*float cLabelX = x1 + ((x2 - x1) / 2);
         float cLabelY = y1 + ((y2 - y1) / 2);
@@ -302,10 +279,6 @@ void Gridbrain::printConnection(GridbrainConnection* conn)
     comp1->print();
     printf(" -> ");
     comp2->print();
-
-    printf(" [%f][%f] ",
-            conn->mWeight,
-            conn->mRealWeight);
 
     conn->mGeneTag.print();
 

@@ -37,6 +37,8 @@ void GridbrainComponent::clearDefinitions()
 {
     mType = NUL;
     mSubType = -1;
+    mParam = 0;
+    mInit = false;
     mInput = 0;
     mOutput = 0;
     mState = 0;
@@ -82,6 +84,8 @@ void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)
 {
     mType = comp->mType;
     mSubType = comp->mSubType;
+    mParam = comp->mParam;
+    mInit = false;
     mOrigSymTable = comp->mOrigSymTable;
     mTargetSymTable = comp->mTargetSymTable;
     mOrigSymID = comp->mOrigSymID;
@@ -99,13 +103,13 @@ void GridbrainComponent::copyPosition(GridbrainComponent* comp)
 bool GridbrainComponent::isAggregator()
 {
     return ((mType == GridbrainComponent::MAX)
-        || (mType == GridbrainComponent::MMAX));
+            || (mType == GridbrainComponent::AVG));
 }
 
 bool GridbrainComponent::isUnique()
 {
-    return ((mType == GridbrainComponent::PER)
-        || (mType == GridbrainComponent::ACT));
+    return ((mType == GridbrainComponent::IN)
+        || (mType == GridbrainComponent::OUT));
 }
 
 string GridbrainComponent::getName()
@@ -114,40 +118,36 @@ string GridbrainComponent::getName()
     {
     case NUL:
         return "NUL";
-    case PER:
-        return "PER";
-    case ACT:
-        return "ACT";
-    case THR:
-        return "THR";
-    case STHR:
-        return "STHR";
+    case IN:
+        return "IN";
+    case OUT:
+        return "OUT";
+    case SUM:
+        return "SUM";
     case MAX:
         return "MAX";
+    case AVG:
+        return "AVG";
     case MUL:
         return "MUL";
     case NOT:
         return "NOT";
-    case MMAX:
-        return "MMAX";
     case AND:
         return "AND";
-    case TAND:
-        return "TAND";
-    case TNAND:
-        return "TNAND";
     case INV:
         return "INV";
+    case NEG:
+        return "NEG";
+    case MOD:
+        return "MOD";
+    case AMP:
+        return "AMP";
     case RAND:
         return "RAND";
     case CLK:
         return "CLK";
-    case MEMA:
-        return "MEMA";
     case MEMC:
         return "MEMC";
-    case MEMT:
-        return "MEMT";
     case MEMW:
         return "MEMW";
     default:
@@ -159,10 +159,10 @@ GridbrainComponent::ConnType GridbrainComponent::getConnectorType()
 {
     switch(mType)
     {
-    case PER:
+    case IN:
     case RAND:
         return CONN_OUT;
-    case ACT:
+    case OUT:
         return CONN_IN;
     default:
         return CONN_INOUT;
@@ -173,13 +173,10 @@ bool GridbrainComponent::isProducer()
 {
     switch(mType)
     {
-    case PER:
+    case IN:
     case NOT:
-    case TNAND:
     case RAND:
-    case MEMA:
     case MEMC:
-    case MEMT:
     case MEMW:
         return true;
     default:
@@ -191,10 +188,8 @@ bool GridbrainComponent::isConsumer()
 {
     switch(mType)
     {
-    case ACT:
-    case MEMA:
+    case OUT:
     case MEMC:
-    case MEMT:
     case MEMW:
         return true;
     default:
@@ -206,9 +201,7 @@ bool GridbrainComponent::isMemory()
 {
     switch(mType)
     {
-    case MEMA:
     case MEMC:
-    case MEMT:
     case MEMW:
         return true;
     default:
@@ -315,23 +308,21 @@ Orbit<GridbrainComponent>::MethodType GridbrainComponent::mMethods[] = {{0,0}};
 
 Orbit<GridbrainComponent>::NumberGlobalType GridbrainComponent::mNumberGlobals[] = {
     {"NUL", NUL},
-    {"PER", PER},
-    {"ACT", ACT},
-    {"THR", THR},
-    {"STHR", STHR},
+    {"IN", IN},
+    {"OUT", OUT},
+    {"SUM", SUM},
     {"MAX", MAX},
+    {"AVG", AVG},
     {"MUL", MUL},
     {"NOT", NOT},
-    {"MMAX", MMAX},
     {"AND", AND},
-    {"TAND", TAND},
-    {"TNAND", TNAND},
     {"INV", INV},
+    {"NEG", NEG},
+    {"AMP", AMP},
+    {"MOD", MOD},
     {"RAND", RAND},
     {"CLK", CLK},
-    {"MEMA", MEMA},
     {"MEMC", MEMC},
-    {"MEMT", MEMT},
     {"MEMW", MEMW},
     {0,0}
 };

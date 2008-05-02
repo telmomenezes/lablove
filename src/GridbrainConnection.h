@@ -38,8 +38,7 @@ public:
     unsigned int mRowTarg;
     unsigned int mGridTarg;
     bool mInterGrid;
-    float mWeight;
-    float mRealWeight;
+
     void* mPrevConnection;
     void* mNextConnection;
     void* mPrevInConnection;

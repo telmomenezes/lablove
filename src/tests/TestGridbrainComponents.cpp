@@ -23,6 +23,7 @@
 
 #include <stdexcept>
 
+/*
 struct GridbrainCompFixture
 {
     GridbrainCompFixture()
@@ -54,7 +55,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNUL2)
     GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::NUL;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp2->mOutput, 0.0f, 0.0f);
 }
@@ -78,8 +79,8 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNUL4)
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::NUL;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -92,8 +93,8 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNUL5)
     comp1->mType = GridbrainComponent::AND;
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::NUL;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -107,7 +108,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNUL6)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::NUL;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.05);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -143,7 +144,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNUL9)
     comp2->mType = GridbrainComponent::AND;
     comp3->mType = GridbrainComponent::NUL;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -157,7 +158,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNUL10)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::NUL;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -171,7 +172,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNUL11)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::NUL;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.05);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -204,7 +205,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNOT2)
     GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::NOT;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp2->mOutput, 0.0f, 0.0f);
 }
@@ -228,8 +229,8 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNOT4)
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::NOT;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -242,8 +243,8 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNOT5)
     comp1->mType = GridbrainComponent::AND;
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::NOT;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -257,7 +258,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNOT6)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::NOT;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.05);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -293,7 +294,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNOT9)
     comp2->mType = GridbrainComponent::AND;
     comp3->mType = GridbrainComponent::NOT;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -307,7 +308,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNOT10)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::NOT;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
@@ -321,7 +322,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNOT11)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::NOT;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.05);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -354,7 +355,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTHR2)
     GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::THR;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
 }
@@ -378,8 +379,8 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTHR4)
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::THR;
     comp3->mType = GridbrainComponent::THR;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
@@ -392,8 +393,8 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTHR5)
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::THR;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
@@ -407,7 +408,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTHR6)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::THR;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.05);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
@@ -442,7 +443,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTHR9)
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::AND;
     comp3->mType = GridbrainComponent::THR;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0, -0.5);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
@@ -457,7 +458,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTHR10)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::THR;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -471,7 +472,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTHR11)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::THR;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.05);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0001f);
 }
@@ -504,7 +505,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestSTHR2)
     GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::STHR;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
 }
@@ -528,8 +529,8 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestSTHR4)
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::STHR;
     comp3->mType = GridbrainComponent::STHR;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
@@ -542,8 +543,8 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestSTHR5)
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::STHR;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
@@ -557,7 +558,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestSTHR6)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::STHR;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.05);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
@@ -593,7 +594,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestSTHR9)
     comp2->mType = GridbrainComponent::AND;
     comp3->mType = GridbrainComponent::STHR;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, -1.0f, 0.0f);
 }
@@ -607,7 +608,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestSTHR10)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::STHR;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -621,7 +622,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestSTHR11)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::STHR;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.05);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0001f);
 }
@@ -654,7 +655,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAND2)
     GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::AND;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
 }
@@ -678,8 +679,8 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAND4)
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::AND;
     comp3->mType = GridbrainComponent::AND;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -692,8 +693,8 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAND5)
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::AND;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
@@ -707,7 +708,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAND6)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::AND;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.05);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
@@ -743,7 +744,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAND9)
     comp2->mType = GridbrainComponent::AND;
     comp3->mType = GridbrainComponent::AND;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -757,7 +758,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAND10)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::AND;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, -1.0f, 0.0f);
 }
@@ -771,7 +772,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAND11)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::AND;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.05);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, -1.0f, 0.0f);
 }
@@ -804,7 +805,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMUL2)
     GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::AND;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
 }
@@ -828,8 +829,8 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMUL4)
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::MUL;
     comp3->mType = GridbrainComponent::MUL;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -842,8 +843,8 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMUL5)
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::MUL;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
@@ -857,7 +858,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMUL6)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::MUL;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.05);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0526316f, 0.0001f);
 }
@@ -893,7 +894,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMUL9)
     comp2->mType = GridbrainComponent::MUL;
     comp3->mType = GridbrainComponent::MUL;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -907,7 +908,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMUL10)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::MUL;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, -1.0f, 0.0f);
 }
@@ -921,7 +922,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMUL11)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::MUL;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.05);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, -0.0526316f, 0.0001f);
 }
@@ -954,7 +955,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTAND2)
     GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::TAND;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
 }
@@ -978,8 +979,8 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTAND4)
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::TAND;
     comp3->mType = GridbrainComponent::TAND;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -992,8 +993,8 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTAND5)
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::TAND;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
@@ -1007,7 +1008,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTAND6)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::TAND;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.05);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -1043,7 +1044,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTAND9)
     comp2->mType = GridbrainComponent::TAND;
     comp3->mType = GridbrainComponent::TAND;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -1057,7 +1058,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTAND10)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::TAND;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, -1.0f, 0.0f);
 }
@@ -1071,7 +1072,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTAND11)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::TAND;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.05);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -1104,7 +1105,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTNAND2)
     GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::TNAND;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp2->mOutput, 0.0f, 0.0f);
 }
@@ -1128,8 +1129,8 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTNAND4)
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::TNAND;
     comp3->mType = GridbrainComponent::TNAND;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -1142,8 +1143,8 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTNAND5)
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::TNAND;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -1157,7 +1158,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTNAND6)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::TNAND;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.05);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
@@ -1193,7 +1194,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTNAND9)
     comp2->mType = GridbrainComponent::TNAND;
     comp3->mType = GridbrainComponent::TNAND;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -1207,7 +1208,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTNAND10)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::TNAND;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -1221,7 +1222,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestTNAND11)
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::TNAND;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0, -0.05);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
@@ -1357,7 +1358,7 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainMAX1)
 {
     GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
     cmp1->mType = GridbrainComponent::MAX;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.0;
     buff = mGridbrain.getInputBuffer(0);
@@ -1370,7 +1371,7 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainMAX2)
 {
     GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
     cmp1->mType = GridbrainComponent::MAX;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.1;
     buff = mGridbrain.getInputBuffer(0);
@@ -1383,7 +1384,7 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainMAX3)
 {
     GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
     cmp1->mType = GridbrainComponent::MAX;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.0;
     buff = mGridbrain.getInputBuffer(0);
@@ -1398,7 +1399,7 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainMAX4)
 {
     GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
     cmp1->mType = GridbrainComponent::MAX;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.0;
     buff = mGridbrain.getInputBuffer(0);
@@ -1413,8 +1414,8 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainMAX5)
 {
     GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
     cmp1->mType = GridbrainComponent::MAX;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 1.0;
     buff[1] = 0.0;
@@ -1429,8 +1430,8 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainMAX6)
 {
     GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
     cmp1->mType = GridbrainComponent::MAX;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.2;
     buff[1] = 0.2;
@@ -1445,7 +1446,7 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainMMAX1)
 {
     GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
     cmp1->mType = GridbrainComponent::MMAX;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.0;
     buff = mGridbrain.getInputBuffer(0);
@@ -1458,7 +1459,7 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainMMAX2)
 {
     GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
     cmp1->mType = GridbrainComponent::MMAX;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.1;
     buff = mGridbrain.getInputBuffer(0);
@@ -1471,7 +1472,7 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainMMAX3)
 {
     GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
     cmp1->mType = GridbrainComponent::MMAX;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.0;
     buff = mGridbrain.getInputBuffer(0);
@@ -1486,7 +1487,7 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainMMAX4)
 {
     GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
     cmp1->mType = GridbrainComponent::MMAX;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.0;
     buff = mGridbrain.getInputBuffer(0);
@@ -1501,8 +1502,8 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainMMAX5)
 {
     GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
     cmp1->mType = GridbrainComponent::MMAX;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 1.0;
     buff[1] = 0.0;
@@ -1517,8 +1518,8 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainMMAX6)
 {
     GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
     cmp1->mType = GridbrainComponent::MMAX;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.2;
     buff[1] = 0.2;
@@ -1546,7 +1547,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestINV2)
     GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::INV;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5f);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp2->mOutput, 0.0f, 0.0f);
 }
@@ -1592,8 +1593,8 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestINV6)
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::INV;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
@@ -1620,7 +1621,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestINV8)
     comp1->mType = GridbrainComponent::NOT;
     comp2->mType = GridbrainComponent::NOT;
     comp3->mType = GridbrainComponent::INV;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0, -0.5);
     mGridbrain.cycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
@@ -1945,7 +1946,7 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMEMC3)
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit1)
 {
-    mGridbrain.addConnection(0, 0, 0, 2, 0, 1, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 2, 0, 1);
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.2;
     float* outBuff = mGridbrain.getOutputBuffer();
@@ -1955,7 +1956,7 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit1)
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit2)
 {
-    mGridbrain.addConnection(0, 0, 0, 2, 0, 1, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 2, 0, 1);
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.2;
     buff = mGridbrain.getInputBuffer(0);
@@ -1983,7 +1984,7 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit3)
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit4)
 {
-    mGridbrain.addConnection(0, 0, 0, 2, 0, 1, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 2, 0, 1);
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 1.0;
     buff = mGridbrain.getInputBuffer(0);
@@ -1999,8 +2000,8 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit5)
 {
     GridbrainComponent* cmp1 = mGridbrain.getComponent(0, 0, 1);
     cmp1->mType = GridbrainComponent::TAND;
-    mGridbrain.addConnection(0, 0, 0, 0, 0, 1, 0.5);
-    mGridbrain.addConnection(0, 0, 1, 2, 0, 1, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 0, 0, 1);
+    mGridbrain.addConnection(0, 0, 1, 2, 0, 1);
  
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 1.0;
@@ -2017,8 +2018,8 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit6)
 {
     GridbrainComponent* cmp1 = mGridbrain.getComponent(0, 0, 1);
     cmp1->mType = GridbrainComponent::TAND;
-    mGridbrain.addConnection(0, 0, 0, 0, 0, 1, 0.5);
-    mGridbrain.addConnection(0, 0, 1, 2, 0, 1, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 0, 0, 1);
+    mGridbrain.addConnection(0, 0, 1, 2, 0, 1);
  
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 1.0;
@@ -2037,11 +2038,11 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit7)
     GridbrainComponent* cmp2 = mGridbrain.getComponent(2, 0, 0);
     cmp1->mType = GridbrainComponent::MMAX;
     cmp2->mType = GridbrainComponent::TAND;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 2, 0, 2, 0, 0, 0.5);
-    mGridbrain.addConnection(1, 0, 0, 2, 0, 0, 0.5);
-    mGridbrain.addConnection(2, 0, 0, 2, 0, 1, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 2, 0, 2, 0, 0);
+    mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
+    mGridbrain.addConnection(2, 0, 0, 2, 0, 1);
  
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.1;
@@ -2066,11 +2067,11 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit8)
     GridbrainComponent* cmp2 = mGridbrain.getComponent(2, 0, 0);
     cmp1->mType = GridbrainComponent::MMAX;
     cmp2->mType = GridbrainComponent::TAND;
-    mGridbrain.addConnection(0, 0, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 1, 0, 1, 0, 0, 0.5);
-    mGridbrain.addConnection(0, 2, 0, 2, 0, 0, 0.5);
-    mGridbrain.addConnection(1, 0, 0, 2, 0, 0, 0.5);
-    mGridbrain.addConnection(2, 0, 0, 2, 0, 1, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
+    mGridbrain.addConnection(0, 2, 0, 2, 0, 0);
+    mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
+    mGridbrain.addConnection(2, 0, 0, 2, 0, 1);
  
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.1;
@@ -2088,4 +2089,4 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit8)
     mGridbrain.cycle();
     CHECK_CLOSE(outBuff[0], 0.0f, 0.0001f);
 }
-
+*/

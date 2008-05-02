@@ -391,7 +391,6 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
     int x2 = eqTarg->mColumn;
     int y2 = eqTarg->mRow;
     int g2 = eqTarg->mGrid;
-    float weight = conn->mWeight;
 
     if (brain->isConnectionValid(x1, y1, g1, x2, y2, g2) && (g1 <= g2))
     {
@@ -433,7 +432,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
     }
     else
     {
-        brain->addConnection(x1, y1, g1, x2, y2, g2, weight, conn->mGeneTag);
+        brain->addConnection(x1, y1, g1, x2, y2, g2, conn->mGeneTag);
         eqOrig = brain->getComponent(x1, y1, g1);
         eqTarg = brain->getComponent(x2, y2, g2);
         canAddComponent = false;

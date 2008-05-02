@@ -85,9 +85,9 @@ TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateRemoveConnection)
     CHECK(conn1 >= conn2);
 }
 
-TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateChangeConnection)
+TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateChangeParam)
 {
-    mGridbrain.setMutateChangeConnectionWeightProb(0.1f);
+    mGridbrain.setMutateChangeParamProb(0.1f);
     mGridbrain.mutate();
     CHECK(mGridbrain.isValid());
     mGridbrain.addRandomConnections(100);

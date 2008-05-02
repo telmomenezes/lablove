@@ -34,13 +34,15 @@ using std::string;
 switch(compType) \
 { \
 case GridbrainComponent::MUL: \
-case GridbrainComponent::MMAX: \
-case GridbrainComponent::AND: \
+case GridbrainComponent::MAX: \
+case GridbrainComponent::AVG: \
     inputType = GridbrainComponent::IN_MUL; \
     break; \
-case GridbrainComponent::TAND: \
-case GridbrainComponent::TNAND: \
+case GridbrainComponent::AND: \
     inputType = GridbrainComponent::IN_TMUL; \
+    break; \
+case GridbrainComponent::NOT: \
+    inputType = GridbrainComponent::IN_TSUM; \
     break; \
 default: \
     inputType = GridbrainComponent::IN_SUM; \
@@ -50,8 +52,8 @@ default: \
 class GridbrainComponent
 {
 public:
-    enum Type {NUL, PER, ACT, THR, STHR, MAX, MUL, NOT, MMAX, AND, TAND, TNAND, INV, RAND, CLK, MEMA, MEMC, MEMT, MEMW};
-    enum InputType {IN_SUM, IN_MUL, IN_TMUL};
+    enum Type {NUL, IN, OUT, AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, MAX, AVG, CLK, MEMW, MEMC};
+    enum InputType {IN_SUM, IN_TSUM, IN_MUL, IN_TMUL};
     enum ConnType {CONN_IN, CONN_OUT, CONN_INOUT};
 
     GridbrainComponent(lua_State* luaState=NULL);
@@ -92,6 +94,8 @@ public:
 
     Type mType;
     int mSubType;
+    float mParam;
+    bool mInit;
     float mInput;
     float mOutput;
     unsigned int mConnectionsCount;
@@ -101,6 +105,7 @@ public:
     float mState;
     bool mCycleFlag;
     bool mForwardFlag;
+    unsigned int mEvalCount;
     unsigned int mOffset;
     unsigned int mPerceptionPosition;
     unsigned int mActionPosition;

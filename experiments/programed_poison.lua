@@ -8,14 +8,14 @@ dofile("basic_defines.lua")
 -- Experiment Parameters
 --------------------------------------------------------------------------------
 
-numberOfPlants = 200
-numberOfAgents = 50
+numberOfPlants = 50
+numberOfAgents = 25
 
 agentSize = 10.0
 plantSize = 10.0
 
-worldWidth = 3000
-worldHeight = 3000
+worldWidth = 1000
+worldHeight = 1000
 
 viewRange = 150.0
 viewAngle = 170.0
@@ -133,12 +133,12 @@ brain = Gridbrain()
 
 brain:setMutateAddConnectionProb(0)
 brain:setMutateRemoveConnectionProb(0)
-brain:setMutateChangeConnectionWeightProb(0)
+brain:setMutateChangeParamProb(0)
 brain:setMutateChangeComponentProb(0)
-brain:setWeightMutationStanDev(0)
+brain:setParamMutationStanDev(0)
 
 grid = Grid()
-grid:init(Grid.ALPHA, 4, 3)
+grid:init(Grid.ALPHA, 5, 3)
 brain:addGrid(grid, "objects");
 
 grid2 = Grid()
@@ -147,37 +147,39 @@ brain:addGrid(grid2, "beta")
 
 brain:init()
 
-brain:setComponent(0, 0, 0, PER, SimCont2D.PERCEPTION_POSITION)
-brain:setComponent(0, 1, 0, PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, agentFeed:getID(), foodTableCode)
-brain:setComponent(0, 2, 0, PER, SimCont2D.PERCEPTION_TARGET)
-brain:setComponent(1, 1, 0, TAND)
-brain:setComponent(2, 1, 0, TNAND)
-brain:setComponent(2, 2, 0, MMAX)
-brain:setComponent(3, 0, 0, TAND)
-brain:setComponent(3, 1, 0, TAND)
-brain:setComponent(3, 2, 0, TAND)
+brain:setComponent(0, 0, 0, IN, 0, SimCont2D.PERCEPTION_POSITION)
+brain:setComponent(0, 1, 0, IN, 0, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, agentFeed:getID(), foodTableCode)
+brain:setComponent(0, 2, 0, IN, 0, SimCont2D.PERCEPTION_TARGET)
+brain:setComponent(1, 1, 0, AMP, ((-1 / ((0.1 / feedCenter) + 1))) + 1)
+brain:setComponent(2, 1, 0, AND)
+brain:setComponent(3, 1, 0, NOT)
+brain:setComponent(3, 2, 0, MAX)
+brain:setComponent(4, 0, 0, AND)
+brain:setComponent(4, 1, 0, AND)
+brain:setComponent(4, 2, 0, AND)
 
 brain:setComponent(0, 0, 1, NOT)
-brain:setComponent(1, 0, 1, ACT, SimCont2D.ACTION_ROTATE)
-brain:setComponent(1, 1, 1, ACT, SimCont2D.ACTION_GO)
-brain:setComponent(1, 2, 1, ACT, SimCont2D.ACTION_EATB)
+brain:setComponent(1, 0, 1, OUT, 0, SimCont2D.ACTION_ROTATE)
+brain:setComponent(1, 1, 1, OUT, 0, SimCont2D.ACTION_GO)
+brain:setComponent(1, 2, 1, OUT, 0, SimCont2D.ACTION_EATB)
 
-brain:addConnectionReal(0, 0, 0, 3, 0, 0, 1.0)
-brain:addConnectionReal(0, 0, 0, 2, 1, 0, 1.0)
-brain:addConnectionReal(0, 1, 0, 1, 1, 0, 0.1 / feedCenter)
-brain:addConnectionReal(0, 1, 0, 2, 2, 0, 1.0)
-brain:addConnectionReal(0, 2, 0, 3, 2, 0, 1.0)
-brain:addConnectionReal(1, 1, 0, 3, 0, 0, 1.0)
-brain:addConnectionReal(1, 1, 0, 0, 0, 1, 1.0)
-brain:addConnectionReal(1, 1, 0, 2, 2, 0, 1.0)
-brain:addConnectionReal(1, 1, 0, 3, 2, 0, 1.0)
-brain:addConnectionReal(2, 1, 0, 3, 1, 0, 1.0)
-brain:addConnectionReal(2, 2, 0, 3, 0, 0, 1.0)
-brain:addConnectionReal(2, 2, 0, 3, 1, 0, 1.0)
-brain:addConnectionReal(3, 0, 0, 1, 0, 1, 1.0)
-brain:addConnectionReal(3, 1, 0, 1, 1, 1, 1.0)
-brain:addConnectionReal(3, 2, 0, 1, 2, 1, 1.0)
-brain:addConnectionReal(0, 0, 1, 1, 0, 1, 1.0)
+brain:addConnection(0, 0, 0, 4, 0, 0)
+brain:addConnection(0, 0, 0, 3, 1, 0)
+brain:addConnection(0, 1, 0, 1, 1, 0)
+brain:addConnection(1, 1, 0, 2, 1, 0)
+brain:addConnection(0, 1, 0, 3, 2, 0)
+brain:addConnection(0, 2, 0, 4, 2, 0)
+brain:addConnection(2, 1, 0, 4, 0, 0)
+brain:addConnection(2, 1, 0, 0, 0, 1)
+brain:addConnection(2, 1, 0, 3, 2, 0)
+brain:addConnection(2, 1, 0, 4, 2, 0)
+brain:addConnection(3, 1, 0, 4, 1, 0)
+brain:addConnection(3, 2, 0, 4, 0, 0)
+brain:addConnection(3, 2, 0, 4, 1, 0)
+brain:addConnection(4, 0, 0, 1, 0, 1)
+brain:addConnection(4, 1, 0, 1, 1, 1)
+brain:addConnection(4, 2, 0, 1, 2, 1)
+brain:addConnection(0, 0, 1, 1, 0, 1)
 
 agent:setBrain(brain)
 

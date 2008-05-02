@@ -83,7 +83,7 @@ TEST_FIXTURE(GridbrainFixture, GridbrainZeroInitialConnections)
 
 TEST_FIXTURE(GridbrainFixture, GridbrainAddConnection)
 {
-    mGridbrain.addConnection(0, 0, 0, 1, 1, 0, 0.5);
+    mGridbrain.addConnection(0, 0, 0, 1, 1, 0);
     CHECK_EQUAL(mGridbrain.getConnectionsCount(), 1);
     CHECK(mGridbrain.connectionExists(0, 0, 0, 1, 1, 0));
     CHECK(mGridbrain.isValid());
@@ -142,7 +142,7 @@ TEST_FIXTURE(GridbrainFixture2, GridbrainAddRandomConnections6)
 TEST_FIXTURE(GridbrainFixture, GridbrainAddRandomConnections7)
 {
     GridbrainComponent* comp1 = mGridbrain.getComponent(1, 1, 0);
-    comp1->mType = GridbrainComponent::ACT;
+    comp1->mType = GridbrainComponent::OUT;
     mGridbrain.init();
     CHECK_EQUAL(mGridbrain.getConnectionsCount(), 0);
     mGridbrain.addRandomConnections(27);
@@ -153,7 +153,7 @@ TEST_FIXTURE(GridbrainFixture, GridbrainAddRandomConnections7)
 TEST_FIXTURE(GridbrainFixture, GridbrainAddRandomConnections8)
 {
     GridbrainComponent* comp1 = mGridbrain.getComponent(1, 1, 0);
-    comp1->mType = GridbrainComponent::PER;
+    comp1->mType = GridbrainComponent::IN;
     mGridbrain.init();
     CHECK_EQUAL(mGridbrain.getConnectionsCount(), 0);
     mGridbrain.addRandomConnections(27);
@@ -165,8 +165,8 @@ TEST_FIXTURE(GridbrainFixture, GridbrainAddRandomConnections9)
 {
     GridbrainComponent* comp1 = mGridbrain.getComponent(1, 1, 0);
     GridbrainComponent* comp2 = mGridbrain.getComponent(1, 2, 0);
-    comp1->mType = GridbrainComponent::PER;
-    comp2->mType = GridbrainComponent::ACT;
+    comp1->mType = GridbrainComponent::IN;
+    comp2->mType = GridbrainComponent::OUT;
     mGridbrain.init();
     CHECK_EQUAL(mGridbrain.getConnectionsCount(), 0);
     mGridbrain.addRandomConnections(27);

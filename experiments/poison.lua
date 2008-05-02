@@ -9,22 +9,22 @@ dofile("basic_defines.lua")
 -- Experiment Parameters
 --------------------------------------------------------------------------------
 
-numberOfPlants = 200
-numberOfAgents = 50
+numberOfPlants = 50
+numberOfAgents = 25
 
 agentSize = 10.0
 plantSize = 10.0
 
-worldWidth = 3000
-worldHeight = 3000
+worldWidth = 1000
+worldHeight = 1000
 
 alphaWidth = 0--4
 betaWidth = 0--2
 alphaHeight = 0--3
 betaHeight = 0--3
 
-alphaComponents = {TAND, TNAND, NOT, MMAX}
-betaComponents = {TAND, TNAND, NOT}
+alphaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, MAX, AVG}
+betaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, CLK, MEMW, MEMC}
 
 viewRange = 150.0
 viewAngle = 170.0
@@ -51,14 +51,14 @@ compCount = 1
 bufferSize = 100
 fitnessAging = 0.1
 
-addConnectionProb = 0.005
-removeConnectionProb = 0.01
-changeWeightProb = 0.01
-weightMutationStanDev = 1.0
-splitConnectionProb = 0.005
+addConnectionProb = 0.01
+removeConnectionProb = 0.02
+changeParamProb = 0.01
+paramMutationStanDev = 1.0
+splitConnectionProb = 0.01
 joinConnectionsProb = 0.0
 changeComponentProb = 0.0
-changeInactiveComponentProb = 0.01
+changeInactiveComponentProb = 0.1
 swapComponentProb = 0.1
 
 recombineProb = 0.0
@@ -84,8 +84,8 @@ dofile("basic_command_line.lua")
 
 addConnectionProb = getNumberParameter("addconnprob", addConnectionProb, "con+")
 removeConnectionProb = getNumberParameter("removeconnprob", removeConnectionProb, "con-")
-changeWeightProb = getNumberParameter("changeweightprob", changeWeightProb, "wgt")
-weightMutationStanDev = getNumberParameter("weightmutstandev", weightMutationStanDev, "wsd")
+changeParamProb = getNumberParameter("changeparamprob", changeParamProb, "par")
+paramMutationStanDev = getNumberParameter("parammutstandev", paramMutationStanDev, "psd")
 splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "spl")
 joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb, "joi")
 changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, "chg")
@@ -215,8 +215,8 @@ brain = Gridbrain()
 
 brain:setMutateAddConnectionProb(addConnectionProb)
 brain:setMutateRemoveConnectionProb(removeConnectionProb)
-brain:setMutateChangeConnectionWeightProb(changeWeightProb)
-brain:setWeightMutationStanDev(weightMutationStanDev)
+brain:setMutateChangeParamProb(changeParamProb)
+brain:setParamMutationStanDev(paramMutationStanDev)
 brain:setMutateSplitConnectionProb(splitConnectionProb)
 brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
@@ -233,10 +233,10 @@ alphaSet = GridbrainComponentSet()
 for i, comp in pairs(alphaComponents) do
     alphaSet:addComponent(comp)
 end
-alphaSet:addComponent(PER, SimCont2D.PERCEPTION_POSITION)
-alphaSet:addComponent(PER, SimCont2D.PERCEPTION_DISTANCE)
-alphaSet:addComponent(PER, SimCont2D.PERCEPTION_TARGET)
-alphaSet:addComponent(PER, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, agentFeed:getID(), foodTableCode)
+alphaSet:addComponent(IN, SimCont2D.PERCEPTION_POSITION)
+alphaSet:addComponent(IN, SimCont2D.PERCEPTION_DISTANCE)
+alphaSet:addComponent(IN, SimCont2D.PERCEPTION_TARGET)
+alphaSet:addComponent(IN, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, agentFeed:getID(), foodTableCode)
 
 grid = Grid()
 grid:init(ALPHA, alphaWidth, alphaHeight)
@@ -248,9 +248,9 @@ betaSet = GridbrainComponentSet()
 for i, comp in pairs(betaComponents) do
     betaSet:addComponent(comp)
 end
-betaSet:addComponent(ACT, SimCont2D.ACTION_GO)
-betaSet:addComponent(ACT, SimCont2D.ACTION_ROTATE)
-betaSet:addComponent(ACT, SimCont2D.ACTION_EATB)
+betaSet:addComponent(OUT, SimCont2D.ACTION_GO)
+betaSet:addComponent(OUT, SimCont2D.ACTION_ROTATE)
+betaSet:addComponent(OUT, SimCont2D.ACTION_EATB)
     
 grid2 = Grid()
 grid2:init(BETA, betaWidth, betaHeight)

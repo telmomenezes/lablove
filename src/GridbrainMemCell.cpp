@@ -24,18 +24,7 @@ GridbrainMemCell::GridbrainMemCell()
 {
     mValue = 0.0f;
     mWrite = 0.0f;
-    mAdd = 0.0f;
     mClear = false;
-    mToggle = 0.0f;
-}
-
-GridbrainMemCell::GridbrainMemCell(const GridbrainMemCell& cell)
-{
-    mValue = cell.mValue;
-    mWrite = cell.mWrite;
-    mAdd = cell.mAdd;
-    mClear = cell.mClear;
-    mToggle = cell.mToggle;
 }
 
 GridbrainMemCell::~GridbrainMemCell()
@@ -52,38 +41,8 @@ void GridbrainMemCell::cycle()
     {
         mValue = mWrite;
     }
-    else if (mAdd != 0.0f)
-    {
-        mValue += mAdd;
-    }
-    else if (mToggle != 0.0f)
-    {
-        if (mValue != 0.0f)
-        {
-            mValue = 0.0f;
-        }
-        else if (mToggle > 0.0f)
-        {
-            mValue = 1.0f;
-        }
-        else
-        {
-            mValue = -1.0f;
-        }
-    }
-
-    if (mValue > 1.0f)
-    {
-        mValue = 1.0f;
-    }
-    else if (mValue < -1.0f)
-    {
-        mValue = -1.0f;
-    }
 
     mWrite = 0.0f;
-    mAdd = 0.0f;
     mClear = false;
-    mToggle = 0.0f;
 }
 

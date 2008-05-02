@@ -77,15 +77,6 @@ public:
                 unsigned int xTarg,
                 unsigned int yTarg,
                 unsigned int gTarg,
-                float weight,
-                GridbrainGeneTag tag=GridbrainGeneTag());
-    void addConnectionReal(unsigned int xOrig,
-                unsigned int yOrig,
-                unsigned int gOrig,
-                unsigned int xTarg,
-                unsigned int yTarg,
-                unsigned int gTarg,
-                float realWeight,
                 GridbrainGeneTag tag=GridbrainGeneTag());
     void removeConnection(GridbrainConnection* conn);
     void removeConnection(unsigned int xOrig,
@@ -146,6 +137,7 @@ public:
                 unsigned int y,
                 unsigned int gridNumber,
                 GridbrainComponent::Type type,
+                float param=0.0f,
                 int subType=-1,
                 InterfaceItem::TableLinkType linkType=InterfaceItem::NO_LINK,
                 int origSymTable=-1,
@@ -158,8 +150,8 @@ public:
 
     void setMutateAddConnectionProb(float prob){mMutateAddConnectionProb = prob;}
     void setMutateRemoveConnectionProb(float prob){mMutateRemoveConnectionProb = prob;}
-    void setMutateChangeConnectionWeightProb(float prob){mMutateChangeConnectionWeightProb = prob;}
-    void setWeightMutationStanDev(float sd){mWeightMutationStanDev = sd;}
+    void setMutateChangeParamProb(float prob){mMutateChangeParamProb = prob;}
+    void setParamMutationStanDev(float sd){mParamMutationStanDev = sd;}
     void setMutateSplitConnectionProb(float prob){mMutateSplitConnectionProb = prob;}
     void setMutateJoinConnectionsProb(float prob){mMutateJoinConnectionsProb = prob;}
     void setMutateChangeComponentProb(float prob){mMutateChangeComponentProb = prob;}
@@ -203,30 +195,29 @@ public:
     int setComponent(lua_State* luaState);
     int addGrid(lua_State* luaState);
     int addConnection(lua_State* luaState);
-    int addConnectionReal(lua_State* luaState);
     int addRandomConnections(lua_State* luaState);
     int setGrowMethod(lua_State* luaState);
     int setCloneConnectionsMode(lua_State* luaState);
     int setMutationScope(lua_State* luaState);
     int setMutateAddConnectionProb(lua_State* luaState);
     int setMutateRemoveConnectionProb(lua_State* luaState);
-    int setMutateChangeConnectionWeightProb(lua_State* luaState);
+    int setMutateChangeParamProb(lua_State* luaState);
     int setMutateSplitConnectionProb(lua_State* luaState);
     int setMutateJoinConnectionsProb(lua_State* luaState);
     int setMutateChangeComponentProb(lua_State* luaState);
     int setMutateChangeInactiveComponentProb(lua_State* luaState);
     int setMutateSwapComponentProb(lua_State* luaState);
-    int setWeightMutationStanDev(lua_State* luaState);
+    int setParamMutationStanDev(lua_State* luaState);
     int setGeneGrouping(lua_State* luaState);
     int setMaxInputDepth(lua_State* luaState);
 
     static long MUTATIONS_ADD_CONN;
     static long MUTATIONS_REM_CONN;
-    static long MUTATIONS_CHG_WGT;
     static long MUTATIONS_SPLIT_CONN;
     static long MUTATIONS_JOIN_CONN;
     static long MUTATIONS_CHG_COMP;
     static long MUTATIONS_CHG_IN_COMP;
+    static long MUTATIONS_CHG_PARAM;
     static long MUTATIONS_SWP_COMP;
 
     static void debugMutationsCount();
@@ -243,8 +234,6 @@ protected:
     void calcExpansion();
     void linkMemory();
 
-    void applyWeight(GridbrainConnection* conn);
-
     bool swapComponents(GridbrainComponent* comp1, GridbrainComponent* comp2);
 
     bool isSplitable(GridbrainConnection* conn);
@@ -256,11 +245,11 @@ protected:
 
     void mutateAddConnection(unsigned int popSize);
     void mutateRemoveConnection(unsigned int popSize);
-    void mutateChangeConnectionWeight();
     void mutateSplitConnection(unsigned int popSize);
     void mutateJoinConnections(unsigned int popSize);
     void mutateChangeComponent();
     void mutateChangeInactiveComponent();
+    void mutateChangeParam();
     void mutateSwapComponent(float prob=0.0f);
 
     void initGridWritePositions();
@@ -304,7 +293,6 @@ protected:
 
     static mt_distribution* mDistConnections;
     static mt_distribution* mDistMutationsProb;
-    static mt_distribution* mDistWeights;
     static mt_distribution* mDistComponents;
     static mt_distribution* mDistRecombine;
     static mt_distribution* mDistGridbrain;
@@ -323,8 +311,8 @@ protected:
 
     float mMutateAddConnectionProb;
     float mMutateRemoveConnectionProb;
-    float mMutateChangeConnectionWeightProb;
-    float mWeightMutationStanDev;
+    float mMutateChangeParamProb;
+    float mParamMutationStanDev;
     float mMutateSplitConnectionProb;
     float mMutateJoinConnectionsProb;
     float mMutateChangeComponentProb;

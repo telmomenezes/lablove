@@ -24,16 +24,13 @@ class GridbrainMemCell
 {
 public:
     GridbrainMemCell();
-    GridbrainMemCell(const GridbrainMemCell& cell);
     virtual ~GridbrainMemCell();
 
     void cycle();
 
     float mValue;
     float mWrite;
-    float mAdd;
     bool mClear;
-    float mToggle;
 };
 #endif
 

@@ -1403,6 +1403,10 @@ void SimCont2D::setSize(SimulationObject* obj, float size)
 void SimCont2D::deltaEnergy(SimulationObject* obj, double delta)
 {
     obj->mFloatData[FLOAT_ENERGY] += delta;
+    /*if (isnan(obj->mFloatData[FLOAT_ENERGY]))
+    {
+        throw(0);
+    }*/
 }
 
 string SimCont2D::getInterfaceName(bool input, int type)
