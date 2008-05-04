@@ -52,14 +52,14 @@ bufferSize = 100
 fitnessAging = 0.1
 
 addConnectionProb = 0.01
-removeConnectionProb = 0.02
-changeParamProb = 0.01
-paramMutationStanDev = 1.0
-splitConnectionProb = 0.01
+removeConnectionProb = 0.01
+changeParamProb = 0.0
+paramMutationStanDev = 0.0
+splitConnectionProb = 0.0
 joinConnectionsProb = 0.0
 changeComponentProb = 0.0
-changeInactiveComponentProb = 0.1
-swapComponentProb = 0.1
+changeInactiveComponentProb = 0.0
+swapComponentProb = 0.0
 
 recombineProb = 0.0
 geneGrouping = false
@@ -95,11 +95,6 @@ recombineProb = getNumberParameter("recombineprob", recombineProb, "rec")
 bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
 compCount = getNumberParameter("compcount", compCount, "cc")
 fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")
-initialConnections = getNumberParameter("initconn", initialConnections, "ico")
-growMethod = getStringParameter("growmethod", growMethod, "gm")
-cloneConnectionsMode = getStringParameter("cloneconnmode", cloneConnectionsMode, "ccm")
-mutationScope = getStringParameter("mutationscope", mutationScope, "ms")
-geneGrouping = getBoolParameter("genegrouping", geneGrouping, "gg")
 evolutionStopTime = getNumberParameter("evostop", evolutionStopTime, "est")
 --viewRange = getNumberParameter("viewrange", viewRange, "vr")
 

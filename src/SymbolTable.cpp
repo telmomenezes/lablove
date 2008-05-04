@@ -317,6 +317,24 @@ void SymbolTable::acquireSymbol(Symbol* sym)
     mAcquiredSymbols[id] = sym->clone();
 }
 
+int SymbolTable::getSymbolPos(llULINT symID)
+{
+    int pos = 0;
+    map<llULINT, Symbol*>::iterator iterSymbol;
+    for (iterSymbol = mSymbols.begin();
+        iterSymbol != mSymbols.end();
+        iterSymbol++)
+    {
+        if ((*iterSymbol).first == symID)
+        {
+            return pos;
+        }
+        pos++;
+    }
+
+    return -1;
+}
+
 void SymbolTable::printDebug()
 {
     printf("Table %d '%s'\n", mID, mName.c_str());

@@ -79,6 +79,21 @@ int Brain::getChannelByName(string name)
     return mChannels[name];
 }
 
+string Brain::getChannelName(int chan)
+{
+    for (map<string, int>::iterator iterChan = mChannels.begin();
+        iterChan != mChannels.end();
+        iterChan++)
+    {
+        if ((*iterChan).second == chan)
+        {
+            return (*iterChan).first;
+        }
+    }
+
+    return "";
+}
+
 bool Brain::getFieldValue(string fieldName, float& value)
 {
     value = 0.0f;

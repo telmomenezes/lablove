@@ -63,6 +63,8 @@ public:
 
     void acquireSymbol(Symbol* sym);
 
+    int getSymbolPos(llULINT symID);
+
     void printDebug();
 
     int addSymbol(lua_State* luaState);

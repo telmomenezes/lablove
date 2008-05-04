@@ -24,6 +24,7 @@
 #define GRID_MARGIN 50
 #define COMPONENT_SIDE 40
 #define COMPONENT_MARGIN 50
+#define GRID_TITLE 10
 
 void Gridbrain::initGridWritePositions()
 {
@@ -38,7 +39,7 @@ void Gridbrain::initGridWritePositions()
         if (grid->getType() == Grid::ALPHA)
         {
             grid->setWritePos(GRID_MARGIN, currentY);
-            currentY += (grid->getHeight() * (COMPONENT_SIDE + COMPONENT_MARGIN)) + GRID_MARGIN;
+            currentY += (grid->getHeight() * (COMPONENT_SIDE + COMPONENT_MARGIN)) + GRID_MARGIN + GRID_TITLE;
             if (grid->getWidth() > maxAlphaWidth)
             {
                 maxAlphaWidth = grid->getWidth();
@@ -46,7 +47,7 @@ void Gridbrain::initGridWritePositions()
         }
         else if (grid->getType() == Grid::BETA)
         {
-            betaHeight = grid->getHeight() * (COMPONENT_SIDE + COMPONENT_MARGIN);
+            betaHeight = (grid->getHeight() * (COMPONENT_SIDE + COMPONENT_MARGIN)) + GRID_TITLE;
         }
     }
 
@@ -73,7 +74,7 @@ void Gridbrain::initGridWritePositions()
         if (grid->getType() == Grid::ALPHA)
         {
             grid->setWritePos(GRID_MARGIN, currentY);
-            currentY += (grid->getHeight() * (COMPONENT_SIDE + COMPONENT_MARGIN)) + GRID_MARGIN;
+            currentY += (grid->getHeight() * (COMPONENT_SIDE + COMPONENT_MARGIN)) + GRID_MARGIN + GRID_TITLE;
         }
         else if (grid->getType() == Grid::BETA)
         {
@@ -93,7 +94,7 @@ void Gridbrain::getComponentWritePos(unsigned int& posX,
     unsigned int gridX = pGrid->getWriteX();
     unsigned int gridY = pGrid->getWriteY();
     posX = gridX + (x * (COMPONENT_SIDE + COMPONENT_MARGIN)) + (COMPONENT_SIDE / 2); 
-    posY = gridY + (y * (COMPONENT_SIDE + COMPONENT_MARGIN)) + (COMPONENT_SIDE / 2);
+    posY = gridY + (y * (COMPONENT_SIDE + COMPONENT_MARGIN)) + (COMPONENT_SIDE / 2) + GRID_TITLE;
 }
 
 string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
@@ -112,6 +113,28 @@ string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
     for (unsigned int i = 0; i < mGridsCount; i++)
     {
         Grid* grid = mGridsVec[i];
+
+        string gridName = getChannelName(i);
+
+        if (gridName == "")
+        {
+            if (grid->getType() == Grid::ALPHA)
+            {
+                gridName = "alpha";
+            }
+            else
+            {
+                gridName = "beta";
+            }
+        }
+
+        sprintf(buffer,
+                "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"left\" font-size=\"12\" fill=\"black\">%s</text>\n",
+                grid->getWriteX(),
+                grid->getWriteY(),
+                gridName.c_str());
+        svg += buffer;
+
         for (unsigned int x = 0; x < grid->getWidth(); x++)
         {
             for (unsigned int y = 0; y < grid->getHeight(); y++)
@@ -146,14 +169,33 @@ string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
                     string subName = pop->getInterfaceName(comp->mType == GridbrainComponent::IN, comp->mSubType);
                     if (subName == "?")
                     {
-                        subName = obj->getSymbolName(comp->mOrigSymTable, comp->mOrigSymID);
-
-                        if (subName == "?")
-                        {
-                            subName = obj->getTableName(comp->mOrigSymTable);
-                        }
+                        subName = obj->getTableName(comp->mOrigSymTable);
+                        sprintf(buffer, "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"7\" fill=\"%s\">%s(%d)</text>\n", compX, labelY, color, subName.c_str(), obj->getSymbolTable(comp->mOrigSymTable)->getSymbolPos(comp->mOrigSymID));
                     }
-                    sprintf(buffer, "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"7\" fill=\"%s\">%s</text>\n", compX, labelY, color, subName.c_str());
+                    else
+                    {
+                        sprintf(buffer, "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"7\" fill=\"%s\">%s</text>\n", compX, labelY, color, subName.c_str());
+                    }
+                    svg += buffer;
+                    labelY -= 10;
+                }
+                else if (comp->isMemory())
+                {
+                    labelY += 5;
+                    sprintf(buffer, "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"7\" fill=\"%s\">%d</text>\n", compX, labelY, color, getMemCellPos(comp->mOrigSymID));
+                    svg += buffer;
+                    labelY -= 10;
+                }
+                else if ((comp->mType == GridbrainComponent::AMP)
+                    || (comp->mType == GridbrainComponent::CLK))
+                {
+                    labelY += 5;
+                    string subName = pop->getInterfaceName(comp->mType == GridbrainComponent::IN, comp->mSubType);
+                    if (subName == "?")
+                    {
+                        subName = obj->getTableName(comp->mOrigSymTable);
+                    }
+                    sprintf(buffer, "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"7\" fill=\"%s\">%f</text>\n", compX, labelY, color, comp->mParam);
                     svg += buffer;
                     labelY -= 10;
                 }

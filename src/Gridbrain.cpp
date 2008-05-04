@@ -2464,6 +2464,24 @@ void Gridbrain::linkMemory()
     }
 }
 
+int Gridbrain::getMemCellPos(llULINT id)
+{
+    int pos = 0;
+    map<llULINT, GridbrainMemCell>::iterator iterCell;
+    for (iterCell = mMemory.begin();
+        iterCell != mMemory.end();
+        iterCell++)
+    {
+        if ((*iterCell).first == id)
+        {
+            return pos;
+        }
+        pos++;
+    }
+
+    return -1;
+}
+
 const char Gridbrain::mClassName[] = "Gridbrain";
 
 Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {

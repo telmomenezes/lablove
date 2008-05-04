@@ -64,6 +64,8 @@ public:
     virtual bool getFieldValue(string fieldName, float& value);
 
     int getChannelByName(string name);
+    string getChannelName(int chan);
+
     virtual string write(SimulationObject* obj, PopulationManager* pop){return "";}
 
     virtual bool symbolUsed(int tableID, unsigned long symbolID){return false;}
