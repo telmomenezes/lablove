@@ -336,6 +336,8 @@ void Grid::addColumn(ColumnPlacement place, unsigned int pos)
         }
     }
 
+    gc.setNew();
+
     mColumnCoords.insert(iterCoord, gc);
 }
 
@@ -361,6 +363,9 @@ void Grid::addRow()
     {
         gc = mRowCoords[newRow - 1].rightOf();
     }
+
+    gc.setNew();
+
     mRowCoords.insert(iterCoord, gc);
 }
 

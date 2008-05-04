@@ -45,11 +45,13 @@ public:
 
     bool isValid();
 
-    int mXoverOrigin;
+    void setNew(){mNew = true;}
+    bool isNew(){return mNew;}
 
 protected:
     unsigned int mDepth;
     unsigned int mBranch;
+    bool mNew;
 };
 #endif
 

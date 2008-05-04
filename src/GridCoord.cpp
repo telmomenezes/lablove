@@ -23,21 +23,21 @@ GridCoord::GridCoord()
 {
     mDepth = 0;
     mBranch = 0;
-    mXoverOrigin = 0;
+    mNew = false;
 }
 
 GridCoord::GridCoord(unsigned int depth, unsigned int branch)
 {
     mDepth = depth;
     mBranch = branch;
-    mXoverOrigin = 0;
+    mNew = false;
 }
 
 GridCoord::GridCoord(const GridCoord& coord)
 {
     mDepth = coord.mDepth;
     mBranch = coord.mBranch;
-    mXoverOrigin = coord.mXoverOrigin;
+    mNew = false;
 }
 
 GridCoord::~GridCoord()

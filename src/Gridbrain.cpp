@@ -287,7 +287,10 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                 int oldY = oldGrid->getRowByCoord(yCoord);
 
                 GridbrainComponent* oldComponent = NULL;
-                if ((oldX >= 0) && (oldY >= 0))
+                if ((oldX >= 0)
+                    && (oldY >= 0)
+                    && (!xCoord.isNew())
+                    && (!yCoord.isNew()))
                 {
                     oldComponent = getComponent(oldX, oldY, g);
                 }
@@ -1515,7 +1518,11 @@ void Gridbrain::cycle()
                             comp->mState += comp->mInput;
                             comp->mEvalCount++;
                         }
-                        output = comp->mState / ((float)comp->mEvalCount);
+                        output = 0.0f;
+                        if (comp->mEvalCount > 0)
+                        {
+                            output = comp->mState / ((float)comp->mEvalCount);
+                        }
                         break;
                     case GridbrainComponent::MUL:
                         //printf("MUL ");

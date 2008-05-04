@@ -11,9 +11,9 @@
     * SimCont2D speak actions and perceptions
     * SimCont2D self perceptions
     * Removal of obsolete mutation operators in the Gridbrain
-    * New Gridbrain components: STHR, INV, RAND, CLK, MEMA, MEMC, MEMT, MEMW
+    * Base Gridbrain component set stabilized: NUL, IN, OUT, AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, MAX, AVG, CLK, MEMW, MEMC
     * Gridbrain::mutateChangeInactiveComponent
-    * ...
+    * Gridbrain connection no longer using weights
 
 0.2 alpha release
 9-Mar-2008
