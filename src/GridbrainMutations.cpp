@@ -242,8 +242,8 @@ GridbrainConnection* Gridbrain::selectSplitableConnection(unsigned int initialPo
 }
 
 void Gridbrain::selectJoinableConnections(unsigned int initialPop,
-                                            GridbrainConnection*& connOut1,
-                                            GridbrainConnection*& connOut2)
+                                            GridbrainConnection* &connOut1,
+                                            GridbrainConnection* &connOut2)
 {
     connOut1 = NULL;
     connOut2 = NULL;
