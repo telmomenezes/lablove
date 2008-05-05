@@ -52,7 +52,7 @@ default: \
 class GridbrainComponent
 {
 public:
-    enum Type {NUL, IN, OUT, AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, MAX, AVG, CLK, MEMW, MEMC};
+    enum Type {NUL, IN, OUT, AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, GTZ, ZERO, MAX, AVG, CLK, MEMW, MEMC, MEMD};
     enum InputType {IN_SUM, IN_TSUM, IN_MUL, IN_TMUL};
     enum ConnType {CONN_IN, CONN_OUT, CONN_INOUT};
 

@@ -23,8 +23,8 @@ betaWidth = 0--2
 alphaHeight = 0--3
 betaHeight = 0--3
 
-alphaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, MAX, AVG}
-betaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, CLK, MEMW, MEMC}
+alphaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, GTZ, ZERO, MAX, AVG}
+betaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, GTZ, ZERO, CLK, MEMW, MEMC, MEMD}
 
 viewRange = 150.0
 viewAngle = 170.0
@@ -64,10 +64,6 @@ swapComponentProb = 0.0
 recombineProb = 0.0
 geneGrouping = false
 
-growMethod = "pressure"
-cloneConnectionsMode = "all_plus"
-mutationScope = "all"
-
 timeLimit = 0
 logTimeInterval = 100
 logBrains = true
@@ -104,29 +100,6 @@ logSuffix = logBaseName
             .. parameterString
             .. "s"
             .. seedIndex
-
-growMethodCode = 0
-if growMethod == "pressure" then
-    growMethodCode = Gridbrain.GM_PRESSURE
-elseif growMethod == "free" then
-    growMetodCode = Gridbrain.GM_FREE
-end
-
-cloneConnectionsModeCode = 0
-if cloneConnectionsMode == "all" then
-    cloneConnectionsModeCode = Gridbrain.CC_ALL
-elseif cloneConnectionsMode == "all_plus" then
-    cloneConnectionsModeCode = Gridbrain.CC_ALL_PLUS
-elseif cloneConnectionsMode == "active" then
-    cloneConnectionsModeCode = Gridbrain.CC_ACTIVE
-end
-
-mutationScopeCode = 0
-if mutationScope == "all" then
-    mutationScopeCode = Gridbrain.MS_ALL
-elseif mutationScope == "active" then
-    mutationScopeCode = Gridbrain.MS_ACTIVE
-end
 
 -- Simulation
 --------------------------------------------------------------------------------
@@ -198,6 +171,7 @@ agent:setSymbolName("color", colorTableCode, agentColor:getID())
 
 agentFeed = SymbolFloat(0.0)
 agentFeedTable = SymbolTable(agentFeed)
+agentFeedTable:setName("food")
 agent:addSymbolTable(agentFeedTable)
 feedTableCode = agentFeedTable:getID()
 dummyTable = SymbolTable(agentFeed)
@@ -217,10 +191,6 @@ brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
 brain:setMutateChangeInactiveComponentProb(changeInactiveComponentProb)
 brain:setMutateSwapComponentProb(swapComponentProb)
-
-brain:setGrowMethod(growMethodCode)
-brain:setCloneConnectionsMode(cloneConnectionsModeCode)
-brain:setMutationScope(mutationScopeCode)
 
 brain:setGeneGrouping(geneGrouping)
 

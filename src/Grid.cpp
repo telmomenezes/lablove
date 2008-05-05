@@ -73,11 +73,15 @@ Grid::Grid(const Grid& grid)
     for (unsigned int i = 0; i < mWidth; i++)
     {
         mColumnTargetCountVec.push_back(grid.mColumnTargetCountVec[i]);
-        mColumnCoords.push_back(grid.mColumnCoords[i]);
+        GridCoord gc = grid.mColumnCoords[i];
+        gc.setNew(false);
+        mColumnCoords.push_back(gc);
     }
     for (unsigned int i = 0; i < mHeight; i++)
     {
-        mRowCoords.push_back(grid.mRowCoords[i]);
+        GridCoord gc = grid.mRowCoords[i];
+        gc.setNew(false);
+        mRowCoords.push_back(gc);
     }
 
     mMaxDepth = 0;
@@ -336,8 +340,6 @@ void Grid::addColumn(ColumnPlacement place, unsigned int pos)
         }
     }
 
-    gc.setNew();
-
     mColumnCoords.insert(iterCoord, gc);
 }
 
@@ -363,8 +365,6 @@ void Grid::addRow()
     {
         gc = mRowCoords[newRow - 1].rightOf();
     }
-
-    gc.setNew();
 
     mRowCoords.insert(iterCoord, gc);
 }

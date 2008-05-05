@@ -12,9 +12,12 @@ NEG = GridbrainComponent.NEG
 MOD = GridbrainComponent.MOD
 AMP = GridbrainComponent.AMP
 RAND = GridbrainComponent.RAND
+GTZ = GridbrainComponent.GTZ
+ZERO = GridbrainComponent.ZERO
 CLK = GridbrainComponent.CLK
 MEMC = GridbrainComponent.MEMC
 MEMW = GridbrainComponent.MEMW
+MEMD = GridbrainComponent.MEMD
 
 NO_LINK = InterfaceItem.NO_LINK
 SYM_TO_SYM = InterfaceItem.SYM_TO_SYM

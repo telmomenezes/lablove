@@ -45,7 +45,7 @@ public:
 
     bool isValid();
 
-    void setNew(){mNew = true;}
+    void setNew(bool val){mNew = val;}
     bool isNew(){return mNew;}
 
 protected:

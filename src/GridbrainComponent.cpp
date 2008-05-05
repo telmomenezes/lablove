@@ -144,12 +144,18 @@ string GridbrainComponent::getName()
         return "AMP";
     case RAND:
         return "RAND";
+    case GTZ:
+        return "GTZ";
+    case ZERO:
+        return "ZERO";
     case CLK:
         return "CLK";
     case MEMC:
         return "MEMC";
     case MEMW:
         return "MEMW";
+    case MEMD:
+        return "MEMD";
     default:
         return "?";
     }
@@ -176,8 +182,10 @@ bool GridbrainComponent::isProducer()
     case IN:
     case NOT:
     case RAND:
+    case ZERO:
     case MEMC:
     case MEMW:
+    case MEMD:
         return true;
     default:
         return false;
@@ -191,6 +199,7 @@ bool GridbrainComponent::isConsumer()
     case OUT:
     case MEMC:
     case MEMW:
+    case MEMD:
         return true;
     default:
         return false;
@@ -203,6 +212,7 @@ bool GridbrainComponent::isMemory()
     {
     case MEMC:
     case MEMW:
+    case MEMD:
         return true;
     default:
         return false;
@@ -321,9 +331,12 @@ Orbit<GridbrainComponent>::NumberGlobalType GridbrainComponent::mNumberGlobals[]
     {"AMP", AMP},
     {"MOD", MOD},
     {"RAND", RAND},
+    {"GTZ", GTZ},
+    {"ZERO", ZERO},
     {"CLK", CLK},
     {"MEMC", MEMC},
     {"MEMW", MEMW},
+    {"MEMD", MEMD},
     {0,0}
 };
 

@@ -66,7 +66,7 @@ Gridbrain::Gridbrain(lua_State* luaState)
     mAllActive = false;
 
     mGrowMethod = GM_PRESSURE;
-    mCloneConnectionsMode = CC_ALL_PLUS;
+    mCloneConnectionsMode = CC_ALL;
     mMutationScope = MS_ALL;
 
     mGeneGrouping = false;
@@ -1556,24 +1556,7 @@ void Gridbrain::cycle()
                         break;
                     case GridbrainComponent::INV:
                         //printf("INV ");
-                        output = comp->mInput;
-                        if (output > 1.0f)
-                        {
-                            output = 1.0f;
-                        }
-                        else if (output < -1.0f)
-                        {
-                            output = -1.0f;
-                        }
-
-                        if (output >= 0)
-                        {
-                            output = 1.0f - output;
-                        }
-                        else
-                        {
-                            output = -1.0f - output;
-                        }
+                        output = 1.0f / comp->mInput;
 
                         break;
                     case GridbrainComponent::RAND:
@@ -1599,6 +1582,32 @@ void Gridbrain::cycle()
                     case GridbrainComponent::AMP:
                         //printf("AMP ");
                         output = comp->mInput * ((1.0f / (1.0f - comp->mParam)) - 1.0f);
+
+                        break;
+                    case GridbrainComponent::GTZ:
+                        //printf("GTZ ");
+
+                        if (comp->mInput > 0.0f)
+                        {
+                            output = 1.0f;
+                        }
+                        else
+                        {
+                            output = 0.0f;
+                        }
+
+                        break;
+                    case GridbrainComponent::ZERO:
+                        //printf("ZERO ");
+
+                        if (comp->mInput == 0.0f)
+                        {
+                            output = 1.0f;
+                        }
+                        else
+                        {
+                            output = 0.0f;
+                        }
 
                         break;
                     case GridbrainComponent::CLK:
@@ -1651,6 +1660,11 @@ void Gridbrain::cycle()
                         //printf("MEMW ");
                         comp->mMemCell->mWrite += comp->mInput;
                         output = comp->mMemCell->mValue;
+
+                        break;
+                    case GridbrainComponent::MEMD:
+                        //printf("MEMD ");
+                        output = comp->mMemCell->mValue - comp->mInput;
 
                         break;
                     default:
