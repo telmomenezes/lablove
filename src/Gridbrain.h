@@ -44,9 +44,6 @@ using std::string;
 class Gridbrain : public Brain
 {
 public:
-    enum GrowMethod {GM_FREE, GM_PRESSURE};
-    enum CloneConnectionsMode {CC_ALL, CC_ALL_PLUS, CC_ACTIVE};
-    enum MutationScope {MS_ALL, MS_ACTIVE};
     enum ExpansionType {ET_NONE,
                         ET_COLUMN_RANDOM,
                         ET_COLUMN_FIRST,
@@ -85,7 +82,7 @@ public:
                 unsigned int xTarg,
                 unsigned int yTarg,
                 unsigned int gTarg);
-    void removeRandomConnection(unsigned int initialPop);
+    void removeRandomConnection();
     GridbrainConnection* getConnection(unsigned int xOrig,
                 unsigned int yOrig,
                 unsigned int gOrig,
@@ -144,10 +141,6 @@ public:
                 llULINT origSymID=0,
                 int targetSymTable=-1);
 
-    void setGrowMethod(GrowMethod val){mGrowMethod = val;}
-    void setCloneConnectionsMode(CloneConnectionsMode val){mCloneConnectionsMode = val;}
-    void setMutationScope(MutationScope val){mMutationScope = val;}
-
     void setMutateAddConnectionProb(float prob){mMutateAddConnectionProb = prob;}
     void setMutateRemoveConnectionProb(float prob){mMutateRemoveConnectionProb = prob;}
     void setMutateChangeParamProb(float prob){mMutateChangeParamProb = prob;}
@@ -196,9 +189,6 @@ public:
     int addGrid(lua_State* luaState);
     int addConnection(lua_State* luaState);
     int addRandomConnections(lua_State* luaState);
-    int setGrowMethod(lua_State* luaState);
-    int setCloneConnectionsMode(lua_State* luaState);
-    int setMutationScope(lua_State* luaState);
     int setMutateAddConnectionProb(lua_State* luaState);
     int setMutateRemoveConnectionProb(lua_State* luaState);
     int setMutateChangeParamProb(lua_State* luaState);
@@ -241,9 +231,6 @@ protected:
     bool isSplitable(GridbrainConnection* conn);
     GridbrainConnection* selectSplitableConnection(unsigned int initialPop);
     GridbrainConnection* selectJoinableConnection(unsigned int initialPop);
-
-    GridbrainConnection* getFirstMutableConnection(unsigned int initialPop);
-    unsigned int getMutableConnectionsCount(unsigned int initialPop);
 
     void mutateAddConnection(unsigned int popSize);
     void mutateRemoveConnection(unsigned int popSize);
@@ -331,10 +318,6 @@ protected:
     unsigned int mActiveComponents;
     unsigned int mActivePerceptions;
     unsigned int mActiveActions;
-
-    GrowMethod mGrowMethod;
-    CloneConnectionsMode mCloneConnectionsMode;
-    MutationScope mMutationScope;
 
     bool mGeneGrouping;
 

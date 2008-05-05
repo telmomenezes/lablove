@@ -152,50 +152,7 @@ int Gridbrain::nextRandomComponent()
     return mCompSeqPos;
 }
 
-GridbrainConnection* Gridbrain::getFirstMutableConnection(unsigned int initialPop)
-{
-    GridbrainConnection* conn = mConnections;
-
-    if (mMutationScope == MS_ALL)
-    {
-        return conn;
-    }
-
-    unsigned int offset = 0;
-
-    if (mConnectionsCount > initialPop)
-    {
-        offset = mConnectionsCount - initialPop;
-    }
-
-    for (unsigned int i = 0; i < offset; i++)
-    {
-        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
-    }
-
-    return conn;
-}
-
-unsigned int Gridbrain::getMutableConnectionsCount(unsigned int initialPop)
-{
-    if (mMutationScope == MS_ALL)
-    {
-        return mConnectionsCount;
-    }
-    else
-    {
-        if (mConnectionsCount < initialPop)
-        {
-            return mConnectionsCount;
-        }
-        else
-        {
-            return initialPop;
-        }
-    }
-}
-
-void Gridbrain::removeRandomConnection(unsigned int initialPop)
+void Gridbrain::removeRandomConnection()
 {
     if (mConnectionsCount == 0)
     {
@@ -203,8 +160,8 @@ void Gridbrain::removeRandomConnection(unsigned int initialPop)
     }
 
     unsigned int pos;
-    GridbrainConnection* conn = getFirstMutableConnection(initialPop);
-    pos = mDistConnections->iuniform(0, getMutableConnectionsCount(initialPop));
+    GridbrainConnection* conn = mConnections;
+    pos = mDistConnections->iuniform(0, mConnectionsCount);
     
     unsigned int i = 0;
     while (i < pos)
@@ -249,7 +206,7 @@ bool Gridbrain::isSplitable(GridbrainConnection* conn)
 
 GridbrainConnection* Gridbrain::selectSplitableConnection(unsigned int initialPop)
 {
-    GridbrainConnection* conn = getFirstMutableConnection(initialPop);
+    GridbrainConnection* conn = mConnections;
     unsigned int count = 0;
     while (conn != NULL)
     {
@@ -267,7 +224,7 @@ GridbrainConnection* Gridbrain::selectSplitableConnection(unsigned int initialPo
 
     unsigned int pos = mDistConnections->iuniform(0, count);
 
-    conn = getFirstMutableConnection(initialPop);
+    conn = mConnections;
     unsigned int i = 0;
     while (i <= pos)
     {
@@ -286,7 +243,7 @@ GridbrainConnection* Gridbrain::selectSplitableConnection(unsigned int initialPo
 
 GridbrainConnection* Gridbrain::selectJoinableConnection(unsigned int initialPop)
 {
-    GridbrainConnection* conn = getFirstMutableConnection(initialPop);
+    GridbrainConnection* conn = mConnections;
     unsigned int count = 0;
     while (conn != NULL)
     {
@@ -310,7 +267,7 @@ GridbrainConnection* Gridbrain::selectJoinableConnection(unsigned int initialPop
 
     unsigned int pos = mDistConnections->iuniform(0, count);
 
-    conn = getFirstMutableConnection(initialPop);
+    conn = mConnections;
     unsigned int i = 0;
     while (i <= pos)
     {
@@ -358,7 +315,7 @@ void Gridbrain::mutateRemoveConnection(unsigned int popSize)
 
     for (unsigned int i = 0; i < count; i++)
     {
-        removeRandomConnection(popSize);
+        removeRandomConnection();
     }
 }
 

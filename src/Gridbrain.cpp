@@ -65,10 +65,6 @@ Gridbrain::Gridbrain(lua_State* luaState)
     mActiveConnections = 0;
     mAllActive = false;
 
-    mGrowMethod = GM_PRESSURE;
-    mCloneConnectionsMode = CC_ALL;
-    mMutationScope = MS_ALL;
-
     mGeneGrouping = false;
 }
 
@@ -129,10 +125,6 @@ Gridbrain* Gridbrain::baseClone()
     {
         gb->mChannels[(*iterChannel).first] = (*iterChannel).second;
     }
-
-    gb->mGrowMethod = mGrowMethod;
-    gb->mCloneConnectionsMode = mCloneConnectionsMode;
-    gb->mMutationScope = mMutationScope;
 
     gb->mOwner = mOwner;
 
@@ -218,21 +210,13 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                 }
             }
 
-            if (mGrowMethod == GM_FREE)
+            if (oldGrid->mMaxDepth == newGrid->getWidth())
             {
                 newGrid->addColumn();
-                newGrid->addRow();
             }
-            else if (mGrowMethod == GM_PRESSURE)
+            if (oldGrid->mMaxActiveCol == newGrid->getHeight())
             {
-                if (oldGrid->mMaxDepth == newGrid->getWidth())
-                {
-                    newGrid->addColumn();
-                }
-                if (oldGrid->mMaxActiveCol == newGrid->getHeight())
-                {
-                    newGrid->addRow();
-                }
+                newGrid->addRow();
             }
         }
         else if (targetGrid == g)
@@ -292,7 +276,12 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                     && (!xCoord.isNew())
                     && (!yCoord.isNew()))
                 {
-                    oldComponent = getComponent(oldX, oldY, g);
+                    GridbrainComponent* oc = getComponent(oldX, oldY, g);
+
+                    if (oc->isUsed())
+                    {
+                        oldComponent = oc;
+                    }
                 }
 
                 GridbrainComponent* newComponent = gb->getComponent(x, y, g);
@@ -348,56 +337,43 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
     GridbrainConnection* conn = mConnections;
     while (conn != NULL)
     {
-        if ((mCloneConnectionsMode == CC_ALL)
-            || (mCloneConnectionsMode == CC_ALL_PLUS)
-            || (conn->mActive))
+        int x1 = conn->mColumnOrig;
+        int y1 = conn->mRowOrig;
+        int g1 = conn->mGridOrig;
+        int x2 = conn->mColumnTarg;
+        int y2 = conn->mRowTarg;
+        int g2 = conn->mGridTarg;
+
+        Grid* oldGridOrig = mGridsVec[g1];
+        Grid* oldGridTarg = mGridsVec[g2];
+        Grid* newGridOrig = gb->mGridsVec[g1];
+        Grid* newGridTarg = gb->mGridsVec[g2];
+
+        GridCoord x1Coord = oldGridOrig->getColumnCoord(x1);
+        GridCoord y1Coord = oldGridOrig->getRowCoord(y1);
+        GridCoord x2Coord = oldGridTarg->getColumnCoord(x2);
+        GridCoord y2Coord = oldGridTarg->getRowCoord(y2);
+
+        x1 = newGridOrig->getColumnByCoord(x1Coord);
+        y1 = newGridOrig->getRowByCoord(y1Coord);
+        x2 = newGridTarg->getColumnByCoord(x2Coord);
+        y2 = newGridTarg->getRowByCoord(y2Coord);
+
+        if ((x1 >= 0)
+            && (y1 >= 0)
+            && (x2 >= 0)
+            && (y2 >= 0))
         {
-            int x1 = conn->mColumnOrig;
-            int y1 = conn->mRowOrig;
-            int g1 = conn->mGridOrig;
-            int x2 = conn->mColumnTarg;
-            int y2 = conn->mRowTarg;
-            int g2 = conn->mGridTarg;
-
-            Grid* oldGridOrig = mGridsVec[g1];
-            Grid* oldGridTarg = mGridsVec[g2];
-            Grid* newGridOrig = gb->mGridsVec[g1];
-            Grid* newGridTarg = gb->mGridsVec[g2];
-
-            GridCoord x1Coord = oldGridOrig->getColumnCoord(x1);
-            GridCoord y1Coord = oldGridOrig->getRowCoord(y1);
-            GridCoord x2Coord = oldGridTarg->getColumnCoord(x2);
-            GridCoord y2Coord = oldGridTarg->getRowCoord(y2);
-
-            x1 = newGridOrig->getColumnByCoord(x1Coord);
-            y1 = newGridOrig->getRowByCoord(y1Coord);
-            x2 = newGridTarg->getColumnByCoord(x2Coord);
-            y2 = newGridTarg->getRowByCoord(y2Coord);
-
-            if ((x1 >= 0)
-                && (y1 >= 0)
-                && (x2 >= 0)
-                && (y2 >= 0))
-            {
-                gb->addConnection(x1,
-                    y1,
-                    g1,
-                    x2,
-                    y2,
-                    g2,
-                    conn->mGeneTag);
-            }
-            else
-            {
-                lostConnections++;
-            }
+            gb->addConnection(x1,
+                y1,
+                g1,
+                x2,
+                y2,
+                g2,
+                conn->mGeneTag);
         }
-        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
-    }
 
-    if (mCloneConnectionsMode == CC_ALL_PLUS)
-    {
-        gb->addRandomConnections(lostConnections);
+        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
     }
 
     gb->generateMemory();
@@ -2504,9 +2480,6 @@ Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
     {"addGrid", &Gridbrain::addGrid},
     {"addConnection", &Gridbrain::addConnection},
     {"addRandomConnections", &Gridbrain::addRandomConnections},
-    {"setGrowMethod", &Gridbrain::setGrowMethod},
-    {"setCloneConnectionsMode", &Gridbrain::setCloneConnectionsMode},
-    {"setMutationScope", &Gridbrain::setMutationScope},
     {"setMutateAddConnectionProb", &Gridbrain::setMutateAddConnectionProb},
     {"setMutateRemoveConnectionProb", &Gridbrain::setMutateRemoveConnectionProb},
     {"setMutateChangeParamProb", &Gridbrain::setMutateChangeParamProb},
@@ -2522,13 +2495,6 @@ Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
 };
 
 Orbit<Gridbrain>::NumberGlobalType Gridbrain::mNumberGlobals[] = {
-    {"GM_FREE", GM_FREE},
-    {"GM_PRESSURE", GM_PRESSURE},
-    {"CC_ALL", CC_ALL},
-    {"CC_ALL_PLUS", CC_ALL_PLUS},
-    {"CC_ACTIVE", CC_ACTIVE},
-    {"MS_ALL", MS_ALL},
-    {"MS_ACTIVE", MS_ACTIVE},
     {0,0}};
 
 int Gridbrain::init(lua_State* luaState)
@@ -2579,27 +2545,6 @@ int Gridbrain::addRandomConnections(lua_State* luaState)
 {
     unsigned int count = luaL_checkint(luaState, 1);
     addRandomConnections(count);
-    return 0;
-}
-
-int Gridbrain::setGrowMethod(lua_State* luaState)
-{
-    unsigned int val = luaL_checkint(luaState, 1);
-    setGrowMethod((GrowMethod)val);
-    return 0;
-}
-
-int Gridbrain::setCloneConnectionsMode(lua_State* luaState)
-{
-    unsigned int val = luaL_checkint(luaState, 1);
-    setCloneConnectionsMode((CloneConnectionsMode)val);
-    return 0;
-}
-
-int Gridbrain::setMutationScope(lua_State* luaState)
-{
-    unsigned int val = luaL_checkint(luaState, 1);
-    setMutationScope((MutationScope)val);
     return 0;
 }
 
