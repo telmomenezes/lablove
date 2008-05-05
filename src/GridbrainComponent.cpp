@@ -227,9 +227,9 @@ void GridbrainComponent::calcProducer(bool prod)
         return;
     }
 
-    if (prod || (isProducer()))
+    if (prod || isProducer())
     {
-        if (!isProducer())
+        if (prod)
         {
             mProducer = true;
         }
@@ -248,7 +248,7 @@ void GridbrainComponent::calcProducer(bool prod)
 
 bool GridbrainComponent::calcConsumer()
 {
-    if (mConsumer || isConsumer())
+    if (mConsumer)
     {
         return true;
     }
@@ -265,6 +265,11 @@ bool GridbrainComponent::calcConsumer()
         }
 
         conn = (GridbrainConnection*)conn->mNextConnection;
+    }
+    
+    if (isConsumer())
+    {
+        return true;
     }
 
     mConsumer = false;

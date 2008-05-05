@@ -26,6 +26,9 @@ betaHeight = 0--3
 alphaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, GTZ, ZERO, MAX, AVG}
 betaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, GTZ, ZERO, CLK, MEMW, MEMC, MEMD}
 
+betaComponents = {MEMW, MEMC, MEMD}
+betaComponents = {MEMW, MEMC, MEMD}
+
 viewRange = 150.0
 viewAngle = 170.0
 
