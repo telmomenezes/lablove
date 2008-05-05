@@ -230,7 +230,7 @@ protected:
 
     bool isSplitable(GridbrainConnection* conn);
     GridbrainConnection* selectSplitableConnection(unsigned int initialPop);
-    void Gridbrain::selectJoinableConnections(unsigned int initialPop,
+    void selectJoinableConnections(unsigned int initialPop,
                                             GridbrainConnection* &connOut1,
                                             GridbrainConnection* &connOut2);
 
