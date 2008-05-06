@@ -25,7 +25,7 @@ maxAge = 5000
 initialEnergy = 1.0
 metabolism = 0.0
 goCost = 0.005
-rotateCost = 0.0
+rotateCost = 0.005
 goForceScale = 0.3
 rotateForceScale = 0.006
 

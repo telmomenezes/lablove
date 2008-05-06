@@ -18,11 +18,6 @@ plantSize = 10.0
 worldWidth = 1000
 worldHeight = 1000
 
-alphaWidth = 0--4
-betaWidth = 0--2
-alphaHeight = 0--3
-betaHeight = 0--3
-
 alphaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, GTZ, ZERO, MAX, AVG}
 betaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, GTZ, ZERO, CLK, MEMW, MEMC, MEMD}
 
@@ -34,7 +29,7 @@ maxAge = 5000
 initialEnergy = 1.0
 metabolism = 0.0
 goCost = 0.005
-rotateCost = 0.0
+rotateCost = 0.005
 goForceScale = 0.3
 rotateForceScale = 0.006
 
@@ -44,8 +39,6 @@ rotFriction = 0.0
 rotDrag = 0.05
 
 feedCenter = 0.25
-
-initialConnections = 0
 
 compCount = 1
 bufferSize = 100
@@ -58,7 +51,6 @@ paramMutationStanDev = 0.0
 splitConnectionProb = 0.0
 joinConnectionsProb = 0.0
 changeComponentProb = 0.0
-changeInactiveComponentProb = 0.0
 swapComponentProb = 0.0
 
 recombineProb = 0.0
@@ -85,7 +77,6 @@ paramMutationStanDev = getNumberParameter("parammutstandev", paramMutationStanDe
 splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "spl")
 joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb, "joi")
 changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, "chg")
-changeInactiveComponentProb = getNumberParameter("changeincompprob", changeInactiveComponentProb, "chin")
 swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb, "swp")
 recombineProb = getNumberParameter("recombineprob", recombineProb, "rec")
 bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
@@ -189,7 +180,6 @@ brain:setParamMutationStanDev(paramMutationStanDev)
 brain:setMutateSplitConnectionProb(splitConnectionProb)
 brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
-brain:setMutateChangeInactiveComponentProb(changeInactiveComponentProb)
 brain:setMutateSwapComponentProb(swapComponentProb)
 
 brain:setGeneGrouping(geneGrouping)
@@ -204,7 +194,7 @@ alphaSet:addComponent(IN, SimCont2D.PERCEPTION_TARGET)
 alphaSet:addComponent(IN, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, agentFeed:getID(), foodTableCode)
 
 grid = Grid()
-grid:init(ALPHA, alphaWidth, alphaHeight)
+grid:init(ALPHA, 0, 0)
 grid:setComponentSet(alphaSet)
 
 brain:addGrid(grid, "objects");
@@ -218,14 +208,12 @@ betaSet:addComponent(OUT, SimCont2D.ACTION_ROTATE)
 betaSet:addComponent(OUT, SimCont2D.ACTION_EATB)
     
 grid2 = Grid()
-grid2:init(BETA, betaWidth, betaHeight)
+grid2:init(BETA, 0, 0)
 grid2:setComponentSet(betaSet)
 
 brain:addGrid(grid2, "beta")
 
 agent:setBrain(brain)
-
-brain:addRandomConnections(initialConnections)
 
 -- Plants
 --------------------------------------------------------------------------------
