@@ -1453,7 +1453,7 @@ void Gridbrain::cycle()
                         break;
                     case GridbrainComponent::SUM:
                         //printf("SUM ");
-                        comp->mInput = output;
+                        output = comp->mInput;
                         break;
                     case GridbrainComponent::MAX:
                         //printf("MAX ");
@@ -1557,7 +1557,14 @@ void Gridbrain::cycle()
                         break;
                     case GridbrainComponent::AMP:
                         //printf("AMP ");
-                        output = comp->mInput * ((1.0f / (1.0f - comp->mParam)) - 1.0f);
+                        if ((comp->mParam == 1.0f) && (comp->mInput == 0.0f))
+                        {
+                            output = 0.0f;
+                        }
+                        else
+                        {
+                            output = comp->mInput * ((1.0f / (1.0f - comp->mParam)) - 1.0f);
+                        }
 
                         break;
                     case GridbrainComponent::GTZ:
@@ -1593,15 +1600,14 @@ void Gridbrain::cycle()
                         {
                             comp->mTriggerInterval = (llULINT)(powf(5.0f, comp->mParam * 10.0f));
                             comp->mTimeToTrigger = comp->mTriggerInterval;
+                            comp->mInit = true;
                         }
 
                         output = 0.0f;
+                        input = comp->mInput;
 
                         if (comp->mTriggerInterval > 0)
                         {
-
-                            input = comp->mInput;
-
                             // Check for synch signal
                             if ((comp->mLastInput == 0.0f) && (input != 0.0f))
                             {
@@ -1649,15 +1655,6 @@ void Gridbrain::cycle()
                         break;
                     }
                             
-
-                    if (output > 1.0f)
-                    {
-                        output = 1.0f;
-                    }
-                    else if (output < -1.0f)
-                    {
-                        output = -1.0f;
-                    }
                     comp->mOutput = output;
 
                     //printf("%f => %f\n", comp->mInput, output);
