@@ -208,6 +208,8 @@ protected:
     float normalizeAngle(float angle);
 
     void speak(Agent* agent, Symbol* sym);
+
+    virtual void drawTerrain();
         
     static mt_distribution* mDistAge;
     static mt_distribution* mDistPosition;

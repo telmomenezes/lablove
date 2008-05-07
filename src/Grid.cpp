@@ -74,13 +74,11 @@ Grid::Grid(const Grid& grid)
     {
         mColumnTargetCountVec.push_back(grid.mColumnTargetCountVec[i]);
         GridCoord gc = grid.mColumnCoords[i];
-        gc.setNew(false);
         mColumnCoords.push_back(gc);
     }
     for (unsigned int i = 0; i < mHeight; i++)
     {
         GridCoord gc = grid.mRowCoords[i];
-        gc.setNew(false);
         mRowCoords.push_back(gc);
     }
 

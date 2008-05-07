@@ -1085,10 +1085,7 @@ void SimCont2D::drawBeforeObjects()
     art_setScale(mZoom, mZoom);
     art_setTranslation(mViewX, mViewY);
 
-    art_setColor(0, 255, 0, 255);
-    art_setTexture(mBackgroundTexture);
-    art_fillRectangle(0, 0, mWorldWidth, mWorldLength);
-    art_clearTexture();
+    drawTerrain();
 
     if (mShowGrid)
     {
@@ -1179,6 +1176,14 @@ void SimCont2D::drawBeforeObjects()
             iterEvent++;
         }
     }
+}
+
+void SimCont2D::drawTerrain()
+{
+    art_setColor(0, 255, 0, 255);
+    art_setTexture(mBackgroundTexture);
+    art_fillRectangle(0, 0, mWorldWidth, mWorldLength);
+    art_clearTexture();
 }
 
 void SimCont2D::drawAfterObjects()
@@ -1403,10 +1408,6 @@ void SimCont2D::setSize(SimulationObject* obj, float size)
 void SimCont2D::deltaEnergy(SimulationObject* obj, double delta)
 {
     obj->mFloatData[FLOAT_ENERGY] += delta;
-    if (isnan(obj->mFloatData[FLOAT_ENERGY]))
-    {
-        throw(0);
-    }
 }
 
 string SimCont2D::getInterfaceName(bool input, int type)

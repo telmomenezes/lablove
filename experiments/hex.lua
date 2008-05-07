@@ -51,7 +51,6 @@ paramMutationStanDev = 1.0
 splitConnectionProb = 0.01
 joinConnectionsProb = 0.0
 changeComponentProb = 0.0
-changeInComponentProb = 0.01
 swapComponentProb = 0.1
 
 recombineProb = 0.0
@@ -78,7 +77,6 @@ paramMutationStanDev = getNumberParameter("parammutstandev", paramMutationStanDe
 splitConnectionProb = getNumberParameter("splitconnprob", splitConnectionProb, "spl")
 joinConnectionsProb = getNumberParameter("joinconnprob", joinConnectionsProb, "joi")
 changeComponentProb = getNumberParameter("changecompprob", changeComponentProb, "chg")
-changeInComponentProb = getNumberParameter("changeincompprob", changeInComponentProb, "chin")
 swapComponentProb = getNumberParameter("swapcompprob", swapComponentProb, "swp")
 recombineProb = getNumberParameter("recombineprob", recombineProb, "rec")
 bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
@@ -97,8 +95,8 @@ logSuffix = logBaseName
 -- Simulation
 --------------------------------------------------------------------------------
 
-sim = SimCont2D()
-sim:setWorldDimensions(worldWidth, worldHeight, 250)
+sim = SimHex()
+sim:setWorldDimensions(worldWidth, worldHeight, 250, 50)
 sim:setViewRange(viewRange)
 sim:setViewAngle(viewAngle)
 sim:setGoCost(goCost)
@@ -182,7 +180,6 @@ brain:setParamMutationStanDev(paramMutationStanDev)
 brain:setMutateSplitConnectionProb(splitConnectionProb)
 brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
-brain:setMutateChangeInactiveComponentProb(changeInComponentProb)
 brain:setMutateSwapComponentProb(swapComponentProb)
 
 brain:setGeneGrouping(geneGrouping)

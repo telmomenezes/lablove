@@ -21,10 +21,21 @@
 
 SimHex::SimHex(lua_State* luaState)
 {
+    mHexSide = 0;
+    mHexA = 0;
+    mHexB = 0;
+    mHexCellWidth = 0;
+    mHexCellLength = 0;
+    mHexMap = NULL;
 }
 
 SimHex::~SimHex()
 {
+    if (mHexMap != NULL)
+    {
+        free(mHexMap);
+        mHexMap = NULL;
+    }
 }
 
 void SimHex::setWorldDimensions(float worldWidth,
@@ -35,6 +46,118 @@ void SimHex::setWorldDimensions(float worldWidth,
     SimCont2D::setWorldDimensions(worldWidth, worldLength, cellSide);
 
     mHexSide = hexSide;
+    mHexA = 0.866f * mHexSide;
+    mHexB = 0.5f * mHexSide;
+
+    int cellX;
+    int cellY;
+    getHexCell(worldWidth - 1, worldLength - 1, cellX, cellY);
+    mHexCellWidth = cellX + 1;
+    mHexCellLength = cellY + 1;
+
+    mHexMap = (HexCell*)malloc(mHexCellWidth * mHexCellLength * sizeof(HexCell));
+}
+
+void SimHex::drawTerrain()
+{
+    SimCont2D::drawTerrain();
+
+    art_setColor(0, 0, 0, 255);
+    art_setLineWidth(1.0f);
+
+    float x = 0;
+    float y = 0;
+
+    for (int hx = 0; hx < mHexCellWidth; hx++)
+    {
+        for (int hy = 0; hy < mHexCellLength; hy ++)
+        {
+            float x = ((float)hx) * 2 * mHexA;
+            float y = ((float)hy) * (mHexSide + mHexB);
+
+            if ((hy % 2) == 1)
+            {
+                x += mHexA;
+            }
+
+            float x1 = x;
+            float y1 = y - mHexB;
+            float x2 = x + mHexA;
+            float y2 = y;
+            float x3 = x + mHexA;
+            float y3 = y + mHexSide;
+            float x4 = x;
+            float y4 = y + mHexSide + mHexB;
+            float x5 = x - mHexA;
+            float y5 = y + mHexSide;
+            float x6 = x - mHexA;
+            float y6 = y;
+
+            art_drawLine(x1, y1, x2, y2);
+            art_drawLine(x2, y2, x3, y3);
+            art_drawLine(x3, y3, x4, y4);
+            art_drawLine(x4, y4, x5, y5);
+            art_drawLine(x5, y5, x6, y6);
+            art_drawLine(x6, y6, x1, y1);
+        }
+    }
+}
+
+void SimHex::getHexCell(float x, float y, int& hX, int& hY)
+{
+    float deltaX = mHexA * 2;
+    float deltaY = mHexSide + mHexB;
+
+    hY = truncf(y / deltaY);
+    float inY = y - (hY * deltaY);
+    int even = ((((int)hY) % 2) == 0);
+
+    float adjustedX = x;
+
+    if (even)
+    {
+        adjustedX += mHexA;
+    }
+
+    hX = truncf(adjustedX / deltaX);
+    float inX = adjustedX - (hX * deltaX);
+
+    if (inY > mHexSide)
+    {
+        if (inX < mHexA)
+        {
+            float lineX = inX;
+            float lineY = mHexB - (inY - mHexSide);
+
+            float m = -(mHexB / mHexA);
+
+            if (lineY < ((lineX * m) + mHexB))
+            {
+                hY++;
+
+                if (even)
+                {
+                    hX--;
+                }
+            }
+        }
+        else
+        {
+            float lineX = inX - mHexA;
+            float lineY = mHexB - (inY - mHexSide);
+            float m = mHexB / mHexA;
+
+            if (lineY < (lineX * m))
+            {
+                hY++;
+
+                if (!even)
+                {
+                    hX++;
+                }
+            }
+        }
+    }
 }
 
 const char SimHex::mClassName[] = "SimHex";

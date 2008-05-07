@@ -272,16 +272,9 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
 
                 GridbrainComponent* oldComponent = NULL;
                 if ((oldX >= 0)
-                    && (oldY >= 0)
-                    && (!xCoord.isNew())
-                    && (!yCoord.isNew()))
+                    && (oldY >= 0))
                 {
-                    GridbrainComponent* oc = getComponent(oldX, oldY, g);
-
-                    //if (oc->isUsed())
-                    //{
-                        oldComponent = oc;
-                    //}
+                    oldComponent = getComponent(oldX, oldY, g);
                 }
 
                 GridbrainComponent* newComponent = gb->getComponent(x, y, g);
@@ -1438,16 +1431,7 @@ void Gridbrain::cycle()
                         break;
                     case GridbrainComponent::OUT:
                         //printf("OUT ");
-                        // TODO: return 1 if the action was executed?
                         output = comp->mInput;
-                        if (output > 1.0f)
-                        {
-                            output = 1.0f;
-                        }
-                        else if (output < -1.0f)
-                        {
-                            output = -1.0f;
-                        }
                         outputVector[comp->mActionPosition] = output;
 
                         break;
@@ -1653,6 +1637,11 @@ void Gridbrain::cycle()
                         // TODO: this is an error. how to inform?
                         output = 0.0f;
                         break;
+                    }
+
+                    if (isnan(output))
+                    {
+                        output = 0.0f;
                     }
                             
                     comp->mOutput = output;

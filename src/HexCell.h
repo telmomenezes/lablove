@@ -17,38 +17,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef __INCLUDE_GRID_COORD_H
-#define __INCLUDE_GRID_COORD_H
+#if !defined(__INCLUDE_HEX_CELL_H)
+#define __INCLUDE_HEX_CELL_H
 
-#include <string>
-using std::string;
-
-class GridCoord
+class HexCell
 {
 public:
-    GridCoord();
-    GridCoord(unsigned int depth, unsigned int branch);
-    GridCoord(const GridCoord& coord);
-    virtual ~GridCoord();
-
-    bool operator==(const GridCoord &gc) const;
-
-    GridCoord leftOf();
-    GridCoord rightOf();
-
-    int position(GridCoord gc);
-
-    unsigned int getDepth(){return mDepth;}
-    unsigned int getBranch(){return mBranch;}
-
-    string toString();
-
-    bool isValid();
-
-
-protected:
-    unsigned int mDepth;
-    unsigned int mBranch;
+    HexCell();
+    virtual ~HexCell();
 };
 #endif
 

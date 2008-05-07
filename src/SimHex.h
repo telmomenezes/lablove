@@ -21,6 +21,7 @@
 #define __INCLUDE_SIM_HEX_H
 
 #include "SimCont2D.h"
+#include "HexCell.h"
 
 class SimHex : public SimCont2D
 {
@@ -40,7 +41,17 @@ public:
     int setWorldDimensions(lua_State* luaState);
 
 protected:
+    virtual void drawTerrain();
+
+    void getHexCell(float x, float y, int& hX, int& hY);
+
     float mHexSide;
+    float mHexA;
+    float mHexB;
+    int mHexCellWidth;
+    int mHexCellLength;
+
+    HexCell* mHexMap;
 };
 #endif
 

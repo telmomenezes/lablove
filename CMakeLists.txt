@@ -42,6 +42,7 @@ SET(SOURCE_FILES
     src/Simulation.cpp
     src/SimCont2D.cpp
     src/SimHex.cpp
+    src/HexCell.cpp
     src/ScriptableObject.cpp
     src/SimulationObject.cpp
     src/GraphicalObject.cpp
