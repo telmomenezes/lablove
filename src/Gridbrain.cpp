@@ -278,10 +278,10 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                 {
                     GridbrainComponent* oc = getComponent(oldX, oldY, g);
 
-                    if (oc->isUsed())
-                    {
+                    //if (oc->isUsed())
+                    //{
                         oldComponent = oc;
-                    }
+                    //}
                 }
 
                 GridbrainComponent* newComponent = gb->getComponent(x, y, g);

@@ -41,6 +41,7 @@ SET(SOURCE_FILES
     src/PopulationManager.cpp
     src/Simulation.cpp
     src/SimCont2D.cpp
+    src/SimHex.cpp
     src/ScriptableObject.cpp
     src/SimulationObject.cpp
     src/GraphicalObject.cpp

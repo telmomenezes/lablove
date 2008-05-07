@@ -18,6 +18,7 @@
  */
 
 #include "SimCont2D.h"
+#include "SimHex.h"
 #include "SimulationObject.h"
 #include "GraphicalObject.h"
 #include "Agent.h"
@@ -152,6 +153,7 @@ int main(int argc, char *argv[])
     luaopen_debug(luaState);
     
     Orbit<SimCont2D>::orbitRegister(luaState);
+    Orbit<SimHex>::orbitRegister(luaState);
     Orbit<SimulationObject>::orbitRegister(luaState);
     Orbit<GraphicalObject>::orbitRegister(luaState);
     Orbit<Agent>::orbitRegister(luaState);
