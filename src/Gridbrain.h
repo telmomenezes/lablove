@@ -51,7 +51,6 @@ public:
                         ET_COLUMN_BEFORE,
                         ET_COLUMN_AFTER,
                         ET_ROW};
-    enum CompEquivalenceType {CET_ORIGIN, CET_TARGET, CET_NEW};
 
     Gridbrain(lua_State* luaState=NULL);
     virtual ~Gridbrain();
@@ -264,7 +263,7 @@ protected:
     GridbrainComponent* getCompByRelativeOffset(GridbrainComponent* compOrig, unsigned int offset);
 
     void clearRecombineInfo();
-    GridbrainComponent* findEquivalentComponent(GridbrainComponent* comp, CompEquivalenceType eqType);
+    GridbrainComponent* findEquivalentComponent(GridbrainComponent* comp);
     Gridbrain* importConnection(Gridbrain* gb,
                                 GridbrainConnection* conn,
                                 bool &canAddComponent,
@@ -276,7 +275,7 @@ protected:
     bool checkGene(llULINT geneID);
     bool selectGene(llULINT geneID, bool select);
 
-    int compEquivalence(GridbrainComponent* comp1, GridbrainComponent* comp2, CompEquivalenceType eqType);
+    int compEquivalence(GridbrainComponent* comp1, GridbrainComponent* comp2);
     GridbrainGeneTag findGeneTag(GridbrainConnection* conn);
     virtual void popAdjust(vector<SimulationObject*>* popVec);
 

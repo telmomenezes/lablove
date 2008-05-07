@@ -45,10 +45,10 @@ bufferSize = 100
 fitnessAging = 0.1
 
 addConnectionProb = 0.01
-removeConnectionProb = 0.01
-changeParamProb = 0.0
-paramMutationStanDev = 0.0
-splitConnectionProb = 0.0
+removeConnectionProb = 0.02
+changeParamProb = 0.01
+paramMutationStanDev = 1.0
+splitConnectionProb = 0.01
 joinConnectionsProb = 0.0
 changeComponentProb = 0.0
 changeInComponentProb = 0.01

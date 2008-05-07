@@ -70,7 +70,7 @@ void Gridbrain::clearRecombineInfo()
     }
 }
 
-GridbrainComponent* Gridbrain::findEquivalentComponent(GridbrainComponent* comp, CompEquivalenceType eqType)
+GridbrainComponent* Gridbrain::findEquivalentComponent(GridbrainComponent* comp)
 {
     int bestEq = 0;
     GridbrainComponent* eqComp = NULL;
@@ -79,7 +79,7 @@ GridbrainComponent* Gridbrain::findEquivalentComponent(GridbrainComponent* comp,
     {
         GridbrainComponent* comp2 = &mComponents[i];
 
-        int eq = compEquivalence(comp, comp2, eqType);
+        int eq = compEquivalence(comp, comp2);
 
         if (eq > bestEq)
         {
@@ -159,8 +159,8 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
     GridbrainComponent* orig = (GridbrainComponent*)(conn->mOrigComponent);
     GridbrainComponent* targ = (GridbrainComponent*)(conn->mTargComponent);
 
-    GridbrainComponent* eqOrig = brain->findEquivalentComponent(orig, CET_NEW);
-    GridbrainComponent* eqTarg = brain->findEquivalentComponent(targ, CET_NEW);
+    GridbrainComponent* eqOrig = brain->findEquivalentComponent(orig);
+    GridbrainComponent* eqTarg = brain->findEquivalentComponent(targ);
 
     ;if ((eqOrig == NULL) || (eqTarg == NULL))
     {
@@ -234,7 +234,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
                 Gridbrain* newBrain = brain->clone(false, ET_COLUMN_RANDOM, origGrid);
                 delete brain;
                 brain = newBrain;
-                eqOrig = brain->findEquivalentComponent(orig, CET_NEW);
+                eqOrig = brain->findEquivalentComponent(orig);
             }
         }
 
@@ -267,7 +267,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
                 {
                     targX++;
                 }
-                eqOrig = brain->findEquivalentComponent(orig, CET_NEW);
+                eqOrig = brain->findEquivalentComponent(orig);
             }
             else
             {
@@ -314,7 +314,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
                 delete brain;
                 brain = newBrain;
                 recalcTarg = true;
-                eqOrig = brain->findEquivalentComponent(orig, CET_NEW);
+                eqOrig = brain->findEquivalentComponent(orig);
             }
         }
 
@@ -347,7 +347,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
             delete brain;
             brain = newBrain;
             recalcOrig = true;
-            eqTarg = brain->findEquivalentComponent(targ, CET_NEW);
+            eqTarg = brain->findEquivalentComponent(targ);
         }
 
         while (eqTarg == NULL)
@@ -373,7 +373,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
                 delete brain;
                 brain = newBrain;
                 recalcOrig = true;
-                eqTarg = brain->findEquivalentComponent(targ, CET_NEW);
+                eqTarg = brain->findEquivalentComponent(targ);
             }
         }
 
@@ -641,7 +641,7 @@ Brain* Gridbrain::recombine(Brain* brain)
     return gbNew;
 }
 
-int Gridbrain::compEquivalence(GridbrainComponent* comp1, GridbrainComponent* comp2, CompEquivalenceType eqType)
+int Gridbrain::compEquivalence(GridbrainComponent* comp1, GridbrainComponent* comp2)
 {
     if (!comp1->isEqual(comp2))
     {
@@ -651,28 +651,6 @@ int Gridbrain::compEquivalence(GridbrainComponent* comp1, GridbrainComponent* co
     if (comp1->isUnique())
     {
         return 2;
-    }
-
-    switch (eqType)
-    {
-    case CET_ORIGIN:
-        if ((comp1->mInboundConnections == 0)
-            && (comp2->mInboundConnections == 0)
-            && (comp1->mConnectionsCount == 1)
-            && (comp2->mConnectionsCount == 1))
-        {
-            return 1;
-        }
-        break;
-    case CET_TARGET:
-        if ((comp1->mInboundConnections == 1)
-            && (comp2->mInboundConnections == 1)
-            && (comp1->mConnectionsCount == 0)
-            && (comp2->mConnectionsCount == 0))
-        {
-            return 1;
-        }
-        break;
     }
 
     GridbrainConnection* conn1 = (GridbrainConnection*)comp1->mFirstInConnection;
@@ -726,7 +704,7 @@ GridbrainGeneTag Gridbrain::findGeneTag(GridbrainConnection* conn)
             GridbrainComponent* orig2 = (GridbrainComponent*)conn2->mOrigComponent;
             GridbrainComponent* targ2 = (GridbrainComponent*)conn2->mTargComponent;
 
-            int eq = compEquivalence(orig1, orig2, CET_ORIGIN) + compEquivalence(targ1, targ2, CET_TARGET);
+            int eq = compEquivalence(orig1, orig2) + compEquivalence(targ1, targ2);
 
             if (eq > bestEq)
             {
