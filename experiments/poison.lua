@@ -46,12 +46,12 @@ fitnessAging = 0.1
 
 addConnectionProb = 0.01
 removeConnectionProb = 0.01
-changeParamProb = 0.01
-paramMutationStanDev = 1.0
-splitConnectionProb = 0.01
-joinConnectionsProb = 0.01
+changeParamProb = 0.0
+paramMutationStanDev = 0.0
+splitConnectionProb = 0.0
+joinConnectionsProb = 0.0
 changeComponentProb = 0.0
-changeInComponentProb = 0.33
+changeInComponentProb = 0.1
 swapComponentProb = 0.0
 
 recombineProb = 1.0
