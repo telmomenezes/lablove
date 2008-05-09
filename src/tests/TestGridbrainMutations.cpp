@@ -50,15 +50,6 @@ TEST_FIXTURE(GridbrainMutFixture, GridbrainNoMutations)
     CHECK(mGridbrain.isValid());
 }
 
-TEST_FIXTURE(GridbrainMutFixture, GridbrainRemoveRandomConn)
-{
-    mGridbrain.addRandomConnections(100);
-    unsigned int count = mGridbrain.getConnectionsCount();
-    mGridbrain.removeRandomConnection();
-    count--;
-    CHECK_EQUAL(mGridbrain.getConnectionsCount(), count);
-}
-
 TEST_FIXTURE(GridbrainMutFixture, GridbrainMutateAddConnection)
 {
     mGridbrain.setMutateAddConnectionProb(0.1f);

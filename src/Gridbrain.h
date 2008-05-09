@@ -44,19 +44,14 @@ using std::string;
 class Gridbrain : public Brain
 {
 public:
-    enum ExpansionType {ET_NONE,
-                        ET_COLUMN_RANDOM,
-                        ET_COLUMN_FIRST,
-                        ET_COLUMN_LAST,
-                        ET_COLUMN_BEFORE,
-                        ET_COLUMN_AFTER,
-                        ET_ROW};
+    enum ExpansionType {ET_NONE, ET_COLUMN, ET_ROW};
+    enum CompEquivalenceType {CET_ORIGIN, CET_TARGET, CET_NEW};
 
     Gridbrain(lua_State* luaState=NULL);
     virtual ~Gridbrain();
 
     virtual Brain* clone();
-    Gridbrain* clone(bool grow, ExpansionType expansion, unsigned int targetGrid, unsigned int pos=0);
+    Gridbrain* clone(bool grow, ExpansionType expansion=ET_NONE, unsigned int targetGrid=0, GridCoord* gc=NULL);
 
     void addGrid(Grid* grid, string name);
     virtual void init();
@@ -81,7 +76,7 @@ public:
                 unsigned int xTarg,
                 unsigned int yTarg,
                 unsigned int gTarg);
-    void removeRandomConnection();
+    GridbrainConnection* getRandomConnection();
     GridbrainConnection* getConnection(unsigned int xOrig,
                 unsigned int yOrig,
                 unsigned int gOrig,
@@ -212,8 +207,6 @@ public:
     static void debugMutationsCount();
 
 protected:
-    Gridbrain* baseClone();
-    
     void generateMemory(Gridbrain* originGB=NULL);
 
     void initGridsIO();
@@ -227,16 +220,10 @@ protected:
 
     bool swapComponents(GridbrainComponent* comp1, GridbrainComponent* comp2);
 
-    bool isSplitable(GridbrainConnection* conn);
-    GridbrainConnection* selectSplitableConnection(unsigned int initialPop);
-    void selectJoinableConnections(unsigned int initialPop,
-                                            GridbrainConnection* &connOut1,
-                                            GridbrainConnection* &connOut2);
-
     void mutateAddConnection(unsigned int popSize);
     void mutateRemoveConnection(unsigned int popSize);
-    void mutateSplitConnection(unsigned int popSize);
-    void mutateJoinConnections(unsigned int popSize);
+    void mutateSplitConnection();
+    void mutateJoinConnections();
     void mutateChangeComponent();
     void mutateChangeInactiveComponent();
     void mutateChangeParam();
@@ -251,6 +238,7 @@ protected:
     
     void initRandomConnectionSequence(float selectionProb);
     GridbrainConnection* nextRandomConnection();
+    GridbrainConnection* skipNextRandomConnection();
     void initRandomComponentSequence(float selectionProb);
     int nextRandomComponent();
 
@@ -263,19 +251,21 @@ protected:
     GridbrainComponent* getCompByRelativeOffset(GridbrainComponent* compOrig, unsigned int offset);
 
     void clearRecombineInfo();
+    bool exists(GridbrainComponent* comp, unsigned int ex, unsigned int ey);
+    void recombineUnusedComponents(Gridbrain* gb1, Gridbrain* gb2);
     GridbrainComponent* findEquivalentComponent(GridbrainComponent* comp);
-    Gridbrain* importConnection(Gridbrain* gb,
-                                GridbrainConnection* conn,
-                                bool &canAddComponent,
-                                bool &success,
-                                unsigned int &failsOrder,
-                                unsigned int &failsComp);
-    bool correctOrder(int& x1, int& y1, int& x2, int& y2, int g);
+    Gridbrain* importComponent(Gridbrain* gbTarg,
+                                Gridbrain* gbOrig,
+                                GridbrainComponent* compOrig,
+                                GridbrainComponent*& compTarg);
+    Gridbrain* importConnection(Gridbrain* gbTarg,
+                                Gridbrain* gbOrig,
+                                GridbrainConnection* conn);
 
     bool checkGene(llULINT geneID);
     bool selectGene(llULINT geneID, bool select);
 
-    int compEquivalence(GridbrainComponent* comp1, GridbrainComponent* comp2);
+    int compEquivalence(GridbrainComponent* comp1, GridbrainComponent* comp2, CompEquivalenceType eqType);
     GridbrainGeneTag findGeneTag(GridbrainConnection* conn);
     virtual void popAdjust(vector<SimulationObject*>* popVec);
 

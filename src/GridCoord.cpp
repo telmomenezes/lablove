@@ -25,7 +25,7 @@ GridCoord::GridCoord()
     mBranch = 0;
 }
 
-GridCoord::GridCoord(unsigned int depth, unsigned int branch)
+GridCoord::GridCoord(llULINT depth, llULINT branch)
 {
     mDepth = depth;
     mBranch = branch;
@@ -43,16 +43,16 @@ GridCoord::~GridCoord()
 
 GridCoord GridCoord::leftOf()
 {
-    unsigned int depth = mDepth + 1;
-    unsigned int branch = 2 * mBranch;
+    llULINT depth = mDepth + 1;
+    llULINT branch = 2 * mBranch;
     GridCoord gc(depth, branch);
     return gc;
 }
 
 GridCoord GridCoord::rightOf()
 {
-    unsigned int depth = mDepth + 1;
-    unsigned int branch = (2 * mBranch) + 1;
+    llULINT depth = mDepth + 1;
+    llULINT branch = (2 * mBranch) + 1;
     GridCoord gc(depth, branch);
     return gc;
 }
@@ -69,10 +69,10 @@ bool GridCoord::operator==(const GridCoord &gc) const
 
 int GridCoord::position(GridCoord gc)
 {
-    unsigned int d1 = mDepth;
-    unsigned int b1 = mBranch;
-    unsigned int d2 = gc.mDepth;
-    unsigned int b2 = gc.mBranch;
+    llULINT d1 = mDepth;
+    llULINT b1 = mBranch;
+    llULINT d2 = gc.mDepth;
+    llULINT b2 = gc.mBranch;
 
     if (d1 == d2)
     {
@@ -90,8 +90,8 @@ int GridCoord::position(GridCoord gc)
         }
     }
 
-    unsigned int deltaD;
-    unsigned int downB;
+    llULINT deltaD;
+    llULINT downB;
     int inversor;
     GridCoord firstRight;
 
@@ -144,8 +144,8 @@ string GridCoord::toString()
 
 bool GridCoord::isValid()
 {
-    unsigned int maxBranch = 1;
-    for (unsigned int i = 0; i < mDepth; i++)
+    llULINT maxBranch = 1;
+    for (llULINT i = 0; i < mDepth; i++)
     {
         maxBranch *= 2;
     }

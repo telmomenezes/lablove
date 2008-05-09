@@ -277,94 +277,78 @@ float* Grid::getInputBuffer()
     return buffer;
 }
 
-void Grid::addColumn(ColumnPlacement place, unsigned int pos)
+void Grid::addColumn(GridCoord* gc)
 {
     mWidth++;
     mSize = mWidth * mHeight;
-    int newColumn;
-
-    switch (place)
-    {
-    case CP_FIRST:
-        newColumn = 0;
-        break;
-    case CP_LAST:
-        newColumn = mWidth - 1;
-        break;
-    case CP_RANDOM:
-        newColumn = mDistRowsAndColumns->iuniform(0, mWidth);
-        break;
-    case CP_BEFORE:
-        newColumn = pos;
-        break;
-    case CP_AFTER:
-        newColumn = pos + 1;
-        break;
-    }
     mColumnTargetCountVec.push_back(0);
 
-    vector<GridCoord>::iterator iterCoord = mColumnCoords.begin();
-    for (unsigned int i = 0; i < newColumn; i++)
+    if (gc == NULL)
     {
-        iterCoord++;
-    }
+        GridCoord ngc;
 
-    GridCoord gc;
-
-    if (mWidth == 1)
-    {
-        gc = GridCoord();
-    }
-    else if (newColumn == 0)
-    {
-        gc = mColumnCoords[0].leftOf();
-    }
-    else if (newColumn == (mWidth - 1))
-    {
-        gc = mColumnCoords[mWidth - 2].rightOf();
+        if (mWidth == 1)
+        {
+            ngc = GridCoord();
+            mColumnCoords.push_back(ngc);
+        }
+        else if (mType == ALPHA)
+        {
+            ngc = mColumnCoords[mWidth - 2].rightOf();
+            mColumnCoords.push_back(ngc);
+        }
+        else if (mType == BETA)
+        {
+            ngc = mColumnCoords[0].leftOf();
+            vector<GridCoord>::iterator iterCoord = mColumnCoords.begin();   
+            mColumnCoords.insert(iterCoord, ngc);
+        }
     }
     else
-    {
-        unsigned int d1 = mColumnCoords[newColumn - 1].getDepth();
-        unsigned int d2 = mColumnCoords[newColumn].getDepth();
+    {   
+        GridCoord ngc = *gc;
 
-        if (d1 > d2)
+        vector<GridCoord>::iterator iterCoord = mColumnCoords.begin();
+        while ((iterCoord != mColumnCoords.end())
+                && ((*iterCoord).position(ngc) != 1))
         {
-            gc = mColumnCoords[newColumn - 1].rightOf();
+            iterCoord++;
         }
-        else
-        {
-            gc = mColumnCoords[newColumn].leftOf();
-        }
+        mColumnCoords.insert(iterCoord, ngc);
     }
-
-    mColumnCoords.insert(iterCoord, gc);
 }
 
-void Grid::addRow()
+void Grid::addRow(GridCoord* gc)
 {
-    int newRow = mHeight;
     mHeight++;
     mSize = mWidth * mHeight;
 
-    vector<GridCoord>::iterator iterCoord = mRowCoords.begin();
-    for (unsigned int i = 0; i < newRow; i++)
+    if (gc == NULL)
     {
-        iterCoord++;
-    }
+        GridCoord ngc;
 
-    GridCoord gc;
-
-    if (newRow == 0)
-    {
-        gc = GridCoord();
+        if (mHeight == 1)
+        {
+            ngc = GridCoord();
+        }
+        else
+        {
+            ngc = mRowCoords[mHeight - 2].rightOf();
+        }
+        mRowCoords.push_back(ngc);
     }
     else
-    {
-        gc = mRowCoords[newRow - 1].rightOf();
-    }
+    {   
+        GridCoord ngc = *gc;
 
-    mRowCoords.insert(iterCoord, gc);
+        vector<GridCoord>::iterator iterCoord = mRowCoords.begin();
+        while ((iterCoord != mRowCoords.end())
+                && ((*iterCoord).position(ngc) != 1))
+        {
+            iterCoord++;
+        }
+        mRowCoords.insert(iterCoord, ngc);
+    }
 }
 
 void Grid::deleteColumn(unsigned int col)

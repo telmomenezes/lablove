@@ -45,16 +45,16 @@ bufferSize = 100
 fitnessAging = 0.1
 
 addConnectionProb = 0.01
-removeConnectionProb = 0.02
+removeConnectionProb = 0.01
 changeParamProb = 0.01
 paramMutationStanDev = 1.0
 splitConnectionProb = 0.01
-joinConnectionsProb = 0.0
+joinConnectionsProb = 0.01
 changeComponentProb = 0.0
-changeInComponentProb = 0.01
+changeInComponentProb = 0.33
 swapComponentProb = 0.0
 
-recombineProb = 0.0
+recombineProb = 1.0
 geneGrouping = false
 
 timeLimit = 0

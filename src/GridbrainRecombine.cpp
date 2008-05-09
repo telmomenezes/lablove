@@ -79,7 +79,7 @@ GridbrainComponent* Gridbrain::findEquivalentComponent(GridbrainComponent* comp)
     {
         GridbrainComponent* comp2 = &mComponents[i];
 
-        int eq = compEquivalence(comp, comp2);
+        int eq = compEquivalence(comp, comp2, CET_NEW);
 
         if (eq > bestEq)
         {
@@ -96,350 +96,129 @@ GridbrainComponent* Gridbrain::findEquivalentComponent(GridbrainComponent* comp)
     return eqComp;
 }
 
-bool Gridbrain::correctOrder(int& x1, int& y1, int& x2, int& y2, int g)
+Gridbrain* Gridbrain::importComponent(Gridbrain* gbTarg,
+                                        Gridbrain* gbOrig,
+                                        GridbrainComponent* compOrig,
+                                        GridbrainComponent*& compTarg)
 {
-    GridbrainComponent* comp1 = getComponent(x1, y1, g);
-    GridbrainComponent* comp2 = getComponent(x2, y2, g);
+    Gridbrain* brain = gbTarg;
 
-    if ((x1 != x2) && (swapComponents(comp1, comp2)))
+    compTarg = NULL;
+
+    unsigned int origX = compOrig->mColumn;
+    unsigned int origY = compOrig->mRow;
+    unsigned int g = compOrig->mGrid;
+
+    Grid* gridOrig = gbOrig->getGrid(g);
+    Grid* gridTarg = brain->getGrid(g);
+
+    GridCoord coordCol = gridOrig->getColumnCoord(origX);
+    GridCoord coordRow = gridOrig->getRowCoord(origY);
+
+    int targX = gridTarg->getColumnByCoord(coordCol);
+    int targY = gridTarg->getRowByCoord(coordRow);
+
+    if (targX == -1)
     {
-        unsigned int tx = x1;
-        unsigned int ty = y1;
-        x1 = x2;
-        y1 = y2;
-        x2 = tx;
-        y2 = ty;
-        return true;
+        Gridbrain* newBrain = brain->clone(false, ET_COLUMN, g, &coordCol);
+        delete brain;
+        brain = newBrain;
+        gridTarg = brain->getGrid(g);
+        targX = gridTarg->getColumnByCoord(coordCol);
+    }
+    if (targY == -1)
+    {
+        Gridbrain* newBrain = brain->clone(false, ET_ROW, g, &coordRow);
+        delete brain;
+        brain = newBrain;
+        gridTarg = brain->getGrid(g);
+        targY = gridTarg->getRowByCoord(coordRow);
     }
 
-    Grid* grid = mGridsVec[g];
+    compTarg = brain->getComponent(targX, targY, g);
 
-    for (unsigned int x = x1 + 1; x < grid->getWidth(); x++)
+    while (compTarg->isUsed())
     {
-        for (unsigned int y = 0; y < grid->getHeight(); y++)
+        for (unsigned int y = 0;
+                (y < gridTarg->getHeight()) && (compTarg->isUsed());
+                y++)
         {
-            GridbrainComponent* compSwap = getComponent(x, y, g);
+            compTarg = brain->getComponent(targX, y, g);
+        }
 
-            if (swapComponents(comp2, compSwap))
-            {
-                x2 = x;
-                y2 = y;
-                return true;
-            }
+        if (compTarg->isUsed())
+        {
+            Gridbrain* newBrain = brain->clone(false, ET_ROW, g);
+            delete brain;
+            brain = newBrain;
+            gridTarg = brain->getGrid(g);
+            compTarg = brain->getComponent(targX, 0, g);
         }
     }
 
-    for (int x = x2 - 1; x >= 0; x--)
-    {
-        for (unsigned int y = 0; y < grid->getHeight(); y++)
-        {
-            GridbrainComponent* compSwap = getComponent(x, y, g);
+    compTarg->copyDefinitions(compOrig);
 
-            if (swapComponents(comp1, compSwap))
-            {
-                x1 = x;
-                y1 = y;
-                return true;
-            }
-        }
-    }
-
-    return false;
+    return brain;
 }
 
-Gridbrain* Gridbrain::importConnection(Gridbrain* gb,
-                                        GridbrainConnection* conn,
-                                        bool &canAddComponent,
-                                        bool &success,
-                                        unsigned int &failsOrder,
-                                        unsigned int &failsComp)
+Gridbrain* Gridbrain::importConnection(Gridbrain* gbTarg,
+                                        Gridbrain* gbOrig,
+                                        GridbrainConnection* conn)
 {
-    Gridbrain* brain = gb;
+    Gridbrain* brain = gbTarg;
 
     GridbrainComponent* orig = (GridbrainComponent*)(conn->mOrigComponent);
     GridbrainComponent* targ = (GridbrainComponent*)(conn->mTargComponent);
 
+    unsigned int g1 = orig->mGrid;
+    unsigned int g2 = targ->mGrid;
+
+    GridCoord cX1;
+    GridCoord cY1;
+    GridCoord cX2;
+    GridCoord cY2;
+
     GridbrainComponent* eqOrig = brain->findEquivalentComponent(orig);
     GridbrainComponent* eqTarg = brain->findEquivalentComponent(targ);
 
-    ;if ((eqOrig == NULL) || (eqTarg == NULL))
-    {
-        if (!canAddComponent)
-        {
-            //printf("* components missing\n");
-            failsComp++;
-            success = false;
-            return brain;
-        }
-    }
-
-    unsigned int origX;
-    unsigned int origY;
-    unsigned int origG;
-    unsigned int targX;
-    unsigned int targY;
-    unsigned int targG;
+    Grid* grid1 = brain->getGrid(g1);
+    Grid* grid2 = brain->getGrid(g2);
 
     if (eqOrig != NULL)
     {
-        origX = eqOrig->mColumn;
-        origY = eqOrig->mRow;
-        origG = eqOrig->mGrid;
-        //printf("origin exists: ");
-        //printComponent(eqOrig);
-        //printf("\n");
+        cX1 = grid1->getColumnCoord(eqOrig->mColumn);
+        cY1 = grid1->getRowCoord(eqOrig->mRow);
     }
     if (eqTarg != NULL)
     {
-        targX = eqTarg->mColumn;
-        targY = eqTarg->mRow;
-        targG = eqTarg->mGrid;
-        //printf("target exists: ");
-        //printComponent(eqTarg);
-        //printf("\n");
-    }
-
-    unsigned int origGrid = orig->mGrid;
-    unsigned int targetGrid = targ->mGrid;
-
-    if ((eqOrig == NULL)
-        && (eqTarg == NULL))
-    {
-        //printf("* insert orig and target\n");
-        while (eqOrig == NULL)
-        {
-            Grid* grid = brain->mGridsVec[origGrid];
-
-            for (unsigned int x = 0;
-                    (x < grid->getWidth()) && (eqOrig == NULL);
-                    x++)
-            {
-                for (unsigned int y = 0;
-                        (y < grid->getHeight()) && (eqOrig == NULL);
-                        y++)
-                {
-                    GridbrainComponent* curComp = brain->getComponent(x, y, origGrid);
-
-                    if (!curComp->isUsed())
-                    {
-                        curComp->copyDefinitions(orig);
-                        eqOrig = curComp;
-                    }
-                }
-            }
-
-            // Grid width needs to be expanded?
-            if (eqOrig == NULL)
-            {
-                Gridbrain* newBrain = brain->clone(false, ET_COLUMN_RANDOM, origGrid);
-                delete brain;
-                brain = newBrain;
-                eqOrig = brain->findEquivalentComponent(orig);
-            }
-        }
-
-        origX = eqOrig->mColumn;
-        origY = eqOrig->mRow;
-        origG = eqOrig->mGrid;
+        cX2 = grid2->getColumnCoord(eqTarg->mColumn);
+        cY2 = grid2->getRowCoord(eqTarg->mRow);
     }
 
     if (eqOrig == NULL)
     {
-        //printf("* insert orig\n");
-        Grid* grid = brain->mGridsVec[origGrid];
-
-        bool recalcTarg = false;
-        
-        unsigned int origColumn;
-
-        if (origGrid == targetGrid)
-        {
-            if (eqTarg->mColumn == 0)
-            {
-                origColumn = 0;
-
-                // Grid width needs to be expanded
-                Gridbrain* newBrain = brain->clone(false, ET_COLUMN_FIRST, origGrid);
-                delete brain;
-                brain = newBrain;
-                recalcTarg = true;
-                if (targG == origG)
-                {
-                    targX++;
-                }
-                eqOrig = brain->findEquivalentComponent(orig);
-            }
-            else
-            {
-                origColumn = eqTarg->mColumn - 1;
-            }
-        }
-        else
-        {
-            if (grid->getWidth() == 0)
-            {
-                origColumn = 0;
-
-                // Grid width needs to be expanded
-                Gridbrain* newBrain = brain->clone(false, ET_COLUMN_FIRST, origGrid);
-                delete brain;
-                brain = newBrain;
-                recalcTarg = true;
-            }
-            else
-            {
-                origColumn = grid->getWidth() - 1;
-            }
-        }
-
-        while (eqOrig == NULL)
-        {
-            grid = brain->mGridsVec[origGrid];
-            unsigned int y = 0;
-            while ((eqOrig == NULL) && (y < grid->getHeight()))
-            {
-                GridbrainComponent* curComp = brain->getComponent(origColumn, y, origGrid);
-                y++;
-                if (!curComp->isUsed())
-                {
-                    curComp->copyDefinitions(orig);
-                    eqOrig = curComp;
-                }
-            }
-
-            // Grid height needs to be expanded?
-            if (eqOrig == NULL)
-            {
-                Gridbrain* newBrain = brain->clone(false, ET_ROW, origGrid);
-                delete brain;
-                brain = newBrain;
-                recalcTarg = true;
-                eqOrig = brain->findEquivalentComponent(orig);
-            }
-        }
-
-        origX = eqOrig->mColumn;
-        origY = eqOrig->mRow;
-        origG = eqOrig->mGrid;
-
-        if (recalcTarg)
-        {
-            eqTarg = brain->getComponent(targX, targY, targG);
-        }
+        brain = importComponent(brain, gbOrig, orig, eqOrig);
+        grid1 = brain->getGrid(g1);
+        grid2 = brain->getGrid(g2);
+        cX1 = grid1->getColumnCoord(eqOrig->mColumn);
+        cY1 = grid1->getRowCoord(eqOrig->mRow);
     }
 
     if (eqTarg == NULL)
     {
-        //printf("* insert target\n");
-        bool recalcOrig = false;
-        
-        unsigned int targetColumn = 0;
-
-        if (origGrid == targetGrid)
-        {
-            targetColumn = eqOrig->mColumn + 1;
-        }
-
-        // Grid width needs to be expanded?
-        if (brain->mGridsVec[targetGrid]->getWidth() == targetColumn)
-        {
-            Gridbrain* newBrain = brain->clone(false, ET_COLUMN_LAST, targetGrid);
-            delete brain;
-            brain = newBrain;
-            recalcOrig = true;
-            eqTarg = brain->findEquivalentComponent(targ);
-        }
-
-        while (eqTarg == NULL)
-        {
-            Grid* grid = brain->mGridsVec[targetGrid];
-
-            unsigned int y = 0;
-            while ((eqTarg == NULL) && (y < grid->getHeight()))
-            {
-                GridbrainComponent* curComp = brain->getComponent(targetColumn, y, targetGrid);
-                y++;
-                if (!curComp->isUsed())
-                {
-                    curComp->copyDefinitions(targ);
-                    eqTarg = curComp;
-                }
-            }
-
-            // Grid height needs to be expanded?
-            if (eqTarg == NULL)
-            {
-                Gridbrain* newBrain = brain->clone(false, ET_ROW, targetGrid);
-                delete brain;
-                brain = newBrain;
-                recalcOrig = true;
-                eqTarg = brain->findEquivalentComponent(targ);
-            }
-        }
-
-        if (recalcOrig)
-        {
-            eqOrig = brain->getComponent(origX, origY, origG);
-        }
+        brain = importComponent(brain, gbOrig, targ, eqTarg);
+        grid1 = brain->getGrid(g1);
+        grid2 = brain->getGrid(g2);
+        cX2 = grid2->getColumnCoord(eqTarg->mColumn);
+        cY2 = grid2->getRowCoord(eqTarg->mRow);
     }
 
-    bool fail = false;
+    unsigned int x1 = grid1->getColumnByCoord(cX1);
+    unsigned int y1 = grid1->getRowByCoord(cY1);
+    unsigned int x2 = grid2->getColumnByCoord(cX2);
+    unsigned int y2 = grid2->getRowByCoord(cY2);
 
-    int x1 = eqOrig->mColumn;
-    int y1 = eqOrig->mRow;
-    int g1 = eqOrig->mGrid;
-    int x2 = eqTarg->mColumn;
-    int y2 = eqTarg->mRow;
-    int g2 = eqTarg->mGrid;
-
-    if (brain->isConnectionValid(x1, y1, g1, x2, y2, g2) && (g1 <= g2))
-    {
-        if ((g1 == g2) && (x1 >= x2))
-        {
-            //printf("* reverse order\n");
-            if (!brain->correctOrder(x1, y1, x2, y2, g1))
-            {
-                Gridbrain* newBrain = brain->clone(false, ET_COLUMN_BEFORE, g1, x2);
-                delete brain;
-                brain = newBrain;
-                x1++;
-                x2++;
-                if (!brain->correctOrder(x1, y1, x2, y2, g1))
-                {
-                    Gridbrain* newBrain = brain->clone(false, ET_COLUMN_AFTER, g1, x1);
-                    delete brain;
-                    brain = newBrain;
-                    
-                    if (!brain->correctOrder(x1, y1, x2, y2, g1))
-                    {
-                        fail = true;
-                    }
-                }
-            }
-        }
-    }
-    else
-    {
-        fail = true;
-    }
-
-    if (fail)
-    {
-        failsOrder++;
-        success = false;
-
-        //printf("FAILURE\n");
-    }
-    else
-    {
-        brain->addConnection(x1, y1, g1, x2, y2, g2, conn->mGeneTag);
-        eqOrig = brain->getComponent(x1, y1, g1);
-        eqTarg = brain->getComponent(x2, y2, g2);
-        canAddComponent = false;
-        success = true;
-
-        //printf("SUCCESS\n");
-    }
+    brain->addConnection(x1, y1, g1, x2, y2, g2, conn->mGeneTag);
 
     return brain;
 }
@@ -487,13 +266,8 @@ Brain* Gridbrain::recombine(Brain* brain)
 {
     //printf("\n\n=== START RECOMBINE ===\n");
 
-    Gridbrain* gbNew = (Gridbrain*)(this->clone(false, ET_NONE, 0));
+    Gridbrain* gbNew = (Gridbrain*)(this->clone(false));
     Gridbrain* gb2 = (Gridbrain*)brain;
-
-    //printf("\n>>>> PARENT1\n");
-    //gbNew->printDebug();
-    //printf("\n>>>> PARENT2\n");
-    //gb2->printDebug();
 
     gbNew->clearRecombineInfo();
     gb2->clearRecombineInfo();
@@ -552,6 +326,11 @@ Brain* Gridbrain::recombine(Brain* brain)
         conn = (GridbrainConnection*)conn->mNextGlobalConnection;
     }
 
+    /*printf(">>> PARENT 1\n");
+    gbNew->printDebug();
+    printf(">>> PARENT 2\n");
+    gb2->printDebug();*/
+
     // Remove unselected connections from child
     conn = gbNew->mConnections;
     while (conn != NULL)
@@ -567,81 +346,128 @@ Brain* Gridbrain::recombine(Brain* brain)
     }
 
     // Import selected connections from parent 2
-    bool done = false;
-    bool canAddComponent = false;
-
-    while (!done)
+    conn = gb2->mConnections;
+    while (conn != NULL)
     {
-        unsigned int failsOrder = 0;
-        unsigned int failsComp = 0;
-        unsigned int imports = 0;
-
-        conn = gb2->mConnections;
-        while (conn != NULL)
+        if (conn->mSelectionState == GridbrainConnection::SS_SELECTED)
         {
-            if (conn->mSelectionState == GridbrainConnection::SS_SELECTED)
-            {
-                bool success;
-                //printf("-> Import connection: ");
-                //gb2->printConnection(conn);
-                gbNew = importConnection(gbNew, conn, canAddComponent, success, failsOrder, failsComp);
-
-                if (success)
-                {
-                    conn->mSelectionState = GridbrainConnection::SS_UNSELECTED;
-                    imports++;
-                }
-            }
-
-            conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+            //printf("-> Import connection: ");
+            //gb2->printConnection(conn);
+            gbNew = importConnection(gbNew, gb2, conn);
         }
 
-        unsigned int fails = failsOrder + failsComp;
-
-        bool addComponent = false;
-        if (fails > 0)
-        {
-            if (imports == 0)
-            {
-                if (failsComp > 0)
-                {
-                    canAddComponent = true;
-                }
-                else
-                {
-                    // OK, we give up...
-                    /*printf("=>>>>give up!\n");
-                    printf(">>> PARENT 1\n");
-                    printDebug();
-                    printf(">>> PARENT 2\n");
-                    gb2->printDebug();
-                    printf(">>> CHILD\n");
-                    gbNew->printDebug();*/
-                    done = true;
-                }
-            }
-        }
-        else
-        {
-            // It's done!
-            done = true;
-        }
+        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
     }
+
+    gbNew->recombineUnusedComponents(this, gb2);
 
     gbNew->generateMemory();
     gbNew->update();
 
-    /*printf(">>> PARENT 1\n");
-    printDebug();
-    printf(">>> PARENT 2\n");
-    gb2->printDebug();
-    printf(">>> CHILD\n");
+    
+    /*printf(">>> CHILD\n");
     gbNew->printDebug();*/
 
     return gbNew;
 }
 
-int Gridbrain::compEquivalence(GridbrainComponent* comp1, GridbrainComponent* comp2)
+bool Gridbrain::exists(GridbrainComponent* comp, unsigned int ex, unsigned int ey)
+{
+    Grid* grid = mGridsVec[comp->mGrid];
+    unsigned int startPos = grid->getOffset();
+    unsigned int endPos = grid->getOffset() + grid->getSize();
+
+    for (unsigned int pos = startPos; pos < endPos; pos++)
+    {
+        GridbrainComponent* comp2 = &mComponents[pos];
+
+        if ((comp2->mColumn != ex) || (comp2->mRow != ey))
+        {
+            if (comp->isEqual(comp2))
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+void Gridbrain::recombineUnusedComponents(Gridbrain* gb1, Gridbrain* gb2)
+{
+    for (unsigned int g = 0; g < mGridsCount; g++)
+    {
+        Grid* gridChild = mGridsVec[g];
+        Grid* gridP1 = gb1->getGrid(g);
+        Grid* gridP2 = gb2->getGrid(g);
+        
+        for (unsigned int x = 0; x < gridChild->getWidth(); x++)
+        {
+            GridCoord colCoord = gridChild->getColumnCoord(x);
+            int x1 = gridP1->getColumnByCoord(colCoord);
+            int x2 = gridP2->getColumnByCoord(colCoord);
+
+            for (unsigned int y = 0; y < gridChild->getHeight(); y++)
+            {
+                GridbrainComponent* comp = getComponent(x, y, g);
+
+                if (!comp->isUsed())
+                {
+                    GridCoord rowCoord = gridChild->getRowCoord(y);
+                    int y1 = gridP1->getRowByCoord(rowCoord);
+                    int y2 = gridP2->getRowByCoord(rowCoord);
+
+                    GridbrainComponent* comp1 = NULL;
+                    GridbrainComponent* comp2 = NULL;
+                    bool choice1 = false;
+                    bool choice2 = false;
+
+                    if ((x1 >= 0) && (y1 >= 0))
+                    {
+                        comp1 = gb1->getComponent(x1, y1, g);
+                        choice1 = true;
+                        if ((comp1->isUnique()) && (exists(comp1, x, y)))
+                        {
+                            choice1 = false;
+                        }
+                    }
+                    if ((x2 >= 0) && (y2 >= 0))
+                    {
+                        comp2 = gb2->getComponent(x2, y2, g);
+                        choice2 = true;
+                        if ((comp2->isUnique()) && (exists(comp2, x, y)))
+                        {
+                            choice2 = false;
+                        }
+                    }
+
+                    if (choice1 && choice2)
+                    {
+                        if (mDistRecombine->iuniform(0, 2) == 0)
+                        {
+                            choice1 = false;
+                        }
+                        else
+                        {
+                            choice2 = false;
+                        }
+                    }
+
+                    if (choice1)
+                    {
+                        comp->copyDefinitions(comp1);
+                    }
+                    else if (choice2)
+                    {
+                        comp->copyDefinitions(comp2);
+                    }
+                }
+            }
+        }
+    }
+}
+
+int Gridbrain::compEquivalence(GridbrainComponent* comp1, GridbrainComponent* comp2, CompEquivalenceType eqType)
 {
     if (!comp1->isEqual(comp2))
     {
@@ -651,6 +477,28 @@ int Gridbrain::compEquivalence(GridbrainComponent* comp1, GridbrainComponent* co
     if (comp1->isUnique())
     {
         return 2;
+    }
+
+    switch (eqType)
+    {
+    case CET_ORIGIN:
+        if ((comp1->mInboundConnections == 0)
+            && (comp2->mInboundConnections == 0)
+            && (comp1->mConnectionsCount == 1)
+            && (comp2->mConnectionsCount == 1))
+        {
+            return 1;
+        }
+        break;
+    case CET_TARGET:
+        if ((comp1->mInboundConnections == 1)
+            && (comp2->mInboundConnections == 1)
+            && (comp1->mConnectionsCount == 0)
+            && (comp2->mConnectionsCount == 0))
+        {
+            return 1;
+        }
+        break;
     }
 
     GridbrainConnection* conn1 = (GridbrainConnection*)comp1->mFirstInConnection;
@@ -690,7 +538,7 @@ int Gridbrain::compEquivalence(GridbrainComponent* comp1, GridbrainComponent* co
 
 GridbrainGeneTag Gridbrain::findGeneTag(GridbrainConnection* conn)
 {
-    int bestEq = 1;
+    int bestEq = 0;
     GridbrainGeneTag tag;
 
     GridbrainConnection* conn2 = mConnections;
@@ -704,7 +552,14 @@ GridbrainGeneTag Gridbrain::findGeneTag(GridbrainConnection* conn)
             GridbrainComponent* orig2 = (GridbrainComponent*)conn2->mOrigComponent;
             GridbrainComponent* targ2 = (GridbrainComponent*)conn2->mTargComponent;
 
-            int eq = compEquivalence(orig1, orig2) + compEquivalence(targ1, targ2);
+            int eq1 = compEquivalence(orig1, orig2, CET_ORIGIN);
+            int eq2 = compEquivalence(targ1, targ2, CET_TARGET);
+
+            int eq = 0;
+            if ((eq1 > 0) && (eq2 > 0))
+            {
+                eq = eq1 + eq2;
+            }
 
             if (eq > bestEq)
             {

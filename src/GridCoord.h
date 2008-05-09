@@ -20,6 +20,7 @@
 #ifndef __INCLUDE_GRID_COORD_H
 #define __INCLUDE_GRID_COORD_H
 
+#include "types.h"
 #include <string>
 using std::string;
 
@@ -27,7 +28,7 @@ class GridCoord
 {
 public:
     GridCoord();
-    GridCoord(unsigned int depth, unsigned int branch);
+    GridCoord(llULINT depth, llULINT branch);
     GridCoord(const GridCoord& coord);
     virtual ~GridCoord();
 
@@ -38,8 +39,8 @@ public:
 
     int position(GridCoord gc);
 
-    unsigned int getDepth(){return mDepth;}
-    unsigned int getBranch(){return mBranch;}
+    llULINT getDepth(){return mDepth;}
+    llULINT getBranch(){return mBranch;}
 
     string toString();
 
@@ -47,8 +48,8 @@ public:
 
 
 protected:
-    unsigned int mDepth;
-    unsigned int mBranch;
+    llULINT mDepth;
+    llULINT mBranch;
 };
 #endif
 

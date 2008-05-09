@@ -91,7 +91,12 @@ Gridbrain::~Gridbrain()
     mGridsCount = 0;
 }
 
-Gridbrain* Gridbrain::baseClone()
+Brain* Gridbrain::clone()
+{
+    return clone(true);
+}
+
+Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int targetGrid, GridCoord* gc)
 {
     Gridbrain* gb = new Gridbrain();
 
@@ -129,18 +134,6 @@ Gridbrain* Gridbrain::baseClone()
     gb->mOwner = mOwner;
 
     gb->mGeneGrouping = mGeneGrouping;
-
-    return gb;
-}
-
-Brain* Gridbrain::clone()
-{
-    return clone(true, ET_NONE, 0);
-}
-
-Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int targetGrid, unsigned int pos)
-{
-    Gridbrain* gb = baseClone();
 
     gb->generateMemory(this);
 
@@ -209,8 +202,30 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                     row++;
                 }
             }
+    
+            bool widthExpand = true;
+            if (oldGrid->getSize() > 0)
+            {
+                widthExpand = false;
+                unsigned int frontier = 0;
+                if ((oldGrid->getType() == Grid::ALPHA)
+                    && (oldGrid->getWidth() > 0))
+                {
+                    frontier = oldGrid->getWidth() - 1;
+                }
+                for (unsigned int y = 0;
+                    (y < oldGrid->getHeight()) && (!widthExpand);
+                    y++)
+                    {
+                    GridbrainComponent* comp = getComponent(frontier, y, g);
+                    if (comp->mActive)
+                    {
+                        widthExpand = true;
+                    }
+                }
+            }
 
-            if (oldGrid->mMaxDepth == newGrid->getWidth())
+            if (widthExpand)
             {
                 newGrid->addColumn();
             }
@@ -219,28 +234,16 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                 newGrid->addRow();
             }
         }
-        else if (targetGrid == g)
+        
+        if (targetGrid == g)
         {
-            switch (expansion)
+            if (expansion == ET_COLUMN)
             {
-            case ET_COLUMN_FIRST:
-                newGrid->addColumn(Grid::CP_FIRST);
-                break;
-            case ET_COLUMN_LAST:
-                newGrid->addColumn(Grid::CP_LAST);
-                break;
-            case ET_COLUMN_RANDOM:
-                newGrid->addColumn(Grid::CP_RANDOM);
-                break;
-            case ET_COLUMN_BEFORE:
-                newGrid->addColumn(Grid::CP_BEFORE, pos);
-                break;
-            case ET_COLUMN_AFTER:
-                newGrid->addColumn(Grid::CP_AFTER, pos);
-                break;
-            case ET_ROW:
-                newGrid->addRow();
-                break;
+                newGrid->addColumn(gc);
+            }
+            else if (expansion == ET_ROW)
+            {
+                newGrid->addRow(gc);
             }
         }
 
@@ -657,26 +660,12 @@ void Gridbrain::addConnection(unsigned int xOrig,
                     gTarg);
         throw std::runtime_error(buffer);
     }
-
-    if ((gOrig == gTarg) && (xOrig >= xTarg))
-    {
-        char buffer[500];
-        sprintf(buffer,
-                    "Only feedforward connections allowed in the gridbrain. Invalid add connection: %d,%d,%d -> %d,%d,%d",
-                    xOrig,
-                    yOrig,
-                    gOrig,
-                    xTarg,
-                    yTarg,
-                    gTarg);
-        throw std::runtime_error(buffer);
-    }
-
-    if (connectionExists(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg))
+    
+    if (!isConnectionValid(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg))
     {
         return;
     }
-    if (!isConnectionValid(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg))
+    if (connectionExists(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg))
     {
         return;
     }
@@ -2089,6 +2078,11 @@ bool Gridbrain::isConnectionValid(unsigned int xOrig,
                 unsigned int yTarg,
                 unsigned int gTarg)
 {
+    if ((gOrig == gTarg) && (xOrig >= xTarg))
+    {
+        return false;
+    }
+
     GridbrainComponent* compOrig = getComponent(xOrig, yOrig, gOrig);
     if (compOrig->getConnectorType() == GridbrainComponent::CONN_IN)
     {
