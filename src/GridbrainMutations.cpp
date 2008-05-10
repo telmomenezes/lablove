@@ -302,11 +302,8 @@ void Gridbrain::mutateSplitConnection()
             MUTATIONS_SPLIT_CONN++;
             GridbrainGeneTag tag1 = conn->mGeneTag;
 
-            // Current connection is going to be delted, advance to next one
-            mConnSeqCurrent = (GridbrainConnection*)conn->mNextGlobalConnection;
-
             // remove 1->2 connection
-            removeConnection(x1, y1, g1, x2, y2, g2);
+            removeConnection(conn);
 
             GridbrainGeneTag tag2;
             GridbrainGeneTag tag3;
