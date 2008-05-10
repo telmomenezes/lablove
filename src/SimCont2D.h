@@ -130,8 +130,8 @@ public:
     virtual void placeRandom(SimulationObject* obj);
     virtual void placeNear(SimulationObject* obj, SimulationObject* ref);
 
-    void setPos(SimulationObject* obj, float x, float y);
-    void setRot(SimulationObject* obj, float rot);
+    virtual void setPos(SimulationObject* obj, float x, float y);
+    virtual void setRot(SimulationObject* obj, float rot);
 
     virtual void drawBeforeObjects();
     virtual void drawAfterObjects();

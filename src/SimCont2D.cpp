@@ -911,12 +911,12 @@ void SimCont2D::act(Agent* agent)
         if (mHumanRotateLeft)
         {
             actionRotate = true;
-            actionRotateParam -= 1.0f;
+            actionRotateParam += 1.0f;
         }
         if (mHumanRotateRight)
         {
             actionRotate = true;
-            actionRotateParam += 1.0f;
+            actionRotateParam -= 1.0f;
         }
         if (mHumanEat)
         {

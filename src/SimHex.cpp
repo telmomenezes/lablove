@@ -27,6 +27,7 @@ SimHex::SimHex(lua_State* luaState)
     mHexCellWidth = 0;
     mHexCellLength = 0;
     mHexMap = NULL;
+    mHumanPaint = false;
 }
 
 SimHex::~SimHex()
@@ -62,7 +63,7 @@ void SimHex::drawTerrain()
 {
     SimCont2D::drawTerrain();
 
-    art_setColor(0, 0, 0, 255);
+    art_setColor(0, 0, 0, 100);
     art_setLineWidth(1.0f);
 
     float x = 0;
@@ -157,6 +158,87 @@ void SimHex::getHexCell(float x, float y, int& hX, int& hY)
                 }
             }
         }
+    }
+}
+
+void SimHex::initializeData(SimulationObject* obj)
+{
+    obj->initFloatData(18);
+    obj->initULData(5);
+    obj->initIntData(7);
+}
+
+void SimHex::addObject(SimulationObject* object, bool init)
+{
+    SimCont2D::addObject(object, init);
+
+    object->mIntData[INT_HEX_X] = 0.0f;
+    object->mIntData[INT_HEX_Y] = 0.0f;
+
+    if (object->mType == SimulationObject::TYPE_AGENT)
+    {
+        Agent* agent = (Agent*)object;
+        int channelTerrain = agent->getBrain()->getChannelByName("terrain");
+
+        object->mIntData[INT_CHANNEL_TERRAIN] = channelTerrain;
+    }
+}
+
+void SimHex::setPos(SimulationObject* obj, float x, float y)
+{
+    SimCont2D::setPos(obj, x, y);
+
+    int hexX;
+    int hexY;
+    getHexCell(x, y, hexX, hexY);
+    obj->mIntData[INT_HEX_X] = hexX;
+    obj->mIntData[INT_HEX_Y] = hexY;
+}
+
+void SimHex::act(Agent* agent)
+{
+    SimCont2D::act(agent);
+
+    if (agent == mHumanAgent)
+    {
+        if (mHumanPaint)
+        {
+            printf("PAINT\n");
+        }
+    }
+}
+
+bool SimHex::onKeyDown(Art_KeyCode key)
+{
+    if (SimCont2D::onKeyDown(key))
+    {
+        return true;
+    }
+
+    switch (key)
+    {
+    case ART_KEY_P:
+        mHumanPaint = true;
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool SimHex::onKeyUp(Art_KeyCode key)
+{
+    if (SimCont2D::onKeyUp(key))
+    {
+        return true;
+    }
+
+    switch (key)
+    {
+    case ART_KEY_P:
+        mHumanPaint = false;
+        return true;
+    default:
+        return false;
     }
 }
 

@@ -1,7 +1,4 @@
--- POISON
--- Agents evolve to find and eat certain food items
--- Amount of energy gathered from food is realtive to symbol_distance(feed,food)
--- Food will be poisonous if symbol_binding(feed,food) < feedCenter
+-- HEX
 --------------------------------------------------------------------------------
 
 dofile("basic_defines.lua")
@@ -9,14 +6,14 @@ dofile("basic_defines.lua")
 -- Experiment Parameters
 --------------------------------------------------------------------------------
 
-numberOfPlants = 50
+numberOfPlants = 0
 numberOfAgents = 25
 
 agentSize = 10.0
 plantSize = 10.0
 
-worldWidth = 1000
-worldHeight = 1000
+worldWidth = 3000
+worldHeight = 3000
 
 alphaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, GTZ, ZERO, MAX, AVG}
 betaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, GTZ, ZERO, CLK, MEMW, MEMC, MEMD}
@@ -61,7 +58,7 @@ logTimeInterval = 100
 logBrains = true
 logOnlyLastBrain = true
 
-humanAgent = false
+humanAgent = true
 
 evolutionStopTime = 0
 
@@ -85,7 +82,7 @@ fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")
 evolutionStopTime = getNumberParameter("evostop", evolutionStopTime, "est")
 --viewRange = getNumberParameter("viewrange", viewRange, "vr")
 
-logBaseName = "_poison_"
+logBaseName = "_hex_"
 
 logSuffix = logBaseName
             .. parameterString

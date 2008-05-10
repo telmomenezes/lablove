@@ -26,6 +26,15 @@
 class SimHex : public SimCont2D
 {
 public:
+    enum IntData {INT_CHANNEL_OBJECTS,
+                INT_CHANNEL_SOUNDS,
+                INT_CHANNEL_SELF,
+                INT_CHANNEL_TERRAIN,
+                INT_CHANNEL_BETA,
+                INT_HEX_X,
+                INT_HEX_Y
+                };
+
     SimHex(lua_State* luaState=NULL);
     virtual ~SimHex();
 
@@ -33,6 +42,13 @@ public:
                                      float worldLength,
                                      unsigned int cellSide,
                                      float hexSide);
+
+    virtual void initializeData(SimulationObject* obj);
+    virtual void addObject(SimulationObject* object, bool init=false);
+    virtual void setPos(SimulationObject* obj, float x, float y);
+
+    virtual bool onKeyDown(Art_KeyCode keycode);
+    virtual bool onKeyUp(Art_KeyCode keycode);
 
     static const char mClassName[];
     static Orbit<SimHex>::MethodType mMethods[];
@@ -45,6 +61,8 @@ protected:
 
     void getHexCell(float x, float y, int& hX, int& hY);
 
+    virtual void act(Agent* agent);
+
     float mHexSide;
     float mHexA;
     float mHexB;
@@ -52,6 +70,8 @@ protected:
     int mHexCellLength;
 
     HexCell* mHexMap;
+
+    bool mHumanPaint;
 };
 #endif
 

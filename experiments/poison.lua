@@ -44,12 +44,12 @@ compCount = 1
 bufferSize = 100
 fitnessAging = 0.1
 
-addConnectionProb = 0.01
-removeConnectionProb = 0.01
+addConnectionProb = 0.05
+removeConnectionProb = 0.05
 changeParamProb = 0.0
 paramMutationStanDev = 0.0
-splitConnectionProb = 0.0
-joinConnectionsProb = 0.0
+splitConnectionProb = 0.05
+joinConnectionsProb = 0.05
 changeComponentProb = 0.0
 changeInComponentProb = 0.1
 swapComponentProb = 0.0
