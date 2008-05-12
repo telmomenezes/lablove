@@ -58,7 +58,8 @@ void LogBestBrain::dump(llULINT time, double realTime)
     }
     else
     {
-        sprintf(fileName, "%s%d%s", mFileNamePrefix.c_str(), time / 1000, mFileNameSuffix.c_str());
+        unsigned int t = time / 1000;
+        sprintf(fileName, "%s%d%s", mFileNamePrefix.c_str(), t, mFileNameSuffix.c_str());
     }    
     FILE* file = fopen(fileName, "w");
     fprintf(file, mBrainString.c_str());

@@ -85,8 +85,9 @@ public:
 
     void addColumn(GridCoord* gc=NULL);
     void addRow(GridCoord* gc=NULL);
-    void deleteColumn(unsigned int col);
-    void deleteRow(unsigned int row);
+    void deleteColumn(GridCoord col);
+    void deleteRow(GridCoord row);
+    GridCoord getColCoordAfter(GridCoord col);
 
     GridCoord getColumnCoord(unsigned int col){return mColumnCoords[col];}
     GridCoord getRowCoord(unsigned int row){return mRowCoords[row];}

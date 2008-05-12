@@ -31,6 +31,8 @@ public:
     GridbrainConnection();
     virtual ~GridbrainConnection();
 
+    bool connectsNeighbourColumns();
+
     unsigned int mColumnOrig;
     unsigned int mRowOrig;
     unsigned int mGridOrig;

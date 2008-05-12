@@ -267,7 +267,7 @@ popDyn:setCompCount(compCount)
 popDyn:setFitnessAging(fitnessAging)
 popDyn:setRecombineProb(recombineProb)
 agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize)
-popDyn:addSpecies(plant, numberOfPlants, 1, 1)
+popDyn:addSpecies(plant, numberOfPlants, 1)
 popDyn:setEvolutionStopTime(evolutionStopTime)
 
 -- Human Agent

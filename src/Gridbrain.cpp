@@ -144,13 +144,17 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
     
         if (grow)
         {
-            unsigned int col = 0;
+            int leftInactive = 0;
+            int rightInactive = 0;
+            int jump = 9999999;
 
             for (unsigned int x = 0;
                 x < oldGrid->getWidth();
                 x++)
             {
-                bool deleteCol = true;
+                bool activeCol = false;
+                unsigned int minConnJump = 9999999;
+                GridCoord colCoord = oldGrid->getColumnCoord(x);
 
                 for (unsigned int y = 0;
                     y < oldGrid->getHeight();
@@ -159,28 +163,99 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                     GridbrainComponent* comp = getComponent(x, y, g);
                     if (comp->mActive)
                     {
-                        deleteCol = false;
+                        activeCol = true;
+
+                        GridbrainConnection* conn = comp->mFirstConnection;
+                        while (conn != NULL)
+                        {
+                            if (conn->mGridOrig == conn->mGridTarg)
+                            {
+                                unsigned int connJump = conn->mColumnTarg - conn->mColumnOrig;
+                                if (connJump < minConnJump)
+                                {
+                                    minConnJump = connJump;
+                                }
+                            }
+                            conn = (GridbrainConnection*)conn->mNextConnection;
+                        }
                     }
                 }
 
-                if (deleteCol)
+                if (activeCol)
                 {
-                    newGrid->deleteColumn(col);
+                    leftInactive = -1;
+                    rightInactive = 0;
+                    jump = minConnJump;
+
+                    if ((newGrid->getType() == Grid::ALPHA)
+                        && (x == (oldGrid->getWidth() - 1)))
+                    {
+                        GridCoord newCol = colCoord.rightOf();
+                        newGrid->addColumn(&newCol);
+                    }
+                    if ((newGrid->getType() == Grid::BETA)
+                        && (x == 0))
+                    {
+                        GridCoord newCol = colCoord.leftOf();
+                        newGrid->addColumn(&newCol);
+                    }
+                    if (minConnJump == 1)
+                    {
+                        GridCoord newCol = newGrid->getColCoordAfter(colCoord);
+                        newGrid->addColumn(&newCol);
+                        jump++;
+                    }
                 }
                 else
                 {
-                    col++;
+                    bool deleteCol = true;
+
+                    if (newGrid->getType() == Grid::ALPHA)
+                    {
+                        if ((x == (oldGrid->getWidth() - 1))
+                            && (rightInactive == 0))
+                        {
+                            deleteCol = false;
+                        }
+                    }
+                    else
+                    {
+                        if (leftInactive == 0)
+                        {
+                            deleteCol = false;
+                        }
+                    }
+
+                    if (jump == 2)
+                    {
+                        deleteCol = false;
+                    }
+
+                    if (deleteCol)
+                    {
+                        newGrid->deleteColumn(colCoord);
+                    }
+                    else
+                    {
+                        if (leftInactive >= 0)
+                        {
+                            leftInactive++;
+                        }
+                        rightInactive++;
+                        jump--;    
+                    }
                 }
             }
 
-            unsigned int row = 0;
+////////////////////
+            int botInactive = 0;
 
             for (unsigned int y = 0;
                 y < oldGrid->getHeight();
                 y++)
             {
-
-                bool deleteRow = true;
+                bool activeRow = false;
+                GridCoord rowCoord = oldGrid->getRowCoord(y);
 
                 for (unsigned int x = 0;
                     x < oldGrid->getWidth();
@@ -189,50 +264,43 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                     GridbrainComponent* comp = getComponent(x, y, g);
                     if (comp->mActive)
                     {
-                        deleteRow = false;
+                        activeRow = true;
                     }
                 }
 
-                if (deleteRow)
+                if (activeRow)
                 {
-                    newGrid->deleteRow(row);
+                    botInactive = 0;
+
+                    if (y == (oldGrid->getHeight() - 1))
+                    {
+                        newGrid->addRow();
+                    }
                 }
                 else
                 {
-                    row++;
-                }
-            }
-    
-            bool widthExpand = true;
-            if (oldGrid->getSize() > 0)
-            {
-                widthExpand = false;
-                unsigned int frontier = 0;
-                if ((oldGrid->getType() == Grid::ALPHA)
-                    && (oldGrid->getWidth() > 0))
-                {
-                    frontier = oldGrid->getWidth() - 1;
-                }
-                for (unsigned int y = 0;
-                    (y < oldGrid->getHeight()) && (!widthExpand);
-                    y++)
+                    botInactive++;
+
+                    bool deleteRow = true;
+
+                    if ((y == (oldGrid->getHeight() - 1))
+                        && (botInactive <= 1))
                     {
-                    GridbrainComponent* comp = getComponent(frontier, y, g);
-                    if (comp->mActive)
+                        deleteRow = false;
+                    }
+
+                    if (deleteRow)
                     {
-                        widthExpand = true;
+                        newGrid->deleteRow(rowCoord);
                     }
                 }
             }
+        }
 
-            if (widthExpand)
-            {
-                newGrid->addColumn();
-            }
-            if (oldGrid->mMaxActiveCol == newGrid->getHeight())
-            {
-                newGrid->addRow();
-            }
+        if (newGrid->getSize() == 0)
+        {
+            newGrid->addColumn();
+            newGrid->addRow();
         }
         
         if (targetGrid == g)
@@ -1421,6 +1489,10 @@ void Gridbrain::cycle()
                     case GridbrainComponent::OUT:
                         //printf("OUT ");
                         output = comp->mInput;
+                        if (isnan(output))
+                        {
+                            output = 0.0f;
+                        }
                         outputVector[comp->mActionPosition] = output;
 
                         break;
@@ -1505,7 +1577,23 @@ void Gridbrain::cycle()
                         break;
                     case GridbrainComponent::INV:
                         //printf("INV ");
-                        output = 1.0f / comp->mInput;
+                        input = comp->mInput;
+                        if (input > 1.0f)
+                        {
+                            input = 1.0f;
+                        }
+                        else if (input < -1.0f)
+                        {
+                            input = -1.0f;
+                        }
+                        if (input >= 0.0f)
+                        {
+                            output = 1.0f - input;
+                        }
+                        else if (input < 0.0f)
+                        {
+                            output = -1.0f - input;
+                        }
 
                         break;
                     case GridbrainComponent::RAND:

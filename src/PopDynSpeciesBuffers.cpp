@@ -168,14 +168,18 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
         // Simple clone
         newOrganism = org->clone();
     }
-
-    newOrganism->setKinID(organismNumber);
             
     // Mutate
     if (mEvolutionOn)
     {
         newOrganism->mutate();
     }
+
+    //SimulationObject* newOrganism2 = newOrganism->clone();
+    //delete newOrganism;
+    //newOrganism = newOrganism2;
+
+    newOrganism->setKinID(organismNumber);
 
     mPopManager->addObject(newOrganism, init);
     

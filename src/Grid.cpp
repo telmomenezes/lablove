@@ -292,16 +292,10 @@ void Grid::addColumn(GridCoord* gc)
             ngc = GridCoord();
             mColumnCoords.push_back(ngc);
         }
-        else if (mType == ALPHA)
+        else
         {
             ngc = mColumnCoords[mWidth - 2].rightOf();
             mColumnCoords.push_back(ngc);
-        }
-        else if (mType == BETA)
-        {
-            ngc = mColumnCoords[0].leftOf();
-            vector<GridCoord>::iterator iterCoord = mColumnCoords.begin();   
-            mColumnCoords.insert(iterCoord, ngc);
         }
     }
     else
@@ -351,7 +345,7 @@ void Grid::addRow(GridCoord* gc)
     }
 }
 
-void Grid::deleteColumn(unsigned int col)
+void Grid::deleteColumn(GridCoord col)
 {
     if (mWidth == 0)
     {
@@ -361,9 +355,8 @@ void Grid::deleteColumn(unsigned int col)
     vector<GridCoord>::iterator iterCol = mColumnCoords.begin();
     vector<unsigned int>::iterator iterColTarg = mColumnTargetCountVec.begin();
     
-    for (unsigned int i = 0;
-            i < col;
-            i++)
+    while ((iterCol != mColumnCoords.end())
+        && (!((*iterCol) == col)))
     {
         iterCol++;
         iterColTarg++;
@@ -376,7 +369,7 @@ void Grid::deleteColumn(unsigned int col)
     mSize = mWidth * mHeight;
 }
 
-void Grid::deleteRow(unsigned int row)
+void Grid::deleteRow(GridCoord row)
 {
     if (mHeight == 0)
     {
@@ -385,9 +378,8 @@ void Grid::deleteRow(unsigned int row)
 
     vector<GridCoord>::iterator iterRow = mRowCoords.begin();
     
-    for (unsigned int i = 0;
-            i < row;
-            i++)
+    while ((iterRow != mRowCoords.end())
+        && (!((*iterRow) == row)))
     {
         iterRow++;
     }
@@ -396,6 +388,28 @@ void Grid::deleteRow(unsigned int row)
 
     mHeight--;
     mSize = mWidth * mHeight;
+}
+
+GridCoord Grid::getColCoordAfter(GridCoord col)
+{
+    int x = getColumnByCoord(col);
+    GridCoord col1 = mColumnCoords[x];
+
+    if (x == (mWidth - 1))
+    {
+        return col1.rightOf();
+    }
+
+    GridCoord col2 = mColumnCoords[x + 1];
+
+    if (col1.getDepth() >= col2.getDepth())
+    {
+        return col1.rightOf();
+    }
+    else
+    {
+        return col2.leftOf();
+    }
 }
 
 int Grid::getColumnByCoord(GridCoord coord)

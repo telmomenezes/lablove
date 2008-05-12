@@ -27,3 +27,9 @@ GridbrainConnection::~GridbrainConnection()
 {
 }
 
+bool GridbrainConnection::connectsNeighbourColumns()
+{
+    return ((mGridOrig == mGridTarg)
+        && ((mColumnTarg - mColumnOrig) == 1));
+}
+
