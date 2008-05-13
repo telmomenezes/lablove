@@ -62,7 +62,7 @@ logTimeInterval = 100
 logBrains = true
 logOnlyLastBrain = true
 
-humanAgent = false
+humanAgent = true
 
 evolutionStopTime = 0
 
@@ -324,6 +324,7 @@ if humanAgent then
     dummyBrain = DummyBrain(1)
     dummyBrain:setChannelName(0, "objects")
     dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
+    dummyBrain:addPerception("Orientation", 0, SimCont2D.PERCEPTION_ORIENTATION)
     dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
     dummyBrain:addPerception("Feed", 0, SimCont2D.PERCEPTION_SYMBOL, feedTableCode, humanFeed:getID(), foodTableCode)
     dummyBrain:addPerception("Target", 0, SimCont2D.PERCEPTION_TARGET)

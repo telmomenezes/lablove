@@ -25,6 +25,7 @@
 #include "PopulationDynamics.h"
 #include "Agent.h"
 #include "RandDistManager.h"
+#include "Laser.h"
 
 #include "art.h"
 
@@ -36,12 +37,14 @@ public:
 
     enum Perception {PERCEPTION_NULL,
                     PERCEPTION_POSITION,
+                    PERCEPTION_ORIENTATION,
                     PERCEPTION_DISTANCE,
                     PERCEPTION_TARGET,
                     PERCEPTION_IN_CONTACT,
                     PERCEPTION_SYMBOL,
                     PERCEPTION_ENERGY,
-                    PERCEPTION_CAN_SPEAK
+                    PERCEPTION_CAN_SPEAK,
+                    PERCEPTION_CAN_FIRE
                     };
 
     enum Action {ACTION_NULL,
@@ -49,7 +52,8 @@ public:
                 ACTION_ROTATE,
                 ACTION_EAT,
                 ACTION_EATB,
-                ACTION_SPEAK
+                ACTION_SPEAK,
+                ACTION_FIRE
                 };
 
     enum FloatData {FLOAT_X,
@@ -76,7 +80,8 @@ public:
                 UL_LOW_AGE_LIMIT,
                 UL_HIGH_AGE_LIMIT,
                 UL_COLLISION_DETECTION_ITERATION,
-                UL_LAST_SPEAK_TIME
+                UL_LAST_SPEAK_TIME,
+                UL_LAST_FIRE_TIME
                 };
 
     enum IntData {INT_CHANNEL_OBJECTS,
@@ -175,6 +180,7 @@ public:
     
     void setSoundRange(float range){mSoundRange = range;}
     void setSpeakInterval(unsigned int interval){mSpeakInterval = interval;}
+    void setFireInterval(unsigned int interval){mFireInterval = interval;}
 
     static const char mClassName[];
     static Orbit<SimCont2D>::MethodType mMethods[];
@@ -193,6 +199,7 @@ public:
     int setFeedCenter(lua_State* luaState);
     int setSoundRange(lua_State* luaState);
     int setSpeakInterval(lua_State* luaState);
+    int setFireInterval(lua_State* luaState);
 
 protected:
     virtual void process(SimulationObject* obj);
@@ -201,15 +208,21 @@ protected:
     virtual void onScanObject(Agent* orig,
                                 SimulationObject* targ,
                                 float distance,
-                                float angle);
+                                float angle,
+                                float orientation);
     void go(Agent* agent, float force);
     void rotate(Agent* agent, float force);
     void eat(Agent* agent, Action actionType);
     float normalizeAngle(float angle);
 
     void speak(Agent* agent, Symbol* sym);
+    void fire(Agent* agent);
 
     virtual void drawTerrain();
+
+    void processLaserShots();
+    void drawLaserShots();
+    void createLaserShot(float x1, float y1, float ang, float length, float speed, llULINT ownerID);
         
     static mt_distribution* mDistAge;
     static mt_distribution* mDistPosition;
@@ -274,6 +287,7 @@ protected:
     bool mHumanRotateRight;
     bool mHumanEat;
     bool mHumanSpeak;
+    bool mHumanFire;
 
     float mZoom;
 
@@ -281,10 +295,13 @@ protected:
 
     float mSoundRange;
     unsigned int mSpeakInterval;
+    unsigned int mFireInterval;
 
     list<VisualEvent*> mVisualEvents;
 
     Art_Layer* mBackgroundTexture;
+
+    list<Laser> mLaserShots;
 };
 #endif
 

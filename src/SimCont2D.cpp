@@ -100,6 +100,7 @@ SimCont2D::SimCont2D(lua_State* luaState)
 
     mSoundRange = 250.0f;
     mSpeakInterval = 250;
+    mFireInterval = 250;
 }
 
 SimCont2D::~SimCont2D()
@@ -260,7 +261,7 @@ void SimCont2D::setRot(SimulationObject* obj, float rot)
 void SimCont2D::initializeData(SimulationObject* obj)
 {
     obj->initFloatData(18);
-    obj->initULData(5);
+    obj->initULData(6);
     obj->initIntData(4);
 }
 
@@ -316,6 +317,7 @@ void SimCont2D::addObject(SimulationObject* object, bool init)
     }
 
     object->mULData[UL_LAST_SPEAK_TIME] = 0;
+    object->mULData[UL_LAST_FIRE_TIME] = 0;
 
     if (object->mType == SimulationObject::TYPE_AGENT)
     {
@@ -646,6 +648,8 @@ void SimCont2D::process(SimulationObject* obj)
             obj->mFitness = mDistFitnessRandom->uniform(0.0f, 1.0f);
         }
     }
+
+    processLaserShots();
 }
 
 void SimCont2D::perceive(Agent* agent)
@@ -700,7 +704,8 @@ void SimCont2D::perceive(Agent* agent)
                 onScanObject(agent,
                                 target,
                                 distance,
-                                normalizeAngle(agent->mFloatData[FLOAT_ROT] - angle));
+                                normalizeAngle(agent->mFloatData[FLOAT_ROT] - angle),
+                                normalizeAngle(target->mFloatData[FLOAT_ROT] - angle));
             }
         }
     }
@@ -790,6 +795,15 @@ void SimCont2D::perceive(Agent* agent)
                     }
                     inBuffer[pos] = normalizedValue;
                     break;
+                case PERCEPTION_CAN_FIRE:
+                    normalizedValue = 0.0f;
+
+                    if ((mSimulationTime - agent->mULData[UL_LAST_FIRE_TIME]) > mFireInterval)
+                    {
+                        normalizedValue = 1.0f;
+                    }
+                    inBuffer[pos] = normalizedValue;
+                    break;
             }
 
             pos++;
@@ -800,7 +814,8 @@ void SimCont2D::perceive(Agent* agent)
 void SimCont2D::onScanObject(Agent* orig,
                 SimulationObject* targ,
                 float distance,
-                float angle)
+                float angle,
+                float orientation)
 {
     float* inBuffer = orig->getBrain()->getInputBuffer(orig->mIntData[INT_CHANNEL_OBJECTS]);
     if (inBuffer == NULL)
@@ -850,6 +865,11 @@ void SimCont2D::onScanObject(Agent* orig,
                 inBuffer[pos] = normalizedValue;
                 break;
 
+            case PERCEPTION_ORIENTATION:
+                normalizedValue = orientation / M_PI;
+                inBuffer[pos] = normalizedValue;
+                break;
+
             case PERCEPTION_DISTANCE:
                 normalizedValue = distance / mViewRange;
                 inBuffer[pos] = normalizedValue;
@@ -895,6 +915,7 @@ void SimCont2D::act(Agent* agent)
 {
     bool actionGo = false;
     bool actionRotate = false;
+    bool actionFire = false;
     Action actionEat = ACTION_NULL;
     Symbol* actionSpeakSymbol = NULL;
     float actionGoParam = 0.0f;
@@ -926,6 +947,10 @@ void SimCont2D::act(Agent* agent)
         {
             actionSpeakSymbol = new SymbolRGB(255, 0, 0);
             actionSpeakParam = 1.0f;
+        }
+        if (mHumanFire)
+        {
+            actionFire = true;
         }
     }
     else
@@ -976,6 +1001,9 @@ void SimCont2D::act(Agent* agent)
                             }
                         }
                         break;
+                    case ACTION_FIRE:
+                        actionFire = true;
+                        break;
                 }
             }
 
@@ -1015,6 +1043,10 @@ void SimCont2D::act(Agent* agent)
     if (actionSpeakSymbol != NULL)
     {
         speak(agent, actionSpeakSymbol);
+    }
+    if (actionFire)
+    {
+        fire(agent);
     }
 }
 
@@ -1078,6 +1110,24 @@ void SimCont2D::eat(Agent* agent, Action actionType)
             break;
         }
     }
+}
+
+void SimCont2D::fire(Agent* agent)
+{
+    if (((mSimulationTime - agent->mULData[UL_LAST_FIRE_TIME]) <= mFireInterval)
+        && (agent->mULData[UL_LAST_FIRE_TIME] != 0))
+    {
+        return;
+    }
+
+    agent->mULData[UL_LAST_FIRE_TIME] = mSimulationTime;
+
+    createLaserShot(agent->mFloatData[FLOAT_X],
+                    agent->mFloatData[FLOAT_Y],
+                    agent->mFloatData[FLOAT_ROT],
+                    25,
+                    0.02,
+                    agent->getID());
 }
 
 void SimCont2D::drawBeforeObjects()
@@ -1188,6 +1238,8 @@ void SimCont2D::drawTerrain()
 
 void SimCont2D::drawAfterObjects()
 {
+    drawLaserShots();
+
     if (mShowEnergy)
     {
         art_setFont(mFont);
@@ -1207,7 +1259,6 @@ void SimCont2D::drawAfterObjects()
 
     art_clearScale();
     art_clearTranslation();
-
 
     if (mShowBrain)
     {
@@ -1248,6 +1299,192 @@ bool SimCont2D::getFieldValue(SimulationObject* obj, string fieldName, float& va
     }
 }
 
+void SimCont2D::processLaserShots()
+{
+    for (list<Laser>::iterator iterLaser = mLaserShots.begin();
+            iterLaser != mLaserShots.end();
+            iterLaser++)
+    {
+        Laser* laser = &(*iterLaser);
+
+        float x1 = laser->mX1;
+        float y1 = laser->mY1;
+
+        laser->mX1 += cosf(laser->mAng) * laser->mSpeed;
+        laser->mY1 += sinf(laser->mAng) * laser->mSpeed;
+        laser->mX2 += cosf(laser->mAng) * laser->mSpeed;
+        laser->mY2 += sinf(laser->mAng) * laser->mSpeed;
+
+        float x2 = laser->mX2;
+        float y2 = laser->mY2;
+
+        float cX = x1;
+        float cY = y1;
+
+        int cellX = ((int)(cX)) / mCellSide;
+        int cellY = ((int)(cY)) / mCellSide;
+
+        int targCellX = ((int)(x2)) / mCellSide;
+        int targCellY = ((int)(y2)) / mCellSide;
+
+        if (targCellX < 0)
+        {
+            targCellX = 0;
+        }
+        else if (targCellX >= mWorldCellWidth)
+        {
+            targCellX = mWorldCellWidth - 1;
+        }
+        if (targCellY < 0)
+        {
+            targCellY = 0;
+        }
+        else if (targCellY >= mWorldCellLength)
+        {
+            targCellY = mWorldCellLength - 1;
+        }
+
+        targCellX *= laser->mDirX;
+        targCellY *= laser->mDirY;
+
+        while (((cellX * laser->mDirX) <= targCellX)
+            && ((cellY * laser->mDirY) <= targCellY))
+        {
+            list<SimulationObject*>* cellList = mCellGrid[(mWorldCellWidth * cellY) + cellX];
+
+            for (list<SimulationObject*>::iterator iterObj = cellList->begin();
+                iterObj != cellList->end();
+                iterObj++)
+            {
+                SimulationObject* obj = *iterObj;
+
+                if (obj->getID() != laser->mOwnerID)
+                {
+                    float objX = obj->mFloatData[FLOAT_X];
+                    float objY = obj->mFloatData[FLOAT_Y];
+                    float r = obj->mFloatData[FLOAT_SIZE];
+
+                    float x_1 = x1 - objX;
+                    float x_2 = x2 - objX;
+                    float y_1 = y1 - objY;
+                    float y_2 = y2 - objY;
+
+                    float dx = x_2 - x_1;
+                    float dy = y_2 - y_1;
+                    float dr2 = (dx * dx) + (dy * dy);
+                    float D = (x_1 * y_2) - (x_2 * y_1);
+
+                    float colides = ((r * r) * dr2) - (D * D);
+
+                    if (colides >= 0.0f)
+                    {
+                        //printf("colision! %d\n", obj->getID());
+                        deltaEnergy(obj, -1000.0f);
+                    }
+                }
+            }
+
+            float bX;
+            float bY;
+
+            if (laser->mDirX == 1)
+            {
+                bX = (cellX + 1) * mCellSide;
+            }
+            else
+            {
+                bX = cellX * mCellSide;
+            }
+            if (laser->mDirY == 1)
+            {
+                bY = (cellY + 1) * mCellSide;
+            }
+            else
+            {
+                bY = cellY * mCellSide;
+            }
+
+            float bXY = (cX * laser->mM) + laser->mB;
+            float bYX = (cY - laser->mB) / laser->mM;
+
+            float deltaX1 = cX - bX;
+            float deltaY1 = cY - bXY;
+            float deltaX2 = cX - bYX;
+            float deltaY2 = cY - bY;
+
+            float dis1 = (deltaX1 * deltaX1) + (deltaY1 * deltaY1);
+            float dis2 = (deltaX2 * deltaX2) + (deltaY2 * deltaY2);
+
+            if (dis1 >= dis2)
+            {
+                cX = bX;
+                cY = bXY;
+                cellX += laser->mDirX;
+            }
+            else
+            {
+                cX = bYX;
+                cY = bY;
+                cellY += laser->mDirY;
+            }
+        }
+
+        if ((laser->mX1 > mWorldWidth)
+            || (laser->mX2 > mWorldWidth)
+            || (laser->mY1 > mWorldLength)
+            || (laser->mY2 > mWorldLength)
+            || (laser->mX1 < 0)
+            || (laser->mX2 < 0)
+            || (laser->mY1 < 0)
+            || (laser->mY2 < 0))
+        {
+            mLaserShots.erase(iterLaser);
+        }
+    }
+}
+
+void SimCont2D::drawLaserShots()
+{
+    art_setColor(255, 255, 255, 255);
+    art_setLineWidth(1.0f);
+
+    for (list<Laser>::iterator iterLaser = mLaserShots.begin();
+            iterLaser != mLaserShots.end();
+            iterLaser++)
+    {
+        Laser* laser = &(*iterLaser);
+        art_drawLine(laser->mX1, laser->mY1, laser->mX2, laser->mY2);
+    }
+}
+
+void SimCont2D::createLaserShot(float x1, float y1, float ang, float length, float speed, llULINT ownerID)
+{
+    mLaserShots.push_back(Laser());
+    Laser* laser = &(mLaserShots.back());
+    laser->mX1 = x1;
+    laser->mY1 = y1;
+    laser->mAng = ang;
+    laser->mLength = length;
+    laser->mSpeed = speed;
+    laser->mX2 = x1 + (cosf(ang) * length);
+    laser->mY2 = y1 + (sinf(ang) * length);
+    laser->mM = tanf(ang);
+    laser->mB = y1 - (laser->mM * x1);
+
+    laser->mDirX = 1;
+    if (x1 < laser->mX2)
+    {
+        laser->mDirX = -1;
+    }
+    laser->mDirY = 1;
+    if (y1 < laser->mY2)
+    {
+        laser->mDirY = -1;
+    }
+
+    laser->mOwnerID = ownerID;
+}
+
 bool SimCont2D::onKeyDown(Art_KeyCode key)
 {
     if (Simulation::onKeyDown(key))
@@ -1271,6 +1508,9 @@ bool SimCont2D::onKeyDown(Art_KeyCode key)
         return true;
     case ART_KEY_S:
         mHumanSpeak = true;
+        return true;
+    case ART_KEY_SPACE:
+        mHumanFire = true;
         return true;
     default:
         return false;
@@ -1312,6 +1552,9 @@ bool SimCont2D::onKeyUp(Art_KeyCode key)
         return true;
     case ART_KEY_S:
         mHumanSpeak = false;
+        return true;
+    case ART_KEY_SPACE:
+        mHumanFire = false;
         return true;
     default:
         return false;
@@ -1422,12 +1665,16 @@ string SimCont2D::getInterfaceName(bool input, int type)
             return "target";
         case PERCEPTION_POSITION:
             return "position";
+        case PERCEPTION_ORIENTATION:
+            return "orientation";
         case PERCEPTION_DISTANCE:
             return "distance";
         case PERCEPTION_ENERGY:
             return "energy";
         case PERCEPTION_CAN_SPEAK:
             return "canspeak";
+        case PERCEPTION_CAN_FIRE:
+            return "canfire";
         default:
             return "?";
         }
@@ -1446,6 +1693,8 @@ string SimCont2D::getInterfaceName(bool input, int type)
             return "eatB";
         case ACTION_SPEAK:
             return "speak";
+        case ACTION_FIRE:
+            return "fire";
         default:
             return "?";
         }
@@ -1519,24 +1768,28 @@ Orbit<SimCont2D>::MethodType SimCont2D::mMethods[] = {
     {"setFeedCenter", &SimCont2D::setFeedCenter},
     {"setSoundRange", &SimCont2D::setSoundRange},
     {"setSpeakInterval", &SimCont2D::setSpeakInterval},
+    {"setFireInterval", &SimCont2D::setFireInterval},
     {0,0}
 };
 
 Orbit<SimCont2D>::NumberGlobalType SimCont2D::mNumberGlobals[] = {
     {"PERCEPTION_NULL", PERCEPTION_NULL},
     {"PERCEPTION_POSITION", PERCEPTION_POSITION},
+    {"PERCEPTION_ORIENTATION", PERCEPTION_ORIENTATION},
     {"PERCEPTION_DISTANCE", PERCEPTION_DISTANCE},
     {"PERCEPTION_TARGET", PERCEPTION_TARGET},
     {"PERCEPTION_IN_CONTACT", PERCEPTION_IN_CONTACT},
     {"PERCEPTION_SYMBOL", PERCEPTION_SYMBOL},
     {"PERCEPTION_ENERGY", PERCEPTION_ENERGY},
     {"PERCEPTION_CAN_SPEAK", PERCEPTION_CAN_SPEAK},
+    {"PERCEPTION_CAN_FIRE", PERCEPTION_CAN_FIRE},
     {"ACTION_NULL", ACTION_NULL},
     {"ACTION_GO", ACTION_GO},
     {"ACTION_ROTATE", ACTION_ROTATE},
     {"ACTION_EAT", ACTION_EAT},
     {"ACTION_EATB", ACTION_EATB},
     {"ACTION_SPEAK", ACTION_SPEAK},
+    {"ACTION_FIRE", ACTION_FIRE},
     {"FITNESS_ENERGY", FITNESS_ENERGY},
     {"FITNESS_ENERGY_SUM", FITNESS_ENERGY_SUM},
     {"FITNESS_ENERGY_SUM_ABOVE_INIT", FITNESS_ENERGY_SUM_ABOVE_INIT},
@@ -1637,6 +1890,13 @@ int SimCont2D::setSpeakInterval(lua_State* luaState)
 {
     unsigned int speakInterval = luaL_checkint(luaState, 1);
     setSpeakInterval(speakInterval);
+    return 0;
+}
+
+int SimCont2D::setFireInterval(lua_State* luaState)
+{
+    unsigned int fireInterval = luaL_checkint(luaState, 1);
+    setFireInterval(fireInterval);
     return 0;
 }
 
