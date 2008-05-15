@@ -55,6 +55,10 @@ public:
 
     llULINT getID(){return mID;}
 
+    virtual void process(){}
+    virtual void perceive(){}
+    virtual void act(){}
+
     virtual void draw(){}
 
     unsigned int getSpeciesID(){return mSpeciesID;}

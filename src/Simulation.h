@@ -76,6 +76,16 @@ public:
 
     virtual string getInterfaceName(bool input, int type){return "";}
 
+    float calcSymbolsBinding(SimObj* origObj,
+                            SimObj* targetObj,
+                            int origSymTable,
+                            int targetSymTable,
+                            llULINT origSymID);
+    float calcSymbolsBinding(SimObj* obj,
+                                    int symTable,
+                                    llULINT symID,
+                                    Symbol* symbol);
+
     virtual bool onKeyDown(Art_KeyCode keycode);
     virtual bool onKeyUp(Art_KeyCode keycode){return false;}
     virtual bool onMouseButtonDown(Art_MouseButton button, int x, int y){return false;}
@@ -94,18 +104,7 @@ public:
 
 protected:
     virtual void onCycle(){}
-    virtual void process(SimObj* object){}
-    virtual void perceive(SimObj* obj){}
-    virtual void act(SimObj* agent){}
-    float calcSymbolsBinding(SimObj* origObj,
-                            SimObj* targetObj,
-                            int origSymTable,
-                            int targetSymTable,
-                            llULINT origSymID);
-    float calcSymbolsBinding(SimObj* obj,
-                                    int symTable,
-                                    llULINT symID,
-                                    Symbol* symbol);
+    
     void drawTimes();
 
     static RandDistManager mDistManager;

@@ -136,14 +136,14 @@ void Simulation::cycle()
     {
         SimObj* obj = *iterObj;
 
-        process(obj); 
+        obj->process(); 
 
         if (obj->mType == SimObj::TYPE_AGENT)
         {
-            perceive(obj);
+            obj->perceive();
             obj->emptyMessageList();
             obj->compute();
-            act(obj);
+            obj->act();
         }
     
         if (draw)

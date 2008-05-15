@@ -27,7 +27,6 @@ SimHex::SimHex(lua_State* luaState)
     mHexCellWidth = 0;
     mHexCellLength = 0;
     mHexMap = NULL;
-    mHumanPaint = false;
 }
 
 SimHex::~SimHex()
@@ -178,30 +177,17 @@ void SimHex::addObject(SimObj* object, bool init)
     }
 }
 
-void SimHex::setPos(SimObjHex* obj, float x, float y)
+void SimHex::updatePos(SimObj2D* obj, float origX, float origY, float targX, float targY)
 {
-    Sim2D::setPos(obj, x, y);
+    Sim2D::updatePos(obj, origX, origY, targX, targY);
 
     SimObjHex* objHex = (SimObjHex*)obj;
 
     int hexX;
     int hexY;
-    getHexCell(x, y, hexX, hexY);
+    getHexCell(targX, targY, hexX, hexY);
     objHex->mHexX = hexX;
     objHex->mHexY = hexY;
-}
-
-void SimHex::act(SimObj* agent)
-{
-    Sim2D::act(agent);
-
-    if (agent == mHumanAgent)
-    {
-        if (mHumanPaint)
-        {
-            printf("PAINT\n");
-        }
-    }
 }
 
 bool SimHex::onKeyDown(Art_KeyCode key)
@@ -211,13 +197,17 @@ bool SimHex::onKeyDown(Art_KeyCode key)
         return true;
     }
 
-    switch (key)
+    if (mHumanAgent != NULL)
     {
-    case ART_KEY_P:
-        mHumanPaint = true;
-        return true;
-    default:
-        return false;
+        SimObjHex* humanHex = (SimObjHex*)mHumanAgent;
+        switch (key)
+        {
+        case ART_KEY_P:
+            humanHex->mHumanPaint = true;
+            return true;
+        default:
+            return false;
+        }
     }
 }
 
@@ -228,13 +218,17 @@ bool SimHex::onKeyUp(Art_KeyCode key)
         return true;
     }
 
-    switch (key)
+    if (mHumanAgent != NULL)
     {
-    case ART_KEY_P:
-        mHumanPaint = false;
-        return true;
-    default:
-        return false;
+        SimObjHex* humanHex = (SimObjHex*)mHumanAgent;
+        switch (key)
+        {
+        case ART_KEY_P:
+            humanHex->mHumanPaint = false;
+            return true;
+        default:
+            return false;
+        }
     }
 }
 
@@ -248,18 +242,7 @@ Orbit<SimHex>::MethodType SimHex::mMethods[] = {
     {"run", &Simulation::run},
     {"setTimeLimit", &Simulation::setTimeLimit},
     {"setWorldDimensions", &SimHex::setWorldDimensions},
-    {"setViewRange", &Sim2D::setViewRange},
-    {"setViewAngle", &Sim2D::setViewAngle},
-    {"setGoCost", &Sim2D::setGoCost},
-    {"setRotateCost", &Sim2D::setRotateCost},
-    {"setGoForceScale", &Sim2D::setGoForceScale},
-    {"setRotateForceScale", &Sim2D::setRotateForceScale},
-    {"setPos", &Sim2D::setPos},
-    {"setRot", &Sim2D::setRot},
     {"setHuman", &Sim2D::setHuman},
-    {"setFeedCenter", &Sim2D::setFeedCenter},
-    {"setSoundRange", &Sim2D::setSoundRange},
-    {"setSpeakInterval", &Sim2D::setSpeakInterval},
     {0,0}
 };
 

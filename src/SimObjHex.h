@@ -35,6 +35,8 @@ public:
     int mHexX;
     int mHexY;
 
+    bool mHumanPaint;
+
     static const char mClassName[];
     static Orbit<SimObjHex>::MethodType mMethods[];
     static Orbit<SimObjHex>::NumberGlobalType mNumberGlobals[];

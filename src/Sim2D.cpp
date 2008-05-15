@@ -20,7 +20,6 @@
 #include "Sim2D.h"
 #include "PopulationDynamics.h"
 #include "SymbolFloat.h"
-#include "SymbolRGB.h"
 
 #include <math.h>
 #include <list>
@@ -29,7 +28,6 @@ using std::list;
 
 mt_distribution* Sim2D::mDistAge = gDistManager.getNewDistribution();
 mt_distribution* Sim2D::mDistPosition = gDistManager.getNewDistribution();
-mt_distribution* Sim2D::mDistFitnessRandom = gDistManager.getNewDistribution();
 
 Sim2D::Sim2D(lua_State* luaState)
 {
@@ -50,22 +48,6 @@ Sim2D::Sim2D(lua_State* luaState)
     mShowBrain = false;
     mShowEnergy = false;
     
-    mViewRange = 0.0f;
-    mViewAngle = 0.0f;
-    mHalfViewAngle = 0.0f;
-    mLowLimitViewAngle = 0.0f;
-    mHighLimitViewAngle = 0.0f;
-
-    mGoCost = 0.0f;
-    mRotateCost = 0.0f;
-
-    mGoForceScale = 0.0f;
-    mRotateForceScale = 0.0f;
-
-    mTargetObject = NULL;
-    mDistanceToTargetObject = 0.0f;
-    mCurrentTargetInputBuffer = NULL;
-
     mDragging = false;
     mLastMouseX = 0;
     mLastMouseY = 0;
@@ -86,20 +68,9 @@ Sim2D::Sim2D(lua_State* luaState)
 
     mCollisionDetectionIteration = 0;
 
-    mHumanAgent = NULL;
-    mHumanGo = false;
-    mHumanRotateLeft = false;
-    mHumanRotateRight = false;
-    mHumanEat = false;
-    mHumanSpeak = false;
-
     mZoom = 1.0f;
 
-    mFeedCenter = 0.5f;
-
-    mSoundRange = 250.0f;
-    mSpeakInterval = 250;
-    mFireInterval = 250;
+    mHumanAgent = NULL;
 }
 
 Sim2D::~Sim2D()
@@ -155,10 +126,12 @@ void Sim2D::setWorldDimensions(float worldWidth,
     }
 }
 
-void Sim2D::setPos(SimObj2D* obj, float x, float y)
+void Sim2D::updatePos(SimObj2D* obj,
+                        float origX,
+                        float origY,
+                        float targX,
+                        float targY)
 {
-    float origX = obj->mX;
-    float origY = obj->mY;
     float size = obj->mSize;
 
     int origX1 = ((int)(origX - size)) / mCellSide;
@@ -183,10 +156,10 @@ void Sim2D::setPos(SimObj2D* obj, float x, float y)
         origY2 = mWorldCellLength - 1;
     }
 
-    int targX1 = ((int)(x - size)) / mCellSide;
-    int targX2 = ((int)(x + size)) / mCellSide;
-    int targY1 = ((int)(y - size)) / mCellSide;
-    int targY2 = ((int)(y + size)) / mCellSide;
+    int targX1 = ((int)(targX - size)) / mCellSide;
+    int targX2 = ((int)(targX + size)) / mCellSide;
+    int targY1 = ((int)(targY - size)) / mCellSide;
+    int targY2 = ((int)(targY + size)) / mCellSide;
 
     if (targX1 < 0)
     {
@@ -204,9 +177,6 @@ void Sim2D::setPos(SimObj2D* obj, float x, float y)
     {
         targY2 = mWorldCellLength - 1;
     }
-
-    obj->mX = x;
-    obj->mY = y;
 
     if (obj->mInitialized)
     {
@@ -252,14 +222,11 @@ void Sim2D::setPos(SimObj2D* obj, float x, float y)
     }
 }
 
-void Sim2D::setRot(SimObj2D* obj, float rot)
-{
-    obj->mRot = normalizeAngle(rot);
-}
-
 void Sim2D::addObject(SimObj* obj, bool init)
 {
     SimObj2D* object = (SimObj2D*)obj;
+
+    object->mSim2D = this;
 
     object->mEnergy = object->mInitialEnergy;
 
@@ -340,10 +307,10 @@ void Sim2D::removeObject(SimObj* obj, bool deleteObj)
 
 void Sim2D::placeRandom(SimObj* obj)
 {
-    setPos((SimObj2D*)obj,
-            mDistPosition->uniform(0, mWorldWidth),
+    SimObj2D* obj2D = (SimObj2D*)obj;
+    obj2D->setPos(mDistPosition->uniform(0, mWorldWidth),
             mDistPosition->uniform(0, mWorldLength));
-    setRot((SimObj2D*)obj, mDistPosition->uniform(0, M_PI * 2));
+    obj2D->setRot(mDistPosition->uniform(0, M_PI * 2));
 }
 
 void Sim2D::placeNear(SimObj* obj, SimObj* ref)
@@ -381,8 +348,10 @@ void Sim2D::placeNear(SimObj* obj, SimObj* ref)
         targY = targY - mWorldLength;
     }
 
-    setPos((SimObj2D*)obj, targX, targY);
-    setRot((SimObj2D*)obj, mDistPosition->uniform(0, M_PI * 2));
+    SimObj2D* obj2D = (SimObj2D*)obj;
+
+    obj2D->setPos(targX, targY);
+    obj2D->setRot(mDistPosition->uniform(0, M_PI * 2));
 }
 
 void Sim2D::startCollisionDetection(float x, float y, float rad)
@@ -492,590 +461,6 @@ void Sim2D::onCycle()
     processLaserShots();
 }
 
-void Sim2D::process(SimObj* object)
-{
-    SimObj2D* obj = (SimObj2D*)object;
-
-    if (obj->mEnergy <= 0)
-    {
-        killOrganism(obj);
-    }
-    else if (obj->mMaxAge > 0)
-    {
-        if (mSimulationTime - obj->mCreationTime >= obj->mAgeLimit)
-        {
-            killOrganism(obj);
-        }
-    }
-
-    obj->mSpeedX += obj->mImpulseX / obj->mSize;
-    obj->mSpeedY += obj->mImpulseY / obj->mSize;
-    obj->mImpulseX = 0.0f;
-    obj->mImpulseY = 0.0f;
-
-    float speed = sqrtf((obj->mSpeedX
-                    * obj->mSpeedX)
-                    + (obj->mSpeedY
-                    * obj->mSpeedY));
-
-
-    float oneMinusDrag = 1 - obj->mDrag;
-    
-    obj->mSpeedX *= oneMinusDrag;
-    obj->mSpeedY *= oneMinusDrag;
-
-    float newX = obj->mX + obj->mSpeedX;
-    float newY = obj->mY + obj->mSpeedY;
-
-    if (newX < 0.0f)
-    {
-        newX = 0.0f;
-        obj->mSpeedX = 0.0f;
-    }
-    else if (newX > mWorldWidth)
-    {
-        newX = mWorldWidth;
-        obj->mSpeedX = 0.0f;
-    }
-    if (newY < 0.0f)
-    {
-        newY = 0.0f;
-        obj->mSpeedY = 0.0f;
-    }
-    else if (newY > mWorldLength)
-    {
-        newY = mWorldLength;
-        obj->mSpeedY = 0.0f;
-    }
-
-    obj->mSpeedRot += obj->mImpulseRot / obj->mSize;
-    obj->mImpulseRot = 0.0f;
-
-    float absRotSpeed = obj->mSpeedRot;
-    if (obj->mSpeedRot < 0.0f)
-    {
-        absRotSpeed = -absRotSpeed;
-    }
-
-    float oneMinusRotDrag = 1.0f - obj->mRotDrag;
-    obj->mSpeedRot *= oneMinusRotDrag;
-
-    float newRot = obj->mRot + obj->mSpeedRot;
-
-    setPos((SimObj2D*)obj, newX, newY);
-    setRot((SimObj2D*)obj, newRot);
-
-    // Update fitness
-    switch (obj->getFitnessMeasure())
-    {
-    case FITNESS_ENERGY:
-        obj->mFitness = obj->mEnergy;
-        break;
-    case FITNESS_ENERGY_SUM:
-        if ((mSimulationTime % 10) == 0)
-        {
-            obj->mFitness += obj->mEnergy;
-        }
-        break;
-    case FITNESS_ENERGY_SUM_ABOVE_INIT:
-        if ((mSimulationTime % 10) == 0)
-        {
-            float energy = obj->mEnergy;
-            energy -= obj->mInitialEnergy;
-            if (energy < 0.0f)
-            {
-                energy = 0.0f;
-            }
-            obj->mFitness += energy;
-        }
-        break;
-    case FITNESS_RANDOM:
-        if ((mSimulationTime % 1000) == 0)
-        {
-            obj->mFitness = mDistFitnessRandom->uniform(0.0f, 1.0f);
-        }
-    }
-}
-
-void Sim2D::perceive(SimObj* obj)
-{
-    SimObj2D* agent = (SimObj2D*)obj;
-
-    // Perceive visible objects
-    mTargetObject = NULL;
-    mDistanceToTargetObject = 9999999999.9f;
-    mCurrentTargetInputBuffer = NULL;
-
-    mLowLimitViewAngle = normalizeAngle(agent->mRot - mHalfViewAngle);
-    mHighLimitViewAngle = normalizeAngle(agent->mRot + mHalfViewAngle);
-
-    startCollisionDetection(agent->mX, agent->mY, mViewRange);
-
-    SimObj2D* target;
-    float distance;
-    float angle;
-
-    while (target = nextCollision(distance, angle))
-    {
-        if (target != agent)
-        {
-            bool visible = false;
-            
-            // This is an aproximation
-            float extraAngle = atan2f(target->mSize, distance);
-
-            distance -= agent->mSize;
-            distance -= target->mSize;
-            if (distance < 0.0f)
-            {
-                distance = 0.0f;
-            }
-
-            if (mHighLimitViewAngle > mLowLimitViewAngle)
-            {
-                if ((angle - extraAngle <= mHighLimitViewAngle) && (angle + extraAngle >= mLowLimitViewAngle))
-                {
-                    visible = true;
-                }
-            }
-            else
-            {
-                if ((angle - extraAngle <= mHighLimitViewAngle) || (angle + extraAngle >= mLowLimitViewAngle))
-                {
-                    visible = true;
-                }
-            }
-
-            if (visible)
-            {
-                onScanObject((SimObj2D*)agent,
-                                (SimObj2D*)target,
-                                distance,
-                                normalizeAngle(agent->mRot - angle),
-                                normalizeAngle(target->mRot - angle));
-            }
-        }
-    }
-
-    // Perceive sounds
-    list<Message*>* messageList = agent->getMessageList();
-
-    if (agent->mChannelSounds >= 0)
-    {
-        for (list<Message*>::iterator iterMessage = messageList->begin();
-                iterMessage != messageList->end();
-                iterMessage++)
-        {
-            Message* msg = (*iterMessage);
-
-            list<InterfaceItem*>* interface = agent->getBrain()->getInputInterface(agent->mChannelSounds);
-            float* inBuffer = agent->getBrain()->getInputBuffer(agent->mChannelSounds);
-
-            if (inBuffer != NULL)
-            {
-                unsigned int pos = 0;
-                float normalizedValue;
-
-                for (list<InterfaceItem*>::iterator iterItem = interface->begin();
-                    iterItem != interface->end();
-                    iterItem++)
-                {
-                    unsigned int type = (*iterItem)->mType;
-
-                    switch (type)
-                    {
-                        case PERCEPTION_POSITION:
-                            normalizedValue = msg->mData[1] / M_PI;
-                            inBuffer[pos] = normalizedValue;
-                            break;
-
-                        case PERCEPTION_DISTANCE:
-                            normalizedValue = msg->mData[0] / mSoundRange;
-                            inBuffer[pos] = normalizedValue;
-                            break;
-
-                        case PERCEPTION_SYMBOL:
-                            InterfaceItem* item = (*iterItem);
-                            normalizedValue = calcSymbolsBinding(agent,
-                                                    item->mOrigSymTable,
-                                                    item->mOrigSymID,
-                                                    msg->mSymbol);
-                            inBuffer[pos] = normalizedValue;
-                            break;
-                    }
-
-                    pos++;
-                }
-            }
-        }
-    }
-
-    // Perceive self
-    if (agent->mChannelSelf >= 0)
-    {
-        list<InterfaceItem*>* interface = agent->getBrain()->getInputInterface(agent->mChannelSelf);
-        float* inBuffer = agent->getBrain()->getInputBuffer(agent->mChannelSelf);
-        unsigned int pos = 0;
-        float normalizedValue;
-        float ratio;
-
-        for (list<InterfaceItem*>::iterator iterItem = interface->begin();
-            iterItem != interface->end();
-            iterItem++)
-        {
-            unsigned int type = (*iterItem)->mType;
-
-            switch (type)
-            {
-                case PERCEPTION_ENERGY:
-                    ratio = agent->mEnergy / agent->mInitialEnergy;
-                    normalizedValue = 1.0f - (1.0f / (ratio + 1.0f));
-                    inBuffer[pos] = normalizedValue;
-                    break;
-
-                case PERCEPTION_CAN_SPEAK:
-                    normalizedValue = 0.0f;
-
-                    if ((mSimulationTime - agent->mLastSpeakTime) > mSpeakInterval)
-                    {
-                        normalizedValue = 1.0f;
-                    }
-                    inBuffer[pos] = normalizedValue;
-                    break;
-                case PERCEPTION_CAN_FIRE:
-                    normalizedValue = 0.0f;
-
-                    if ((mSimulationTime - agent->mLastFireTime) > mFireInterval)
-                    {
-                        normalizedValue = 1.0f;
-                    }
-                    inBuffer[pos] = normalizedValue;
-                    break;
-            }
-
-            pos++;
-        }
-    }
-}
-
-void Sim2D::onScanObject(SimObj2D* orig,
-                SimObj2D* targ,
-                float distance,
-                float angle,
-                float orientation)
-{
-    float* inBuffer = orig->getBrain()->getInputBuffer(orig->mChannelObjects);
-    if (inBuffer == NULL)
-    {
-        return;
-    }
-
-    bool isTarget = false;
-
-    // TODO: use the nearest to angle 0 instead of the closest distance?
-    if (distance <= 0)
-    {
-        if ((mTargetObject == NULL) || (distance < mDistanceToTargetObject))
-        {
-            mTargetObject = targ;
-            mDistanceToTargetObject = distance;
-            isTarget = true;
-        }
-    }
-
-    float normalizedValue;
-
-    list<InterfaceItem*>* interface = orig->getBrain()->getInputInterface(orig->mChannelObjects);
-    unsigned int pos = 0;
-
-    for (list<InterfaceItem*>::iterator iterItem = interface->begin();
-        iterItem != interface->end();
-        iterItem++)
-    {
-        unsigned int type = (*iterItem)->mType;
-
-        switch (type)
-        {
-            case PERCEPTION_IN_CONTACT:
-                if (distance <= 0.0f)
-                {
-                    inBuffer[pos] = 1.0f;
-                }
-                else
-                {
-                    inBuffer[pos] = 0.0f;
-                }
-                break;
-
-            case PERCEPTION_POSITION:
-                normalizedValue = angle / M_PI;
-                inBuffer[pos] = normalizedValue;
-                break;
-
-            case PERCEPTION_ORIENTATION:
-                normalizedValue = orientation / M_PI;
-                inBuffer[pos] = normalizedValue;
-                break;
-
-            case PERCEPTION_DISTANCE:
-                normalizedValue = distance / mViewRange;
-                inBuffer[pos] = normalizedValue;
-                break;
-
-            case PERCEPTION_TARGET:
-                if (isTarget)
-                {
-                    inBuffer[pos] = 1.0f;
-
-                    if (mCurrentTargetInputBuffer != NULL)
-                    {
-                        mCurrentTargetInputBuffer[pos] = 0.0f;
-                    }
-                }
-                else
-                {
-                    inBuffer[pos] = 0.0f;
-                }
-                break;
-
-            case PERCEPTION_SYMBOL:
-                InterfaceItem* item = (*iterItem);
-                normalizedValue = calcSymbolsBinding(orig,
-                                                    targ,
-                                                    item->mOrigSymTable,
-                                                    item->mTargetSymTable,
-                                                    item->mOrigSymID);
-                inBuffer[pos] = normalizedValue;
-                break;
-        }
-
-        pos++;
-    }
-
-    if (isTarget)
-    {
-        mCurrentTargetInputBuffer = inBuffer;
-    }
-}
-
-void Sim2D::act(SimObj* agent)
-{
-    bool actionGo = false;
-    bool actionRotate = false;
-    bool actionFire = false;
-    Action actionEat = ACTION_NULL;
-    Symbol* actionSpeakSymbol = NULL;
-    float actionGoParam = 0.0f;
-    float actionRotateParam = 0.0f;
-    float actionSpeakParam = -99999999.9f;
-
-    if (agent == mHumanAgent)
-    {
-        if (mHumanGo)
-        {
-            actionGo = true;
-            actionGoParam = 1.0f;
-        }
-        if (mHumanRotateLeft)
-        {
-            actionRotate = true;
-            actionRotateParam += 1.0f;
-        }
-        if (mHumanRotateRight)
-        {
-            actionRotate = true;
-            actionRotateParam -= 1.0f;
-        }
-        if (mHumanEat)
-        {
-            actionEat = ACTION_EAT;
-        }
-        if (mHumanSpeak)
-        {
-            actionSpeakSymbol = new SymbolRGB(255, 0, 0);
-            actionSpeakParam = 1.0f;
-        }
-        if (mHumanFire)
-        {
-            actionFire = true;
-        }
-    }
-    else
-    {
-        list<InterfaceItem*>* interface = agent->getBrain()->getOutputInterface();
-        float* outBuffer = agent->getBrain()->getOutputBuffer();
-        unsigned int pos = 0;
-
-        for (list<InterfaceItem*>::iterator iterItem = interface->begin();
-            iterItem != interface->end();
-            iterItem++)
-        {
-            float output = outBuffer[pos];
-
-            Action actionType = (Action)(*iterItem)->mType;
-
-            if (output != 0.0f)
-            {
-                switch (actionType)
-                {
-                    case ACTION_GO:
-                        actionGo = true;
-                        actionGoParam += output;
-                        break;
-                    case ACTION_ROTATE:
-                        actionRotate = true;
-                        actionRotateParam += output;
-                        break;
-                    case ACTION_EAT:
-                    case ACTION_EATB:
-                        actionEat = actionType;
-                        break;
-                    case ACTION_SPEAK:
-                        if (output > actionSpeakParam)
-                        {
-                            SymbolTable* table = agent->getSymbolTable((*iterItem)->mOrigSymTable);
-
-                            if (table != NULL)
-                            {
-                                Symbol* sym = table->getSymbol((*iterItem)->mOrigSymID);
-                                //printf("id: %d\n", (*iterItem)->mOrigSymID);
-
-                                if (sym != NULL)
-                                {
-                                    actionSpeakParam = output;
-                                    actionSpeakSymbol = sym;
-                                }
-                            }
-                        }
-                        break;
-                    case ACTION_FIRE:
-                        actionFire = true;
-                        break;
-                }
-            }
-
-            pos++;
-        }
-    }
-
-    if (actionGoParam > 1.0f)
-    {
-        actionGoParam = 1.0f;
-    }
-    else if (actionGoParam < -1.0f)
-    {
-        actionGoParam = -1.0f;
-    }
-    if (actionRotateParam > 1.0f)
-    {
-        actionRotateParam = 1.0f;
-    }
-    else if (actionRotateParam < -1.0f)
-    {
-        actionRotateParam = -1.0f;
-    }
-
-    if (actionGo)
-    {
-        go((SimObj2D*)agent, actionGoParam * mGoForceScale);
-    }
-    if (actionRotate)
-    {
-        rotate((SimObj2D*)agent, actionRotateParam * mRotateForceScale);
-    }
-    if (actionEat != ACTION_NULL)
-    {
-        eat((SimObj2D*)agent, actionEat);
-    }
-    if (actionSpeakSymbol != NULL)
-    {
-        speak((SimObj2D*)agent, actionSpeakSymbol);
-    }
-    if (actionFire)
-    {
-        fire((SimObj2D*)agent);
-    }
-}
-
-void Sim2D::go(SimObj2D* agent, float force)
-{
-    float delta = -mGoCost * fabsf(force);
-    agent->deltaEnergy(delta);
-
-    agent->mImpulseX = cosf(agent->mRot) * force;
-    agent->mImpulseY = sinf(agent->mRot) * force;
-}
-
-void Sim2D::rotate(SimObj2D* agent, float force)
-{
-    agent->deltaEnergy(-mRotateCost * fabsf(force));
-    agent->mImpulseRot -= force;
-}
-
-void Sim2D::eat(SimObj2D* agent, Action actionType)
-{
-    if (mTargetObject)
-    {
-        Symbol* sym1 = agent->getSymbolByName("feed");
-        if (sym1 == NULL)
-        {
-            return;
-        }
-        Symbol* sym2 = mTargetObject->getSymbolByName("food");
-        if (sym2 == NULL)
-        {
-            return;
-        }
-
-        switch (actionType)
-        {
-        case ACTION_EAT:
-            if (sym1->getBinding(sym2) > mFeedCenter)
-            {
-                float energy = mTargetObject->mEnergy;
-                agent->deltaEnergy(energy);
-                mTargetObject->deltaEnergy(-energy);
-            }
-            break;
-        case ACTION_EATB:
-            float distance = sym1->getBinding(sym2);
-            float energyFactor;
-
-            if (distance < mFeedCenter)
-            {
-                energyFactor = -(mFeedCenter - distance) / mFeedCenter;
-            }
-            else
-            {
-                energyFactor = (distance - mFeedCenter) / (1.0f - mFeedCenter);
-            }
-
-            float energy = mTargetObject->mEnergy;
-            agent->deltaEnergy(energyFactor * energy);
-            mTargetObject->deltaEnergy(-energy);
-            break;
-        }
-    }
-}
-
-void Sim2D::fire(SimObj2D* agent)
-{
-    if (((mSimulationTime - agent->mLastFireTime) <= mFireInterval)
-        && (agent->mLastFireTime != 0))
-    {
-        return;
-    }
-
-    agent->mLastFireTime = mSimulationTime;
-
-    createLaserShot(agent->mX,
-                    agent->mY,
-                    agent->mRot,
-                    25,
-                    0.02,
-                    agent->getID());
-}
-
 void Sim2D::drawBeforeObjects()
 {
     art_setScale(mZoom, mZoom);
@@ -1126,8 +511,8 @@ void Sim2D::drawBeforeObjects()
 
             if (obj->mType == SimObj::TYPE_AGENT)
             {
-                float beginAngle = normalizeAngle(obj->mRot - mHalfViewAngle);
-                float endAngle = normalizeAngle(obj->mRot + mHalfViewAngle);
+                float beginAngle = normalizeAngle(obj->mRot - obj->mHalfViewAngle);
+                float endAngle = normalizeAngle(obj->mRot + obj->mHalfViewAngle);
 
                 if (beginAngle > endAngle)
                 {
@@ -1137,7 +522,7 @@ void Sim2D::drawBeforeObjects()
                 art_setColor(150, 150, 150, 100);
                 art_fillCircleSlice(obj->mX,
                                 obj->mY,
-                                mViewRange,
+                                obj->mViewRange,
                                 beginAngle,
                                 endAngle);
             }
@@ -1166,7 +551,7 @@ void Sim2D::drawBeforeObjects()
                 unsigned int curTime = mSimulationTime - ve->mStartTime;
                 float alpha = (1.0f - (((float)curTime) / ((float)deltaTime))) * 255.0f;
                 art_setColor(ve->mRed, ve->mGreen, ve->mBlue, (unsigned int)alpha);
-                art_fillCircle(ve->mX, ve->mY, mSoundRange);
+                art_fillCircle(ve->mX, ve->mY, ve->mRadius);
                 break;
             }
             iterEvent++;
@@ -1438,28 +823,31 @@ bool Sim2D::onKeyDown(Art_KeyCode key)
         return true;
     }
 
-    switch (key)
+    if (mHumanAgent != NULL)
     {
-    case ART_KEY_UP:
-        mHumanGo = true;
-        return true;
-    case ART_KEY_RIGHT:
-        mHumanRotateRight = true;
-        return true;
-    case ART_KEY_LEFT:
-        mHumanRotateLeft = true;
-        return true;
-    case ART_KEY_E:
-        mHumanEat = true;
-        return true;
-    case ART_KEY_S:
-        mHumanSpeak = true;
-        return true;
-    case ART_KEY_SPACE:
-        mHumanFire = true;
-        return true;
-    default:
-        return false;
+        switch (key)
+        {
+        case ART_KEY_UP:
+            mHumanAgent->mHumanGo = true;
+            return true;
+        case ART_KEY_RIGHT:
+            mHumanAgent->mHumanRotateRight = true;
+            return true;
+        case ART_KEY_LEFT:
+            mHumanAgent->mHumanRotateLeft = true;
+            return true;
+        case ART_KEY_E:
+            mHumanAgent->mHumanEat = true;
+            return true;
+        case ART_KEY_S:
+            mHumanAgent->mHumanSpeak = true;
+            return true;
+        case ART_KEY_SPACE:
+            mHumanAgent->mHumanFire = true;
+            return true;
+        default:
+            return false;
+        }
     }
 }
 
@@ -1484,27 +872,34 @@ bool Sim2D::onKeyUp(Art_KeyCode key)
     case ART_KEY_N:
         mShowEnergy = !mShowEnergy;
         return true;
-    case ART_KEY_UP:
-        mHumanGo = false;
-        return true;
-    case ART_KEY_RIGHT:
-        mHumanRotateRight = false;
-        return true;
-    case ART_KEY_LEFT:
-        mHumanRotateLeft = false;
-        return true;
-    case ART_KEY_E:
-        mHumanEat = false;
-        return true;
-    case ART_KEY_S:
-        mHumanSpeak = false;
-        return true;
-    case ART_KEY_SPACE:
-        mHumanFire = false;
-        return true;
-    default:
-        return false;
     }
+
+    if (mHumanAgent != NULL)
+    {
+        switch (key)
+        {
+        case ART_KEY_UP:
+            mHumanAgent->mHumanGo = false;
+            return true;
+        case ART_KEY_RIGHT:
+            mHumanAgent->mHumanRotateRight = false;
+            return true;
+        case ART_KEY_LEFT:
+            mHumanAgent->mHumanRotateLeft = false;
+            return true;
+        case ART_KEY_E:
+            mHumanAgent->mHumanEat = false;
+            return true;
+        case ART_KEY_S:
+            mHumanAgent->mHumanSpeak = false;
+            return true;
+        case ART_KEY_SPACE:
+            mHumanAgent->mHumanFire = false;
+            return true;
+        }
+    }
+
+    return false;
 }
 
 bool Sim2D::onMouseButtonDown(Art_MouseButton button, int x, int y)
@@ -1562,32 +957,6 @@ bool Sim2D::onMouseWheel(bool up)
     return true;
 }
 
-void Sim2D::setViewAngle(float angle)
-{
-    mViewAngle = (angle * M_PI) / 180.0f;
-    mHalfViewAngle = mViewAngle / 2.0f;
-}
-
-void Sim2D::setViewRange(float range)
-{
-    mViewRange = range;
-}
-
-float Sim2D::normalizeAngle(float angle)
-{
-    float PI2 = M_PI * 2.0f;
-    while(angle > M_PI)
-    {
-        angle -= PI2;
-    }
-    while(angle <= -M_PI)
-    {
-        angle += PI2;
-    }
-
-    return angle;
-}
-
 string Sim2D::getInterfaceName(bool input, int type)
 {
     if (input)
@@ -1636,48 +1005,25 @@ string Sim2D::getInterfaceName(bool input, int type)
     }
 }
 
-void Sim2D::speak(SimObj2D* agent, Symbol* sym)
+void Sim2D::setHuman(SimObj2D* agent)
 {
-    if (((mSimulationTime - agent->mLastSpeakTime) <= mSpeakInterval)
-        && (agent->mLastSpeakTime != 0))
+    mHumanAgent = agent;
+    mHumanAgent->mHumanControlled = true;
+}
+
+float Sim2D::normalizeAngle(float angle)
+{
+    float PI2 = M_PI * 2.0f;
+    while(angle > M_PI)
     {
-        return;
+        angle -= PI2;
+    }
+    while(angle <= -M_PI)
+    {
+        angle += PI2;
     }
 
-    agent->mLastSpeakTime = mSimulationTime;
-
-    startCollisionDetection(agent->mX, agent->mY, mSoundRange);
-
-    SimObj* target;
-    float distance;
-    float angle;
-
-    while (target = nextCollision(distance, angle))
-    {
-        if ((target->mType == SimObj::TYPE_AGENT)
-            && (agent != target))
-        {
-            Message* msg = new Message();
-            msg->mSymbol = sym->clone();
-            msg->mType = 0; // Only one message type for now (sound message)
-            float* msgData = (float*)malloc(2 * sizeof(float));
-            msgData[0] = distance;
-            msgData[1] = normalizeAngle(angle + M_PI);
-            msg->mData = msgData;
-            target->addMessage(msg);
-        }
-    }
-
-    VisualEvent* ve = (VisualEvent*)malloc(sizeof(VisualEvent));
-    ve->mType = VE_SPEAK;
-    ve->mX = agent->mX;
-    ve->mY = agent->mY;
-    ve->mRed = sym->getRed();
-    ve->mGreen = sym->getGreen();
-    ve->mBlue = sym->getBlue();
-    ve->mStartTime = mSimulationTime;
-    ve->mEndTime = mSimulationTime + mSpeakInterval;
-    mVisualEvents.push_back(ve);
+    return angle;
 }
 
 const char Sim2D::mClassName[] = "Sim2D";
@@ -1690,19 +1036,7 @@ Orbit<Sim2D>::MethodType Sim2D::mMethods[] = {
     {"run", &Simulation::run},
     {"setTimeLimit", &Simulation::setTimeLimit},
     {"setWorldDimensions", &Sim2D::setWorldDimensions},
-    {"setViewRange", &Sim2D::setViewRange},
-    {"setViewAngle", &Sim2D::setViewAngle},
-    {"setGoCost", &Sim2D::setGoCost},
-    {"setRotateCost", &Sim2D::setRotateCost},
-    {"setGoForceScale", &Sim2D::setGoForceScale},
-    {"setRotateForceScale", &Sim2D::setRotateForceScale},
-    {"setPos", &Sim2D::setPos},
-    {"setRot", &Sim2D::setRot},
     {"setHuman", &Sim2D::setHuman},
-    {"setFeedCenter", &Sim2D::setFeedCenter},
-    {"setSoundRange", &Sim2D::setSoundRange},
-    {"setSpeakInterval", &Sim2D::setSpeakInterval},
-    {"setFireInterval", &Sim2D::setFireInterval},
     {0,0}
 };
 
@@ -1740,97 +1074,10 @@ int Sim2D::setWorldDimensions(lua_State* luaState)
     return 0;
 }
 
-int Sim2D::setViewRange(lua_State* luaState)
-{
-    float viewRange = luaL_checknumber(luaState, 1);
-    setViewRange(viewRange);
-    return 0;
-}
-
-int Sim2D::setViewAngle(lua_State* luaState)
-{
-    float viewAngle = luaL_checknumber(luaState, 1);
-    setViewAngle(viewAngle);
-    return 0;
-}
-
-int Sim2D::setGoCost(lua_State* luaState)
-{
-    float cost = luaL_checknumber(luaState, 1);
-    setGoCost(cost);
-    return 0;
-}
-
-int Sim2D::setRotateCost(lua_State* luaState)
-{
-    float cost = luaL_checknumber(luaState, 1);
-    setRotateCost(cost);
-    return 0;
-}
-
-int Sim2D::setGoForceScale(lua_State* luaState)
-{
-    float scale = luaL_checknumber(luaState, 1);
-    setGoForceScale(scale);
-    return 0;
-}
-
-int Sim2D::setRotateForceScale(lua_State* luaState)
-{
-    float scale = luaL_checknumber(luaState, 1);
-    setRotateForceScale(scale);
-    return 0;
-}
-
-int Sim2D::setPos(lua_State* luaState)
-{
-    SimObj2D* simObj = (SimObj2D*)Orbit<Sim2D>::pointer(luaState, 1);
-    float x = luaL_checknumber(luaState, 2);
-    float y = luaL_checknumber(luaState, 3);
-    setPos(simObj, x, y);
-    return 0;
-}
-
-int Sim2D::setRot(lua_State* luaState)
-{
-    SimObj2D* simObj = (SimObj2D*)Orbit<Sim2D>::pointer(luaState, 1);
-    float rot = luaL_checknumber(luaState, 2);
-    setRot(simObj, rot);
-    return 0;
-}
-
 int Sim2D::setHuman(lua_State* luaState)
 {
     SimObj2D* agent = (SimObj2D*)Orbit<Sim2D>::pointer(luaState, 1);
     setHuman(agent);
-    return 0;
-}
-
-int Sim2D::setFeedCenter(lua_State* luaState)
-{
-    float center = luaL_checknumber(luaState, 1);
-    setFeedCenter(center);
-    return 0;
-}
-
-int Sim2D::setSoundRange(lua_State* luaState)
-{
-    float range = luaL_checknumber(luaState, 1);
-    setSoundRange(range);
-    return 0;
-}
-
-int Sim2D::setSpeakInterval(lua_State* luaState)
-{
-    unsigned int speakInterval = luaL_checkint(luaState, 1);
-    setSpeakInterval(speakInterval);
-    return 0;
-}
-
-int Sim2D::setFireInterval(lua_State* luaState)
-{
-    unsigned int fireInterval = luaL_checkint(luaState, 1);
-    setFireInterval(fireInterval);
     return 0;
 }
 

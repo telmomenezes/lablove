@@ -21,6 +21,7 @@
 
 SimObjHex::SimObjHex(lua_State* luaState) : SimObj2D(luaState)
 {
+    mHumanPaint = false;
 }
 
 SimObjHex::SimObjHex(SimObjHex* obj) : SimObj2D(obj)

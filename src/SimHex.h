@@ -36,7 +36,7 @@ public:
                                      float hexSide);
 
     virtual void addObject(SimObj* object, bool init=false);
-    virtual void setPos(SimObjHex* obj, float x, float y);
+    virtual void updatePos(SimObj2D* obj, float origX, float origY, float targX, float targY);
 
     virtual bool onKeyDown(Art_KeyCode keycode);
     virtual bool onKeyUp(Art_KeyCode keycode);
@@ -52,8 +52,6 @@ protected:
 
     void getHexCell(float x, float y, int& hX, int& hY);
 
-    virtual void act(SimObj* agent);
-
     float mHexSide;
     float mHexA;
     float mHexB;
@@ -61,8 +59,6 @@ protected:
     int mHexCellLength;
 
     HexCell* mHexMap;
-
-    bool mHumanPaint;
 };
 #endif
 

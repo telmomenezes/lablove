@@ -96,15 +96,9 @@ logSuffix = logBaseName
 
 sim = Sim2D()
 sim:setWorldDimensions(worldWidth, worldHeight, 250)
-sim:setViewRange(viewRange)
-sim:setViewAngle(viewAngle)
-sim:setGoCost(goCost)
-sim:setRotateCost(rotateCost)
-sim:setGoForceScale(goForceScale)
-sim:setRotateForceScale(rotateForceScale)
+
 sim:setSeedIndex(seedIndex)
 sim:setTimeLimit(timeLimit)
-sim:setFeedCenter(feedCenter)
 
 -- Agents
 --------------------------------------------------------------------------------
@@ -119,6 +113,13 @@ agent:setDrag(drag)
 agent:setRotDrag(rotDrag)
 agent:setInitialEnergy(initialEnergy)
 agent:setMaxAge(maxAge)
+agent:setViewRange(viewRange)
+agent:setViewAngle(viewAngle)
+agent:setGoCost(goCost)
+agent:setRotateCost(rotateCost)
+agent:setGoForceScale(goForceScale)
+agent:setRotateForceScale(rotateForceScale)
+agent:setFeedCenter(feedCenter)
 
 agentColor = SymbolRGB(0, 0, 255)
 symTable = SymbolTable(agentColor)
@@ -229,6 +230,13 @@ if humanAgent then
     human:setRotDrag(rotDrag)
     human:setInitialEnergy(1.0)
     human:setMaxAge(maxAge)
+    human:setViewRange(viewRange)
+    human:setViewAngle(viewAngle)
+    human:setGoCost(goCost)
+    human:setRotateCost(rotateCost)
+    human:setGoForceScale(goForceScale)
+    human:setRotateForceScale(rotateForceScale)
+    human:setFeedCenter(feedCenter)
     
     humanColor = SymbolRGB(82, 228, 241)
     symTable = SymbolTable(humanColor, colorTableCode)
@@ -252,7 +260,7 @@ if humanAgent then
 
     human:addGraphic(Graphic2DTriangle())
     sim:addObject(human)
-    sim:setPos(human, 300, 300)
+    human:setPos(300, 300)
     sim:setHuman(human)
 end
 
