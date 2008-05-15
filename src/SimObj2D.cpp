@@ -565,7 +565,7 @@ void SimObj2D::act()
     bool actionGo = false;
     bool actionRotate = false;
     bool actionFire = false;
-    Sim2D::Action actionEat = Sim2D::ACTION_NULL;
+    int actionEat = Sim2D::ACTION_NULL;
     Symbol* actionSpeakSymbol = NULL;
     float actionGoParam = 0.0f;
     float actionRotateParam = 0.0f;
@@ -614,7 +614,7 @@ void SimObj2D::act()
         {
             float output = outBuffer[pos];
 
-            Sim2D::Action actionType = (Sim2D::Action)(*iterItem)->mType;
+            int actionType = (*iterItem)->mType;
 
             if (output != 0.0f)
             {

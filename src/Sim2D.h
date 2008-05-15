@@ -34,39 +34,35 @@ class Sim2D : public Simulation
 {
 public:
 
-    enum Perception {PERCEPTION_NULL,
-                    PERCEPTION_POSITION,
-                    PERCEPTION_ORIENTATION,
-                    PERCEPTION_DISTANCE,
-                    PERCEPTION_TARGET,
-                    PERCEPTION_IN_CONTACT,
-                    PERCEPTION_SYMBOL,
-                    PERCEPTION_ENERGY,
-                    PERCEPTION_CAN_SPEAK,
-                    PERCEPTION_CAN_FIRE
-                    };
+    static const int PERCEPTION_NULL = 0;
+    static const int PERCEPTION_POSITION = 1;
+    static const int PERCEPTION_ORIENTATION = 2;
+    static const int PERCEPTION_DISTANCE = 3;
+    static const int PERCEPTION_TARGET = 4;
+    static const int PERCEPTION_IN_CONTACT = 5;
+    static const int PERCEPTION_SYMBOL = 6;
+    static const int PERCEPTION_ENERGY = 7;
+    static const int PERCEPTION_CAN_SPEAK = 8;
+    static const int PERCEPTION_CAN_FIRE = 9;
 
-    enum Action {ACTION_NULL,
-                ACTION_GO,
-                ACTION_ROTATE,
-                ACTION_EAT,
-                ACTION_EATB,
-                ACTION_SPEAK,
-                ACTION_FIRE
-                };
+    static const int ACTION_NULL = 0;
+    static const int ACTION_GO = 1;
+    static const int ACTION_ROTATE= 2;
+    static const int ACTION_EAT = 3;
+    static const int ACTION_EATB = 4;
+    static const int ACTION_SPEAK = 5;
+    static const int ACTION_FIRE = 6;
 
-    enum FitnessMeasure {FITNESS_ENERGY,
-                        FITNESS_ENERGY_SUM,
-                        FITNESS_ENERGY_SUM_ABOVE_INIT,
-                        FITNESS_RANDOM
-    };
+    static const int FITNESS_ENERGY = 0;
+    static const int FITNESS_ENERGY_SUM = 1;
+    static const int FITNESS_ENERGY_SUM_ABOVE_INIT = 2;
+    static const int FITNESS_RANDOM = 3;
 
-    enum VisualEventType {VE_SPEAK
-    };
+    static const int VE_SPEAK = 0;
 
     typedef struct
     {
-        VisualEventType mType;
+        int mType;
         float mX;
         float mY;
         float mRadius;
