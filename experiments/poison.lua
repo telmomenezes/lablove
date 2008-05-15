@@ -112,7 +112,7 @@ sim:setFeedCenter(feedCenter)
 agent = SimObj2D()
 
 agent:setFitnessMeasure(Sim2D.FITNESS_ENERGY_SUM_ABOVE_INIT)
-agent:addGraphic(GraphicTriangle())
+agent:addGraphic(Graphic2DTriangle())
 
 agent:setSize(agentSize)
 agent:setDrag(drag)
@@ -197,7 +197,7 @@ plantFoodTable = SymbolTable(plantFood, foodTableCode)
 plant:addSymbolTable(plantFoodTable)
 plant:setSymbolName("food", foodTableCode, plantFood:getID())
 
-graphic = GraphicGradient()
+graphic = Graphic2DGradient()
 graphic:setSymbolName("food")
 graphic:setReferenceSymbol(plantFood)
 graphic:setColor1(255, 0, 0)
@@ -250,7 +250,7 @@ if humanAgent then
 
     human:setBrain(dummyBrain)
 
-    human:addGraphic(GraphicTriangle())
+    human:addGraphic(Graphic2DTriangle())
     sim:addObject(human)
     sim:setPos(human, 300, 300)
     sim:setHuman(human)

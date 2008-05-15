@@ -22,7 +22,6 @@
 
 #include "Log.h"
 #include "SimObj.h"
-#include "PopulationManager.h"
 
 #include "Orbit.h"
 
@@ -37,7 +36,7 @@ public:
 
     virtual void init(){}
 
-    virtual void process(SimObj* obj, PopulationManager* popManager);
+    virtual void process(SimObj* obj, Simulation* sim);
     virtual void dump(llULINT time, double realTime);
 
     void setFileNamePrefix(string prefix){mFileNamePrefix = prefix;}

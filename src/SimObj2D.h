@@ -21,7 +21,7 @@
 #define __INCLUDE_SIM_OBJ_2D_H
 
 #include "SimObj.h"
-#include "Graphic.h"
+#include "Graphic2D.h"
 #include "Orbit.h"
 
 #include <list>
@@ -38,7 +38,7 @@ public:
 
     void draw();
 
-    void addGraphic(Graphic* graph);
+    void addGraphic(Graphic2D* graph);
 
     void setSize(float size);
     void setDrag(float drag){mDrag = drag;}
@@ -48,7 +48,7 @@ public:
 
     void deltaEnergy(double delta);
 
-    list<Graphic*> mGraphics;
+    list<Graphic2D*> mGraphics;
 
     static const char mClassName[];
     static Orbit<SimObj2D>::MethodType mMethods[];

@@ -27,8 +27,8 @@ PopulationDynamics::~PopulationDynamics()
 {   
 }
 
-void PopulationDynamics::init(PopulationManager* popManager)
+void PopulationDynamics::init(Simulation* sim)
 {
-    mPopManager = popManager;
+    mSimulation = sim;
 }
 

@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "GraphicBiomorph.h"
+#include "Graphic2DBiomorph.h"
 #include "SymbolRGB.h"
 #include "SymbolFloat.h"
 #include "SymbolFloatVector.h"
@@ -25,7 +25,7 @@
 
 #include <stdexcept>
 
-GraphicBiomorph::GraphicBiomorph(lua_State* luaState)
+Graphic2DBiomorph::Graphic2DBiomorph(lua_State* luaState)
 {
     mObject = NULL;
     mSize = 0;
@@ -40,7 +40,7 @@ GraphicBiomorph::GraphicBiomorph(lua_State* luaState)
     mCurrentLine = 0;
 }
 
-GraphicBiomorph::~GraphicBiomorph()
+Graphic2DBiomorph::~Graphic2DBiomorph()
 {
     if (mX1Points != NULL)
     {
@@ -69,12 +69,12 @@ GraphicBiomorph::~GraphicBiomorph()
     //art_removeLayer(mLayer);
 }
 
-Graphic* GraphicBiomorph::clone()
+Graphic2D* Graphic2DBiomorph::clone()
 {
-    return new GraphicBiomorph();
+    return new Graphic2DBiomorph();
 }
 
-void GraphicBiomorph::init(SimObj2D* obj)
+void Graphic2DBiomorph::init(SimObj2D* obj)
 {
     mLayer = art_createLayer(128, 128);
 
@@ -217,7 +217,7 @@ void GraphicBiomorph::init(SimObj2D* obj)
     art_drawToRoot();
 }
 
-void GraphicBiomorph::calcTree(float x, float y, int length, int dir)
+void Graphic2DBiomorph::calcTree(float x, float y, int length, int dir)
 {
     if (dir < 0)
     {
@@ -244,7 +244,7 @@ void GraphicBiomorph::calcTree(float x, float y, int length, int dir)
     }
 }
 
-void GraphicBiomorph::normalizePoints()
+void Graphic2DBiomorph::normalizePoints()
 {
     float maxX = -9999999999.9f;
     float maxY = -9999999999.9f;
@@ -336,7 +336,7 @@ void GraphicBiomorph::normalizePoints()
     }
 }
 
-void GraphicBiomorph::draw()
+void Graphic2DBiomorph::draw()
 {
     float rot = mObject->mRot;
     float centerX = mObject->mX;
@@ -351,9 +351,9 @@ void GraphicBiomorph::draw()
     art_clearRotation();
 }
 
-const char GraphicBiomorph::mClassName[] = "GraphicBiomorph";
+const char Graphic2DBiomorph::mClassName[] = "Graphic2DBiomorph";
 
-Orbit<GraphicBiomorph>::MethodType GraphicBiomorph::mMethods[] = {{0,0}};
+Orbit<Graphic2DBiomorph>::MethodType Graphic2DBiomorph::mMethods[] = {{0,0}};
 
-Orbit<GraphicBiomorph>::NumberGlobalType GraphicBiomorph::mNumberGlobals[] = {{0,0}};
+Orbit<Graphic2DBiomorph>::NumberGlobalType Graphic2DBiomorph::mNumberGlobals[] = {{0,0}};
 

@@ -20,7 +20,6 @@
 #if !defined(__INCLUDE_SIMULATION_H)
 #define __INCLUDE_SIMULATION_H
 
-#include "PopulationManager.h"
 #include "SimObj.h"
 #include "PopulationDynamics.h"
 #include "Orbit.h"
@@ -35,7 +34,7 @@
 using std::list;
 using std::string;
 
-class Simulation : public PopulationManager
+class Simulation
 {
 public:
     Simulation(lua_State* luaState=NULL);
@@ -53,15 +52,29 @@ public:
     void cycle();
 
     virtual void addObject(SimObj* obj, bool init=false);
+    virtual void removeObject(SimObj* obj, bool deleteObj=true);
+    list<SimObj*>* getObjectList(){return &mObjects;}
 
     virtual SimObj* getObjectByScreenPos(int x, int y){return NULL;}
 
     void setPopulationDynamics(PopulationDynamics* popDyn){mPopulationDynamics = popDyn;}
     PopulationDynamics* getPopulationDynamics(){return mPopulationDynamics;}
 
+    virtual void killOrganism(SimObj* org);
+
+    virtual void placeRandom(SimObj* obj){}
+    virtual void placeNear(SimObj* obj, SimObj* ref){}
+
+    void setSelectedObject(SimObj* object);
+    SimObj* getSelectedObject(){return mSelectedObject;}
+
     llULINT getTime(){return mSimulationTime;}
 
     void setSeedIndex(int index=-1);
+
+    virtual bool getFieldValue(SimObj* obj, string fieldName, float& value);
+
+    virtual string getInterfaceName(bool input, int type){return "";}
 
     virtual bool onKeyDown(Art_KeyCode keycode);
     virtual bool onKeyUp(Art_KeyCode keycode){return false;}
@@ -101,6 +114,11 @@ protected:
     PopulationDynamics* mPopulationDynamics;
 
     bool mStop;
+
+    list<SimObj*> mObjects;
+    list<SimObj*> mObjectsToKill;
+
+    SimObj* mSelectedObject;
     
     Art_Layer* mLogo;
 

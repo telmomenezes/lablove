@@ -35,7 +35,7 @@ using std::map;
 using std::string;
 
 class SimObj;
-class PopulationManager;
+class Simulation;
 
 class Brain
 {
@@ -67,7 +67,7 @@ public:
     int getChannelByName(string name);
     string getChannelName(int chan);
 
-    virtual string write(SimObj* obj, PopulationManager* pop){return "";}
+    virtual string write(SimObj* obj, Simulation* sim){return "";}
 
     virtual bool symbolUsed(int tableID, unsigned long symbolID){return false;}
 

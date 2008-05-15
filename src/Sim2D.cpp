@@ -286,7 +286,7 @@ void Sim2D::addObject(SimObj* obj, bool init)
     }
 
     SimObj2D* obj2D = (SimObj2D*)object;
-    for (list<Graphic*>::iterator iterGraph = obj2D->mGraphics.begin();
+    for (list<Graphic2D*>::iterator iterGraph = obj2D->mGraphics.begin();
             iterGraph != obj2D->mGraphics.end();
             iterGraph++)
     {

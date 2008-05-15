@@ -29,9 +29,9 @@ PopDynFixedSpecies::~PopDynFixedSpecies()
 {
 }
 
-void PopDynFixedSpecies::init(PopulationManager* popManager)
+void PopDynFixedSpecies::init(Simulation* sim)
 {
-    PopulationDynamics::init(popManager);
+    PopulationDynamics::init(sim);
 
     for (map<unsigned int, SpeciesData>::iterator iterSpecies = mSpecies.begin();
         iterSpecies != mSpecies.end();
@@ -41,8 +41,8 @@ void PopDynFixedSpecies::init(PopulationManager* popManager)
         for (unsigned int i = 0; i < species->mPopulation; i++)
         {
             SimObj* org = species->mBaseOrganism->clone();
-            mPopManager->addObject(org);
-            mPopManager->placeRandom(org);
+            mSimulation->addObject(org);
+            mSimulation->placeRandom(org);
             species->mOrganismVector.push_back(org);
         }
     }
@@ -111,12 +111,12 @@ void PopDynFixedSpecies::onOrganismDeath(SimObj* org)
     // Mutate
     newOrganism->mutate();
 
-    mPopManager->addObject(newOrganism);
-    mPopManager->placeRandom(newOrganism);
+    mSimulation->addObject(newOrganism);
+    mSimulation->placeRandom(newOrganism);
 
     // Remove
     species->mOrganismVector[orgPos] = newOrganism;
-    mPopManager->removeObject(org);
+    mSimulation->removeObject(org);
 }
 
 const char PopDynFixedSpecies::mClassName[] = "PopDynFixedSpecies";

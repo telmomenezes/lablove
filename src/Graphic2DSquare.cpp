@@ -17,14 +17,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "GraphicSquare.h"
+#include "Graphic2DSquare.h"
 #include "SymbolRGB.h"
 #include "SymbolFloat.h"
 #include "Simulation.h"
 
 #include <stdexcept>
 
-GraphicSquare::GraphicSquare(lua_State* luaState)
+Graphic2DSquare::Graphic2DSquare(lua_State* luaState)
 {
     mObject = NULL;
     mSize = 0;
@@ -33,16 +33,16 @@ GraphicSquare::GraphicSquare(lua_State* luaState)
     mBlue = 0;
 }
 
-GraphicSquare::~GraphicSquare()
+Graphic2DSquare::~Graphic2DSquare()
 {   
 }
 
-Graphic* GraphicSquare::clone()
+Graphic2D* Graphic2DSquare::clone()
 {
-    return new GraphicSquare();
+    return new Graphic2DSquare();
 }
 
-void GraphicSquare::init(SimObj2D* obj)
+void Graphic2DSquare::init(SimObj2D* obj)
 {
     mObject = obj;
 
@@ -59,7 +59,7 @@ void GraphicSquare::init(SimObj2D* obj)
     }
 }
 
-void GraphicSquare::draw()
+void Graphic2DSquare::draw()
 {
     float rot = mObject->mRot;
     float centerX = mObject->mX;
@@ -71,9 +71,9 @@ void GraphicSquare::draw()
     art_clearRotation();
 }
 
-const char GraphicSquare::mClassName[] = "GraphicSquare";
+const char Graphic2DSquare::mClassName[] = "Graphic2DSquare";
 
-Orbit<GraphicSquare>::MethodType GraphicSquare::mMethods[] = {{0,0}};
+Orbit<Graphic2DSquare>::MethodType Graphic2DSquare::mMethods[] = {{0,0}};
 
-Orbit<GraphicSquare>::NumberGlobalType GraphicSquare::mNumberGlobals[] = {{0,0}};
+Orbit<Graphic2DSquare>::NumberGlobalType Graphic2DSquare::mNumberGlobals[] = {{0,0}};
 

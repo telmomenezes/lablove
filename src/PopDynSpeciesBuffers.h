@@ -28,7 +28,7 @@ public:
     PopDynSpeciesBuffers(lua_State* luaState=NULL);
     virtual ~PopDynSpeciesBuffers();
 
-    virtual void init(PopulationManager* popManager);
+    virtual void init(Simulation* sim);
     virtual void onOrganismDeath(SimObj* org);
 
     virtual unsigned int addSpecies(SimObj* org,

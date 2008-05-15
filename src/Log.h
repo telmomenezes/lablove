@@ -21,7 +21,7 @@
 #define __INCLUDE_LOG_H
 
 #include "SimObj.h"
-#include "PopulationManager.h"
+#include "Simulation.h"
 #include "types.h"
 
 class Log
@@ -32,7 +32,7 @@ public:
 
     virtual void init(){}
 
-    virtual void process(SimObj* obj, PopulationManager* popManager)=0;
+    virtual void process(SimObj* obj, Simulation* sim)=0;
     virtual void dump(llULINT time, double realTime)=0;
 };
 #endif

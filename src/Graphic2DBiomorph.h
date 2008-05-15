@@ -17,29 +17,29 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_GRAPHIC_BIOMORPH_H)
-#define __INCLUDE_GRAPHIC_BIOMORPH_H
+#if !defined(__INCLUDE_GRAPHIC_2D_BIOMORPH_H)
+#define __INCLUDE_GRAPHIC_2D_BIOMORPH_H
 
-#include "Graphic.h"
+#include "Graphic2D.h"
 #include "Orbit.h"
 #include "SimObj2D.h"
 
 #include "art.h"
 
-class GraphicBiomorph : public Graphic
+class Graphic2DBiomorph : public Graphic2D
 {
 public:
-    GraphicBiomorph(lua_State* luaState=NULL);
-    virtual ~GraphicBiomorph();
+    Graphic2DBiomorph(lua_State* luaState=NULL);
+    virtual ~Graphic2DBiomorph();
     
-    virtual Graphic* clone();
+    virtual Graphic2D* clone();
 
     virtual void init(SimObj2D* obj);
     virtual void draw();
 
     static const char mClassName[];
-    static Orbit<GraphicBiomorph>::MethodType mMethods[];
-    static Orbit<GraphicBiomorph>::NumberGlobalType mNumberGlobals[];
+    static Orbit<Graphic2DBiomorph>::MethodType mMethods[];
+    static Orbit<Graphic2DBiomorph>::NumberGlobalType mNumberGlobals[];
 
 protected:
     void calcTree(float x, float y, int length, int dir);

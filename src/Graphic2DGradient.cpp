@@ -17,13 +17,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "GraphicGradient.h"
+#include "Graphic2DGradient.h"
 #include "SymbolFloat.h"
 #include "Simulation.h"
 
 #include <stdexcept>
 
-GraphicGradient::GraphicGradient(lua_State* luaState)
+Graphic2DGradient::Graphic2DGradient(lua_State* luaState)
 {
     mObject = NULL;
     mSize = 0;
@@ -41,13 +41,13 @@ GraphicGradient::GraphicGradient(lua_State* luaState)
     mCenter = 0.5f;
 }
 
-GraphicGradient::~GraphicGradient()
+Graphic2DGradient::~Graphic2DGradient()
 {   
 }
 
-Graphic* GraphicGradient::clone()
+Graphic2D* Graphic2DGradient::clone()
 {
-    GraphicGradient* graph = new GraphicGradient();
+    Graphic2DGradient* graph = new Graphic2DGradient();
     graph->mSymbolName = mSymbolName;
     graph->mReferenceSymbol = mReferenceSymbol;
     graph->mRed1 = mRed1;
@@ -60,7 +60,7 @@ Graphic* GraphicGradient::clone()
     return graph;
 }
 
-void GraphicGradient::init(SimObj2D* obj)
+void Graphic2DGradient::init(SimObj2D* obj)
 {
     mObject = obj;
 
@@ -100,7 +100,7 @@ void GraphicGradient::init(SimObj2D* obj)
     mBlue = mBlue1 + deltaBlue;
 }
 
-void GraphicGradient::draw()
+void Graphic2DGradient::draw()
 {
     float rot = mObject->mRot;
     float centerX = mObject->mX;
@@ -112,20 +112,20 @@ void GraphicGradient::draw()
     art_clearRotation();
 }
 
-const char GraphicGradient::mClassName[] = "GraphicGradient";
+const char Graphic2DGradient::mClassName[] = "Graphic2DGradient";
 
-Orbit<GraphicGradient>::MethodType GraphicGradient::mMethods[] = {
-    {"setSymbolName", &GraphicGradient::setSymbolName},
-    {"setReferenceSymbol", &GraphicGradient::setReferenceSymbol},
-    {"setColor1", &GraphicGradient::setColor1},
-    {"setColor2", &GraphicGradient::setColor2},
-    {"setCenter", &GraphicGradient::setCenter},
+Orbit<Graphic2DGradient>::MethodType Graphic2DGradient::mMethods[] = {
+    {"setSymbolName", &Graphic2DGradient::setSymbolName},
+    {"setReferenceSymbol", &Graphic2DGradient::setReferenceSymbol},
+    {"setColor1", &Graphic2DGradient::setColor1},
+    {"setColor2", &Graphic2DGradient::setColor2},
+    {"setCenter", &Graphic2DGradient::setCenter},
     {0,0}
 };
 
-Orbit<GraphicGradient>::NumberGlobalType GraphicGradient::mNumberGlobals[] = {{0,0}};
+Orbit<Graphic2DGradient>::NumberGlobalType Graphic2DGradient::mNumberGlobals[] = {{0,0}};
 
-int GraphicGradient::setSymbolName(lua_State* luaState)
+int Graphic2DGradient::setSymbolName(lua_State* luaState)
 {
     string name = luaL_checkstring(luaState, 1);
     setSymbolName(name);
@@ -133,15 +133,15 @@ int GraphicGradient::setSymbolName(lua_State* luaState)
     return 0;
 }
 
-int GraphicGradient::setReferenceSymbol(lua_State* luaState)
+int Graphic2DGradient::setReferenceSymbol(lua_State* luaState)
 {
-    Symbol* refSym = (Symbol*)Orbit<GraphicGradient>::pointer(luaState, 1);
+    Symbol* refSym = (Symbol*)Orbit<Graphic2DGradient>::pointer(luaState, 1);
     setReferenceSymbol(refSym);
 
     return 0;
 }
 
-int GraphicGradient::setColor1(lua_State* luaState)
+int Graphic2DGradient::setColor1(lua_State* luaState)
 {
     float red = luaL_checkint(luaState, 1);
     float green = luaL_checkint(luaState, 2);
@@ -152,7 +152,7 @@ int GraphicGradient::setColor1(lua_State* luaState)
     return 0;
 }
 
-int GraphicGradient::setColor2(lua_State* luaState)
+int Graphic2DGradient::setColor2(lua_State* luaState)
 {
     float red = luaL_checkint(luaState, 1);
     float green = luaL_checkint(luaState, 2);
@@ -163,7 +163,7 @@ int GraphicGradient::setColor2(lua_State* luaState)
     return 0;
 }
 
-int GraphicGradient::setCenter(lua_State* luaState)
+int Graphic2DGradient::setCenter(lua_State* luaState)
 {
     float center = luaL_checknumber(luaState, 1);
     setCenter(center);

@@ -48,7 +48,7 @@ public:
 
     PopDynGenerations(lua_State* luaState=NULL);
     virtual ~PopDynGenerations();
-    virtual void init(PopulationManager* popManager);
+    virtual void init(Simulation* sim);
     virtual void onCycle(llULINT time, double realTime);
     virtual void onOrganismDeath(SimObj* org);
 

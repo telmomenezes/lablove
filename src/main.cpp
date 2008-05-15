@@ -41,10 +41,10 @@
 #include "LogBestBrain.h"
 #include "StatCommon.h"
 #include "StatTime.h"
-#include "GraphicTriangle.h"
-#include "GraphicSquare.h"
-#include "GraphicGradient.h"
-#include "GraphicBiomorph.h"
+#include "Graphic2DTriangle.h"
+#include "Graphic2DSquare.h"
+#include "Graphic2DGradient.h"
+#include "Graphic2DBiomorph.h"
 
 #if defined(__WIN32)
 #define WIN32_LEAN_AND_MEAN
@@ -174,10 +174,10 @@ int main(int argc, char *argv[])
     Orbit<LogBestBrain>::orbitRegister(luaState);
     Orbit<StatCommon>::orbitRegister(luaState);
     Orbit<StatTime>::orbitRegister(luaState);
-    Orbit<GraphicTriangle>::orbitRegister(luaState);
-    Orbit<GraphicSquare>::orbitRegister(luaState);
-    Orbit<GraphicGradient>::orbitRegister(luaState);
-    Orbit<GraphicBiomorph>::orbitRegister(luaState);
+    Orbit<Graphic2DTriangle>::orbitRegister(luaState);
+    Orbit<Graphic2DSquare>::orbitRegister(luaState);
+    Orbit<Graphic2DGradient>::orbitRegister(luaState);
+    Orbit<Graphic2DBiomorph>::orbitRegister(luaState);
 
     lua_register(luaState, "getCommandLineParameter", getCommandLineParameter);
     lua_register(luaState, "randomZeroToOne", randomZeroToOne);

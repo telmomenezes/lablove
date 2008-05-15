@@ -17,27 +17,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_GRAPHIC_H)
-#define __INCLUDE_GRAPHIC_H
+#include "Graphic2D.h"
 
-#include "Orbit.h"
-#include "art.h"
-
-class SimObj2D;
-
-class Graphic
+Graphic2D::Graphic2D(lua_State* luaState)
 {
-public:
-    Graphic(lua_State* luaState=NULL);
-    virtual ~Graphic();
+    mObject = NULL;
+}
 
-    virtual Graphic* clone()=0;
-
-    virtual void init(SimObj2D* obj)=0;
-    virtual void draw()=0;
-
-protected:
-    SimObj2D* mObject;
-};
-#endif
+Graphic2D::~Graphic2D()
+{   
+}
 

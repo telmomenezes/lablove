@@ -38,7 +38,6 @@ ENDIF(WIN32)
 ########### Sources ###########
 
 SET(SOURCE_FILES
-    src/PopulationManager.cpp
     src/Simulation.cpp
     src/Sim2D.cpp
     src/Laser.cpp
@@ -80,11 +79,11 @@ SET(SOURCE_FILES
     src/Statistics.cpp
     src/StatCommon.cpp
     src/StatTime.cpp
-    src/Graphic.cpp
-    src/GraphicTriangle.cpp
-    src/GraphicSquare.cpp
-    src/GraphicGradient.cpp
-    src/GraphicBiomorph.cpp
+    src/Graphic2D.cpp
+    src/Graphic2DTriangle.cpp
+    src/Graphic2DSquare.cpp
+    src/Graphic2DGradient.cpp
+    src/Graphic2DBiomorph.cpp
     src/RandDistManager.cpp
     src/Message.cpp
     src/mtwist/mtwist.c

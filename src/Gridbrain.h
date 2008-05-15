@@ -35,6 +35,7 @@
 #include "RandDistManager.h"
 #include "types.h"
 #include "SimObj.h"
+#include "Simulation.h"
 
 #include <vector>
 #include <string>
@@ -150,7 +151,7 @@ public:
 
     virtual bool getFieldValue(string fieldName, float& value);
 
-    virtual string write(SimObj* obj, PopulationManager* pop);
+    virtual string write(SimObj* obj, Simulation* sim);
     virtual void printDebug();
     void printConnection(GridbrainConnection* conn);
 

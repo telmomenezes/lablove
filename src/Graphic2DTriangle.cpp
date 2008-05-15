@@ -17,14 +17,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "GraphicTriangle.h"
+#include "Graphic2DTriangle.h"
 #include "SymbolRGB.h"
 #include "SymbolFloat.h"
 #include "Simulation.h"
 
 #include <stdexcept>
 
-GraphicTriangle::GraphicTriangle(lua_State* luaState)
+Graphic2DTriangle::Graphic2DTriangle(lua_State* luaState)
 {
     mObject = NULL;
     mSize = 0;
@@ -33,16 +33,16 @@ GraphicTriangle::GraphicTriangle(lua_State* luaState)
     mBlue = 0;
 }
 
-GraphicTriangle::~GraphicTriangle()
+Graphic2DTriangle::~Graphic2DTriangle()
 {   
 }
 
-Graphic* GraphicTriangle::clone()
+Graphic2D* Graphic2DTriangle::clone()
 {
-    return new GraphicTriangle();
+    return new Graphic2DTriangle();
 }
 
-void GraphicTriangle::init(SimObj2D* obj)
+void Graphic2DTriangle::init(SimObj2D* obj)
 {
     mObject = obj;
     mSize = obj->mSize;
@@ -57,7 +57,7 @@ void GraphicTriangle::init(SimObj2D* obj)
     }
 }
 
-void GraphicTriangle::draw()
+void Graphic2DTriangle::draw()
 {
     float rot = mObject->mRot;
     float centerX = mObject->mX;
@@ -79,9 +79,9 @@ void GraphicTriangle::draw()
     art_drawTriangle(x1, y1, x2, y2, x3, y3);
 }
 
-const char GraphicTriangle::mClassName[] = "GraphicTriangle";
+const char Graphic2DTriangle::mClassName[] = "Graphic2DTriangle";
 
-Orbit<GraphicTriangle>::MethodType GraphicTriangle::mMethods[] = {{0,0}};
+Orbit<Graphic2DTriangle>::MethodType Graphic2DTriangle::mMethods[] = {{0,0}};
 
-Orbit<GraphicTriangle>::NumberGlobalType GraphicTriangle::mNumberGlobals[] = {{0,0}};
+Orbit<Graphic2DTriangle>::NumberGlobalType Graphic2DTriangle::mNumberGlobals[] = {{0,0}};
 

@@ -43,9 +43,9 @@ PopDynSpeciesBuffers::~PopDynSpeciesBuffers()
     }
 }
 
-void PopDynSpeciesBuffers::init(PopulationManager* popManager)
+void PopDynSpeciesBuffers::init(Simulation* sim)
 {
-    PopulationDynamics::init(popManager);
+    PopulationDynamics::init(sim);
 
     for (map<unsigned int, SpeciesData>::iterator iterSpecies = mSpecies.begin();
         iterSpecies != mSpecies.end();
@@ -141,8 +141,8 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
         sprintf(fileName2, "%d_P2.svg", r);
         FILE* file1 = fopen(fileName1, "w");
         FILE* file2 = fopen(fileName2, "w");
-        fprintf(file1, agent1->getBrain()->write(agent1, mPopManager).c_str());
-        fprintf(file2, agent2->getBrain()->write(agent2, mPopManager).c_str());
+        fprintf(file1, agent1->getBrain()->write(agent1, mSimulation).c_str());
+        fprintf(file2, agent2->getBrain()->write(agent2, mSimulation).c_str());
         fflush(file1);
         fflush(file2);
         fclose(file1);
@@ -157,7 +157,7 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
         sprintf(fileName3, "%d_CH.svg", r);
         FILE* file3 = fopen(fileName3, "w");
         Agent* agent3 = (Agent*)newOrganism;
-        fprintf(file3, agent3->getBrain()->write(agent3, mPopManager).c_str());
+        fprintf(file3, agent3->getBrain()->write(agent3, mSimulation).c_str());
         fflush(file3);
         fclose(file3);
         }*/
@@ -180,15 +180,15 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
 
     newOrganism->setKinID(organismNumber);
 
-    mPopManager->addObject(newOrganism, init);
+    mSimulation->addObject(newOrganism, init);
     
     if (nearObj == NULL)
     {
-        mPopManager->placeRandom(newOrganism);
+        mSimulation->placeRandom(newOrganism);
     }
     else
     {
-        mPopManager->placeNear(newOrganism, nearObj);
+        mSimulation->placeNear(newOrganism, nearObj);
     }
 }
 
@@ -237,12 +237,12 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimObj* org)
     }
 
     // Remove
-    mPopManager->removeObject(org, deleteObj);
+    mSimulation->removeObject(org, deleteObj);
 
     // Find organism to place near
     unsigned int refOrgNumber = mDistOrganism->iuniform(0, species->mPopulation - 1);
 
-    list<SimObj*>* objects = mPopManager->getObjectList();
+    list<SimObj*>* objects = mSimulation->getObjectList();
 
     list<SimObj*>::iterator iterObj = objects->begin();
     SimObj* refObj;

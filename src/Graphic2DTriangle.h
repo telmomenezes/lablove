@@ -17,29 +17,29 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_GRAPHIC_SQUARE_H)
-#define __INCLUDE_GRAPHIC_SQUARE_H
+#if !defined(__INCLUDE_GRAPHIC_2D_TRIANGLE_H)
+#define __INCLUDE_GRAPHIC_2D_TRIANGLE_H
 
-#include "Graphic.h"
+#include "Graphic2D.h"
 #include "Orbit.h"
 #include "SimObj2D.h"
 
 #include "art.h"
 
-class GraphicSquare : public Graphic
+class Graphic2DTriangle : public Graphic2D
 {
 public:
-    GraphicSquare(lua_State* luaState=NULL);
-    virtual ~GraphicSquare();
+    Graphic2DTriangle(lua_State* luaState=NULL);
+    virtual ~Graphic2DTriangle();
     
-    virtual Graphic* clone();
+    virtual Graphic2D* clone();
 
     virtual void init(SimObj2D* obj);
     virtual void draw();
 
     static const char mClassName[];
-    static Orbit<GraphicSquare>::MethodType mMethods[];
-    static Orbit<GraphicSquare>::NumberGlobalType mNumberGlobals[];
+    static Orbit<Graphic2DTriangle>::MethodType mMethods[];
+    static Orbit<Graphic2DTriangle>::NumberGlobalType mNumberGlobals[];
 
 protected:
     float mSize;

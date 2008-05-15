@@ -51,11 +51,11 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
 
 SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
 {
-    for (list<Graphic*>::iterator iterGraph = obj->mGraphics.begin();
+    for (list<Graphic2D*>::iterator iterGraph = obj->mGraphics.begin();
             iterGraph != obj->mGraphics.end();
             iterGraph++)
     {
-        Graphic* graph = (*iterGraph)->clone();
+        Graphic2D* graph = (*iterGraph)->clone();
         mGraphics.push_back(graph);
     }
     
@@ -89,7 +89,7 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
 
 SimObj2D::~SimObj2D()
 {
-    for (list<Graphic*>::iterator iterGraph = mGraphics.begin();
+    for (list<Graphic2D*>::iterator iterGraph = mGraphics.begin();
             iterGraph != mGraphics.end();
             iterGraph++)
     {
@@ -105,7 +105,7 @@ SimObj* SimObj2D::clone()
 
 void SimObj2D::draw()
 {
-    for (list<Graphic*>::iterator iterGraph = mGraphics.begin();
+    for (list<Graphic2D*>::iterator iterGraph = mGraphics.begin();
             iterGraph != mGraphics.end();
             iterGraph++)
     {
@@ -113,7 +113,7 @@ void SimObj2D::draw()
     }
 }
 
-void SimObj2D::addGraphic(Graphic* graph)
+void SimObj2D::addGraphic(Graphic2D* graph)
 {
     mGraphics.push_back(graph);
 }
@@ -150,7 +150,7 @@ Orbit<SimObj2D>::NumberGlobalType SimObj2D::mNumberGlobals[] = {{0,0}};
 
 int SimObj2D::addGraphic(lua_State* luaState)
 {
-    Graphic* graph = (Graphic*)Orbit<SimObj2D>::pointer(luaState, 1);
+    Graphic2D* graph = (Graphic2D*)Orbit<SimObj2D>::pointer(luaState, 1);
     addGraphic(graph);
     return 0;
 }

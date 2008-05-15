@@ -91,7 +91,7 @@ void PopDynSpecies::onCycle(llULINT time, double realTime)
                         iterOrg != (*iterSpecies).second.mOrganismVector.end();
                         iterOrg++)
                 {
-                    (*iterLogs)->process(*iterOrg, mPopManager);
+                    (*iterLogs)->process(*iterOrg, mSimulation);
                 }
                 (*iterLogs)->dump(time, realTime);
             }
@@ -114,7 +114,7 @@ void PopDynSpecies::onOrganismDeath(SimObj* org)
             iterLogs != species->mDeathLogs.end();
             iterLogs++)
     {
-        (*iterLogs)->process(org, mPopManager);
+        (*iterLogs)->process(org, mSimulation);
     }
 }
 

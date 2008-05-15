@@ -17,22 +17,22 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_GRAPHIC_GRADIENT_H)
-#define __INCLUDE_GRAPHIC_GRADIENT_H
+#if !defined(__INCLUDE_GRAPHIC_2D_GRADIENT_H)
+#define __INCLUDE_GRAPHIC_2D_GRADIENT_H
 
-#include "Graphic.h"
+#include "Graphic2D.h"
 #include "Orbit.h"
 #include "SimObj2D.h"
 
 #include "art.h"
 
-class GraphicGradient : public Graphic
+class Graphic2DGradient : public Graphic2D
 {
 public:
-    GraphicGradient(lua_State* luaState=NULL);
-    virtual ~GraphicGradient();
+    Graphic2DGradient(lua_State* luaState=NULL);
+    virtual ~Graphic2DGradient();
     
-    virtual Graphic* clone();
+    virtual Graphic2D* clone();
 
     virtual void init(SimObj2D* obj);
     virtual void draw();
@@ -44,8 +44,8 @@ public:
     void setCenter(float center){mCenter = center;}
 
     static const char mClassName[];
-    static Orbit<GraphicGradient>::MethodType mMethods[];
-    static Orbit<GraphicGradient>::NumberGlobalType mNumberGlobals[];
+    static Orbit<Graphic2DGradient>::MethodType mMethods[];
+    static Orbit<Graphic2DGradient>::NumberGlobalType mNumberGlobals[];
 
     int setSymbolName(lua_State* luaState);
     int setReferenceSymbol(lua_State* luaState);

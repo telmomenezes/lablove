@@ -36,7 +36,7 @@ LogBestBrain::~LogBestBrain()
 {
 }
 
-void LogBestBrain::process(SimObj* obj, PopulationManager* popManager)
+void LogBestBrain::process(SimObj* obj, Simulation* sim)
 {
     if (mFirstObject || (obj->mFitness > mBestFitness))
     {
@@ -45,7 +45,7 @@ void LogBestBrain::process(SimObj* obj, PopulationManager* popManager)
 
         if (obj->mType == SimObj::TYPE_AGENT)
         {
-            mBrainString = obj->getBrain()->write(obj, (Simulation*)popManager);
+            mBrainString = obj->getBrain()->write(obj, sim);
         }
     }
 }

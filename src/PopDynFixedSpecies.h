@@ -27,7 +27,7 @@ class PopDynFixedSpecies : public PopDynSpecies
 public:
     PopDynFixedSpecies(lua_State* luaState=NULL);
     virtual ~PopDynFixedSpecies();
-    virtual void init(PopulationManager* popManager);
+    virtual void init(Simulation* sim);
     virtual void onOrganismDeath(SimObj* org);
 
     virtual unsigned int addSpecies(SimObj* org, unsigned int population);

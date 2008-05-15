@@ -20,6 +20,7 @@
 #include "PopDynGenerations.h"
 #include "SimObj.h"
 #include "types.h"
+#include "Simulation.h"
 
 unsigned int PopDynGenerations::CURRENT_SPECIES_ID = 0;
 mt_distribution* PopDynGenerations::mDistOrganism = gDistManager.getNewDistribution();
@@ -54,9 +55,9 @@ void PopDynGenerations::addSpeciesLog(unsigned int speciesIndex, Log* log)
     mSpecies[speciesIndex].mLogs.push_back(log);
 }
 
-void PopDynGenerations::init(PopulationManager* popManager)
+void PopDynGenerations::init(Simulation* sim)
 {
-    PopulationDynamics::init(popManager);
+    PopulationDynamics::init(sim);
 
     for (vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
         iterSpecies != mSpecies.end();
@@ -65,8 +66,8 @@ void PopDynGenerations::init(PopulationManager* popManager)
         for (unsigned int i = 0; i < (*iterSpecies).mPopulation; i++)
         {
             SimObj* org = (*iterSpecies).mBaseOrganism->clone();
-            mPopManager->addObject(org);
-            mPopManager->placeRandom(org);
+            mSimulation->addObject(org);
+            mSimulation->placeRandom(org);
             (*iterSpecies).mOrganismList.push_back(org);
         }
     }
@@ -120,8 +121,8 @@ void PopDynGenerations::onCycle(llULINT time, double realTime)
                     // Mutate
                     newOrganism->mutate();
 
-                    mPopManager->addObject(newOrganism);
-                    mPopManager->placeRandom(newOrganism);
+                    mSimulation->addObject(newOrganism);
+                    mSimulation->placeRandom(newOrganism);
 
                     
 
@@ -138,11 +139,11 @@ void PopDynGenerations::onCycle(llULINT time, double realTime)
                         iterLogs != (*iterSpecies).mLogs.end();
                         iterLogs++)
                     {
-                        (*iterLogs)->process(org, mPopManager);
+                        (*iterLogs)->process(org, mSimulation);
                     }
 
                     (*iterSpecies).mOrganismList.pop_front();
-                    mPopManager->removeObject(org);
+                    mSimulation->removeObject(org);
                 }
             }
 
@@ -171,11 +172,11 @@ void PopDynGenerations::onOrganismDeath(SimObj* org)
                 return;
             }
 
-            mPopManager->removeObject(org);
+            mSimulation->removeObject(org);
 
             SimObj* org = (*iterSpecies).mBaseOrganism->clone();
-            mPopManager->addObject(org);
-            mPopManager->placeRandom(org);
+            mSimulation->addObject(org);
+            mSimulation->placeRandom(org);
 
             return;
         }

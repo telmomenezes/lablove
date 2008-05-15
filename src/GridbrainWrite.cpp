@@ -18,7 +18,7 @@
  */
 
 #include "Gridbrain.h"
-#include "PopulationManager.h"
+#include "Simulation.h"
 
 #include <string.h>
 
@@ -98,7 +98,7 @@ void Gridbrain::getComponentWritePos(unsigned int& posX,
     posY = gridY + (y * (COMPONENT_SIDE + COMPONENT_MARGIN)) + (COMPONENT_SIDE / 2) + GRID_TITLE;
 }
 
-string Gridbrain::write(SimObj* obj, PopulationManager* pop)
+string Gridbrain::write(SimObj* obj, Simulation* sim)
 {
     string svg;
     char buffer[1000];
@@ -167,7 +167,7 @@ string Gridbrain::write(SimObj* obj, PopulationManager* pop)
                     || (comp->mType == GridbrainComponent::OUT))
                 {
                     labelY += 5;
-                    string subName = pop->getInterfaceName(comp->mType == GridbrainComponent::IN, comp->mSubType);
+                    string subName = sim->getInterfaceName(comp->mType == GridbrainComponent::IN, comp->mSubType);
                     if (subName == "?")
                     {
                         subName = obj->getTableName(comp->mOrigSymTable);
@@ -191,7 +191,7 @@ string Gridbrain::write(SimObj* obj, PopulationManager* pop)
                     || (comp->mType == GridbrainComponent::CLK))
                 {
                     labelY += 5;
-                    string subName = pop->getInterfaceName(comp->mType == GridbrainComponent::IN, comp->mSubType);
+                    string subName = sim->getInterfaceName(comp->mType == GridbrainComponent::IN, comp->mSubType);
                     if (subName == "?")
                     {
                         subName = obj->getTableName(comp->mOrigSymTable);

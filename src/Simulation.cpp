@@ -56,6 +56,12 @@ Simulation::Simulation(lua_State* luaState)
 
 Simulation::~Simulation()
 {
+    list<SimObj*>::iterator iterObj;
+    for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
+    {
+        delete *iterObj;
+    }
+    mObjects.clear();
 }
 
 void Simulation::initGraphics(unsigned int width,
@@ -205,12 +211,56 @@ void Simulation::cycle()
 void Simulation::addObject(SimObj* object, bool init)
 {
     object->setCreationTime(mSimulationTime);
-    PopulationManager::addObject(object);
+    mObjects.push_back(object);
+}
+
+void Simulation::removeObject(SimObj* obj, bool deleteObj)
+{
+    if (mSelectedObject == obj)
+    {
+        mSelectedObject = NULL;
+    }
+
+    list<SimObj*>::iterator iterObj;
+    for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
+    {
+        if((*iterObj) == obj)
+        {
+            mObjects.erase(iterObj);
+            if (deleteObj)
+            {
+                delete obj;
+            }
+            return;
+        }
+    }
+}
+
+void Simulation::killOrganism(SimObj* org)
+{
+    if (org->mDeleted)
+    {
+        return;
+    }
+
+    org->mDeleted = true;
+
+    mObjectsToKill.push_back(org);
+}
+
+void Simulation::setSelectedObject(SimObj* object)
+{
+    mSelectedObject = object;
 }
 
 void Simulation::setSeedIndex(int index)
 {
     gDistManager.setSeedIndex(index);
+}
+
+bool Simulation::getFieldValue(SimObj* obj, string fieldName, float& value)
+{
+    return obj->getFieldValue(fieldName, value);
 }
 
 float Simulation::calcSymbolsBinding(SimObj* origObj,
