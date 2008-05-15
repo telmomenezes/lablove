@@ -1,19 +1,19 @@
 0.3
 
+    * Major code refactoring
     * Gridbrain::calcDensityMetrics()
-    * Gridbrain grow modes: FREE, PRESSURE
-    * Gridbrain clone connections modes: ALL, ALL_PLUS, ACTIVE
-    * Gridbrain mutation scopes: ALL, ACTIVE
     * Removal of obsolete clone randomize API
     * Removal of obsolete "diversify" flag in SpeciesData
     * Gridbrain::mutateAddInactiveConnections
     * Gridbrain recombination implemented
-    * SimCont2D speak actions and perceptions
-    * SimCont2D self perceptions
+    * Sim2D speak actions and perceptions
+    * Sim2D self perceptions
     * Removal of obsolete mutation operators in the Gridbrain
-    * Base Gridbrain component set stabilized: NUL, IN, OUT, AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, MAX, AVG, CLK, MEMW, MEMC
+    * Base Gridbrain component set stabilized: NUL, IN, OUT, AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, MAX, AVG, CLK, MEMW, MEMC, MEMD
     * Gridbrain::mutateChangeInactiveComponent
     * Gridbrain connection no longer using weights
+    * Laser shots created sim Sim2D
+    * SimHex created
 
 0.2 alpha release
 9-Mar-2008

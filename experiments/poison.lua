@@ -59,7 +59,7 @@ logTimeInterval = 100
 logBrains = true
 logOnlyLastBrain = true
 
-humanAgent = true
+humanAgent = false
 
 evolutionStopTime = 0
 
