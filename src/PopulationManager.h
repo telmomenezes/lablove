@@ -20,7 +20,7 @@
 #if !defined(__INCLUDE_POPULATION_MANAGER_H)
 #define __INCLUDE_POPULATION_MANAGER_H
 
-#include "SimulationObject.h"
+#include "SimObj.h"
 
 #include <list>
 #include <string>
@@ -34,27 +34,27 @@ public:
     PopulationManager();
     virtual ~PopulationManager();
 
-    virtual void addObject(SimulationObject* object, bool init=false);
-    virtual void removeObject(SimulationObject* obj, bool deleteObj=true);
-    list<SimulationObject*>* getObjectList(){return &mObjects;}
+    virtual void addObject(SimObj* object, bool init=false);
+    virtual void removeObject(SimObj* obj, bool deleteObj=true);
+    list<SimObj*>* getObjectList(){return &mObjects;}
 
-    virtual void placeRandom(SimulationObject* obj){}
-    virtual void placeNear(SimulationObject* obj, SimulationObject* ref){}
+    virtual void placeRandom(SimObj* obj){}
+    virtual void placeNear(SimObj* obj, SimObj* ref){}
 
-    virtual void killOrganism(SimulationObject* org);
+    virtual void killOrganism(SimObj* org);
 
-    void setSelectedObject(SimulationObject* object);
-    SimulationObject* getSelectedObject(){return mSelectedObject;}
+    void setSelectedObject(SimObj* object);
+    SimObj* getSelectedObject(){return mSelectedObject;}
 
-    virtual bool getFieldValue(SimulationObject* obj, string fieldName, float& value);
+    virtual bool getFieldValue(SimObj* obj, string fieldName, float& value);
 
     virtual string getInterfaceName(bool input, int type){return "?";}
 
 protected:
-    list<SimulationObject*> mObjects;
-    list<SimulationObject*> mObjectsToKill;
+    list<SimObj*> mObjects;
+    list<SimObj*> mObjectsToKill;
 
-    SimulationObject* mSelectedObject;
+    SimObj* mSelectedObject;
 };
 #endif
 

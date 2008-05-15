@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,13 +18,13 @@
  */
 
 #include "UnitTest++.h"
-#include "SimCont2D.h"
+#include "Sim2D.h"
 
 #include <stdexcept>
 
-struct SimCont2DFixture
+struct Sim2DFixture
 {
-    SimCont2DFixture()
+    Sim2DFixture()
     {
         srand((long int)(art_getTime()));
         mWidth = 1000;
@@ -33,28 +33,28 @@ struct SimCont2DFixture
         mSim.setWorldDimensions(mWidth, mLength, mCell);
     }
 
-    ~SimCont2DFixture(){}
+    ~Sim2DFixture(){}
 
-    SimCont2D mSim;
+    Sim2D mSim;
     unsigned int mWidth;
     unsigned int mLength;
     unsigned int mCell;
 };
 
-TEST_FIXTURE(SimCont2DFixture, SimCont2DSetDimensions)
+TEST_FIXTURE(Sim2DFixture, Sim2DSetDimensions)
 {
     CHECK_EQUAL(mSim.getWorldWidth(), mWidth);
     CHECK_EQUAL(mSim.getWorldLength(), mLength);
     CHECK_EQUAL(mSim.getCellSide(), mCell);
 }
 
-TEST_FIXTURE(SimCont2DFixture, SimCont2DPlaceObject)
+TEST_FIXTURE(Sim2DFixture, Sim2DPlaceObject)
 {
-    SimulationObject* dummy = new SimulationObject();
+    SimObj2D* dummy = new SimObj2D();
     mSim.addObject(dummy);
-    mSim.setSize(dummy, 50.0f);
+    dummy->setSize(50.0f);
     mSim.setPos(dummy, 400.0f, 400.0f);
-    list<SimulationObject*>** grid = mSim.getCellGrid();
+    list<SimObj2D*>** grid = mSim.getCellGrid();
     int gridX1 = 350 / mCell;
     int gridX2 = 450 / mCell;
     int gridY1 = 350 / mCell;
@@ -64,7 +64,7 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DPlaceObject)
     {
         for (int y = 0; y < mSim.getWorldCellLength(); y++)
         {
-            list<SimulationObject*>* l = grid[(y * mSim.getWorldCellWidth()) + x];
+            list<SimObj2D*>* l = grid[(y * mSim.getWorldCellWidth()) + x];
             int count = 0;
             if ((x >= gridX1) && (x <= gridX2) && (y >= gridY1) && (y <= gridY2))
             {
@@ -75,56 +75,56 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DPlaceObject)
     }
 }
 
-TEST_FIXTURE(SimCont2DFixture, SimCont2DRemoveObject)
+TEST_FIXTURE(Sim2DFixture, Sim2DRemoveObject)
 {
-    SimulationObject* dummy = new SimulationObject();
+    SimObj2D* dummy = new SimObj2D();
     mSim.addObject(dummy);
-    mSim.setSize(dummy, 10.0f);
+    dummy->setSize(10.0f);
     mSim.setPos(dummy, 100.0f, 100.0f);
     mSim.removeObject(dummy);
-    list<SimulationObject*>** grid = mSim.getCellGrid();
+    list<SimObj2D*>** grid = mSim.getCellGrid();
 
     for (int x = 0; x < mSim.getWorldCellWidth(); x++)
     {
         for (int y = 0; y < mSim.getWorldCellLength(); y++)
         {
-            list<SimulationObject*>* l = grid[(y * mSim.getWorldCellWidth()) + x];
+            list<SimObj2D*>* l = grid[(y * mSim.getWorldCellWidth()) + x];
             CHECK_EQUAL(l->size(), 0);
         }
     }
 }
 
-TEST_FIXTURE(SimCont2DFixture, SimCont2DEmptyCollisionDetection)
+TEST_FIXTURE(Sim2DFixture, Sim2DEmptyCollisionDetection)
 {
     mSim.startCollisionDetection(100, 100, 100);
     float distance;
     float angle;
-    SimulationObject* obj = mSim.nextCollision(distance, angle);
+    SimObj2D* obj = mSim.nextCollision(distance, angle);
     CHECK(obj == NULL);
     CHECK_EQUAL(distance, 0);
     CHECK_EQUAL(angle, 0);
 }
 
-TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection1)
+TEST_FIXTURE(Sim2DFixture, Sim2DCollisionDetection1)
 {
     mSim.startCollisionDetection(100, 100, 100);
     float distance;
     float angle;
-    SimulationObject* obj = mSim.nextCollision(distance, angle);
+    SimObj2D* obj = mSim.nextCollision(distance, angle);
     CHECK(obj == NULL);
     CHECK_EQUAL(distance, 0);
     CHECK_EQUAL(angle, 0);
 }
 
-TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection2)
+TEST_FIXTURE(Sim2DFixture, Sim2DCollisionDetection2)
 {
-    SimulationObject* dummy = new SimulationObject();
+    SimObj2D* dummy = new SimObj2D();
     mSim.addObject(dummy);
     mSim.setPos(dummy, 100.0f, 100.0f);
     mSim.startCollisionDetection(100.0f, 100.0f, 100.0f);
     float distance;
     float angle;
-    SimulationObject* obj = mSim.nextCollision(distance, angle);
+    SimObj2D* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_EQUAL(distance, 0);
     CHECK_EQUAL(angle, 0.0f);
@@ -132,12 +132,12 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection2)
     CHECK(obj == NULL);
 }
 
-TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection3)
+TEST_FIXTURE(Sim2DFixture, Sim2DCollisionDetection3)
 {
-    SimulationObject* dummy1 = new SimulationObject();
-    SimulationObject* dummy2 = new SimulationObject();
-    SimulationObject* dummy3 = new SimulationObject();
-    SimulationObject* dummy4 = new SimulationObject();
+    SimObj2D* dummy1 = new SimObj2D();
+    SimObj2D* dummy2 = new SimObj2D();
+    SimObj2D* dummy3 = new SimObj2D();
+    SimObj2D* dummy4 = new SimObj2D();
     mSim.addObject(dummy1);
     mSim.addObject(dummy2);
     mSim.addObject(dummy3);
@@ -149,7 +149,7 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection3)
     mSim.startCollisionDetection(100.0f, 100.0f, 100.0f);
     float distance;
     float angle;
-    SimulationObject* obj = mSim.nextCollision(distance, angle);
+    SimObj2D* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_EQUAL(distance, 10.0f);
     obj = mSim.nextCollision(distance, angle);
@@ -165,15 +165,15 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection3)
     CHECK(obj == NULL);
 }
 
-TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection4)
+TEST_FIXTURE(Sim2DFixture, Sim2DCollisionDetection4)
 {
-    SimulationObject* dummy1 = new SimulationObject();
+    SimObj2D* dummy1 = new SimObj2D();
     mSim.addObject(dummy1);
     mSim.setPos(dummy1, 110.0f, 100.0f);
     mSim.startCollisionDetection(100.0f, 100.0f, 100.0f);
     float distance;
     float angle;
-    SimulationObject* obj = mSim.nextCollision(distance, angle);
+    SimObj2D* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, 0.0f, 0.001f);
     CHECK_EQUAL(distance, 10.0f);
@@ -181,15 +181,15 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection4)
     CHECK(obj == NULL);
 }
 
-TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection5)
+TEST_FIXTURE(Sim2DFixture, Sim2DCollisionDetection5)
 {
-    SimulationObject* dummy1 = new SimulationObject();
+    SimObj2D* dummy1 = new SimObj2D();
     mSim.addObject(dummy1);
     mSim.setPos(dummy1, 100.0f, 110.0f);
     mSim.startCollisionDetection(100.0f, 100.0f, 100.0f);
     float distance;
     float angle;
-    SimulationObject* obj = mSim.nextCollision(distance, angle);
+    SimObj2D* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, M_PI / 2.0f, 0.001f);
     CHECK_EQUAL(distance, 10.0f);
@@ -197,15 +197,15 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection5)
     CHECK(obj == NULL);
 }
 
-TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection6)
+TEST_FIXTURE(Sim2DFixture, Sim2DCollisionDetection6)
 {
-    SimulationObject* dummy1 = new SimulationObject();
+    SimObj2D* dummy1 = new SimObj2D();
     mSim.addObject(dummy1);
     mSim.setPos(dummy1, 90.0f, 100.0f);
     mSim.startCollisionDetection(100.0f, 100.0f, 100.0f);
     float distance;
     float angle;
-    SimulationObject* obj = mSim.nextCollision(distance, angle);
+    SimObj2D* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, M_PI, 0.001f);
     CHECK_EQUAL(distance, 10.0f);
@@ -213,15 +213,15 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection6)
     CHECK(obj == NULL);
 }
 
-TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection7)
+TEST_FIXTURE(Sim2DFixture, Sim2DCollisionDetection7)
 {
-    SimulationObject* dummy1 = new SimulationObject();
+    SimObj2D* dummy1 = new SimObj2D();
     mSim.addObject(dummy1);
     mSim.setPos(dummy1, 100.0f, 90.0f);
     mSim.startCollisionDetection(100.0f, 100.0f, 100.0f);
     float distance;
     float angle;
-    SimulationObject* obj = mSim.nextCollision(distance, angle);
+    SimObj2D* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, -M_PI / 2.0f, 0.001f);
     CHECK_EQUAL(distance, 10.0f);
@@ -229,15 +229,15 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection7)
     CHECK(obj == NULL);
 }
 
-TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection8)
+TEST_FIXTURE(Sim2DFixture, Sim2DCollisionDetection8)
 {
-    SimulationObject* dummy1 = new SimulationObject();
+    SimObj2D* dummy1 = new SimObj2D();
     mSim.addObject(dummy1);
     mSim.setPos(dummy1, 110.0f, 110.0f);
     mSim.startCollisionDetection(100.0f, 100.0f, 100.0f);
     float distance;
     float angle;
-    SimulationObject* obj = mSim.nextCollision(distance, angle);
+    SimObj2D* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, M_PI / 4.0f, 0.001f);
     CHECK_CLOSE(distance, sqrt(10 * 10 + 10 * 10), 0.001f);
@@ -245,15 +245,15 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection8)
     CHECK(obj == NULL);
 }
 
-TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection9)
+TEST_FIXTURE(Sim2DFixture, Sim2DCollisionDetection9)
 {
-    SimulationObject* dummy1 = new SimulationObject();
+    SimObj2D* dummy1 = new SimObj2D();
     mSim.addObject(dummy1);
     mSim.setPos(dummy1, 110.0f, 90.0f);
     mSim.startCollisionDetection(100.0f, 100.0f, 100.0f);
     float distance;
     float angle;
-    SimulationObject* obj = mSim.nextCollision(distance, angle);
+    SimObj2D* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, -M_PI / 4.0f, 0.001f);
     CHECK_CLOSE(distance, sqrt(10 * 10 + 10 * 10), 0.001f);
@@ -261,15 +261,15 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection9)
     CHECK(obj == NULL);
 }
 
-TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection10)
+TEST_FIXTURE(Sim2DFixture, Sim2DCollisionDetection10)
 {
-    SimulationObject* dummy1 = new SimulationObject();
+    SimObj2D* dummy1 = new SimObj2D();
     mSim.addObject(dummy1);
     mSim.setPos(dummy1, 90.0f, 110.0f);
     mSim.startCollisionDetection(100.0f, 100.0f, 100.0f);
     float distance;
     float angle;
-    SimulationObject* obj = mSim.nextCollision(distance, angle);
+    SimObj2D* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, (3 * M_PI) / 4.0f, 0.001f);
     CHECK_CLOSE(distance, sqrt(10 * 10 + 10 * 10), 0.001f);
@@ -277,15 +277,15 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection10)
     CHECK(obj == NULL);
 }
 
-TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection11)
+TEST_FIXTURE(Sim2DFixture, Sim2DCollisionDetection11)
 {
-    SimulationObject* dummy1 = new SimulationObject();
+    SimObj2D* dummy1 = new SimObj2D();
     mSim.addObject(dummy1);
     mSim.setPos(dummy1, 90.0f, 90.0f);
     mSim.startCollisionDetection(100.0f, 100.0f, 100.0f);
     float distance;
     float angle;
-    SimulationObject* obj = mSim.nextCollision(distance, angle);
+    SimObj2D* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, -(3 * M_PI) / 4.0f, 0.001f);
     CHECK_CLOSE(distance, sqrt(10 * 10 + 10 * 10), 0.001f);
@@ -293,15 +293,15 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection11)
     CHECK(obj == NULL);
 }
 
-TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection12)
+TEST_FIXTURE(Sim2DFixture, Sim2DCollisionDetection12)
 {
-    SimulationObject* dummy1 = new SimulationObject();
+    SimObj2D* dummy1 = new SimObj2D();
     mSim.addObject(dummy1);
     mSim.setPos(dummy1, 50.0f, 50.0f);
     mSim.startCollisionDetection(100.0f, 100.0f, 100.0f);
     float distance;
     float angle;
-    SimulationObject* obj = mSim.nextCollision(distance, angle);
+    SimObj2D* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, -(3 * M_PI) / 4.0f, 0.001f);
     CHECK_CLOSE(distance, sqrt(50 * 50 + 50 * 50), 0.001f);
@@ -309,16 +309,16 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection12)
     CHECK(obj == NULL);
 }
 
-TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection13)
+TEST_FIXTURE(Sim2DFixture, Sim2DCollisionDetection13)
 {
-    SimulationObject* dummy1 = new SimulationObject();
+    SimObj2D* dummy1 = new SimObj2D();
     mSim.addObject(dummy1);
-    mSim.setSize(dummy1, 10.0f);
+    dummy1->setSize(10.0f);
     mSim.setPos(dummy1, 50.0f, 150.0f);
     mSim.startCollisionDetection(100.0f, 100.0f, 100.0f);
     float distance;
     float angle;
-    SimulationObject* obj = mSim.nextCollision(distance, angle);
+    SimObj2D* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, (3 * M_PI) / 4.0f, 0.001f);
     CHECK_CLOSE(distance, sqrt(50 * 50 + 50 * 50), 0.001f);
@@ -326,22 +326,22 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection13)
     CHECK(obj == NULL);
 }
 
-TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection14)
+TEST_FIXTURE(Sim2DFixture, Sim2DCollisionDetection14)
 {
-    SimulationObject* dummy1 = new SimulationObject();
+    SimObj2D* dummy1 = new SimObj2D();
     mSim.addObject(dummy1);
     mSim.setPos(dummy1, 300.0f, 300.0f);
     mSim.startCollisionDetection(100.0f, 100.0f, 100.0f);
     float distance;
     float angle;
-    SimulationObject* obj = mSim.nextCollision(distance, angle);
+    SimObj2D* obj = mSim.nextCollision(distance, angle);
     CHECK(obj == NULL);
 }
 
-TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection15)
+TEST_FIXTURE(Sim2DFixture, Sim2DCollisionDetection15)
 {
-    SimulationObject* dummy1 = new SimulationObject();
-    SimulationObject* dummy2 = new SimulationObject();
+    SimObj2D* dummy1 = new SimObj2D();
+    SimObj2D* dummy2 = new SimObj2D();
     mSim.addObject(dummy1);
     mSim.addObject(dummy2);
     mSim.setPos(dummy1, 90.0f, 100.0f);
@@ -349,7 +349,7 @@ TEST_FIXTURE(SimCont2DFixture, SimCont2DCollisionDetection15)
     mSim.startCollisionDetection(100.0f, 100.0f, 100.0f);
     float distance;
     float angle;
-    SimulationObject* obj = mSim.nextCollision(distance, angle);
+    SimObj2D* obj = mSim.nextCollision(distance, angle);
     CHECK(obj != NULL);
     CHECK_CLOSE(angle, M_PI, 0.001f);
     CHECK_EQUAL(distance, 10.0f);

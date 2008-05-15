@@ -21,8 +21,6 @@
 #define __INCLUDE_BRAIN_H
 
 #include "InterfaceItem.h"
-#include "SimulationObject.h"
-#include "PopulationManager.h"
 
 #include "art.h"
 
@@ -35,6 +33,9 @@ using std::list;
 using std::vector;
 using std::map;
 using std::string;
+
+class SimObj;
+class PopulationManager;
 
 class Brain
 {
@@ -55,22 +56,22 @@ public:
     virtual void mutate()=0;
     virtual Brain* recombine(Brain* brain)=0;
 
-    virtual void setSelectedSymbols(SimulationObject* obj){}
+    virtual void setSelectedSymbols(SimObj* obj){}
 
     virtual void draw()=0;
 
-    void setOwner(SimulationObject* obj){mOwner = obj;}
+    void setOwner(SimObj* obj){mOwner = obj;}
 
     virtual bool getFieldValue(string fieldName, float& value);
 
     int getChannelByName(string name);
     string getChannelName(int chan);
 
-    virtual string write(SimulationObject* obj, PopulationManager* pop){return "";}
+    virtual string write(SimObj* obj, PopulationManager* pop){return "";}
 
     virtual bool symbolUsed(int tableID, unsigned long symbolID){return false;}
 
-    virtual void popAdjust(vector<SimulationObject*>* popVec){}
+    virtual void popAdjust(vector<SimObj*>* popVec){}
 
     virtual void printDebug(){}
 
@@ -80,7 +81,7 @@ protected:
     vector<list<InterfaceItem*>*> mInputInterfacesVector;
     list<InterfaceItem*> mOutputInterface;
     map<string, int> mChannels;
-    SimulationObject* mOwner;
+    SimObj* mOwner;
 };
 #endif
 

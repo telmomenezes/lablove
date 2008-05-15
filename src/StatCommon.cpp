@@ -54,7 +54,7 @@ void StatCommon::init()
     fflush(mFile);
 }
 
-void StatCommon::process(SimulationObject* obj, PopulationManager* popManager)
+void StatCommon::process(SimObj* obj, PopulationManager* popManager)
 {
     list<list<float> >::iterator iterValueList = mValueLists.begin();
 

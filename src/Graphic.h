@@ -20,9 +20,10 @@
 #if !defined(__INCLUDE_GRAPHIC_H)
 #define __INCLUDE_GRAPHIC_H
 
-#include "SimulationObject.h"
 #include "Orbit.h"
 #include "art.h"
+
+class SimObj2D;
 
 class Graphic
 {
@@ -32,11 +33,11 @@ public:
 
     virtual Graphic* clone()=0;
 
-    virtual void init(SimulationObject* obj)=0;
+    virtual void init(SimObj2D* obj)=0;
     virtual void draw()=0;
 
 protected:
-    SimulationObject* mObject;
+    SimObj2D* mObject;
 };
 #endif
 

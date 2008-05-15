@@ -21,7 +21,7 @@
 #define __INCLUDE_STATISTICS_H
 
 #include "Log.h"
-#include "SimulationObject.h"
+#include "SimObj.h"
 #include "PopulationManager.h"
 #include "types.h"
 
@@ -45,7 +45,7 @@ public:
 
     void addField(string fieldName);
     void setFile(string filePath);
-    virtual void process(SimulationObject* obj, PopulationManager* popManager)=0;
+    virtual void process(SimObj* obj, PopulationManager* popManager)=0;
     virtual void dump(llULINT time, double realTime)=0;
 
     int addField(lua_State* luaState);

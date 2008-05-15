@@ -17,11 +17,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "SimCont2D.h"
+#include "Sim2D.h"
 #include "SimHex.h"
-#include "SimulationObject.h"
-#include "GraphicalObject.h"
-#include "Agent.h"
+#include "SimObj.h"
+#include "SimObj2D.h"
+#include "SimObjHex.h"
 #include "PopDynGenerations.h"
 #include "PopDynFixedSpecies.h"
 #include "PopDynSpeciesBuffers.h"
@@ -46,12 +46,10 @@
 #include "GraphicGradient.h"
 #include "GraphicBiomorph.h"
 
-#if defined(__LABLOVE_WITH_GRAPHICS)
 #if defined(__WIN32)
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include "windows.h"
-#endif
 #endif
 
 extern "C"
@@ -152,11 +150,11 @@ int main(int argc, char *argv[])
     luaopen_math(luaState);
     luaopen_debug(luaState);
     
-    Orbit<SimCont2D>::orbitRegister(luaState);
+    Orbit<Sim2D>::orbitRegister(luaState);
     Orbit<SimHex>::orbitRegister(luaState);
-    Orbit<SimulationObject>::orbitRegister(luaState);
-    Orbit<GraphicalObject>::orbitRegister(luaState);
-    Orbit<Agent>::orbitRegister(luaState);
+    Orbit<SimObj>::orbitRegister(luaState);
+    Orbit<SimObj2D>::orbitRegister(luaState);
+    Orbit<SimObjHex>::orbitRegister(luaState);
     Orbit<PopDynGenerations>::orbitRegister(luaState);
     Orbit<PopDynFixedSpecies>::orbitRegister(luaState);
     Orbit<PopDynSpeciesBuffers>::orbitRegister(luaState);

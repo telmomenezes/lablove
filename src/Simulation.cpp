@@ -21,7 +21,6 @@
 #include "PopulationDynamics.h"
 #include "Symbol.h"
 #include "SymbolTable.h"
-#include "GraphicalObject.h"
 //#include "Gridbrain.h"
 
 #include <math.h>
@@ -110,7 +109,7 @@ void Simulation::cycle()
 
     bool draw = mDrawGraphics && drawThisCycle;
 
-    list<SimulationObject*>::iterator iterObj;
+    list<SimObj*>::iterator iterObj;
 
     for (iterObj = mObjectsToKill.begin();
         iterObj != mObjectsToKill.end();
@@ -125,19 +124,20 @@ void Simulation::cycle()
         drawBeforeObjects();
     }
 
+    onCycle();
+
     for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
     {
-        SimulationObject* obj = *iterObj;
+        SimObj* obj = *iterObj;
 
         process(obj); 
 
-        if (obj->mType == SimulationObject::TYPE_AGENT)
+        if (obj->mType == SimObj::TYPE_AGENT)
         {
-            Agent* agent = (Agent*)obj;
-            perceive(agent);
-            agent->emptyMessageList();
-            agent->compute();
-            act(agent);
+            perceive(obj);
+            obj->emptyMessageList();
+            obj->compute();
+            act(obj);
         }
     
         if (draw)
@@ -202,22 +202,10 @@ void Simulation::cycle()
     }
 }
 
-void Simulation::addObject(SimulationObject* object, bool init)
+void Simulation::addObject(SimObj* object, bool init)
 {
     object->setCreationTime(mSimulationTime);
     PopulationManager::addObject(object);
-
-    if ((object->mType == SimulationObject::TYPE_GRAPHICAL_OBJECT)
-        || (object->mType == SimulationObject::TYPE_AGENT))
-    {
-        GraphicalObject* gObj = (GraphicalObject*)object;
-        for (list<Graphic*>::iterator iterGraph = gObj->mGraphics.begin();
-                iterGraph != gObj->mGraphics.end();
-                iterGraph++)
-        {
-            (*iterGraph)->init(gObj);
-        }
-    }
 }
 
 void Simulation::setSeedIndex(int index)
@@ -225,8 +213,8 @@ void Simulation::setSeedIndex(int index)
     gDistManager.setSeedIndex(index);
 }
 
-float Simulation::calcSymbolsBinding(SimulationObject* origObj,
-                                    SimulationObject* targetObj,
+float Simulation::calcSymbolsBinding(SimObj* origObj,
+                                    SimObj* targetObj,
                                     int origSymTable,
                                     int targetSymTable,
                                     llULINT origSymID)
@@ -248,7 +236,7 @@ float Simulation::calcSymbolsBinding(SimulationObject* origObj,
     return calcSymbolsBinding(origObj, origSymTable, origSymID, targetSym);
 }
 
-float Simulation::calcSymbolsBinding(SimulationObject* obj,
+float Simulation::calcSymbolsBinding(SimObj* obj,
                                     int symTable,
                                     llULINT symID,
                                     Symbol* symbol)
@@ -358,7 +346,7 @@ void Simulation::setTimeLimit(llULINT limit)
 
 int Simulation::addObject(lua_State *luaState)
 {
-    SimulationObject* simObj = (SimulationObject*)Orbit<SimulationObject>::pointer(luaState, 1);
+    SimObj* simObj = (SimObj*)Orbit<SimObj>::pointer(luaState, 1);
     addObject(simObj);
     return 0;
 }
@@ -387,7 +375,7 @@ int Simulation::run(lua_State* luaState)
 
 int Simulation::setPopulationDynamics(lua_State *luaState)
 {
-    PopulationDynamics* popDyn = (PopulationDynamics*)Orbit<SimulationObject>::pointer(luaState, 1);
+    PopulationDynamics* popDyn = (PopulationDynamics*)Orbit<SimObj>::pointer(luaState, 1);
     setPopulationDynamics(popDyn);
     return 0;
 }

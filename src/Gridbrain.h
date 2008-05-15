@@ -34,6 +34,7 @@
 #include "GridbrainMemCell.h"
 #include "RandDistManager.h"
 #include "types.h"
+#include "SimObj.h"
 
 #include <vector>
 #include <string>
@@ -122,7 +123,7 @@ public:
     virtual void mutate();
     virtual Brain* recombine(Brain* brain);
 
-    virtual void setSelectedSymbols(SimulationObject* obj);
+    virtual void setSelectedSymbols(SimObj* obj);
 
     void setComponent(unsigned int x,
                 unsigned int y,
@@ -149,7 +150,7 @@ public:
 
     virtual bool getFieldValue(string fieldName, float& value);
 
-    virtual string write(SimulationObject* obj, PopulationManager* pop);
+    virtual string write(SimObj* obj, PopulationManager* pop);
     virtual void printDebug();
     void printConnection(GridbrainConnection* conn);
 
@@ -267,7 +268,7 @@ protected:
 
     int compEquivalence(GridbrainComponent* comp1, GridbrainComponent* comp2, CompEquivalenceType eqType);
     GridbrainGeneTag findGeneTag(GridbrainConnection* conn);
-    virtual void popAdjust(vector<SimulationObject*>* popVec);
+    virtual void popAdjust(vector<SimObj*>* popVec);
 
     static llULINT CURRENT_MEM_ID;
 

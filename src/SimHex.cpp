@@ -44,7 +44,7 @@ void SimHex::setWorldDimensions(float worldWidth,
                                 unsigned int cellSide,
                                 float hexSide)
 {
-    SimCont2D::setWorldDimensions(worldWidth, worldLength, cellSide);
+    Sim2D::setWorldDimensions(worldWidth, worldLength, cellSide);
 
     mHexSide = hexSide;
     mHexA = 0.866f * mHexSide;
@@ -61,7 +61,7 @@ void SimHex::setWorldDimensions(float worldWidth,
 
 void SimHex::drawTerrain()
 {
-    SimCont2D::drawTerrain();
+    Sim2D::drawTerrain();
 
     art_setColor(0, 0, 0, 100);
     art_setLineWidth(1.0f);
@@ -161,43 +161,39 @@ void SimHex::getHexCell(float x, float y, int& hX, int& hY)
     }
 }
 
-void SimHex::initializeData(SimulationObject* obj)
+void SimHex::addObject(SimObj* object, bool init)
 {
-    obj->initFloatData(18);
-    obj->initULData(5);
-    obj->initIntData(7);
-}
+    Sim2D::addObject(object, init);
 
-void SimHex::addObject(SimulationObject* object, bool init)
-{
-    SimCont2D::addObject(object, init);
+    SimObjHex* objHex = (SimObjHex*)object;
 
-    object->mIntData[INT_HEX_X] = 0.0f;
-    object->mIntData[INT_HEX_Y] = 0.0f;
+    objHex->mHexX = 0.0f;
+    objHex->mHexY = 0.0f;
 
-    if (object->mType == SimulationObject::TYPE_AGENT)
+    if (object->mType == SimObj::TYPE_AGENT)
     {
-        Agent* agent = (Agent*)object;
-        int channelTerrain = agent->getBrain()->getChannelByName("terrain");
+        int channelTerrain = object->getBrain()->getChannelByName("terrain");
 
-        object->mIntData[INT_CHANNEL_TERRAIN] = channelTerrain;
+        objHex->mChannelTerrain = channelTerrain;
     }
 }
 
-void SimHex::setPos(SimulationObject* obj, float x, float y)
+void SimHex::setPos(SimObjHex* obj, float x, float y)
 {
-    SimCont2D::setPos(obj, x, y);
+    Sim2D::setPos(obj, x, y);
+
+    SimObjHex* objHex = (SimObjHex*)obj;
 
     int hexX;
     int hexY;
     getHexCell(x, y, hexX, hexY);
-    obj->mIntData[INT_HEX_X] = hexX;
-    obj->mIntData[INT_HEX_Y] = hexY;
+    objHex->mHexX = hexX;
+    objHex->mHexY = hexY;
 }
 
-void SimHex::act(Agent* agent)
+void SimHex::act(SimObj* agent)
 {
-    SimCont2D::act(agent);
+    Sim2D::act(agent);
 
     if (agent == mHumanAgent)
     {
@@ -210,7 +206,7 @@ void SimHex::act(Agent* agent)
 
 bool SimHex::onKeyDown(Art_KeyCode key)
 {
-    if (SimCont2D::onKeyDown(key))
+    if (Sim2D::onKeyDown(key))
     {
         return true;
     }
@@ -227,7 +223,7 @@ bool SimHex::onKeyDown(Art_KeyCode key)
 
 bool SimHex::onKeyUp(Art_KeyCode key)
 {
-    if (SimCont2D::onKeyUp(key))
+    if (Sim2D::onKeyUp(key))
     {
         return true;
     }
@@ -252,18 +248,18 @@ Orbit<SimHex>::MethodType SimHex::mMethods[] = {
     {"run", &Simulation::run},
     {"setTimeLimit", &Simulation::setTimeLimit},
     {"setWorldDimensions", &SimHex::setWorldDimensions},
-    {"setViewRange", &SimCont2D::setViewRange},
-    {"setViewAngle", &SimCont2D::setViewAngle},
-    {"setGoCost", &SimCont2D::setGoCost},
-    {"setRotateCost", &SimCont2D::setRotateCost},
-    {"setGoForceScale", &SimCont2D::setGoForceScale},
-    {"setRotateForceScale", &SimCont2D::setRotateForceScale},
-    {"setPos", &SimCont2D::setPos},
-    {"setRot", &SimCont2D::setRot},
-    {"setHuman", &SimCont2D::setHuman},
-    {"setFeedCenter", &SimCont2D::setFeedCenter},
-    {"setSoundRange", &SimCont2D::setSoundRange},
-    {"setSpeakInterval", &SimCont2D::setSpeakInterval},
+    {"setViewRange", &Sim2D::setViewRange},
+    {"setViewAngle", &Sim2D::setViewAngle},
+    {"setGoCost", &Sim2D::setGoCost},
+    {"setRotateCost", &Sim2D::setRotateCost},
+    {"setGoForceScale", &Sim2D::setGoForceScale},
+    {"setRotateForceScale", &Sim2D::setRotateForceScale},
+    {"setPos", &Sim2D::setPos},
+    {"setRot", &Sim2D::setRot},
+    {"setHuman", &Sim2D::setHuman},
+    {"setFeedCenter", &Sim2D::setFeedCenter},
+    {"setSoundRange", &Sim2D::setSoundRange},
+    {"setSpeakInterval", &Sim2D::setSpeakInterval},
     {0,0}
 };
 

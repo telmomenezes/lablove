@@ -17,13 +17,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_SIM_CONT2D_H)
-#define __INCLUDE_SIM_CONT2D_H
+#if !defined(__INCLUDE_SIM_2D_H)
+#define __INCLUDE_SIM_2D_H
 
 #include "Simulation.h"
-#include "SimulationObject.h"
+#include "SimObj2D.h"
 #include "PopulationDynamics.h"
-#include "Agent.h"
 #include "RandDistManager.h"
 #include "Laser.h"
 
@@ -31,7 +30,7 @@
 
 #include "Orbit.h"
 
-class SimCont2D : public Simulation
+class Sim2D : public Simulation
 {
 public:
 
@@ -56,40 +55,6 @@ public:
                 ACTION_FIRE
                 };
 
-    enum FloatData {FLOAT_X,
-                    FLOAT_Y,
-                    FLOAT_ROT,
-                    FLOAT_SIZE,
-                    FLOAT_SIZE_SQUARED,
-                    FLOAT_SPEED_X,
-                    FLOAT_SPEED_Y,
-                    FLOAT_SPEED_ROT,
-                    FLOAT_FRICTION,
-                    FLOAT_ROT_FRICTION,
-                    FLOAT_DRAG,
-                    FLOAT_ROT_DRAG,
-                    FLOAT_IMPULSE_X,
-                    FLOAT_IMPULSE_Y,
-                    FLOAT_IMPULSE_ROT,
-                    FLOAT_INITIAL_ENERGY,
-                    FLOAT_ENERGY,
-                    FLOAT_METABOLISM
-                    };
-
-    enum ULData {UL_MAX_AGE,
-                UL_LOW_AGE_LIMIT,
-                UL_HIGH_AGE_LIMIT,
-                UL_COLLISION_DETECTION_ITERATION,
-                UL_LAST_SPEAK_TIME,
-                UL_LAST_FIRE_TIME
-                };
-
-    enum IntData {INT_CHANNEL_OBJECTS,
-                INT_CHANNEL_SOUNDS,
-                INT_CHANNEL_SELF,
-                INT_CHANNEL_BETA
-                };
-
     enum FitnessMeasure {FITNESS_ENERGY,
                         FITNESS_ENERGY_SUM,
                         FITNESS_ENERGY_SUM_ABOVE_INIT,
@@ -111,8 +76,8 @@ public:
         int mBlue;
     } VisualEvent;
 
-    SimCont2D(lua_State* luaState=NULL);
-    virtual ~SimCont2D();
+    Sim2D(lua_State* luaState=NULL);
+    virtual ~Sim2D();
 
     virtual void initGraphics(unsigned int width,
                                 unsigned int height,
@@ -127,16 +92,15 @@ public:
     float getCellSide(){return mCellSide;}
     unsigned int getWorldCellWidth(){return mWorldCellWidth;}
     unsigned int getWorldCellLength(){return mWorldCellLength;}
-    list<SimulationObject*>** getCellGrid(){return mCellGrid;}
+    list<SimObj2D*>** getCellGrid(){return mCellGrid;}
 
-    virtual void initializeData(SimulationObject* obj);
-    virtual void addObject(SimulationObject* object, bool init=false);
-    virtual void removeObject(SimulationObject* obj, bool deleteObj=true);
-    virtual void placeRandom(SimulationObject* obj);
-    virtual void placeNear(SimulationObject* obj, SimulationObject* ref);
+    virtual void addObject(SimObj* obj, bool init=false);
+    virtual void removeObject(SimObj* obj, bool deleteObj=true);
+    virtual void placeRandom(SimObj* obj);
+    virtual void placeNear(SimObj* obj, SimObj* ref);
 
-    virtual void setPos(SimulationObject* obj, float x, float y);
-    virtual void setRot(SimulationObject* obj, float rot);
+    virtual void setPos(SimObj2D* obj, float x, float y);
+    virtual void setRot(SimObj2D* obj, float rot);
 
     virtual void drawBeforeObjects();
     virtual void drawAfterObjects();
@@ -152,9 +116,9 @@ public:
     float getViewX(){return mViewX;}
     float getViewY(){return mViewY;}
 
-    virtual SimulationObject* getObjectByScreenPos(int x, int y);
+    virtual SimObj* getObjectByScreenPos(int x, int y);
 
-    virtual bool getFieldValue(SimulationObject* obj, string fieldName, float& value);
+    virtual bool getFieldValue(SimObj* obj, string fieldName, float& value);
     
     virtual bool onKeyDown(Art_KeyCode keycode);
     virtual bool onKeyUp(Art_KeyCode keycode);
@@ -168,13 +132,10 @@ public:
     float getViewRange(){return mViewRange;}
     float getViewAngle(){return mViewAngle;}
 
-    void setHuman(Agent* agent){mHumanAgent = agent;}
+    void setHuman(SimObj2D* agent){mHumanAgent = agent;}
 
     void startCollisionDetection(float x, float y, float rad);
-    SimulationObject* nextCollision(float& distance, float& angle);
-
-    void deltaEnergy(SimulationObject* obj, double delta);
-    void setSize(SimulationObject* obj, float size);
+    SimObj2D* nextCollision(float& distance, float& angle);
 
     virtual string getInterfaceName(bool input, int type);
     
@@ -183,8 +144,8 @@ public:
     void setFireInterval(unsigned int interval){mFireInterval = interval;}
 
     static const char mClassName[];
-    static Orbit<SimCont2D>::MethodType mMethods[];
-    static Orbit<SimCont2D>::NumberGlobalType mNumberGlobals[];
+    static Orbit<Sim2D>::MethodType mMethods[];
+    static Orbit<Sim2D>::NumberGlobalType mNumberGlobals[];
 
     int setWorldDimensions(lua_State* luaState);
     int setViewRange(lua_State* luaState);
@@ -202,21 +163,22 @@ public:
     int setFireInterval(lua_State* luaState);
 
 protected:
-    virtual void process(SimulationObject* obj);
-    virtual void perceive(Agent* agent);
-    virtual void act(Agent* agent);
-    virtual void onScanObject(Agent* orig,
-                                SimulationObject* targ,
+    virtual void onCycle();
+    virtual void process(SimObj* object);
+    virtual void perceive(SimObj* obj);
+    virtual void act(SimObj* agent);
+    virtual void onScanObject(SimObj2D* orig,
+                                SimObj2D* targ,
                                 float distance,
                                 float angle,
                                 float orientation);
-    void go(Agent* agent, float force);
-    void rotate(Agent* agent, float force);
-    void eat(Agent* agent, Action actionType);
+    void go(SimObj2D* agent, float force);
+    void rotate(SimObj2D* agent, float force);
+    void eat(SimObj2D* agent, Action actionType);
     float normalizeAngle(float angle);
 
-    void speak(Agent* agent, Symbol* sym);
-    void fire(Agent* agent);
+    void speak(SimObj2D* agent, Symbol* sym);
+    void fire(SimObj2D* agent);
 
     virtual void drawTerrain();
 
@@ -235,7 +197,7 @@ protected:
     int mWorldCellWidth;
     int mWorldCellLength;
 
-    list<SimulationObject*>** mCellGrid;
+    list<SimObj2D*>** mCellGrid;
 
     float mViewX;
     float mViewY;
@@ -256,7 +218,7 @@ protected:
     float mGoForceScale;
     float mRotateForceScale;
 
-    SimulationObject* mTargetObject;
+    SimObj2D* mTargetObject;
     float mDistanceToTargetObject;
     float* mCurrentTargetInputBuffer;
 
@@ -276,12 +238,12 @@ protected:
     float mCollisionY;
     float mCollisionRadius;
 
-    list<SimulationObject*>* mCurrentCellList;
-    list<SimulationObject*>::iterator mCurrentCellListIterator;
+    list<SimObj2D*>* mCurrentCellList;
+    list<SimObj2D*>::iterator mCurrentCellListIterator;
 
     llULINT mCollisionDetectionIteration;
 
-    Agent* mHumanAgent;
+    SimObj2D* mHumanAgent;
     bool mHumanGo;
     bool mHumanRotateLeft;
     bool mHumanRotateRight;

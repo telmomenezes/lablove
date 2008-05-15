@@ -18,7 +18,7 @@
  */
 
 #include "PopDynSpecies.h"
-#include "SimulationObject.h"
+#include "SimObj.h"
 
 unsigned int PopDynSpecies::CURRENT_SPECIES_ID = 1;
 mt_distribution* PopDynSpecies::mDistOrganism = gDistManager.getNewDistribution();
@@ -34,7 +34,7 @@ PopDynSpecies::~PopDynSpecies()
 {
 }
 
-unsigned int PopDynSpecies::addSpecies(SimulationObject* org, unsigned int population)
+unsigned int PopDynSpecies::addSpecies(SimObj* org, unsigned int population)
 {
     unsigned int speciesID = CURRENT_SPECIES_ID++;
     org->setSpeciesID(speciesID);
@@ -87,7 +87,7 @@ void PopDynSpecies::onCycle(llULINT time, double realTime)
                 iterLogs != (*iterSpecies).second.mSampleLogs.end();
                 iterLogs++)
             {
-                for (vector<SimulationObject*>::iterator iterOrg = (*iterSpecies).second.mOrganismVector.begin();
+                for (vector<SimObj*>::iterator iterOrg = (*iterSpecies).second.mOrganismVector.begin();
                         iterOrg != (*iterSpecies).second.mOrganismVector.end();
                         iterOrg++)
                 {
@@ -99,7 +99,7 @@ void PopDynSpecies::onCycle(llULINT time, double realTime)
     }
 }
 
-void PopDynSpecies::onOrganismDeath(SimulationObject* org)
+void PopDynSpecies::onOrganismDeath(SimObj* org)
 {
     int speciesID = org->getSpeciesID();
 
@@ -121,7 +121,7 @@ void PopDynSpecies::onOrganismDeath(SimulationObject* org)
 int PopDynSpecies::addSampleLog(lua_State* luaState)
 {
     unsigned int speciesID = luaL_checkint(luaState, 1);
-    Log* log = (Log*)Orbit<SimulationObject>::pointer(luaState, 2);
+    Log* log = (Log*)Orbit<SimObj>::pointer(luaState, 2);
     addSampleLog(speciesID, log);
     return 0;
 }
@@ -129,7 +129,7 @@ int PopDynSpecies::addSampleLog(lua_State* luaState)
 int PopDynSpecies::addDeathLog(lua_State* luaState)
 {
     unsigned int speciesID = luaL_checkint(luaState, 1);
-    Log* log = (Log*)Orbit<SimulationObject>::pointer(luaState, 2);
+    Log* log = (Log*)Orbit<SimObj>::pointer(luaState, 2);
     addDeathLog(speciesID, log);
     return 0;
 }

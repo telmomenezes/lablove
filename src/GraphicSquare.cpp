@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,7 +18,6 @@
  */
 
 #include "GraphicSquare.h"
-#include "SimulationObject.h"
 #include "SymbolRGB.h"
 #include "SymbolFloat.h"
 #include "Simulation.h"
@@ -43,37 +42,11 @@ Graphic* GraphicSquare::clone()
     return new GraphicSquare();
 }
 
-void GraphicSquare::init(SimulationObject* obj)
+void GraphicSquare::init(SimObj2D* obj)
 {
     mObject = obj;
 
-    mXIndex = obj->getNamedFloatDataIndex("x");
-    if (mXIndex == -1)
-    {
-        throw std::runtime_error("Failed to initialize GraphicSquare: object does not define 'x' named data item");
-    }
-    mYIndex = obj->getNamedFloatDataIndex("y");
-    if (mYIndex == -1)
-    {
-        throw std::runtime_error("Failed to initialize GraphicSquare: object does not define 'y' named data item");
-    }
-    mRotIndex = obj->getNamedFloatDataIndex("rot");
-    if (mRotIndex == -1)
-    {
-        throw std::runtime_error("Failed to initialize GraphicSquare: object does not define 'rot' named data item");
-    }
-
-    SymbolFloat* symSize = (SymbolFloat*)obj->getSymbolByName("size");
-
-    if (symSize == NULL)
-    {
-        throw std::runtime_error("Failed to initialize GraphicSquare: object does not define 'size' named symbol");
-    }
-    else
-    {
-        mSize = symSize->getFloat();
-    }
-
+    mSize = obj->mSize;
     mSize = sqrtf(2.0 * mSize * mSize);
 
     SymbolRGB* color = (SymbolRGB*)(obj->getSymbolByName("color"));
@@ -88,9 +61,9 @@ void GraphicSquare::init(SimulationObject* obj)
 
 void GraphicSquare::draw()
 {
-    float rot = mObject->mFloatData[mRotIndex];
-    float centerX = mObject->mFloatData[mXIndex];
-    float centerY = mObject->mFloatData[mYIndex];
+    float rot = mObject->mRot;
+    float centerX = mObject->mX;
+    float centerY = mObject->mY;
 
     art_setRotation(centerX, centerY, rot);
     art_setColor(mRed, mGreen, mBlue, 255);

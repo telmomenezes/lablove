@@ -18,7 +18,7 @@
  */
 
 #include "PopDynGenerations.h"
-#include "SimulationObject.h"
+#include "SimObj.h"
 #include "types.h"
 
 unsigned int PopDynGenerations::CURRENT_SPECIES_ID = 0;
@@ -34,7 +34,7 @@ PopDynGenerations::~PopDynGenerations()
 {
 }
 
-unsigned int PopDynGenerations::addSpecies(SimulationObject* org, long population, bool isStatic)
+unsigned int PopDynGenerations::addSpecies(SimObj* org, long population, bool isStatic)
 {
     org->setSpeciesID(++CURRENT_SPECIES_ID);
 
@@ -64,7 +64,7 @@ void PopDynGenerations::init(PopulationManager* popManager)
     {
         for (unsigned int i = 0; i < (*iterSpecies).mPopulation; i++)
         {
-            SimulationObject* org = (*iterSpecies).mBaseOrganism->clone();
+            SimObj* org = (*iterSpecies).mBaseOrganism->clone();
             mPopManager->addObject(org);
             mPopManager->placeRandom(org);
             (*iterSpecies).mOrganismList.push_back(org);
@@ -86,26 +86,26 @@ void PopDynGenerations::onCycle(llULINT time, double realTime)
             if (!(*iterSpecies).mStatic)
             {
                 // Create next generation
-                SimulationObject* newOrgList = NULL;
-                SimulationObject* newOrganism = NULL;
-                SimulationObject* prevNewOrganism = NULL;
+                SimObj* newOrgList = NULL;
+                SimObj* newOrganism = NULL;
+                SimObj* prevNewOrganism = NULL;
 
                 for (unsigned int i = 0; i < (*iterSpecies).mPopulation; i++)
                 {
                     // Tournament selection of 2
-                    SimulationObject* bestOrganism = NULL;
+                    SimObj* bestOrganism = NULL;
                     float bestFitness = 0.0f;
 
                     for (unsigned int tournmentStep = 0; tournmentStep < 2; tournmentStep++)
                     {
                         unsigned int organismNumber = mDistOrganism->iuniform(0, (*iterSpecies).mPopulation);
 
-                        list<SimulationObject*>::iterator iterOrg = (*iterSpecies).mOrganismList.begin();
+                        list<SimObj*>::iterator iterOrg = (*iterSpecies).mOrganismList.begin();
                         for (unsigned int i = 0; i < organismNumber; i++)
                         {
                             iterOrg++;
                         }
-                        SimulationObject* org = *iterOrg;
+                        SimObj* org = *iterOrg;
 
                         if ((tournmentStep == 0) || (org->mFitness > bestFitness))
                         {
@@ -131,7 +131,7 @@ void PopDynGenerations::onCycle(llULINT time, double realTime)
                 // Delete old population
                 for (unsigned int i = 0; i < (*iterSpecies).mPopulation; i++)
                 {
-                    SimulationObject* org = (*iterSpecies).mOrganismList.front();
+                    SimObj* org = (*iterSpecies).mOrganismList.front();
 
                     // Update statistics
                     for (list<Log*>::iterator iterLogs = (*iterSpecies).mLogs.begin();
@@ -159,7 +159,7 @@ void PopDynGenerations::onCycle(llULINT time, double realTime)
     }
 }
 
-void PopDynGenerations::onOrganismDeath(SimulationObject* org)
+void PopDynGenerations::onOrganismDeath(SimObj* org)
 {
     vector<SpeciesData>::iterator iterSpecies = mSpecies.begin();
     while (iterSpecies != mSpecies.end())
@@ -173,7 +173,7 @@ void PopDynGenerations::onOrganismDeath(SimulationObject* org)
 
             mPopManager->removeObject(org);
 
-            SimulationObject* org = (*iterSpecies).mBaseOrganism->clone();
+            SimObj* org = (*iterSpecies).mBaseOrganism->clone();
             mPopManager->addObject(org);
             mPopManager->placeRandom(org);
 
@@ -197,7 +197,7 @@ Orbit<PopDynGenerations>::NumberGlobalType PopDynGenerations::mNumberGlobals[] =
 
 int PopDynGenerations::addSpecies(lua_State* luaState)
 {
-    SimulationObject* obj = (SimulationObject*)Orbit<PopDynGenerations>::pointer(luaState, 1);
+    SimObj* obj = (SimObj*)Orbit<PopDynGenerations>::pointer(luaState, 1);
     int population = luaL_checkint(luaState, 2);
     bool isStatic = luaL_checkbool(luaState, 3);
     unsigned int index = addSpecies(obj, population, isStatic);

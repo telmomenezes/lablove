@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,7 +18,6 @@
  */
 
 #include "GraphicBiomorph.h"
-#include "SimulationObject.h"
 #include "SymbolRGB.h"
 #include "SymbolFloat.h"
 #include "SymbolFloatVector.h"
@@ -75,38 +74,13 @@ Graphic* GraphicBiomorph::clone()
     return new GraphicBiomorph();
 }
 
-void GraphicBiomorph::init(SimulationObject* obj)
+void GraphicBiomorph::init(SimObj2D* obj)
 {
     mLayer = art_createLayer(128, 128);
 
     mObject = obj;
 
-    mXIndex = obj->getNamedFloatDataIndex("x");
-    if (mXIndex == -1)
-    {
-        throw std::runtime_error("Failed to initialize GraphicBiomorph: object does not define 'x' named data item");
-    }
-    mYIndex = obj->getNamedFloatDataIndex("y");
-    if (mYIndex == -1)
-    {
-        throw std::runtime_error("Failed to initialize GraphicBiomorph: object does not define 'y' named data item");
-    }
-    mRotIndex = obj->getNamedFloatDataIndex("rot");
-    if (mRotIndex == -1)
-    {
-        throw std::runtime_error("Failed to initialize GraphicBiomorph: object does not define 'rot' named data item");
-    }
-
-    SymbolFloat* symSize = (SymbolFloat*)obj->getSymbolByName("size");
-
-    if (symSize == NULL)
-    {
-        throw std::runtime_error("Failed to initialize GraphicBiomorph: object does not define 'size' named symbol");
-    }
-    else
-    {
-        mSize = symSize->getFloat();
-    }
+    mSize = obj->mSize;
 
     SymbolRGB* color = (SymbolRGB*)(obj->getSymbolByName("color"));
 
@@ -364,9 +338,9 @@ void GraphicBiomorph::normalizePoints()
 
 void GraphicBiomorph::draw()
 {
-    float rot = mObject->mFloatData[mRotIndex];
-    float centerX = mObject->mFloatData[mXIndex];
-    float centerY = mObject->mFloatData[mYIndex];
+    float rot = mObject->mRot;
+    float centerX = mObject->mX;
+    float centerY = mObject->mY;
 
     float side = mSize * 3;
     float halfSide = side / 2;

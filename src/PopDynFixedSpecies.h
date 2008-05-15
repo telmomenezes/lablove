@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -28,9 +28,9 @@ public:
     PopDynFixedSpecies(lua_State* luaState=NULL);
     virtual ~PopDynFixedSpecies();
     virtual void init(PopulationManager* popManager);
-    virtual void onOrganismDeath(SimulationObject* org);
+    virtual void onOrganismDeath(SimObj* org);
 
-    virtual unsigned int addSpecies(SimulationObject* org, unsigned int population);
+    virtual unsigned int addSpecies(SimObj* org, unsigned int population);
 
     void setTournamentSize(unsigned int size){mTournamentSize = size;}
 

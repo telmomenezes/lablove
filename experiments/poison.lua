@@ -27,15 +27,12 @@ viewAngle = 170.0
 maxAge = 5000
 
 initialEnergy = 1.0
-metabolism = 0.0
 goCost = 0.005
 rotateCost = 0.005
 goForceScale = 0.3
 rotateForceScale = 0.006
 
-friction = 0.0
 drag = 0.05
-rotFriction = 0.0
 rotDrag = 0.05
 
 feedCenter = 0.25
@@ -97,7 +94,7 @@ logSuffix = logBaseName
 -- Simulation
 --------------------------------------------------------------------------------
 
-sim = SimCont2D()
+sim = Sim2D()
 sim:setWorldDimensions(worldWidth, worldHeight, 250)
 sim:setViewRange(viewRange)
 sim:setViewAngle(viewAngle)
@@ -112,49 +109,16 @@ sim:setFeedCenter(feedCenter)
 -- Agents
 --------------------------------------------------------------------------------
 
-agent = Agent()
+agent = SimObj2D()
 
-agent:setFitnessMeasure(SimCont2D.FITNESS_ENERGY_SUM_ABOVE_INIT)
+agent:setFitnessMeasure(Sim2D.FITNESS_ENERGY_SUM_ABOVE_INIT)
 agent:addGraphic(GraphicTriangle())
 
-symSize = SymbolFloat(agentSize)
-symTable = SymbolTable(symSize)
-agent:addSymbolTable(symTable)
-sizeTableCode = symTable:getID()
-agent:setSymbolName("size", sizeTableCode, symSize:getID())
-
-symFriction = SymbolFloat(friction)
-symDrag = SymbolFloat(drag)
-symRotFriction = SymbolFloat(rotFriction)
-symRotDrag = SymbolFloat(rotDrag)
-symTable = SymbolTable(symFriction)
-symTable:addSymbol(symDrag)
-symTable:addSymbol(symRotFriction)
-symTable:addSymbol(symRotDrag)
-agent:addSymbolTable(symTable)
-physicsTableCode = symTable:getID()
-agent:setSymbolName("friction", physicsTableCode, symFriction:getID())
-agent:setSymbolName("drag", physicsTableCode, symDrag:getID())
-agent:setSymbolName("rot_friction", physicsTableCode, symRotFriction:getID())
-agent:setSymbolName("rot_drag", physicsTableCode, symRotDrag:getID())
-
-symInitialEnergy = SymbolFloat(initialEnergy)
-symMetabolism = SymbolFloat(metabolism)
-symTable = SymbolTable(symInitialEnergy)
-symTable:addSymbol(symMetabolism)
-agent:addSymbolTable(symTable)
-energyTableCode = symTable:getID()
-agent:setSymbolName("initial_energy", energyTableCode, symInitialEnergy:getID())
-agent:setSymbolName("metabolism", energyTableCode, symMetabolism:getID())
-
-symLowAgeLimit = SymbolUL(maxAge)
-symHighAgeLimit = SymbolUL(maxAge)
-symTable = SymbolTable(symLowAgeLimit)
-symTable:addSymbol(symHighAgeLimit)
-agent:addSymbolTable(symTable)
-ageTableCode = symTable:getID()
-agent:setSymbolName("low_age_limit", ageTableCode, symLowAgeLimit:getID())
-agent:setSymbolName("high_age_limit", ageTableCode, symHighAgeLimit:getID())
+agent:setSize(agentSize)
+agent:setDrag(drag)
+agent:setRotDrag(rotDrag)
+agent:setInitialEnergy(initialEnergy)
+agent:setMaxAge(maxAge)
 
 agentColor = SymbolRGB(0, 0, 255)
 symTable = SymbolTable(agentColor)
@@ -191,10 +155,10 @@ alphaSet = GridbrainComponentSet()
 for i, comp in pairs(alphaComponents) do
     alphaSet:addComponent(comp)
 end
-alphaSet:addComponent(IN, SimCont2D.PERCEPTION_POSITION)
-alphaSet:addComponent(IN, SimCont2D.PERCEPTION_DISTANCE)
-alphaSet:addComponent(IN, SimCont2D.PERCEPTION_TARGET)
-alphaSet:addComponent(IN, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, agentFeed:getID(), foodTableCode)
+alphaSet:addComponent(IN, Sim2D.PERCEPTION_POSITION)
+alphaSet:addComponent(IN, Sim2D.PERCEPTION_DISTANCE)
+alphaSet:addComponent(IN, Sim2D.PERCEPTION_TARGET)
+alphaSet:addComponent(IN, Sim2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, agentFeed:getID(), foodTableCode)
 
 grid = Grid()
 grid:init(ALPHA, 0, 0)
@@ -206,9 +170,9 @@ betaSet = GridbrainComponentSet()
 for i, comp in pairs(betaComponents) do
     betaSet:addComponent(comp)
 end
-betaSet:addComponent(OUT, SimCont2D.ACTION_GO)
-betaSet:addComponent(OUT, SimCont2D.ACTION_ROTATE)
-betaSet:addComponent(OUT, SimCont2D.ACTION_EATB)
+betaSet:addComponent(OUT, Sim2D.ACTION_GO)
+betaSet:addComponent(OUT, Sim2D.ACTION_ROTATE)
+betaSet:addComponent(OUT, Sim2D.ACTION_EATB)
     
 grid2 = Grid()
 grid2:init(BETA, 0, 0)
@@ -221,26 +185,11 @@ agent:setBrain(brain)
 -- Plants
 --------------------------------------------------------------------------------
 
-plant = GraphicalObject()
+plant = SimObj2D()
 --plant:setBirthRadius(50.0)
-
-symSize = SymbolFloat(plantSize)
-symTable = SymbolTable(symSize, sizeTableCode)
-plant:addSymbolTable(symTable)
-plant:setSymbolName("size", sizeTableCode, symSize:getID())
-
-symPlantInitialEnergy = SymbolFloat(1.0)
-symTable = SymbolTable(symPlantInitialEnergy, energyTableCode)
-plant:addSymbolTable(symTable)
-plant:setSymbolName("initial_energy", energyTableCode, symPlantInitialEnergy:getID())
-
-symLowAgeLimit = SymbolUL(maxAge)
-symHighAgeLimit = SymbolUL(maxAge)
-symTable = SymbolTable(symLowAgeLimit, ageTableCode)
-symTable:addSymbol(symHighAgeLimit)
-plant:addSymbolTable(symTable)
-plant:setSymbolName("low_age_limit", ageTableCode, symLowAgeLimit:getID())
-plant:setSymbolName("high_age_limit", ageTableCode, symHighAgeLimit:getID())
+plant:setSize(plantSize)
+plant:setInitialEnergy(1.0)
+plant:setMaxAge(maxAge)
 
 plantFood = SymbolFloat(0.0)
 plantFood:setAlwaysRandom()
@@ -274,43 +223,13 @@ popDyn:setEvolutionStopTime(evolutionStopTime)
 --------------------------------------------------------------------------------
 
 if humanAgent then
-    human = Agent()
+    human = SimObj2D()
+    human:setSize(agentSize)
+    human:setDrag(drag)
+    human:setRotDrag(rotDrag)
+    human:setInitialEnergy(1.0)
+    human:setMaxAge(maxAge)
     
-    symSize = SymbolFloat(agentSize)
-    symTable = SymbolTable(symSize, sizeTableCode)
-    human:addSymbolTable(symTable)
-    human:setSymbolName("size", sizeTableCode, symSize:getID())
-
-    symHFriction = SymbolFloat(friction)
-    symHDrag = SymbolFloat(drag)
-    symHRotFriction = SymbolFloat(rotFriction)
-    symHRotDrag = SymbolFloat(rotDrag)
-    symTable = SymbolTable(symFriction, physicsTableCode)
-    symTable:addSymbol(symHDrag)
-    symTable:addSymbol(symHRotFriction)
-    symTable:addSymbol(symHRotDrag)
-    human:addSymbolTable(symTable)
-    human:setSymbolName("friction", physicsTableCode, symHFriction:getID())
-    human:setSymbolName("drag", physicsTableCode, symHDrag:getID())
-    human:setSymbolName("rot_friction", physicsTableCode, symHRotFriction:getID())
-    human:setSymbolName("rot_drag", physicsTableCode, symHRotDrag:getID())
-
-    symHInitialEnergy = SymbolFloat(1.0)
-    symHMetabolism = SymbolFloat(metabolism)
-    symTable = SymbolTable(symHInitialEnergy, energyTableCode)
-    symTable:addSymbol(symHMetabolism)
-    human:addSymbolTable(symTable)
-    human:setSymbolName("initial_energy", energyTableCode, symHInitialEnergy:getID())
-    human:setSymbolName("metabolism", energyTableCode, symHMetabolism:getID())
-
-    symHLowAgeLimit = SymbolUL(maxAge)
-    symHHighAgeLimit = SymbolUL(maxAge)
-    symTable = SymbolTable(symHLowAgeLimit, ageTableCode)
-    symTable:addSymbol(symHHighAgeLimit)
-    human:addSymbolTable(symTable)
-    human:setSymbolName("low_age_limit", ageTableCode, symHLowAgeLimit:getID())
-    human:setSymbolName("high_age_limit", ageTableCode, symHHighAgeLimit:getID())
-
     humanColor = SymbolRGB(82, 228, 241)
     symTable = SymbolTable(humanColor, colorTableCode)
     human:addSymbolTable(symTable)
@@ -323,11 +242,11 @@ if humanAgent then
 
     dummyBrain = DummyBrain(1)
     dummyBrain:setChannelName(0, "objects")
-    dummyBrain:addPerception("Position", 0, SimCont2D.PERCEPTION_POSITION)
-    dummyBrain:addPerception("Orientation", 0, SimCont2D.PERCEPTION_ORIENTATION)
-    dummyBrain:addPerception("Distance", 0, SimCont2D.PERCEPTION_DISTANCE)
-    dummyBrain:addPerception("Feed", 0, SimCont2D.PERCEPTION_SYMBOL, feedTableCode, humanFeed:getID(), foodTableCode)
-    dummyBrain:addPerception("Target", 0, SimCont2D.PERCEPTION_TARGET)
+    dummyBrain:addPerception("Position", 0, Sim2D.PERCEPTION_POSITION)
+    dummyBrain:addPerception("Orientation", 0, Sim2D.PERCEPTION_ORIENTATION)
+    dummyBrain:addPerception("Distance", 0, Sim2D.PERCEPTION_DISTANCE)
+    dummyBrain:addPerception("Feed", 0, Sim2D.PERCEPTION_SYMBOL, feedTableCode, humanFeed:getID(), foodTableCode)
+    dummyBrain:addPerception("Target", 0, Sim2D.PERCEPTION_TARGET)
 
     human:setBrain(dummyBrain)
 

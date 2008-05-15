@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,8 +18,7 @@
  */
 
 #include "PopDynSpeciesBuffers.h"
-#include "SimulationObject.h"
-#include "Agent.h"
+#include "SimObj.h"
 
 mt_distribution* PopDynSpeciesBuffers::mDistRecombine = gDistManager.getNewDistribution();
 
@@ -56,7 +55,7 @@ void PopDynSpeciesBuffers::init(PopulationManager* popManager)
         SpeciesData* species = &((*iterSpecies).second);
         for (unsigned int i = 0; i < species->mBufferSize; i++)
         {
-            SimulationObject* org = species->mBaseOrganism->clone();
+            SimObj* org = species->mBaseOrganism->clone();
             species->mOrganismVector.push_back(org);
         }
         for (unsigned int i = 0; i < species->mPopulation; i++)
@@ -66,7 +65,7 @@ void PopDynSpeciesBuffers::init(PopulationManager* popManager)
     }
 }
 
-unsigned int PopDynSpeciesBuffers::addSpecies(SimulationObject* org,
+unsigned int PopDynSpeciesBuffers::addSpecies(SimObj* org,
                                                 unsigned int population,
                                                 unsigned int bufferSize,
                                                 bool queen)
@@ -86,7 +85,7 @@ unsigned int PopDynSpeciesBuffers::addSpecies(SimulationObject* org,
     return speciesID;
 }
 
-void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, SimulationObject* nearObj)
+void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, SimObj* nearObj)
 {
     SpeciesData* species = &(mSpecies[speciesID]);
     
@@ -111,9 +110,9 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
         organismNumber = mDistOrganism->iuniform(0, species->mBufferSize);
     }
 
-    SimulationObject* org = species->mOrganismVector[organismNumber];
+    SimObj* org = species->mOrganismVector[organismNumber];
    
-    SimulationObject* newOrganism;
+    SimObj* newOrganism;
 
     float prob = mDistRecombine->uniform(0.0f, 1.0f);
     if ((prob < mRecombineProb) && mEvolutionOn)
@@ -129,7 +128,7 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
                 organismNumber2++;
             }
         }
-        SimulationObject* org2 = species->mOrganismVector[organismNumber2];
+        SimObj* org2 = species->mOrganismVector[organismNumber2];
 
         /*unsigned int r = mDistRecombine->iuniform(0, 100);
         if (speciesID == 1)
@@ -175,7 +174,7 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
         newOrganism->mutate();
     }
 
-    //SimulationObject* newOrganism2 = newOrganism->clone();
+    //SimObj* newOrganism2 = newOrganism->clone();
     //delete newOrganism;
     //newOrganism = newOrganism2;
 
@@ -193,7 +192,7 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
     }
 }
 
-void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
+void PopDynSpeciesBuffers::onOrganismDeath(SimObj* org)
 {
     PopDynSpecies::onOrganismDeath(org);
 
@@ -219,7 +218,7 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
         {
             organismNumber = mDistOrganism->iuniform(0, species->mBufferSize);
         }
-        SimulationObject* org2 = species->mOrganismVector[organismNumber];
+        SimObj* org2 = species->mOrganismVector[organismNumber];
 
         if (org->mFitness >= org2->mFitness)
         {
@@ -243,10 +242,10 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimulationObject* org)
     // Find organism to place near
     unsigned int refOrgNumber = mDistOrganism->iuniform(0, species->mPopulation - 1);
 
-    list<SimulationObject*>* objects = mPopManager->getObjectList();
+    list<SimObj*>* objects = mPopManager->getObjectList();
 
-    list<SimulationObject*>::iterator iterObj = objects->begin();
-    SimulationObject* refObj;
+    list<SimObj*>::iterator iterObj = objects->begin();
+    SimObj* refObj;
     unsigned int pos = 0;
     while (pos <= refOrgNumber)
     {
@@ -320,7 +319,7 @@ int PopDynSpeciesBuffers::setRecombineProb(lua_State* luaState)
 
 int PopDynSpeciesBuffers::addSpecies(lua_State* luaState)
 {
-    SimulationObject* obj = (SimulationObject*)Orbit<PopDynSpeciesBuffers>::pointer(luaState, 1);
+    SimObj* obj = (SimObj*)Orbit<PopDynSpeciesBuffers>::pointer(luaState, 1);
     unsigned int population = luaL_checkint(luaState, 2);
     unsigned int bufferSize = luaL_checkint(luaState, 3);
     bool queen = false;

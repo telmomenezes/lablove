@@ -18,6 +18,7 @@
  */
 
 #include "Gridbrain.h"
+#include "PopulationManager.h"
 
 #include <string.h>
 
@@ -97,7 +98,7 @@ void Gridbrain::getComponentWritePos(unsigned int& posX,
     posY = gridY + (y * (COMPONENT_SIDE + COMPONENT_MARGIN)) + (COMPONENT_SIDE / 2) + GRID_TITLE;
 }
 
-string Gridbrain::write(SimulationObject* obj, PopulationManager* pop)
+string Gridbrain::write(SimObj* obj, PopulationManager* pop)
 {
     string svg;
     char buffer[1000];

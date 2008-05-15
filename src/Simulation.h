@@ -21,8 +21,7 @@
 #define __INCLUDE_SIMULATION_H
 
 #include "PopulationManager.h"
-#include "SimulationObject.h"
-#include "Agent.h"
+#include "SimObj.h"
 #include "PopulationDynamics.h"
 #include "Orbit.h"
 #include "RandDistManager.h"
@@ -53,10 +52,9 @@ public:
     void run();
     void cycle();
 
-    virtual void initializeData(SimulationObject* obj){}
-    virtual void addObject(SimulationObject* object, bool init=false);
+    virtual void addObject(SimObj* obj, bool init=false);
 
-    virtual SimulationObject* getObjectByScreenPos(int x, int y){return NULL;}
+    virtual SimObj* getObjectByScreenPos(int x, int y){return NULL;}
 
     void setPopulationDynamics(PopulationDynamics* popDyn){mPopulationDynamics = popDyn;}
     PopulationDynamics* getPopulationDynamics(){return mPopulationDynamics;}
@@ -82,15 +80,16 @@ public:
     int setTimeLimit(lua_State* luaState);
 
 protected:
-    virtual void process(SimulationObject* obj){}
-    virtual void perceive(Agent* agent){}
-    virtual void act(Agent* agent){}
-    float calcSymbolsBinding(SimulationObject* origObj,
-                            SimulationObject* targetObj,
+    virtual void onCycle(){}
+    virtual void process(SimObj* object){}
+    virtual void perceive(SimObj* obj){}
+    virtual void act(SimObj* agent){}
+    float calcSymbolsBinding(SimObj* origObj,
+                            SimObj* targetObj,
                             int origSymTable,
                             int targetSymTable,
                             llULINT origSymID);
-    float calcSymbolsBinding(SimulationObject* obj,
+    float calcSymbolsBinding(SimObj* obj,
                                     int symTable,
                                     llULINT symID,
                                     Symbol* symbol);

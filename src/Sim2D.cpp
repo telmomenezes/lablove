@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -17,8 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "SimCont2D.h"
-#include "SimulationObject.h"
+#include "Sim2D.h"
 #include "PopulationDynamics.h"
 #include "SymbolFloat.h"
 #include "SymbolRGB.h"
@@ -28,11 +27,11 @@
 
 using std::list;
 
-mt_distribution* SimCont2D::mDistAge = gDistManager.getNewDistribution();
-mt_distribution* SimCont2D::mDistPosition = gDistManager.getNewDistribution();
-mt_distribution* SimCont2D::mDistFitnessRandom = gDistManager.getNewDistribution();
+mt_distribution* Sim2D::mDistAge = gDistManager.getNewDistribution();
+mt_distribution* Sim2D::mDistPosition = gDistManager.getNewDistribution();
+mt_distribution* Sim2D::mDistFitnessRandom = gDistManager.getNewDistribution();
 
-SimCont2D::SimCont2D(lua_State* luaState)
+Sim2D::Sim2D(lua_State* luaState)
 {
     mWorldWidth = 0.0f;
     mWorldLength = 0.0f;
@@ -103,7 +102,7 @@ SimCont2D::SimCont2D(lua_State* luaState)
     mFireInterval = 250;
 }
 
-SimCont2D::~SimCont2D()
+Sim2D::~Sim2D()
 {
     if (mCellGrid != NULL)
     {
@@ -127,7 +126,7 @@ SimCont2D::~SimCont2D()
     mVisualEvents.clear();
 }
 
-void SimCont2D::initGraphics(unsigned int width,
+void Sim2D::initGraphics(unsigned int width,
                                 unsigned int height,
                                 bool fullScreen,
                                 bool noGraphics)
@@ -137,7 +136,7 @@ void SimCont2D::initGraphics(unsigned int width,
     mBackgroundTexture = art_loadImage("media/grass.jpg");
 }
 
-void SimCont2D::setWorldDimensions(float worldWidth,
+void Sim2D::setWorldDimensions(float worldWidth,
                                     float worldLength,
                                     unsigned int cellSide)
 {
@@ -148,19 +147,19 @@ void SimCont2D::setWorldDimensions(float worldWidth,
     mWorldCellLength = (unsigned int)(ceilf(mWorldLength / ((float)mCellSide)));
 
     unsigned int gridSize = mWorldCellWidth * mWorldCellLength;
-    mCellGrid = (list<SimulationObject*>**)malloc(sizeof(list<SimulationObject*>*) * gridSize);
+    mCellGrid = (list<SimObj2D*>**)malloc(sizeof(list<SimObj2D*>*) * gridSize);
 
     for (unsigned int i = 0; i < gridSize; i++)
     {
-        mCellGrid[i] = new list<SimulationObject*>();
+        mCellGrid[i] = new list<SimObj2D*>();
     }
 }
 
-void SimCont2D::setPos(SimulationObject* obj, float x, float y)
+void Sim2D::setPos(SimObj2D* obj, float x, float y)
 {
-    float origX = obj->mFloatData[FLOAT_X];
-    float origY = obj->mFloatData[FLOAT_Y];
-    float size = obj->mFloatData[FLOAT_SIZE];
+    float origX = obj->mX;
+    float origY = obj->mY;
+    float size = obj->mSize;
 
     int origX1 = ((int)(origX - size)) / mCellSide;
     int origX2 = ((int)(origX + size)) / mCellSide;
@@ -206,8 +205,8 @@ void SimCont2D::setPos(SimulationObject* obj, float x, float y)
         targY2 = mWorldCellLength - 1;
     }
 
-    obj->mFloatData[FLOAT_X] = x;
-    obj->mFloatData[FLOAT_Y] = y;
+    obj->mX = x;
+    obj->mY = y;
 
     if (obj->mInitialized)
     {
@@ -221,7 +220,7 @@ void SimCont2D::setPos(SimulationObject* obj, float x, float y)
                     || (cellY < targY1)
                     || (cellY > targY2))
                 {
-                    list<SimulationObject*>* cellList = mCellGrid[(mWorldCellWidth * cellY) + cellX];
+                    list<SimObj2D*>* cellList = mCellGrid[(mWorldCellWidth * cellY) + cellX];
                     cellList->remove(obj);
                 }
             }
@@ -246,101 +245,64 @@ void SimCont2D::setPos(SimulationObject* obj, float x, float y)
                 || (cellY < origY1)
                 || (cellY > origY2))
             {
-                list<SimulationObject*>* cellList = mCellGrid[(mWorldCellWidth * cellY) + cellX];
+                list<SimObj2D*>* cellList = mCellGrid[(mWorldCellWidth * cellY) + cellX];
                 cellList->push_back(obj);
             }
         }
     }
 }
 
-void SimCont2D::setRot(SimulationObject* obj, float rot)
+void Sim2D::setRot(SimObj2D* obj, float rot)
 {
-    obj->mFloatData[FLOAT_ROT] = normalizeAngle(rot);
+    obj->mRot = normalizeAngle(rot);
 }
 
-void SimCont2D::initializeData(SimulationObject* obj)
+void Sim2D::addObject(SimObj* obj, bool init)
 {
-    obj->initFloatData(18);
-    obj->initULData(6);
-    obj->initIntData(4);
-}
+    SimObj2D* object = (SimObj2D*)obj;
 
-void SimCont2D::addObject(SimulationObject* object, bool init)
-{
-    if(!object->mDataInitialized)
-    {
-        initializeData(object);
-        object->mDataInitialized = true;
-    }
-
-    object->setNamedFloatDataIndex("x", FLOAT_X);
-    object->setNamedFloatDataIndex("y", FLOAT_Y);
-    object->setNamedFloatDataIndex("rot", FLOAT_ROT);
-
-    object->mFloatData[FLOAT_SPEED_X] = 0.0f;
-    object->mFloatData[FLOAT_SPEED_Y] = 0.0f;
-    object->mFloatData[FLOAT_SPEED_ROT] = 0.0f;
-    object->mFloatData[FLOAT_IMPULSE_X] = 0.0f;
-    object->mFloatData[FLOAT_IMPULSE_Y] = 0.0f;
-    object->mFloatData[FLOAT_IMPULSE_ROT] = 0.0f;
-
-    object->setFloatDataFromSymbol("size", FLOAT_SIZE);
-    object->mFloatData[FLOAT_SIZE_SQUARED] = object->mFloatData[FLOAT_SIZE] * object->mFloatData[FLOAT_SIZE];
-    object->setFloatDataFromSymbol("initial_energy", FLOAT_INITIAL_ENERGY);
-    object->setFloatDataFromSymbol("metabolism", FLOAT_METABOLISM);
-    object->setFloatDataFromSymbol("friction", FLOAT_FRICTION);
-    object->setFloatDataFromSymbol("drag", FLOAT_DRAG);
-    object->setFloatDataFromSymbol("rot_friction", FLOAT_ROT_FRICTION);
-    object->setFloatDataFromSymbol("rot_drag", FLOAT_ROT_DRAG);
-    object->setULDataFromSymbol("low_age_limit", UL_LOW_AGE_LIMIT);
-    object->setULDataFromSymbol("high_age_limit", UL_HIGH_AGE_LIMIT);
-
-    object->mFloatData[FLOAT_ENERGY] = object->mFloatData[FLOAT_INITIAL_ENERGY];
-
-    object->mULData[UL_COLLISION_DETECTION_ITERATION] = 0;
-
-    if (object->mULData[UL_HIGH_AGE_LIMIT] > 0)
-    {
-        object->mULData[UL_MAX_AGE] =
-            mDistAge->iuniform(
-                object->mULData[UL_LOW_AGE_LIMIT],
-                object->mULData[UL_HIGH_AGE_LIMIT]);
-    }
-    else
-    {
-        object->mULData[UL_MAX_AGE] = 0;
-    }
+    object->mEnergy = object->mInitialEnergy;
 
     if (init)
     {
-        object->mULData[UL_MAX_AGE] = mDistAge->iuniform(1, object->mULData[UL_MAX_AGE]);
+        object->mAgeLimit = mDistAge->iuniform(1, object->mMaxAge);
+    }
+    else
+    {
+        object->mAgeLimit = object->mMaxAge;
     }
 
-    object->mULData[UL_LAST_SPEAK_TIME] = 0;
-    object->mULData[UL_LAST_FIRE_TIME] = 0;
-
-    if (object->mType == SimulationObject::TYPE_AGENT)
+    if (object->mType == SimObj::TYPE_AGENT)
     {
-        Agent* agent = (Agent*)object;
-        int channelObjects = agent->getBrain()->getChannelByName("objects");
-        int channelSounds = agent->getBrain()->getChannelByName("sounds");
-        int channelSelf = agent->getBrain()->getChannelByName("self");
-        int channelBeta = agent->getBrain()->getChannelByName("beta");
+        int channelObjects = object->getBrain()->getChannelByName("objects");
+        int channelSounds = object->getBrain()->getChannelByName("sounds");
+        int channelSelf = object->getBrain()->getChannelByName("self");
+        int channelBeta = object->getBrain()->getChannelByName("beta");
 
-        object->mIntData[INT_CHANNEL_OBJECTS] = channelObjects;
-        object->mIntData[INT_CHANNEL_SOUNDS] = channelSounds;
-        object->mIntData[INT_CHANNEL_SELF] = channelSelf;
-        object->mIntData[INT_CHANNEL_BETA] = channelBeta;
+        object->mChannelObjects = channelObjects;
+        object->mChannelSounds = channelSounds;
+        object->mChannelSelf = channelSelf;
+        object->mChannelBeta = channelBeta;
+    }
+
+    SimObj2D* obj2D = (SimObj2D*)object;
+    for (list<Graphic*>::iterator iterGraph = obj2D->mGraphics.begin();
+            iterGraph != obj2D->mGraphics.end();
+            iterGraph++)
+    {
+        (*iterGraph)->init(obj2D);
     }
 
     Simulation::addObject(object);
 }
 
-void SimCont2D::removeObject(SimulationObject* obj, bool deleteObj)
+void Sim2D::removeObject(SimObj* obj, bool deleteObj)
 {
-    float origX = obj->mFloatData[FLOAT_X];
-    float origY = obj->mFloatData[FLOAT_Y];
-    float size = obj->mFloatData[FLOAT_SIZE];
+    SimObj2D* object = (SimObj2D*)obj;
+
+    float origX = object->mX;
+    float origY = object->mY;
+    float size = object->mSize;
     int origX1 = ((int)(origX - size)) / mCellSide;
     int origX2 = ((int)(origX + size)) / mCellSide;
     int origY1 = ((int)(origY - size)) / mCellSide;
@@ -368,23 +330,23 @@ void SimCont2D::removeObject(SimulationObject* obj, bool deleteObj)
     {
         for (int cellY = origY1; cellY <= origY2; cellY++)
         {
-            list<SimulationObject*>* cellList = mCellGrid[(mWorldCellWidth * cellY) + cellX];
-            cellList->remove(obj);
+            list<SimObj2D*>* cellList = mCellGrid[(mWorldCellWidth * cellY) + cellX];
+            cellList->remove(object);
         }
     }
 
     Simulation::removeObject(obj, deleteObj);
 }
 
-void SimCont2D::placeRandom(SimulationObject* obj)
+void Sim2D::placeRandom(SimObj* obj)
 {
-    setPos(obj,
+    setPos((SimObj2D*)obj,
             mDistPosition->uniform(0, mWorldWidth),
             mDistPosition->uniform(0, mWorldLength));
-    setRot(obj, mDistPosition->uniform(0, M_PI * 2));
+    setRot((SimObj2D*)obj, mDistPosition->uniform(0, M_PI * 2));
 }
 
-void SimCont2D::placeNear(SimulationObject* obj, SimulationObject* ref)
+void Sim2D::placeNear(SimObj* obj, SimObj* ref)
 {
     if (obj->getBirthRadius() == 0.0f)
     {
@@ -392,8 +354,8 @@ void SimCont2D::placeNear(SimulationObject* obj, SimulationObject* ref)
         return;
     }
 
-    float origX = ref->mFloatData[FLOAT_X];
-    float origY = ref->mFloatData[FLOAT_Y];
+    float origX = ((SimObj2D*)ref)->mX;
+    float origY = ((SimObj2D*)ref)->mY;
 
     float distance = mDistPosition->uniform(0, obj->getBirthRadius());
     float angle = mDistPosition->uniform(0, M_PI * 2);
@@ -419,11 +381,11 @@ void SimCont2D::placeNear(SimulationObject* obj, SimulationObject* ref)
         targY = targY - mWorldLength;
     }
 
-    setPos(obj, targX, targY);
-    setRot(obj, mDistPosition->uniform(0, M_PI * 2));
+    setPos((SimObj2D*)obj, targX, targY);
+    setRot((SimObj2D*)obj, mDistPosition->uniform(0, M_PI * 2));
 }
 
-void SimCont2D::startCollisionDetection(float x, float y, float rad)
+void Sim2D::startCollisionDetection(float x, float y, float rad)
 {
     mCollisionX = x;
     mCollisionY = y;
@@ -465,7 +427,7 @@ void SimCont2D::startCollisionDetection(float x, float y, float rad)
     mCollisionDetectionIteration++;
 }
 
-SimulationObject* SimCont2D::nextCollision(float& distance, float& angle)
+SimObj2D* Sim2D::nextCollision(float& distance, float& angle)
 {
     distance = 0.0f;
     angle = 0.0f;
@@ -496,17 +458,17 @@ SimulationObject* SimCont2D::nextCollision(float& distance, float& angle)
             mCurrentCellListIterator = mCurrentCellList->begin();
         }
 
-        SimulationObject* obj = *mCurrentCellListIterator;
+        SimObj2D* obj = *mCurrentCellListIterator;
 
-        if (obj->mULData[UL_COLLISION_DETECTION_ITERATION] != mCollisionDetectionIteration)
+        if (obj->mCollisionDetectionIteration != mCollisionDetectionIteration)
         {
-            obj->mULData[UL_COLLISION_DETECTION_ITERATION] = mCollisionDetectionIteration;
+            obj->mCollisionDetectionIteration = mCollisionDetectionIteration;
 
-            float dX =  obj->mFloatData[FLOAT_X] - mCollisionX;
-            float dY =  obj->mFloatData[FLOAT_Y] - mCollisionY;
+            float dX =  obj->mX - mCollisionX;
+            float dY =  obj->mY - mCollisionY;
             distance = sqrtf((dX * dX) + (dY * dY));
 
-            if ((distance - obj->mFloatData[FLOAT_SIZE]) <= mCollisionRadius)
+            if ((distance - obj->mSize) <= mCollisionRadius)
             {
                 if (distance < 0.0f)
                 {
@@ -525,116 +487,101 @@ SimulationObject* SimCont2D::nextCollision(float& distance, float& angle)
     }
 }
 
-void SimCont2D::process(SimulationObject* obj)
+void Sim2D::onCycle()
 {
-    obj->mFloatData[FLOAT_ENERGY] -= obj->mFloatData[FLOAT_METABOLISM];
+    processLaserShots();
+}
 
-    if (obj->mFloatData[FLOAT_ENERGY] <= 0)
+void Sim2D::process(SimObj* object)
+{
+    SimObj2D* obj = (SimObj2D*)object;
+
+    if (obj->mEnergy <= 0)
     {
         killOrganism(obj);
     }
-    else if (obj->mULData[UL_MAX_AGE] > 0)
+    else if (obj->mMaxAge > 0)
     {
-        if (mSimulationTime - obj->mCreationTime >= obj->mULData[UL_MAX_AGE])
+        if (mSimulationTime - obj->mCreationTime >= obj->mAgeLimit)
         {
             killOrganism(obj);
         }
     }
 
-    obj->mFloatData[FLOAT_SPEED_X] += obj->mFloatData[FLOAT_IMPULSE_X] / obj->mFloatData[FLOAT_SIZE];
-    obj->mFloatData[FLOAT_SPEED_Y] += obj->mFloatData[FLOAT_IMPULSE_Y] / obj->mFloatData[FLOAT_SIZE];
-    obj->mFloatData[FLOAT_IMPULSE_X] = 0.0f;
-    obj->mFloatData[FLOAT_IMPULSE_Y] = 0.0f;
+    obj->mSpeedX += obj->mImpulseX / obj->mSize;
+    obj->mSpeedY += obj->mImpulseY / obj->mSize;
+    obj->mImpulseX = 0.0f;
+    obj->mImpulseY = 0.0f;
 
-    float speed = sqrtf((obj->mFloatData[FLOAT_SPEED_X]
-                    * obj->mFloatData[FLOAT_SPEED_X])
-                    + (obj->mFloatData[FLOAT_SPEED_Y]
-                    * obj->mFloatData[FLOAT_SPEED_Y]));
+    float speed = sqrtf((obj->mSpeedX
+                    * obj->mSpeedX)
+                    + (obj->mSpeedY
+                    * obj->mSpeedY));
 
-    float friction = obj->mFloatData[FLOAT_FRICTION] * obj->mFloatData[FLOAT_SIZE];
-    float newSpeedRatio = 0.0f;
 
-    if (speed > friction)
-    {
-        newSpeedRatio = (speed - friction) / speed;
-    }
-
-    float oneMinusDrag = 1 - obj->mFloatData[FLOAT_DRAG];
+    float oneMinusDrag = 1 - obj->mDrag;
     
-    obj->mFloatData[FLOAT_SPEED_X] *= newSpeedRatio * oneMinusDrag;
-    obj->mFloatData[FLOAT_SPEED_Y] *= newSpeedRatio * oneMinusDrag;
+    obj->mSpeedX *= oneMinusDrag;
+    obj->mSpeedY *= oneMinusDrag;
 
-    float newX = obj->mFloatData[FLOAT_X] + obj->mFloatData[FLOAT_SPEED_X];
-    float newY = obj->mFloatData[FLOAT_Y] + obj->mFloatData[FLOAT_SPEED_Y];
+    float newX = obj->mX + obj->mSpeedX;
+    float newY = obj->mY + obj->mSpeedY;
 
     if (newX < 0.0f)
     {
         newX = 0.0f;
-        obj->mFloatData[FLOAT_SPEED_X] = 0.0f;
+        obj->mSpeedX = 0.0f;
     }
     else if (newX > mWorldWidth)
     {
         newX = mWorldWidth;
-        obj->mFloatData[FLOAT_SPEED_X] = 0.0f;
+        obj->mSpeedX = 0.0f;
     }
     if (newY < 0.0f)
     {
         newY = 0.0f;
-        obj->mFloatData[FLOAT_SPEED_Y] = 0.0f;
+        obj->mSpeedY = 0.0f;
     }
     else if (newY > mWorldLength)
     {
         newY = mWorldLength;
-        obj->mFloatData[FLOAT_SPEED_Y] = 0.0f;
+        obj->mSpeedY = 0.0f;
     }
 
-    obj->mFloatData[FLOAT_SPEED_ROT] += obj->mFloatData[FLOAT_IMPULSE_ROT] / obj->mFloatData[FLOAT_SIZE];
-    obj->mFloatData[FLOAT_IMPULSE_ROT] = 0.0f;
+    obj->mSpeedRot += obj->mImpulseRot / obj->mSize;
+    obj->mImpulseRot = 0.0f;
 
-    float rotFriction = obj->mFloatData[FLOAT_ROT_FRICTION] * obj->mFloatData[FLOAT_SIZE];
-    float absRotFriction = rotFriction;
-    float absRotSpeed = obj->mFloatData[FLOAT_SPEED_ROT];
-
-    if (obj->mFloatData[FLOAT_SPEED_ROT] < 0.0f)
+    float absRotSpeed = obj->mSpeedRot;
+    if (obj->mSpeedRot < 0.0f)
     {
         absRotSpeed = -absRotSpeed;
-        rotFriction = -rotFriction;
     }
 
-    if (absRotFriction > absRotSpeed)
-    {
-        obj->mFloatData[FLOAT_SPEED_ROT] = 0.0f;
-    }
-    else
-    {
-        obj->mFloatData[FLOAT_SPEED_ROT] -= rotFriction;
-    }
+    float oneMinusRotDrag = 1.0f - obj->mRotDrag;
+    obj->mSpeedRot *= oneMinusRotDrag;
 
-    float oneMinusRotDrag = 1.0f - obj->mFloatData[FLOAT_ROT_DRAG];
-    obj->mFloatData[FLOAT_SPEED_ROT] *= oneMinusRotDrag;
+    float newRot = obj->mRot + obj->mSpeedRot;
 
-    float newRot = obj->mFloatData[FLOAT_ROT] + obj->mFloatData[FLOAT_SPEED_ROT];
-
-    setPos(obj, newX, newY);
-    setRot(obj, newRot);
+    setPos((SimObj2D*)obj, newX, newY);
+    setRot((SimObj2D*)obj, newRot);
 
     // Update fitness
     switch (obj->getFitnessMeasure())
     {
     case FITNESS_ENERGY:
-        obj->mFitness = obj->mFloatData[FLOAT_ENERGY];
+        obj->mFitness = obj->mEnergy;
         break;
     case FITNESS_ENERGY_SUM:
         if ((mSimulationTime % 10) == 0)
         {
-            obj->mFitness += obj->mFloatData[FLOAT_ENERGY];
+            obj->mFitness += obj->mEnergy;
         }
         break;
     case FITNESS_ENERGY_SUM_ABOVE_INIT:
         if ((mSimulationTime % 10) == 0)
         {
-            float energy = obj->mFloatData[FLOAT_ENERGY];
-            energy -= obj->mFloatData[FLOAT_INITIAL_ENERGY];
+            float energy = obj->mEnergy;
+            energy -= obj->mInitialEnergy;
             if (energy < 0.0f)
             {
                 energy = 0.0f;
@@ -648,23 +595,23 @@ void SimCont2D::process(SimulationObject* obj)
             obj->mFitness = mDistFitnessRandom->uniform(0.0f, 1.0f);
         }
     }
-
-    processLaserShots();
 }
 
-void SimCont2D::perceive(Agent* agent)
+void Sim2D::perceive(SimObj* obj)
 {
+    SimObj2D* agent = (SimObj2D*)obj;
+
     // Perceive visible objects
     mTargetObject = NULL;
     mDistanceToTargetObject = 9999999999.9f;
     mCurrentTargetInputBuffer = NULL;
 
-    mLowLimitViewAngle = normalizeAngle(agent->mFloatData[FLOAT_ROT] - mHalfViewAngle);
-    mHighLimitViewAngle = normalizeAngle(agent->mFloatData[FLOAT_ROT] + mHalfViewAngle);
+    mLowLimitViewAngle = normalizeAngle(agent->mRot - mHalfViewAngle);
+    mHighLimitViewAngle = normalizeAngle(agent->mRot + mHalfViewAngle);
 
-    startCollisionDetection(agent->mFloatData[FLOAT_X], agent->mFloatData[FLOAT_Y], mViewRange);
+    startCollisionDetection(agent->mX, agent->mY, mViewRange);
 
-    SimulationObject* target;
+    SimObj2D* target;
     float distance;
     float angle;
 
@@ -675,10 +622,10 @@ void SimCont2D::perceive(Agent* agent)
             bool visible = false;
             
             // This is an aproximation
-            float extraAngle = atan2f(target->mFloatData[FLOAT_SIZE], distance);
+            float extraAngle = atan2f(target->mSize, distance);
 
-            distance -= agent->mFloatData[FLOAT_SIZE];
-            distance -= target->mFloatData[FLOAT_SIZE];
+            distance -= agent->mSize;
+            distance -= target->mSize;
             if (distance < 0.0f)
             {
                 distance = 0.0f;
@@ -701,11 +648,11 @@ void SimCont2D::perceive(Agent* agent)
 
             if (visible)
             {
-                onScanObject(agent,
-                                target,
+                onScanObject((SimObj2D*)agent,
+                                (SimObj2D*)target,
                                 distance,
-                                normalizeAngle(agent->mFloatData[FLOAT_ROT] - angle),
-                                normalizeAngle(target->mFloatData[FLOAT_ROT] - angle));
+                                normalizeAngle(agent->mRot - angle),
+                                normalizeAngle(target->mRot - angle));
             }
         }
     }
@@ -713,7 +660,7 @@ void SimCont2D::perceive(Agent* agent)
     // Perceive sounds
     list<Message*>* messageList = agent->getMessageList();
 
-    if (agent->mIntData[INT_CHANNEL_SOUNDS] >= 0)
+    if (agent->mChannelSounds >= 0)
     {
         for (list<Message*>::iterator iterMessage = messageList->begin();
                 iterMessage != messageList->end();
@@ -721,8 +668,8 @@ void SimCont2D::perceive(Agent* agent)
         {
             Message* msg = (*iterMessage);
 
-            list<InterfaceItem*>* interface = agent->getBrain()->getInputInterface(agent->mIntData[INT_CHANNEL_SOUNDS]);
-            float* inBuffer = agent->getBrain()->getInputBuffer(agent->mIntData[INT_CHANNEL_SOUNDS]);
+            list<InterfaceItem*>* interface = agent->getBrain()->getInputInterface(agent->mChannelSounds);
+            float* inBuffer = agent->getBrain()->getInputBuffer(agent->mChannelSounds);
 
             if (inBuffer != NULL)
             {
@@ -764,10 +711,10 @@ void SimCont2D::perceive(Agent* agent)
     }
 
     // Perceive self
-    if (agent->mIntData[INT_CHANNEL_SELF] >= 0)
+    if (agent->mChannelSelf >= 0)
     {
-        list<InterfaceItem*>* interface = agent->getBrain()->getInputInterface(agent->mIntData[INT_CHANNEL_SELF]);
-        float* inBuffer = agent->getBrain()->getInputBuffer(agent->mIntData[INT_CHANNEL_SELF]);
+        list<InterfaceItem*>* interface = agent->getBrain()->getInputInterface(agent->mChannelSelf);
+        float* inBuffer = agent->getBrain()->getInputBuffer(agent->mChannelSelf);
         unsigned int pos = 0;
         float normalizedValue;
         float ratio;
@@ -781,7 +728,7 @@ void SimCont2D::perceive(Agent* agent)
             switch (type)
             {
                 case PERCEPTION_ENERGY:
-                    ratio = agent->mFloatData[FLOAT_ENERGY] / agent->mFloatData[FLOAT_INITIAL_ENERGY];
+                    ratio = agent->mEnergy / agent->mInitialEnergy;
                     normalizedValue = 1.0f - (1.0f / (ratio + 1.0f));
                     inBuffer[pos] = normalizedValue;
                     break;
@@ -789,7 +736,7 @@ void SimCont2D::perceive(Agent* agent)
                 case PERCEPTION_CAN_SPEAK:
                     normalizedValue = 0.0f;
 
-                    if ((mSimulationTime - agent->mULData[UL_LAST_SPEAK_TIME]) > mSpeakInterval)
+                    if ((mSimulationTime - agent->mLastSpeakTime) > mSpeakInterval)
                     {
                         normalizedValue = 1.0f;
                     }
@@ -798,7 +745,7 @@ void SimCont2D::perceive(Agent* agent)
                 case PERCEPTION_CAN_FIRE:
                     normalizedValue = 0.0f;
 
-                    if ((mSimulationTime - agent->mULData[UL_LAST_FIRE_TIME]) > mFireInterval)
+                    if ((mSimulationTime - agent->mLastFireTime) > mFireInterval)
                     {
                         normalizedValue = 1.0f;
                     }
@@ -811,13 +758,13 @@ void SimCont2D::perceive(Agent* agent)
     }
 }
 
-void SimCont2D::onScanObject(Agent* orig,
-                SimulationObject* targ,
+void Sim2D::onScanObject(SimObj2D* orig,
+                SimObj2D* targ,
                 float distance,
                 float angle,
                 float orientation)
 {
-    float* inBuffer = orig->getBrain()->getInputBuffer(orig->mIntData[INT_CHANNEL_OBJECTS]);
+    float* inBuffer = orig->getBrain()->getInputBuffer(orig->mChannelObjects);
     if (inBuffer == NULL)
     {
         return;
@@ -838,7 +785,7 @@ void SimCont2D::onScanObject(Agent* orig,
 
     float normalizedValue;
 
-    list<InterfaceItem*>* interface = orig->getBrain()->getInputInterface(orig->mIntData[INT_CHANNEL_OBJECTS]);
+    list<InterfaceItem*>* interface = orig->getBrain()->getInputInterface(orig->mChannelObjects);
     unsigned int pos = 0;
 
     for (list<InterfaceItem*>::iterator iterItem = interface->begin();
@@ -911,7 +858,7 @@ void SimCont2D::onScanObject(Agent* orig,
     }
 }
 
-void SimCont2D::act(Agent* agent)
+void Sim2D::act(SimObj* agent)
 {
     bool actionGo = false;
     bool actionRotate = false;
@@ -1030,43 +977,42 @@ void SimCont2D::act(Agent* agent)
 
     if (actionGo)
     {
-        go(agent, actionGoParam * mGoForceScale);
+        go((SimObj2D*)agent, actionGoParam * mGoForceScale);
     }
     if (actionRotate)
     {
-        rotate(agent, actionRotateParam * mRotateForceScale);
+        rotate((SimObj2D*)agent, actionRotateParam * mRotateForceScale);
     }
     if (actionEat != ACTION_NULL)
     {
-        eat(agent, actionEat);
+        eat((SimObj2D*)agent, actionEat);
     }
     if (actionSpeakSymbol != NULL)
     {
-        speak(agent, actionSpeakSymbol);
+        speak((SimObj2D*)agent, actionSpeakSymbol);
     }
     if (actionFire)
     {
-        fire(agent);
+        fire((SimObj2D*)agent);
     }
 }
 
-void SimCont2D::go(Agent* agent, float force)
+void Sim2D::go(SimObj2D* agent, float force)
 {
     float delta = -mGoCost * fabsf(force);
-    deltaEnergy(agent, delta);
+    agent->deltaEnergy(delta);
 
-    agent->mFloatData[FLOAT_IMPULSE_X] = cosf(agent->mFloatData[FLOAT_ROT]) * force;
-    agent->mFloatData[FLOAT_IMPULSE_Y] = sinf(agent->mFloatData[FLOAT_ROT]) * force;
+    agent->mImpulseX = cosf(agent->mRot) * force;
+    agent->mImpulseY = sinf(agent->mRot) * force;
 }
 
-void SimCont2D::rotate(Agent* agent, float force)
+void Sim2D::rotate(SimObj2D* agent, float force)
 {
-    deltaEnergy(agent, -mRotateCost * fabsf(force));
-
-    agent->mFloatData[FLOAT_IMPULSE_ROT] -= force;
+    agent->deltaEnergy(-mRotateCost * fabsf(force));
+    agent->mImpulseRot -= force;
 }
 
-void SimCont2D::eat(Agent* agent, Action actionType)
+void Sim2D::eat(SimObj2D* agent, Action actionType)
 {
     if (mTargetObject)
     {
@@ -1086,9 +1032,9 @@ void SimCont2D::eat(Agent* agent, Action actionType)
         case ACTION_EAT:
             if (sym1->getBinding(sym2) > mFeedCenter)
             {
-                float energy = mTargetObject->mFloatData[FLOAT_ENERGY];
-                deltaEnergy(agent, energy);
-                deltaEnergy(mTargetObject, -energy);
+                float energy = mTargetObject->mEnergy;
+                agent->deltaEnergy(energy);
+                mTargetObject->deltaEnergy(-energy);
             }
             break;
         case ACTION_EATB:
@@ -1104,33 +1050,33 @@ void SimCont2D::eat(Agent* agent, Action actionType)
                 energyFactor = (distance - mFeedCenter) / (1.0f - mFeedCenter);
             }
 
-            float energy = mTargetObject->mFloatData[FLOAT_ENERGY];
-            deltaEnergy(agent, energyFactor * energy);
-            deltaEnergy(mTargetObject, -energy);
+            float energy = mTargetObject->mEnergy;
+            agent->deltaEnergy(energyFactor * energy);
+            mTargetObject->deltaEnergy(-energy);
             break;
         }
     }
 }
 
-void SimCont2D::fire(Agent* agent)
+void Sim2D::fire(SimObj2D* agent)
 {
-    if (((mSimulationTime - agent->mULData[UL_LAST_FIRE_TIME]) <= mFireInterval)
-        && (agent->mULData[UL_LAST_FIRE_TIME] != 0))
+    if (((mSimulationTime - agent->mLastFireTime) <= mFireInterval)
+        && (agent->mLastFireTime != 0))
     {
         return;
     }
 
-    agent->mULData[UL_LAST_FIRE_TIME] = mSimulationTime;
+    agent->mLastFireTime = mSimulationTime;
 
-    createLaserShot(agent->mFloatData[FLOAT_X],
-                    agent->mFloatData[FLOAT_Y],
-                    agent->mFloatData[FLOAT_ROT],
+    createLaserShot(agent->mX,
+                    agent->mY,
+                    agent->mRot,
                     25,
                     0.02,
                     agent->getID());
 }
 
-void SimCont2D::drawBeforeObjects()
+void Sim2D::drawBeforeObjects()
 {
     art_setScale(mZoom, mZoom);
     art_setTranslation(mViewX, mViewY);
@@ -1172,16 +1118,16 @@ void SimCont2D::drawBeforeObjects()
 
     if (mShowViewRange)
     {
-        list<SimulationObject*>::iterator iterObj;
+        list<SimObj*>::iterator iterObj;
 
         for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
         {
-            SimulationObject* obj = *iterObj;
+            SimObj2D* obj = (SimObj2D*)(*iterObj);
 
-            if (obj->mType == SimulationObject::TYPE_AGENT)
+            if (obj->mType == SimObj::TYPE_AGENT)
             {
-                float beginAngle = normalizeAngle(obj->mFloatData[FLOAT_ROT] - mHalfViewAngle);
-                float endAngle = normalizeAngle(obj->mFloatData[FLOAT_ROT] + mHalfViewAngle);
+                float beginAngle = normalizeAngle(obj->mRot - mHalfViewAngle);
+                float endAngle = normalizeAngle(obj->mRot + mHalfViewAngle);
 
                 if (beginAngle > endAngle)
                 {
@@ -1189,8 +1135,8 @@ void SimCont2D::drawBeforeObjects()
                 }
 
                 art_setColor(150, 150, 150, 100);
-                art_fillCircleSlice(obj->mFloatData[FLOAT_X],
-                                obj->mFloatData[FLOAT_Y],
+                art_fillCircleSlice(obj->mX,
+                                obj->mY,
                                 mViewRange,
                                 beginAngle,
                                 endAngle);
@@ -1228,7 +1174,7 @@ void SimCont2D::drawBeforeObjects()
     }
 }
 
-void SimCont2D::drawTerrain()
+void Sim2D::drawTerrain()
 {
     art_setColor(0, 255, 0, 255);
     art_setTexture(mBackgroundTexture);
@@ -1236,7 +1182,7 @@ void SimCont2D::drawTerrain()
     art_clearTexture();
 }
 
-void SimCont2D::drawAfterObjects()
+void Sim2D::drawAfterObjects()
 {
     drawLaserShots();
 
@@ -1244,15 +1190,15 @@ void SimCont2D::drawAfterObjects()
     {
         art_setFont(mFont);
         char text[255];
-        list<SimulationObject*>::iterator iterObj;
+        list<SimObj*>::iterator iterObj;
         for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
         {
-            SimulationObject* obj = *iterObj;
+            SimObj2D* obj = (SimObj2D*)(*iterObj);
 
             art_setColor(100, 100, 100, 100);
-            sprintf(text, "%f", obj->mFloatData[FLOAT_ENERGY]);
-            art_drawText(obj->mFloatData[FLOAT_X],
-                            obj->mFloatData[FLOAT_Y],
+            sprintf(text, "%f", obj->mEnergy);
+            art_drawText(obj->mX,
+                            obj->mY,
                             text);
         }
     }
@@ -1275,22 +1221,22 @@ void SimCont2D::drawAfterObjects()
     }
 }
 
-SimulationObject* SimCont2D::getObjectByScreenPos(int x, int y)
+SimObj* Sim2D::getObjectByScreenPos(int x, int y)
 {
-    /*list<SimulationObject*>::iterator iterObj;
+    /*list<SimObj2D*>::iterator iterObj;
     for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
     {
-        SimulationObject* obj = *iterObj;
+        SimObj* obj = *iterObj;
     }*/
 
     return NULL;
 }
 
-bool SimCont2D::getFieldValue(SimulationObject* obj, string fieldName, float& value)
+bool Sim2D::getFieldValue(SimObj* obj, string fieldName, float& value)
 {
     if (fieldName == "energy")
     {
-        value = obj->mFloatData[FLOAT_ENERGY];
+        value = ((SimObj2D*)obj)->mEnergy;
         return true;
     }
     else
@@ -1299,7 +1245,7 @@ bool SimCont2D::getFieldValue(SimulationObject* obj, string fieldName, float& va
     }
 }
 
-void SimCont2D::processLaserShots()
+void Sim2D::processLaserShots()
 {
     for (list<Laser>::iterator iterLaser = mLaserShots.begin();
             iterLaser != mLaserShots.end();
@@ -1350,19 +1296,19 @@ void SimCont2D::processLaserShots()
         while (((cellX * laser->mDirX) <= targCellX)
             && ((cellY * laser->mDirY) <= targCellY))
         {
-            list<SimulationObject*>* cellList = mCellGrid[(mWorldCellWidth * cellY) + cellX];
+            list<SimObj2D*>* cellList = mCellGrid[(mWorldCellWidth * cellY) + cellX];
 
-            for (list<SimulationObject*>::iterator iterObj = cellList->begin();
+            for (list<SimObj2D*>::iterator iterObj = cellList->begin();
                 iterObj != cellList->end();
                 iterObj++)
             {
-                SimulationObject* obj = *iterObj;
+                SimObj2D* obj = (SimObj2D*)(*iterObj);
 
                 if (obj->getID() != laser->mOwnerID)
                 {
-                    float objX = obj->mFloatData[FLOAT_X];
-                    float objY = obj->mFloatData[FLOAT_Y];
-                    float r = obj->mFloatData[FLOAT_SIZE];
+                    float objX = obj->mX;
+                    float objY = obj->mY;
+                    float r = obj->mSize;
 
                     float x_1 = x1 - objX;
                     float x_2 = x2 - objX;
@@ -1379,7 +1325,7 @@ void SimCont2D::processLaserShots()
                     if (colides >= 0.0f)
                     {
                         //printf("colision! %d\n", obj->getID());
-                        deltaEnergy(obj, -1000.0f);
+                        ((SimObj2D*)obj)->deltaEnergy(-1000.0f);
                     }
                 }
             }
@@ -1443,7 +1389,7 @@ void SimCont2D::processLaserShots()
     }
 }
 
-void SimCont2D::drawLaserShots()
+void Sim2D::drawLaserShots()
 {
     art_setColor(255, 255, 255, 255);
     art_setLineWidth(1.0f);
@@ -1457,7 +1403,7 @@ void SimCont2D::drawLaserShots()
     }
 }
 
-void SimCont2D::createLaserShot(float x1, float y1, float ang, float length, float speed, llULINT ownerID)
+void Sim2D::createLaserShot(float x1, float y1, float ang, float length, float speed, llULINT ownerID)
 {
     mLaserShots.push_back(Laser());
     Laser* laser = &(mLaserShots.back());
@@ -1485,7 +1431,7 @@ void SimCont2D::createLaserShot(float x1, float y1, float ang, float length, flo
     laser->mOwnerID = ownerID;
 }
 
-bool SimCont2D::onKeyDown(Art_KeyCode key)
+bool Sim2D::onKeyDown(Art_KeyCode key)
 {
     if (Simulation::onKeyDown(key))
     {
@@ -1517,7 +1463,7 @@ bool SimCont2D::onKeyDown(Art_KeyCode key)
     }
 }
 
-bool SimCont2D::onKeyUp(Art_KeyCode key)
+bool Sim2D::onKeyUp(Art_KeyCode key)
 {
     if (Simulation::onKeyUp(key))
     {
@@ -1561,7 +1507,7 @@ bool SimCont2D::onKeyUp(Art_KeyCode key)
     }
 }
 
-bool SimCont2D::onMouseButtonDown(Art_MouseButton button, int x, int y)
+bool Sim2D::onMouseButtonDown(Art_MouseButton button, int x, int y)
 {
     mDragging = true;
     mLastMouseX = x;
@@ -1569,13 +1515,13 @@ bool SimCont2D::onMouseButtonDown(Art_MouseButton button, int x, int y)
     return false;
 }
 
-bool SimCont2D::onMouseButtonUp(Art_MouseButton button, int x, int y)
+bool Sim2D::onMouseButtonUp(Art_MouseButton button, int x, int y)
 {
     mDragging = false;
     return false;
 }
 
-bool SimCont2D::onMouseMove(int x, int y)
+bool Sim2D::onMouseMove(int x, int y)
 {
     if (mDragging)
     {
@@ -1593,7 +1539,7 @@ bool SimCont2D::onMouseMove(int x, int y)
     return false;
 }
 
-bool SimCont2D::onMouseWheel(bool up)
+bool Sim2D::onMouseWheel(bool up)
 {
     float wWidth = (float)art_getWinWidth();
     float wHeight = (float)art_getWinHeight();
@@ -1616,18 +1562,18 @@ bool SimCont2D::onMouseWheel(bool up)
     return true;
 }
 
-void SimCont2D::setViewAngle(float angle)
+void Sim2D::setViewAngle(float angle)
 {
     mViewAngle = (angle * M_PI) / 180.0f;
     mHalfViewAngle = mViewAngle / 2.0f;
 }
 
-void SimCont2D::setViewRange(float range)
+void Sim2D::setViewRange(float range)
 {
     mViewRange = range;
 }
 
-float SimCont2D::normalizeAngle(float angle)
+float Sim2D::normalizeAngle(float angle)
 {
     float PI2 = M_PI * 2.0f;
     while(angle > M_PI)
@@ -1642,18 +1588,7 @@ float SimCont2D::normalizeAngle(float angle)
     return angle;
 }
 
-void SimCont2D::setSize(SimulationObject* obj, float size)
-{
-    obj->mFloatData[FLOAT_SIZE] = size;
-    obj->mFloatData[FLOAT_SIZE_SQUARED] = size * size;
-}
-
-void SimCont2D::deltaEnergy(SimulationObject* obj, double delta)
-{
-    obj->mFloatData[FLOAT_ENERGY] += delta;
-}
-
-string SimCont2D::getInterfaceName(bool input, int type)
+string Sim2D::getInterfaceName(bool input, int type)
 {
     if (input)
     {
@@ -1701,28 +1636,27 @@ string SimCont2D::getInterfaceName(bool input, int type)
     }
 }
 
-void SimCont2D::speak(Agent* agent, Symbol* sym)
+void Sim2D::speak(SimObj2D* agent, Symbol* sym)
 {
-    if (((mSimulationTime - agent->mULData[UL_LAST_SPEAK_TIME]) <= mSpeakInterval)
-        && (agent->mULData[UL_LAST_SPEAK_TIME] != 0))
+    if (((mSimulationTime - agent->mLastSpeakTime) <= mSpeakInterval)
+        && (agent->mLastSpeakTime != 0))
     {
         return;
     }
 
-    agent->mULData[UL_LAST_SPEAK_TIME] = mSimulationTime;
+    agent->mLastSpeakTime = mSimulationTime;
 
-    startCollisionDetection(agent->mFloatData[FLOAT_X], agent->mFloatData[FLOAT_Y], mSoundRange);
+    startCollisionDetection(agent->mX, agent->mY, mSoundRange);
 
-    SimulationObject* target;
+    SimObj* target;
     float distance;
     float angle;
 
     while (target = nextCollision(distance, angle))
     {
-        if ((target->mType == SimulationObject::TYPE_AGENT)
+        if ((target->mType == SimObj::TYPE_AGENT)
             && (agent != target))
         {
-            Agent* targAgent = (Agent*)target;
             Message* msg = new Message();
             msg->mSymbol = sym->clone();
             msg->mType = 0; // Only one message type for now (sound message)
@@ -1730,14 +1664,14 @@ void SimCont2D::speak(Agent* agent, Symbol* sym)
             msgData[0] = distance;
             msgData[1] = normalizeAngle(angle + M_PI);
             msg->mData = msgData;
-            targAgent->addMessage(msg);
+            target->addMessage(msg);
         }
     }
 
     VisualEvent* ve = (VisualEvent*)malloc(sizeof(VisualEvent));
     ve->mType = VE_SPEAK;
-    ve->mX = agent->mFloatData[FLOAT_X];
-    ve->mY = agent->mFloatData[FLOAT_Y];
+    ve->mX = agent->mX;
+    ve->mY = agent->mY;
     ve->mRed = sym->getRed();
     ve->mGreen = sym->getGreen();
     ve->mBlue = sym->getBlue();
@@ -1746,33 +1680,33 @@ void SimCont2D::speak(Agent* agent, Symbol* sym)
     mVisualEvents.push_back(ve);
 }
 
-const char SimCont2D::mClassName[] = "SimCont2D";
+const char Sim2D::mClassName[] = "Sim2D";
 
-Orbit<SimCont2D>::MethodType SimCont2D::mMethods[] = {
+Orbit<Sim2D>::MethodType Sim2D::mMethods[] = {
     {"addObject", &Simulation::addObject},
     {"setSeedIndex", &Simulation::setSeedIndex},
     {"setPopulationDynamics", &Simulation::setPopulationDynamics},
     {"initGraphics", &Simulation::initGraphics},
     {"run", &Simulation::run},
     {"setTimeLimit", &Simulation::setTimeLimit},
-    {"setWorldDimensions", &SimCont2D::setWorldDimensions},
-    {"setViewRange", &SimCont2D::setViewRange},
-    {"setViewAngle", &SimCont2D::setViewAngle},
-    {"setGoCost", &SimCont2D::setGoCost},
-    {"setRotateCost", &SimCont2D::setRotateCost},
-    {"setGoForceScale", &SimCont2D::setGoForceScale},
-    {"setRotateForceScale", &SimCont2D::setRotateForceScale},
-    {"setPos", &SimCont2D::setPos},
-    {"setRot", &SimCont2D::setRot},
-    {"setHuman", &SimCont2D::setHuman},
-    {"setFeedCenter", &SimCont2D::setFeedCenter},
-    {"setSoundRange", &SimCont2D::setSoundRange},
-    {"setSpeakInterval", &SimCont2D::setSpeakInterval},
-    {"setFireInterval", &SimCont2D::setFireInterval},
+    {"setWorldDimensions", &Sim2D::setWorldDimensions},
+    {"setViewRange", &Sim2D::setViewRange},
+    {"setViewAngle", &Sim2D::setViewAngle},
+    {"setGoCost", &Sim2D::setGoCost},
+    {"setRotateCost", &Sim2D::setRotateCost},
+    {"setGoForceScale", &Sim2D::setGoForceScale},
+    {"setRotateForceScale", &Sim2D::setRotateForceScale},
+    {"setPos", &Sim2D::setPos},
+    {"setRot", &Sim2D::setRot},
+    {"setHuman", &Sim2D::setHuman},
+    {"setFeedCenter", &Sim2D::setFeedCenter},
+    {"setSoundRange", &Sim2D::setSoundRange},
+    {"setSpeakInterval", &Sim2D::setSpeakInterval},
+    {"setFireInterval", &Sim2D::setFireInterval},
     {0,0}
 };
 
-Orbit<SimCont2D>::NumberGlobalType SimCont2D::mNumberGlobals[] = {
+Orbit<Sim2D>::NumberGlobalType Sim2D::mNumberGlobals[] = {
     {"PERCEPTION_NULL", PERCEPTION_NULL},
     {"PERCEPTION_POSITION", PERCEPTION_POSITION},
     {"PERCEPTION_ORIENTATION", PERCEPTION_ORIENTATION},
@@ -1797,7 +1731,7 @@ Orbit<SimCont2D>::NumberGlobalType SimCont2D::mNumberGlobals[] = {
     {0,0}
 };
 
-int SimCont2D::setWorldDimensions(lua_State* luaState)
+int Sim2D::setWorldDimensions(lua_State* luaState)
 {
     float width = luaL_checknumber(luaState, 1);
     float height = luaL_checknumber(luaState, 2);
@@ -1806,94 +1740,94 @@ int SimCont2D::setWorldDimensions(lua_State* luaState)
     return 0;
 }
 
-int SimCont2D::setViewRange(lua_State* luaState)
+int Sim2D::setViewRange(lua_State* luaState)
 {
     float viewRange = luaL_checknumber(luaState, 1);
     setViewRange(viewRange);
     return 0;
 }
 
-int SimCont2D::setViewAngle(lua_State* luaState)
+int Sim2D::setViewAngle(lua_State* luaState)
 {
     float viewAngle = luaL_checknumber(luaState, 1);
     setViewAngle(viewAngle);
     return 0;
 }
 
-int SimCont2D::setGoCost(lua_State* luaState)
+int Sim2D::setGoCost(lua_State* luaState)
 {
     float cost = luaL_checknumber(luaState, 1);
     setGoCost(cost);
     return 0;
 }
 
-int SimCont2D::setRotateCost(lua_State* luaState)
+int Sim2D::setRotateCost(lua_State* luaState)
 {
     float cost = luaL_checknumber(luaState, 1);
     setRotateCost(cost);
     return 0;
 }
 
-int SimCont2D::setGoForceScale(lua_State* luaState)
+int Sim2D::setGoForceScale(lua_State* luaState)
 {
     float scale = luaL_checknumber(luaState, 1);
     setGoForceScale(scale);
     return 0;
 }
 
-int SimCont2D::setRotateForceScale(lua_State* luaState)
+int Sim2D::setRotateForceScale(lua_State* luaState)
 {
     float scale = luaL_checknumber(luaState, 1);
     setRotateForceScale(scale);
     return 0;
 }
 
-int SimCont2D::setPos(lua_State* luaState)
+int Sim2D::setPos(lua_State* luaState)
 {
-    SimulationObject* simObj = (SimulationObject*)Orbit<SimCont2D>::pointer(luaState, 1);
+    SimObj2D* simObj = (SimObj2D*)Orbit<Sim2D>::pointer(luaState, 1);
     float x = luaL_checknumber(luaState, 2);
     float y = luaL_checknumber(luaState, 3);
     setPos(simObj, x, y);
     return 0;
 }
 
-int SimCont2D::setRot(lua_State* luaState)
+int Sim2D::setRot(lua_State* luaState)
 {
-    SimulationObject* simObj = (SimulationObject*)Orbit<SimCont2D>::pointer(luaState, 1);
+    SimObj2D* simObj = (SimObj2D*)Orbit<Sim2D>::pointer(luaState, 1);
     float rot = luaL_checknumber(luaState, 2);
     setRot(simObj, rot);
     return 0;
 }
 
-int SimCont2D::setHuman(lua_State* luaState)
+int Sim2D::setHuman(lua_State* luaState)
 {
-    Agent* agent = (Agent*)Orbit<SimCont2D>::pointer(luaState, 1);
+    SimObj2D* agent = (SimObj2D*)Orbit<Sim2D>::pointer(luaState, 1);
     setHuman(agent);
     return 0;
 }
 
-int SimCont2D::setFeedCenter(lua_State* luaState)
+int Sim2D::setFeedCenter(lua_State* luaState)
 {
     float center = luaL_checknumber(luaState, 1);
     setFeedCenter(center);
     return 0;
 }
 
-int SimCont2D::setSoundRange(lua_State* luaState)
+int Sim2D::setSoundRange(lua_State* luaState)
 {
     float range = luaL_checknumber(luaState, 1);
     setSoundRange(range);
     return 0;
 }
 
-int SimCont2D::setSpeakInterval(lua_State* luaState)
+int Sim2D::setSpeakInterval(lua_State* luaState)
 {
     unsigned int speakInterval = luaL_checkint(luaState, 1);
     setSpeakInterval(speakInterval);
     return 0;
 }
 
-int SimCont2D::setFireInterval(lua_State* luaState)
+int Sim2D::setFireInterval(lua_State* luaState)
 {
     unsigned int fireInterval = luaL_checkint(luaState, 1);
     setFireInterval(fireInterval);

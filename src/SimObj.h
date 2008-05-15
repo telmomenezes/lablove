@@ -17,12 +17,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_SIMULATION_OBJECT_H)
-#define __INCLUDE_SIMULATION_OBJECT_H
+#if !defined(__INCLUDE_SIM_OBJ_H)
+#define __INCLUDE_SIM_OBJ_H
 
 #include "SymbolTable.h"
 #include "Symbol.h"
 #include "SymbolPointer.h"
+#include "Brain.h"
+#include "Message.h"
 #include "types.h"
 
 #include "Orbit.h"
@@ -39,24 +41,17 @@ using std::string;
 using std::list;
 using std::vector;
 
-class SimulationObject
+class SimObj
 {
 public:
-    enum Type {TYPE_OBJECT,
-            TYPE_GRAPHICAL_OBJECT,
-            TYPE_AGENT};
+    enum Type {TYPE_OBJECT, TYPE_AGENT};
 
     static llULINT CURRENT_ID;
 
-    SimulationObject(lua_State* luaState=NULL);
-    SimulationObject(SimulationObject* obj);
-    virtual ~SimulationObject();
-    virtual SimulationObject* clone();
-
-    void initFloatData(unsigned int size);
-    void initBoolData(unsigned int size);
-    void initIntData(unsigned int size);
-    void initULData(unsigned int size);
+    SimObj(lua_State* luaState=NULL);
+    SimObj(SimObj* obj);
+    virtual ~SimObj();
+    virtual SimObj* clone();
 
     llULINT getID(){return mID;}
 
@@ -68,8 +63,13 @@ public:
     llULINT getCreationTime(){return mCreationTime;}
     void setCreationTime(llULINT time){mCreationTime = time;}
 
-    virtual SimulationObject* recombine(SimulationObject* otherParent);
+    virtual SimObj* recombine(SimObj* otherParent);
     virtual void mutate();
+
+    void setBrain(Brain* brain);
+    Brain* getBrain(){return mBrain;}
+
+    virtual void compute();
 
     void addSymbolTable(SymbolTable* table);
     SymbolTable* getSymbolTable(int id);
@@ -80,19 +80,10 @@ public:
     string getSymbolName(int table, llULINT id);
     string getTableName(int table);
 
-    void setFloatDataFromSymbol(string symbolName, unsigned int dataIndex);
-    void setULDataFromSymbol(string symbolName, unsigned int dataIndex);
+    void setFloatDataFromSymbol(string symbolName, float& var);
+    void setULDataFromSymbol(string symbolName, llULINT& var);
 
     virtual bool getFieldValue(string fieldName, float& value);
-
-    void setNamedFloatDataIndex(string name, int index);
-    void setNamedBoolDataIndex(string name, int index);
-    void setNamedIntDataIndex(string name, int index);
-    void getNamedULDataIndex(string name, int index);
-    int getNamedFloatDataIndex(string name);
-    int getNamedBoolDataIndex(string name);
-    int getNamedIntDataIndex(string name);
-    int getNamedULDataIndex(string name);
 
     void setBirthRadius(float rad){mBirthRadius = rad;}
     float getBirthRadius(){return mBirthRadius;}
@@ -103,7 +94,11 @@ public:
     void setKinID(llULINT id){mKinID = id;}
     llULINT getKinID(){return mKinID;}
 
-    virtual void popAdjust(vector<SimulationObject*>* popVec){}
+    virtual void popAdjust(vector<SimObj*>* popVec);
+
+    void addMessage(Message* msg){mMessageList.push_back(msg);}
+    list<Message*>* getMessageList(){return &mMessageList;}
+    void emptyMessageList();
 
     virtual void printDebug();
 
@@ -113,47 +108,37 @@ public:
 
     llULINT mCreationTime;
     bool mInitialized;
-    bool mDataInitialized;
 
     float mFitness;
-
-    float* mFloatData;
-    bool* mBoolData;
-    int* mIntData;
-    llULINT* mULData;
-    unsigned int mFloatDataSize;
-    unsigned int mBoolDataSize;
-    unsigned int mIntDataSize;
-    unsigned int mULDataSize;
 
     map<int, SymbolTable*> mSymbolTables;
 
     static const char mClassName[];
-    static Orbit<SimulationObject>::MethodType mMethods[];
-    static Orbit<SimulationObject>::NumberGlobalType mNumberGlobals[];
+    static Orbit<SimObj>::MethodType mMethods[];
+    static Orbit<SimObj>::NumberGlobalType mNumberGlobals[];
 
     int addSymbolTable(lua_State* luaState);
     int setSize(lua_State* luaState);
     int setSymbolName(lua_State* luaState);
     int setBirthRadius(lua_State* luaState);
     int setFitnessMeasure(lua_State* luaState);
+    int setBrain(lua_State* luaState);
 
 protected:
-    virtual void recombine(SimulationObject* parent1, SimulationObject* parent2);
+    virtual void recombine(SimObj* parent1, SimObj* parent2);
 
     llULINT mID;
     llULINT mKinID;
 
     map<string, SymbolPointer> mNamedSymbols;
-    map<string, int> mNamedFloatDataIndexes;
-    map<string, int> mNamedBoolDataIndexes;
-    map<string, int> mNamedIntDataIndexes;
-    map<string, int> mNamedULDataIndexes;
 
     unsigned int mSpeciesID;
 
     float mBirthRadius;
     int mFitnessMeasure;
+
+    Brain* mBrain;
+    list<Message*> mMessageList;
 };
 #endif
 

@@ -55,7 +55,7 @@ public:
     void setOffset(unsigned int offset){mOffset = offset;}
     
     unsigned int getOffset(){return mOffset;}
-    GridbrainComponent* getRandomComponent(SimulationObject* obj,
+    GridbrainComponent* getRandomComponent(SimObj* obj,
                                             GridbrainComponent* components,
                                             map<llULINT, GridbrainMemCell>* memory);
     void setInput(unsigned int number, unsigned int depth, float value);

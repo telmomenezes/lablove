@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -17,23 +17,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_LOG_H)
-#define __INCLUDE_LOG_H
+#if !defined(__INCLUDE_SIM_OBJ_HEX_H)
+#define __INCLUDE_SIM_OBJ_HEX_H
 
-#include "SimObj.h"
-#include "PopulationManager.h"
-#include "types.h"
+#include "SimObj2D.h"
+#include "Orbit.h"
 
-class Log
+class SimObjHex : public SimObj2D
 {
 public:
-    Log();
-    virtual ~Log();
+    SimObjHex(lua_State* luaState=NULL);
+    SimObjHex(SimObjHex* obj);
+    virtual ~SimObjHex();
+    virtual SimObj* clone();
+    
+    int mChannelTerrain;
+    int mHexX;
+    int mHexY;
 
-    virtual void init(){}
-
-    virtual void process(SimObj* obj, PopulationManager* popManager)=0;
-    virtual void dump(llULINT time, double realTime)=0;
+    static const char mClassName[];
+    static Orbit<SimObjHex>::MethodType mMethods[];
+    static Orbit<SimObjHex>::NumberGlobalType mNumberGlobals[];
 };
 #endif
 

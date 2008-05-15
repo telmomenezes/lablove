@@ -17,37 +17,36 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_GRAPHICAL_OBJECT_H)
-#define __INCLUDE_GRAPHICAL_OBJECT_H
+#include "SimObjHex.h"
 
-#include "SimulationObject.h"
-#include "Graphic.h"
-#include "Orbit.h"
-#include "art.h"
-
-#include <list>
-
-using std::list;
-
-class GraphicalObject : public SimulationObject
+SimObjHex::SimObjHex(lua_State* luaState) : SimObj2D(luaState)
 {
-public:
-    GraphicalObject(lua_State* luaState=NULL);
-    GraphicalObject(GraphicalObject* obj);
-    virtual ~GraphicalObject();
-    virtual SimulationObject* clone();
+}
 
-    void draw();
+SimObjHex::SimObjHex(SimObjHex* obj) : SimObj2D(obj)
+{
+}
 
-    void addGraphic(Graphic* graph);
+SimObjHex::~SimObjHex()
+{
+}
 
-    list<Graphic*> mGraphics;
+SimObj* SimObjHex::clone()
+{
+    return new SimObjHex(this);
+}
 
-    static const char mClassName[];
-    static Orbit<GraphicalObject>::MethodType mMethods[];
-    static Orbit<GraphicalObject>::NumberGlobalType mNumberGlobals[];
+const char SimObjHex::mClassName[] = "SimObjHex";
 
-    int addGraphic(lua_State* luaState);
+Orbit<SimObjHex>::MethodType SimObjHex::mMethods[] = {
+	{"addGraphic", &SimObj2D::addGraphic},
+    {"addSymbolTable", &SimObj::addSymbolTable},
+	{"setSymbolName", &SimObj::setSymbolName},
+	{"setBirthRadius", &SimObj::setBirthRadius},
+	{"setFitnessMeasure", &SimObj::setFitnessMeasure},
+    {"setBrain", &SimObj::setBrain},
+    {0,0}
 };
-#endif
+
+Orbit<SimObjHex>::NumberGlobalType SimObjHex::mNumberGlobals[] = {{0,0}};
 

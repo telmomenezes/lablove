@@ -42,9 +42,9 @@ public:
     PopDynSpecies(lua_State* luaState=NULL);
     virtual ~PopDynSpecies();
     virtual void onCycle(llULINT time, double realTime);
-    virtual void onOrganismDeath(SimulationObject* org);
+    virtual void onOrganismDeath(SimObj* org);
 
-    virtual unsigned int addSpecies(SimulationObject* org, unsigned int population);
+    virtual unsigned int addSpecies(SimObj* org, unsigned int population);
 
     void addSampleLog(unsigned int speciesIndex, Log* log);
     void addDeathLog(unsigned int speciesIndex, Log* log);

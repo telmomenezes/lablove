@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,7 +18,6 @@
  */
 
 #include "GraphicTriangle.h"
-#include "SimulationObject.h"
 #include "SymbolRGB.h"
 #include "SymbolFloat.h"
 #include "Simulation.h"
@@ -43,36 +42,10 @@ Graphic* GraphicTriangle::clone()
     return new GraphicTriangle();
 }
 
-void GraphicTriangle::init(SimulationObject* obj)
+void GraphicTriangle::init(SimObj2D* obj)
 {
     mObject = obj;
-
-    mXIndex = obj->getNamedFloatDataIndex("x");
-    if (mXIndex == -1)
-    {
-        throw std::runtime_error("Failed to initialize GraphicTriangle: object does not define 'x' named data item");
-    }
-    mYIndex = obj->getNamedFloatDataIndex("y");
-    if (mYIndex == -1)
-    {
-        throw std::runtime_error("Failed to initialize GraphicTriangle: object does not define 'y' named data item");
-    }
-    mRotIndex = obj->getNamedFloatDataIndex("rot");
-    if (mRotIndex == -1)
-    {
-        throw std::runtime_error("Failed to initialize GraphicTriangle: object does not define 'rot' named data item");
-    }
-
-    SymbolFloat* symSize = (SymbolFloat*)obj->getSymbolByName("size");
-
-    if (symSize == NULL)
-    {
-        throw std::runtime_error("Failed to initialize GraphicTriangle: object does not define 'size' named symbol");
-    }
-    else
-    {
-        mSize = symSize->getFloat();
-    }
+    mSize = obj->mSize;
 
     SymbolRGB* color = (SymbolRGB*)(obj->getSymbolByName("color"));
 
@@ -86,9 +59,9 @@ void GraphicTriangle::init(SimulationObject* obj)
 
 void GraphicTriangle::draw()
 {
-    float rot = mObject->mFloatData[mRotIndex];
-    float centerX = mObject->mFloatData[mXIndex];
-    float centerY = mObject->mFloatData[mYIndex];
+    float rot = mObject->mRot;
+    float centerX = mObject->mX;
+    float centerY = mObject->mY;
 
     float a1 = rot;
     float a2 = rot + (M_PI * 0.8f);

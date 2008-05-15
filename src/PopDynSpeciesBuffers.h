@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -29,9 +29,9 @@ public:
     virtual ~PopDynSpeciesBuffers();
 
     virtual void init(PopulationManager* popManager);
-    virtual void onOrganismDeath(SimulationObject* org);
+    virtual void onOrganismDeath(SimObj* org);
 
-    virtual unsigned int addSpecies(SimulationObject* org,
+    virtual unsigned int addSpecies(SimObj* org,
                                     unsigned int population,
                                     unsigned int bufferSize,
                                     bool queen=false);
@@ -50,7 +50,7 @@ public:
     int setRecombineProb(lua_State* luaState);
 
 protected:
-    void xoverMutateSend(unsigned int speciesID, bool init=false, SimulationObject* nearObj=NULL);
+    void xoverMutateSend(unsigned int speciesID, bool init=false, SimObj* nearObj=NULL);
     unsigned int getQueenNeighbour(int pos, int size);
 
     static mt_distribution* mDistRecombine;

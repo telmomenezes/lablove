@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -22,6 +22,7 @@
 
 #include "Graphic.h"
 #include "Orbit.h"
+#include "SimObj2D.h"
 
 #include "art.h"
 
@@ -33,7 +34,7 @@ public:
     
     virtual Graphic* clone();
 
-    virtual void init(SimulationObject* obj);
+    virtual void init(SimObj2D* obj);
     virtual void draw();
 
     void setSymbolName(string symbolName){mSymbolName = symbolName;}

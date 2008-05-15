@@ -22,7 +22,6 @@
 
 #include "GridbrainConnection.h"
 #include "InterfaceItem.h"
-#include "SimulationObject.h"
 #include "Orbit.h"
 #include "types.h"
 #include "GridbrainMemCell.h"

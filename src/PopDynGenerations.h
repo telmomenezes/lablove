@@ -36,8 +36,8 @@ class PopDynGenerations : public PopulationDynamics
 
 typedef struct
 {
-    SimulationObject* mBaseOrganism;
-    list<SimulationObject*> mOrganismList;
+    SimObj* mBaseOrganism;
+    list<SimObj*> mOrganismList;
     list<Log*> mLogs;
     long mPopulation;
     bool mStatic;
@@ -50,9 +50,9 @@ public:
     virtual ~PopDynGenerations();
     virtual void init(PopulationManager* popManager);
     virtual void onCycle(llULINT time, double realTime);
-    virtual void onOrganismDeath(SimulationObject* org);
+    virtual void onOrganismDeath(SimObj* org);
 
-    unsigned int addSpecies(SimulationObject* org, long population, bool isStatic);
+    unsigned int addSpecies(SimObj* org, long population, bool isStatic);
     void addSpeciesLog(unsigned int speciesIndex, Log* log);
     void setGenerationTime(unsigned int time){mGenerationTime = time;}
 

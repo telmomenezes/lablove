@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,7 +18,7 @@
  */
 
 #include "PopDynFixedSpecies.h"
-#include "SimulationObject.h"
+#include "SimObj.h"
 
 PopDynFixedSpecies::PopDynFixedSpecies(lua_State* luaState)
 {
@@ -40,7 +40,7 @@ void PopDynFixedSpecies::init(PopulationManager* popManager)
         SpeciesData* species = &((*iterSpecies).second);
         for (unsigned int i = 0; i < species->mPopulation; i++)
         {
-            SimulationObject* org = species->mBaseOrganism->clone();
+            SimObj* org = species->mBaseOrganism->clone();
             mPopManager->addObject(org);
             mPopManager->placeRandom(org);
             species->mOrganismVector.push_back(org);
@@ -48,14 +48,14 @@ void PopDynFixedSpecies::init(PopulationManager* popManager)
     }
 }
 
-unsigned int PopDynFixedSpecies::addSpecies(SimulationObject* org, unsigned int population)
+unsigned int PopDynFixedSpecies::addSpecies(SimObj* org, unsigned int population)
 {
     unsigned int speciesID = PopDynSpecies::addSpecies(org, population);
 
     return speciesID;
 }
 
-void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
+void PopDynFixedSpecies::onOrganismDeath(SimObj* org)
 {
     PopDynSpecies::onOrganismDeath(org);
 
@@ -67,7 +67,7 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
     }
     SpeciesData* species = &(mSpecies[speciesID]);
 
-    vector<SimulationObject*>::iterator iterOrg;
+    vector<SimObj*>::iterator iterOrg;
 
     int orgPos = -1;
     int curPos = 0;
@@ -82,10 +82,10 @@ void PopDynFixedSpecies::onOrganismDeath(SimulationObject* org)
         curPos++;
     }
 
-    SimulationObject* newOrganism = NULL;
+    SimObj* newOrganism = NULL;
 
     // Tournament selection
-    SimulationObject* bestOrganism = NULL;
+    SimObj* bestOrganism = NULL;
     float bestFitness = 0.0f;
     
     for (unsigned int tournamentStep = 0; tournamentStep < mTournamentSize; tournamentStep++)
@@ -134,7 +134,7 @@ Orbit<PopDynFixedSpecies>::NumberGlobalType PopDynFixedSpecies::mNumberGlobals[]
 
 int PopDynFixedSpecies::addSpecies(lua_State* luaState)
 {
-    SimulationObject* obj = (SimulationObject*)Orbit<PopDynFixedSpecies>::pointer(luaState, 1);
+    SimObj* obj = (SimObj*)Orbit<PopDynFixedSpecies>::pointer(luaState, 1);
     int population = luaL_checkint(luaState, 2);
     unsigned int index = addSpecies(obj, population);
     lua_pushinteger(luaState, index);

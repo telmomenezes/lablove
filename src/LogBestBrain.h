@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -21,7 +21,7 @@
 #define __INCLUDE_LOG_BEST_BRAIN_H
 
 #include "Log.h"
-#include "SimulationObject.h"
+#include "SimObj.h"
 #include "PopulationManager.h"
 
 #include "Orbit.h"
@@ -37,7 +37,7 @@ public:
 
     virtual void init(){}
 
-    virtual void process(SimulationObject* obj, PopulationManager* popManager);
+    virtual void process(SimObj* obj, PopulationManager* popManager);
     virtual void dump(llULINT time, double realTime);
 
     void setFileNamePrefix(string prefix){mFileNamePrefix = prefix;}

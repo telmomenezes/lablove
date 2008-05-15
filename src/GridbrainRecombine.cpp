@@ -18,9 +18,9 @@
  */
 
 #include "Gridbrain.h"
-#include "Agent.h"
+#include "SymbolTable.h"
 
-void Gridbrain::setSelectedSymbols(SimulationObject* obj)
+void Gridbrain::setSelectedSymbols(SimObj* obj)
 {
     map<int, SymbolTable*>::iterator iterTables;
     for (iterTables = obj->mSymbolTables.begin();
@@ -578,7 +578,7 @@ GridbrainGeneTag Gridbrain::findGeneTag(GridbrainConnection* conn)
     return tag;
 }
 
-void Gridbrain::popAdjust(vector<SimulationObject*>* popVec)
+void Gridbrain::popAdjust(vector<SimObj*>* popVec)
 {
     for (unsigned int pos = 0; pos < mNumberOfComponents; pos++)
     {
@@ -595,9 +595,8 @@ void Gridbrain::popAdjust(vector<SimulationObject*>* popVec)
                 unsigned int vecPos = 0;
                 while ((conn->mGeneTag.mGeneID == 0) && (vecPos < popVec->size()))
                 {
-                    SimulationObject* obj = (*popVec)[vecPos];
-                    Agent* agent = (Agent*)obj;
-                    Gridbrain* gb = (Gridbrain*)agent->getBrain();
+                    SimObj* obj = (*popVec)[vecPos];
+                    Gridbrain* gb = (Gridbrain*)obj->getBrain();
                     conn->mGeneTag = gb->findGeneTag(conn);
                     vecPos++;
                 }

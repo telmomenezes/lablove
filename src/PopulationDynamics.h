@@ -21,7 +21,7 @@
 #define __INCLUDE_POPULATION_DYNAMICS_H
 
 #include "PopulationManager.h"
-#include "SimulationObject.h"
+#include "SimObj.h"
 #include "types.h"
 
 class PopulationDynamics
@@ -32,7 +32,7 @@ public:
 
     virtual void init(PopulationManager* popManager);
     virtual void onCycle(llULINT time, double realTime)=0;
-    virtual void onOrganismDeath(SimulationObject* org)=0;
+    virtual void onOrganismDeath(SimObj* org)=0;
 
 protected:
     PopulationManager* mPopManager;

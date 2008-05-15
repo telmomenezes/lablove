@@ -27,8 +27,8 @@ using std::vector;
 class SpeciesData
 {
 public:
-    SimulationObject* mBaseOrganism;
-    vector<SimulationObject*> mOrganismVector;
+    SimObj* mBaseOrganism;
+    vector<SimObj*> mOrganismVector;
     list<Log*> mDeathLogs;
     list<Log*> mSampleLogs;
     unsigned int mPopulation;

@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,7 +18,6 @@
  */
 
 #include "LogBestBrain.h"
-#include "Agent.h"
 #include "Simulation.h"
 
 #include <stdio.h>
@@ -37,15 +36,17 @@ LogBestBrain::~LogBestBrain()
 {
 }
 
-void LogBestBrain::process(SimulationObject* obj, PopulationManager* popManager)
+void LogBestBrain::process(SimObj* obj, PopulationManager* popManager)
 {
     if (mFirstObject || (obj->mFitness > mBestFitness))
     {
         mBestFitness = obj->mFitness;
         mFirstObject = false;
-       //TODO: check if object is agent
-       Agent* agent = (Agent*)obj;
-       mBrainString = agent->getBrain()->write(agent, (Simulation*)popManager);
+
+        if (obj->mType == SimObj::TYPE_AGENT)
+        {
+            mBrainString = obj->getBrain()->write(obj, (Simulation*)popManager);
+        }
     }
 }
 

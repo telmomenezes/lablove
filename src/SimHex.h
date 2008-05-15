@@ -20,21 +20,13 @@
 #if !defined(__INCLUDE_SIM_HEX_H)
 #define __INCLUDE_SIM_HEX_H
 
-#include "SimCont2D.h"
+#include "Sim2D.h"
 #include "HexCell.h"
+#include "SimObjHex.h"
 
-class SimHex : public SimCont2D
+class SimHex : public Sim2D
 {
 public:
-    enum IntData {INT_CHANNEL_OBJECTS,
-                INT_CHANNEL_SOUNDS,
-                INT_CHANNEL_SELF,
-                INT_CHANNEL_TERRAIN,
-                INT_CHANNEL_BETA,
-                INT_HEX_X,
-                INT_HEX_Y
-                };
-
     SimHex(lua_State* luaState=NULL);
     virtual ~SimHex();
 
@@ -43,9 +35,8 @@ public:
                                      unsigned int cellSide,
                                      float hexSide);
 
-    virtual void initializeData(SimulationObject* obj);
-    virtual void addObject(SimulationObject* object, bool init=false);
-    virtual void setPos(SimulationObject* obj, float x, float y);
+    virtual void addObject(SimObj* object, bool init=false);
+    virtual void setPos(SimObjHex* obj, float x, float y);
 
     virtual bool onKeyDown(Art_KeyCode keycode);
     virtual bool onKeyUp(Art_KeyCode keycode);
@@ -61,7 +52,7 @@ protected:
 
     void getHexCell(float x, float y, int& hX, int& hY);
 
-    virtual void act(Agent* agent);
+    virtual void act(SimObj* agent);
 
     float mHexSide;
     float mHexA;

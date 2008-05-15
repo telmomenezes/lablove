@@ -25,7 +25,7 @@ PopulationManager::PopulationManager()
 
 PopulationManager::~PopulationManager()
 {
-    list<SimulationObject*>::iterator iterObj;
+    list<SimObj*>::iterator iterObj;
     for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
     {
         delete *iterObj;
@@ -33,19 +33,19 @@ PopulationManager::~PopulationManager()
     mObjects.clear();
 }
 
-void PopulationManager::addObject(SimulationObject* object, bool init)
+void PopulationManager::addObject(SimObj* object, bool init)
 {
     mObjects.push_back(object);
 }
 
-void PopulationManager::removeObject(SimulationObject* obj, bool deleteObj)
+void PopulationManager::removeObject(SimObj* obj, bool deleteObj)
 {
     if (mSelectedObject == obj)
     {
         mSelectedObject = NULL;
     }
 
-    list<SimulationObject*>::iterator iterObj;
+    list<SimObj*>::iterator iterObj;
     for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
     {
         if((*iterObj) == obj)
@@ -60,7 +60,7 @@ void PopulationManager::removeObject(SimulationObject* obj, bool deleteObj)
     }
 }
 
-void PopulationManager::killOrganism(SimulationObject* org)
+void PopulationManager::killOrganism(SimObj* org)
 {
     if (org->mDeleted)
     {
@@ -72,12 +72,12 @@ void PopulationManager::killOrganism(SimulationObject* org)
     mObjectsToKill.push_back(org);
 }
 
-void PopulationManager::setSelectedObject(SimulationObject* object)
+void PopulationManager::setSelectedObject(SimObj* object)
 {
     mSelectedObject = object;
 }
 
-bool PopulationManager::getFieldValue(SimulationObject* obj, string fieldName, float& value)
+bool PopulationManager::getFieldValue(SimObj* obj, string fieldName, float& value)
 {
     return obj->getFieldValue(fieldName, value);
 }

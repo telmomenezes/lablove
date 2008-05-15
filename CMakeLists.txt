@@ -40,14 +40,14 @@ ENDIF(WIN32)
 SET(SOURCE_FILES
     src/PopulationManager.cpp
     src/Simulation.cpp
-    src/SimCont2D.cpp
+    src/Sim2D.cpp
     src/Laser.cpp
     src/SimHex.cpp
     src/HexCell.cpp
     src/ScriptableObject.cpp
-    src/SimulationObject.cpp
-    src/GraphicalObject.cpp
-    src/Agent.cpp
+    src/SimObj.cpp
+    src/SimObj2D.cpp
+    src/SimObjHex.cpp
     src/Brain.cpp
     src/InterfaceItem.cpp
     src/DummyBrain.cpp
@@ -122,7 +122,7 @@ SET(UNIT_TEST_FILES
         ${UNIT_TEST_FILES}
         src/tests/Main.cpp
         src/tests/TestSimulation.cpp
-        src/tests/TestSimCont2D.cpp
+        src/tests/TestSim2D.cpp
         src/tests/TestGrid.cpp
         src/tests/TestGridCoord.cpp
         src/tests/TestGridbrain.cpp
