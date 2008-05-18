@@ -8,6 +8,8 @@ SET(PACKAGE lablove)
 
 ########### Global settings ###########
 
+CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
+
 OPTION(DEBUG "Debug settings" OFF)
 OPTION(PROFILE "Profile settings" OFF)
 SET(CMAKE_VERBOSE_MAKEFILE "OFF")
