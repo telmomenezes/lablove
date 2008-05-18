@@ -48,7 +48,7 @@ paramMutationStanDev = 0.0
 splitConnectionProb = 0.01
 joinConnectionsProb = 0.01
 changeComponentProb = 0.0
-changeInComponentProb = 0.1
+changeInComponentProb = 0.2
 swapComponentProb = 0.0
 
 recombineProb = 1.0
