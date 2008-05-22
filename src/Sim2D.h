@@ -52,11 +52,13 @@ public:
     static const int ACTION_EATB = 4;
     static const int ACTION_SPEAK = 5;
     static const int ACTION_FIRE = 6;
+    static const int ACTION_FIREB = 7;
 
     static const int FITNESS_ENERGY = 0;
     static const int FITNESS_ENERGY_SUM = 1;
     static const int FITNESS_ENERGY_SUM_ABOVE_INIT = 2;
-    static const int FITNESS_RANDOM = 3;
+    static const int FITNESS_SCORE_SUM = 3;
+    static const int FITNESS_RANDOM = 4;
 
     static const int VE_SPEAK = 0;
 
@@ -127,7 +129,7 @@ public:
 
     virtual string getInterfaceName(bool input, int type);
 
-    void createLaserShot(float x1, float y1, float ang, float length, float speed, llULINT ownerID);
+    void fireLaser(Laser laser);
 
     static float normalizeAngle(float angle);
 

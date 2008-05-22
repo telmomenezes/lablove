@@ -22,6 +22,7 @@
 #include "SimObj.h"
 #include "SimObj2D.h"
 #include "SimObjHex.h"
+#include "Target2D.h"
 #include "PopDynGenerations.h"
 #include "PopDynFixedSpecies.h"
 #include "PopDynSpeciesBuffers.h"
@@ -41,10 +42,6 @@
 #include "LogBestBrain.h"
 #include "StatCommon.h"
 #include "StatTime.h"
-#include "Graphic2DTriangle.h"
-#include "Graphic2DSquare.h"
-#include "Graphic2DGradient.h"
-#include "Graphic2DBiomorph.h"
 
 #if defined(__WIN32)
 #define WIN32_LEAN_AND_MEAN
@@ -154,6 +151,7 @@ int main(int argc, char *argv[])
     Orbit<SimHex>::orbitRegister(luaState);
     Orbit<SimObj>::orbitRegister(luaState);
     Orbit<SimObj2D>::orbitRegister(luaState);
+    Orbit<Target2D>::orbitRegister(luaState);
     Orbit<SimObjHex>::orbitRegister(luaState);
     Orbit<PopDynGenerations>::orbitRegister(luaState);
     Orbit<PopDynFixedSpecies>::orbitRegister(luaState);
@@ -174,10 +172,6 @@ int main(int argc, char *argv[])
     Orbit<LogBestBrain>::orbitRegister(luaState);
     Orbit<StatCommon>::orbitRegister(luaState);
     Orbit<StatTime>::orbitRegister(luaState);
-    Orbit<Graphic2DTriangle>::orbitRegister(luaState);
-    Orbit<Graphic2DSquare>::orbitRegister(luaState);
-    Orbit<Graphic2DGradient>::orbitRegister(luaState);
-    Orbit<Graphic2DBiomorph>::orbitRegister(luaState);
 
     lua_register(luaState, "getCommandLineParameter", getCommandLineParameter);
     lua_register(luaState, "randomZeroToOne", randomZeroToOne);

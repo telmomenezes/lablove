@@ -49,6 +49,7 @@ SET(SOURCE_FILES
     src/SimObj.cpp
     src/SimObj2D.cpp
     src/SimObjHex.cpp
+    src/Target2D.cpp
     src/Brain.cpp
     src/InterfaceItem.cpp
     src/DummyBrain.cpp
@@ -81,11 +82,6 @@ SET(SOURCE_FILES
     src/Statistics.cpp
     src/StatCommon.cpp
     src/StatTime.cpp
-    src/Graphic2D.cpp
-    src/Graphic2DTriangle.cpp
-    src/Graphic2DSquare.cpp
-    src/Graphic2DGradient.cpp
-    src/Graphic2DBiomorph.cpp
     src/RandDistManager.cpp
     src/Message.cpp
     src/mtwist/mtwist.c

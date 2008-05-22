@@ -53,6 +53,8 @@ public:
     virtual ~SimObj();
     virtual SimObj* clone();
 
+    virtual void init(){}
+
     llULINT getID(){return mID;}
 
     virtual void process(){}

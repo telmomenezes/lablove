@@ -59,7 +59,7 @@ logTimeInterval = 100
 logBrains = true
 logOnlyLastBrain = true
 
-humanAgent = false
+humanAgent = true
 
 evolutionStopTime = 0
 
@@ -106,7 +106,6 @@ sim:setTimeLimit(timeLimit)
 agent = SimObj2D()
 
 agent:setFitnessMeasure(Sim2D.FITNESS_ENERGY_SUM_ABOVE_INIT)
-agent:addGraphic(Graphic2DTriangle())
 
 agent:setSize(agentSize)
 agent:setDrag(drag)
@@ -120,6 +119,8 @@ agent:setRotateCost(rotateCost)
 agent:setGoForceScale(goForceScale)
 agent:setRotateForceScale(rotateForceScale)
 agent:setFeedCenter(feedCenter)
+agent:setShape(SimObj2D.SHAPE_TRIANGLE)
+agent:setColoringSymbolName("color")
 
 agentColor = SymbolRGB(0, 0, 255)
 symTable = SymbolTable(agentColor)
@@ -198,14 +199,8 @@ plantFoodTable = SymbolTable(plantFood, foodTableCode)
 plant:addSymbolTable(plantFoodTable)
 plant:setSymbolName("food", foodTableCode, plantFood:getID())
 
-graphic = Graphic2DGradient()
-graphic:setSymbolName("food")
-graphic:setReferenceSymbol(plantFood)
-graphic:setColor1(255, 0, 0)
-graphic:setColor2(0, 255, 0)
-graphic:setCenter(feedCenter)
-
-plant:addGraphic(graphic)
+plant:setShape(SimObj2D.SHAPE_SQUARE)
+plant:setColoringScale("food", plantFood, feedCenter, 255, 0, 0, 0, 255, 0)
 
 -- Population Dynamics
 --------------------------------------------------------------------------------
@@ -237,6 +232,10 @@ if humanAgent then
     human:setGoForceScale(goForceScale)
     human:setRotateForceScale(rotateForceScale)
     human:setFeedCenter(feedCenter)
+    human:setShape(SimObj2D.SHAPE_TRIANGLE)
+    human:setColoringSymbolName("color")
+
+
     
     humanColor = SymbolRGB(82, 228, 241)
     symTable = SymbolTable(humanColor, colorTableCode)
@@ -258,7 +257,6 @@ if humanAgent then
 
     human:setBrain(dummyBrain)
 
-    human:addGraphic(Graphic2DTriangle())
     sim:addObject(human)
     human:setPos(300, 300)
     sim:setHuman(human)

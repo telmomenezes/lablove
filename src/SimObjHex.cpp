@@ -40,7 +40,6 @@ SimObj* SimObjHex::clone()
 const char SimObjHex::mClassName[] = "SimObjHex";
 
 Orbit<SimObjHex>::MethodType SimObjHex::mMethods[] = {
-	{"addGraphic", &SimObj2D::addGraphic},
     {"addSymbolTable", &SimObj::addSymbolTable},
 	{"setSymbolName", &SimObj::setSymbolName},
 	{"setBirthRadius", &SimObj::setBirthRadius},

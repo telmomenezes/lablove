@@ -21,6 +21,8 @@
 #include "Sim2D.h"
 #include "SymbolRGB.h"
 
+#include <stdexcept>
+
 mt_distribution* SimObj2D::mDistFitnessRandom = gDistManager.getNewDistribution();
 
 SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
@@ -55,6 +57,7 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     mSoundRange = 250.0f;
     mSpeakInterval = 250;
     mFireInterval = 250;
+    mScore = 0.0f;
 
     mCollisionDetectionIteration = 0;
     mLastSpeakTime = 0;
@@ -76,18 +79,26 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     mTargetObject = NULL;
     mDistanceToTargetObject = 0.0f;
     mCurrentTargetInputBuffer = NULL;
+
+    mRed = 0;
+    mGreen = 0;
+    mBlue = 0;
+
+    mShape = SHAPE_TRIANGLE;
+    mColoring = COLORING_SYMBOL_SOLID;
+    mColoringSymbolName = "";
+    mColoringReferenceSymbol = NULL;
+    mColoringScaleRed1 = 0;
+    mColoringScaleGreen1 = 0;
+    mColoringScaleBlue1 = 0;
+    mColoringScaleRed2 = 0;
+    mColoringScaleGreen2 = 0;
+    mColoringScaleBlue2 = 0;
+    mColoringScaleCenter = 0.0f;
 }
 
 SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
 {
-    for (list<Graphic2D*>::iterator iterGraph = obj->mGraphics.begin();
-            iterGraph != obj->mGraphics.end();
-            iterGraph++)
-    {
-        Graphic2D* graph = (*iterGraph)->clone();
-        mGraphics.push_back(graph);
-    }
-    
     mX = 0;
     mY = 0;
     mRot = 0;
@@ -118,6 +129,7 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
     mSoundRange = obj->mSoundRange;
     mSpeakInterval = obj->mSpeakInterval;
     mFireInterval = obj->mFireInterval;
+    mScore = 0.0f;
 
     mCollisionDetectionIteration = 0;
     mLastSpeakTime = 0;
@@ -139,22 +151,97 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
     mTargetObject = NULL;
     mDistanceToTargetObject = 0.0f;
     mCurrentTargetInputBuffer = NULL;
+
+    mRed = 0;
+    mGreen = 0;
+    mBlue = 0;
+
+    mShape = obj->mShape;
+    mColoring = obj->mColoring; 
+    mColoringSymbolName = obj->mColoringSymbolName;
+    mColoringReferenceSymbol = obj->mColoringReferenceSymbol;
+    mColoringScaleRed1 = obj->mColoringScaleRed1;
+    mColoringScaleGreen1 = obj->mColoringScaleGreen1;
+    mColoringScaleBlue1 = obj->mColoringScaleBlue1;
+    mColoringScaleRed2 = obj->mColoringScaleRed2;
+    mColoringScaleGreen2 = obj->mColoringScaleGreen2;
+    mColoringScaleBlue2 = obj->mColoringScaleBlue2;
+    mColoringScaleCenter = obj->mColoringScaleCenter;
 }
 
 SimObj2D::~SimObj2D()
 {
-    for (list<Graphic2D*>::iterator iterGraph = mGraphics.begin();
-            iterGraph != mGraphics.end();
-            iterGraph++)
-    {
-        delete (*iterGraph);
-    }
-    mGraphics.clear();
 }
 
 SimObj* SimObj2D::clone()
 {
     return new SimObj2D(this);
+}
+
+void SimObj2D::init()
+{
+    if (mType == TYPE_AGENT)
+    {
+        mChannelObjects = mBrain->getChannelByName("objects");
+        mChannelSounds = mBrain->getChannelByName("sounds");
+        mChannelSelf = mBrain->getChannelByName("self");
+        mChannelBeta = mBrain->getChannelByName("beta");
+    }
+
+    if (mColoring == COLORING_SYMBOL_SOLID)
+    {
+        Symbol* color = getSymbolByName(mColoringSymbolName);
+
+        if (color != NULL)
+        {
+            mRed = color->getRed();
+            mGreen = color->getGreen();
+            mBlue = color->getBlue();
+        }
+    }
+    else if (mColoring == COLORING_SYMBOL_SCALE)
+    {
+        Symbol* sym = getSymbolByName(mColoringSymbolName);
+
+        if (sym == NULL)
+        {
+            throw std::runtime_error("Failed to initialize SimObj2D: object does not define '" + mColoringSymbolName + "' named symbol");
+        }
+
+        float binding = mColoringReferenceSymbol->getBinding(sym);
+
+        if (binding < mColoringScaleCenter)
+        {
+            binding /= mColoringScaleCenter * 2.0f;
+        }
+        else
+        {
+            binding -= mColoringScaleCenter;
+            binding /= (1.0f - mColoringScaleCenter) * 2.0f;
+            binding += 0.5f;
+        }
+
+        float deltaRed = mColoringScaleRed2 - mColoringScaleRed1;
+        float deltaGreen = mColoringScaleGreen2 - mColoringScaleGreen1;
+        float deltaBlue = mColoringScaleBlue2 - mColoringScaleBlue1;
+
+        deltaRed *= binding;
+        deltaGreen *= binding;
+        deltaBlue *= binding;
+
+        mRed = mColoringScaleRed1 + deltaRed;
+        mGreen = mColoringScaleGreen1 + deltaGreen;
+        mBlue = mColoringScaleBlue1 + deltaBlue;
+    }
+
+    if (mShape == SHAPE_SQUARE)
+    {
+        mShapeSize = sqrtf(2.0 * mSize * mSize);
+    }
+    else
+    {
+        mShapeSize = mSize;
+    }
 }
 
 void SimObj2D::setPos(float x, float y)
@@ -171,17 +258,34 @@ void SimObj2D::setRot(float rot)
 
 void SimObj2D::draw()
 {
-    for (list<Graphic2D*>::iterator iterGraph = mGraphics.begin();
-            iterGraph != mGraphics.end();
-            iterGraph++)
-    {
-        (*iterGraph)->draw();
-    }
-}
+    art_setColor(mRed, mGreen, mBlue, 255);
 
-void SimObj2D::addGraphic(Graphic2D* graph)
-{
-    mGraphics.push_back(graph);
+    switch (mShape)
+    {
+    case SHAPE_TRIANGLE:
+        float a1 = mRot;
+        float a2 = mRot + (M_PI * 0.8f);
+        float a3 = mRot + (M_PI * 1.2f);
+        float x1 = mX + (cosf(a1) * mShapeSize);
+        float y1 = mY + (sinf(a1) * mShapeSize);
+        float x2 = mX + (cosf(a2) * mShapeSize);
+        float y2 = mY + (sinf(a2) * mShapeSize);
+        float x3 = mX + (cosf(a3) * mShapeSize);
+        float y3 = mY + (sinf(a3) * mShapeSize);
+
+        art_setLineWidth(2.0f);
+        art_fillTriangle(x1, y1, x2, y2, x3, y3);
+        art_drawTriangle(x1, y1, x2, y2, x3, y3);
+
+        break;
+    case SHAPE_SQUARE:
+
+        art_setRotation(mX, mY, mRot);
+        art_fillSquare(mX, mY, mShapeSize);
+        art_clearRotation();
+
+        break;
+    }
 }
 
 void SimObj2D::setSize(float size)
@@ -208,6 +312,43 @@ void SimObj2D::setViewRange(float range)
 
 void SimObj2D::process()
 {
+    llULINT simTime = mSim2D->getTime();
+
+    // Process laser hit list
+    unsigned int mLaserHitDuration = 400;
+    float totalDamage = 0.0f;
+    for (list<Laser>::iterator iterLaser = mLaserHits.begin();
+            iterLaser != mLaserHits.end();
+            iterLaser++)
+    {
+        if ((simTime - (*iterLaser).mFireTime) > mLaserHitDuration)
+        {
+            mLaserHits.erase(iterLaser);
+        }
+        else
+        {
+            totalDamage += (*iterLaser).mEnergy;
+        }
+    }
+    if (totalDamage >= mEnergy)
+    {
+        for (list<Laser>::iterator iterLaser = mLaserHits.begin();
+            iterLaser != mLaserHits.end();
+            iterLaser++)
+        {
+            llULINT id = (*iterLaser).mOwnerID;
+            SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
+
+            if (obj != NULL)
+            {
+                obj->mScore += mEnergy;
+            }
+        }
+
+        mEnergy = 0.0f;
+    }
+
+    // Check for death
     if (mEnergy <= 0)
     {
         mSim2D->killOrganism(this);
@@ -220,6 +361,7 @@ void SimObj2D::process()
         }
     }
 
+    // Update physics
     mSpeedX += mImpulseX / mSize;
     mSpeedY += mImpulseY / mSize;
     mImpulseX = 0.0f;
@@ -280,13 +422,13 @@ void SimObj2D::process()
         mFitness = mEnergy;
         break;
     case Sim2D::FITNESS_ENERGY_SUM:
-        if ((mSim2D->getTime() % 10) == 0)
+        if ((simTime % 10) == 0)
         {
             mFitness += mEnergy;
         }
         break;
     case Sim2D::FITNESS_ENERGY_SUM_ABOVE_INIT:
-        if ((mSim2D->getTime() % 10) == 0)
+        if ((simTime % 10) == 0)
         {
             float energy = mEnergy;
             energy -= mInitialEnergy;
@@ -297,8 +439,14 @@ void SimObj2D::process()
             mFitness += energy;
         }
         break;
+    case Sim2D::FITNESS_SCORE_SUM:
+        if ((simTime % 10) == 0)
+        {
+            mFitness += mScore;
+        }
+        break;
     case Sim2D::FITNESS_RANDOM:
-        if ((mSim2D->getTime() % 1000) == 0)
+        if ((simTime % 1000) == 0)
         {
             mFitness = mDistFitnessRandom->uniform(0.0f, 1.0f);
         }
@@ -564,7 +712,7 @@ void SimObj2D::act()
 {
     bool actionGo = false;
     bool actionRotate = false;
-    bool actionFire = false;
+    int actionFire = Sim2D::ACTION_NULL;
     int actionEat = Sim2D::ACTION_NULL;
     Symbol* actionSpeakSymbol = NULL;
     float actionGoParam = 0.0f;
@@ -599,7 +747,7 @@ void SimObj2D::act()
         }
         if (mHumanFire)
         {
-            actionFire = true;
+            actionFire = Sim2D::ACTION_FIREB;
         }
     }
     else
@@ -651,7 +799,8 @@ void SimObj2D::act()
                         }
                         break;
                     case Sim2D::ACTION_FIRE:
-                        actionFire = true;
+                    case Sim2D::ACTION_FIREB:
+                        actionFire = actionType;
                         break;
                 }
             }
@@ -693,9 +842,9 @@ void SimObj2D::act()
     {
         speak(actionSpeakSymbol);
     }
-    if (actionFire)
+    if (actionFire != Sim2D::ACTION_NULL)
     {
-        fire();
+        fire(actionFire);
     }
 }
 
@@ -760,7 +909,7 @@ void SimObj2D::eat(SimObj2D* target, unsigned int actionType)
     }
 }
 
-void SimObj2D::fire()
+void SimObj2D::fire(unsigned int actionType)
 {
     if (((mSim2D->getTime() - mLastFireTime) <= mFireInterval)
         && (mLastFireTime != 0))
@@ -768,9 +917,53 @@ void SimObj2D::fire()
         return;
     }
 
-    mLastFireTime = mSim2D->getTime();
+    Laser laser;
 
-    mSim2D->createLaserShot(mX, mY, mRot, 25, 1.0, mID);
+    laser.mFireTime = mSim2D->getTime();
+    mLastFireTime = laser.mFireTime;
+
+    float length = 25;
+
+    laser.mX1 = mX;
+    laser.mY1 = mY;
+    laser.mAng = mRot;
+    laser.mLength = length;
+    laser.mSpeed = 1.0;
+    laser.mX2 = mX + (cosf(mRot) * length);
+    laser.mY2 = mY + (sinf(mRot) * length);
+    laser.mM = tanf(mRot);
+    laser.mB = mY - (laser.mM * mX);
+
+    laser.mDirX = 1;
+    if (mX < laser.mX2)
+    {
+        laser.mDirX = -1;
+    }
+    laser.mDirY = 1;
+    if (mY < laser.mY2)
+    {
+        laser.mDirY = -1;
+    }
+
+    laser.mOwnerID = mID;
+
+    switch (actionType)
+    {
+    case Sim2D::ACTION_FIREB:
+        laser.mType = Laser::LASER_COMULATIVE;
+        break;
+    case Sim2D::ACTION_FIRE:
+    default:
+        laser.mType = Laser::LASER_ONE_HIT;
+        break;
+    }
+
+    laser.mEnergy = 1.0f;
+
+    laser.mRange = 500.0f;
+    laser.mDistanceTraveled = 0.0f;
+
+    mSim2D->fireLaser(laser);
 }
 
 void SimObj2D::speak(Symbol* sym)
@@ -818,6 +1011,65 @@ void SimObj2D::speak(Symbol* sym)
     mSim2D->mVisualEvents.push_back(ve);
 }
 
+void SimObj2D::processLaserHit(Laser* laser)
+{
+    llULINT id = laser->mOwnerID;
+
+    switch (laser->mType)
+    {
+    case Laser::LASER_COMULATIVE:
+        for (list<Laser>::iterator iterLaser = mLaserHits.begin();
+            iterLaser != mLaserHits.end();
+            iterLaser++)
+        {
+            if (((*iterLaser).mOwnerID) == id)
+            {
+                return;
+            }
+        }
+        mLaserHits.push_back(*laser);
+        break;
+    case Laser::LASER_ONE_HIT:
+    default:
+        float score = laser->mEnergy;
+        if (score > mEnergy)
+        {
+            score = mEnergy;
+        }
+        SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
+
+        if (obj != NULL)
+        {
+            obj->mScore += score;
+        }
+
+        deltaEnergy(-laser->mEnergy);
+        break;
+    }
+}
+
+void SimObj2D::setColoringScale(string symbolName,
+                                Symbol* referenceSymbol,
+                                float scaleCenter,
+                                int r1,
+                                int g1,
+                                int b1,
+                                int r2,
+                                int g2,
+                                int b2)
+{
+    mColoring = COLORING_SYMBOL_SCALE;
+    mColoringSymbolName = symbolName;
+    mColoringReferenceSymbol = referenceSymbol;
+    mColoringScaleCenter = scaleCenter;
+    mColoringScaleRed1 = r1;
+    mColoringScaleGreen1 = g1;
+    mColoringScaleBlue1 = b1;
+    mColoringScaleRed2 = r2;
+    mColoringScaleGreen2 = g2;
+    mColoringScaleBlue2 = b2;
+}
+
 const char SimObj2D::mClassName[] = "SimObj2D";
 
 Orbit<SimObj2D>::MethodType SimObj2D::mMethods[] = {
@@ -828,7 +1080,6 @@ Orbit<SimObj2D>::MethodType SimObj2D::mMethods[] = {
     {"setBrain", &SimObj::setBrain},
     {"setPos", &SimObj2D::setPos},
     {"setRot", &SimObj2D::setRot},
-	{"addGraphic", &SimObj2D::addGraphic},
 	{"setSize", &SimObj2D::setSize},
 	{"setDrag", &SimObj2D::setDrag},
 	{"setRotDrag", &SimObj2D::setRotDrag},
@@ -844,10 +1095,21 @@ Orbit<SimObj2D>::MethodType SimObj2D::mMethods[] = {
     {"setSoundRange", &SimObj2D::setSoundRange},
     {"setSpeakInterval", &SimObj2D::setSpeakInterval},
     {"setFireInterval", &SimObj2D::setFireInterval},
+    {"setShape", &SimObj2D::setShape},
+    {"setColoring", &SimObj2D::setColoring},
+    {"setColoringSymbolName", &SimObj2D::setColoringSymbolName},
+    {"setColoringScale", &SimObj2D::setColoringScale},
     {0,0}
 };
 
-Orbit<SimObj2D>::NumberGlobalType SimObj2D::mNumberGlobals[] = {{0,0}};
+Orbit<SimObj2D>::NumberGlobalType SimObj2D::mNumberGlobals[] = {
+    {"SHAPE_TRIANGLE", SHAPE_TRIANGLE},
+    {"SHAPE_SQUARE", SHAPE_SQUARE},
+    {"SHAPE_CIRCLE", SHAPE_CIRCLE},
+    {"COLORING_SYMBOL_SOLID", COLORING_SYMBOL_SOLID},
+    {"COLORING_SYMBOL_SCALE", COLORING_SYMBOL_SCALE},
+    {0, 0}};
+ 
 
 int SimObj2D::setPos(lua_State* luaState)
 {
@@ -861,13 +1123,6 @@ int SimObj2D::setRot(lua_State* luaState)
 {
     float rot = luaL_checknumber(luaState, 1);
     setRot(rot);
-    return 0;
-}
-
-int SimObj2D::addGraphic(lua_State* luaState)
-{
-    Graphic2D* graph = (Graphic2D*)Orbit<SimObj2D>::pointer(luaState, 1);
-    addGraphic(graph);
     return 0;
 }
 
@@ -973,6 +1228,42 @@ int SimObj2D::setFireInterval(lua_State* luaState)
 {
     unsigned int fireInterval = luaL_checkint(luaState, 1);
     setFireInterval(fireInterval);
+    return 0;
+}
+
+int SimObj2D::setShape(lua_State* luaState)
+{
+    int shape = luaL_checkint(luaState, 1);
+    setShape(shape);
+    return 0;
+}
+
+int SimObj2D::setColoring(lua_State* luaState)
+{
+    int coloring = luaL_checkint(luaState, 1);
+    setShape(coloring);
+    return 0;
+}
+
+int SimObj2D::setColoringSymbolName(lua_State* luaState)
+{
+    string name = luaL_checkstring(luaState, 1);
+    setColoringSymbolName(name);
+    return 0;
+}
+
+int SimObj2D::setColoringScale(lua_State* luaState)
+{
+    string name = luaL_checkstring(luaState, 1);
+    Symbol* refSym = (Symbol*)Orbit<SimObj2D>::pointer(luaState, 2);
+    float scaleCenter = luaL_checknumber(luaState, 3);
+    int r1 = luaL_checkint(luaState, 4);
+    int g1 = luaL_checkint(luaState, 5);
+    int b1 = luaL_checkint(luaState, 6);
+    int r2 = luaL_checkint(luaState, 7);
+    int g2 = luaL_checkint(luaState, 8);
+    int b2 = luaL_checkint(luaState, 9);
+    setColoringScale(name, refSym, scaleCenter, r1, g1, b1, r2, g2, b2);
     return 0;
 }
 

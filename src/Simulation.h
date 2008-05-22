@@ -54,6 +54,7 @@ public:
     virtual void addObject(SimObj* obj, bool init=false);
     virtual void removeObject(SimObj* obj, bool deleteObj=true);
     list<SimObj*>* getObjectList(){return &mObjects;}
+    SimObj* getObjectByID(llULINT id);
 
     virtual SimObj* getObjectByScreenPos(int x, int y){return NULL;}
 

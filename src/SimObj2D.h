@@ -21,8 +21,8 @@
 #define __INCLUDE_SIM_OBJ_2D_H
 
 #include "SimObj.h"
-#include "Graphic2D.h"
 #include "Orbit.h"
+#include "Laser.h"
 
 #include <list>
 
@@ -33,10 +33,20 @@ class Sim2D;
 class SimObj2D : public SimObj
 {
 public:
+
+    static const int SHAPE_TRIANGLE = 0;
+    static const int SHAPE_SQUARE = 1;
+    static const int SHAPE_CIRCLE = 2;
+
+    static const int COLORING_SYMBOL_SOLID = 0;
+    static const int COLORING_SYMBOL_SCALE = 1;
+
     SimObj2D(lua_State* luaState=NULL);
     SimObj2D(SimObj2D* obj);
     virtual ~SimObj2D();
     virtual SimObj* clone();
+
+    virtual void init();
 
     virtual void process();
     virtual void perceive();
@@ -45,9 +55,7 @@ public:
     void setPos(float x, float y);
     void setRot(float rot);
 
-    void draw();
-
-    void addGraphic(Graphic2D* graph);
+    virtual void draw();
 
     void setSize(float size);
     void setDrag(float drag){mDrag = drag;}
@@ -56,6 +64,8 @@ public:
     void setMaxAge(llULINT maxAge){mMaxAge = maxAge;}
 
     void deltaEnergy(double delta);
+
+    void processLaserHit(Laser* laser);
 
     void setGoCost(float cost){mGoCost = cost;}
     void setRotateCost(float cost){mRotateCost = cost;}
@@ -69,8 +79,18 @@ public:
     void setSoundRange(float range){mSoundRange = range;}
     void setSpeakInterval(unsigned int interval){mSpeakInterval = interval;}
     void setFireInterval(unsigned int interval){mFireInterval = interval;}
-
-    list<Graphic2D*> mGraphics;
+    void setShape(int shape){mShape = shape;}
+    void setColoring(int coloring){mColoring = coloring;}
+    void setColoringSymbolName(string symbolName){mColoringSymbolName = symbolName;}
+    void setColoringScale(string symbolName,
+                            Symbol* referenceSymbol,
+                            float scaleCenter,
+                            int r1,
+                            int g1,
+                            int b1,
+                            int r2,
+                            int g2,
+                            int b2);
 
     static const char mClassName[];
     static Orbit<SimObj2D>::MethodType mMethods[];
@@ -78,7 +98,6 @@ public:
 
     int setPos(lua_State* luaState);
     int setRot(lua_State* luaState);
-    int addGraphic(lua_State* luaState);
     int setSize(lua_State* luaState);
     int setDrag(lua_State* luaState);
     int setRotDrag(lua_State* luaState);
@@ -94,6 +113,10 @@ public:
     int setSoundRange(lua_State* luaState);
     int setSpeakInterval(lua_State* luaState);
     int setFireInterval(lua_State* luaState);
+    int setShape(lua_State* luaState);
+    int setColoring(lua_State* luaState);
+    int setColoringSymbolName(lua_State* luaState);
+    int setColoringScale(lua_State* luaState);
 
     float mX;
     float mY;
@@ -125,6 +148,7 @@ public:
     float mSoundRange;
     unsigned int mSpeakInterval;
     unsigned int mFireInterval;
+    float mScore;
 
     llULINT mCollisionDetectionIteration;
     llULINT mLastSpeakTime;
@@ -154,13 +178,32 @@ protected:
     void rotate(float force);
     void eat(SimObj2D* target, unsigned int actionType);
     void speak(Symbol* sym);
-    void fire();
+    void fire(unsigned int actionType);
 
     static mt_distribution* mDistFitnessRandom;
 
     SimObj2D* mTargetObject;
     float mDistanceToTargetObject;
     float* mCurrentTargetInputBuffer;
+
+    list<Laser> mLaserHits;
+
+    int mRed;
+    int mGreen;
+    int mBlue;
+
+    int mShape;
+    int mColoring;
+    string mColoringSymbolName;
+    Symbol* mColoringReferenceSymbol;
+    int mColoringScaleRed1;
+    int mColoringScaleGreen1;
+    int mColoringScaleBlue1;
+    int mColoringScaleRed2;
+    int mColoringScaleGreen2;
+    int mColoringScaleBlue2;
+    float mColoringScaleCenter;
+    float mShapeSize;
 };
 #endif
 

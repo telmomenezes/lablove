@@ -25,8 +25,11 @@
 class Laser
 {
 public:
+    enum LaserType {LASER_ONE_HIT, LASER_COMULATIVE};
+
     Laser();
     virtual ~Laser();
+    Laser(const Laser& laser);
 
     float mX1;
     float mY1;
@@ -40,6 +43,11 @@ public:
     int mDirX;
     int mDirY;
     llULINT mOwnerID;
+    LaserType mType;
+    float mEnergy;
+    float mRange;
+    float mDistanceTraveled;
+    llULINT mFireTime;
 };
 #endif
 

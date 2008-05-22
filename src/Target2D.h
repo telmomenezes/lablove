@@ -17,38 +17,34 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_GRAPHIC_2D_TRIANGLE_H)
-#define __INCLUDE_GRAPHIC_2D_TRIANGLE_H
+#if !defined(__INCLUDE_TARGET_2D_H)
+#define __INCLUDE_TARGET_2D_H
 
-#include "Graphic2D.h"
-#include "Orbit.h"
 #include "SimObj2D.h"
+#include "Orbit.h"
 
-#include "art.h"
-
-class Graphic2DTriangle : public Graphic2D
+class Target2D : public SimObj2D
 {
 public:
-    Graphic2DTriangle(lua_State* luaState=NULL);
-    virtual ~Graphic2DTriangle();
-    
-    virtual Graphic2D* clone();
+    Target2D(lua_State* luaState=NULL);
+    Target2D(Target2D* obj);
+    virtual ~Target2D();
+    virtual SimObj* clone();
 
-    virtual void init(SimObj2D* obj);
+    virtual void init();
+
     virtual void draw();
 
+    float mMinEnergy;
+    float mMaxEnergy;
+    float mEnergySizeFactor;
+
     static const char mClassName[];
-    static Orbit<Graphic2DTriangle>::MethodType mMethods[];
-    static Orbit<Graphic2DTriangle>::NumberGlobalType mNumberGlobals[];
+    static Orbit<Target2D>::MethodType mMethods[];
+    static Orbit<Target2D>::NumberGlobalType mNumberGlobals[];
 
 protected:
-    float mSize;
-    int mRed;
-    int mGreen;
-    int mBlue;
-    int mXIndex;
-    int mYIndex;
-    int mRotIndex;
+    static mt_distribution* mDistEnergy;
 };
 #endif
 

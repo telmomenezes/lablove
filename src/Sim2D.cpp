@@ -239,26 +239,7 @@ void Sim2D::addObject(SimObj* obj, bool init)
         object->mAgeLimit = object->mMaxAge;
     }
 
-    if (object->mType == SimObj::TYPE_AGENT)
-    {
-        int channelObjects = object->getBrain()->getChannelByName("objects");
-        int channelSounds = object->getBrain()->getChannelByName("sounds");
-        int channelSelf = object->getBrain()->getChannelByName("self");
-        int channelBeta = object->getBrain()->getChannelByName("beta");
-
-        object->mChannelObjects = channelObjects;
-        object->mChannelSounds = channelSounds;
-        object->mChannelSelf = channelSelf;
-        object->mChannelBeta = channelBeta;
-    }
-
-    SimObj2D* obj2D = (SimObj2D*)object;
-    for (list<Graphic2D*>::iterator iterGraph = obj2D->mGraphics.begin();
-            iterGraph != obj2D->mGraphics.end();
-            iterGraph++)
-    {
-        (*iterGraph)->init(obj2D);
-    }
+    object->init(); 
 
     Simulation::addObject(object);
 }
@@ -645,6 +626,7 @@ void Sim2D::processLaserShots()
         laser->mY1 += sinf(laser->mAng) * laser->mSpeed;
         laser->mX2 += cosf(laser->mAng) * laser->mSpeed;
         laser->mY2 += sinf(laser->mAng) * laser->mSpeed;
+        laser->mDistanceTraveled += laser->mSpeed;
 
         float x2 = laser->mX2;
         float y2 = laser->mY2;
@@ -678,8 +660,11 @@ void Sim2D::processLaserShots()
         targCellX *= laser->mDirX;
         targCellY *= laser->mDirY;
 
+        bool del = false;
+
         while (((cellX * laser->mDirX) <= targCellX)
-            && ((cellY * laser->mDirY) <= targCellY))
+            && ((cellY * laser->mDirY) <= targCellY)
+            && (!del))
         {
             list<SimObj2D*>* cellList = mCellGrid[(mWorldCellWidth * cellY) + cellX];
 
@@ -710,7 +695,8 @@ void Sim2D::processLaserShots()
                     if (colides >= 0.0f)
                     {
                         //printf("colision! %d\n", obj->getID());
-                        ((SimObj2D*)obj)->deltaEnergy(-1000.0f);
+                        ((SimObj2D*)obj)->processLaserHit(laser);
+                        del = true;
                     }
                 }
             }
@@ -760,7 +746,9 @@ void Sim2D::processLaserShots()
             }
         }
 
-        if ((laser->mX1 > mWorldWidth)
+        if (del
+            || (laser->mDistanceTraveled > laser->mRange)
+            || (laser->mX1 > mWorldWidth)
             || (laser->mX2 > mWorldWidth)
             || (laser->mY1 > mWorldLength)
             || (laser->mY2 > mWorldLength)
@@ -788,32 +776,9 @@ void Sim2D::drawLaserShots()
     }
 }
 
-void Sim2D::createLaserShot(float x1, float y1, float ang, float length, float speed, llULINT ownerID)
+void Sim2D::fireLaser(Laser laser)
 {
-    mLaserShots.push_back(Laser());
-    Laser* laser = &(mLaserShots.back());
-    laser->mX1 = x1;
-    laser->mY1 = y1;
-    laser->mAng = ang;
-    laser->mLength = length;
-    laser->mSpeed = speed;
-    laser->mX2 = x1 + (cosf(ang) * length);
-    laser->mY2 = y1 + (sinf(ang) * length);
-    laser->mM = tanf(ang);
-    laser->mB = y1 - (laser->mM * x1);
-
-    laser->mDirX = 1;
-    if (x1 < laser->mX2)
-    {
-        laser->mDirX = -1;
-    }
-    laser->mDirY = 1;
-    if (y1 < laser->mY2)
-    {
-        laser->mDirY = -1;
-    }
-
-    laser->mOwnerID = ownerID;
+    mLaserShots.push_back(laser);
 }
 
 bool Sim2D::onKeyDown(Art_KeyCode key)
@@ -999,6 +964,8 @@ string Sim2D::getInterfaceName(bool input, int type)
             return "speak";
         case ACTION_FIRE:
             return "fire";
+        case ACTION_FIREB:
+            return "fireB";
         default:
             return "?";
         }
@@ -1058,9 +1025,11 @@ Orbit<Sim2D>::NumberGlobalType Sim2D::mNumberGlobals[] = {
     {"ACTION_EATB", ACTION_EATB},
     {"ACTION_SPEAK", ACTION_SPEAK},
     {"ACTION_FIRE", ACTION_FIRE},
+    {"ACTION_FIREB", ACTION_FIREB},
     {"FITNESS_ENERGY", FITNESS_ENERGY},
     {"FITNESS_ENERGY_SUM", FITNESS_ENERGY_SUM},
     {"FITNESS_ENERGY_SUM_ABOVE_INIT", FITNESS_ENERGY_SUM_ABOVE_INIT},
+    {"FITNESS_SCORE_SUM", FITNESS_SCORE_SUM},
     {"FITNESS_RANDOM", FITNESS_RANDOM},
     {0,0}
 };

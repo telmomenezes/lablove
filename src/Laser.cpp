@@ -27,3 +27,24 @@ Laser::~Laser()
 {   
 }
 
+Laser::Laser(const Laser& laser)
+{
+    mX1 = laser.mX1;
+    mY1 = laser.mY1;
+    mX2 = laser.mX2;
+    mY2 = laser.mY2;
+    mAng = laser.mAng;
+    mLength = laser.mLength;
+    mSpeed = laser.mSpeed;
+    mM = laser.mM;
+    mB = laser.mB;
+    mDirX = laser.mDirX;
+    mDirY = laser.mDirY;
+    mOwnerID = laser.mOwnerID;
+    mType = laser.mType;
+    mEnergy = laser.mEnergy;
+    mRange = laser.mRange;
+    mDistanceTraveled = laser.mDistanceTraveled;
+    mFireTime = laser.mFireTime;
+}
+

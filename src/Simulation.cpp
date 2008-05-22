@@ -84,6 +84,21 @@ void Simulation::initGraphics(unsigned int width,
     mFont = art_loadFont("media/vera/Vera.ttf", 8);
 }
 
+SimObj* Simulation::getObjectByID(llULINT id)
+{
+    for (list<SimObj*>::iterator iterObj = mObjects.begin();
+            iterObj != mObjects.end();
+            iterObj++)
+    {
+        if ((*iterObj)->getID() == id)
+        {
+            return (*iterObj);
+        }
+    }
+
+    return NULL;
+}
+
 void Simulation::run()
 {
     mInitialRealTime = art_getTime();
