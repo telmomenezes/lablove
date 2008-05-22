@@ -17,17 +17,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "Laser.h"
+#include "Laser2D.h"
 
-Laser::Laser()
+Laser2D::Laser2D()
 {
 }
 
-Laser::~Laser()
+Laser2D::~Laser2D()
 {   
 }
 
-Laser::Laser(const Laser& laser)
+Laser2D::Laser2D(const Laser2D& laser)
 {
     mX1 = laser.mX1;
     mY1 = laser.mY1;

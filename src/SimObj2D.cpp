@@ -317,7 +317,7 @@ void SimObj2D::process()
     // Process laser hit list
     unsigned int mLaserHitDuration = 400;
     float totalDamage = 0.0f;
-    for (list<Laser>::iterator iterLaser = mLaserHits.begin();
+    for (list<Laser2D>::iterator iterLaser = mLaserHits.begin();
             iterLaser != mLaserHits.end();
             iterLaser++)
     {
@@ -332,7 +332,7 @@ void SimObj2D::process()
     }
     if (totalDamage >= mEnergy)
     {
-        for (list<Laser>::iterator iterLaser = mLaserHits.begin();
+        for (list<Laser2D>::iterator iterLaser = mLaserHits.begin();
             iterLaser != mLaserHits.end();
             iterLaser++)
         {
@@ -917,7 +917,7 @@ void SimObj2D::fire(unsigned int actionType)
         return;
     }
 
-    Laser laser;
+    Laser2D laser;
 
     laser.mFireTime = mSim2D->getTime();
     mLastFireTime = laser.mFireTime;
@@ -950,11 +950,11 @@ void SimObj2D::fire(unsigned int actionType)
     switch (actionType)
     {
     case Sim2D::ACTION_FIREB:
-        laser.mType = Laser::LASER_COMULATIVE;
+        laser.mType = Laser2D::LASER_COMULATIVE;
         break;
     case Sim2D::ACTION_FIRE:
     default:
-        laser.mType = Laser::LASER_ONE_HIT;
+        laser.mType = Laser2D::LASER_ONE_HIT;
         break;
     }
 
@@ -1011,14 +1011,14 @@ void SimObj2D::speak(Symbol* sym)
     mSim2D->mVisualEvents.push_back(ve);
 }
 
-void SimObj2D::processLaserHit(Laser* laser)
+void SimObj2D::processLaserHit(Laser2D* laser)
 {
     llULINT id = laser->mOwnerID;
 
     switch (laser->mType)
     {
-    case Laser::LASER_COMULATIVE:
-        for (list<Laser>::iterator iterLaser = mLaserHits.begin();
+    case Laser2D::LASER_COMULATIVE:
+        for (list<Laser2D>::iterator iterLaser = mLaserHits.begin();
             iterLaser != mLaserHits.end();
             iterLaser++)
         {
@@ -1029,7 +1029,7 @@ void SimObj2D::processLaserHit(Laser* laser)
         }
         mLaserHits.push_back(*laser);
         break;
-    case Laser::LASER_ONE_HIT:
+    case Laser2D::LASER_ONE_HIT:
     default:
         float score = laser->mEnergy;
         if (score > mEnergy)

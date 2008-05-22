@@ -102,7 +102,7 @@ void Sim2D::initGraphics(unsigned int width,
                                 bool fullScreen,
                                 bool noGraphics)
 {
-    Simulation::initGraphics(width, height, fullScreen, noGraphics);
+    SimArtist::initGraphics(width, height, fullScreen, noGraphics);
 
     mBackgroundTexture = art_loadImage("media/grass.jpg");
 }
@@ -613,11 +613,11 @@ bool Sim2D::getFieldValue(SimObj* obj, string fieldName, float& value)
 
 void Sim2D::processLaserShots()
 {
-    for (list<Laser>::iterator iterLaser = mLaserShots.begin();
+    for (list<Laser2D>::iterator iterLaser = mLaserShots.begin();
             iterLaser != mLaserShots.end();
             iterLaser++)
     {
-        Laser* laser = &(*iterLaser);
+        Laser2D* laser = &(*iterLaser);
 
         float x1 = laser->mX1;
         float y1 = laser->mY1;
@@ -767,23 +767,23 @@ void Sim2D::drawLaserShots()
     art_setColor(255, 255, 255, 255);
     art_setLineWidth(1.0f);
 
-    for (list<Laser>::iterator iterLaser = mLaserShots.begin();
+    for (list<Laser2D>::iterator iterLaser = mLaserShots.begin();
             iterLaser != mLaserShots.end();
             iterLaser++)
     {
-        Laser* laser = &(*iterLaser);
+        Laser2D* laser = &(*iterLaser);
         art_drawLine(laser->mX1, laser->mY1, laser->mX2, laser->mY2);
     }
 }
 
-void Sim2D::fireLaser(Laser laser)
+void Sim2D::fireLaser(Laser2D laser)
 {
     mLaserShots.push_back(laser);
 }
 
 bool Sim2D::onKeyDown(Art_KeyCode key)
 {
-    if (Simulation::onKeyDown(key))
+    if (SimArtist::onKeyDown(key))
     {
         return true;
     }
@@ -818,7 +818,7 @@ bool Sim2D::onKeyDown(Art_KeyCode key)
 
 bool Sim2D::onKeyUp(Art_KeyCode key)
 {
-    if (Simulation::onKeyUp(key))
+    if (SimArtist::onKeyUp(key))
     {
         return true;
     }
@@ -999,9 +999,9 @@ Orbit<Sim2D>::MethodType Sim2D::mMethods[] = {
     {"addObject", &Simulation::addObject},
     {"setSeedIndex", &Simulation::setSeedIndex},
     {"setPopulationDynamics", &Simulation::setPopulationDynamics},
-    {"initGraphics", &Simulation::initGraphics},
     {"run", &Simulation::run},
     {"setTimeLimit", &Simulation::setTimeLimit},
+    {"initGraphics", &SimArtist::initGraphics},
     {"setWorldDimensions", &Sim2D::setWorldDimensions},
     {"setHuman", &Sim2D::setHuman},
     {0,0}

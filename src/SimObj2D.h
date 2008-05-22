@@ -22,7 +22,7 @@
 
 #include "SimObj.h"
 #include "Orbit.h"
-#include "Laser.h"
+#include "Laser2D.h"
 
 #include <list>
 
@@ -65,7 +65,7 @@ public:
 
     void deltaEnergy(double delta);
 
-    void processLaserHit(Laser* laser);
+    void processLaserHit(Laser2D* laser);
 
     void setGoCost(float cost){mGoCost = cost;}
     void setRotateCost(float cost){mRotateCost = cost;}
@@ -186,7 +186,7 @@ protected:
     float mDistanceToTargetObject;
     float* mCurrentTargetInputBuffer;
 
-    list<Laser> mLaserHits;
+    list<Laser2D> mLaserHits;
 
     int mRed;
     int mGreen;

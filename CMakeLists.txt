@@ -41,8 +41,8 @@ ENDIF(WIN32)
 
 SET(SOURCE_FILES
     src/Simulation.cpp
+    src/SimArtist.cpp
     src/Sim2D.cpp
-    src/Laser.cpp
     src/SimHex.cpp
     src/HexCell.cpp
     src/ScriptableObject.cpp
@@ -50,6 +50,7 @@ SET(SOURCE_FILES
     src/SimObj2D.cpp
     src/SimObjHex.cpp
     src/Target2D.cpp
+    src/Laser2D.cpp
     src/Brain.cpp
     src/InterfaceItem.cpp
     src/DummyBrain.cpp

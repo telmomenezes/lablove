@@ -20,17 +20,17 @@
 #if !defined(__INCLUDE_SIM_2D_H)
 #define __INCLUDE_SIM_2D_H
 
-#include "Simulation.h"
+#include "SimArtist.h"
 #include "SimObj2D.h"
 #include "PopulationDynamics.h"
 #include "RandDistManager.h"
-#include "Laser.h"
+#include "Laser2D.h"
 
 #include "art.h"
 
 #include "Orbit.h"
 
-class Sim2D : public Simulation
+class Sim2D : public SimArtist
 {
 public:
 
@@ -129,7 +129,7 @@ public:
 
     virtual string getInterfaceName(bool input, int type);
 
-    void fireLaser(Laser laser);
+    void fireLaser(Laser2D laser);
 
     static float normalizeAngle(float angle);
 
@@ -198,7 +198,7 @@ protected:
 
     Art_Layer* mBackgroundTexture;
 
-    list<Laser> mLaserShots;
+    list<Laser2D> mLaserShots;
 };
 #endif
 

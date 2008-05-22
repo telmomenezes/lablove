@@ -17,19 +17,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_LASER_H)
-#define __INCLUDE_LASER_H
+#if !defined(__INCLUDE_LASER_2D_H)
+#define __INCLUDE_LASER_2D_H
 
 #include "types.h"
 
-class Laser
+class Laser2D
 {
 public:
     enum LaserType {LASER_ONE_HIT, LASER_COMULATIVE};
 
-    Laser();
-    virtual ~Laser();
-    Laser(const Laser& laser);
+    Laser2D();
+    virtual ~Laser2D();
+    Laser2D(const Laser2D& laser);
 
     float mX1;
     float mY1;

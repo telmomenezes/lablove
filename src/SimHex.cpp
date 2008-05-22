@@ -238,7 +238,7 @@ Orbit<SimHex>::MethodType SimHex::mMethods[] = {
     {"addObject", &Simulation::addObject},
     {"setSeedIndex", &Simulation::setSeedIndex},
     {"setPopulationDynamics", &Simulation::setPopulationDynamics},
-    {"initGraphics", &Simulation::initGraphics},
+    {"initGraphics", &SimArtist::initGraphics},
     {"run", &Simulation::run},
     {"setTimeLimit", &Simulation::setTimeLimit},
     {"setWorldDimensions", &SimHex::setWorldDimensions},

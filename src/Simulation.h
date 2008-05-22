@@ -26,8 +26,6 @@
 #include "RandDistManager.h"
 #include "types.h"
 
-#include "art.h"
-
 #include <list>
 #include <string>
 
@@ -40,16 +38,11 @@ public:
     Simulation(lua_State* luaState=NULL);
     virtual ~Simulation();
 
-    virtual void initGraphics(unsigned int width,
-                                unsigned int height,
-                                bool fullScreen,
-                                bool noGraphics=false);
-    
     virtual void drawBeforeObjects(){}
     virtual void drawAfterObjects(){}
 
-    void run();
-    void cycle();
+    virtual void run();
+    virtual void cycle();
 
     virtual void addObject(SimObj* obj, bool init=false);
     virtual void removeObject(SimObj* obj, bool deleteObj=true);
@@ -87,18 +80,10 @@ public:
                                     llULINT symID,
                                     Symbol* symbol);
 
-    virtual bool onKeyDown(Art_KeyCode keycode);
-    virtual bool onKeyUp(Art_KeyCode keycode){return false;}
-    virtual bool onMouseButtonDown(Art_MouseButton button, int x, int y){return false;}
-    virtual bool onMouseButtonUp(Art_MouseButton button, int x, int y){return false;}
-    virtual bool onMouseMove(int x, int y){return false;}
-    virtual bool onMouseWheel(bool up){return false;}
-
     void setTimeLimit(llULINT limit);
 
     int addObject(lua_State* luaState);
     int run(lua_State* luaState);
-    int initGraphics(lua_State* luaState);
     int setPopulationDynamics(lua_State* luaState);
     int setSeedIndex(lua_State* luaState);
     int setTimeLimit(lua_State* luaState);
@@ -106,8 +91,6 @@ public:
 protected:
     virtual void onCycle(){}
     
-    void drawTimes();
-
     static RandDistManager mDistManager;
 
     llULINT mSimulationTime;
@@ -120,25 +103,10 @@ protected:
 
     SimObj* mSelectedObject;
     
-    Art_Layer* mLogo;
-
-    double mInitialRealTime;
-    llULINT mLastSimulationTime;
-    double mLastRealTime;
-    double mCPS;
-    string mSimulationTimeText;
-    string mRealTimeText;
-    string mCPSText;
-
-    Art_Font* mFont;
-
     llULINT mTimeLimit;
 
     bool mDrawGraphics;
-
-    double mLastDrawTime;
-    unsigned int mTargetFPS;
-    double mFrameDuration;
+    bool mDrawThisCycle;
 
     unsigned int mSymAcquireInterval;
 };
