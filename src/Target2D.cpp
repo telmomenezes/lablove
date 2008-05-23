@@ -46,14 +46,16 @@ SimObj* Target2D::clone()
 
 void Target2D::init()
 {
-    SimObj2D::init();
-
     mEnergy = mDistEnergy->uniform(mMinEnergy, mMaxEnergy);
     mSize = mEnergy * mEnergySizeFactor;
+
+    SimObj2D::init();
 }
 
-void Target2D::draw()
+void Target2D::setEnergyLimits(float min, float max)
 {
+    mMinEnergy = min;
+    mMaxEnergy = max;
 }
 
 const char Target2D::mClassName[] = "Target2D";
@@ -81,8 +83,37 @@ Orbit<Target2D>::MethodType Target2D::mMethods[] = {
     {"setSoundRange", &SimObj2D::setSoundRange},
     {"setSpeakInterval", &SimObj2D::setSpeakInterval},
     {"setFireInterval", &SimObj2D::setFireInterval},
+    {"setShape", &SimObj2D::setShape},
+    {"setColoring", &SimObj2D::setColoring},
+    {"setColoringSymbolName", &SimObj2D::setColoringSymbolName},
+    {"setColoringScale", &SimObj2D::setColoringScale},
+    {"setFireInterval", &SimObj2D::setFireInterval},
+    {"setLaserLength", &SimObj2D::setLaserLength},
+    {"setLaserRange", &SimObj2D::setLaserRange},
+    {"setLaserStrengthFactor", &SimObj2D::setLaserStrengthFactor},
+    {"setLaserCostFactor", &SimObj2D::setLaserCostFactor},
+    {"setLaserHitDuration", &SimObj2D::setLaserHitDuration},
+    {"setEnergyLimits", &Target2D::setEnergyLimits},
+    {"setEnergySizeFactor", &Target2D::setEnergySizeFactor},
+    {"setEnergyLimits", &Target2D::setEnergyLimits},
+    {"setEnergySizeFactor", &Target2D::setEnergySizeFactor},
     {0,0}
 };
 
 Orbit<Target2D>::NumberGlobalType Target2D::mNumberGlobals[] = {{0,0}};
+
+int Target2D::setEnergyLimits(lua_State* luaState)
+{
+    float min = luaL_checknumber(luaState, 1);
+    float max = luaL_checknumber(luaState, 2);
+    setEnergyLimits(min, max);
+    return 0;
+}
+
+int Target2D::setEnergySizeFactor(lua_State* luaState)
+{
+    float factor = luaL_checknumber(luaState, 1);
+    setEnergySizeFactor(factor);
+    return 0;
+}
 

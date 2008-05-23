@@ -78,7 +78,6 @@ public:
     float getViewAngle(){return mViewAngle;}
     void setSoundRange(float range){mSoundRange = range;}
     void setSpeakInterval(unsigned int interval){mSpeakInterval = interval;}
-    void setFireInterval(unsigned int interval){mFireInterval = interval;}
     void setShape(int shape){mShape = shape;}
     void setColoring(int coloring){mColoring = coloring;}
     void setColoringSymbolName(string symbolName){mColoringSymbolName = symbolName;}
@@ -91,6 +90,13 @@ public:
                             int r2,
                             int g2,
                             int b2);
+
+    void setFireInterval(unsigned int interval){mFireInterval = interval;}
+    void setLaserLength(float length){mLaserLength = length;}
+    void setLaserRange(float range){mLaserRange = range;}
+    void setLaserStrengthFactor(float factor){mLaserStrengthFactor = factor;}
+    void setLaserCostFactor(float factor){mLaserCostFactor = factor;}
+    void setLaserHitDuration(unsigned int duration){mLaserHitDuration = duration;}
 
     static const char mClassName[];
     static Orbit<SimObj2D>::MethodType mMethods[];
@@ -112,11 +118,16 @@ public:
     int setFeedCenter(lua_State* luaState);
     int setSoundRange(lua_State* luaState);
     int setSpeakInterval(lua_State* luaState);
-    int setFireInterval(lua_State* luaState);
     int setShape(lua_State* luaState);
     int setColoring(lua_State* luaState);
     int setColoringSymbolName(lua_State* luaState);
     int setColoringScale(lua_State* luaState);
+    int setFireInterval(lua_State* luaState);
+    int setLaserLength(lua_State* luaState);
+    int setLaserRange(lua_State* luaState);
+    int setLaserStrengthFactor(lua_State* luaState);
+    int setLaserCostFactor(lua_State* luaState);
+    int setLaserHitDuration(lua_State* luaState);
 
     float mX;
     float mY;
@@ -147,12 +158,10 @@ public:
     float mFeedCenter;
     float mSoundRange;
     unsigned int mSpeakInterval;
-    unsigned int mFireInterval;
     float mScore;
 
     llULINT mCollisionDetectionIteration;
     llULINT mLastSpeakTime;
-    llULINT mLastFireTime;
 
     int mChannelObjects;
     int mChannelSounds;
@@ -178,7 +187,7 @@ protected:
     void rotate(float force);
     void eat(SimObj2D* target, unsigned int actionType);
     void speak(Symbol* sym);
-    void fire(unsigned int actionType);
+    void fire(unsigned int actionType, float strength);
 
     static mt_distribution* mDistFitnessRandom;
 
@@ -204,6 +213,14 @@ protected:
     int mColoringScaleBlue2;
     float mColoringScaleCenter;
     float mShapeSize;
+
+    llULINT mLastFireTime;
+    unsigned int mFireInterval;
+    float mLaserLength;
+    float mLaserRange;
+    float mLaserStrengthFactor;
+    float mLaserCostFactor;
+    unsigned int mLaserHitDuration;
 };
 #endif
 

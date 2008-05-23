@@ -33,7 +33,8 @@ public:
 
     virtual void init();
 
-    virtual void draw();
+    void setEnergyLimits(float min, float max);
+    void setEnergySizeFactor(float factor){mEnergySizeFactor = factor;}
 
     float mMinEnergy;
     float mMaxEnergy;
@@ -42,6 +43,9 @@ public:
     static const char mClassName[];
     static Orbit<Target2D>::MethodType mMethods[];
     static Orbit<Target2D>::NumberGlobalType mNumberGlobals[];
+
+    int setEnergyLimits(lua_State* luaState);
+    int setEnergySizeFactor(lua_State* luaState);
 
 protected:
     static mt_distribution* mDistEnergy;

@@ -289,8 +289,9 @@ void Sim2D::removeObject(SimObj* obj, bool deleteObj)
 void Sim2D::placeRandom(SimObj* obj)
 {
     SimObj2D* obj2D = (SimObj2D*)obj;
-    obj2D->setPos(mDistPosition->uniform(0, mWorldWidth),
-            mDistPosition->uniform(0, mWorldLength));
+    float x = mDistPosition->uniform(0, mWorldWidth);
+    float y = mDistPosition->uniform(0, mWorldLength);
+    obj2D->setPos(x, y);
     obj2D->setRot(mDistPosition->uniform(0, M_PI * 2));
 }
 
@@ -664,6 +665,8 @@ void Sim2D::processLaserShots()
 
         while (((cellX * laser->mDirX) <= targCellX)
             && ((cellY * laser->mDirY) <= targCellY)
+            && (cellX < mWorldCellWidth)
+            && (cellY < mWorldCellLength)
             && (!del))
         {
             list<SimObj2D*>* cellList = mCellGrid[(mWorldCellWidth * cellY) + cellX];
@@ -694,9 +697,17 @@ void Sim2D::processLaserShots()
 
                     if (colides >= 0.0f)
                     {
-                        //printf("colision! %d\n", obj->getID());
-                        ((SimObj2D*)obj)->processLaserHit(laser);
-                        del = true;
+                        float dist1 = (x_1 * x_1) + (y_1 * y_1);
+                        float dist2 = (x_2 * x_2) + (y_2 * y_2);
+                        float dist = (obj->mSize * obj->mSize);
+
+                        if ((dist1 <= dist)
+                            || (dist2 <= dist))
+                        {
+                            //printf("colision! %d (%d, %d)\n", obj->getID(), cellX, cellY);
+                            ((SimObj2D*)obj)->processLaserHit(laser);
+                            del = true;
+                        }
                     }
                 }
             }

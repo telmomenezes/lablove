@@ -56,7 +56,6 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     mFeedCenter = 0;
     mSoundRange = 250.0f;
     mSpeakInterval = 250;
-    mFireInterval = 250;
     mScore = 0.0f;
 
     mCollisionDetectionIteration = 0;
@@ -95,6 +94,13 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     mColoringScaleGreen2 = 0;
     mColoringScaleBlue2 = 0;
     mColoringScaleCenter = 0.0f;
+
+    mFireInterval = 0;
+    mLaserLength = 0.0f;
+    mLaserRange = 0.0f;
+    mLaserStrengthFactor = 0.0f;
+    mLaserCostFactor = 0.0f;
+    mLaserHitDuration = 0;
 }
 
 SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
@@ -167,6 +173,13 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
     mColoringScaleGreen2 = obj->mColoringScaleGreen2;
     mColoringScaleBlue2 = obj->mColoringScaleBlue2;
     mColoringScaleCenter = obj->mColoringScaleCenter;
+
+    mFireInterval = obj->mFireInterval;
+    mLaserLength = obj->mLaserLength;
+    mLaserRange = obj->mLaserRange;
+    mLaserStrengthFactor = obj->mLaserStrengthFactor;
+    mLaserCostFactor = obj->mLaserCostFactor;
+    mLaserHitDuration = obj->mLaserHitDuration;
 }
 
 SimObj2D::~SimObj2D()
@@ -279,10 +292,14 @@ void SimObj2D::draw()
 
         break;
     case SHAPE_SQUARE:
-
         art_setRotation(mX, mY, mRot);
         art_fillSquare(mX, mY, mShapeSize);
         art_clearRotation();
+
+        break;
+    case SHAPE_CIRCLE:
+        art_fillCircle(mX, mY, mShapeSize);
+        art_drawCircle(mX, mY, mShapeSize);
 
         break;
     }
@@ -315,13 +332,13 @@ void SimObj2D::process()
     llULINT simTime = mSim2D->getTime();
 
     // Process laser hit list
-    unsigned int mLaserHitDuration = 400;
     float totalDamage = 0.0f;
     for (list<Laser2D>::iterator iterLaser = mLaserHits.begin();
             iterLaser != mLaserHits.end();
             iterLaser++)
     {
-        if ((simTime - (*iterLaser).mFireTime) > mLaserHitDuration)
+        unsigned int timeSinceFired = simTime - (*iterLaser).mFireTime;
+        if (timeSinceFired > mLaserHitDuration)
         {
             mLaserHits.erase(iterLaser);
         }
@@ -339,7 +356,7 @@ void SimObj2D::process()
             llULINT id = (*iterLaser).mOwnerID;
             SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
 
-            if (obj != NULL)
+            if ((obj != NULL) && (obj->mSpeciesID != mSpeciesID))
             {
                 obj->mScore += mEnergy;
             }
@@ -718,23 +735,24 @@ void SimObj2D::act()
     float actionGoParam = 0.0f;
     float actionRotateParam = 0.0f;
     float actionSpeakParam = -99999999.9f;
+    float actionFireParam = 0.0f;
 
     if (mHumanControlled)
     {
         if (mHumanGo)
         {
             actionGo = true;
-            actionGoParam = 1.0f;
+            actionGoParam = 0.1f;
         }
         if (mHumanRotateLeft)
         {
             actionRotate = true;
-            actionRotateParam += 1.0f;
+            actionRotateParam += 0.1f;
         }
         if (mHumanRotateRight)
         {
             actionRotate = true;
-            actionRotateParam -= 1.0f;
+            actionRotateParam -= 0.1f;
         }
         if (mHumanEat)
         {
@@ -748,6 +766,7 @@ void SimObj2D::act()
         if (mHumanFire)
         {
             actionFire = Sim2D::ACTION_FIREB;
+            actionFireParam = 1.0f;
         }
     }
     else
@@ -801,6 +820,7 @@ void SimObj2D::act()
                     case Sim2D::ACTION_FIRE:
                     case Sim2D::ACTION_FIREB:
                         actionFire = actionType;
+                        actionFireParam += output;
                         break;
                 }
             }
@@ -826,6 +846,12 @@ void SimObj2D::act()
         actionRotateParam = -1.0f;
     }
 
+    actionFireParam = fabsf(actionFireParam);
+    if (actionFireParam > 1.0f)
+    {
+        actionFireParam = 1.0f;
+    }
+
     if (actionGo)
     {
         go(actionGoParam * mGoForceScale);
@@ -844,7 +870,7 @@ void SimObj2D::act()
     }
     if (actionFire != Sim2D::ACTION_NULL)
     {
-        fire(actionFire);
+        fire(actionFire, actionFireParam);
     }
 }
 
@@ -909,7 +935,7 @@ void SimObj2D::eat(SimObj2D* target, unsigned int actionType)
     }
 }
 
-void SimObj2D::fire(unsigned int actionType)
+void SimObj2D::fire(unsigned int actionType, float strength)
 {
     if (((mSim2D->getTime() - mLastFireTime) <= mFireInterval)
         && (mLastFireTime != 0))
@@ -922,15 +948,13 @@ void SimObj2D::fire(unsigned int actionType)
     laser.mFireTime = mSim2D->getTime();
     mLastFireTime = laser.mFireTime;
 
-    float length = 25;
-
     laser.mX1 = mX;
     laser.mY1 = mY;
     laser.mAng = mRot;
-    laser.mLength = length;
+    laser.mLength = mLaserLength;
     laser.mSpeed = 1.0;
-    laser.mX2 = mX + (cosf(mRot) * length);
-    laser.mY2 = mY + (sinf(mRot) * length);
+    laser.mX2 = mX + (cosf(mRot) * mLaserLength);
+    laser.mY2 = mY + (sinf(mRot) * mLaserLength);
     laser.mM = tanf(mRot);
     laser.mB = mY - (laser.mM * mX);
 
@@ -958,10 +982,13 @@ void SimObj2D::fire(unsigned int actionType)
         break;
     }
 
-    laser.mEnergy = 1.0f;
+    laser.mEnergy = strength * mLaserStrengthFactor;
 
-    laser.mRange = 500.0f;
+    laser.mRange = mLaserRange;
     laser.mDistanceTraveled = 0.0f;
+
+    float cost = mLaserCostFactor * strength;
+    deltaEnergy(-cost);
 
     mSim2D->fireLaser(laser);
 }
@@ -1038,7 +1065,7 @@ void SimObj2D::processLaserHit(Laser2D* laser)
         }
         SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
 
-        if (obj != NULL)
+        if ((obj != NULL) && (obj->mSpeciesID != mSpeciesID))
         {
             obj->mScore += score;
         }
@@ -1099,6 +1126,12 @@ Orbit<SimObj2D>::MethodType SimObj2D::mMethods[] = {
     {"setColoring", &SimObj2D::setColoring},
     {"setColoringSymbolName", &SimObj2D::setColoringSymbolName},
     {"setColoringScale", &SimObj2D::setColoringScale},
+    {"setFireInterval", &SimObj2D::setFireInterval},
+    {"setLaserLength", &SimObj2D::setLaserLength},
+    {"setLaserRange", &SimObj2D::setLaserRange},
+    {"setLaserStrengthFactor", &SimObj2D::setLaserStrengthFactor},
+    {"setLaserCostFactor", &SimObj2D::setLaserCostFactor},
+    {"setLaserHitDuration", &SimObj2D::setLaserHitDuration},
     {0,0}
 };
 
@@ -1224,13 +1257,6 @@ int SimObj2D::setSpeakInterval(lua_State* luaState)
     return 0;
 }
 
-int SimObj2D::setFireInterval(lua_State* luaState)
-{
-    unsigned int fireInterval = luaL_checkint(luaState, 1);
-    setFireInterval(fireInterval);
-    return 0;
-}
-
 int SimObj2D::setShape(lua_State* luaState)
 {
     int shape = luaL_checkint(luaState, 1);
@@ -1264,6 +1290,48 @@ int SimObj2D::setColoringScale(lua_State* luaState)
     int g2 = luaL_checkint(luaState, 8);
     int b2 = luaL_checkint(luaState, 9);
     setColoringScale(name, refSym, scaleCenter, r1, g1, b1, r2, g2, b2);
+    return 0;
+}
+
+int SimObj2D::setFireInterval(lua_State* luaState)
+{
+    unsigned int interval = luaL_checkint(luaState, 1);
+    setFireInterval(interval);
+    return 0;
+}
+
+int SimObj2D::setLaserLength(lua_State* luaState)
+{
+    float length = luaL_checknumber(luaState, 1);
+    setLaserLength(length);
+    return 0;
+}
+
+int SimObj2D::setLaserRange(lua_State* luaState)
+{
+    float range = luaL_checknumber(luaState, 1);
+    setLaserRange(range);
+    return 0;
+}
+
+int SimObj2D::setLaserStrengthFactor(lua_State* luaState)
+{
+    float factor = luaL_checknumber(luaState, 1);
+    setLaserStrengthFactor(factor);
+    return 0;
+}
+
+int SimObj2D::setLaserCostFactor(lua_State* luaState)
+{
+    float factor = luaL_checknumber(luaState, 1);
+    setLaserCostFactor(factor);
+    return 0;
+}
+
+int SimObj2D::setLaserHitDuration(lua_State* luaState)
+{
+    unsigned int duration = luaL_checkint(luaState, 1);
+    setLaserHitDuration(duration);
     return 0;
 }
 

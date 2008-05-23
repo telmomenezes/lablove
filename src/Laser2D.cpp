@@ -21,6 +21,23 @@
 
 Laser2D::Laser2D()
 {
+    mX1 = 0;
+    mY1 = 0;
+    mX2 = 0;
+    mY2 = 0;
+    mAng = 0;
+    mLength = 0;
+    mSpeed = 0;
+    mM = 0;
+    mB = 0;
+    mDirX = 0;
+    mDirY = 0;
+    mOwnerID = 0;
+    mType = LASER_ONE_HIT;
+    mEnergy = 0;
+    mRange = 0;
+    mDistanceTraveled = 0;
+    mFireTime = 0;
 }
 
 Laser2D::~Laser2D()
