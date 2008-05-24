@@ -7,12 +7,12 @@ dofile("basic_defines.lua")
 -- Experiment Parameters
 --------------------------------------------------------------------------------
 
-numberOfTargets = 10
+numberOfTargets = 50
 numberOfAgents = 25
 
 agentSize = 10.0
 
-targetMinEnergy = 0.5
+targetMinEnergy = 0.2
 targetMaxEnergy = 3.0
 targetSizeFactor = 10.0
 
