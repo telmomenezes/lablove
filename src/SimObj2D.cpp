@@ -273,18 +273,28 @@ void SimObj2D::draw()
 {
     art_setColor(mRed, mGreen, mBlue, 255);
 
+    float a1;
+    float a2;
+    float a3;
+    float x1;
+    float y1;
+    float x2;
+    float y2;
+    float x3;
+    float y3;
+
     switch (mShape)
     {
     case SHAPE_TRIANGLE:
-        float a1 = mRot;
-        float a2 = mRot + (M_PI * 0.8f);
-        float a3 = mRot + (M_PI * 1.2f);
-        float x1 = mX + (cosf(a1) * mShapeSize);
-        float y1 = mY + (sinf(a1) * mShapeSize);
-        float x2 = mX + (cosf(a2) * mShapeSize);
-        float y2 = mY + (sinf(a2) * mShapeSize);
-        float x3 = mX + (cosf(a3) * mShapeSize);
-        float y3 = mY + (sinf(a3) * mShapeSize);
+        a1 = mRot;
+        a2 = mRot + (M_PI * 0.8f);
+        a3 = mRot + (M_PI * 1.2f);
+        x1 = mX + (cosf(a1) * mShapeSize);
+        y1 = mY + (sinf(a1) * mShapeSize);
+        x2 = mX + (cosf(a2) * mShapeSize);
+        y2 = mY + (sinf(a2) * mShapeSize);
+        x3 = mX + (cosf(a3) * mShapeSize);
+        y3 = mY + (sinf(a3) * mShapeSize);
 
         art_setLineWidth(2.0f);
         art_fillTriangle(x1, y1, x2, y2, x3, y3);
