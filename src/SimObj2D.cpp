@@ -688,6 +688,11 @@ void SimObj2D::onScanObject(SimObj2D* targ,
                 normalizedValue = distance / mViewRange;
                 inBuffer[pos] = normalizedValue;
                 break;
+    
+            case Sim2D::PERCEPTION_SIZE:
+                normalizedValue = targ->mSize / mSize;
+                inBuffer[pos] = normalizedValue;
+                break;
 
             case Sim2D::PERCEPTION_TARGET:
                 if (isTarget)

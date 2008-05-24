@@ -38,12 +38,13 @@ public:
     static const int PERCEPTION_POSITION = 1;
     static const int PERCEPTION_ORIENTATION = 2;
     static const int PERCEPTION_DISTANCE = 3;
-    static const int PERCEPTION_TARGET = 4;
-    static const int PERCEPTION_IN_CONTACT = 5;
-    static const int PERCEPTION_SYMBOL = 6;
-    static const int PERCEPTION_ENERGY = 7;
-    static const int PERCEPTION_CAN_SPEAK = 8;
-    static const int PERCEPTION_CAN_FIRE = 9;
+    static const int PERCEPTION_SIZE = 4;
+    static const int PERCEPTION_TARGET = 5;
+    static const int PERCEPTION_IN_CONTACT = 6;
+    static const int PERCEPTION_SYMBOL = 7;
+    static const int PERCEPTION_ENERGY = 8;
+    static const int PERCEPTION_CAN_SPEAK = 9;
+    static const int PERCEPTION_CAN_FIRE = 10;
 
     static const int ACTION_NULL = 0;
     static const int ACTION_GO = 1;

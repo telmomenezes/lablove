@@ -34,7 +34,8 @@ public:
     virtual unsigned int addSpecies(SimObj* org,
                                     unsigned int population,
                                     unsigned int bufferSize,
-                                    bool queen=false);
+                                    bool queen=false,
+                                    float queenStanDev=1.0f);
 
     void setCompCount(unsigned int count){mCompCount = count;}
     void setFitnessAging(float aging){mFitnessAging = aging;}
@@ -51,7 +52,7 @@ public:
 
 protected:
     void xoverMutateSend(unsigned int speciesID, bool init=false, SimObj* nearObj=NULL);
-    unsigned int getQueenNeighbour(int pos, int size);
+    unsigned int getQueenNeighbour(int pos, int size, float stanDev);
 
     static mt_distribution* mDistRecombine;
 

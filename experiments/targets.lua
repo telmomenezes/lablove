@@ -8,13 +8,13 @@ dofile("basic_defines.lua")
 --------------------------------------------------------------------------------
 
 numberOfTargets = 10
-numberOfAgents = 0
+numberOfAgents = 25
 
 agentSize = 10.0
 
 targetMinEnergy = 0.5
-targetMaxEnergy = 0.5
-targetSizeFactor = 100.0
+targetMaxEnergy = 3.0
+targetSizeFactor = 10.0
 
 worldWidth = 2000
 worldHeight = 2000
@@ -25,7 +25,7 @@ betaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, GTZ, ZERO, CLK, 
 viewRange = 300.0
 viewAngle = 170.0
 
-maxAge = 500000
+maxAge = 5000
 
 initialEnergy = 1.0
 goCost = 0.005
@@ -36,14 +36,14 @@ rotateForceScale = 0.006
 drag = 0.05
 rotDrag = 0.05
 
-fireInterval = 250
+fireInterval = 1000
 laserLength = 25
 laserRange = 300.0
 laserStrengthFactor = 1.0
-laserCostFactor = 0.0
+laserCostFactor = 0.1
 laserHitDuration = 500
 
-soundRange = 250
+soundRange = 500
 speakInterval = 250
 
 compCount = 1
@@ -65,11 +65,17 @@ logTimeInterval = 100
 logBrains = true
 logOnlyLastBrain = true
 
-humanAgent = true
+humanAgent = false
 
 evolutionStopTime = 0
 
-comm = false
+comm = true
+
+queen = true
+queenStanDev = 1.0
+
+targetBirthRadius = 500.0
+agentBirthRadius = 500.0
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
@@ -98,9 +104,8 @@ sim:setTimeLimit(timeLimit)
 --------------------------------------------------------------------------------
 
 agent = SimObj2D()
-
 agent:setFitnessMeasure(Sim2D.FITNESS_SCORE_SUM)
-
+agent:setBirthRadius(agentBirthRadius)
 agent:setSize(agentSize)
 agent:setDrag(drag)
 agent:setRotDrag(rotDrag)
@@ -148,8 +153,9 @@ for i, comp in pairs(alphaComponents) do
 end
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_POSITION)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_DISTANCE)
+alphaSet:addComponent(IN, Sim2D.PERCEPTION_SIZE)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_TARGET)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_SYMBOL, SYM_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
+alphaSet:addComponent(IN, Sim2D.PERCEPTION_SYMBOL, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
 grid = Grid()
 grid:init(ALPHA, 0, 0)
 grid:setComponentSet(alphaSet)
@@ -197,8 +203,6 @@ if comm then
     betaSet:addComponent(OUT, Sim2D.ACTION_SPEAK, TAB_TO_SYM, colorTableCode, agentColor:getID())
 end
     
-
-    
 grid2 = Grid()
 grid2:init(BETA, 0, 0)
 grid2:setComponentSet(betaSet)
@@ -211,7 +215,7 @@ agent:setBrain(brain)
 --------------------------------------------------------------------------------
 
 target = Target2D()
---target:setBirthRadius(50.0)
+target:setBirthRadius(targetBirthRadius)
 target:setMaxAge(maxAge)
 target:setEnergyLimits(targetMinEnergy, targetMaxEnergy)
 target:setEnergySizeFactor(targetSizeFactor)
@@ -233,7 +237,7 @@ sim:setPopulationDynamics(popDyn)
 popDyn:setCompCount(compCount)
 popDyn:setFitnessAging(fitnessAging)
 popDyn:setRecombineProb(recombineProb)
-agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize)
+agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize, queen, queenStanDev)
 popDyn:addSpecies(target, numberOfTargets, 1)
 popDyn:setEvolutionStopTime(evolutionStopTime)
 

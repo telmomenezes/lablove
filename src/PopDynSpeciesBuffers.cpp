@@ -68,7 +68,8 @@ void PopDynSpeciesBuffers::init(Simulation* sim)
 unsigned int PopDynSpeciesBuffers::addSpecies(SimObj* org,
                                                 unsigned int population,
                                                 unsigned int bufferSize,
-                                                bool queen)
+                                                bool queen,
+                                                float queenStanDev)
 {
     unsigned int speciesID = CURRENT_SPECIES_ID++;
     org->setSpeciesID(speciesID);
@@ -79,6 +80,7 @@ unsigned int PopDynSpeciesBuffers::addSpecies(SimObj* org,
     mSpecies[speciesID].mPopulation = population;
     mSpecies[speciesID].mBufferSize = bufferSize;
     mSpecies[speciesID].mQueen = queen;
+    mSpecies[speciesID].mQueenStanDev = queenStanDev;
     mSpecies[speciesID].mCurrentQueen = 0;
     mSpecies[speciesID].mQueenState = 0;
 
@@ -212,7 +214,7 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimObj* org)
         unsigned int organismNumber;
         if (species->mQueen)
         {
-            organismNumber = getQueenNeighbour(org->getKinID(), species->mBufferSize);
+            organismNumber = getQueenNeighbour(org->getKinID(), species->mBufferSize, species->mQueenStanDev);
         }
         else
         {
@@ -261,9 +263,9 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimObj* org)
     xoverMutateSend(speciesID, false, refObj);
 }
 
-unsigned int PopDynSpeciesBuffers::getQueenNeighbour(int pos, int size)
+unsigned int PopDynSpeciesBuffers::getQueenNeighbour(int pos, int size, float stanDev)
 {
-    int deltaPos = (int)(mDistOrganism->normal(0.0f, 1.0f));
+    int deltaPos = (int)(mDistOrganism->normal(0.0f, stanDev));
 
     int newPos = pos - deltaPos;
 
@@ -327,8 +329,9 @@ int PopDynSpeciesBuffers::addSpecies(lua_State* luaState)
     {
         queen = luaL_checkbool(luaState, 4);
     }
+    float stanDev = luaL_optnumber(luaState, 5, 1.0f);
 
-    unsigned int id = addSpecies(obj, population, bufferSize, queen);
+    unsigned int id = addSpecies(obj, population, bufferSize, queen, stanDev);
     lua_pushinteger(luaState, id);
     return 1;
 }

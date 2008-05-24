@@ -661,14 +661,15 @@ void Sim2D::processLaserShots()
         targCellX *= laser->mDirX;
         targCellY *= laser->mDirY;
 
-        bool del = false;
+        SimObj2D* bestTarget = NULL;
 
         while (((cellX * laser->mDirX) <= targCellX)
             && ((cellY * laser->mDirY) <= targCellY)
             && (cellX < mWorldCellWidth)
             && (cellY < mWorldCellLength)
-            && (!del))
+            && (bestTarget == NULL))
         {
+            float mindSource = 999999999.9f;
             list<SimObj2D*>* cellList = mCellGrid[(mWorldCellWidth * cellY) + cellX];
 
             for (list<SimObj2D*>::iterator iterObj = cellList->begin();
@@ -704,12 +705,24 @@ void Sim2D::processLaserShots()
                         if ((dist1 <= dist)
                             || (dist2 <= dist))
                         {
-                            //printf("colision! %d (%d, %d)\n", obj->getID(), cellX, cellY);
-                            ((SimObj2D*)obj)->processLaserHit(laser);
-                            del = true;
+                            float dsX = obj->mX - x1;
+                            float dsY = obj->mY - y1;
+                            float dSource = (dsX * dsX) + (dsY * dsY);
+
+                            if (dSource < mindSource)
+                            {
+                                mindSource = dSource;
+                                bestTarget = (SimObj2D*)obj;
+                            }
                         }
                     }
                 }
+            }
+
+            if (bestTarget != NULL)
+            {
+                //printf("colision! %d (%d, %d)\n", obj->getID(), cellX, cellY);
+                bestTarget->processLaserHit(laser);
             }
 
             float bX;
@@ -757,7 +770,7 @@ void Sim2D::processLaserShots()
             }
         }
 
-        if (del
+        if ((bestTarget != NULL)
             || (laser->mDistanceTraveled > laser->mRange)
             || (laser->mX1 > mWorldWidth)
             || (laser->mX2 > mWorldWidth)
@@ -949,6 +962,8 @@ string Sim2D::getInterfaceName(bool input, int type)
             return "orientation";
         case PERCEPTION_DISTANCE:
             return "distance";
+        case PERCEPTION_SIZE:
+            return "size";
         case PERCEPTION_ENERGY:
             return "energy";
         case PERCEPTION_CAN_SPEAK:
@@ -1023,6 +1038,7 @@ Orbit<Sim2D>::NumberGlobalType Sim2D::mNumberGlobals[] = {
     {"PERCEPTION_POSITION", PERCEPTION_POSITION},
     {"PERCEPTION_ORIENTATION", PERCEPTION_ORIENTATION},
     {"PERCEPTION_DISTANCE", PERCEPTION_DISTANCE},
+    {"PERCEPTION_SIZE", PERCEPTION_SIZE},
     {"PERCEPTION_TARGET", PERCEPTION_TARGET},
     {"PERCEPTION_IN_CONTACT", PERCEPTION_IN_CONTACT},
     {"PERCEPTION_SYMBOL", PERCEPTION_SYMBOL},
