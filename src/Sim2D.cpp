@@ -782,6 +782,7 @@ void Sim2D::processLaserShots()
             || (laser->mY2 < 0))
         {
             mLaserShots.erase(iterLaser);
+            return;
         }
     }
 }
