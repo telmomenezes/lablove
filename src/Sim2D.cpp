@@ -614,9 +614,9 @@ bool Sim2D::getFieldValue(SimObj* obj, string fieldName, float& value)
 
 void Sim2D::processLaserShots()
 {
-    for (list<Laser2D>::iterator iterLaser = mLaserShots.begin();
-            iterLaser != mLaserShots.end();
-            iterLaser++)
+    list<Laser2D>::iterator iterLaser = mLaserShots.begin();
+
+    while (iterLaser != mLaserShots.end())
     {
         Laser2D* laser = &(*iterLaser);
 
@@ -781,8 +781,11 @@ void Sim2D::processLaserShots()
             || (laser->mY1 < 0)
             || (laser->mY2 < 0))
         {
-            mLaserShots.erase(iterLaser);
-            return;
+            iterLaser = mLaserShots.erase(iterLaser);
+        }
+        else
+        {
+            iterLaser++;
         }
     }
 }

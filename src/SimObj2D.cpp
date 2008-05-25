@@ -343,17 +343,18 @@ void SimObj2D::process()
 
     // Process laser hit list
     float totalDamage = 0.0f;
-    for (list<Laser2D>::iterator iterLaser = mLaserHits.begin();
-            iterLaser != mLaserHits.end();
-            iterLaser++)
+
+    list<Laser2D>::iterator iterLaser = mLaserHits.begin();
+    while (iterLaser != mLaserHits.end())
     {
         unsigned int timeSinceFired = simTime - (*iterLaser).mFireTime;
         if (timeSinceFired > mLaserHitDuration)
         {
-            mLaserHits.erase(iterLaser);
+            iterLaser = mLaserHits.erase(iterLaser);
         }
         else
         {
+            iterLaser++;
             totalDamage += (*iterLaser).mEnergy;
         }
     }
