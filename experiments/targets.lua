@@ -8,16 +8,16 @@ dofile("basic_defines.lua")
 --------------------------------------------------------------------------------
 
 numberOfTargets = 50
-numberOfAgents = 25
+numberOfAgents = 5
 
 agentSize = 10.0
 
-targetMinEnergy = 0.2
-targetMaxEnergy = 3.0
+targetMinEnergy = 0.9
+targetMaxEnergy = 0.9
 targetSizeFactor = 10.0
 
-worldWidth = 2000
-worldHeight = 2000
+worldWidth = 1000
+worldHeight = 1000
 
 alphaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, GTZ, ZERO, MAX, AVG}
 betaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, GTZ, ZERO, CLK, MEMW, MEMC, MEMD}
@@ -36,7 +36,7 @@ rotateForceScale = 0.006
 drag = 0.05
 rotDrag = 0.05
 
-fireInterval = 1000
+fireInterval = 500
 laserLength = 25
 laserRange = 300.0
 laserStrengthFactor = 1.0
@@ -69,13 +69,12 @@ humanAgent = false
 
 evolutionStopTime = 0
 
-comm = true
+comm = false
 
 queen = true
-queenStanDev = 1.0
 
 targetBirthRadius = 500.0
-agentBirthRadius = 500.0
+agentBirthRadius = 100.0
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
@@ -154,7 +153,6 @@ end
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_POSITION)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_DISTANCE)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_SIZE)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_TARGET)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_SYMBOL, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
 grid = Grid()
 grid:init(ALPHA, 0, 0)
@@ -167,7 +165,7 @@ for i, comp in pairs(alphaComponents) do
     selfSet:addComponent(comp)
 end
 selfSet:addComponent(IN, Sim2D.PERCEPTION_ENERGY)
-selfSet:addComponent(IN, Sim2D.PERCEPTION_CAN_FIRE)
+--selfSet:addComponent(IN, Sim2D.PERCEPTION_CAN_FIRE)
 if comm then
     selfSet:addComponent(IN, Sim2D.PERCEPTION_CAN_SPEAK)
 end
@@ -237,7 +235,7 @@ sim:setPopulationDynamics(popDyn)
 popDyn:setCompCount(compCount)
 popDyn:setFitnessAging(fitnessAging)
 popDyn:setRecombineProb(recombineProb)
-agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize, queen, queenStanDev)
+agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize, queen)
 popDyn:addSpecies(target, numberOfTargets, 1)
 popDyn:setEvolutionStopTime(evolutionStopTime)
 

@@ -255,6 +255,8 @@ void SimObj2D::init()
     {
         mShapeSize = mSize;
     }
+
+    //mLastFireTime = mSim2D->getTime();
 }
 
 void SimObj2D::setPos(float x, float y)
@@ -354,8 +356,8 @@ void SimObj2D::process()
         }
         else
         {
-            iterLaser++;
             totalDamage += (*iterLaser).mEnergy;
+            iterLaser++;
         }
     }
     if (totalDamage >= mEnergy)
@@ -953,16 +955,9 @@ void SimObj2D::eat(SimObj2D* target, unsigned int actionType)
 
 void SimObj2D::fire(unsigned int actionType, float strength)
 {
-    if (((mSim2D->getTime() - mLastFireTime) <= mFireInterval)
-        && (mLastFireTime != 0))
-    {
-        return;
-    }
-
     Laser2D laser;
 
     laser.mFireTime = mSim2D->getTime();
-    mLastFireTime = laser.mFireTime;
 
     laser.mX1 = mX;
     laser.mY1 = mY;
@@ -998,7 +993,16 @@ void SimObj2D::fire(unsigned int actionType, float strength)
         break;
     }
 
-    laser.mEnergy = strength * mLaserStrengthFactor;
+    if (((mSim2D->getTime() - mLastFireTime) <= mFireInterval)
+        && (mLastFireTime != 0))
+    {
+        laser.mEnergy = 0.0f;
+    }
+    else
+    {
+        laser.mEnergy = strength * mLaserStrengthFactor;
+    }
+    mLastFireTime = laser.mFireTime;
 
     laser.mRange = mLaserRange;
     laser.mDistanceTraveled = 0.0f;

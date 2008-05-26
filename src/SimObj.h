@@ -97,9 +97,6 @@ public:
     void setFitnessMeasure(int measure){mFitnessMeasure = measure;}
     int getFitnessMeasure(){return mFitnessMeasure;}
 
-    void setKinID(llULINT id){mKinID = id;}
-    llULINT getKinID(){return mKinID;}
-
     virtual void popAdjust(vector<SimObj*>* popVec);
 
     void addMessage(Message* msg){mMessageList.push_back(msg);}
@@ -134,7 +131,6 @@ protected:
     virtual void recombine(SimObj* parent1, SimObj* parent2);
 
     llULINT mID;
-    llULINT mKinID;
 
     map<string, SymbolPointer> mNamedSymbols;
 

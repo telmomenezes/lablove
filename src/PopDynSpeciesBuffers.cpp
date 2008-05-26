@@ -68,8 +68,7 @@ void PopDynSpeciesBuffers::init(Simulation* sim)
 unsigned int PopDynSpeciesBuffers::addSpecies(SimObj* org,
                                                 unsigned int population,
                                                 unsigned int bufferSize,
-                                                bool queen,
-                                                float queenStanDev)
+                                                bool queen)
 {
     unsigned int speciesID = CURRENT_SPECIES_ID++;
     org->setSpeciesID(speciesID);
@@ -80,9 +79,9 @@ unsigned int PopDynSpeciesBuffers::addSpecies(SimObj* org,
     mSpecies[speciesID].mPopulation = population;
     mSpecies[speciesID].mBufferSize = bufferSize;
     mSpecies[speciesID].mQueen = queen;
-    mSpecies[speciesID].mQueenStanDev = queenStanDev;
     mSpecies[speciesID].mCurrentQueen = 0;
-    mSpecies[speciesID].mQueenState = 0;
+    mSpecies[speciesID].mQueenState = population;
+    mSpecies[speciesID].mSuperSister = NULL;
 
     return speciesID;
 }
@@ -91,96 +90,116 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
 {
     SpeciesData* species = &(mSpecies[speciesID]);
     
-    unsigned int organismNumber;
+    unsigned int parent1;
+    unsigned int parent2;
+
     if (species->mQueen)
     {
-        //organismNumber = getQueenNeighbour(species->mCurrentQueen, species->mBufferSize);
-        organismNumber = species->mCurrentQueen;
-        species->mQueenState++;
         if (species->mQueenState >= species->mPopulation)
         {
             species->mQueenState = 0;
-            species->mCurrentQueen++;
             if (species->mCurrentQueen >= species->mBufferSize)
             {
                 species->mCurrentQueen = 0;
             }
-        }
-    }
-    else
-    {
-        organismNumber = mDistOrganism->iuniform(0, species->mBufferSize);
-    }
 
-    SimObj* org = species->mOrganismVector[organismNumber];
-   
-    SimObj* newOrganism;
-
-    float prob = mDistRecombine->uniform(0.0f, 1.0f);
-    if ((prob < mRecombineProb) && mEvolutionOn)
-    {
-        // Recombine
-        unsigned int organismNumber2 = organismNumber;
-        
-        if (species->mBufferSize > 1)
-        {
-            organismNumber2 = mDistOrganism->iuniform(0, species->mBufferSize - 1);
-            if (organismNumber2 >= organismNumber)
+            parent1 = species->mCurrentQueen;
+            parent2 = parent1 + 1;
+            if (parent2 >= species->mBufferSize)
             {
-                organismNumber2++;
+                parent2 = 0;
+            }
+            if (species->mSuperSister != NULL)
+            {
+                delete species->mSuperSister;
+                species->mSuperSister = NULL;
             }
         }
-        SimObj* org2 = species->mOrganismVector[organismNumber2];
-
-        /*unsigned int r = mDistRecombine->iuniform(0, 100);
-        if (speciesID == 1)
-        {
-        Agent* agent1 = (Agent*)org;
-        Agent* agent2 = (Agent*)org2;
-        char fileName1[255];
-        char fileName2[255];
-        sprintf(fileName1, "%d_P1.svg", r);
-        sprintf(fileName2, "%d_P2.svg", r);
-        FILE* file1 = fopen(fileName1, "w");
-        FILE* file2 = fopen(fileName2, "w");
-        fprintf(file1, agent1->getBrain()->write(agent1, mSimulation).c_str());
-        fprintf(file2, agent2->getBrain()->write(agent2, mSimulation).c_str());
-        fflush(file1);
-        fflush(file2);
-        fclose(file1);
-        fclose(file2);
-        }*/
-
-        newOrganism = org->recombine(org2);
-
-        /*if (speciesID == 1)
-        {
-        char fileName3[255];
-        sprintf(fileName3, "%d_CH.svg", r);
-        FILE* file3 = fopen(fileName3, "w");
-        Agent* agent3 = (Agent*)newOrganism;
-        fprintf(file3, agent3->getBrain()->write(agent3, mSimulation).c_str());
-        fflush(file3);
-        fclose(file3);
-        }*/
+        species->mQueenState++;
     }
     else
     {
-        // Simple clone
-        newOrganism = org->clone();
+        parent1 = mDistOrganism->iuniform(0, species->mBufferSize);
+        if (species->mBufferSize > 1)
+        {
+            parent1 = mDistOrganism->iuniform(0, species->mBufferSize - 1);
+            if (parent2 >= parent1)
+            {
+                parent2++;
+            }
+        }
+        else
+        {
+            parent2 = parent1;
+        }
     }
-            
-    // Mutate
-    if (mEvolutionOn)
+
+    SimObj* newOrganism;
+
+    if ((!species->mQueen)
+        || (species->mSuperSister == NULL))
     {
-        newOrganism->mutate();
+        SimObj* org = species->mOrganismVector[parent1];
+
+        float prob = mDistRecombine->uniform(0.0f, 1.0f);
+        if ((prob < mRecombineProb) && mEvolutionOn)
+        {
+            // Recombine
+            SimObj* org2 = species->mOrganismVector[parent2];
+
+            /*unsigned int r = mDistRecombine->iuniform(0, 100);
+            if (speciesID == 1)
+            {
+            Agent* agent1 = (Agent*)org;
+            Agent* agent2 = (Agent*)org2;
+            char fileName1[255];
+            char fileName2[255];
+            sprintf(fileName1, "%d_P1.svg", r);
+            sprintf(fileName2, "%d_P2.svg", r);
+            FILE* file1 = fopen(fileName1, "w");
+            FILE* file2 = fopen(fileName2, "w");
+            fprintf(file1, agent1->getBrain()->write(agent1, mSimulation).c_str());
+            fprintf(file2, agent2->getBrain()->write(agent2, mSimulation).c_str());
+            fflush(file1);
+            fflush(file2);
+            fclose(file1);
+            fclose(file2);
+            }*/
+
+            newOrganism = org->recombine(org2);
+
+            /*if (speciesID == 1)
+            {
+            char fileName3[255];
+            sprintf(fileName3, "%d_CH.svg", r);
+            FILE* file3 = fopen(fileName3, "w");
+            Agent* agent3 = (Agent*)newOrganism;
+            fprintf(file3, agent3->getBrain()->write(agent3, mSimulation).c_str());
+            fflush(file3);
+            fclose(file3);
+            }*/
+        }
+        else
+        {
+            // Simple clone
+            newOrganism = org->clone();
+        }
+            
+        // Mutate
+        if (mEvolutionOn)
+        {
+            newOrganism->mutate();
+        }
+
+        if (species->mQueen)
+        {
+            species->mSuperSister = newOrganism->clone();
+        }
     }
-
-    //SimObj* newOrganism2 = newOrganism->clone();
-    //delete newOrganism;
-    //newOrganism = newOrganism2;
-
-    newOrganism->setKinID(organismNumber);
+    else
+    {
+        newOrganism = species->mSuperSister->clone();
+    }
 
     mSimulation->addObject(newOrganism, init);
     
@@ -211,15 +230,7 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimObj* org)
     // Buffer replacements
     for (unsigned int i = 0; (i < mCompCount) && keepComparing; i++)
     {
-        unsigned int organismNumber;
-        if (species->mQueen)
-        {
-            organismNumber = getQueenNeighbour(org->getKinID(), species->mBufferSize, species->mQueenStanDev);
-        }
-        else
-        {
-            organismNumber = mDistOrganism->iuniform(0, species->mBufferSize);
-        }
+        unsigned int organismNumber = mDistOrganism->iuniform(0, species->mBufferSize);
         SimObj* org2 = species->mOrganismVector[organismNumber];
 
         if (org->mFitness >= org2->mFitness)
@@ -261,25 +272,6 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimObj* org)
 
     // Replace
     xoverMutateSend(speciesID, false, refObj);
-}
-
-unsigned int PopDynSpeciesBuffers::getQueenNeighbour(int pos, int size, float stanDev)
-{
-    int deltaPos = (int)(mDistOrganism->normal(0.0f, stanDev));
-
-    int newPos = pos - deltaPos;
-
-    while (newPos < 0)
-    {
-        newPos += size;
-    }
-
-    while (newPos >= size)
-    {
-        newPos -= size;
-    }
-
-    return newPos;
 }
 
 const char PopDynSpeciesBuffers::mClassName[] = "PopDynSpeciesBuffers";
@@ -329,9 +321,8 @@ int PopDynSpeciesBuffers::addSpecies(lua_State* luaState)
     {
         queen = luaL_checkbool(luaState, 4);
     }
-    float stanDev = luaL_optnumber(luaState, 5, 1.0f);
 
-    unsigned int id = addSpecies(obj, population, bufferSize, queen, stanDev);
+    unsigned int id = addSpecies(obj, population, bufferSize, queen);
     lua_pushinteger(luaState, id);
     return 1;
 }

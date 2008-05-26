@@ -183,6 +183,7 @@ bool GridbrainComponent::isProducer()
     case NOT:
     case RAND:
     case ZERO:
+    case CLK:
     case MEMC:
     case MEMW:
     case MEMD:

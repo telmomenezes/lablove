@@ -35,9 +35,9 @@ public:
     unsigned int mBufferSize;
 
     bool mQueen;
-    float mQueenStanDev;
     unsigned int mCurrentQueen;
     unsigned int mQueenState;
+    SimObj* mSuperSister;
 };
 #endif
 

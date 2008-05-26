@@ -1659,7 +1659,8 @@ void Gridbrain::cycle()
 
                         if (!comp->mInit)
                         {
-                            comp->mTriggerInterval = (llULINT)(powf(5.0f, comp->mParam * 10.0f));
+                            //comp->mTriggerInterval = (llULINT)(powf(5.0f, comp->mParam * 10.0f));
+                            comp->mTriggerInterval = (llULINT)(5000.0f / comp->mParam);
                             comp->mTimeToTrigger = comp->mTriggerInterval;
                             comp->mInit = true;
                         }
