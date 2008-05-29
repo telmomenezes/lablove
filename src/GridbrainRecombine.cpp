@@ -42,17 +42,9 @@ void Gridbrain::setSelectedSymbols(SimObj* obj)
             {
                 sym->mSelected = false;
 
-                for (unsigned int i = 0;
-                    (i < mNumberOfComponents) && (!sym->mSelected);
-                    i++)
+                if (symbolUsed(tableID, symID))
                 {
-                    GridbrainComponent* comp = &mComponents[i];
-
-                    if ((tableID == comp->mOrigSymTable)
-                        && (symID == comp->mOrigSymID))
-                    {
-                        sym->mSelected = true;
-                    }
+                    sym->mSelected = true;
                 }
             }
         }

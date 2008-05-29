@@ -2119,14 +2119,14 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestCLK1)
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.cycle();
     CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
-    for (unsigned int i = 0; i < 5; i++)
+    for (unsigned int i = 0; i < 500; i++)
     {
         mGridbrain.cycle();
         CHECK_CLOSE(comp2->mOutput, 0.0f, 0.0f);
     }
     mGridbrain.cycle();
     CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
-    for (unsigned int i = 0; i < 5; i++)
+    for (unsigned int i = 0; i < 500; i++)
     {
         mGridbrain.cycle();
         CHECK_CLOSE(comp2->mOutput, 0.0f, 0.0f);
@@ -2148,14 +2148,14 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestCLK3)
     GridbrainComponent* comp1 = mGridbrain.getComponent(1, 0, 0);
     comp1->mType = GridbrainComponent::CLK;
     comp1->mParam = 0.1f;
-    for (unsigned int i = 0; i < 5; i++)
+    for (unsigned int i = 0; i < 500; i++)
     {
         mGridbrain.cycle();
         CHECK_CLOSE(comp1->mOutput, 0.0f, 0.0f);
     }
     mGridbrain.cycle();
     CHECK_CLOSE(comp1->mOutput, 1.0f, 0.0f);
-    for (unsigned int i = 0; i < 5; i++)
+    for (unsigned int i = 0; i < 500; i++)
     {
         mGridbrain.cycle();
         CHECK_CLOSE(comp1->mOutput, 0.0f, 0.0f);
@@ -2169,14 +2169,14 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestCLK4)
     GridbrainComponent* comp1 = mGridbrain.getComponent(1, 0, 0);
     comp1->mType = GridbrainComponent::CLK;
     comp1->mParam = 0.2f;
-    for (unsigned int i = 0; i < 25; i++)
+    for (unsigned int i = 0; i < 1000; i++)
     {
         mGridbrain.cycle();
         CHECK_CLOSE(comp1->mOutput, 0.0f, 0.0f);
     }
     mGridbrain.cycle();
     CHECK_CLOSE(comp1->mOutput, 1.0f, 0.0f);
-    for (unsigned int i = 0; i < 25; i++)
+    for (unsigned int i = 0; i < 1000; i++)
     {
         mGridbrain.cycle();
         CHECK_CLOSE(comp1->mOutput, 0.0f, 0.0f);

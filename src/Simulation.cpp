@@ -38,8 +38,6 @@ Simulation::Simulation(lua_State* luaState)
 
     mDrawGraphics = true;
     mDrawThisCycle = true;
-
-    mSymAcquireInterval = 100;
 }
 
 Simulation::~Simulation()
@@ -232,13 +230,6 @@ float Simulation::calcSymbolsBinding(SimObj* obj,
     }
 
     float binding = sym->getBinding(symbol);
-
-    if ((binding < 1.0f)
-        && (table->isDynamic())
-        && (((mSimulationTime - obj->mCreationTime) % mSymAcquireInterval) == 0))
-    {
-        table->acquireSymbol(symbol);
-    }
 
     return binding;
 }

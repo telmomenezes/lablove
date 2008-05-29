@@ -57,32 +57,19 @@ GridbrainComponent* GridbrainComponentSet::getRandom(SimObj* obj,
     else
     {
         bool found = false;
-        bool tab2sym = false;
 
         while(!found)
         {
-            if (!tab2sym)
-            {
-                unsigned int pos = mDistComponentSet->iuniform(0, mSize);
-                comp = mComponentVec[pos];
-            }
+            unsigned int pos = mDistComponentSet->iuniform(0, mSize);
+            comp = mComponentVec[pos];
 
             if (comp->mTableLinkType == InterfaceItem::TAB_TO_SYM)
             {
                 SymbolTable* table = obj->getSymbolTable(comp->mOrigSymTable);
-
-                if (tab2sym)
-                {
-                    table->grow();
-                }
-                else
-                {
-                    tab2sym = true;
-                }
-
                 comp->mOrigSymID = table->getRandomSymbolId();
                 //printf("size: %d\n", table->getSize());
-                //printf("id: %d\n", comp->mOrigSymID);
+                //printf("rand symID: %d", comp->mOrigSymID);
+                //printf(" objID: %d\n", obj->getID());
             }
             else if (comp->isMemory())
             {

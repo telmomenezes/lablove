@@ -21,6 +21,7 @@
 #include "Simulation.h"
 
 #include <string.h>
+#include <stdexcept>
 
 #define GRID_MARGIN 50
 #define COMPONENT_SIDE 40
@@ -172,6 +173,18 @@ string Gridbrain::write(SimObj* obj, Simulation* sim)
                     {
                         subName = obj->getTableName(comp->mOrigSymTable);
                         sprintf(buffer, "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"7\" fill=\"%s\">%s(%d)</text>\n", compX, labelY, color, subName.c_str(), obj->getSymbolTable(comp->mOrigSymTable)->getSymbolPos(comp->mOrigSymID));
+            
+                        /*int symPos = mOwner->getSymbolTable(comp->mOrigSymTable)->getSymbolPos(comp->mOrigSymID);
+                        printf("color[%d](%d)", comp->mOrigSymTable, symPos);
+                        printf("(%d)", comp->mOrigSymID);
+                        printf(" objID: %d\n", mOwner->getID());
+
+                        if (symPos < 0)
+                        {
+                            printf("######### DEBUG OWNER (%d)\n", mOwner->getID());
+                            mOwner->printDebug();
+                            throw std::runtime_error("xxx");
+                        }*/
                     }
                     else
                     {

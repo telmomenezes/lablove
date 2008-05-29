@@ -1659,8 +1659,7 @@ void Gridbrain::cycle()
 
                         if (!comp->mInit)
                         {
-                            //comp->mTriggerInterval = (llULINT)(powf(5.0f, comp->mParam * 10.0f));
-                            comp->mTriggerInterval = (llULINT)(5000.0f / comp->mParam);
+                            comp->mTriggerInterval = (llULINT)(5000.0f * comp->mParam);
                             comp->mTimeToTrigger = comp->mTriggerInterval;
                             comp->mInit = true;
                         }
@@ -2319,7 +2318,6 @@ bool Gridbrain::symbolUsed(int tableID, llULINT symbolID)
         if ((comp->mOrigSymTable == tableID)
             && (comp->mOrigSymID == symbolID))
         {
-            
             return true;
         }
     }

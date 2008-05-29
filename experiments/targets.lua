@@ -28,8 +28,8 @@ viewAngle = 170.0
 maxAge = 5000
 
 initialEnergy = 1.0
-goCost = 0.005
-rotateCost = 0.005
+goCost = 0.001
+rotateCost = 0.001
 goForceScale = 0.3
 rotateForceScale = 0.006
 
@@ -69,9 +69,10 @@ humanAgent = false
 
 evolutionStopTime = 0
 
+self = false
 comm = false
 
-queen = true
+queen = false
 
 targetBirthRadius = 500.0
 agentBirthRadius = 100.0
@@ -130,6 +131,8 @@ agent:setLaserHitDuration(laserHitDuration)
 agentColor = SymbolRGB(0, 0, 255)
 symTable = SymbolTable(agentColor)
 agent:addSymbolTable(symTable)
+symTable:setDynamic(true)
+symTable:setName("color")
 colorTableCode = symTable:getID()
 agent:setSymbolName("color", colorTableCode, agentColor:getID())
 
@@ -160,19 +163,21 @@ grid:setComponentSet(alphaSet)
 brain:addGrid(grid, "objects");
 
 -- Self Grid
-selfSet = GridbrainComponentSet()
-for i, comp in pairs(alphaComponents) do
-    selfSet:addComponent(comp)
+if self then
+    selfSet = GridbrainComponentSet()
+    for i, comp in pairs(alphaComponents) do
+        selfSet:addComponent(comp)
+    end
+    selfSet:addComponent(IN, Sim2D.PERCEPTION_ENERGY)
+    --selfSet:addComponent(IN, Sim2D.PERCEPTION_CAN_FIRE)
+    if comm then
+        selfSet:addComponent(IN, Sim2D.PERCEPTION_CAN_SPEAK)
+    end
+    selfGrid = Grid()
+    selfGrid:init(ALPHA, 0, 0)
+    selfGrid:setComponentSet(selfSet)
+    brain:addGrid(selfGrid, "self")
 end
-selfSet:addComponent(IN, Sim2D.PERCEPTION_ENERGY)
---selfSet:addComponent(IN, Sim2D.PERCEPTION_CAN_FIRE)
-if comm then
-    selfSet:addComponent(IN, Sim2D.PERCEPTION_CAN_SPEAK)
-end
-selfGrid = Grid()
-selfGrid:init(ALPHA, 0, 0)
-selfGrid:setComponentSet(selfSet)
-brain:addGrid(selfGrid, "self");
 
 -- Sounds grid
 if comm then

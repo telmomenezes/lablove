@@ -61,8 +61,6 @@ public:
 
     unsigned int getSize(){return mSymbols.size();}
 
-    void acquireSymbol(Symbol* sym);
-
     int getSymbolPos(llULINT symID);
 
     void printDebug();
@@ -88,7 +86,6 @@ protected:
     int mID;
     llULINT mReferenceSymbolID;
     map<llULINT, Symbol*> mSymbols;
-    map<llULINT, Symbol*> mAcquiredSymbols;
     bool mDynamic;
     string mName;
 };

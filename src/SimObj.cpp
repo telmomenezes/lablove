@@ -38,6 +38,7 @@ SimObj::SimObj(lua_State* luaState)
     mInitialized = false;
 
     mFitness = 0.0f;
+    mGroupFitness = 0.0f;
 
     mBirthRadius = 0.0f;
     mFitnessMeasure = 0;
@@ -69,6 +70,7 @@ SimObj::SimObj(SimObj* obj)
     mInitialized = false;
 
     mFitness = 0.0f;
+    mGroupFitness = 0.0f;
     mFitnessMeasure = obj->mFitnessMeasure;
 
     mBirthRadius = obj->mBirthRadius;
@@ -98,19 +100,18 @@ SimObj::SimObj(SimObj* obj)
             {
                 int tableID = (*iterTables).first;
 
-                map<llULINT, Symbol*>::iterator iterSymbol;
-                for (iterSymbol = table->getSymbolMap()->begin();
-                    iterSymbol != table->getSymbolMap()->end();
-                    iterSymbol++)
+                map<llULINT, Symbol*>::iterator iterSymbol = table->getSymbolMap()->begin();
+                while (iterSymbol != table->getSymbolMap()->end())
                 {
                     llULINT symbolID = (*iterSymbol).first;
 
                     Symbol* sym = (*iterSymbol).second;
 
+                    iterSymbol++;
+
                     if ((!sym->mFixed) && 
                         (!mBrain->symbolUsed(tableID, symbolID)))
                     {
-                        iterSymbol++;
                         table->getSymbolMap()->erase(symbolID);
                         delete sym;
                     }
@@ -124,6 +125,12 @@ SimObj::SimObj(SimObj* obj)
 
 SimObj::~SimObj()
 {
+    if (mBrain != NULL)
+    {
+        delete mBrain;
+        mBrain = NULL;
+    }
+
     map<int, SymbolTable*>::iterator iterTables;
 
     for (iterTables = mSymbolTables.begin();
@@ -136,12 +143,6 @@ SimObj::~SimObj()
     mSymbolTables.clear();
 
     mNamedSymbols.clear();
-
-    if (mBrain != NULL)
-    {
-        delete mBrain;
-        mBrain = NULL;
-    }
 
     for (list<Message*>::iterator iterMessage = mMessageList.begin();
             iterMessage != mMessageList.end();
@@ -321,6 +322,7 @@ void SimObj::recombine(SimObj* parent1, SimObj* parent2)
 
         newBrain->setSelectedSymbols(parent1);
         newBrain->setSelectedSymbols(parent2);
+        setBrain(newBrain);
     }
 
     map<int, SymbolTable*>::iterator iterTables;
@@ -344,33 +346,14 @@ void SimObj::recombine(SimObj* parent1, SimObj* parent2)
 
         mSymbolTables[tableID] = table1->recombine(table2);
     }
-
-    if (mType == TYPE_AGENT)
-    {
-        map<int, SymbolTable*>::iterator iterTables;
-
-        for (iterTables = mSymbolTables.begin();
-            iterTables != mSymbolTables.end();
-            iterTables++)
-        {
-            SymbolTable* table = (*iterTables).second;
-
-            if (table->isDynamic())
-            {
-                table->grow();
-            }
-        }
-
-        setBrain(newBrain);
-    }
 }
 
 SimObj* SimObj::recombine(SimObj* otherParent)
 {
     SimObj* obj = clone();
-
     obj->recombine(this, otherParent);
     SimObj* child = obj->clone();
+
     delete obj;
 
     return child;

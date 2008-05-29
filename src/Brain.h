@@ -69,7 +69,7 @@ public:
 
     virtual string write(SimObj* obj, Simulation* sim){return "";}
 
-    virtual bool symbolUsed(int tableID, unsigned long symbolID){return false;}
+    virtual bool symbolUsed(int tableID, llULINT symbolID){return false;}
 
     virtual void popAdjust(vector<SimObj*>* popVec){}
 

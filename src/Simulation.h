@@ -107,8 +107,6 @@ protected:
 
     bool mDrawGraphics;
     bool mDrawThisCycle;
-
-    unsigned int mSymAcquireInterval;
 };
 #endif
 
