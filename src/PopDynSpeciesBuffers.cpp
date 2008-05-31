@@ -68,7 +68,8 @@ void PopDynSpeciesBuffers::init(Simulation* sim)
 unsigned int PopDynSpeciesBuffers::addSpecies(SimObj* org,
                                                 unsigned int population,
                                                 unsigned int bufferSize,
-                                                bool queen)
+                                                bool queen,
+                                                bool groupSelection)
 {
     unsigned int speciesID = CURRENT_SPECIES_ID++;
     org->setSpeciesID(speciesID);
@@ -82,7 +83,7 @@ unsigned int PopDynSpeciesBuffers::addSpecies(SimObj* org,
     mSpecies[speciesID].mCurrentQueen = 0;
     mSpecies[speciesID].mQueenState = population;
     mSpecies[speciesID].mSuperSister = NULL;
-    mSpecies[speciesID].mGroupSelection = false;
+    mSpecies[speciesID].mGroupSelection = groupSelection;
 
     return speciesID;
 }
@@ -100,24 +101,24 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
         if (species->mQueenState >= species->mPopulation)
         {
             parent1 = species->mCurrentQueen;
-            parent2 = parent1 + 1;
+            parent2 = mDistOrganism->iuniform(0, species->mBufferSize - 1);
+            if (parent2 >= parent1)
+            {
+                parent2++;
+            }
+            //printf(">> parent1: %d parent2: %d\n", parent1, parent2);
+            species->mCurrentQueen = parent2;
 
             species->mQueenState = 0;
-            species->mCurrentQueen++;
-            if (species->mCurrentQueen >= species->mBufferSize)
-            {
-                species->mCurrentQueen = 0;
-            }
 
-            if (parent2 >= species->mBufferSize)
-            {
-                parent2 = 0;
-            }
             if (species->mSuperSister != NULL)
             {
                 delete species->mSuperSister;
-                species->mSuperSister = NULL;
             }
+
+            SimObj* org1 = species->mOrganismVector[parent1];
+            SimObj* org2 = species->mOrganismVector[parent2];
+            species->mSuperSister = org1->recombine(org2);
         }
         species->mQueenState++;
     }
@@ -140,8 +141,7 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
 
     SimObj* newOrganism;
 
-    if ((!species->mQueen)
-        || (species->mSuperSister == NULL))
+    if (!species->mQueen)
     {
         SimObj* org = species->mOrganismVector[parent1];
 
@@ -203,6 +203,12 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
     else
     {
         newOrganism = species->mSuperSister->clone();
+
+        // Mutate
+        if (mEvolutionOn)
+        {
+            newOrganism->mutate();
+        }
     }
 
     // Group fitness calculations
@@ -271,7 +277,6 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimObj* org)
     {
         org->mFitness = org->mGroupFitness;
     }
-
 
     bool deleteObj = true;
     bool keepComparing = true;
@@ -370,8 +375,13 @@ int PopDynSpeciesBuffers::addSpecies(lua_State* luaState)
     {
         queen = luaL_checkbool(luaState, 4);
     }
+    bool groupSelection = false;
+    if (lua_gettop(luaState) > 4)
+    {
+        groupSelection = luaL_checkbool(luaState, 5);
+    }
 
-    unsigned int id = addSpecies(obj, population, bufferSize, queen);
+    unsigned int id = addSpecies(obj, population, bufferSize, queen, groupSelection);
     lua_pushinteger(luaState, id);
     return 1;
 }

@@ -34,7 +34,8 @@ public:
     virtual unsigned int addSpecies(SimObj* org,
                                     unsigned int population,
                                     unsigned int bufferSize,
-                                    bool queen=false);
+                                    bool queen=false,
+                                    bool groupsSelection=false);
 
     void setCompCount(unsigned int count){mCompCount = count;}
     void setFitnessAging(float aging){mFitnessAging = aging;}

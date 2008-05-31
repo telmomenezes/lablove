@@ -98,6 +98,8 @@ public:
     void setLaserCostFactor(float factor){mLaserCostFactor = factor;}
     void setLaserHitDuration(unsigned int duration){mLaserHitDuration = duration;}
 
+    virtual bool getFieldValue(string fieldName, float& value);
+
     static const char mClassName[];
     static Orbit<SimObj2D>::MethodType mMethods[];
     static Orbit<SimObj2D>::NumberGlobalType mNumberGlobals[];
@@ -221,6 +223,7 @@ protected:
     float mLaserStrengthFactor;
     float mLaserCostFactor;
     unsigned int mLaserHitDuration;
+    unsigned int mFriendlyFire;
 };
 #endif
 

@@ -99,6 +99,7 @@ SimObj::SimObj(SimObj* obj)
             if (table->isDynamic())
             {
                 int tableID = (*iterTables).first;
+                table->mUsedCount = 0;
 
                 map<llULINT, Symbol*>::iterator iterSymbol = table->getSymbolMap()->begin();
                 while (iterSymbol != table->getSymbolMap()->end())
@@ -106,11 +107,16 @@ SimObj::SimObj(SimObj* obj)
                     llULINT symbolID = (*iterSymbol).first;
 
                     Symbol* sym = (*iterSymbol).second;
-
                     iterSymbol++;
 
-                    if ((!sym->mFixed) && 
-                        (!mBrain->symbolUsed(tableID, symbolID)))
+                    sym->mUsed = mBrain->symbolUsed(tableID, symbolID);
+
+                    if (sym->mUsed)
+                    {
+                        table->mUsedCount++;
+                    }
+
+                    if ((!sym->mFixed) && (!sym->mUsed))
                     {
                         table->getSymbolMap()->erase(symbolID);
                         delete sym;
@@ -279,6 +285,11 @@ bool SimObj::getFieldValue(string fieldName, float& value)
         value = mFitness;
         return true;
     }
+    else if (fieldName == "group_fitness")
+    {
+        value = mGroupFitness;
+        return true;
+    }
     else if (fieldName.substr(0,  14) == "symtable_size_")
     {
         string tableName = fieldName.substr(14, fieldName.size() - 14);
@@ -286,7 +297,22 @@ bool SimObj::getFieldValue(string fieldName, float& value)
         SymbolTable* table = getSymbolTableByName(tableName);
         if (table)
         {
-            value = table->getSize();
+            value = (float)table->getSize();
+        }
+        else
+        {
+            value = 0.0f;
+        }
+        return true;
+    }
+    else if (fieldName.substr(0,  14) == "symtable_used_")
+    {
+        string tableName = fieldName.substr(14, fieldName.size() - 14);
+
+        SymbolTable* table = getSymbolTableByName(tableName);
+        if (table)
+        {
+            value = (float)table->mUsedCount;
         }
         else
         {

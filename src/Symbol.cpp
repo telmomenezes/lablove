@@ -28,6 +28,7 @@ Symbol::Symbol()
     mID = NEXT_SYMBOL_ID;
     NEXT_SYMBOL_ID++;
     mSelected = false;
+    mUsed = false;
 }
 
 Symbol::Symbol(Symbol* sym)
@@ -36,6 +37,7 @@ Symbol::Symbol(Symbol* sym)
     mFixed = sym->mFixed;
     mID = sym->mID;
     mSelected = false;
+    mUsed = false;
 }
 
 Symbol::~Symbol()

@@ -312,22 +312,21 @@ void Sim2D::placeNear(SimObj* obj, SimObj* ref)
     float targX = origX + (sinf(angle) * distance);
     float targY = origY + (cosf(angle) * distance);
 
-    // Wrap around if limits are exceeded
     if (targX < 0.0f)
     {
-        targX = mWorldWidth + targX;
+        targX = 0.0f;
     }
     if (targY < 0.0f)
     {
-        targY = mWorldLength + targY;
+        targY = 0.0f;
     }
     if (targX > mWorldWidth)
     {
-        targX = targX - mWorldWidth;
+        targX = mWorldWidth;
     }
     if (targY > mWorldLength)
     {
-        targY = targY - mWorldLength;
+        targY = mWorldLength;
     }
 
     SimObj2D* obj2D = (SimObj2D*)obj;

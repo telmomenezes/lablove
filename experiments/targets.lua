@@ -8,12 +8,12 @@ dofile("basic_defines.lua")
 --------------------------------------------------------------------------------
 
 numberOfTargets = 50
-numberOfAgents = 5
+numberOfAgents = 10
 
 agentSize = 10.0
 
-targetMinEnergy = 0.9
-targetMaxEnergy = 0.9
+targetMinEnergy = 1.0
+targetMaxEnergy = 1.0
 targetSizeFactor = 10.0
 
 worldWidth = 1000
@@ -36,12 +36,12 @@ rotateForceScale = 0.006
 drag = 0.05
 rotDrag = 0.05
 
-fireInterval = 500
+fireInterval = 1000
 laserLength = 25
 laserRange = 300.0
 laserStrengthFactor = 1.0
 laserCostFactor = 0.1
-laserHitDuration = 500
+laserHitDuration = 300
 
 soundRange = 500
 speakInterval = 250
@@ -73,8 +73,8 @@ self = false
 comm = false
 
 queen = false
+groupSelection = false
 
-targetBirthRadius = 500.0
 agentBirthRadius = 100.0
 
 -- Command line, log file names, etc
@@ -82,7 +82,12 @@ agentBirthRadius = 100.0
 
 dofile("basic_command_line.lua")
 
-evolutionStopTime = getNumberParameter("evostop", evolutionStopTime, "est")
+queen = getBoolParameter("queen", queen, "queen")
+groupSelection = getBoolParameter("groupsel", groupSelection, "grps")
+self = getBoolParameter("self", self, "self")
+comm = getBoolParameter("comm", self, "comm")
+targetMinEnergy = getNumberParameter("targmin", targetMinEnergy, "tmin")
+targetMaxEnergy = getNumberParameter("targmax", targetMaxEnergy, "tmax")
 
 logBaseName = "_targets_"
 
@@ -156,6 +161,7 @@ end
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_POSITION)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_DISTANCE)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_SIZE)
+alphaSet:addComponent(IN, Sim2D.PERCEPTION_ORIENTATION)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_SYMBOL, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
 grid = Grid()
 grid:init(ALPHA, 0, 0)
@@ -218,7 +224,6 @@ agent:setBrain(brain)
 --------------------------------------------------------------------------------
 
 target = Target2D()
-target:setBirthRadius(targetBirthRadius)
 target:setMaxAge(maxAge)
 target:setEnergyLimits(targetMinEnergy, targetMaxEnergy)
 target:setEnergySizeFactor(targetSizeFactor)
@@ -240,7 +245,7 @@ sim:setPopulationDynamics(popDyn)
 popDyn:setCompCount(compCount)
 popDyn:setFitnessAging(fitnessAging)
 popDyn:setRecombineProb(recombineProb)
-agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize, queen)
+agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize, queen, groupSelection)
 popDyn:addSpecies(target, numberOfTargets, 1)
 popDyn:setEvolutionStopTime(evolutionStopTime)
 
@@ -295,14 +300,12 @@ end
 stats = StatCommon()
 stats:setFile("log" .. logSuffix .. ".csv")
 stats:addField("fitness")
-stats:addField("energy")
+stats:addField("group_fitness")
 stats:addField("gb_connections")
 stats:addField("gb_active_connections")
 stats:addField("gb_active_components")
-stats:addField("gb_grid_width_objects")
-stats:addField("gb_grid_height_objects")
-stats:addField("gb_grid_width_beta")
-stats:addField("gb_grid_height_beta")
+stats:addField("symtable_used_color")
+stats:addField("friendly_fire")
 popDyn:addDeathLog(agentSpeciesIndex, stats)
 
 if logBrains then

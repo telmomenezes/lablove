@@ -43,6 +43,7 @@ public:
     int mDirX;
     int mDirY;
     llULINT mOwnerID;
+    unsigned int mOwnerSpecies;
     LaserType mType;
     float mEnergy;
     float mRange;

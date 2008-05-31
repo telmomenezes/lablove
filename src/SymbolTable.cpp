@@ -94,6 +94,7 @@ void SymbolTable::create(Symbol* refSymbol, int id)
 
     mDynamic = false;
     mName = "";
+    mUsedCount = 0;
 }
 
 SymbolTable* SymbolTable::recombine(SymbolTable* table2)

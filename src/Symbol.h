@@ -61,6 +61,8 @@ public:
     bool mSelected;
     llULINT mID;
 
+    bool mUsed;
+
 protected:
     static llULINT NEXT_SYMBOL_ID;
 };

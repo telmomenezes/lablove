@@ -65,6 +65,8 @@ public:
 
     void printDebug();
 
+    unsigned int mUsedCount;
+
     int addSymbol(lua_State* luaState);
     int getID(lua_State* luaState);
     int setDynamic(lua_State* luaState);

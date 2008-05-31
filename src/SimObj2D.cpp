@@ -101,6 +101,8 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     mLaserStrengthFactor = 0.0f;
     mLaserCostFactor = 0.0f;
     mLaserHitDuration = 0;
+
+    mFriendlyFire = 0;
 }
 
 SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
@@ -180,6 +182,8 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
     mLaserStrengthFactor = obj->mLaserStrengthFactor;
     mLaserCostFactor = obj->mLaserCostFactor;
     mLaserHitDuration = obj->mLaserHitDuration;
+
+    mFriendlyFire = 0;
 }
 
 SimObj2D::~SimObj2D()
@@ -981,6 +985,7 @@ void SimObj2D::fire(unsigned int actionType, float strength)
     }
 
     laser.mOwnerID = mID;
+    laser.mOwnerSpecies = mSpeciesID;
 
     switch (actionType)
     {
@@ -1073,8 +1078,17 @@ void SimObj2D::processLaserHit(Laser2D* laser)
             {
                 return;
             }
+
+            // Track friendly fire
+            if (((*iterLaser).mOwnerSpecies) == mSpeciesID)
+            {
+                mFriendlyFire++;
+            }
         }
         mLaserHits.push_back(*laser);
+
+        //unsigned int timeSinceFired = mSim2D->getTime() - laser->mFireTime;
+        //printf("laser delay: %d\n", timeSinceFired);
         break;
     case Laser2D::LASER_ONE_HIT:
     default:
@@ -1115,6 +1129,19 @@ void SimObj2D::setColoringScale(string symbolName,
     mColoringScaleRed2 = r2;
     mColoringScaleGreen2 = g2;
     mColoringScaleBlue2 = b2;
+}
+
+bool SimObj2D::getFieldValue(string fieldName, float& value)
+{
+    if (fieldName == "friendly_fire")
+    {
+        value = (float)mFriendlyFire;
+        return true;
+    }
+    else
+    {
+        return SimObj::getFieldValue(fieldName, value);
+    }
 }
 
 const char SimObj2D::mClassName[] = "SimObj2D";
