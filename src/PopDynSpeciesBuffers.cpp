@@ -266,7 +266,11 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimObj* org)
 
             if (obj->getSpeciesID() == speciesID)
             {
-                obj->mGroupFitness += org->mFitness;
+                if (obj->getID() != org->getID())
+                {
+                    obj->mGroupFitness += org->mFitness;
+                }
+                org->mGroupFitness += obj->mFitness;
             }
         }
     }
