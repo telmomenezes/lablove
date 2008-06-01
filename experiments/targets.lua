@@ -73,7 +73,7 @@ self = false
 comm = false
 
 queen = false
-groupSelection = true
+groupSelection = false
 
 agentBirthRadius = 100.0
 
