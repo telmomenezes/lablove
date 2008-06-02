@@ -69,7 +69,7 @@ unsigned int PopDynSpeciesBuffers::addSpecies(SimObj* org,
                                                 unsigned int population,
                                                 unsigned int bufferSize,
                                                 bool queen,
-                                                bool groupSelection)
+                                                float groupFactor)
 {
     unsigned int speciesID = CURRENT_SPECIES_ID++;
     org->setSpeciesID(speciesID);
@@ -83,7 +83,7 @@ unsigned int PopDynSpeciesBuffers::addSpecies(SimObj* org,
     mSpecies[speciesID].mCurrentQueen = 0;
     mSpecies[speciesID].mQueenState = population;
     mSpecies[speciesID].mSuperSister = NULL;
-    mSpecies[speciesID].mGroupSelection = groupSelection;
+    mSpecies[speciesID].mGroupFactor = groupFactor;
 
     return speciesID;
 }
@@ -212,20 +212,17 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
     }
 
     // Group fitness calculations
-    if (species->mGroupSelection)
+    list<SimObj*>* objList = mSimulation->getObjectList();
+
+    for (list<SimObj*>::iterator iterObj = objList->begin();
+            iterObj != objList->end();
+            iterObj++)
     {
-        list<SimObj*>* objList = mSimulation->getObjectList();
+        SimObj* obj = (*iterObj);
 
-        for (list<SimObj*>::iterator iterObj = objList->begin();
-                iterObj != objList->end();
-                iterObj++)
+        if (obj->getSpeciesID() == speciesID)
         {
-            SimObj* obj = (*iterObj);
-
-            if (obj->getSpeciesID() == speciesID)
-            {
-                newOrganism->mGroupFitness -= obj->mFitness;
-            }
+            newOrganism->mGroupFitness -= obj->mFitness;
         }
     }
 
@@ -254,33 +251,27 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimObj* org)
     SpeciesData* species = &(mSpecies[speciesID]);
 
     // Group fitness calculations
-    if (species->mGroupSelection)
+    list<SimObj*>* objList = mSimulation->getObjectList();
+
+    for (list<SimObj*>::iterator iterObj = objList->begin();
+            iterObj != objList->end();
+            iterObj++)
     {
-        list<SimObj*>* objList = mSimulation->getObjectList();
+        SimObj* obj = (*iterObj);
 
-        for (list<SimObj*>::iterator iterObj = objList->begin();
-                iterObj != objList->end();
-                iterObj++)
+        if (obj->getSpeciesID() == speciesID)
         {
-            SimObj* obj = (*iterObj);
-
-            if (obj->getSpeciesID() == speciesID)
+            if (obj->getID() != org->getID())
             {
-                if (obj->getID() != org->getID())
-                {
-                    obj->mGroupFitness += org->mFitness;
-                }
+                obj->mGroupFitness += org->mFitness;
                 org->mGroupFitness += obj->mFitness;
             }
         }
     }
 
-    PopDynSpecies::onOrganismDeath(org);
+    org->mFitness = (species->mGroupFactor * (org->mGroupFitness / (float)species->mPopulation)) + org->mFitness;
 
-    if (species->mGroupSelection)
-    {
-        org->mFitness = org->mGroupFitness;
-    }
+    PopDynSpecies::onOrganismDeath(org);
 
     bool deleteObj = true;
     bool keepComparing = true;
@@ -379,13 +370,9 @@ int PopDynSpeciesBuffers::addSpecies(lua_State* luaState)
     {
         queen = luaL_checkbool(luaState, 4);
     }
-    bool groupSelection = false;
-    if (lua_gettop(luaState) > 4)
-    {
-        groupSelection = luaL_checkbool(luaState, 5);
-    }
+    float groupFactor = luaL_optnumber(luaState, 5, 0.0f);
 
-    unsigned int id = addSpecies(obj, population, bufferSize, queen, groupSelection);
+    unsigned int id = addSpecies(obj, population, bufferSize, queen, groupFactor);
     lua_pushinteger(luaState, id);
     return 1;
 }

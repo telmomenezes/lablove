@@ -34,7 +34,7 @@ public:
     unsigned int mPopulation;
     unsigned int mBufferSize;
 
-    bool mGroupSelection;
+    float mGroupFactor;
     bool mQueen;
     unsigned int mCurrentQueen;
     unsigned int mQueenState;

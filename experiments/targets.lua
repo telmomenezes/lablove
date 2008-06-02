@@ -73,7 +73,7 @@ self = false
 comm = false
 
 queen = false
-groupSelection = false
+groupFactor = 1.0
 
 agentBirthRadius = 100.0
 
@@ -83,7 +83,7 @@ agentBirthRadius = 100.0
 dofile("basic_command_line.lua")
 
 queen = getBoolParameter("queen", queen, "queen")
-groupSelection = getBoolParameter("groupsel", groupSelection, "grps")
+groupFactor = getNumberParameter("groupfactor", groupFactor, "grpf")
 self = getBoolParameter("self", self, "self")
 comm = getBoolParameter("comm", self, "comm")
 targetMinEnergy = getNumberParameter("targmin", targetMinEnergy, "tmin")
@@ -245,7 +245,7 @@ sim:setPopulationDynamics(popDyn)
 popDyn:setCompCount(compCount)
 popDyn:setFitnessAging(fitnessAging)
 popDyn:setRecombineProb(recombineProb)
-agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize, queen, groupSelection)
+agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize, queen, groupFactor)
 popDyn:addSpecies(target, numberOfTargets, 1)
 popDyn:setEvolutionStopTime(evolutionStopTime)
 

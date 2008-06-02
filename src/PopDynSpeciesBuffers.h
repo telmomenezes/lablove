@@ -35,7 +35,7 @@ public:
                                     unsigned int population,
                                     unsigned int bufferSize,
                                     bool queen=false,
-                                    bool groupsSelection=false);
+                                    float groupFactor=0.0f);
 
     void setCompCount(unsigned int count){mCompCount = count;}
     void setFitnessAging(float aging){mFitnessAging = aging;}
