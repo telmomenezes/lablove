@@ -48,6 +48,7 @@ class Gridbrain : public Brain
 public:
     enum ExpansionType {ET_NONE, ET_COLUMN, ET_ROW};
     enum CompEquivalenceType {CET_ORIGIN, CET_TARGET, CET_NEW};
+    enum RecombinationType {RT_UNIFORM, RT_TREE, RT_TREE_TERMINAL};
 
     Gridbrain(lua_State* luaState=NULL);
     virtual ~Gridbrain();
@@ -147,6 +148,7 @@ public:
     void setMutateChangeInactiveComponentProb(float prob){mMutateChangeInactiveComponentProb = prob;}
     void setMutateSwapComponentProb(float prob){mMutateSwapComponentProb = prob;}
 
+    void setRecombinationType(RecombinationType type){mRecombinationType = type;}
     void setGeneGrouping(bool val){mGeneGrouping = val;}
 
     virtual bool getFieldValue(string fieldName, float& value);
@@ -194,6 +196,7 @@ public:
     int setMutateChangeInactiveComponentProb(lua_State* luaState);
     int setMutateSwapComponentProb(lua_State* luaState);
     int setParamMutationStanDev(lua_State* luaState);
+    int setRecombinationType(lua_State* luaState);
     int setGeneGrouping(lua_State* luaState);
     int setMaxInputDepth(lua_State* luaState);
 
@@ -253,6 +256,9 @@ protected:
     GridbrainComponent* getCompByRelativeOffset(GridbrainComponent* compOrig, unsigned int offset);
 
     void clearRecombineInfo();
+    void selectConnUniform(Gridbrain* gb1, Gridbrain* gb2);
+    void selectTree(GridbrainComponent* comp);
+    void selectConnTree(Gridbrain* gb1, Gridbrain* gb2, bool terminal);
     bool exists(GridbrainComponent* comp, unsigned int ex, unsigned int ey);
     void recombineUnusedComponents(Gridbrain* gb1, Gridbrain* gb2);
     GridbrainComponent* findEquivalentComponent(GridbrainComponent* comp);
@@ -315,6 +321,8 @@ protected:
     bool mGeneGrouping;
 
     map<llULINT, GridbrainMemCell> mMemory;
+
+    RecombinationType mRecombinationType;
 };
 
 #endif

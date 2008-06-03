@@ -65,6 +65,7 @@ Gridbrain::Gridbrain(lua_State* luaState)
     mActiveConnections = 0;
     mAllActive = false;
 
+    mRecombinationType = RT_UNIFORM;
     mGeneGrouping = false;
 }
 
@@ -133,6 +134,7 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
 
     gb->mOwner = mOwner;
 
+    gb->mRecombinationType = mRecombinationType;
     gb->mGeneGrouping = mGeneGrouping;
 
     gb->generateMemory(this);
@@ -2556,12 +2558,16 @@ Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
     {"setMutateChangeComponentProb", &Gridbrain::setMutateChangeComponentProb},
     {"setMutateChangeInactiveComponentProb", &Gridbrain::setMutateChangeInactiveComponentProb},
     {"setMutateSwapComponentProb", &Gridbrain::setMutateSwapComponentProb},
+    {"setRecombinationType", &Gridbrain::setRecombinationType},
     {"setGeneGrouping", &Gridbrain::setGeneGrouping},
     {"setMaxInputDepth", &Gridbrain::setMaxInputDepth},
     {0,0}
 };
 
 Orbit<Gridbrain>::NumberGlobalType Gridbrain::mNumberGlobals[] = {
+    {"RT_UNIFORM", RT_UNIFORM},
+    {"RT_TREE", RT_TREE},
+    {"RT_TREE_TERMINAL", RT_TREE_TERMINAL},
     {0,0}};
 
 int Gridbrain::init(lua_State* luaState)
@@ -2675,6 +2681,13 @@ int Gridbrain::setParamMutationStanDev(lua_State* luaState)
 {
     float sd = luaL_checknumber(luaState, 1);
     setParamMutationStanDev(sd);
+    return 0;
+}
+
+int Gridbrain::setRecombinationType(lua_State* luaState)
+{
+    RecombinationType type = (RecombinationType)luaL_checkint(luaState, 1);
+    setRecombinationType(type);
     return 0;
 }
 

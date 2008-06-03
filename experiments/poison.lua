@@ -52,6 +52,8 @@ changeInComponentProb = 0.2
 swapComponentProb = 0.0
 
 recombineProb = 1.0
+recTree = false
+recTerminal = false
 geneGrouping = false
 
 timeLimit = 0
@@ -59,7 +61,7 @@ logTimeInterval = 100
 logBrains = true
 logOnlyLastBrain = true
 
-humanAgent = true
+humanAgent = false
 
 evolutionStopTime = 0
 
@@ -82,7 +84,19 @@ bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
 compCount = getNumberParameter("compcount", compCount, "cc")
 fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")
 evolutionStopTime = getNumberParameter("evostop", evolutionStopTime, "est")
+recTree = getBoolParameter("rectree", recTree, "rectree")
+recTerminal = getBoolParameter("recterm", recTerminal, "recterm")
 --viewRange = getNumberParameter("viewrange", viewRange, "vr")
+
+recType = Gridbrain.RT_UNIFORM
+
+if recTree then
+    if recTerminal then
+        recType = Gridbrain.RT_TREE_TERMINAL
+    else
+        recType = Gridbrain.RT_TREE
+    end
+end
 
 logBaseName = "_poison_"
 
@@ -150,7 +164,7 @@ brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
 brain:setMutateChangeInactiveComponentProb(changeInComponentProb)
 brain:setMutateSwapComponentProb(swapComponentProb)
-
+brain:setRecombinationType(recType)
 brain:setGeneGrouping(geneGrouping)
 
 alphaSet = GridbrainComponentSet()

@@ -254,18 +254,10 @@ bool Gridbrain::selectGene(llULINT geneID, bool select)
     }
 }
 
-Brain* Gridbrain::recombine(Brain* brain)
+void Gridbrain::selectConnUniform(Gridbrain* gb1, Gridbrain* gb2)
 {
-    //printf("\n\n=== START RECOMBINE ===\n");
-
-    Gridbrain* gbNew = (Gridbrain*)(this->clone(false));
-    Gridbrain* gb2 = (Gridbrain*)brain;
-
-    gbNew->clearRecombineInfo();
-    gb2->clearRecombineInfo();
-
     // Select connections, parent 1
-    GridbrainConnection* conn = gbNew->mConnections;
+    GridbrainConnection* conn = gb1->mConnections;
     while (conn != NULL)
     {
         if (conn->mSelectionState == GridbrainConnection::SS_UNKNOWN)
@@ -274,12 +266,12 @@ Brain* Gridbrain::recombine(Brain* brain)
             {
                 if (mDistRecombine->iuniform(0, 2) == 0)
                 {
-                    gbNew->selectGene(conn->mGeneTag.mGeneID, true);
+                    gb1->selectGene(conn->mGeneTag.mGeneID, true);
                     gb2->selectGene(conn->mGeneTag.mGeneID, false);
                 }
                 else
                 {
-                    gbNew->selectGene(conn->mGeneTag.mGeneID, false);
+                    gb1->selectGene(conn->mGeneTag.mGeneID, false);
                     gb2->selectGene(conn->mGeneTag.mGeneID, true);
                 }
             }
@@ -287,11 +279,11 @@ Brain* Gridbrain::recombine(Brain* brain)
             {
                 if (mDistRecombine->iuniform(0, 2) == 0)
                 {
-                    gbNew->selectGene(conn->mGeneTag.mGeneID, true);
+                    gb1->selectGene(conn->mGeneTag.mGeneID, true);
                 }
                 else
                 {
-                    gbNew->selectGene(conn->mGeneTag.mGeneID, false);
+                    gb1->selectGene(conn->mGeneTag.mGeneID, false);
                 }
             }
         }
@@ -317,6 +309,112 @@ Brain* Gridbrain::recombine(Brain* brain)
 
         conn = (GridbrainConnection*)conn->mNextGlobalConnection;
     }
+}
+
+void Gridbrain::selectTree(GridbrainComponent* comp)
+{
+    GridbrainConnection* conn = comp->mFirstInConnection;
+    
+    while (conn != NULL)
+    {
+        selectGene(conn->mGeneTag.mGeneID, true);
+        selectTree((GridbrainComponent*)conn->mOrigComponent);
+        conn = (GridbrainConnection*)conn->mNextInConnection;
+    }
+}
+
+void Gridbrain::selectConnTree(Gridbrain* gb1, Gridbrain* gb2, bool terminal)
+{
+    // Select crossover component
+    unsigned int candidates = 0;
+    for (unsigned int i = 0; i < gb1->mNumberOfComponents; i++)
+    {
+        GridbrainComponent* comp = &gb1->mComponents[i];
+
+        if (comp->mActive
+            && (comp->mInboundConnections > 0)
+            && ((!terminal) || comp->mConnectionsCount == 0))
+        {
+            candidates++;
+        }
+    }
+
+    if (candidates > 0)
+    {
+        unsigned int pos = mDistRecombine->iuniform(0, candidates);
+        unsigned int curPos = 0;
+        unsigned int i = 0;
+        GridbrainComponent* xoverComp = NULL;
+
+        while (curPos <= pos)
+        {
+            xoverComp = &gb1->mComponents[i];
+            i++;
+            if (xoverComp->mActive
+                && (xoverComp->mInboundConnections > 0)
+                && ((!terminal) || xoverComp->mConnectionsCount == 0))
+            {
+                curPos++;
+            }
+        }
+
+        // Select connections, parent 1
+        gb1->selectTree(xoverComp);
+
+        GridbrainConnection* conn = gb1->mConnections;
+        while (conn != NULL)
+        {
+            if (conn->mSelectionState == GridbrainConnection::SS_SELECTED)
+            {
+                if (gb2->checkGene(conn->mGeneTag.mGeneID))
+                {
+                    gb2->selectGene(conn->mGeneTag.mGeneID, false);
+                }
+            }
+            else
+            {
+                gb1->selectGene(conn->mGeneTag.mGeneID, false);
+            }
+
+            conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+        }
+    }
+
+    // Select connections, parent 2
+    GridbrainConnection* conn = gb2->mConnections;
+    while (conn != NULL)
+    {
+        if (conn->mSelectionState == GridbrainConnection::SS_UNKNOWN)
+        {
+            gb2->selectGene(conn->mGeneTag.mGeneID, true);
+        }
+
+        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+    }
+}
+
+Brain* Gridbrain::recombine(Brain* brain)
+{
+    //printf("\n\n=== START RECOMBINE ===\n");
+
+    Gridbrain* gbNew = (Gridbrain*)(this->clone(false));
+    Gridbrain* gb2 = (Gridbrain*)brain;
+
+    gbNew->clearRecombineInfo();
+    gb2->clearRecombineInfo();
+
+    switch (mRecombinationType)
+    {
+    case RT_UNIFORM:
+        selectConnUniform(gbNew, gb2);
+        break;
+    case RT_TREE:
+        selectConnTree(gbNew, gb2, false);
+        break;
+    case RT_TREE_TERMINAL:
+        selectConnTree(gbNew, gb2, true);
+        break;
+    }
 
     /*printf(">>> PARENT 1\n");
     gbNew->printDebug();
@@ -324,7 +422,7 @@ Brain* Gridbrain::recombine(Brain* brain)
     gb2->printDebug();*/
 
     // Remove unselected connections from child
-    conn = gbNew->mConnections;
+    GridbrainConnection* conn = gbNew->mConnections;
     while (conn != NULL)
     {
         GridbrainConnection* nextConn = (GridbrainConnection*)conn->mNextGlobalConnection;
