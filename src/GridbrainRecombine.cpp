@@ -232,6 +232,30 @@ bool Gridbrain::checkGene(llULINT geneID)
     return false;
 }
 
+bool Gridbrain::isGeneSelected(llULINT geneID)
+{
+    GridbrainConnection* conn = mConnections;
+
+    while (conn != NULL)
+    {
+        if (conn->mGeneTag.mGeneID == geneID)
+        {
+            if (conn->mSelectionState == GridbrainConnection::SS_SELECTED)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+    }
+
+    return false;
+}
+
 bool Gridbrain::selectGene(llULINT geneID, bool select)
 {
     GridbrainConnection* conn = mConnections;
@@ -311,82 +335,146 @@ void Gridbrain::selectConnUniform(Gridbrain* gb1, Gridbrain* gb2)
     }
 }
 
-void Gridbrain::selectTree(GridbrainComponent* comp)
+void Gridbrain::selectPath(GridbrainComponent* comp)
 {
     GridbrainConnection* conn = comp->mFirstInConnection;
     
     while (conn != NULL)
     {
         selectGene(conn->mGeneTag.mGeneID, true);
-        selectTree((GridbrainComponent*)conn->mOrigComponent);
+        selectPath((GridbrainComponent*)conn->mOrigComponent);
         conn = (GridbrainConnection*)conn->mNextInConnection;
     }
 }
 
-void Gridbrain::selectConnTree(Gridbrain* gb1, Gridbrain* gb2, bool terminal)
+void Gridbrain::selectConnPaths(Gridbrain* gb1, Gridbrain* gb2)
 {
-    // Select crossover component
-    unsigned int candidates = 0;
+    // Select paths
     for (unsigned int i = 0; i < gb1->mNumberOfComponents; i++)
     {
-        GridbrainComponent* comp = &gb1->mComponents[i];
+        GridbrainComponent* comp1 = &gb1->mComponents[i];
 
-        if (comp->mActive
-            && (comp->mInboundConnections > 0)
-            && ((!terminal) || comp->mConnectionsCount == 0))
+        if (comp1->mActive
+            && (comp1->mInboundConnections > 0)
+            && (comp1->mConnectionsCount == 0))
         {
-            candidates++;
+            GridbrainComponent* comp2 = gb2->findEquivalentComponent(comp1);
+
+            if (comp2 == NULL)
+            {
+                if (mDistRecombine->iuniform(0, 2) == 0)
+                {
+                    gb1->selectPath(comp1);
+                }
+            }
+            else
+            {
+                if (mDistRecombine->iuniform(0, 2) == 0)
+                {
+                    gb1->selectPath(comp1);
+                }
+                else
+                {
+                    gb2->selectPath(comp2);
+                }
+            }
+        }
+    }
+    for (unsigned int i = 0; i < gb2->mNumberOfComponents; i++)
+    {
+        GridbrainComponent* comp2 = &gb2->mComponents[i];
+
+        if (comp2->mActive
+            && (comp2->mInboundConnections > 0)
+            && (comp2->mConnectionsCount == 0))
+        {
+            GridbrainComponent* comp1 = gb1->findEquivalentComponent(comp2);
+
+            if (comp1 == NULL)
+            {
+                if (mDistRecombine->iuniform(0, 2) == 0)
+                {
+                    gb2->selectPath(comp2);
+                }
+            }
         }
     }
 
-    if (candidates > 0)
+    // Decide on overalping genes and unknown genes
+    GridbrainConnection* conn = gb1->mConnections;
+    while (conn != NULL)
     {
-        unsigned int pos = mDistRecombine->iuniform(0, candidates);
-        unsigned int curPos = 0;
-        unsigned int i = 0;
-        GridbrainComponent* xoverComp = NULL;
-
-        while (curPos <= pos)
+        if (conn->mSelectionState == GridbrainConnection::SS_SELECTED)
         {
-            xoverComp = &gb1->mComponents[i];
-            i++;
-            if (xoverComp->mActive
-                && (xoverComp->mInboundConnections > 0)
-                && ((!terminal) || xoverComp->mConnectionsCount == 0))
+            if (gb2->isGeneSelected(conn->mGeneTag.mGeneID))
             {
-                curPos++;
+                if (mDistRecombine->iuniform(0, 2) == 0)
+                {
+                    gb2->selectGene(conn->mGeneTag.mGeneID, false);
+                }
+                else
+                {
+                    gb1->selectGene(conn->mGeneTag.mGeneID, false);
+                }
             }
         }
-
-        // Select connections, parent 1
-        gb1->selectTree(xoverComp);
-
-        GridbrainConnection* conn = gb1->mConnections;
-        while (conn != NULL)
+        else if (conn->mSelectionState == GridbrainConnection::SS_UNKNOWN)
         {
-            if (conn->mSelectionState == GridbrainConnection::SS_SELECTED)
+            if (!conn->mActive)
             {
                 if (gb2->checkGene(conn->mGeneTag.mGeneID))
                 {
-                    gb2->selectGene(conn->mGeneTag.mGeneID, false);
+                    if (mDistRecombine->iuniform(0, 2) == 0)
+                    {
+                        gb1->selectGene(conn->mGeneTag.mGeneID, true);
+                        gb2->selectGene(conn->mGeneTag.mGeneID, false);
+                    }
+                    else
+                    {
+                        gb1->selectGene(conn->mGeneTag.mGeneID, false);
+                        gb2->selectGene(conn->mGeneTag.mGeneID, true);
+                    }
+                }
+                else
+                {
+                    if (mDistRecombine->iuniform(0, 2) == 0)
+                    {
+                        gb1->selectGene(conn->mGeneTag.mGeneID, true);
+                    }
+                    else
+                    {
+                        gb1->selectGene(conn->mGeneTag.mGeneID, false);
+                    }
                 }
             }
             else
             {
                 gb1->selectGene(conn->mGeneTag.mGeneID, false);
             }
-
-            conn = (GridbrainConnection*)conn->mNextGlobalConnection;
         }
-    }
 
-    // Select connections, parent 2
-    GridbrainConnection* conn = gb2->mConnections;
+        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+    }
+    conn = gb2->mConnections;
     while (conn != NULL)
     {
         if (conn->mSelectionState == GridbrainConnection::SS_UNKNOWN)
         {
-            gb2->selectGene(conn->mGeneTag.mGeneID, true);
+            if (!conn->mActive)
+            {
+                if (mDistRecombine->iuniform(0, 2) == 0)
+                {
+                    gb2->selectGene(conn->mGeneTag.mGeneID, true);
+                }
+                else
+                {
+                    gb2->selectGene(conn->mGeneTag.mGeneID, false);
+                }
+            }
+            else
+            {
+                gb2->selectGene(conn->mGeneTag.mGeneID, false);
+            }
         }
 
         conn = (GridbrainConnection*)conn->mNextGlobalConnection;
@@ -408,11 +496,8 @@ Brain* Gridbrain::recombine(Brain* brain)
     case RT_UNIFORM:
         selectConnUniform(gbNew, gb2);
         break;
-    case RT_TREE:
-        selectConnTree(gbNew, gb2, false);
-        break;
-    case RT_TREE_TERMINAL:
-        selectConnTree(gbNew, gb2, true);
+    case RT_PATHS:
+        selectConnPaths(gbNew, gb2);
         break;
     }
 

@@ -2566,8 +2566,7 @@ Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
 
 Orbit<Gridbrain>::NumberGlobalType Gridbrain::mNumberGlobals[] = {
     {"RT_UNIFORM", RT_UNIFORM},
-    {"RT_TREE", RT_TREE},
-    {"RT_TREE_TERMINAL", RT_TREE_TERMINAL},
+    {"RT_PATHS", RT_PATHS},
     {0,0}};
 
 int Gridbrain::init(lua_State* luaState)

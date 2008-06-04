@@ -48,7 +48,7 @@ class Gridbrain : public Brain
 public:
     enum ExpansionType {ET_NONE, ET_COLUMN, ET_ROW};
     enum CompEquivalenceType {CET_ORIGIN, CET_TARGET, CET_NEW};
-    enum RecombinationType {RT_UNIFORM, RT_TREE, RT_TREE_TERMINAL};
+    enum RecombinationType {RT_UNIFORM, RT_PATHS};
 
     Gridbrain(lua_State* luaState=NULL);
     virtual ~Gridbrain();
@@ -257,8 +257,8 @@ protected:
 
     void clearRecombineInfo();
     void selectConnUniform(Gridbrain* gb1, Gridbrain* gb2);
-    void selectTree(GridbrainComponent* comp);
-    void selectConnTree(Gridbrain* gb1, Gridbrain* gb2, bool terminal);
+    void selectPath(GridbrainComponent* comp);
+    void selectConnPaths(Gridbrain* gb1, Gridbrain* gb2);
     bool exists(GridbrainComponent* comp, unsigned int ex, unsigned int ey);
     void recombineUnusedComponents(Gridbrain* gb1, Gridbrain* gb2);
     GridbrainComponent* findEquivalentComponent(GridbrainComponent* comp);
@@ -271,6 +271,7 @@ protected:
                                 GridbrainConnection* conn);
 
     bool checkGene(llULINT geneID);
+    bool isGeneSelected(llULINT geneID);
     bool selectGene(llULINT geneID, bool select);
 
     int compEquivalence(GridbrainComponent* comp1, GridbrainComponent* comp2, CompEquivalenceType eqType);
