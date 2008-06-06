@@ -94,10 +94,16 @@ unsigned int PopDynSpeciesBuffers::addSpecies(SimObj* org,
 
 unsigned int PopDynSpeciesBuffers::selectProgenitor(SpeciesData* species, int invalidPos)
 {
+    unsigned int bufferSize = species->mBufferSize;
+    if ((invalidPos >= 0) && (bufferSize > 0))
+    {
+        bufferSize -= 1;
+    }
+
     if (species->mRoulette)
     {
         float totalFitness = 0;
-        for (unsigned int i = 0; i < species->mBufferSize; i++)
+        for (unsigned int i = 0; i < bufferSize; i++)
         {
             if (i != invalidPos)
             {
@@ -108,7 +114,7 @@ unsigned int PopDynSpeciesBuffers::selectProgenitor(SpeciesData* species, int in
         float pointer = mDistOrganism->uniform(0.0f, 1.0f);
 
         float totalRelFitness = 0;
-        for (unsigned int i = 0; i < species->mBufferSize; i++)
+        for (unsigned int i = 0; i < bufferSize; i++)
         {
             if (i != invalidPos)
             {
@@ -116,7 +122,7 @@ unsigned int PopDynSpeciesBuffers::selectProgenitor(SpeciesData* species, int in
 
                 if (totalFitness == 0.0f)
                 {
-                    relFitness = 1.0f / (float)species->mBufferSize;
+                    relFitness = 1.0f / (float)bufferSize;
                 }
                 else
                 {
@@ -133,11 +139,7 @@ unsigned int PopDynSpeciesBuffers::selectProgenitor(SpeciesData* species, int in
     }
     else
     {
-        unsigned int bufferSize = species->mBufferSize;
-        if (invalidPos >= 0)
-        {
-            bufferSize -= 1;
-        }
+        
 
         float bestObject = mDistOrganism->iuniform(0, bufferSize);
         if (invalidPos >= 0)
