@@ -33,6 +33,8 @@ public:
     list<Log*> mSampleLogs;
     unsigned int mPopulation;
     unsigned int mBufferSize;
+    int mTournamentSize;
+    bool mRoulette;
 
     float mGroupFactor;
     bool mQueen;

@@ -34,6 +34,8 @@ public:
     virtual unsigned int addSpecies(SimObj* org,
                                     unsigned int population,
                                     unsigned int bufferSize,
+                                    bool roulette=false,
+                                    int tournamentSize=1,
                                     bool queen=false,
                                     float groupFactor=0.0f);
 
@@ -51,6 +53,7 @@ public:
     int setRecombineProb(lua_State* luaState);
 
 protected:
+    unsigned int selectProgenitor(SpeciesData* species, int invalidPos=-1);
     void xoverMutateSend(unsigned int speciesID, bool init=false, SimObj* nearObj=NULL);
 
     static mt_distribution* mDistRecombine;

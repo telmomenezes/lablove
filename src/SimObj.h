@@ -113,6 +113,7 @@ public:
     bool mInitialized;
 
     float mFitness;
+    float mAgedFitness;
     float mGroupFitness;
 
     map<int, SymbolTable*> mSymbolTables;

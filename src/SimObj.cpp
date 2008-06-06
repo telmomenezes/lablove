@@ -38,6 +38,7 @@ SimObj::SimObj(lua_State* luaState)
     mInitialized = false;
 
     mFitness = 0.0f;
+    mAgedFitness = 0.0f;
     mGroupFitness = 0.0f;
 
     mBirthRadius = 0.0f;
@@ -70,6 +71,7 @@ SimObj::SimObj(SimObj* obj)
     mInitialized = false;
 
     mFitness = 0.0f;
+    mAgedFitness = 0.0f;
     mGroupFitness = 0.0f;
     mFitnessMeasure = obj->mFitnessMeasure;
 

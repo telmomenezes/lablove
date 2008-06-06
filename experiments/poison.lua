@@ -41,6 +41,9 @@ compCount = 1
 bufferSize = 100
 fitnessAging = 0.1
 
+roulette = false
+tournamentSize = 0
+
 addConnectionProb = 0.01
 removeConnectionProb = 0.01
 changeParamProb = 0.0
@@ -84,6 +87,8 @@ compCount = getNumberParameter("compcount", compCount, "cc")
 fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")
 evolutionStopTime = getNumberParameter("evostop", evolutionStopTime, "est")
 recPaths = getBoolParameter("recpaths", recPaths, "recpaths")
+roulette = getBoolParameter("roulette", roulette, "rlt")
+tournamentSize = getNumberParameter("trnsize", tournamentSize, "tsiz")
 --viewRange = getNumberParameter("viewrange", viewRange, "vr")
 
 recType = Gridbrain.RT_UNIFORM
@@ -219,7 +224,7 @@ sim:setPopulationDynamics(popDyn)
 popDyn:setCompCount(compCount)
 popDyn:setFitnessAging(fitnessAging)
 popDyn:setRecombineProb(recombineProb)
-agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize)
+agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize, roulette, tournamentSize)
 popDyn:addSpecies(plant, numberOfPlants, 1)
 popDyn:setEvolutionStopTime(evolutionStopTime)
 

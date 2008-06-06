@@ -68,6 +68,8 @@ void PopDynSpeciesBuffers::init(Simulation* sim)
 unsigned int PopDynSpeciesBuffers::addSpecies(SimObj* org,
                                                 unsigned int population,
                                                 unsigned int bufferSize,
+                                                bool roulette,
+                                                int tournamentSize,
                                                 bool queen,
                                                 float groupFactor)
 {
@@ -84,8 +86,89 @@ unsigned int PopDynSpeciesBuffers::addSpecies(SimObj* org,
     mSpecies[speciesID].mQueenState = population;
     mSpecies[speciesID].mSuperSister = NULL;
     mSpecies[speciesID].mGroupFactor = groupFactor;
+    mSpecies[speciesID].mTournamentSize = tournamentSize;
+    mSpecies[speciesID].mRoulette = roulette;
 
     return speciesID;
+}
+
+unsigned int PopDynSpeciesBuffers::selectProgenitor(SpeciesData* species, int invalidPos)
+{
+    if (species->mRoulette)
+    {
+        float totalFitness = 0;
+        for (unsigned int i = 0; i < species->mBufferSize; i++)
+        {
+            if (i != invalidPos)
+            {
+                totalFitness += species->mOrganismVector[i]->mFitness;
+            }
+        }
+
+        float pointer = mDistOrganism->uniform(0.0f, 1.0f);
+
+        float totalRelFitness = 0;
+        for (unsigned int i = 0; i < species->mBufferSize; i++)
+        {
+            if (i != invalidPos)
+            {
+                float relFitness;
+
+                if (totalFitness == 0.0f)
+                {
+                    relFitness = 1.0f / (float)species->mBufferSize;
+                }
+                else
+                {
+                    relFitness = species->mOrganismVector[i]->mFitness / totalFitness;
+                }
+                totalRelFitness += relFitness;
+
+                if (totalRelFitness >= pointer)
+                {
+                    return i;
+                }
+            }
+        }
+    }
+    else
+    {
+        unsigned int bufferSize = species->mBufferSize;
+        if (invalidPos >= 0)
+        {
+            bufferSize -= 1;
+        }
+
+        float bestObject = mDistOrganism->iuniform(0, bufferSize);
+        if (invalidPos >= 0)
+        {
+            if (bestObject >= invalidPos)
+            {
+                bestObject++;
+            }
+        }
+        SimObj* obj = species->mOrganismVector[bestObject];
+        float bestFitness = obj->mFitness;
+
+        for (unsigned int i = 0; i < (species->mTournamentSize - 1); i++)
+        {
+            unsigned int pos = mDistOrganism->iuniform(0, bufferSize);
+            if (invalidPos >= 0)
+            {
+                if (pos >= invalidPos)
+                {
+                    pos++;
+                }
+            }
+            obj = species->mOrganismVector[pos];
+            if (obj->mFitness > bestFitness)
+            {
+                bestObject = pos;
+            }
+        }
+
+        return bestObject;
+    }
 }
 
 void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, SimObj* nearObj)
@@ -101,11 +184,7 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
         if (species->mQueenState >= species->mPopulation)
         {
             parent1 = species->mCurrentQueen;
-            parent2 = mDistOrganism->iuniform(0, species->mBufferSize - 1);
-            if (parent2 >= parent1)
-            {
-                parent2++;
-            }
+            parent2 = selectProgenitor(species, parent1);
             //printf(">> parent1: %d parent2: %d\n", parent1, parent2);
             species->mCurrentQueen = parent2;
 
@@ -124,14 +203,11 @@ void PopDynSpeciesBuffers::xoverMutateSend(unsigned int speciesID, bool init, Si
     }
     else
     {
-        parent1 = mDistOrganism->iuniform(0, species->mBufferSize);
+        parent1 = selectProgenitor(species);
+
         if (species->mBufferSize > 1)
         {
-            parent2 = mDistOrganism->iuniform(0, species->mBufferSize - 1);
-            if (parent2 >= parent1)
-            {
-                parent2++;
-            }
+            parent2 = selectProgenitor(species, parent1);
         }
         else
         {
@@ -282,10 +358,11 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimObj* org)
         unsigned int organismNumber = mDistOrganism->iuniform(0, species->mBufferSize);
         SimObj* org2 = species->mOrganismVector[organismNumber];
 
-        if (org->mFitness >= org2->mFitness)
+        if (org->mFitness >= org2->mAgedFitness)
         {
             delete species->mOrganismVector[organismNumber];
 
+            org->mAgedFitness = org->mFitness;
             species->mOrganismVector[organismNumber] = org;
             deleteObj = false;
             keepComparing = false;
@@ -294,7 +371,7 @@ void PopDynSpeciesBuffers::onOrganismDeath(SimObj* org)
         }
         else
         {
-            org2->mFitness *= (1.0f - mFitnessAging);
+            org2->mAgedFitness *= (1.0f - mFitnessAging);
         }
     }
 
@@ -365,14 +442,20 @@ int PopDynSpeciesBuffers::addSpecies(lua_State* luaState)
     SimObj* obj = (SimObj*)Orbit<PopDynSpeciesBuffers>::pointer(luaState, 1);
     unsigned int population = luaL_checkint(luaState, 2);
     unsigned int bufferSize = luaL_checkint(luaState, 3);
-    bool queen = false;
+    bool roulette = false;
     if (lua_gettop(luaState) > 3)
     {
-        queen = luaL_checkbool(luaState, 4);
+        roulette = luaL_checkbool(luaState, 4);
     }
-    float groupFactor = luaL_optnumber(luaState, 5, 0.0f);
+    int tournamentSize = luaL_optint(luaState, 5, 1);
+    bool queen = false;
+    if (lua_gettop(luaState) > 5)
+    {
+        queen = luaL_checkbool(luaState, 6);
+    }
+    float groupFactor = luaL_optnumber(luaState, 7, 0.0f);
 
-    unsigned int id = addSpecies(obj, population, bufferSize, queen, groupFactor);
+    unsigned int id = addSpecies(obj, population, bufferSize, roulette, tournamentSize, queen, groupFactor);
     lua_pushinteger(luaState, id);
     return 1;
 }
