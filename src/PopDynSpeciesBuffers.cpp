@@ -139,9 +139,7 @@ unsigned int PopDynSpeciesBuffers::selectProgenitor(SpeciesData* species, int in
     }
     else
     {
-        
-
-        float bestObject = mDistOrganism->iuniform(0, bufferSize);
+        unsigned int bestObject = mDistOrganism->iuniform(0, bufferSize);
         if (invalidPos >= 0)
         {
             if (bestObject >= invalidPos)
