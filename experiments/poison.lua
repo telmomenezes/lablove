@@ -41,9 +41,6 @@ compCount = 1
 bufferSize = 100
 fitnessAging = 0.1
 
-roulette = false
-tournamentSize = 0
-
 addConnectionProb = 0.01
 removeConnectionProb = 0.01
 changeParamProb = 0.0
@@ -55,7 +52,8 @@ changeInComponentProb = 0.2
 swapComponentProb = 0.0
 
 recombineProb = 1.0
-recPaths = false
+recTree = false
+recTerminal = false
 geneGrouping = false
 
 timeLimit = 0
@@ -86,15 +84,18 @@ bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
 compCount = getNumberParameter("compcount", compCount, "cc")
 fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")
 evolutionStopTime = getNumberParameter("evostop", evolutionStopTime, "est")
-recPaths = getBoolParameter("recpaths", recPaths, "recpaths")
-roulette = getBoolParameter("roulette", roulette, "rlt")
-tournamentSize = getNumberParameter("trnsize", tournamentSize, "tsiz")
+recTree = getBoolParameter("rectree", recTree, "rectree")
+recTerminal = getBoolParameter("recterm", recTerminal, "recterm")
 --viewRange = getNumberParameter("viewrange", viewRange, "vr")
 
 recType = Gridbrain.RT_UNIFORM
 
-if recPaths then
-    recType = Gridbrain.RT_PATHS
+if recTree then
+    if recTerminal then
+        recType = Gridbrain.RT_TREE_TERMINAL
+    else
+        recType = Gridbrain.RT_TREE
+    end
 end
 
 logBaseName = "_poison_"
@@ -224,7 +225,7 @@ sim:setPopulationDynamics(popDyn)
 popDyn:setCompCount(compCount)
 popDyn:setFitnessAging(fitnessAging)
 popDyn:setRecombineProb(recombineProb)
-agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize, roulette, tournamentSize)
+agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize)
 popDyn:addSpecies(plant, numberOfPlants, 1)
 popDyn:setEvolutionStopTime(evolutionStopTime)
 
