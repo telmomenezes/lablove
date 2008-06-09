@@ -668,6 +668,9 @@ void SimObj2D::onScanObject(SimObj2D* targ,
     }
 
     float normalizedValue;
+    float convX;
+    float convY;
+    float convAngle;
 
     list<InterfaceItem*>* interface = mBrain->getInputInterface(mChannelObjects);
     unsigned int pos = 0;
@@ -702,9 +705,9 @@ void SimObj2D::onScanObject(SimObj2D* targ,
                 break;
 
             case Sim2D::PERCEPTION_CONVERGENCE:
-                float convX = targ->mX + cosf(targ->mRot) * mLaserRange;
-                float convY = targ->mY + sinf(targ->mRot) * mLaserRange;
-                float convAngle = atan2f(convY - mY, convX - mX);
+                convX = targ->mX + cosf(targ->mRot) * mLaserRange;
+                convY = targ->mY + sinf(targ->mRot) * mLaserRange;
+                convAngle = atan2f(convY - mY, convX - mX);
                 normalizedValue = Sim2D::normalizeAngle(mRot - convAngle) / M_PI;
                 inBuffer[pos] = normalizedValue;
                 break;
