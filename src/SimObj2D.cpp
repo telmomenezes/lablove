@@ -701,6 +701,14 @@ void SimObj2D::onScanObject(SimObj2D* targ,
                 inBuffer[pos] = normalizedValue;
                 break;
 
+            case Sim2D::PERCEPTION_CONVERGENCE:
+                float convX = targ->mX + cosf(targ->mRot) * mLaserRange;
+                float convY = targ->mY + sinf(targ->mRot) * mLaserRange;
+                float convAngle = atan2f(convY - mY, convX - mX);
+                normalizedValue = Sim2D::normalizeAngle(mRot - convAngle) / M_PI;
+                inBuffer[pos] = normalizedValue;
+                break;
+
             case Sim2D::PERCEPTION_DISTANCE:
                 normalizedValue = distance / mViewRange;
                 inBuffer[pos] = normalizedValue;

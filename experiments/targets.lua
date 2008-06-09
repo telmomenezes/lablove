@@ -12,8 +12,8 @@ numberOfAgents = 10
 
 agentSize = 10.0
 
-targetMinEnergy = 1.0
-targetMaxEnergy = 1.0
+targetMinEnergy = 0.5
+targetMaxEnergy = 3.0
 targetSizeFactor = 10.0
 
 worldWidth = 1000
@@ -23,7 +23,7 @@ alphaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, GTZ, ZERO, MAX,
 betaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, GTZ, ZERO, CLK, MEMW, MEMC, MEMD}
 
 viewRange = 300.0
-viewAngle = 170.0
+viewAngle = 350.0
 
 maxAge = 5000
 
@@ -70,7 +70,7 @@ humanAgent = false
 evolutionStopTime = 0
 
 self = false
-comm = false
+comm = true
 
 queen = false
 groupFactor = 1.0
@@ -161,7 +161,7 @@ end
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_POSITION)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_DISTANCE)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_SIZE)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_ORIENTATION)
+alphaSet:addComponent(IN, Sim2D.PERCEPTION_CONVERGENCE)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_SYMBOL, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
 grid = Grid()
 grid:init(ALPHA, 0, 0)
@@ -282,7 +282,7 @@ if humanAgent then
     dummyBrain = DummyBrain(1)
     dummyBrain:setChannelName(0, "objects")
     dummyBrain:addPerception("Position", 0, Sim2D.PERCEPTION_POSITION)
-    dummyBrain:addPerception("Orientation", 0, Sim2D.PERCEPTION_ORIENTATION)
+    dummyBrain:addPerception("Convergence", 0, Sim2D.PERCEPTION_CONVERGENCE)
     dummyBrain:addPerception("Distance", 0, Sim2D.PERCEPTION_DISTANCE)
     dummyBrain:addPerception("Color", 0, Sim2D.PERCEPTION_SYMBOL, colorTableCode, humanColor:getID(), colorTableCode)
     dummyBrain:addPerception("Target", 0, Sim2D.PERCEPTION_TARGET)

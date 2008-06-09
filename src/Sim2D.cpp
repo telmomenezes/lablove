@@ -973,6 +973,8 @@ string Sim2D::getInterfaceName(bool input, int type)
             return "canspeak";
         case PERCEPTION_CAN_FIRE:
             return "canfire";
+        case PERCEPTION_CONVERGENCE:
+            return "convergence";
         default:
             return "?";
         }
@@ -1048,6 +1050,7 @@ Orbit<Sim2D>::NumberGlobalType Sim2D::mNumberGlobals[] = {
     {"PERCEPTION_ENERGY", PERCEPTION_ENERGY},
     {"PERCEPTION_CAN_SPEAK", PERCEPTION_CAN_SPEAK},
     {"PERCEPTION_CAN_FIRE", PERCEPTION_CAN_FIRE},
+    {"PERCEPTION_CONVERGENCE", PERCEPTION_CONVERGENCE},
     {"ACTION_NULL", ACTION_NULL},
     {"ACTION_GO", ACTION_GO},
     {"ACTION_ROTATE", ACTION_ROTATE},
