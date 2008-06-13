@@ -699,6 +699,7 @@ void SimObj2D::onScanObject(SimObj2D* targ,
     float dX;
     float dY;
     float ltAng;
+    InterfaceItem* item;
 
     list<InterfaceItem*>* interface = mBrain->getInputInterface(mChannelObjects);
     unsigned int pos = 0;
@@ -759,7 +760,7 @@ void SimObj2D::onScanObject(SimObj2D* targ,
                 break;
 
             case Sim2D::PERCEPTION_SYMBOL:
-                InterfaceItem* item = (*iterItem);
+                item = (*iterItem);
                 normalizedValue = mSim2D->calcSymbolsBinding(this,
                                                     targ,
                                                     item->mOrigSymTable,
