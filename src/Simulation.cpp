@@ -107,6 +107,11 @@ void Simulation::cycle()
         SimObj* obj = *iterObj;
 
         obj->process(); 
+    }
+
+    for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
+    {
+        SimObj* obj = *iterObj;
 
         if (obj->mType == SimObj::TYPE_AGENT)
         {

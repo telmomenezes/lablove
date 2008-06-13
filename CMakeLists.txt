@@ -70,8 +70,7 @@ SET(SOURCE_FILES
     src/PopulationDynamics.cpp
     src/PopDynGenerations.cpp
     src/PopDynSpecies.cpp
-    src/PopDynFixedSpecies.cpp
-    src/PopDynSpeciesBuffers.cpp
+    src/Species.cpp
     src/Symbol.cpp
     src/SymbolBitString.cpp
     src/SymbolRGB.cpp

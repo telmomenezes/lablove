@@ -58,6 +58,7 @@ public:
 
     virtual void placeRandom(SimObj* obj){}
     virtual void placeNear(SimObj* obj, SimObj* ref){}
+    virtual void replace(SimObj* obj, SimObj* ref){}
 
     void setSelectedObject(SimObj* object);
     SimObj* getSelectedObject(){return mSelectedObject;}

@@ -45,6 +45,7 @@ class SimObj
 {
 public:
     enum Type {TYPE_OBJECT, TYPE_AGENT};
+    enum DeathType {DEATH_HARD, DEATH_EXPIRED};
 
     static llULINT CURRENT_ID;
 
@@ -65,6 +66,8 @@ public:
 
     unsigned int getSpeciesID(){return mSpeciesID;}
     void setSpeciesID(unsigned int id){mSpeciesID = id;}
+    int getBodyID(){return mBodyID;}
+    void setBodyID(int id){mBodyID = id;}
 
     llULINT getCreationTime(){return mCreationTime;}
     void setCreationTime(llULINT time){mCreationTime = time;}
@@ -93,6 +96,10 @@ public:
 
     void setBirthRadius(float rad){mBirthRadius = rad;}
     float getBirthRadius(){return mBirthRadius;}
+    void setKeepBodyOnHardDeath(bool val){mKeepBodyOnHardDeath = val;}
+    bool getKeepBodyOnHardDeath(){return mKeepBodyOnHardDeath;}
+    void setKeepBodyOnExpirationDeath(bool val){mKeepBodyOnExpirationDeath = val;}
+    bool getKeepBodyOnExpirationDeath(){return mKeepBodyOnExpirationDeath;}
 
     void setFitnessMeasure(int measure){mFitnessMeasure = measure;}
     int getFitnessMeasure(){return mFitnessMeasure;}
@@ -105,6 +112,9 @@ public:
 
     virtual void printDebug();
 
+    void setDeathType(DeathType type){mDeathType = type;}
+    DeathType getDeathType(){return mDeathType;}
+
     bool mDeleted;
 
     Type mType;
@@ -113,8 +123,8 @@ public:
     bool mInitialized;
 
     float mFitness;
-    float mAgedFitness;
-    float mGroupFitness;
+    float mTeamFitness;
+    float mBodyFitness;
 
     map<int, SymbolTable*> mSymbolTables;
 
@@ -128,6 +138,8 @@ public:
     int setBirthRadius(lua_State* luaState);
     int setFitnessMeasure(lua_State* luaState);
     int setBrain(lua_State* luaState);
+    int setKeepBodyOnHardDeath(lua_State* luaState);
+    int setKeepBodyOnExpirationDeath(lua_State* luaState);
 
 protected:
     virtual void recombine(SimObj* parent1, SimObj* parent2);
@@ -137,12 +149,17 @@ protected:
     map<string, SymbolPointer> mNamedSymbols;
 
     unsigned int mSpeciesID;
+    int mBodyID;
 
     float mBirthRadius;
+    bool mKeepBodyOnHardDeath;
+    bool mKeepBodyOnExpirationDeath;
     int mFitnessMeasure;
 
     Brain* mBrain;
     list<Message*> mMessageList;
+
+    DeathType mDeathType;
 };
 #endif
 

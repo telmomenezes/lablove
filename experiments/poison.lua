@@ -219,14 +219,17 @@ plant:setColoringScale("food", plantFood, feedCenter, 255, 0, 0, 0, 255, 0)
 -- Population Dynamics
 --------------------------------------------------------------------------------
 
-popDyn = PopDynSpeciesBuffers()
+popDyn = PopDynSpecies()
 sim:setPopulationDynamics(popDyn)
 
-popDyn:setCompCount(compCount)
-popDyn:setFitnessAging(fitnessAging)
-popDyn:setRecombineProb(recombineProb)
-agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize)
-popDyn:addSpecies(plant, numberOfPlants, 1)
+agentSpecies = Species(agent, numberOfAgents, bufferSize)
+plantSpecies = Species(plant, numberOfPlants, 1)
+
+agentSpecies:setFitnessAging(fitnessAging)
+agentSpecies:setRecombineProb(recombineProb)
+
+agentSpeciesIndex = popDyn:addSpecies(agentSpecies)
+popDyn:addSpecies(plantSpecies)
 popDyn:setEvolutionStopTime(evolutionStopTime)
 
 -- Human Agent
@@ -290,7 +293,7 @@ stats:addField("gb_grid_width_objects")
 stats:addField("gb_grid_height_objects")
 stats:addField("gb_grid_width_beta")
 stats:addField("gb_grid_height_beta")
-popDyn:addDeathLog(agentSpeciesIndex, stats)
+agentSpecies:addDeathLog(stats)
 
 if logBrains then
     logBrain = LogBestBrain()
@@ -301,7 +304,7 @@ if logBrains then
     else
         logBrain:setFileNamePrefix("brain" .. logSuffix .. "t")
     end
-    popDyn:addDeathLog(agentSpeciesIndex, logBrain)
+    agentSpecies:addDeathLog(logBrain)
 end
 
 popDyn:setLogTimeInterval(logTimeInterval)

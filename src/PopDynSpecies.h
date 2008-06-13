@@ -20,45 +20,38 @@
 #if !defined(__INCLUDE_POPDYN_SPECIES_H)
 #define __INCLUDE_POPDYN_SPECIES_H
 
-#include "PopulationDynamics.h"
+#include "Simulation.h"
 #include "Log.h"
-#include "RandDistManager.h"
-#include "SpeciesData.h"
-#include "types.h"
-
-#include <map>
-#include <vector>
-#include <list>
-
-using std::map;
-using std::vector;
-using std::list;
+#include "Species.h"
+#include "PopulationDynamics.h"
 
 class PopDynSpecies : public PopulationDynamics
 {
 public:
-    static unsigned int CURRENT_SPECIES_ID;
-
     PopDynSpecies(lua_State* luaState=NULL);
     virtual ~PopDynSpecies();
+
+    virtual void init(Simulation* sim);
     virtual void onCycle(llULINT time, double realTime);
     virtual void onOrganismDeath(SimObj* org);
 
-    virtual unsigned int addSpecies(SimObj* org, unsigned int population);
+    virtual unsigned int addSpecies(Species* species);
 
-    void addSampleLog(unsigned int speciesIndex, Log* log);
-    void addDeathLog(unsigned int speciesIndex, Log* log);
     void setLogTimeInterval(llULINT interval){mLogTimeInterval = interval * 1000;}
     void setEvolutionStopTime(unsigned int time){mEvolutionStopTime = ((llULINT)time) * 1000;}
 
-    int addSampleLog(lua_State* luaState);
-    int addDeathLog(lua_State* luaState);
+    static const char mClassName[];
+    static Orbit<PopDynSpecies>::MethodType mMethods[];
+    static Orbit<PopDynSpecies>::NumberGlobalType mNumberGlobals[];
+
     int setLogTimeInterval(lua_State* luaState);
     int setEvolutionStopTime(lua_State* luaState);
+    int addSpecies(lua_State* luaState);
 
 protected:
-    static mt_distribution* mDistOrganism;
-    map<unsigned int, SpeciesData> mSpecies;
+    static unsigned int CURRENT_SPECIES_ID;
+
+    map<unsigned int, Species*> mSpecies;
     llULINT mLogTimeInterval;
 
     llULINT mEvolutionStopTime;

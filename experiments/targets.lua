@@ -7,12 +7,12 @@ dofile("basic_defines.lua")
 -- Experiment Parameters
 --------------------------------------------------------------------------------
 
-numberOfTargets = 50
-numberOfAgents = 10
+numberOfTargets = 1--50
+numberOfAgents = 0--10
 
 agentSize = 10.0
 
-targetMinEnergy = 0.5
+targetMinEnergy = 1.1
 targetMaxEnergy = 3.0
 targetSizeFactor = 10.0
 
@@ -65,15 +65,17 @@ logTimeInterval = 100
 logBrains = true
 logOnlyLastBrain = true
 
-humanAgent = false
+humanAgent = true
 
 evolutionStopTime = 0
 
 self = false
 comm = true
 
-queen = false
-groupFactor = 1.0
+kinFactor = 1.0
+teamFactor = 0.5
+bodyFactor = 0.5
+bodyQueue = 10
 
 agentBirthRadius = 100.0
 
@@ -82,8 +84,8 @@ agentBirthRadius = 100.0
 
 dofile("basic_command_line.lua")
 
-queen = getBoolParameter("queen", queen, "queen")
-groupFactor = getNumberParameter("groupfactor", groupFactor, "grpf")
+kinFactor = getBoolParameter("kin", kinFactor, "kin")
+teamFactor = getNumberParameter("team", teamFactor, "team")
 self = getBoolParameter("self", self, "self")
 comm = getBoolParameter("comm", self, "comm")
 targetMinEnergy = getNumberParameter("targmin", targetMinEnergy, "tmin")
@@ -132,6 +134,8 @@ agent:setLaserRange(laserRange)
 agent:setLaserStrengthFactor(laserStrengthFactor)
 agent:setLaserCostFactor(laserCostFactor)
 agent:setLaserHitDuration(laserHitDuration)
+agent:setKeepBodyOnExpirationDeath(true)
+--agent:setKeepBodyOnHardDeath(true)
 
 agentColor = SymbolRGB(0, 0, 255)
 symTable = SymbolTable(agentColor)
@@ -224,7 +228,7 @@ agent:setBrain(brain)
 --------------------------------------------------------------------------------
 
 target = Target2D()
-target:setMaxAge(maxAge)
+target:setMaxAge(0)
 target:setEnergyLimits(targetMinEnergy, targetMaxEnergy)
 target:setEnergySizeFactor(targetSizeFactor)
 target:setShape(SimObj2D.SHAPE_CIRCLE)
@@ -239,15 +243,22 @@ target:setSymbolName("color", colorTableCode, targetColor:getID())
 -- Population Dynamics
 --------------------------------------------------------------------------------
 
-popDyn = PopDynSpeciesBuffers()
+popDyn = PopDynSpecies()
 sim:setPopulationDynamics(popDyn)
 
-popDyn:setCompCount(compCount)
-popDyn:setFitnessAging(fitnessAging)
-popDyn:setRecombineProb(recombineProb)
-agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, bufferSize, queen, groupFactor)
-popDyn:addSpecies(target, numberOfTargets, 1)
+agentSpecies = Species(agent, numberOfAgents, bufferSize)
+targetSpecies = Species(target, numberOfTargets, 1)
+
+agentSpecies:setFitnessAging(fitnessAging)
+agentSpecies:setRecombineProb(recombineProb)
+agentSpecies:setKinFactor(kinFactor)
+agentSpecies:setTeamFactor(teamFactor)
+agentSpecies:setBodyParams(bodyFactor, bodyQueue)
+
+agentSpeciesIndex = popDyn:addSpecies(agentSpecies)
+popDyn:addSpecies(targetSpecies)
 popDyn:setEvolutionStopTime(evolutionStopTime)
+
 
 -- Human Agent
 --------------------------------------------------------------------------------
@@ -285,7 +296,7 @@ if humanAgent then
     dummyBrain:addPerception("Convergence", 0, Sim2D.PERCEPTION_CONVERGENCE)
     dummyBrain:addPerception("Distance", 0, Sim2D.PERCEPTION_DISTANCE)
     dummyBrain:addPerception("Color", 0, Sim2D.PERCEPTION_SYMBOL, colorTableCode, humanColor:getID(), colorTableCode)
-    dummyBrain:addPerception("Target", 0, Sim2D.PERCEPTION_TARGET)
+    dummyBrain:addPerception("LTarget", 0, Sim2D.PERCEPTION_LTARGET)
 
     human:setBrain(dummyBrain)
 
@@ -306,7 +317,7 @@ stats:addField("gb_active_connections")
 stats:addField("gb_active_components")
 stats:addField("symtable_used_color")
 stats:addField("friendly_fire")
-popDyn:addDeathLog(agentSpeciesIndex, stats)
+agentSpecies:addDeathLog(stats)
 
 if logBrains then
     logBrain = LogBestBrain()
@@ -317,7 +328,7 @@ if logBrains then
     else
         logBrain:setFileNamePrefix("brain" .. logSuffix .. "t")
     end
-    popDyn:addDeathLog(agentSpeciesIndex, logBrain)
+    agentSpecies:addDeathLog(logBrain)
 end
 
 popDyn:setLogTimeInterval(logTimeInterval)

@@ -224,6 +224,8 @@ protected:
     float mLaserCostFactor;
     unsigned int mLaserHitDuration;
     unsigned int mFriendlyFire;
+
+    llULINT mCurrentLaserTargetID;
 };
 #endif
 

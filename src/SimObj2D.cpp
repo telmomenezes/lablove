@@ -103,6 +103,8 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     mLaserHitDuration = 0;
 
     mFriendlyFire = 0;
+
+    mCurrentLaserTargetID = 0;
 }
 
 SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
@@ -184,6 +186,8 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
     mLaserHitDuration = obj->mLaserHitDuration;
 
     mFriendlyFire = 0;
+
+    mCurrentLaserTargetID = 0;
 }
 
 SimObj2D::~SimObj2D()
@@ -385,12 +389,14 @@ void SimObj2D::process()
     // Check for death
     if (mEnergy <= 0)
     {
+        mDeathType = DEATH_HARD;
         mSim2D->killOrganism(this);
     }
     else if (mMaxAge > 0)
     {
         if (mSim2D->getTime() - mCreationTime >= mAgeLimit)
         {
+            mDeathType = DEATH_EXPIRED;
             mSim2D->killOrganism(this);
         }
     }
@@ -483,6 +489,25 @@ void SimObj2D::process()
         if ((simTime % 1000) == 0)
         {
             mFitness = mDistFitnessRandom->uniform(0.0f, 1.0f);
+        }
+    }
+
+    // Update current laser target
+    if (mType == TYPE_AGENT)
+    {
+        SimObj2D* laserTarget = mSim2D->getLineTarget(mX,
+                                                        mY,
+                                                        mX + (cosf(mRot) * mLaserRange),
+                                                        mY + (sinf(mRot) * mLaserRange),
+                                                        mID);
+
+        if (laserTarget != NULL)
+        {
+            mCurrentLaserTargetID = laserTarget->getID();
+        }
+        else
+        {
+            mCurrentLaserTargetID = 0;
         }
     }
 }
@@ -746,6 +771,17 @@ void SimObj2D::onScanObject(SimObj2D* targ,
                                                     item->mTargetSymTable,
                                                     item->mOrigSymID);
                 inBuffer[pos] = normalizedValue;
+                break;
+
+            case Sim2D::PERCEPTION_LTARGET:
+                if (mCurrentLaserTargetID == targ->mID)
+                {
+                    inBuffer[pos] = 1.0f;
+                }
+                else
+                {
+                    inBuffer[pos] = 0.0f;
+                }
                 break;
         }
 
@@ -1163,6 +1199,8 @@ Orbit<SimObj2D>::MethodType SimObj2D::mMethods[] = {
 	{"setBirthRadius", &SimObj::setBirthRadius},
 	{"setFitnessMeasure", &SimObj::setFitnessMeasure},
     {"setBrain", &SimObj::setBrain},
+    {"setKeepBodyOnHardDeath", &SimObj::setKeepBodyOnHardDeath},
+    {"setKeepBodyOnExpirationDeath", &SimObj::setKeepBodyOnExpirationDeath},
     {"setPos", &SimObj2D::setPos},
     {"setRot", &SimObj2D::setRot},
 	{"setSize", &SimObj2D::setSize},

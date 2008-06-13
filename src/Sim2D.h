@@ -46,6 +46,7 @@ public:
     static const int PERCEPTION_CAN_SPEAK = 9;
     static const int PERCEPTION_CAN_FIRE = 10;
     static const int PERCEPTION_CONVERGENCE = 11;
+    static const int PERCEPTION_LTARGET = 12;
 
     static const int ACTION_NULL = 0;
     static const int ACTION_GO = 1;
@@ -99,6 +100,7 @@ public:
     virtual void removeObject(SimObj* obj, bool deleteObj=true);
     virtual void placeRandom(SimObj* obj);
     virtual void placeNear(SimObj* obj, SimObj* ref);
+    virtual void replace(SimObj* obj, SimObj* ref);
 
     virtual void updatePos(SimObj2D* obj,
                             float origX,
@@ -144,6 +146,8 @@ public:
     int setWorldDimensions(lua_State* luaState);
     
     int setHuman(lua_State* luaState);
+
+    SimObj2D* getLineTarget(float x1, float y1, float x2, float y2, llULINT excludeID);
 
 protected:
     virtual void onCycle();

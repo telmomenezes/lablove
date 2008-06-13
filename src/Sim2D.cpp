@@ -295,6 +295,18 @@ void Sim2D::placeRandom(SimObj* obj)
     obj2D->setRot(mDistPosition->uniform(0, M_PI * 2));
 }
 
+void Sim2D::replace(SimObj* obj, SimObj* ref)
+{
+    float x = ((SimObj2D*)ref)->mX;
+    float y = ((SimObj2D*)ref)->mY;
+    float rot = ((SimObj2D*)ref)->mRot;
+
+    SimObj2D* obj2D = (SimObj2D*)obj;
+
+    obj2D->setPos(x, y);
+    obj2D->setRot(rot);
+}
+
 void Sim2D::placeNear(SimObj* obj, SimObj* ref)
 {
     if (obj->getBirthRadius() == 0.0f)
@@ -611,6 +623,212 @@ bool Sim2D::getFieldValue(SimObj* obj, string fieldName, float& value)
     }
 }
 
+SimObj2D* Sim2D::getLineTarget(float x1, float y1, float x2, float y2, llULINT excludeID)
+{
+    //printf("%f %f %f %f %d\n", x1, y1, x2, y2, excludeID);
+    float dx = x2 - x1;
+    float dy = y2 - y1;
+    float M = dy / dx; //tan(angle)
+    float B = y1 - (M * x1);
+
+    float dirX = 1;
+    if (x1 > x2)
+    {
+        dirX = -1;
+    }
+    float dirY = 1;
+    if (y1 > y2)
+    {
+        dirY = -1;
+    }
+    float cX = x1;
+    float cY = y1;
+
+    int cellX = ((int)(cX)) / mCellSide;
+    int cellY = ((int)(cY)) / mCellSide;
+
+    int targCellX = ((int)(x2)) / mCellSide;
+    int targCellY = ((int)(y2)) / mCellSide;
+
+    //printf("*** cells: %d %d %d %d\n", cellX, cellY, targCellX, targCellY);
+
+    if (targCellX < 0)
+    {
+        targCellX = 0;
+    }
+    else if (targCellX >= mWorldCellWidth)
+    {
+        targCellX = mWorldCellWidth - 1;
+    }
+    if (targCellY < 0)
+    {
+        targCellY = 0;
+    }
+    else if (targCellY >= mWorldCellLength)
+    {
+        targCellY = mWorldCellLength - 1;
+    }
+
+    targCellX *= dirX;
+    targCellY *= dirY;
+
+    SimObj2D* bestTarget = NULL;
+
+    while (((cellX * dirX) <= targCellX)
+        && ((cellY * dirY) <= targCellY)
+        && (cellX < mWorldCellWidth)
+        && (cellY < mWorldCellLength)
+        && (bestTarget == NULL))
+    {
+        //printf("cell: %d %d\n", cellX, cellY);
+
+        float mindSource = 999999999.9f;
+        list<SimObj2D*>* cellList = mCellGrid[(mWorldCellWidth * cellY) + cellX];
+
+        for (list<SimObj2D*>::iterator iterObj = cellList->begin();
+            iterObj != cellList->end();
+            iterObj++)
+        {
+            SimObj2D* obj = (SimObj2D*)(*iterObj);
+
+            if (obj->getID() != excludeID)
+            {
+                //printf("obj: %d\n", obj->getID());
+                float objX = obj->mX;
+                float objY = obj->mY;
+                float r = obj->mSize;
+
+                float x_1 = x1 - objX;
+                float x_2 = x2 - objX;
+                float y_1 = y1 - objY;
+                float y_2 = y2 - objY;
+
+                float dx = x_2 - x_1;
+                float dy = y_2 - y_1;
+                float dr2 = (dx * dx) + (dy * dy);
+                float D = (x_1 * y_2) - (x_2 * y_1);
+
+                float colides = ((r * r) * dr2) - (D * D);
+
+                if (colides >= 0.0f)
+                {
+                    float segmentColides = false;
+
+                    float colX1 = x1;
+                    float colX2 = x2;
+                    float colY1 = y1;
+                    float colY2 = y2;
+
+                    if (colX1 > colX2)
+                    {
+                        colX1 = x2;
+                        colX2 = x1;
+                    }
+                    if (colY1 > colY2)
+                    {
+                        colY1 = y2;
+                        colY2 = y1;
+                    }
+
+                    if (((objX + r) >= colX1)
+                        && ((objX - r) <= colX2)
+                        && ((objY + r) >= colY1)
+                        && ((objY - r) <= colY2))
+                    {
+                        segmentColides = true;
+                    }
+                    else
+                    {
+                        float dist1 = (x_1 * x_1) + (y_1 * y_1);
+                        float dist2 = (x_2 * x_2) + (y_2 * y_2);
+                        float dist = (obj->mSize * obj->mSize);
+
+                        if ((dist1 <= dist)
+                            || (dist2 <= dist))
+                        {
+                            segmentColides = true;
+                        }
+                    }
+
+                    if (segmentColides)
+                    {
+                        float dsX = obj->mX - x1;
+                        float dsY = obj->mY - y1;
+                        float dSource = (dsX * dsX) + (dsY * dsY);
+
+                        if (dSource < mindSource)
+                        {
+                            mindSource = dSource;
+                            bestTarget = (SimObj2D*)obj;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (bestTarget != NULL)
+        {
+            //printf("colision! %d (%d, %d)\n", bestTarget->getID(), cellX, cellY);
+            return bestTarget;
+        }
+
+        float bX;
+        float bY;
+
+        if (dirX == 1)
+        {
+            bX = (cellX + 1) * mCellSide;
+        }
+        else
+        {
+            bX = cellX * mCellSide;
+        }
+        if (dirY == 1)
+        {
+            bY = (cellY + 1) * mCellSide;
+        }
+        else
+        {
+            bY = cellY * mCellSide;
+        }
+
+        float bXY = (cX * M) + B;
+        float bYX = (cY - B) / M;
+
+        //printf("M %f B %f dirX: %f dirY: %f\n", M, B, dirX, dirY);
+
+        float deltaX1 = cX - bX;
+        float deltaY1 = cY - bXY;
+        float deltaX2 = cX - bYX;
+        float deltaY2 = cY - bY;
+
+        //printf("cX %f cY %f bX %f bY %f bXY %f bYX %f\n", cX, cY, bX, bY, bXY, bYX);
+        //printf("deltaX1 %f deltaY1 %f deltaX2 %f deltaY2 %f\n", deltaX1, deltaY1, deltaX2, deltaY2);
+
+        float dis1 = (deltaX1 * deltaX1) + (deltaY1 * deltaY1);
+        float dis2 = (deltaX2 * deltaX2) + (deltaY2 * deltaY2);
+
+        //printf("dis1 %f dis2 %f\n", dis1, dis2);
+
+        if ((dis1 < dis2) || isnan(dis2))
+        {
+            cX = bX;
+            cY = bXY;
+            cellX += dirX;
+        }
+        else
+        {
+            cX = bYX;
+            cY = bY;
+            cellY += dirY;
+        }
+
+        //printf("cell after: %d %d\n", cellX, cellY);
+    }
+
+    return NULL;
+}
+
 void Sim2D::processLaserShots()
 {
     list<Laser2D>::iterator iterLaser = mLaserShots.begin();
@@ -631,142 +849,11 @@ void Sim2D::processLaserShots()
         float x2 = laser->mX2;
         float y2 = laser->mY2;
 
-        float cX = x1;
-        float cY = y1;
-
-        int cellX = ((int)(cX)) / mCellSide;
-        int cellY = ((int)(cY)) / mCellSide;
-
-        int targCellX = ((int)(x2)) / mCellSide;
-        int targCellY = ((int)(y2)) / mCellSide;
-
-        if (targCellX < 0)
+        SimObj2D* bestTarget = getLineTarget(x1, y1, x2, y2, laser->mOwnerID);
+        if (bestTarget != NULL)
         {
-            targCellX = 0;
-        }
-        else if (targCellX >= mWorldCellWidth)
-        {
-            targCellX = mWorldCellWidth - 1;
-        }
-        if (targCellY < 0)
-        {
-            targCellY = 0;
-        }
-        else if (targCellY >= mWorldCellLength)
-        {
-            targCellY = mWorldCellLength - 1;
-        }
-
-        targCellX *= laser->mDirX;
-        targCellY *= laser->mDirY;
-
-        SimObj2D* bestTarget = NULL;
-
-        while (((cellX * laser->mDirX) <= targCellX)
-            && ((cellY * laser->mDirY) <= targCellY)
-            && (cellX < mWorldCellWidth)
-            && (cellY < mWorldCellLength)
-            && (bestTarget == NULL))
-        {
-            float mindSource = 999999999.9f;
-            list<SimObj2D*>* cellList = mCellGrid[(mWorldCellWidth * cellY) + cellX];
-
-            for (list<SimObj2D*>::iterator iterObj = cellList->begin();
-                iterObj != cellList->end();
-                iterObj++)
-            {
-                SimObj2D* obj = (SimObj2D*)(*iterObj);
-
-                if (obj->getID() != laser->mOwnerID)
-                {
-                    float objX = obj->mX;
-                    float objY = obj->mY;
-                    float r = obj->mSize;
-
-                    float x_1 = x1 - objX;
-                    float x_2 = x2 - objX;
-                    float y_1 = y1 - objY;
-                    float y_2 = y2 - objY;
-
-                    float dx = x_2 - x_1;
-                    float dy = y_2 - y_1;
-                    float dr2 = (dx * dx) + (dy * dy);
-                    float D = (x_1 * y_2) - (x_2 * y_1);
-
-                    float colides = ((r * r) * dr2) - (D * D);
-
-                    if (colides >= 0.0f)
-                    {
-                        float dist1 = (x_1 * x_1) + (y_1 * y_1);
-                        float dist2 = (x_2 * x_2) + (y_2 * y_2);
-                        float dist = (obj->mSize * obj->mSize);
-
-                        if ((dist1 <= dist)
-                            || (dist2 <= dist))
-                        {
-                            float dsX = obj->mX - x1;
-                            float dsY = obj->mY - y1;
-                            float dSource = (dsX * dsX) + (dsY * dsY);
-
-                            if (dSource < mindSource)
-                            {
-                                mindSource = dSource;
-                                bestTarget = (SimObj2D*)obj;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (bestTarget != NULL)
-            {
-                //printf("colision! %d (%d, %d)\n", obj->getID(), cellX, cellY);
-                bestTarget->processLaserHit(laser);
-            }
-
-            float bX;
-            float bY;
-
-            if (laser->mDirX == 1)
-            {
-                bX = (cellX + 1) * mCellSide;
-            }
-            else
-            {
-                bX = cellX * mCellSide;
-            }
-            if (laser->mDirY == 1)
-            {
-                bY = (cellY + 1) * mCellSide;
-            }
-            else
-            {
-                bY = cellY * mCellSide;
-            }
-
-            float bXY = (cX * laser->mM) + laser->mB;
-            float bYX = (cY - laser->mB) / laser->mM;
-
-            float deltaX1 = cX - bX;
-            float deltaY1 = cY - bXY;
-            float deltaX2 = cX - bYX;
-            float deltaY2 = cY - bY;
-
-            float dis1 = (deltaX1 * deltaX1) + (deltaY1 * deltaY1);
-            float dis2 = (deltaX2 * deltaX2) + (deltaY2 * deltaY2);
-
-            if (dis1 >= dis2)
-            {
-                cX = bX;
-                cY = bXY;
-                cellX += laser->mDirX;
-            }
-            else
-            {
-                cX = bYX;
-                cY = bY;
-                cellY += laser->mDirY;
-            }
+            //printf("colision! %d\n", bestTarget->getID());
+            bestTarget->processLaserHit(laser);
         }
 
         if ((bestTarget != NULL)
@@ -975,6 +1062,8 @@ string Sim2D::getInterfaceName(bool input, int type)
             return "canfire";
         case PERCEPTION_CONVERGENCE:
             return "convergence";
+        case PERCEPTION_LTARGET:
+            return "ltarg";
         default:
             return "?";
         }
@@ -1051,6 +1140,7 @@ Orbit<Sim2D>::NumberGlobalType Sim2D::mNumberGlobals[] = {
     {"PERCEPTION_CAN_SPEAK", PERCEPTION_CAN_SPEAK},
     {"PERCEPTION_CAN_FIRE", PERCEPTION_CAN_FIRE},
     {"PERCEPTION_CONVERGENCE", PERCEPTION_CONVERGENCE},
+    {"PERCEPTION_LTARGET", PERCEPTION_LTARGET},
     {"ACTION_NULL", ACTION_NULL},
     {"ACTION_GO", ACTION_GO},
     {"ACTION_ROTATE", ACTION_ROTATE},

@@ -22,7 +22,7 @@
 #include "SymbolUL.h"
 #include <stdlib.h>
 
-llULINT SimObj::CURRENT_ID = 0;
+llULINT SimObj::CURRENT_ID = 1;
 
 SimObj::SimObj(lua_State* luaState)
 {
@@ -33,18 +33,23 @@ SimObj::SimObj(lua_State* luaState)
     mDeleted = false;
 
     mSpeciesID = 0;
+    mBodyID = -1;
     mCreationTime = 0;
 
     mInitialized = false;
 
     mFitness = 0.0f;
-    mAgedFitness = 0.0f;
-    mGroupFitness = 0.0f;
+    mTeamFitness = 0.0f;
+    mBodyFitness = 0.0f;
 
     mBirthRadius = 0.0f;
+    mKeepBodyOnHardDeath = false;
+    mKeepBodyOnExpirationDeath = false;
     mFitnessMeasure = 0;
 
     mBrain = NULL;
+
+    mDeathType = DEATH_HARD;
 }
 
 SimObj::SimObj(SimObj* obj)
@@ -54,6 +59,7 @@ SimObj::SimObj(SimObj* obj)
     mDeleted = false;
 
     mSpeciesID = obj->mSpeciesID;
+    mBodyID = obj->mBodyID;
     mCreationTime = 0;
 
     map<string, SymbolPointer>::iterator iterSymPointers;
@@ -71,11 +77,15 @@ SimObj::SimObj(SimObj* obj)
     mInitialized = false;
 
     mFitness = 0.0f;
-    mAgedFitness = 0.0f;
-    mGroupFitness = 0.0f;
+    mTeamFitness = 0.0f;
+    mBodyFitness = 0.0f;
     mFitnessMeasure = obj->mFitnessMeasure;
 
+    mDeathType = DEATH_HARD;
+
     mBirthRadius = obj->mBirthRadius;
+    mKeepBodyOnHardDeath = obj->mKeepBodyOnHardDeath;
+    mKeepBodyOnExpirationDeath = obj->mKeepBodyOnExpirationDeath;
 
     map<int, SymbolTable*>::iterator iterTables;
     for (iterTables = obj->mSymbolTables.begin();
@@ -287,9 +297,14 @@ bool SimObj::getFieldValue(string fieldName, float& value)
         value = mFitness;
         return true;
     }
-    else if (fieldName == "group_fitness")
+    else if (fieldName == "team_fitness")
     {
-        value = mGroupFitness;
+        value = mTeamFitness;
+        return true;
+    }
+    else if (fieldName == "body_fitness")
+    {
+        value = mBodyFitness;
         return true;
     }
     else if (fieldName.substr(0,  14) == "symtable_size_")
@@ -448,6 +463,8 @@ Orbit<SimObj>::MethodType SimObj::mMethods[] = {
 	{"setBirthRadius", &SimObj::setBirthRadius},
 	{"setFitnessMeasure", &SimObj::setFitnessMeasure},
     {"setBrain", &SimObj::setBrain},
+    {"setKeepBodyOnHardDeath", &SimObj::setKeepBodyOnHardDeath},
+    {"setKeepBodyOnExpirationDeath", &SimObj::setKeepBodyOnExpirationDeath},
     {0,0}
 };
 
@@ -487,6 +504,20 @@ int SimObj::setBrain(lua_State* luaState)
 {
     Brain* brain = (Brain*)Orbit<SimObj>::pointer(luaState, 1);
     setBrain(brain);
+    return 0;
+}
+
+int SimObj::setKeepBodyOnHardDeath(lua_State* luaState)
+{
+    bool val = luaL_checkbool(luaState, 1);
+    setKeepBodyOnHardDeath(val);
+    return 0;
+}
+
+int SimObj::setKeepBodyOnExpirationDeath(lua_State* luaState)
+{
+    bool val = luaL_checkbool(luaState, 1);
+    setKeepBodyOnExpirationDeath(val);
     return 0;
 }
 

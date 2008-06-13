@@ -21,7 +21,6 @@
 #include "SimObj.h"
 
 unsigned int PopDynSpecies::CURRENT_SPECIES_ID = 1;
-mt_distribution* PopDynSpecies::mDistOrganism = gDistManager.getNewDistribution();
 
 PopDynSpecies::PopDynSpecies(lua_State* luaState)
 {
@@ -32,31 +31,49 @@ PopDynSpecies::PopDynSpecies(lua_State* luaState)
 
 PopDynSpecies::~PopDynSpecies()
 {
+    for (map<unsigned int, Species*>::iterator iterSpecies = mSpecies.begin();
+        iterSpecies != mSpecies.end();
+        iterSpecies++)
+    {
+        delete &((*iterSpecies).second);
+    }
+    mSpecies.clear();
 }
 
-unsigned int PopDynSpecies::addSpecies(SimObj* org, unsigned int population)
+void PopDynSpecies::init(Simulation* sim)
+{
+    PopulationDynamics::init(sim);
+
+    for (map<unsigned int, Species*>::iterator iterSpecies = mSpecies.begin();
+        iterSpecies != mSpecies.end();
+        iterSpecies++)
+    {
+
+        (*iterSpecies).second->setSimulation(mSimulation);
+        (*iterSpecies).second->init();
+    }
+}
+
+unsigned int PopDynSpecies::addSpecies(Species* species)
 {
     unsigned int speciesID = CURRENT_SPECIES_ID++;
-    org->setSpeciesID(speciesID);
+    species->setID(speciesID);
 
-    SpeciesData species;
     mSpecies[speciesID] = species;
-    mSpecies[speciesID].mBaseOrganism = org;
-    mSpecies[speciesID].mPopulation = population;
 
     return speciesID;
 }
 
-void PopDynSpecies::addSampleLog(unsigned int speciesID, Log* log)
+void PopDynSpecies::onOrganismDeath(SimObj* org)
 {
-    log->init();
-    mSpecies[speciesID].mSampleLogs.push_back(log);
-}
 
-void PopDynSpecies::addDeathLog(unsigned int speciesID, Log* log)
-{
-    log->init();
-    mSpecies[speciesID].mDeathLogs.push_back(log);
+    unsigned int speciesID = org->getSpeciesID();
+    if (speciesID == 0)
+    {
+        return;
+    }
+
+    mSpecies[speciesID]->onOrganismDeath(org);
 }
 
 void PopDynSpecies::onCycle(llULINT time, double realTime)
@@ -66,73 +83,35 @@ void PopDynSpecies::onCycle(llULINT time, double realTime)
         && (time > mEvolutionStopTime))
     {
         mEvolutionOn = false;
+        for (map<unsigned int, Species*>::iterator iterSpecies = mSpecies.begin();
+            iterSpecies != mSpecies.end();
+            iterSpecies++)
+        {
+            (*iterSpecies).second->setEvolution(false);
+        }
     }
 
     if ((time % mLogTimeInterval) == 0)
     {
-        for (map<unsigned int, SpeciesData>::iterator iterSpecies = mSpecies.begin();
+        for (map<unsigned int, Species*>::iterator iterSpecies = mSpecies.begin();
             iterSpecies != mSpecies.end();
             iterSpecies++)
         {
-            // Dump death statistics
-            for (list<Log*>::iterator iterLogs = (*iterSpecies).second.mDeathLogs.begin();
-                iterLogs != (*iterSpecies).second.mDeathLogs.end();
-                iterLogs++)
-            {
-                (*iterLogs)->dump(time, realTime);
-            }
-
-            // Process and dump sample statistics
-            for (list<Log*>::iterator iterLogs = (*iterSpecies).second.mSampleLogs.begin();
-                iterLogs != (*iterSpecies).second.mSampleLogs.end();
-                iterLogs++)
-            {
-                for (vector<SimObj*>::iterator iterOrg = (*iterSpecies).second.mOrganismVector.begin();
-                        iterOrg != (*iterSpecies).second.mOrganismVector.end();
-                        iterOrg++)
-                {
-                    (*iterLogs)->process(*iterOrg, mSimulation);
-                }
-                (*iterLogs)->dump(time, realTime);
-            }
+            (*iterSpecies).second->dumpStatistics(time, realTime, mSimulation);
         }
     }
 }
 
-void PopDynSpecies::onOrganismDeath(SimObj* org)
-{
-    int speciesID = org->getSpeciesID();
+const char PopDynSpecies::mClassName[] = "PopDynSpecies";
 
-    if (speciesID == 0)
-    {
-        return;
-    }
-    SpeciesData* species = &(mSpecies[speciesID]);
-            
-    // Update death statistics
-    for (list<Log*>::iterator iterLogs = species->mDeathLogs.begin();
-            iterLogs != species->mDeathLogs.end();
-            iterLogs++)
-    {
-        (*iterLogs)->process(org, mSimulation);
-    }
-}
+Orbit<PopDynSpecies>::MethodType PopDynSpecies::mMethods[] = {
+    {"setLogTimeInterval", &PopDynSpecies::setLogTimeInterval},
+    {"addSpecies", &PopDynSpecies::addSpecies},
+    {"setEvolutionStopTime", &PopDynSpecies::setEvolutionStopTime},
+    {0,0}
+};
 
-int PopDynSpecies::addSampleLog(lua_State* luaState)
-{
-    unsigned int speciesID = luaL_checkint(luaState, 1);
-    Log* log = (Log*)Orbit<SimObj>::pointer(luaState, 2);
-    addSampleLog(speciesID, log);
-    return 0;
-}
-
-int PopDynSpecies::addDeathLog(lua_State* luaState)
-{
-    unsigned int speciesID = luaL_checkint(luaState, 1);
-    Log* log = (Log*)Orbit<SimObj>::pointer(luaState, 2);
-    addDeathLog(speciesID, log);
-    return 0;
-}
+Orbit<PopDynSpecies>::NumberGlobalType PopDynSpecies::mNumberGlobals[] = {{0,0}};
 
 int PopDynSpecies::setLogTimeInterval(lua_State* luaState)
 {
@@ -146,5 +125,13 @@ int PopDynSpecies::setEvolutionStopTime(lua_State* luaState)
     unsigned int time = luaL_checkint(luaState, 1);
     setEvolutionStopTime(time);
     return 0;
+}
+
+int PopDynSpecies::addSpecies(lua_State* luaState)
+{
+    Species* species = (Species*)Orbit<PopDynSpecies>::pointer(luaState, 1);
+    unsigned int id = addSpecies(species);
+    lua_pushinteger(luaState, id);
+    return 1;
 }
 
