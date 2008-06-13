@@ -696,6 +696,9 @@ void SimObj2D::onScanObject(SimObj2D* targ,
     float convX;
     float convY;
     float convAngle;
+    float dX;
+    float dY;
+    float ltAng;
 
     list<InterfaceItem*>* interface = mBrain->getInputInterface(mChannelObjects);
     unsigned int pos = 0;
@@ -726,14 +729,6 @@ void SimObj2D::onScanObject(SimObj2D* targ,
 
             case Sim2D::PERCEPTION_ORIENTATION:
                 normalizedValue = orientation / M_PI;
-                inBuffer[pos] = normalizedValue;
-                break;
-
-            case Sim2D::PERCEPTION_CONVERGENCE:
-                convX = targ->mX + cosf(targ->mRot) * mLaserRange;
-                convY = targ->mY + sinf(targ->mRot) * mLaserRange;
-                convAngle = atan2f(convY - mY, convX - mX);
-                normalizedValue = Sim2D::normalizeAngle(mRot - convAngle) / M_PI;
                 inBuffer[pos] = normalizedValue;
                 break;
 
@@ -782,6 +777,51 @@ void SimObj2D::onScanObject(SimObj2D* targ,
                 {
                     inBuffer[pos] = 0.0f;
                 }
+                break;
+
+            case Sim2D::PERCEPTION_LOF:
+                if (targ->mCurrentLaserTargetID == mID)
+                {
+                    inBuffer[pos] = 1.0f;
+                }
+                else
+                {
+                    inBuffer[pos] = 0.0f;
+                }
+                break;
+
+            case Sim2D::PERCEPTION_CONV:
+                if ((mCurrentLaserTargetID != 0)
+                    && (mCurrentLaserTargetID == targ->mCurrentLaserTargetID))
+                {
+                    inBuffer[pos] = 1.0f;
+                }
+                else
+                {
+                    inBuffer[pos] = 0.0f;
+                }
+                break;
+
+            case Sim2D::PERCEPTION_CONVDIR:
+                if (targ->mCurrentLaserTargetID != 0)
+                {
+                    SimObj2D* lTargObj = (SimObj2D*)mSim2D->getObjectByID(targ->mCurrentLaserTargetID);
+
+                    float dX =  lTargObj->mX - mX;
+                    float dY =  lTargObj->mY - mY;
+
+                    float ltAng = Sim2D::normalizeAngle(mRot - atan2f(dY, dX));
+                    normalizedValue = ltAng / M_PI;
+                }
+                else
+                {
+                    convX = targ->mX + cosf(targ->mRot) * mLaserRange;
+                    convY = targ->mY + sinf(targ->mRot) * mLaserRange;
+                    convAngle = atan2f(convY - mY, convX - mX);
+                    normalizedValue = Sim2D::normalizeAngle(mRot - convAngle) / M_PI;
+                }
+
+                inBuffer[pos] = normalizedValue;
                 break;
         }
 

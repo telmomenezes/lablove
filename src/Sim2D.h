@@ -45,8 +45,10 @@ public:
     static const int PERCEPTION_ENERGY = 8;
     static const int PERCEPTION_CAN_SPEAK = 9;
     static const int PERCEPTION_CAN_FIRE = 10;
-    static const int PERCEPTION_CONVERGENCE = 11;
-    static const int PERCEPTION_LTARGET = 12;
+    static const int PERCEPTION_LTARGET = 11;
+    static const int PERCEPTION_LOF = 12;
+    static const int PERCEPTION_CONV = 13;
+    static const int PERCEPTION_CONVDIR = 14;
 
     static const int ACTION_NULL = 0;
     static const int ACTION_GO = 1;

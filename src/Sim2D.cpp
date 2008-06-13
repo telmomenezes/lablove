@@ -1060,10 +1060,14 @@ string Sim2D::getInterfaceName(bool input, int type)
             return "canspeak";
         case PERCEPTION_CAN_FIRE:
             return "canfire";
-        case PERCEPTION_CONVERGENCE:
-            return "convergence";
         case PERCEPTION_LTARGET:
             return "ltarg";
+        case PERCEPTION_LOF:
+            return "lof";
+        case PERCEPTION_CONV:
+            return "conv";
+        case PERCEPTION_CONVDIR:
+            return "convdir";
         default:
             return "?";
         }
@@ -1139,8 +1143,10 @@ Orbit<Sim2D>::NumberGlobalType Sim2D::mNumberGlobals[] = {
     {"PERCEPTION_ENERGY", PERCEPTION_ENERGY},
     {"PERCEPTION_CAN_SPEAK", PERCEPTION_CAN_SPEAK},
     {"PERCEPTION_CAN_FIRE", PERCEPTION_CAN_FIRE},
-    {"PERCEPTION_CONVERGENCE", PERCEPTION_CONVERGENCE},
     {"PERCEPTION_LTARGET", PERCEPTION_LTARGET},
+    {"PERCEPTION_LOF", PERCEPTION_LOF},
+    {"PERCEPTION_CONV", PERCEPTION_CONV},
+    {"PERCEPTION_CONVDIR", PERCEPTION_CONVDIR},
     {"ACTION_NULL", ACTION_NULL},
     {"ACTION_GO", ACTION_GO},
     {"ACTION_ROTATE", ACTION_ROTATE},

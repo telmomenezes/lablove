@@ -7,8 +7,8 @@ dofile("basic_defines.lua")
 -- Experiment Parameters
 --------------------------------------------------------------------------------
 
-numberOfTargets = 1--50
-numberOfAgents = 0--10
+numberOfTargets = 50
+numberOfAgents = 10
 
 agentSize = 10.0
 
@@ -65,7 +65,7 @@ logTimeInterval = 100
 logBrains = true
 logOnlyLastBrain = true
 
-humanAgent = true
+humanAgent = false
 
 evolutionStopTime = 0
 
@@ -165,7 +165,10 @@ end
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_POSITION)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_DISTANCE)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_SIZE)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_CONVERGENCE)
+alphaSet:addComponent(IN, Sim2D.PERCEPTION_LTARGET)
+alphaSet:addComponent(IN, Sim2D.PERCEPTION_LOF)
+alphaSet:addComponent(IN, Sim2D.PERCEPTION_CONV)
+alphaSet:addComponent(IN, Sim2D.PERCEPTION_CONVDIR)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_SYMBOL, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
 grid = Grid()
 grid:init(ALPHA, 0, 0)
@@ -293,10 +296,12 @@ if humanAgent then
     dummyBrain = DummyBrain(1)
     dummyBrain:setChannelName(0, "objects")
     dummyBrain:addPerception("Position", 0, Sim2D.PERCEPTION_POSITION)
-    dummyBrain:addPerception("Convergence", 0, Sim2D.PERCEPTION_CONVERGENCE)
     dummyBrain:addPerception("Distance", 0, Sim2D.PERCEPTION_DISTANCE)
     dummyBrain:addPerception("Color", 0, Sim2D.PERCEPTION_SYMBOL, colorTableCode, humanColor:getID(), colorTableCode)
     dummyBrain:addPerception("LTarget", 0, Sim2D.PERCEPTION_LTARGET)
+    dummyBrain:addPerception("LOF", 0, Sim2D.PERCEPTION_LOF)
+    dummyBrain:addPerception("Conv", 0, Sim2D.PERCEPTION_CONV)
+    dummyBrain:addPerception("ConvDir", 0, Sim2D.PERCEPTION_CONVDIR)
 
     human:setBrain(dummyBrain)
 
