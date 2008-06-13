@@ -12,7 +12,7 @@ numberOfAgents = 10
 
 agentSize = 10.0
 
-targetMinEnergy = 1.1
+targetMinEnergy = 0.5
 targetMaxEnergy = 3.0
 targetSizeFactor = 10.0
 
