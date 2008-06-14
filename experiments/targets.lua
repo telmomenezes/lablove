@@ -47,7 +47,7 @@ soundRange = 500
 speakInterval = 250
 
 compCount = 1
-bufferSize = 100
+bufferSize = 20
 fitnessAging = 0.1
 
 addConnectionProb = 0.01
@@ -73,6 +73,7 @@ self = false
 comm = true
 
 kinFactor = 1.0
+fitFactor = 1.0
 teamFactor = 0.5
 bodyFactor = 0.5
 bodyQueue = 10
@@ -84,10 +85,13 @@ agentBirthRadius = 100.0
 
 dofile("basic_command_line.lua")
 
-kinFactor = getBoolParameter("kin", kinFactor, "kin")
+kinFactor = getNumberParameter("kin", kinFactor, "kin")
+fitFactor = getNumberParameter("fit", fitFactor, "fit")
 teamFactor = getNumberParameter("team", teamFactor, "team")
+bodyFactor = getNumberParameter("body", bodyFactor, "body")
+bodyQueue = getNumberParameter("bq", bodyQueue, "bq")
 self = getBoolParameter("self", self, "self")
-comm = getBoolParameter("comm", self, "comm")
+comm = getBoolParameter("comm", comm, "comm")
 targetMinEnergy = getNumberParameter("targmin", targetMinEnergy, "tmin")
 targetMaxEnergy = getNumberParameter("targmax", targetMaxEnergy, "tmax")
 
