@@ -1026,6 +1026,8 @@ void SimObj2D::act()
 
             if (output != 0.0f)
             {
+                SymbolTable* table;
+
                 switch (actionType)
                 {
                     case Sim2D::ACTION_GO:
@@ -1041,7 +1043,7 @@ void SimObj2D::act()
                         actionEat = actionType;
                         break;
                     case Sim2D::ACTION_SPEAK:
-                        SymbolTable* table = getSymbolTable((*iterItem)->mOrigSymTable);
+                        table = getSymbolTable((*iterItem)->mOrigSymTable);
 
                         if (table != NULL)
                         {
