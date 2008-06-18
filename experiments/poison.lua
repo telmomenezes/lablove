@@ -174,7 +174,7 @@ end
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_POSITION)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_DISTANCE)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_TARGET)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, agentFeed:getID(), foodTableCode)
+alphaSet:addComponent(IN, Sim2D.PERCEPTION_SYMPRO, SYM_TO_SYM, feedTableCode, agentFeed:getID(), foodTableCode)
 
 grid = Grid()
 grid:init(ALPHA, 0, 0)

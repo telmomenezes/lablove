@@ -34,6 +34,7 @@ switch(compType) \
 { \
 case GridbrainComponent::MUL: \
 case GridbrainComponent::MAX: \
+case GridbrainComponent::MIN: \
 case GridbrainComponent::AVG: \
     inputType = GridbrainComponent::IN_MUL; \
     break; \
@@ -43,6 +44,9 @@ case GridbrainComponent::AND: \
 case GridbrainComponent::NOT: \
     inputType = GridbrainComponent::IN_TSUM; \
     break; \
+case GridbrainComponent::EQ: \
+    inputType = GridbrainComponent::IN_EQ; \
+    break; \
 default: \
     inputType = GridbrainComponent::IN_SUM; \
     break; \
@@ -51,8 +55,8 @@ default: \
 class GridbrainComponent
 {
 public:
-    enum Type {NUL, IN, OUT, AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, GTZ, ZERO, MAX, AVG, CLK, MEMW, MEMC, MEMD};
-    enum InputType {IN_SUM, IN_TSUM, IN_MUL, IN_TMUL};
+    enum Type {NUL, IN, OUT, AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, MAX, MIN, AVG, CLK, MEMW, MEMC, MEMD};
+    enum InputType {IN_SUM, IN_TSUM, IN_MUL, IN_TMUL, IN_EQ};
     enum ConnType {CONN_IN, CONN_OUT, CONN_INOUT};
 
     GridbrainComponent(lua_State* luaState=NULL);
@@ -104,6 +108,7 @@ public:
     float mState;
     bool mCycleFlag;
     bool mForwardFlag;
+    float mPreState;
     unsigned int mEvalCount;
     unsigned int mOffset;
     unsigned int mPerceptionPosition;

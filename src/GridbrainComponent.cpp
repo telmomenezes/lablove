@@ -42,6 +42,7 @@ void GridbrainComponent::clearDefinitions()
     mInput = 0;
     mOutput = 0;
     mState = 0;
+    mPreState = 0;
     mForwardFlag = false;
     mCycleFlag = false;
     mPerceptionPosition = 0;
@@ -103,6 +104,7 @@ void GridbrainComponent::copyPosition(GridbrainComponent* comp)
 bool GridbrainComponent::isAggregator()
 {
     return ((mType == GridbrainComponent::MAX)
+            || (mType == GridbrainComponent::MIN)
             || (mType == GridbrainComponent::AVG));
 }
 
@@ -126,6 +128,8 @@ string GridbrainComponent::getName()
         return "SUM";
     case MAX:
         return "MAX";
+    case MIN:
+        return "MIN";
     case AVG:
         return "AVG";
     case MUL:
@@ -144,6 +148,8 @@ string GridbrainComponent::getName()
         return "AMP";
     case RAND:
         return "RAND";
+    case EQ:
+        return "EQ";
     case GTZ:
         return "GTZ";
     case ZERO:
@@ -328,6 +334,7 @@ Orbit<GridbrainComponent>::NumberGlobalType GridbrainComponent::mNumberGlobals[]
     {"OUT", OUT},
     {"SUM", SUM},
     {"MAX", MAX},
+    {"MIN", MIN},
     {"AVG", AVG},
     {"MUL", MUL},
     {"NOT", NOT},
@@ -337,6 +344,7 @@ Orbit<GridbrainComponent>::NumberGlobalType GridbrainComponent::mNumberGlobals[]
     {"AMP", AMP},
     {"MOD", MOD},
     {"RAND", RAND},
+    {"EQ", EQ},
     {"GTZ", GTZ},
     {"ZERO", ZERO},
     {"CLK", CLK},

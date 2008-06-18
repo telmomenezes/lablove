@@ -140,6 +140,7 @@ void Simulation::cycle()
 void Simulation::addObject(SimObj* object, bool init)
 {
     object->setCreationTime(mSimulationTime);
+    object->onAdd();
     mObjects.push_back(object);
 }
 
@@ -196,7 +197,8 @@ float Simulation::calcSymbolsBinding(SimObj* origObj,
                                     SimObj* targetObj,
                                     int origSymTable,
                                     int targetSymTable,
-                                    llULINT origSymID)
+                                    llULINT origSymID,
+                                    BindingType type)
 {
     SymbolTable* targetTable = targetObj->getSymbolTable(targetSymTable);
 
@@ -212,13 +214,14 @@ float Simulation::calcSymbolsBinding(SimObj* origObj,
         return 0.0f;
     }
 
-    return calcSymbolsBinding(origObj, origSymTable, origSymID, targetSym);
+    return calcSymbolsBinding(origObj, origSymTable, origSymID, targetSym, type);
 }
 
 float Simulation::calcSymbolsBinding(SimObj* obj,
                                     int symTable,
                                     llULINT symID,
-                                    Symbol* symbol)
+                                    Symbol* symbol,
+                                    BindingType type)
 {
     SymbolTable* table = obj->getSymbolTable(symTable);
 
@@ -234,7 +237,20 @@ float Simulation::calcSymbolsBinding(SimObj* obj,
         return 0.0f;
     }
 
-    float binding = sym->getBinding(symbol);
+    float binding = 0.0f;
+    
+    switch (type)
+    {
+    case BINDING_EQUALS:
+        if (sym->equals(symbol))
+        {
+            binding = 1.0f;
+        }
+        break;
+    case BINDING_PROXIMITY:
+        binding = sym->proximity(symbol);
+        break;
+    }
 
     return binding;
 }

@@ -56,7 +56,7 @@ Symbol* SymbolFixedString::clone()
     return new SymbolFixedString(this);
 }
 
-float SymbolFixedString::getBinding(Symbol* sym)
+float SymbolFixedString::proximity(Symbol* sym)
 {
     // TODO: check type
     SymbolFixedString* symStr = (SymbolFixedString*)sym;
@@ -73,6 +73,21 @@ float SymbolFixedString::getBinding(Symbol* sym)
 
     float binding = ((float)match) / ((float)mLength);
     return 1.0f - binding;
+}
+
+bool SymbolFixedString::equals(Symbol* sym)
+{
+    SymbolFixedString* symStr = (SymbolFixedString*)sym;
+
+    for (unsigned int i = 0; i < mLength; i++)
+    {
+        if (mString.substr(i, 1) != symStr->mString.substr(i, 1))
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 void SymbolFixedString::initRandom()

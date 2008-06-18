@@ -54,7 +54,7 @@ Symbol* SymbolUL::clone()
     return new SymbolUL(this);
 }
 
-float SymbolUL::getBinding(Symbol* sym)
+float SymbolUL::proximity(Symbol* sym)
 {
     // TODO: check type
     SymbolUL* symUL = (SymbolUL*)sym;
@@ -73,6 +73,13 @@ float SymbolUL::getBinding(Symbol* sym)
     }
 
     return bind;
+}
+
+bool SymbolUL::equals(Symbol* sym)
+{
+    SymbolUL* symUL = (SymbolUL*)sym;
+
+    return (symUL->mUL == mUL);
 }
 
 void SymbolUL::initRandom()

@@ -46,32 +46,32 @@ TEST(TestSymbolFixedStringBind1)
 {
     SymbolFixedString sym1("ABC", "ABC");
     SymbolFixedString sym2("ABC", "ABC");
-    CHECK_CLOSE(sym1.getBinding(&sym2), 0.0f, 0.0001f);
-    CHECK_CLOSE(sym2.getBinding(&sym1), 0.0f, 0.0001f);
+    CHECK_CLOSE(sym1.proximity(&sym2), 0.0f, 0.0001f);
+    CHECK_CLOSE(sym2.proximity(&sym1), 0.0f, 0.0001f);
 }
 
 TEST(TestSymbolFixedStringBind2)
 {
     SymbolFixedString sym1("ABC", "ABC");
     SymbolFixedString sym2("ABC", "CAB");
-    CHECK_CLOSE(sym1.getBinding(&sym2), 1.0f, 0.0001f);
-    CHECK_CLOSE(sym2.getBinding(&sym1), 1.0f, 0.0001f);
+    CHECK_CLOSE(sym1.proximity(&sym2), 1.0f, 0.0001f);
+    CHECK_CLOSE(sym2.proximity(&sym1), 1.0f, 0.0001f);
 }
 
 TEST(TestSymbolFixedStringBind3)
 {
     SymbolFixedString sym1("ABC", "ABC");
     SymbolFixedString sym2("ABC", "CBA");
-    CHECK_CLOSE(sym1.getBinding(&sym2), 2.0f / 3.0f, 0.0001f);
-    CHECK_CLOSE(sym2.getBinding(&sym1), 2.0f / 3.0f, 0.0001f);
+    CHECK_CLOSE(sym1.proximity(&sym2), 2.0f / 3.0f, 0.0001f);
+    CHECK_CLOSE(sym2.proximity(&sym1), 2.0f / 3.0f, 0.0001f);
 }
 
 TEST(TestSymbolFixedStringBind4)
 {
     SymbolFixedString sym1("ABCD", "ABC");
     SymbolFixedString sym2("ABCD", "ABD");
-    CHECK_CLOSE(sym1.getBinding(&sym2), 1.0f / 3.0f, 0.0001f);
-    CHECK_CLOSE(sym2.getBinding(&sym1), 1.0f / 3.0f, 0.0001f);
+    CHECK_CLOSE(sym1.proximity(&sym2), 1.0f / 3.0f, 0.0001f);
+    CHECK_CLOSE(sym2.proximity(&sym1), 1.0f / 3.0f, 0.0001f);
 }
 
 TEST(TestSymbolFixedStringReplace1)
@@ -111,7 +111,7 @@ TEST(TestSymbolFixedStringMutate1)
     SymbolFixedString sym("ABCD", "ABC");
     SymbolFixedString* sym2 = (SymbolFixedString*)sym.clone();
     sym2->mutate();
-    CHECK(sym.getBinding(sym2) <= 0.33334f);
+    CHECK(sym.proximity(sym2) <= 0.33334f);
     delete sym2;
 }
 

@@ -25,6 +25,7 @@ GridbrainMemCell::GridbrainMemCell()
     mValue = 0.0f;
     mWrite = 0.0f;
     mClear = false;
+    mActive = false;
 }
 
 GridbrainMemCell::~GridbrainMemCell()
@@ -37,7 +38,8 @@ void GridbrainMemCell::cycle()
     {
         mValue = 0.0f;
     }
-    else if (mWrite != 0.0f)
+
+    if ((mValue == 0.0f) && (mWrite != 0.0f))
     {
         mValue = mWrite;
     }

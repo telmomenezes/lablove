@@ -43,6 +43,8 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     mInitialEnergy = 0;
     mEnergy = 0;
     mMaxAge = 0;
+    mMaxAgeLow = 0;
+    mMaxAgeHigh = 0;
     mAgeLimit = 0;
     mViewRange = 0;
     mViewAngle = 0;
@@ -103,8 +105,11 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     mLaserHitDuration = 0;
 
     mFriendlyFire = 0;
-
     mCurrentLaserTargetID = 0;
+    mObjSymAcqCounter = 0;
+
+    mBlockedX = false;
+    mBlockedY = false;
 }
 
 SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
@@ -125,6 +130,8 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
     mInitialEnergy = obj->mInitialEnergy;
     mEnergy = 0;
     mMaxAge = obj->mMaxAge;
+    mMaxAgeLow = obj->mMaxAgeLow;
+    mMaxAgeHigh = obj->mMaxAgeHigh;
     mAgeLimit = 0;
     mViewRange = obj->mViewRange;
     mViewAngle = obj->mViewAngle;
@@ -186,8 +193,24 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
     mLaserHitDuration = obj->mLaserHitDuration;
 
     mFriendlyFire = 0;
-
     mCurrentLaserTargetID = 0;
+    mObjSymAcqCounter = 0;
+
+    for (list<InterfaceItem>::iterator iterItem = obj->mObjectSymbolAcquisition.begin();
+        iterItem != obj->mObjectSymbolAcquisition.end();
+        iterItem++)
+    {
+        mObjectSymbolAcquisition.push_back(*iterItem);
+    }
+    for (list<InterfaceItem>::iterator iterItem = obj->mMessageSymbolAcquisition.begin();
+        iterItem != obj->mMessageSymbolAcquisition.end();
+        iterItem++)
+    {
+        mMessageSymbolAcquisition.push_back(*iterItem);
+    }
+
+    mBlockedX = false;
+    mBlockedY = false;
 }
 
 SimObj2D::~SimObj2D()
@@ -229,7 +252,7 @@ void SimObj2D::init()
             throw std::runtime_error("Failed to initialize SimObj2D: object does not define '" + mColoringSymbolName + "' named symbol");
         }
 
-        float binding = mColoringReferenceSymbol->getBinding(sym);
+        float binding = mColoringReferenceSymbol->proximity(sym);
 
         if (binding < mColoringScaleCenter)
         {
@@ -417,25 +440,38 @@ void SimObj2D::process()
     float newX = mX + mSpeedX;
     float newY = mY + mSpeedY;
 
+    if (fabsf(mSpeedX) > 0)
+    {
+        mBlockedX = false;
+    }
+    if (fabsf(mSpeedY) > 0)
+    {
+        mBlockedY = false;
+    }
+
     if (newX < 0.0f)
     {
         newX = 0.0f;
         mSpeedX = 0.0f;
+        mBlockedX = true;
     }
     else if (newX > mSim2D->getWorldWidth())
     {
         newX = mSim2D->getWorldWidth();
         mSpeedX = 0.0f;
+        mBlockedX = true;
     }
     if (newY < 0.0f)
     {
         newY = 0.0f;
         mSpeedY = 0.0f;
+        mBlockedY = true;
     }
     else if (newY > mSim2D->getWorldLength())
     {
         newY = mSim2D->getWorldLength();
         mSpeedY = 0.0f;
+        mBlockedY = true;
     }
 
     mSpeedRot += mImpulseRot / mSize;
@@ -578,6 +614,21 @@ void SimObj2D::perceive()
         {
             Message* msg = (*iterMessage);
 
+            // Message symbol acquisition
+            for (list<InterfaceItem>::iterator iterItem = mMessageSymbolAcquisition.begin();
+                iterItem != mMessageSymbolAcquisition.end();
+                iterItem++)
+            {
+                InterfaceItem item = *iterItem;
+        
+                SymbolTable* origTable = getSymbolTable(item.mOrigSymTable);
+
+                if (origTable != NULL)
+                {
+                    origTable->acquireSymbol(msg->mSymbol);
+                }
+            }
+
             list<InterfaceItem*>* interface = mBrain->getInputInterface(mChannelSounds);
             float* inBuffer = mBrain->getInputBuffer(mChannelSounds);
 
@@ -585,6 +636,7 @@ void SimObj2D::perceive()
             {
                 unsigned int pos = 0;
                 float normalizedValue;
+                InterfaceItem* item;
 
                 for (list<InterfaceItem*>::iterator iterItem = interface->begin();
                     iterItem != interface->end();
@@ -604,12 +656,28 @@ void SimObj2D::perceive()
                             inBuffer[pos] = normalizedValue;
                             break;
 
-                        case Sim2D::PERCEPTION_SYMBOL:
-                            InterfaceItem* item = (*iterItem);
+                        case Sim2D::PERCEPTION_VALUE:
+                            normalizedValue = msg->mData[2];
+                            inBuffer[pos] = normalizedValue;
+                            break;
+
+                        case Sim2D::PERCEPTION_SYMPRO:
+                            item = (*iterItem);
                             normalizedValue = mSim2D->calcSymbolsBinding(this,
                                                     item->mOrigSymTable,
                                                     item->mOrigSymID,
-                                                    msg->mSymbol);
+                                                    msg->mSymbol,
+                                                    Simulation::BINDING_PROXIMITY);
+                            inBuffer[pos] = normalizedValue;
+                            break;
+
+                        case Sim2D::PERCEPTION_SYMEQ:
+                            item = (*iterItem);
+                            normalizedValue = mSim2D->calcSymbolsBinding(this,
+                                                    item->mOrigSymTable,
+                                                    item->mOrigSymID,
+                                                    msg->mSymbol,
+                                                    Simulation::BINDING_EQUALS);
                             inBuffer[pos] = normalizedValue;
                             break;
                     }
@@ -661,6 +729,29 @@ void SimObj2D::perceive()
                     }
                     inBuffer[pos] = normalizedValue;
                     break;
+                case Sim2D::PERCEPTION_ID:
+                    inBuffer[pos] = (float)(mBodyID + 1);
+                    break;
+                case Sim2D::PERCEPTION_BLOCKED:
+                    normalizedValue = 0.0f;
+
+                    if (mBlockedX || mBlockedY)
+                    {
+                        normalizedValue = 1.0f;
+                    }
+                    inBuffer[pos] = normalizedValue;
+                    break;
+                case Sim2D::PERCEPTION_COMPASS:
+                    float centerX = mSim2D->getWorldWidth() / 2.0f;
+                    float centerY = mSim2D->getWorldLength() / 2.0f;
+                    float dX =  centerX - mX;
+                    float dY =  centerY - mY;
+
+                    float ltAng = Sim2D::normalizeAngle(mRot - atan2f(dY, dX));
+                    normalizedValue = ltAng / M_PI;
+
+                    inBuffer[pos] = normalizedValue;
+                    break;
             }
 
             pos++;
@@ -673,6 +764,30 @@ void SimObj2D::onScanObject(SimObj2D* targ,
                 float angle,
                 float orientation)
 {
+    // Object symbol acquisition
+    mObjSymAcqCounter++;
+
+    if (mObjSymAcqCounter >= 250)
+    {
+        mObjSymAcqCounter = 0;
+        for (list<InterfaceItem>::iterator iterItem = mObjectSymbolAcquisition.begin();
+            iterItem != mObjectSymbolAcquisition.end();
+            iterItem++)
+        {
+            InterfaceItem item = *iterItem;
+
+            SymbolTable* origTable = getSymbolTable(item.mOrigSymTable);
+            SymbolTable* targTable = targ->getSymbolTable(item.mTargetSymTable);
+
+            if ((origTable != NULL)
+                && (targTable != NULL))
+            {
+                Symbol* targetSym = targTable->getReferenceSymbol();
+                origTable->acquireSymbol(targetSym);
+            }
+        }
+    }
+
     float* inBuffer = mBrain->getInputBuffer(mChannelObjects);
     if (inBuffer == NULL)
     {
@@ -759,13 +874,25 @@ void SimObj2D::onScanObject(SimObj2D* targ,
                 }
                 break;
 
-            case Sim2D::PERCEPTION_SYMBOL:
+            case Sim2D::PERCEPTION_SYMPRO:
                 item = (*iterItem);
                 normalizedValue = mSim2D->calcSymbolsBinding(this,
                                                     targ,
                                                     item->mOrigSymTable,
                                                     item->mTargetSymTable,
-                                                    item->mOrigSymID);
+                                                    item->mOrigSymID,
+                                                    Simulation::BINDING_PROXIMITY);
+                inBuffer[pos] = normalizedValue;
+                break;
+
+            case Sim2D::PERCEPTION_SYMEQ:
+                item = (*iterItem);
+                normalizedValue = mSim2D->calcSymbolsBinding(this,
+                                                    targ,
+                                                    item->mOrigSymTable,
+                                                    item->mTargetSymTable,
+                                                    item->mOrigSymID,
+                                                    Simulation::BINDING_EQUALS);
                 inBuffer[pos] = normalizedValue;
                 break;
 
@@ -823,6 +950,10 @@ void SimObj2D::onScanObject(SimObj2D* targ,
                 }
 
                 inBuffer[pos] = normalizedValue;
+                break;
+
+            case Sim2D::PERCEPTION_ID:
+                inBuffer[pos] = (float)(targ->mBodyID + 1);
                 break;
         }
 
@@ -910,20 +1041,17 @@ void SimObj2D::act()
                         actionEat = actionType;
                         break;
                     case Sim2D::ACTION_SPEAK:
-                        if (output > actionSpeakParam)
+                        SymbolTable* table = getSymbolTable((*iterItem)->mOrigSymTable);
+
+                        if (table != NULL)
                         {
-                            SymbolTable* table = getSymbolTable((*iterItem)->mOrigSymTable);
+                            Symbol* sym = table->getSymbol((*iterItem)->mOrigSymID);
+                            //printf("id: %d\n", (*iterItem)->mOrigSymID);
 
-                            if (table != NULL)
+                            if (sym != NULL)
                             {
-                                Symbol* sym = table->getSymbol((*iterItem)->mOrigSymID);
-                                //printf("id: %d\n", (*iterItem)->mOrigSymID);
-
-                                if (sym != NULL)
-                                {
-                                    actionSpeakParam = output;
-                                    actionSpeakSymbol = sym;
-                                }
+                                actionSpeakParam = output;
+                                actionSpeakSymbol = sym;
                             }
                         }
                         break;
@@ -976,7 +1104,7 @@ void SimObj2D::act()
     }
     if (actionSpeakSymbol != NULL)
     {
-        speak(actionSpeakSymbol);
+        speak(actionSpeakSymbol, actionSpeakParam);
     }
     if (actionFire != Sim2D::ACTION_NULL)
     {
@@ -1017,7 +1145,7 @@ void SimObj2D::eat(SimObj2D* target, unsigned int actionType)
         switch (actionType)
         {
         case Sim2D::ACTION_EAT:
-            if (sym1->getBinding(sym2) > mFeedCenter)
+            if (sym1->proximity(sym2) > mFeedCenter)
             {
                 float energy = target->mEnergy;
                 deltaEnergy(energy);
@@ -1025,7 +1153,7 @@ void SimObj2D::eat(SimObj2D* target, unsigned int actionType)
             }
             break;
         case Sim2D::ACTION_EATB:
-            float distance = sym1->getBinding(sym2);
+            float distance = sym1->proximity(sym2);
             float energyFactor;
 
             if (distance < mFeedCenter)
@@ -1047,9 +1175,26 @@ void SimObj2D::eat(SimObj2D* target, unsigned int actionType)
 
 void SimObj2D::fire(unsigned int actionType, float strength)
 {
+    float cost = mLaserCostFactor * strength;
+    deltaEnergy(-cost);
+
+    bool doFire = true;
+    if (((mSim2D->getTime() - mLastFireTime) <= mFireInterval)
+        && (mLastFireTime != 0))
+    {
+        doFire = false;
+    }
+
+    mLastFireTime = mSim2D->getTime();
+
+    if (!doFire)
+    {
+        return;
+    }
+
     Laser2D laser;
 
-    laser.mFireTime = mSim2D->getTime();
+    laser.mFireTime = mLastFireTime;
 
     laser.mX1 = mX;
     laser.mY1 = mY;
@@ -1086,27 +1231,17 @@ void SimObj2D::fire(unsigned int actionType, float strength)
         break;
     }
 
-    if (((mSim2D->getTime() - mLastFireTime) <= mFireInterval)
-        && (mLastFireTime != 0))
-    {
-        laser.mEnergy = 0.0f;
-    }
-    else
-    {
-        laser.mEnergy = strength * mLaserStrengthFactor;
-    }
-    mLastFireTime = laser.mFireTime;
+    
+    laser.mEnergy = strength * mLaserStrengthFactor;
+
 
     laser.mRange = mLaserRange;
     laser.mDistanceTraveled = 0.0f;
 
-    float cost = mLaserCostFactor * strength;
-    deltaEnergy(-cost);
-
     mSim2D->fireLaser(laser);
 }
 
-void SimObj2D::speak(Symbol* sym)
+void SimObj2D::speak(Symbol* sym, float param)
 {
     if (((mSim2D->getTime() - mLastSpeakTime) <= mSpeakInterval)
         && (mLastSpeakTime != 0))
@@ -1130,9 +1265,10 @@ void SimObj2D::speak(Symbol* sym)
             Message* msg = new Message();
             msg->mSymbol = sym->clone();
             msg->mType = 0; // Only one message type for now (sound message)
-            float* msgData = (float*)malloc(2 * sizeof(float));
+            float* msgData = (float*)malloc(3 * sizeof(float));
             msgData[0] = distance;
             msgData[1] = Sim2D::normalizeAngle(angle + M_PI);
+            msgData[2] = param;
             msg->mData = msgData;
             target->addMessage(msg);
         }
@@ -1154,6 +1290,11 @@ void SimObj2D::speak(Symbol* sym)
 void SimObj2D::processLaserHit(Laser2D* laser)
 {
     llULINT id = laser->mOwnerID;
+    SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
+    if ((obj != NULL) && (laser->mEnergy > 0))
+    {
+        obj->mScore += 0.001f;
+    }
 
     switch (laser->mType)
     {
@@ -1185,7 +1326,6 @@ void SimObj2D::processLaserHit(Laser2D* laser)
         {
             score = mEnergy;
         }
-        SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
 
         if ((obj != NULL) && (obj->mSpeciesID != mSpeciesID))
         {
@@ -1232,6 +1372,35 @@ bool SimObj2D::getFieldValue(string fieldName, float& value)
     }
 }
 
+void SimObj2D::addObjectSymbolAcquisition(int origTable, int targTable)
+{
+    InterfaceItem item;
+    item.mOrigSymTable = origTable;
+    item.mTargetSymTable = targTable;
+    mObjectSymbolAcquisition.push_back(item);
+}
+
+void SimObj2D::addMessageSymbolAcquisition(int table)
+{
+    InterfaceItem item;
+    item.mOrigSymTable = table;
+    mObjectSymbolAcquisition.push_back(item);
+}
+
+void SimObj2D::setMaxAge(llULINT maxAgeLow, llULINT maxAgeHigh)
+{
+    mMaxAgeLow = maxAgeLow;
+
+    if (maxAgeHigh == 0)
+    {
+        mMaxAgeHigh = maxAgeLow;
+    }
+    else
+    {
+        mMaxAgeHigh = maxAgeHigh;
+    }
+}
+
 const char SimObj2D::mClassName[] = "SimObj2D";
 
 Orbit<SimObj2D>::MethodType SimObj2D::mMethods[] = {
@@ -1269,6 +1438,8 @@ Orbit<SimObj2D>::MethodType SimObj2D::mMethods[] = {
     {"setLaserStrengthFactor", &SimObj2D::setLaserStrengthFactor},
     {"setLaserCostFactor", &SimObj2D::setLaserCostFactor},
     {"setLaserHitDuration", &SimObj2D::setLaserHitDuration},
+    {"addObjectSymbolAcquisition", &SimObj2D::addObjectSymbolAcquisition},
+    {"addMessageSymbolAcquisition", &SimObj2D::addMessageSymbolAcquisition},
     {0,0}
 };
 
@@ -1326,8 +1497,9 @@ int SimObj2D::setInitialEnergy(lua_State* luaState)
 
 int SimObj2D::setMaxAge(lua_State* luaState)
 {
-    llULINT maxAge = luaL_checkint(luaState, 1);
-    setMaxAge(maxAge);
+    llULINT maxAgeLow = luaL_checkint(luaState, 1);
+    llULINT maxAgeHigh = luaL_optint(luaState, 2, 0);
+    setMaxAge(maxAgeLow, maxAgeHigh);
     return 0;
 }
 
@@ -1469,6 +1641,21 @@ int SimObj2D::setLaserHitDuration(lua_State* luaState)
 {
     unsigned int duration = luaL_checkint(luaState, 1);
     setLaserHitDuration(duration);
+    return 0;
+}
+
+int SimObj2D::addObjectSymbolAcquisition(lua_State* luaState)
+{
+    int origTable = luaL_checkint(luaState, 1);
+    int targTable = luaL_checkint(luaState, 2);
+    addObjectSymbolAcquisition(origTable, targTable);
+    return 0;
+}
+
+int SimObj2D::addMessageSymbolAcquisition(lua_State* luaState)
+{
+    int table = luaL_checkint(luaState, 1);
+    addMessageSymbolAcquisition(table);
     return 0;
 }
 

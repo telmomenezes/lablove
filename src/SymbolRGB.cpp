@@ -62,7 +62,7 @@ Symbol* SymbolRGB::clone()
     return new SymbolRGB(this);
 }
 
-float SymbolRGB::getBinding(Symbol* sym)
+float SymbolRGB::proximity(Symbol* sym)
 {
     // TODO: check type
     SymbolRGB* symRGB = (SymbolRGB*)sym;
@@ -80,6 +80,22 @@ float SymbolRGB::getBinding(Symbol* sym)
     distance = distance / 441.68;
 
     return 1.0f - distance;
+}
+
+bool SymbolRGB::equals(Symbol* sym)
+{
+    SymbolRGB* symRGB = (SymbolRGB*)sym;
+    
+    //printf("(%d %d %d) / (%d %d %d)\n", mRed, mGreen, mBlue, symRGB->mRed, symRGB->mGreen, symRGB->mBlue);
+
+    if ((mRed != symRGB->mRed)
+        || (mGreen != symRGB->mGreen)
+        || (mBlue != symRGB->mBlue))
+    {
+        return false;
+    }
+
+    return true;
 }
 
 void SymbolRGB::initRandom()

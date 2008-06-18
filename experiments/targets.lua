@@ -13,19 +13,20 @@ numberOfAgents = 10
 agentSize = 10.0
 
 targetMinEnergy = 0.5
-targetMaxEnergy = 3.0
+targetMaxEnergy = 2.0
 targetSizeFactor = 10.0
 
-worldWidth = 1000
-worldHeight = 1000
+worldWidth = 500
+worldHeight = 500
 
-alphaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, GTZ, ZERO, MAX, AVG}
-betaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, GTZ, ZERO, CLK, MEMW, MEMC, MEMD}
+alphaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, MAX, MIN, AVG, MEMW, MEMC}
+betaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, CLK, MEMW, MEMC}
 
 viewRange = 300.0
 viewAngle = 350.0
 
-maxAge = 5000
+maxAgeLow = 4500
+maxAgeHigh = 5500
 
 initialEnergy = 1.0
 goCost = 0.001
@@ -47,7 +48,7 @@ soundRange = 500
 speakInterval = 250
 
 compCount = 1
-bufferSize = 20
+bufferSize = 100
 fitnessAging = 0.1
 
 addConnectionProb = 0.01
@@ -69,16 +70,18 @@ humanAgent = false
 
 evolutionStopTime = 0
 
-self = false
+self = true
 comm = true
 
 kinFactor = 1.0
 fitFactor = 1.0
 teamFactor = 0.5
 bodyFactor = 0.5
-bodyQueue = 10
+bodyQueue = 20
 
 agentBirthRadius = 100.0
+
+keepBodyOnExpire = true
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
@@ -121,7 +124,7 @@ agent:setSize(agentSize)
 agent:setDrag(drag)
 agent:setRotDrag(rotDrag)
 agent:setInitialEnergy(initialEnergy)
-agent:setMaxAge(maxAge)
+agent:setMaxAge(maxAgeLow, maxAgeHigh)
 agent:setViewRange(viewRange)
 agent:setViewAngle(viewAngle)
 agent:setGoCost(goCost)
@@ -138,7 +141,7 @@ agent:setLaserRange(laserRange)
 agent:setLaserStrengthFactor(laserStrengthFactor)
 agent:setLaserCostFactor(laserCostFactor)
 agent:setLaserHitDuration(laserHitDuration)
-agent:setKeepBodyOnExpirationDeath(true)
+agent:setKeepBodyOnExpirationDeath(keepBodyOnExpire)
 --agent:setKeepBodyOnHardDeath(true)
 
 agentColor = SymbolRGB(0, 0, 255)
@@ -148,6 +151,10 @@ symTable:setDynamic(true)
 symTable:setName("color")
 colorTableCode = symTable:getID()
 agent:setSymbolName("color", colorTableCode, agentColor:getID())
+
+-- Symbols acquisition
+agent:addObjectSymbolAcquisition(colorTableCode, colorTableCode)
+agent:addMessageSymbolAcquisition(colorTableCode)
 
 -- Agent Brain
 
@@ -173,7 +180,8 @@ alphaSet:addComponent(IN, Sim2D.PERCEPTION_LTARGET)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_LOF)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_CONV)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_CONVDIR)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_SYMBOL, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
+alphaSet:addComponent(IN, Sim2D.PERCEPTION_SYMEQ, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
+alphaSet:addComponent(IN, Sim2D.PERCEPTION_ID)
 grid = Grid()
 grid:init(ALPHA, 0, 0)
 grid:setComponentSet(alphaSet)
@@ -185,11 +193,9 @@ if self then
     for i, comp in pairs(alphaComponents) do
         selfSet:addComponent(comp)
     end
-    selfSet:addComponent(IN, Sim2D.PERCEPTION_ENERGY)
-    --selfSet:addComponent(IN, Sim2D.PERCEPTION_CAN_FIRE)
-    if comm then
-        selfSet:addComponent(IN, Sim2D.PERCEPTION_CAN_SPEAK)
-    end
+    selfSet:addComponent(IN, Sim2D.PERCEPTION_ID)
+    selfSet:addComponent(IN, Sim2D.PERCEPTION_BLOCKED)
+    selfSet:addComponent(IN, Sim2D.PERCEPTION_COMPASS)
     selfGrid = Grid()
     selfGrid:init(ALPHA, 0, 0)
     selfGrid:setComponentSet(selfSet)
@@ -204,7 +210,8 @@ if comm then
     end
     soundSet:addComponent(IN, Sim2D.PERCEPTION_POSITION)
     soundSet:addComponent(IN, Sim2D.PERCEPTION_DISTANCE)
-    soundSet:addComponent(IN, Sim2D.PERCEPTION_SYMBOL, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
+    soundSet:addComponent(IN, Sim2D.PERCEPTION_VALUE)
+    soundSet:addComponent(IN, Sim2D.PERCEPTION_SYMEQ, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
     soundGrid = Grid()
     soundGrid:init(ALPHA, 0, 0)
     soundGrid:setComponentSet(soundSet)
@@ -247,6 +254,7 @@ symTable = SymbolTable(targetColor, colorTableCode)
 target:addSymbolTable(symTable)
 target:setSymbolName("color", colorTableCode, targetColor:getID())
 
+
 -- Population Dynamics
 --------------------------------------------------------------------------------
 
@@ -276,7 +284,7 @@ if humanAgent then
     human:setDrag(drag)
     human:setRotDrag(rotDrag)
     human:setInitialEnergy(1.0)
-    human:setMaxAge(maxAge)
+    human:setMaxAge(maxAgeLow)
     human:setViewRange(viewRange)
     human:setViewAngle(viewAngle)
     human:setGoCost(goCost)
@@ -297,15 +305,20 @@ if humanAgent then
     human:addSymbolTable(symTable)
     human:setSymbolName("color", colorTableCode, humanColor:getID())
 
-    dummyBrain = DummyBrain(1)
+    dummyBrain = DummyBrain(3)
     dummyBrain:setChannelName(0, "objects")
+    dummyBrain:setChannelName(1, "sounds")
+    dummyBrain:setChannelName(2, "self")
     dummyBrain:addPerception("Position", 0, Sim2D.PERCEPTION_POSITION)
     dummyBrain:addPerception("Distance", 0, Sim2D.PERCEPTION_DISTANCE)
-    dummyBrain:addPerception("Color", 0, Sim2D.PERCEPTION_SYMBOL, colorTableCode, humanColor:getID(), colorTableCode)
+    dummyBrain:addPerception("Color", 0, Sim2D.PERCEPTION_SYMEQ, colorTableCode, humanColor:getID(), colorTableCode)
     dummyBrain:addPerception("LTarget", 0, Sim2D.PERCEPTION_LTARGET)
     dummyBrain:addPerception("LOF", 0, Sim2D.PERCEPTION_LOF)
     dummyBrain:addPerception("Conv", 0, Sim2D.PERCEPTION_CONV)
     dummyBrain:addPerception("ConvDir", 0, Sim2D.PERCEPTION_CONVDIR)
+    dummyBrain:addPerception("ID", 0, Sim2D.PERCEPTION_ID)
+    dummyBrain:addPerception("Blocked", 2, Sim2D.PERCEPTION_BLOCKED)
+    dummyBrain:addPerception("Compass", 2, Sim2D.PERCEPTION_COMPASS)
 
     human:setBrain(dummyBrain)
 
@@ -320,7 +333,9 @@ end
 stats = StatCommon()
 stats:setFile("log" .. logSuffix .. ".csv")
 stats:addField("fitness")
-stats:addField("group_fitness")
+stats:addField("base_fitness")
+stats:addField("team_fitness")
+stats:addField("body_fitness")
 stats:addField("gb_connections")
 stats:addField("gb_active_connections")
 stats:addField("gb_active_components")

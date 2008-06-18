@@ -128,7 +128,7 @@ SimObj::SimObj(SimObj* obj)
                         table->mUsedCount++;
                     }
 
-                    if ((!sym->mFixed) && (!sym->mUsed))
+                    if ((!sym->mFixed) && (!sym->mUsed) && (!sym->mProtected))
                     {
                         table->getSymbolMap()->erase(symbolID);
                         delete sym;
@@ -297,6 +297,11 @@ bool SimObj::getFieldValue(string fieldName, float& value)
         value = mFitness;
         return true;
     }
+    else if (fieldName == "base_fitness")
+    {
+        value = mBaseFitness;
+        return true;
+    }
     else if (fieldName == "team_fitness")
     {
         value = mTeamFitness;
@@ -399,7 +404,26 @@ SimObj* SimObj::recombine(SimObj* otherParent)
 
     delete obj;
 
+    //child->printDebug();
+
     return child;
+}
+
+void SimObj::onAdd()
+{
+    // Reset symbol protections
+    map<int, SymbolTable*>::iterator iterTables;
+    for (iterTables = mSymbolTables.begin();
+        iterTables != mSymbolTables.end();
+        iterTables++)
+    {
+        SymbolTable* table = (*iterTables).second;
+
+        if (table->isDynamic())
+        {
+            table->resetProtections();
+        }
+    }
 }
 
 void SimObj::setFloatDataFromSymbol(string symbolName, float& var)

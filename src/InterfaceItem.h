@@ -29,6 +29,7 @@ public:
     enum TableLinkType {NO_LINK, SYM_TO_SYM, TAB_TO_SYM};
 
     InterfaceItem(lua_State* luaState=NULL);
+    InterfaceItem(const InterfaceItem& item);
     virtual ~InterfaceItem();
 
     int mType;

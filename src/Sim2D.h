@@ -41,14 +41,19 @@ public:
     static const int PERCEPTION_SIZE = 4;
     static const int PERCEPTION_TARGET = 5;
     static const int PERCEPTION_IN_CONTACT = 6;
-    static const int PERCEPTION_SYMBOL = 7;
-    static const int PERCEPTION_ENERGY = 8;
-    static const int PERCEPTION_CAN_SPEAK = 9;
-    static const int PERCEPTION_CAN_FIRE = 10;
-    static const int PERCEPTION_LTARGET = 11;
-    static const int PERCEPTION_LOF = 12;
-    static const int PERCEPTION_CONV = 13;
-    static const int PERCEPTION_CONVDIR = 14;
+    static const int PERCEPTION_SYMPRO = 7;
+    static const int PERCEPTION_SYMEQ = 8;
+    static const int PERCEPTION_ENERGY = 9;
+    static const int PERCEPTION_CAN_SPEAK = 10;
+    static const int PERCEPTION_CAN_FIRE = 11;
+    static const int PERCEPTION_LTARGET = 12;
+    static const int PERCEPTION_LOF = 13;
+    static const int PERCEPTION_CONV = 14;
+    static const int PERCEPTION_CONVDIR = 15;
+    static const int PERCEPTION_ID = 16;
+    static const int PERCEPTION_BLOCKED = 17;
+    static const int PERCEPTION_COMPASS = 18;
+    static const int PERCEPTION_VALUE = 19;
 
     static const int ACTION_NULL = 0;
     static const int ACTION_GO = 1;

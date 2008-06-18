@@ -50,6 +50,9 @@ public:
     llULINT getRandomSymbolId();
 
     void grow();
+    void resetProtections();
+
+    void acquireSymbol(Symbol* sym);
 
     map<llULINT, Symbol*>* getSymbolMap(){return &mSymbols;}
 

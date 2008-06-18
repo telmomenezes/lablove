@@ -470,11 +470,34 @@ void Gridbrain::generateMemory(Gridbrain* originGB)
 
         if (comp->isMemory())
         {
-            mMemory[comp->mOrigSymID] = GridbrainMemCell();
+            if (mMemory.count(comp->mOrigSymID) == 0)
+            {
+                mMemory[comp->mOrigSymID] = GridbrainMemCell();
+            }
+            
+            if (comp->mActive)
+            {
+                mMemory[comp->mOrigSymID].mActive = true;
+            }
         }
     }
 
-    mMemory[CURRENT_MEM_ID++] = GridbrainMemCell();
+    bool grow = true;
+
+    for (map<llULINT, GridbrainMemCell>::iterator iterMem = mMemory.begin();
+            grow && (iterMem != mMemory.end());
+            iterMem++)
+    {
+        if (!(*iterMem).second.mActive)
+        {
+            grow = false;
+        }
+    }
+
+    if (grow)
+    {
+        mMemory[CURRENT_MEM_ID++] = GridbrainMemCell();
+    }
 }
 
 void Gridbrain::addGrid(Grid* grid, string name)
@@ -1534,6 +1557,38 @@ void Gridbrain::cycle()
                             output = 0.0f;
                         }
                         break;
+                    case GridbrainComponent::MIN:
+                        //printf("MIN ");
+                        if (comp->mInput != 0)
+                        {
+                            if (!comp->mCycleFlag)
+                            {
+                                output = 1.0f;
+                                comp->mState = comp->mInput;
+                                comp->mCycleFlag = true;
+                            }
+                            else
+                            {
+                                if (comp->mInput <= comp->mState)
+                                {
+                                    output = 1.0f;
+                                    comp->mState = comp->mInput;
+                                    if (pass > 0)
+                                    {
+                                        comp->mState -= 1.0f;
+                                    }
+                                }
+                                else
+                                {
+                                    output = 0.0f;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            output = 0.0f;
+                        }
+                        break;
                     case GridbrainComponent::AVG:
                         //printf("AVG ");
                         if (firstAlpha && (comp->mInput != 0))
@@ -1601,6 +1656,11 @@ void Gridbrain::cycle()
                     case GridbrainComponent::RAND:
                         //printf("RAND ");
                         output = mDistGridbrain->uniform(-1.0f, 1.0f);
+
+                        break;
+                    case GridbrainComponent::EQ:
+                        //printf("EQ ");
+                        output = comp->mInput;
 
                         break;
                     case GridbrainComponent::NEG:
@@ -1703,7 +1763,7 @@ void Gridbrain::cycle()
                         break;
                     case GridbrainComponent::MEMW:
                         //printf("MEMW ");
-                        comp->mMemCell->mWrite += comp->mInput;
+                        comp->mMemCell->mWrite = comp->mInput;
                         output = comp->mMemCell->mValue;
 
                         break;
@@ -1778,6 +1838,20 @@ void Gridbrain::cycle()
                                 
                                 targetComp->mInput += input;
                                 break;
+                            case GridbrainComponent::IN_EQ:
+                                if (!targetComp->mForwardFlag)
+                                {
+                                    targetComp->mInput = 1.0f;
+                                    targetComp->mForwardFlag = true;
+                                    targetComp->mPreState = input;
+                                }
+                                else if (targetComp->mInput == 1.0f)
+                                {
+                                    if (targetComp->mPreState != input)
+                                    {
+                                        targetComp->mInput = 0.0f;
+                                    }
+                                }
                             }
 
                             /*printf("(%d, %d, %d)[%f] -> (%d, %d, %d)[%f]\n",

@@ -23,6 +23,15 @@ InterfaceItem::InterfaceItem(lua_State* luaState)
 {
 }
 
+InterfaceItem::InterfaceItem(const InterfaceItem& item)
+{
+    mType = item.mType;
+    mOrigSymTable = item.mOrigSymTable;
+    mTargetSymTable = item.mTargetSymTable;
+    mOrigSymID = item.mOrigSymID;
+    mTableLinkType = item.mTableLinkType;
+}
+
 InterfaceItem::~InterfaceItem()
 {
 }

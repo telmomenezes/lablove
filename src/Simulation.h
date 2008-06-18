@@ -35,6 +35,8 @@ using std::string;
 class Simulation
 {
 public:
+    enum BindingType {BINDING_EQUALS, BINDING_PROXIMITY};
+
     Simulation(lua_State* luaState=NULL);
     virtual ~Simulation();
 
@@ -75,11 +77,13 @@ public:
                             SimObj* targetObj,
                             int origSymTable,
                             int targetSymTable,
-                            llULINT origSymID);
+                            llULINT origSymID,
+                            BindingType type);
     float calcSymbolsBinding(SimObj* obj,
                                     int symTable,
                                     llULINT symID,
-                                    Symbol* symbol);
+                                    Symbol* symbol,
+                                    BindingType type);
 
     void setTimeLimit(llULINT limit);
 

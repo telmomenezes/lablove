@@ -77,7 +77,7 @@ void SymbolFloatVector::calcMaxBinding()
     mMaxBinding = distance;
 }
 
-float SymbolFloatVector::getBinding(Symbol* sym)
+float SymbolFloatVector::proximity(Symbol* sym)
 {
     // TODO: check type
     SymbolFloatVector* symVec = (SymbolFloatVector*)sym;
@@ -104,6 +104,21 @@ float SymbolFloatVector::getBinding(Symbol* sym)
     }
 
     return bind;
+}
+
+bool SymbolFloatVector::equals(Symbol* sym)
+{
+    SymbolFloatVector* symVec = (SymbolFloatVector*)sym;
+
+    for (unsigned int i = 0; i < mSize; i++)
+    {
+        if (symVec->mVector[i] != mVector[i])
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 void SymbolFloatVector::initRandom()

@@ -229,6 +229,7 @@ void Sim2D::addObject(SimObj* obj, bool init)
     object->mSim2D = this;
 
     object->mEnergy = object->mInitialEnergy;
+    object->mMaxAge = mDistAge->iuniform(object->mMaxAgeLow, object->mMaxAgeHigh);
 
     if (init)
     {
@@ -305,6 +306,7 @@ void Sim2D::replace(SimObj* obj, SimObj* ref)
 
     obj2D->setPos(x, y);
     obj2D->setRot(rot);
+    obj2D->mLastFireTime = ((SimObj2D*)ref)->mLastFireTime;
 }
 
 void Sim2D::placeNear(SimObj* obj, SimObj* ref)
@@ -1068,6 +1070,14 @@ string Sim2D::getInterfaceName(bool input, int type)
             return "conv";
         case PERCEPTION_CONVDIR:
             return "convdir";
+        case PERCEPTION_ID:
+            return "id";
+        case PERCEPTION_BLOCKED:
+            return "blocked";
+        case PERCEPTION_COMPASS:
+            return "compass";
+        case PERCEPTION_VALUE:
+            return "value";
         default:
             return "?";
         }
@@ -1139,7 +1149,8 @@ Orbit<Sim2D>::NumberGlobalType Sim2D::mNumberGlobals[] = {
     {"PERCEPTION_SIZE", PERCEPTION_SIZE},
     {"PERCEPTION_TARGET", PERCEPTION_TARGET},
     {"PERCEPTION_IN_CONTACT", PERCEPTION_IN_CONTACT},
-    {"PERCEPTION_SYMBOL", PERCEPTION_SYMBOL},
+    {"PERCEPTION_SYMEQ", PERCEPTION_SYMEQ},
+    {"PERCEPTION_SYMPRO", PERCEPTION_SYMPRO},
     {"PERCEPTION_ENERGY", PERCEPTION_ENERGY},
     {"PERCEPTION_CAN_SPEAK", PERCEPTION_CAN_SPEAK},
     {"PERCEPTION_CAN_FIRE", PERCEPTION_CAN_FIRE},
@@ -1147,6 +1158,10 @@ Orbit<Sim2D>::NumberGlobalType Sim2D::mNumberGlobals[] = {
     {"PERCEPTION_LOF", PERCEPTION_LOF},
     {"PERCEPTION_CONV", PERCEPTION_CONV},
     {"PERCEPTION_CONVDIR", PERCEPTION_CONVDIR},
+    {"PERCEPTION_ID", PERCEPTION_ID},
+    {"PERCEPTION_BLOCKED", PERCEPTION_BLOCKED},
+    {"PERCEPTION_COMPASS", PERCEPTION_COMPASS},
+    {"PERCEPTION_VALUE", PERCEPTION_VALUE},
     {"ACTION_NULL", ACTION_NULL},
     {"ACTION_GO", ACTION_GO},
     {"ACTION_ROTATE", ACTION_ROTATE},

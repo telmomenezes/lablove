@@ -81,7 +81,7 @@ void SymbolBitString::initFromString(string str)
     }
 }
 
-float SymbolBitString::getBinding(Symbol* sym)
+float SymbolBitString::proximity(Symbol* sym)
 {
     // TODO: check type
     SymbolBitString* symStr = (SymbolBitString*)sym;
@@ -109,6 +109,26 @@ float SymbolBitString::getBinding(Symbol* sym)
 
     float binding = ((float)match) / ((float)maxLength);
     return binding;
+}
+
+bool SymbolBitString::equals(Symbol* sym)
+{
+    SymbolBitString* symStr = (SymbolBitString*)sym;
+
+    if (mLength != symStr->mLength)
+    {
+        return false;
+    }
+
+    for (unsigned int i = 0; i < mLength; i++)
+    {
+        if (mBits[i] != symStr->mBits[i])
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 int SymbolBitString::getRandomBit()

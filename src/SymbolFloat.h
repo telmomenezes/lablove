@@ -34,7 +34,9 @@ public:
     virtual ~SymbolFloat();
     virtual Symbol* clone();
 
-    virtual float getBinding(Symbol* sym);
+    virtual float proximity(Symbol* sym);
+    virtual bool equals(Symbol* sym);
+
     virtual void initRandom();
     virtual void mutate();
 

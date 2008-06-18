@@ -55,7 +55,7 @@ Symbol* SymbolFloat::clone()
     return new SymbolFloat(this);
 }
 
-float SymbolFloat::getBinding(Symbol* sym)
+float SymbolFloat::proximity(Symbol* sym)
 {
     // TODO: check type
     SymbolFloat* symFloat = (SymbolFloat*)sym;
@@ -74,6 +74,13 @@ float SymbolFloat::getBinding(Symbol* sym)
     }
 
     return bind;
+}
+
+bool SymbolFloat::equals(Symbol* sym)
+{
+    SymbolFloat* symFloat = (SymbolFloat*)sym;
+
+    return (symFloat->mFloat == mFloat);
 }
 
 void SymbolFloat::initRandom()

@@ -31,6 +31,8 @@ public:
     float mValue;
     float mWrite;
     bool mClear;
+
+    bool mActive;
 };
 #endif
 

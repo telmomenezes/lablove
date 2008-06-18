@@ -192,6 +192,7 @@ void Species::xoverMutateSend(int bodyID, bool init, SimObj* nearObj, SimObj* de
             SimObj* org1 = mOrganismVector[parent1];
             SimObj* org2 = mOrganismVector[parent2];
             mSuperSister = org1->recombine(org2);
+            mSuperSister->mutate();
         }
         mQueenState++;
     }
@@ -271,12 +272,7 @@ void Species::xoverMutateSend(int bodyID, bool init, SimObj* nearObj, SimObj* de
     else
     {
         newOrganism = mSuperSister->clone();
-
-        // Mutate
-        if (mEvolutionOn)
-        {
-            newOrganism->mutate();
-        }
+        newOrganism->mutate();
     }
 
     // Team fitness calculations
@@ -369,7 +365,8 @@ void Species::onOrganismDeath(SimObj* org)
 
     if (candidate != NULL)
     {
-        candidate->mFitness = (mFitFactor * candidate->mFitness)
+        candidate->mBaseFitness = candidate->mFitness;
+        candidate->mFitness = (mFitFactor * candidate->mBaseFitness)
             + (mTeamFactor * candidate->mTeamFitness)
             + (mBodyFactor * candidate->mBodyFitness);
 

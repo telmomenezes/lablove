@@ -62,6 +62,8 @@ public:
     virtual void perceive(){}
     virtual void act(){}
 
+    virtual void onAdd();
+
     virtual void draw(){}
 
     unsigned int getSpeciesID(){return mSpeciesID;}
@@ -123,8 +125,11 @@ public:
     bool mInitialized;
 
     float mFitness;
+    float mBaseFitness;
     float mTeamFitness;
     float mBodyFitness;
+
+    int mBodyID;
 
     map<int, SymbolTable*> mSymbolTables;
 
@@ -149,7 +154,6 @@ protected:
     map<string, SymbolPointer> mNamedSymbols;
 
     unsigned int mSpeciesID;
-    int mBodyID;
 
     float mBirthRadius;
     bool mKeepBodyOnHardDeath;

@@ -29,6 +29,7 @@ Symbol::Symbol()
     NEXT_SYMBOL_ID++;
     mSelected = false;
     mUsed = false;
+    mProtected = false;
 }
 
 Symbol::Symbol(Symbol* sym)
@@ -38,6 +39,7 @@ Symbol::Symbol(Symbol* sym)
     mID = sym->mID;
     mSelected = false;
     mUsed = false;
+    mProtected = false;
 }
 
 Symbol::~Symbol()

@@ -36,7 +36,9 @@ public:
 
     virtual Symbol* clone() = 0;
 
-    virtual float getBinding(Symbol* sym) = 0;
+    virtual float proximity(Symbol* sym) = 0;
+    virtual bool equals(Symbol* sym) = 0;
+
     virtual void initRandom() = 0;
     virtual void mutate() = 0;
 
@@ -56,6 +58,7 @@ public:
 
     bool mAlwaysRandom;
     bool mFixed;
+    bool mProtected;
 
     // for recombination purposes
     bool mSelected;

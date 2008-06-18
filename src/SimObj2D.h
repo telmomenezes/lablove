@@ -61,7 +61,7 @@ public:
     void setDrag(float drag){mDrag = drag;}
     void setRotDrag(float rotDrag){mRotDrag = rotDrag;}
     void setInitialEnergy(float energy){mInitialEnergy = energy;}
-    void setMaxAge(llULINT maxAge){mMaxAge = maxAge;}
+    void setMaxAge(llULINT maxAgeLow, llULINT maxAgeHigh=0);
 
     void deltaEnergy(double delta);
 
@@ -100,6 +100,9 @@ public:
 
     virtual bool getFieldValue(string fieldName, float& value);
 
+    void addObjectSymbolAcquisition(int origTable, int targTable);
+    void addMessageSymbolAcquisition(int table);
+
     static const char mClassName[];
     static Orbit<SimObj2D>::MethodType mMethods[];
     static Orbit<SimObj2D>::NumberGlobalType mNumberGlobals[];
@@ -130,6 +133,8 @@ public:
     int setLaserStrengthFactor(lua_State* luaState);
     int setLaserCostFactor(lua_State* luaState);
     int setLaserHitDuration(lua_State* luaState);
+    int addObjectSymbolAcquisition(lua_State* luaState);
+    int addMessageSymbolAcquisition(lua_State* luaState);
 
     float mX;
     float mY;
@@ -147,6 +152,8 @@ public:
     float mInitialEnergy;
     float mEnergy;
     llULINT mMaxAge;
+    llULINT mMaxAgeLow;
+    llULINT mMaxAgeHigh;
     llULINT mAgeLimit;
     float mViewRange;
     float mViewAngle;
@@ -180,6 +187,8 @@ public:
     bool mHumanSpeak;
     bool mHumanFire;
 
+    llULINT mLastFireTime;
+
 protected:
     virtual void onScanObject(SimObj2D* targ,
                                 float distance,
@@ -188,7 +197,7 @@ protected:
     void go(float force);
     void rotate(float force);
     void eat(SimObj2D* target, unsigned int actionType);
-    void speak(Symbol* sym);
+    void speak(Symbol* sym, float param);
     void fire(unsigned int actionType, float strength);
 
     static mt_distribution* mDistFitnessRandom;
@@ -216,7 +225,6 @@ protected:
     float mColoringScaleCenter;
     float mShapeSize;
 
-    llULINT mLastFireTime;
     unsigned int mFireInterval;
     float mLaserLength;
     float mLaserRange;
@@ -226,6 +234,14 @@ protected:
     unsigned int mFriendlyFire;
 
     llULINT mCurrentLaserTargetID;
+
+    list<InterfaceItem> mObjectSymbolAcquisition;
+    list<InterfaceItem> mMessageSymbolAcquisition;
+
+    unsigned int mObjSymAcqCounter;
+
+    bool mBlockedX;
+    bool mBlockedY;
 };
 #endif
 

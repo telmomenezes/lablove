@@ -256,6 +256,34 @@ void SymbolTable::grow()
     addRandomSymbol(); 
 }
 
+void SymbolTable::resetProtections()
+{
+    map<llULINT, Symbol*>::iterator iterSymbol;
+    for (iterSymbol = mSymbols.begin();
+        iterSymbol != mSymbols.end();
+        iterSymbol++)
+    {
+        (*iterSymbol).second->mProtected = false;
+    }   
+}
+
+void SymbolTable::acquireSymbol(Symbol* sym)
+{
+    //printf("attempt to acquire %s[%d]\n", sym->toString().c_str(), sym->mID);
+    llULINT id = sym->mID;
+
+    if (mSymbols.count(id) != 0)
+    {
+        mSymbols[id]->mProtected = true;
+        return;
+    }
+
+    Symbol* newSym = sym->clone();
+    newSym->mProtected = true;
+    mSymbols[id] = newSym;
+    //printf("ACQUIRE!!!!!!!! %s\n", newSym->toString().c_str());
+}
+
 int SymbolTable::getSymbolPos(llULINT symID)
 {
     int pos = 0;
