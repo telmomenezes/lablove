@@ -73,11 +73,11 @@ evolutionStopTime = 0
 self = true
 comm = true
 
-kinFactor = 1.0
+kinFactor = 0--1.0
 fitFactor = 1.0
-teamFactor = 0.5
-bodyFactor = 0.5
-bodyQueue = 20
+teamFactor = 0--0.5
+bodyFactor = 0--0.5
+bodyQueue = 0--20
 
 agentBirthRadius = 100.0
 
