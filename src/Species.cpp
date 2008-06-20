@@ -41,7 +41,7 @@ Species::Species(lua_State* luaState)
 
     mKinFactor = 0.0f;
     mCurrentQueen = 0;
-    mQueenState = mPopulation;
+    mQueenState = 0;
     mSuperSister = NULL;
     mFitnessAging = 0.0f;
     mRecombineProb = 0.0f;
@@ -65,6 +65,9 @@ void Species::init()
         SimObj* org = mBaseOrganism->clone();
         mOrganismVector.push_back(org);
     }
+
+    mQueenState = (int)(((float)mPopulation) * mKinFactor) + 1;
+
     for (unsigned int i = 0; i < mPopulation; i++)
     {
         xoverMutateSend(i, true);

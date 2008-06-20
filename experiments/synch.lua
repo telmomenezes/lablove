@@ -62,7 +62,7 @@ agentBirthRadius = 100.0
 
 keepBodyOnExpire = true
 
-kinFactor = 1.0
+kinFactor = 2.0
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
