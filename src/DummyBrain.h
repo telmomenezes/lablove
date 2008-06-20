@@ -47,7 +47,7 @@ public:
     virtual float* getInputBuffer(unsigned int channel);
     virtual float* getOutputBuffer(){return NULL;}
     virtual void cycle();
-    virtual void mutate(){}
+    virtual void mutate(float factor=1.0f){}
     virtual Brain* recombine(Brain* brain){return this->clone();}
  
     void addPerception(string name,

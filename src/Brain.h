@@ -53,7 +53,7 @@ public:
     virtual float* getOutputBuffer()=0;
     virtual void cycle()=0;
 
-    virtual void mutate()=0;
+    virtual void mutate(float factor=1.0f)=0;
     virtual Brain* recombine(Brain* brain)=0;
 
     virtual void setSelectedSymbols(SimObj* obj){}

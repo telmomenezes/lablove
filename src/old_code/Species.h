@@ -44,7 +44,10 @@ public:
     void setFitnessAging(float aging){mFitnessAging = aging;}
     void setRecombineProb(float prob){mRecombineProb = prob;}
 
+    void setFitFactor(float factor){mFitFactor = factor;}
     void setKinFactor(float factor){mKinFactor = factor;}
+    void setTeamFactor(float factor){mTeamFactor = factor;}
+    void setBodyParams(float factor, unsigned int samples);
 
     void addSampleLog(Log* log);
     void addDeathLog(Log* log);
@@ -61,10 +64,15 @@ public:
     int setRecombineProb(lua_State* luaState);
     int addSampleLog(lua_State* luaState);
     int addDeathLog(lua_State* luaState);
+    int setFitFactor(lua_State* luaState);
     int setKinFactor(lua_State* luaState);
+    int setTeamFactor(lua_State* luaState);
+    int setBodyParams(lua_State* luaState);
 
 protected:
     void xoverMutateSend(int bodyID, bool init=false, SimObj* nearObj=NULL, SimObj* deadObj=NULL);
+    SimObj* getCandidate(SimObj* obj);
+    void deleteBodyGroupLists();
 
     static mt_distribution* mDistOrganism;
     static mt_distribution* mDistRecombine;
@@ -76,7 +84,12 @@ protected:
     unsigned int mPopulation;
     unsigned int mBufferSize;
     list<SimObj*>** mBodyGroupLists;
+    float mFitFactor;
     float mKinFactor;
+    float mTeamFactor;
+    float mBodyFactor;
+    unsigned int mBodySamples;
+    float mBodySmoothing;
     unsigned int mCurrentQueen;
     unsigned int mQueenState;
     SimObj* mSuperSister;

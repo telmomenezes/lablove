@@ -1,5 +1,5 @@
--- TARGETS
--- Agents evolve to shoot at targets
+-- SYNCH
+-- Agents evolve to synchronize communication
 --------------------------------------------------------------------------------
 
 dofile("basic_defines.lua")
@@ -7,14 +7,9 @@ dofile("basic_defines.lua")
 -- Experiment Parameters
 --------------------------------------------------------------------------------
 
-numberOfTargets = 0--50
 numberOfAgents = 10
 
 agentSize = 10.0
-
-targetMinEnergy = 0.5
-targetMaxEnergy = 2.0
-targetSizeFactor = 10.0
 
 worldWidth = 500
 worldHeight = 500
@@ -36,13 +31,6 @@ rotateForceScale = 0.006
 
 drag = 0.05
 rotDrag = 0.05
-
-fireInterval = 1000
-laserLength = 25
-laserRange = 300.0
-laserStrengthFactor = 1.0
-laserCostFactor = 0.1
-laserHitDuration = 300
 
 soundRange = 500
 speakInterval = 250
@@ -70,24 +58,20 @@ humanAgent = false
 
 evolutionStopTime = 0
 
-self = true
-comm = true
-
 agentBirthRadius = 100.0
 
 keepBodyOnExpire = true
+
+kinFactor = 1.0
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
 
 dofile("basic_command_line.lua")
 
-self = getBoolParameter("self", self, "self")
-comm = getBoolParameter("comm", comm, "comm")
-targetMinEnergy = getNumberParameter("targmin", targetMinEnergy, "tmin")
-targetMaxEnergy = getNumberParameter("targmax", targetMaxEnergy, "tmax")
+kinFactor = getNumberParameter("kin", kinFactor, "kin")
 
-logBaseName = "_targets_"
+logBaseName = "_synch_"
 
 logSuffix = logBaseName
             .. parameterString
@@ -124,12 +108,6 @@ agent:setShape(SimObj2D.SHAPE_TRIANGLE)
 agent:setColoringSymbolName("color")
 agent:setSoundRange(soundRange)
 agent:setSpeakInterval(speakInterval)
-agent:setFireInterval(fireInterval)
-agent:setLaserLength(laserLength)
-agent:setLaserRange(laserRange)
-agent:setLaserStrengthFactor(laserStrengthFactor)
-agent:setLaserCostFactor(laserCostFactor)
-agent:setLaserHitDuration(laserHitDuration)
 agent:setKeepBodyOnExpirationDeath(keepBodyOnExpire)
 --agent:setKeepBodyOnHardDeath(true)
 
@@ -176,36 +154,19 @@ grid:init(ALPHA, 0, 0)
 grid:setComponentSet(alphaSet)
 brain:addGrid(grid, "objects");
 
--- Self Grid
-if self then
-    selfSet = GridbrainComponentSet()
-    for i, comp in pairs(alphaComponents) do
-        selfSet:addComponent(comp)
-    end
-    selfSet:addComponent(IN, Sim2D.PERCEPTION_ID)
-    selfSet:addComponent(IN, Sim2D.PERCEPTION_BLOCKED)
-    selfSet:addComponent(IN, Sim2D.PERCEPTION_COMPASS)
-    selfGrid = Grid()
-    selfGrid:init(ALPHA, 0, 0)
-    selfGrid:setComponentSet(selfSet)
-    brain:addGrid(selfGrid, "self")
-end
-
 -- Sounds grid
-if comm then
-    soundSet = GridbrainComponentSet()
-    for i, comp in pairs(alphaComponents) do
-        soundSet:addComponent(comp)
-    end
-    soundSet:addComponent(IN, Sim2D.PERCEPTION_POSITION)
-    soundSet:addComponent(IN, Sim2D.PERCEPTION_DISTANCE)
-    soundSet:addComponent(IN, Sim2D.PERCEPTION_VALUE)
-    soundSet:addComponent(IN, Sim2D.PERCEPTION_SYMEQ, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
-    soundGrid = Grid()
-    soundGrid:init(ALPHA, 0, 0)
-    soundGrid:setComponentSet(soundSet)
-    brain:addGrid(soundGrid, "sounds");
+soundSet = GridbrainComponentSet()
+for i, comp in pairs(alphaComponents) do
+    soundSet:addComponent(comp)
 end
+soundSet:addComponent(IN, Sim2D.PERCEPTION_POSITION)
+soundSet:addComponent(IN, Sim2D.PERCEPTION_DISTANCE)
+soundSet:addComponent(IN, Sim2D.PERCEPTION_VALUE)
+soundSet:addComponent(IN, Sim2D.PERCEPTION_SYMEQ, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
+soundGrid = Grid()
+soundGrid:init(ALPHA, 0, 0)
+soundGrid:setComponentSet(soundSet)
+brain:addGrid(soundGrid, "sounds");
 
 -- Beta Grid
 betaSet = GridbrainComponentSet()
@@ -214,10 +175,7 @@ for i, comp in pairs(betaComponents) do
 end
 betaSet:addComponent(OUT, Sim2D.ACTION_GO)
 betaSet:addComponent(OUT, Sim2D.ACTION_ROTATE)
---betaSet:addComponent(OUT, Sim2D.ACTION_FIREB)
-if comm then
-    betaSet:addComponent(OUT, Sim2D.ACTION_SPEAK, TAB_TO_SYM, colorTableCode, agentColor:getID())
-end
+betaSet:addComponent(OUT, Sim2D.ACTION_SPEAK, TAB_TO_SYM, colorTableCode, agentColor:getID())
     
 grid2 = Grid()
 grid2:init(BETA, 0, 0)
@@ -227,23 +185,6 @@ brain:addGrid(grid2, "beta")
 
 agent:setBrain(brain)
 
--- Targets
---------------------------------------------------------------------------------
-
-target = Target2D()
-target:setMaxAge(0)
-target:setEnergyLimits(targetMinEnergy, targetMaxEnergy)
-target:setEnergySizeFactor(targetSizeFactor)
-target:setShape(SimObj2D.SHAPE_CIRCLE)
-target:setColoringSymbolName("color")
-target:setLaserHitDuration(laserHitDuration)
-
-targetColor = SymbolRGB(255, 255, 255)
-symTable = SymbolTable(targetColor, colorTableCode)
-target:addSymbolTable(symTable)
-target:setSymbolName("color", colorTableCode, targetColor:getID())
-
-
 -- Population Dynamics
 --------------------------------------------------------------------------------
 
@@ -251,13 +192,12 @@ popDyn = PopDynSEGA()
 sim:setPopulationDynamics(popDyn)
 
 agentSpecies = Species(agent, numberOfAgents, bufferSize)
-targetSpecies = Species(target, numberOfTargets, 1)
 
 agentSpecies:setFitnessAging(fitnessAging)
 agentSpecies:setRecombineProb(recombineProb)
+agentSpecies:setKinFactor(kinFactor)
 
 agentSpeciesIndex = popDyn:addSpecies(agentSpecies)
-popDyn:addSpecies(targetSpecies)
 popDyn:setEvolutionStopTime(evolutionStopTime)
 
 
@@ -303,8 +243,6 @@ if humanAgent then
     dummyBrain:addPerception("Conv", 0, Sim2D.PERCEPTION_CONV)
     dummyBrain:addPerception("ConvDir", 0, Sim2D.PERCEPTION_CONVDIR)
     dummyBrain:addPerception("ID", 0, Sim2D.PERCEPTION_ID)
-    dummyBrain:addPerception("Blocked", 2, Sim2D.PERCEPTION_BLOCKED)
-    dummyBrain:addPerception("Compass", 2, Sim2D.PERCEPTION_COMPASS)
 
     human:setBrain(dummyBrain)
 

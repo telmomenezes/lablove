@@ -33,7 +33,7 @@ long Gridbrain::MUTATIONS_CHG_IN_COMP = 0;
 long Gridbrain::MUTATIONS_CHG_PARAM = 0;
 long Gridbrain::MUTATIONS_SWP_COMP = 0;
 
-void Gridbrain::mutate()
+void Gridbrain::mutate(float factor)
 {
     /*printf("mMutateAddConnectionProb: %f; mMutateRemoveConnectionProb: %f; mMutateChangeParamProb: %f; mParamMutationStanDev: %f; mMutateSplitConnectionProb: %f; mMutateJoinConnectionsProb: %f; mMutateChangeComponentProb: %f; mMutateSwapComponentProb: %f\n",
     mMutateAddConnectionProb,
@@ -45,20 +45,20 @@ void Gridbrain::mutate()
     mMutateChangeComponentProb,
     mMutateSwapComponentProb);*/
 
-    mutateSwapComponent();
-    mutateChangeComponent();
-    mutateChangeInactiveComponent();
+    mutateChangeComponent(mMutateChangeComponentProb * factor);
+    mutateChangeInactiveComponent(mMutateChangeInactiveComponentProb * factor);
+    mutateChangeParam(mMutateChangeParamProb * factor);
     
     // targets per column may have changed
     calcConnectionCounts();
 
     unsigned int connCount = mConnectionsCount;
 
-    mutateAddConnection(connCount);
-    mutateRemoveConnection(connCount);
+    mutateAddConnection(connCount, mMutateAddConnectionProb * factor);
+    mutateRemoveConnection(connCount, mMutateRemoveConnectionProb * factor);
 
-    mutateSplitConnection();
-    mutateJoinConnections();
+    mutateSplitConnection(mMutateSplitConnectionProb * factor);
+    mutateJoinConnections(mMutateJoinConnectionsProb * factor);
 
     update(); 
 }
@@ -183,7 +183,7 @@ GridbrainConnection* Gridbrain::getRandomConnection()
     return conn;
 }
 
-void Gridbrain::mutateAddConnection(unsigned int popSize)
+void Gridbrain::mutateAddConnection(unsigned int popSize, float prob)
 {
     // Allways create a connection if none exist
     // otherwise a 0 connections grid is an evolutionary dead-end
@@ -193,15 +193,15 @@ void Gridbrain::mutateAddConnection(unsigned int popSize)
         return;
     }
 
-    unsigned int count = generateEventCount(mMutateAddConnectionProb, popSize);
+    unsigned int count = generateEventCount(prob, popSize);
 
     MUTATIONS_ADD_CONN += count;
     addRandomConnections(count);
 }
 
-void Gridbrain::mutateRemoveConnection(unsigned int popSize)
+void Gridbrain::mutateRemoveConnection(unsigned int popSize, float prob)
 {
-    unsigned int count = generateEventCount(mMutateRemoveConnectionProb, popSize);
+    unsigned int count = generateEventCount(prob, popSize);
 
     MUTATIONS_REM_CONN += count;
 
@@ -215,9 +215,9 @@ void Gridbrain::mutateRemoveConnection(unsigned int popSize)
     }
 }
 
-void Gridbrain::mutateSplitConnection()
+void Gridbrain::mutateSplitConnection(float prob)
 {
-    initRandomConnectionSequence(mMutateSplitConnectionProb);
+    initRandomConnectionSequence(prob);
 
     GridbrainConnection* nextConn = nextRandomConnection();
     while (nextConn != NULL)
@@ -341,9 +341,9 @@ void Gridbrain::mutateSplitConnection()
     }
 }
 
-void Gridbrain::mutateJoinConnections()
+void Gridbrain::mutateJoinConnections(float prob)
 {
-    initRandomConnectionSequence(mMutateJoinConnectionsProb);
+    initRandomConnectionSequence(prob);
 
     GridbrainConnection* nextConn = nextRandomConnection();
     while (nextConn != NULL)
@@ -396,9 +396,9 @@ void Gridbrain::mutateJoinConnections()
     }
 }
 
-void Gridbrain::mutateChangeComponent()
+void Gridbrain::mutateChangeComponent(float prob)
 {
-    initRandomComponentSequence(mMutateChangeComponentProb);
+    initRandomComponentSequence(prob);
 
     while (nextRandomComponent() >= 0)
     {
@@ -415,9 +415,9 @@ void Gridbrain::mutateChangeComponent()
     cleanInvalidConnections();
 }
 
-void Gridbrain::mutateChangeInactiveComponent()
+void Gridbrain::mutateChangeInactiveComponent(float prob)
 {
-    initRandomComponentSequence(mMutateChangeInactiveComponentProb);
+    initRandomComponentSequence(prob);
 
     while (nextRandomComponent() >= 0)
     {
@@ -439,9 +439,9 @@ void Gridbrain::mutateChangeInactiveComponent()
     cleanInvalidConnections();
 }
 
-void Gridbrain::mutateChangeParam()
+void Gridbrain::mutateChangeParam(float prob)
 {
-    initRandomComponentSequence(mMutateChangeParamProb);
+    initRandomComponentSequence(prob);
 
     while (nextRandomComponent() >= 0)
     {
@@ -463,84 +463,6 @@ void Gridbrain::mutateChangeParam()
             param = 0.0f;
         }
         comp->mParam = param;
-    }
-}
-
-void Gridbrain::mutateSwapComponent(float prob)
-{
-    float swapProb = prob;
-
-    if (swapProb == 0.0f)
-    {
-        swapProb = mMutateSwapComponentProb;
-    }
-
-    initRandomComponentSequence(swapProb);
-
-    while (nextRandomComponent() >= 0)
-    {
-        MUTATIONS_SWP_COMP++;
-        int pos = mCompSeqPos;
-
-        GridbrainComponent* comp1 = &mComponents[pos];
-
-        unsigned int gridNumber = comp1->mGrid;
-        Grid* grid = mGridsVec[gridNumber];
-
-        // No point in swapping components in a grid with less than 2 columns
-        if (grid->getWidth() > 1)
-        {
-            unsigned int x1 = comp1->mColumn;
-            unsigned int y1 = comp1->mRow;
-
-            unsigned int x2 = mDistComponents->iuniform(0, grid->getWidth() - 1);
-            if (x2 >= comp1->mColumn)
-            {
-                x2++;
-            }
-            unsigned int y2 = mDistComponents->iuniform(0, grid->getHeight());
-
-            GridbrainComponent* comp2 = getComponent(x2, y2, gridNumber);
-
-            bool valid = true;
-
-            // These swaps are not desirable
-            if (comp1->getConnectorType() == GridbrainComponent::CONN_IN)
-            {
-                if (x1 > x2)
-                {
-                    valid = false;
-                }
-            }
-            if (comp2->getConnectorType() == GridbrainComponent::CONN_IN)
-            {
-                if (x1 < x2)
-                {
-                    valid = false;
-                }
-            }
-            if (comp1->getConnectorType() == GridbrainComponent::CONN_OUT)
-            {
-                if (x1 < x2)
-                {
-                    valid = false;
-                }
-            }
-            if (comp2->getConnectorType() == GridbrainComponent::CONN_OUT)
-            {
-                if (x1 > x2)
-                {
-                    valid = false;
-                }
-            }
-
-            // If valid, do swap
-            if (valid)
-            {
-                swapComponents(comp1, comp2);
-                //printf("SWAP (%d, %d, %d) / (%d, %d, %d)\n", x1, y1, gridNumber, x2, y2, gridNumber);
-            }
-        }
     }
 }
 

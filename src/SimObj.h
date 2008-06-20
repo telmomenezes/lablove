@@ -75,7 +75,7 @@ public:
     void setCreationTime(llULINT time){mCreationTime = time;}
 
     virtual SimObj* recombine(SimObj* otherParent);
-    virtual void mutate();
+    virtual void mutate(float factor=1.0f);
 
     void setBrain(Brain* brain);
     Brain* getBrain(){return mBrain;}
@@ -125,9 +125,6 @@ public:
     bool mInitialized;
 
     float mFitness;
-    float mBaseFitness;
-    float mTeamFitness;
-    float mBodyFitness;
 
     int mBodyID;
 

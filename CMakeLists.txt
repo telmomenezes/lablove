@@ -69,7 +69,7 @@ SET(SOURCE_FILES
     src/GridbrainHistory.cpp
     src/PopulationDynamics.cpp
     src/PopDynGenerations.cpp
-    src/PopDynSpecies.cpp
+    src/PopDynSEGA.cpp
     src/Species.cpp
     src/Symbol.cpp
     src/SymbolBitString.cpp

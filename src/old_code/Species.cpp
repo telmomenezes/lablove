@@ -39,7 +39,12 @@ Species::Species(lua_State* luaState)
         mBufferSize = 0;
     }
 
+    mFitFactor = 1.0f;
     mKinFactor = 0.0f;
+    mTeamFactor = 0.0f;
+    mBodyFactor = 0.0f;
+    mBodySamples = 0;
+    mBodySmoothing = 0.0f;
     mCurrentQueen = 0;
     mQueenState = mPopulation;
     mSuperSister = NULL;
@@ -47,6 +52,8 @@ Species::Species(lua_State* luaState)
     mRecombineProb = 0.0f;
 
     mEvolutionOn = true;
+
+    mBodyGroupLists = NULL;
 }
 
 Species::~Species()
@@ -56,6 +63,8 @@ Species::~Species()
         delete mOrganismVector[i];
     }
     mOrganismVector.clear();
+
+    deleteBodyGroupLists(); 
 }
 
 void Species::init()
@@ -117,6 +126,43 @@ void Species::dumpStatistics(llULINT time, double realTime, Simulation* sim)
     }
 }
 
+void Species::setBodyParams(float factor, unsigned int samples)
+{
+    mBodyFactor = factor;
+    mBodySamples = samples;
+    mBodySmoothing = 2.0f / (((float)mBodySamples) + 1.0f);
+
+    if (samples > 0)
+    {
+        deleteBodyGroupLists(); 
+
+        mBodyGroupLists = (list<SimObj*>**)malloc(samples * sizeof(list<SimObj*>*));
+        for (unsigned int i = 0; i < samples; i++)
+        {
+            mBodyGroupLists[i] = new list<SimObj*>();
+        }
+    }
+}
+
+void Species::deleteBodyGroupLists()
+{
+    if (mBodyGroupLists != NULL)
+    {
+        for (unsigned int i = 0; i < mBodySamples; i++)
+        {
+            for (list<SimObj*>::iterator iterObj = mBodyGroupLists[i]->begin();
+                iterObj != mBodyGroupLists[i]->end();
+                iterObj++)
+            {
+                delete(*iterObj);
+            }
+            delete mBodyGroupLists[i];
+        }   
+    }
+    free(mBodyGroupLists);
+    mBodyGroupLists = NULL;
+}
+
 void Species::xoverMutateSend(int bodyID, bool init, SimObj* nearObj, SimObj* deadObj)
 {
     unsigned int parent1;
@@ -146,7 +192,7 @@ void Species::xoverMutateSend(int bodyID, bool init, SimObj* nearObj, SimObj* de
             SimObj* org1 = mOrganismVector[parent1];
             SimObj* org2 = mOrganismVector[parent2];
             mSuperSister = org1->recombine(org2);
-            mSuperSister->mutate(0.5f);
+            mSuperSister->mutate();
         }
         mQueenState++;
     }
@@ -226,7 +272,22 @@ void Species::xoverMutateSend(int bodyID, bool init, SimObj* nearObj, SimObj* de
     else
     {
         newOrganism = mSuperSister->clone();
-        newOrganism->mutate(0.5f);
+        newOrganism->mutate();
+    }
+
+    // Team fitness calculations
+    list<SimObj*>* objList = mSimulation->getObjectList();
+
+    for (list<SimObj*>::iterator iterObj = objList->begin();
+            iterObj != objList->end();
+            iterObj++)
+    {
+        SimObj* obj = (*iterObj);
+
+        if (obj->getSpeciesID() == mID)
+        {
+            newOrganism->mTeamFitness -= obj->mFitness;
+        }
     }
 
     // Set body ID
@@ -277,32 +338,63 @@ void Species::onOrganismDeath(SimObj* org)
 
     int bodyID = org->getBodyID();
 
-    bool deleteOrg = false;
+    // Team fitness calculations
+    list<SimObj*>* objList = mSimulation->getObjectList();
 
-    // Update death statistics
-    for (list<Log*>::iterator iterLogs = mDeathLogs.begin();
-            iterLogs != mDeathLogs.end();
-            iterLogs++)
+    for (list<SimObj*>::iterator iterObj = objList->begin();
+            iterObj != objList->end();
+            iterObj++)
     {
-        (*iterLogs)->process(org, mSimulation);
+        SimObj* obj = (*iterObj);
+
+        if (obj->getSpeciesID() == mID)
+        {
+            if (obj->getID() != org->getID())
+            {
+                obj->mTeamFitness += org->mFitness;
+                org->mTeamFitness += obj->mFitness;
+            }
+        }
     }
+    org->mTeamFitness /= ((float)mPopulation);
 
-    // Buffer replacements
-    unsigned int organismNumber = mDistOrganism->iuniform(0, mBufferSize);
-    SimObj* org2 = mOrganismVector[organismNumber];
+    // Get candidate
+    SimObj* candidate = getCandidate(org);
 
-    if (org->mFitness >= org2->mFitness)
+    bool deleteCandidate = false;
+
+    if (candidate != NULL)
     {
-        delete mOrganismVector[organismNumber];
+        candidate->mBaseFitness = candidate->mFitness;
+        candidate->mFitness = (mFitFactor * candidate->mBaseFitness)
+            + (mTeamFactor * candidate->mTeamFitness)
+            + (mBodyFactor * candidate->mBodyFitness);
 
-        mOrganismVector[organismNumber] = org;
+        // Update death statistics
+        for (list<Log*>::iterator iterLogs = mDeathLogs.begin();
+                iterLogs != mDeathLogs.end();
+                iterLogs++)
+        {
+            (*iterLogs)->process(candidate, mSimulation);
+        }
 
-        org->popAdjust(&mOrganismVector);
-    }
-    else
-    {
-        org2->mFitness *= (1.0f - mFitnessAging);
-        deleteOrg = true;
+        // Buffer replacements
+        unsigned int organismNumber = mDistOrganism->iuniform(0, mBufferSize);
+        SimObj* org2 = mOrganismVector[organismNumber];
+
+        if (candidate->mFitness >= org2->mFitness)
+        {
+            delete mOrganismVector[organismNumber];
+
+            mOrganismVector[organismNumber] = candidate;
+
+            candidate->popAdjust(&mOrganismVector);
+        }
+        else
+        {
+            org2->mFitness *= (1.0f - mFitnessAging);
+            deleteCandidate = true;
+        }
     }
 
     // Find organism to place near
@@ -326,10 +418,50 @@ void Species::onOrganismDeath(SimObj* org)
     // Replace
     xoverMutateSend(bodyID, false, refObj, org);
 
-    if (deleteOrg)
+    if (deleteCandidate)
     {
-        delete org;
+        delete candidate;
     }
+}
+
+SimObj* Species::getCandidate(SimObj* obj)
+{
+    if (mBodySamples == 0)
+    {
+        return obj;
+    }
+
+    list<SimObj*>* bodyList = mBodyGroupLists[obj->getBodyID()];
+
+    bodyList->push_back(obj);
+
+    if (bodyList->size() < (mBodySamples + 1))
+    {
+        return NULL;
+    }
+
+    SimObj* retObj = bodyList->front();
+    bodyList->pop_front();
+
+    float n = 0.0f;
+    float d1 = 0.0f;
+    float d2 = 0.0f;
+    for (list<SimObj*>::iterator iterObj = bodyList->begin();
+            iterObj != bodyList->end();
+            iterObj++)
+    {
+        float fit = (*iterObj)->mFitness;
+        float factor = powf((1 - mBodySmoothing), n);
+
+        d1 += factor * fit;
+        d2 += factor; 
+
+        n += 1.0f;
+    }
+
+    retObj->mBodyFitness = d1 / d2;
+    
+    return retObj;
 }
 
 const char Species::mClassName[] = "Species";
@@ -337,7 +469,10 @@ const char Species::mClassName[] = "Species";
 Orbit<Species>::MethodType Species::mMethods[] = {
     {"addSampleLog", &Species::addSampleLog},
     {"addDeathLog", &Species::addDeathLog},
+    {"setFitFactor", &Species::setFitFactor},
     {"setKinFactor", &Species::setKinFactor},
+    {"setTeamFactor", &Species::setTeamFactor},
+    {"setBodyParams", &Species::setBodyParams},
     {"setFitnessAging", &Species::setFitnessAging},
     {"setRecombineProb", &Species::setRecombineProb},
     {0,0}
@@ -359,10 +494,32 @@ int Species::addDeathLog(lua_State* luaState)
     return 0;
 }
 
+int Species::setFitFactor(lua_State* luaState)
+{
+    float factor = luaL_checknumber(luaState, 1);
+    setFitFactor(factor);
+    return 0;
+}
+
 int Species::setKinFactor(lua_State* luaState)
 {
     float factor = luaL_checknumber(luaState, 1);
     setKinFactor(factor);
+    return 0;
+}
+
+int Species::setTeamFactor(lua_State* luaState)
+{
+    float factor = luaL_checknumber(luaState, 1);
+    setTeamFactor(factor);
+    return 0;
+}
+
+int Species::setBodyParams(lua_State* luaState)
+{
+    float factor = luaL_checknumber(luaState, 1);
+    unsigned int samples = luaL_checkint(luaState, 2);
+    setBodyParams(factor, samples);
     return 0;
 }
 

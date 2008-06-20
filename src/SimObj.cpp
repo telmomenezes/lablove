@@ -39,8 +39,6 @@ SimObj::SimObj(lua_State* luaState)
     mInitialized = false;
 
     mFitness = 0.0f;
-    mTeamFitness = 0.0f;
-    mBodyFitness = 0.0f;
 
     mBirthRadius = 0.0f;
     mKeepBodyOnHardDeath = false;
@@ -77,8 +75,6 @@ SimObj::SimObj(SimObj* obj)
     mInitialized = false;
 
     mFitness = 0.0f;
-    mTeamFitness = 0.0f;
-    mBodyFitness = 0.0f;
     mFitnessMeasure = obj->mFitnessMeasure;
 
     mDeathType = DEATH_HARD;
@@ -297,21 +293,6 @@ bool SimObj::getFieldValue(string fieldName, float& value)
         value = mFitness;
         return true;
     }
-    else if (fieldName == "base_fitness")
-    {
-        value = mBaseFitness;
-        return true;
-    }
-    else if (fieldName == "team_fitness")
-    {
-        value = mTeamFitness;
-        return true;
-    }
-    else if (fieldName == "body_fitness")
-    {
-        value = mBodyFitness;
-        return true;
-    }
     else if (fieldName.substr(0,  14) == "symtable_size_")
     {
         string tableName = fieldName.substr(14, fieldName.size() - 14);
@@ -352,11 +333,11 @@ bool SimObj::getFieldValue(string fieldName, float& value)
     }
 }
 
-void SimObj::mutate()
+void SimObj::mutate(float factor)
 {
     if (mBrain != NULL)
     {
-        mBrain->mutate();
+        mBrain->mutate(factor);
     }
 }
 

@@ -24,7 +24,7 @@
 #include "SimObjHex.h"
 #include "Target2D.h"
 #include "PopDynGenerations.h"
-#include "PopDynSpecies.h"
+#include "PopDynSEGA.h"
 #include "Species.h"
 #include "InterfaceItem.h"
 #include "DummyBrain.h"
@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
     Orbit<Target2D>::orbitRegister(luaState);
     Orbit<SimObjHex>::orbitRegister(luaState);
     Orbit<PopDynGenerations>::orbitRegister(luaState);
-    Orbit<PopDynSpecies>::orbitRegister(luaState);
+    Orbit<PopDynSEGA>::orbitRegister(luaState);
     Orbit<Species>::orbitRegister(luaState);
     Orbit<InterfaceItem>::orbitRegister(luaState);
     Orbit<DummyBrain>::orbitRegister(luaState);

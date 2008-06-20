@@ -122,7 +122,7 @@ public:
 
     virtual void draw(){}
 
-    virtual void mutate();
+    virtual void mutate(float factor=1.0f);
     virtual Brain* recombine(Brain* brain);
 
     virtual void setSelectedSymbols(SimObj* obj);
@@ -225,14 +225,13 @@ protected:
 
     bool swapComponents(GridbrainComponent* comp1, GridbrainComponent* comp2);
 
-    void mutateAddConnection(unsigned int popSize);
-    void mutateRemoveConnection(unsigned int popSize);
-    void mutateSplitConnection();
-    void mutateJoinConnections();
-    void mutateChangeComponent();
-    void mutateChangeInactiveComponent();
-    void mutateChangeParam();
-    void mutateSwapComponent(float prob=0.0f);
+    void mutateAddConnection(unsigned int popSize, float prob);
+    void mutateRemoveConnection(unsigned int popSize, float prob);
+    void mutateSplitConnection(float prob);
+    void mutateJoinConnections(float prob);
+    void mutateChangeComponent(float prob);
+    void mutateChangeInactiveComponent(float prob);
+    void mutateChangeParam(float prob);
 
     void initGridWritePositions();
     void getComponentWritePos(unsigned int& posX,

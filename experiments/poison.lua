@@ -219,7 +219,7 @@ plant:setColoringScale("food", plantFood, feedCenter, 255, 0, 0, 0, 255, 0)
 -- Population Dynamics
 --------------------------------------------------------------------------------
 
-popDyn = PopDynSpecies()
+popDyn = PopDynSEGA()
 sim:setPopulationDynamics(popDyn)
 
 agentSpecies = Species(agent, numberOfAgents, bufferSize)
