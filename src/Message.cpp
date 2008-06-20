@@ -21,11 +21,31 @@
 
 #include <stdlib.h>
 
-Message::Message()
+Message::Message(unsigned int dataSize)
 {
     mSymbol = NULL;
     mType = 0;
-    mData = NULL;
+    mDataSize = dataSize;
+    
+    if (mDataSize > 0)
+    {
+        mData = (float*)malloc(mDataSize * sizeof(float));
+    }
+    else
+    {
+        mData = NULL;
+    }
+    mTime = 0;
+}
+
+Message::Message(Message* msg)
+{
+    mSymbol = msg->mSymbol->clone();
+    mType = msg->mType;
+    mDataSize = msg->mDataSize;
+    mData = (float*)malloc(mDataSize * sizeof(float));
+    memcpy(mData, msg->mData, mDataSize * sizeof(float));
+    mTime = msg->mTime;
 }
 
 Message::~Message()

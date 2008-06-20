@@ -306,7 +306,6 @@ void Sim2D::replace(SimObj* obj, SimObj* ref)
 
     obj2D->setPos(x, y);
     obj2D->setRot(rot);
-    obj2D->mLastFireTime = ((SimObj2D*)ref)->mLastFireTime;
 }
 
 void Sim2D::placeNear(SimObj* obj, SimObj* ref)
@@ -1173,6 +1172,7 @@ Orbit<Sim2D>::NumberGlobalType Sim2D::mNumberGlobals[] = {
     {"FITNESS_ENERGY", FITNESS_ENERGY},
     {"FITNESS_ENERGY_SUM", FITNESS_ENERGY_SUM},
     {"FITNESS_ENERGY_SUM_ABOVE_INIT", FITNESS_ENERGY_SUM_ABOVE_INIT},
+    {"FITNESS_SCORE", FITNESS_SCORE},
     {"FITNESS_SCORE_SUM", FITNESS_SCORE_SUM},
     {"FITNESS_RANDOM", FITNESS_RANDOM},
     {0,0}

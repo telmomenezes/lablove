@@ -67,8 +67,9 @@ public:
     static const int FITNESS_ENERGY = 0;
     static const int FITNESS_ENERGY_SUM = 1;
     static const int FITNESS_ENERGY_SUM_ABOVE_INIT = 2;
-    static const int FITNESS_SCORE_SUM = 3;
-    static const int FITNESS_RANDOM = 4;
+    static const int FITNESS_SCORE = 3;
+    static const int FITNESS_SCORE_SUM = 4;
+    static const int FITNESS_RANDOM = 5;
 
     static const int VE_SPEAK = 0;
 

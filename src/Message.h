@@ -21,16 +21,20 @@
 #define __INCLUDE_MESSAGE_H
 
 #include "Symbol.h"
+#include "types.h"
 
 class Message
 {
 public:
-    Message();
+    Message(unsigned int size=0);
+    Message(Message* msg);
     virtual ~Message();
 
     Symbol* mSymbol;
     unsigned int mType;
     float* mData;
+    unsigned int mDataSize;
+    llULINT mTime;
 };
 #endif
 

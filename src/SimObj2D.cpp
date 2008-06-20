@@ -110,6 +110,8 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
 
     mBlockedX = false;
     mBlockedY = false;
+
+    mLastMessageSent = NULL;
 }
 
 SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
@@ -211,10 +213,16 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
 
     mBlockedX = false;
     mBlockedY = false;
+
+    mLastMessageSent = NULL;
 }
 
 SimObj2D::~SimObj2D()
 {
+    if (mLastMessageSent != NULL)
+    {
+        delete mLastMessageSent;
+    }
 }
 
 SimObj* SimObj2D::clone()
@@ -514,6 +522,9 @@ void SimObj2D::process()
             }
             mFitness += energy;
         }
+        break;
+    case Sim2D::FITNESS_SCORE:
+        mFitness = mScore;
         break;
     case Sim2D::FITNESS_SCORE_SUM:
         if ((simTime % 10) == 0)
@@ -1248,10 +1259,20 @@ void SimObj2D::speak(Symbol* sym, float param)
     if (((mSim2D->getTime() - mLastSpeakTime) <= mSpeakInterval)
         && (mLastSpeakTime != 0))
     {
+        mLastSpeakTime = mSim2D->getTime();
         return;
     }
 
+    mScore += 1.0f;
+    
     mLastSpeakTime = mSim2D->getTime();
+
+    mLastMessageSent = new Message(3);
+    mLastMessageSent->mSymbol = sym->clone();
+    mLastMessageSent->mData[0] = 0;
+    mLastMessageSent->mData[1] = 0;
+    mLastMessageSent->mData[2] = param;
+    mLastMessageSent->mTime = mLastSpeakTime;
 
     mSim2D->startCollisionDetection(mX, mY, mSoundRange);
 
@@ -1264,14 +1285,9 @@ void SimObj2D::speak(Symbol* sym, float param)
         if ((target->mType == SimObj::TYPE_AGENT)
             && (target != this))
         {
-            Message* msg = new Message();
-            msg->mSymbol = sym->clone();
-            msg->mType = 0; // Only one message type for now (sound message)
-            float* msgData = (float*)malloc(3 * sizeof(float));
-            msgData[0] = distance;
-            msgData[1] = Sim2D::normalizeAngle(angle + M_PI);
-            msgData[2] = param;
-            msg->mData = msgData;
+            Message* msg = new Message(mLastMessageSent);
+            msg->mData[0] = distance;
+            msg->mData[1] = Sim2D::normalizeAngle(angle + M_PI);
             target->addMessage(msg);
         }
     }
@@ -1287,6 +1303,18 @@ void SimObj2D::speak(Symbol* sym, float param)
     ve->mStartTime = mSim2D->getTime();
     ve->mEndTime = mSim2D->getTime() + mSpeakInterval;
     mSim2D->mVisualEvents.push_back(ve);
+}
+
+void SimObj2D::addMessage(Message* msg)
+{
+    SimObj::addMessage(msg);
+
+    if ((mLastMessageSent != NULL)
+        && ((mSim2D->getTime() - mLastMessageSent->mTime) <= 5)
+        && (mLastMessageSent->mSymbol->equals(msg->mSymbol)))
+    {
+        mScore += 1.0f;
+    }
 }
 
 void SimObj2D::processLaserHit(Laser2D* laser)

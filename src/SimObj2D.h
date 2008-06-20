@@ -103,6 +103,8 @@ public:
     void addObjectSymbolAcquisition(int origTable, int targTable);
     void addMessageSymbolAcquisition(int table);
 
+    virtual void addMessage(Message* msg);
+
     static const char mClassName[];
     static Orbit<SimObj2D>::MethodType mMethods[];
     static Orbit<SimObj2D>::NumberGlobalType mNumberGlobals[];
@@ -242,6 +244,8 @@ protected:
 
     bool mBlockedX;
     bool mBlockedY;
+
+    Message* mLastMessageSent;
 };
 #endif
 

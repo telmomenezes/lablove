@@ -7,7 +7,7 @@ dofile("basic_defines.lua")
 -- Experiment Parameters
 --------------------------------------------------------------------------------
 
-numberOfTargets = 50
+numberOfTargets = 0--50
 numberOfAgents = 10
 
 agentSize = 10.0
@@ -118,7 +118,7 @@ sim:setTimeLimit(timeLimit)
 --------------------------------------------------------------------------------
 
 agent = SimObj2D()
-agent:setFitnessMeasure(Sim2D.FITNESS_SCORE_SUM)
+agent:setFitnessMeasure(Sim2D.FITNESS_SCORE)
 agent:setBirthRadius(agentBirthRadius)
 agent:setSize(agentSize)
 agent:setDrag(drag)
@@ -225,7 +225,7 @@ for i, comp in pairs(betaComponents) do
 end
 betaSet:addComponent(OUT, Sim2D.ACTION_GO)
 betaSet:addComponent(OUT, Sim2D.ACTION_ROTATE)
-betaSet:addComponent(OUT, Sim2D.ACTION_FIREB)
+--betaSet:addComponent(OUT, Sim2D.ACTION_FIREB)
 if comm then
     betaSet:addComponent(OUT, Sim2D.ACTION_SPEAK, TAB_TO_SYM, colorTableCode, agentColor:getID())
 end
