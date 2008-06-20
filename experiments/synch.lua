@@ -142,12 +142,6 @@ for i, comp in pairs(alphaComponents) do
 end
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_POSITION)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_DISTANCE)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_SIZE)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_LTARGET)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_LOF)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_CONV)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_CONVDIR)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_SYMEQ, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_ID)
 grid = Grid()
 grid:init(ALPHA, 0, 0)
@@ -238,10 +232,6 @@ if humanAgent then
     dummyBrain:addPerception("Position", 0, Sim2D.PERCEPTION_POSITION)
     dummyBrain:addPerception("Distance", 0, Sim2D.PERCEPTION_DISTANCE)
     dummyBrain:addPerception("Color", 0, Sim2D.PERCEPTION_SYMEQ, colorTableCode, humanColor:getID(), colorTableCode)
-    dummyBrain:addPerception("LTarget", 0, Sim2D.PERCEPTION_LTARGET)
-    dummyBrain:addPerception("LOF", 0, Sim2D.PERCEPTION_LOF)
-    dummyBrain:addPerception("Conv", 0, Sim2D.PERCEPTION_CONV)
-    dummyBrain:addPerception("ConvDir", 0, Sim2D.PERCEPTION_CONVDIR)
     dummyBrain:addPerception("ID", 0, Sim2D.PERCEPTION_ID)
 
     human:setBrain(dummyBrain)
@@ -260,8 +250,6 @@ stats:addField("fitness")
 stats:addField("gb_connections")
 stats:addField("gb_active_connections")
 stats:addField("gb_active_components")
-stats:addField("symtable_used_color")
-stats:addField("friendly_fire")
 agentSpecies:addDeathLog(stats)
 
 if logBrains then
