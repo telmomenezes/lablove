@@ -62,7 +62,7 @@ agentBirthRadius = 100.0
 
 keepBodyOnExpire = true
 
-kinFactor = 2.0
+kinFactor = 0.0
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
@@ -91,7 +91,6 @@ sim:setTimeLimit(timeLimit)
 --------------------------------------------------------------------------------
 
 agent = SimObj2D()
-agent:setFitnessMeasure(Sim2D.FITNESS_SCORE)
 agent:setBirthRadius(agentBirthRadius)
 agent:setSize(agentSize)
 agent:setDrag(drag)
@@ -185,8 +184,9 @@ agent:setBrain(brain)
 popDyn = PopDynSEGA()
 sim:setPopulationDynamics(popDyn)
 
-agentSpecies = Species(agent, numberOfAgents, bufferSize)
+agentSpecies = Species(agent, numberOfAgents)
 
+agentSpecies:addGoal(SimObj2D.FITNESS_SYNCH_SCORE, bufferSize)
 agentSpecies:setFitnessAging(fitnessAging)
 agentSpecies:setRecombineProb(recombineProb)
 agentSpecies:setKinFactor(kinFactor)
@@ -246,7 +246,7 @@ end
 
 stats = StatCommon()
 stats:setFile("log" .. logSuffix .. ".csv")
-stats:addField("fitness")
+stats:addField("synch_score")
 stats:addField("gb_connections")
 stats:addField("gb_active_connections")
 stats:addField("gb_active_components")

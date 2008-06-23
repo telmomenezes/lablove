@@ -23,6 +23,7 @@
 #include "SimObj.h"
 #include "Log.h"
 #include "Orbit.h"
+#include "Goal.h"
 
 #include <vector>
 
@@ -40,7 +41,8 @@ public:
 
     void setID(unsigned int id);
     void setSimulation(Simulation* sim){mSimulation = sim;}
-
+    
+    void addGoal(int fitMeasure, unsigned int bufSize);
     void setFitnessAging(float aging){mFitnessAging = aging;}
     void setRecombineProb(float prob){mRecombineProb = prob;}
 
@@ -57,6 +59,7 @@ public:
     static Orbit<Species>::MethodType mMethods[];
     static Orbit<Species>::NumberGlobalType mNumberGlobals[];
 
+    int addGoal(lua_State* luaState);
     int setFitnessAging(lua_State* luaState);
     int setRecombineProb(lua_State* luaState);
     int addSampleLog(lua_State* luaState);
@@ -69,8 +72,9 @@ protected:
     static mt_distribution* mDistOrganism;
     static mt_distribution* mDistRecombine;
 
+    vector<SimObj*> mBuffer;
+    list<Goal> mGoals; 
     SimObj* mBaseOrganism;
-    vector<SimObj*> mOrganismVector;
     list<Log*> mDeathLogs;
     list<Log*> mSampleLogs;
     unsigned int mPopulation;

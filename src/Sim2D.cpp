@@ -618,6 +618,26 @@ bool Sim2D::getFieldValue(SimObj* obj, string fieldName, float& value)
         value = ((SimObj2D*)obj)->mEnergy;
         return true;
     }
+    else if (fieldName == "energy_sum")
+    {
+        value = ((SimObj2D*)obj)->mEnergySum;
+        return true;
+    }
+    else if (fieldName == "energy_sum_above_init")
+    {
+        value = ((SimObj2D*)obj)->mEnergySumAboveInit;
+        return true;
+    }
+    else if (fieldName == "synch_score")
+    {
+        value = ((SimObj2D*)obj)->mSynchScore;
+        return true;
+    }
+    else if (fieldName == "laser_score")
+    {
+        value = ((SimObj2D*)obj)->mLaserScore;
+        return true;
+    }
     else
     {
         return Simulation::getFieldValue(obj, fieldName, value);
@@ -1169,12 +1189,6 @@ Orbit<Sim2D>::NumberGlobalType Sim2D::mNumberGlobals[] = {
     {"ACTION_SPEAK", ACTION_SPEAK},
     {"ACTION_FIRE", ACTION_FIRE},
     {"ACTION_FIREB", ACTION_FIREB},
-    {"FITNESS_ENERGY", FITNESS_ENERGY},
-    {"FITNESS_ENERGY_SUM", FITNESS_ENERGY_SUM},
-    {"FITNESS_ENERGY_SUM_ABOVE_INIT", FITNESS_ENERGY_SUM_ABOVE_INIT},
-    {"FITNESS_SCORE", FITNESS_SCORE},
-    {"FITNESS_SCORE_SUM", FITNESS_SCORE_SUM},
-    {"FITNESS_RANDOM", FITNESS_RANDOM},
     {0,0}
 };
 

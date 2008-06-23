@@ -71,6 +71,7 @@ SET(SOURCE_FILES
     src/PopDynGenerations.cpp
     src/PopDynSEGA.cpp
     src/Species.cpp
+    src/Goal.cpp
     src/Symbol.cpp
     src/SymbolBitString.cpp
     src/SymbolRGB.cpp

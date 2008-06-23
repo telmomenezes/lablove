@@ -103,9 +103,8 @@ public:
     void setKeepBodyOnExpirationDeath(bool val){mKeepBodyOnExpirationDeath = val;}
     bool getKeepBodyOnExpirationDeath(){return mKeepBodyOnExpirationDeath;}
 
-    void setFitnessMeasure(int measure){mFitnessMeasure = measure;}
-    int getFitnessMeasure(){return mFitnessMeasure;}
-
+    virtual float getFitness(int fitMeasure){return mFitness;}
+    
     virtual void popAdjust(vector<SimObj*>* popVec);
 
     virtual void addMessage(Message* msg){mMessageList.push_back(msg);}
@@ -138,7 +137,6 @@ public:
     int setSize(lua_State* luaState);
     int setSymbolName(lua_State* luaState);
     int setBirthRadius(lua_State* luaState);
-    int setFitnessMeasure(lua_State* luaState);
     int setBrain(lua_State* luaState);
     int setKeepBodyOnHardDeath(lua_State* luaState);
     int setKeepBodyOnExpirationDeath(lua_State* luaState);
@@ -155,7 +153,6 @@ protected:
     float mBirthRadius;
     bool mKeepBodyOnHardDeath;
     bool mKeepBodyOnExpirationDeath;
-    int mFitnessMeasure;
 
     Brain* mBrain;
     list<Message*> mMessageList;

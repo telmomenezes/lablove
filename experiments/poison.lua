@@ -119,7 +119,6 @@ sim:setTimeLimit(timeLimit)
 
 agent = SimObj2D()
 
-agent:setFitnessMeasure(Sim2D.FITNESS_ENERGY_SUM_ABOVE_INIT)
 
 agent:setSize(agentSize)
 agent:setDrag(drag)
@@ -222,11 +221,13 @@ plant:setColoringScale("food", plantFood, feedCenter, 255, 0, 0, 0, 255, 0)
 popDyn = PopDynSEGA()
 sim:setPopulationDynamics(popDyn)
 
-agentSpecies = Species(agent, numberOfAgents, bufferSize)
-plantSpecies = Species(plant, numberOfPlants, 1)
-
+agentSpecies = Species(agent, numberOfAgents)
+agentSpecies:addGoal(SimObj2D.FITNESS_ENERGY_SUM_ABOVE_INIT, bufferSize)
 agentSpecies:setFitnessAging(fitnessAging)
 agentSpecies:setRecombineProb(recombineProb)
+
+plantSpecies = Species(plant, numberOfPlants)
+plantSpecies:addGoal(SimObj2D.FITNESS_ENERGY, 1)
 
 agentSpeciesIndex = popDyn:addSpecies(agentSpecies)
 popDyn:addSpecies(plantSpecies)

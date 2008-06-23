@@ -17,35 +17,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "SimObjHex.h"
+#include "Goal.h"
 
-SimObjHex::SimObjHex(lua_State* luaState) : SimObj2D(luaState)
+Goal::Goal(int fitMeasure, unsigned int size)
 {
-    mHumanPaint = false;
+    mFitnessMeasure = fitMeasure;
+    mSize = size;
 }
 
-SimObjHex::SimObjHex(SimObjHex* obj) : SimObj2D(obj)
+Goal::Goal(const Goal& g)
 {
+    mFitnessMeasure = g.mFitnessMeasure;
+    mSize = g.mSize;
 }
 
-SimObjHex::~SimObjHex()
-{
+Goal::~Goal()
+{   
 }
-
-SimObj* SimObjHex::clone()
-{
-    return new SimObjHex(this);
-}
-
-const char SimObjHex::mClassName[] = "SimObjHex";
-
-Orbit<SimObjHex>::MethodType SimObjHex::mMethods[] = {
-    {"addSymbolTable", &SimObj::addSymbolTable},
-	{"setSymbolName", &SimObj::setSymbolName},
-	{"setBirthRadius", &SimObj::setBirthRadius},
-    {"setBrain", &SimObj::setBrain},
-    {0,0}
-};
-
-Orbit<SimObjHex>::NumberGlobalType SimObjHex::mNumberGlobals[] = {{0,0}};
 

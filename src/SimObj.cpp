@@ -43,7 +43,6 @@ SimObj::SimObj(lua_State* luaState)
     mBirthRadius = 0.0f;
     mKeepBodyOnHardDeath = false;
     mKeepBodyOnExpirationDeath = false;
-    mFitnessMeasure = 0;
 
     mBrain = NULL;
 
@@ -75,7 +74,6 @@ SimObj::SimObj(SimObj* obj)
     mInitialized = false;
 
     mFitness = 0.0f;
-    mFitnessMeasure = obj->mFitnessMeasure;
 
     mDeathType = DEATH_HARD;
 
@@ -466,7 +464,6 @@ Orbit<SimObj>::MethodType SimObj::mMethods[] = {
 	{"addSymbolTable", &SimObj::addSymbolTable},
 	{"setSymbolName", &SimObj::setSymbolName},
 	{"setBirthRadius", &SimObj::setBirthRadius},
-	{"setFitnessMeasure", &SimObj::setFitnessMeasure},
     {"setBrain", &SimObj::setBrain},
     {"setKeepBodyOnHardDeath", &SimObj::setKeepBodyOnHardDeath},
     {"setKeepBodyOnExpirationDeath", &SimObj::setKeepBodyOnExpirationDeath},
@@ -495,13 +492,6 @@ int SimObj::setBirthRadius(lua_State* luaState)
 {
     float rad = luaL_checknumber(luaState, 1);
     setBirthRadius(rad);
-    return 0;
-}
-
-int SimObj::setFitnessMeasure(lua_State* luaState)
-{
-    int measure = luaL_checkint(luaState, 1);
-    setFitnessMeasure(measure);
     return 0;
 }
 

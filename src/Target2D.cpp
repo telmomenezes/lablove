@@ -64,7 +64,6 @@ Orbit<Target2D>::MethodType Target2D::mMethods[] = {
     {"addSymbolTable", &SimObj::addSymbolTable},
 	{"setSymbolName", &SimObj::setSymbolName},
 	{"setBirthRadius", &SimObj::setBirthRadius},
-	{"setFitnessMeasure", &SimObj::setFitnessMeasure},
     {"setBrain", &SimObj::setBrain},
     {"setPos", &SimObj2D::setPos},
     {"setRot", &SimObj2D::setRot},

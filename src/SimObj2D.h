@@ -33,6 +33,12 @@ class Sim2D;
 class SimObj2D : public SimObj
 {
 public:
+    static const int FITNESS_ENERGY = 0;
+    static const int FITNESS_ENERGY_SUM = 1;
+    static const int FITNESS_ENERGY_SUM_ABOVE_INIT = 2;
+    static const int FITNESS_RANDOM = 3;
+    static const int FITNESS_SYNCH_SCORE = 4;
+    static const int FITNESS_LASER_SCORE = 5;
 
     static const int SHAPE_TRIANGLE = 0;
     static const int SHAPE_SQUARE = 1;
@@ -54,6 +60,8 @@ public:
 
     void setPos(float x, float y);
     void setRot(float rot);
+
+    virtual float getFitness(int fitMeasure);
 
     virtual void draw();
 
@@ -169,7 +177,6 @@ public:
     float mFeedCenter;
     float mSoundRange;
     unsigned int mSpeakInterval;
-    float mScore;
 
     llULINT mCollisionDetectionIteration;
     llULINT mLastSpeakTime;
@@ -190,6 +197,11 @@ public:
     bool mHumanFire;
 
     llULINT mLastFireTime;
+
+    float mEnergySum;
+    float mEnergySumAboveInit;
+    float mSynchScore;
+    float mLaserScore;
 
 protected:
     virtual void onScanObject(SimObj2D* targ,

@@ -29,16 +29,14 @@ Species::Species(lua_State* luaState)
     {
         mBaseOrganism = (SimObj*)Orbit<Species>::pointer(luaState, 1);
         mPopulation = luaL_checkint(luaState, 2);
-        mBufferSize = luaL_checkint(luaState, 3);
-        
     }
     else
     {
         mBaseOrganism = NULL;
         mPopulation = 0;
-        mBufferSize = 0;
     }
 
+    mBufferSize = 0;
     mKinFactor = 0.0f;
     mCurrentQueen = 0;
     mQueenState = 0;
@@ -53,17 +51,23 @@ Species::~Species()
 {
     for (unsigned int i = 0; i < mBufferSize; i++)
     {
-        delete mOrganismVector[i];
+        delete mBuffer[i];
     }
-    mOrganismVector.clear();
+    mBuffer.clear();
+}
+
+void Species::addGoal(int fitMeasure, unsigned int bufSize)
+{
+    mGoals.push_back(Goal(fitMeasure, bufSize));
+    mBufferSize += bufSize;
 }
 
 void Species::init()
 {
     for (unsigned int i = 0; i < mBufferSize; i++)
     {
-        SimObj* org = mBaseOrganism->clone();
-        mOrganismVector.push_back(org);
+        SimObj* obj = mBaseOrganism->clone();
+        mBuffer.push_back(obj);
     }
 
     mQueenState = (int)(((float)mPopulation) * mKinFactor) + 1;
@@ -110,8 +114,8 @@ void Species::dumpStatistics(llULINT time, double realTime, Simulation* sim)
         iterLogs != mSampleLogs.end();
         iterLogs++)
     {
-        for (vector<SimObj*>::iterator iterOrg = mOrganismVector.begin();
-                iterOrg != mOrganismVector.end();
+        for (vector<SimObj*>::iterator iterOrg = mBuffer.begin();
+                iterOrg != mBuffer.end();
                 iterOrg++)
         {
             (*iterLogs)->process(*iterOrg, sim);
@@ -146,8 +150,8 @@ void Species::xoverMutateSend(int bodyID, bool init, SimObj* nearObj, SimObj* de
                 delete mSuperSister;
             }
 
-            SimObj* org1 = mOrganismVector[parent1];
-            SimObj* org2 = mOrganismVector[parent2];
+            SimObj* org1 = mBuffer[parent1];
+            SimObj* org2 = mBuffer[parent2];
             mSuperSister = org1->recombine(org2);
             mSuperSister->mutate(0.5f);
         }
@@ -174,13 +178,13 @@ void Species::xoverMutateSend(int bodyID, bool init, SimObj* nearObj, SimObj* de
 
     if (mKinFactor == 0.0f)
     {
-        SimObj* org = mOrganismVector[parent1];
+        SimObj* org = mBuffer[parent1];
 
         float prob = mDistRecombine->uniform(0.0f, 1.0f);
         if ((prob < mRecombineProb) && mEvolutionOn)
         {
             // Recombine
-            SimObj* org2 = mOrganismVector[parent2];
+            SimObj* org2 = mBuffer[parent2];
 
             /*unsigned int r = mDistRecombine->iuniform(0, 100);
             if (speciesID == 1)
@@ -280,8 +284,6 @@ void Species::onOrganismDeath(SimObj* org)
 
     int bodyID = org->getBodyID();
 
-    bool deleteOrg = false;
-
     // Update death statistics
     for (list<Log*>::iterator iterLogs = mDeathLogs.begin();
             iterLogs != mDeathLogs.end();
@@ -290,22 +292,36 @@ void Species::onOrganismDeath(SimObj* org)
         (*iterLogs)->process(org, mSimulation);
     }
 
-    // Buffer replacements
-    unsigned int organismNumber = mDistOrganism->iuniform(0, mBufferSize);
-    SimObj* org2 = mOrganismVector[organismNumber];
+    // Challenges
+    unsigned int startPos = 0;
 
-    if (org->mFitness >= org2->mFitness)
-    {
-        delete mOrganismVector[organismNumber];
+    for (list<Goal>::iterator iterGoal = mGoals.begin();
+        iterGoal != mGoals.end();
+        iterGoal++)
+    {   
+        unsigned int objPos = mDistOrganism->iuniform(0, (*iterGoal).mSize);
+        objPos += startPos;
+        SimObj* org2 = mBuffer[objPos];
 
-        mOrganismVector[organismNumber] = org;
+        float fitness = org->getFitness((*iterGoal).mFitnessMeasure);
 
-        org->popAdjust(&mOrganismVector);
-    }
-    else
-    {
-        org2->mFitness *= (1.0f - mFitnessAging);
-        deleteOrg = true;
+        if (fitness >= org2->mFitness)
+        {
+            delete mBuffer[objPos];
+
+            SimObj* newObj = org->clone();
+            newObj->mFitness = fitness;
+
+            mBuffer[objPos] = newObj;
+
+            org->popAdjust(&mBuffer);
+        }
+        else
+        {
+            org2->mFitness *= (1.0f - mFitnessAging);
+        }
+
+        startPos += (*iterGoal).mSize;
     }
 
     // Find organism to place near
@@ -329,15 +345,13 @@ void Species::onOrganismDeath(SimObj* org)
     // Replace
     xoverMutateSend(bodyID, false, refObj, org);
 
-    if (deleteOrg)
-    {
-        delete org;
-    }
+    delete org;
 }
 
 const char Species::mClassName[] = "Species";
 
 Orbit<Species>::MethodType Species::mMethods[] = {
+    {"addGoal", &Species::addGoal},
     {"addSampleLog", &Species::addSampleLog},
     {"addDeathLog", &Species::addDeathLog},
     {"setKinFactor", &Species::setKinFactor},
@@ -347,6 +361,14 @@ Orbit<Species>::MethodType Species::mMethods[] = {
 };
 
 Orbit<Species>::NumberGlobalType Species::mNumberGlobals[] = {{0,0}};
+
+int Species::addGoal(lua_State* luaState)
+{
+    int fitMeasure = luaL_checkint(luaState, 1);
+    unsigned int bufSize = luaL_checkint(luaState, 2);
+    addGoal(fitMeasure, bufSize);
+    return 0;
+}
 
 int Species::addSampleLog(lua_State* luaState)
 {

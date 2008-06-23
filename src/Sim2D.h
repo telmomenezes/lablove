@@ -64,13 +64,6 @@ public:
     static const int ACTION_FIRE = 6;
     static const int ACTION_FIREB = 7;
 
-    static const int FITNESS_ENERGY = 0;
-    static const int FITNESS_ENERGY_SUM = 1;
-    static const int FITNESS_ENERGY_SUM_ABOVE_INIT = 2;
-    static const int FITNESS_SCORE = 3;
-    static const int FITNESS_SCORE_SUM = 4;
-    static const int FITNESS_RANDOM = 5;
-
     static const int VE_SPEAK = 0;
 
     typedef struct

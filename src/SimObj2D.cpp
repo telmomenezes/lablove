@@ -58,7 +58,6 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     mFeedCenter = 0;
     mSoundRange = 250.0f;
     mSpeakInterval = 250;
-    mScore = 0.0f;
 
     mCollisionDetectionIteration = 0;
     mLastSpeakTime = 0;
@@ -112,6 +111,11 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     mBlockedY = false;
 
     mLastMessageSent = NULL;
+
+    mEnergySum = 0.0f;
+    mEnergySumAboveInit = 0.0f;
+    mSynchScore = 0.0f;
+    mLaserScore = 0.0f;
 }
 
 SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
@@ -148,7 +152,6 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
     mSoundRange = obj->mSoundRange;
     mSpeakInterval = obj->mSpeakInterval;
     mFireInterval = obj->mFireInterval;
-    mScore = 0.0f;
 
     mCollisionDetectionIteration = 0;
     mLastSpeakTime = 0;
@@ -215,6 +218,11 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
     mBlockedY = false;
 
     mLastMessageSent = NULL;
+
+    mEnergySum = 0.0f;
+    mEnergySumAboveInit = 0.0f;
+    mSynchScore = 0.0f;
+    mLaserScore = 0.0f;
 }
 
 SimObj2D::~SimObj2D()
@@ -410,7 +418,7 @@ void SimObj2D::process()
 
             if ((obj != NULL) && (obj->mSpeciesID != mSpeciesID))
             {
-                obj->mScore += mEnergy;
+                obj->mLaserScore += mEnergy;
             }
         }
 
@@ -499,44 +507,17 @@ void SimObj2D::process()
     setPos(newX, newY);
     setRot(newRot);
 
-    // Update fitness
-    switch (mFitnessMeasure)
+    // Update scores
+    if ((simTime % 10) == 0)
     {
-    case Sim2D::FITNESS_ENERGY:
-        mFitness = mEnergy;
-        break;
-    case Sim2D::FITNESS_ENERGY_SUM:
-        if ((simTime % 10) == 0)
+        float energy = mEnergy;
+        mEnergySum += energy;
+        energy -= mInitialEnergy;
+        if (energy < 0.0f)
         {
-            mFitness += mEnergy;
+            energy = 0.0f;
         }
-        break;
-    case Sim2D::FITNESS_ENERGY_SUM_ABOVE_INIT:
-        if ((simTime % 10) == 0)
-        {
-            float energy = mEnergy;
-            energy -= mInitialEnergy;
-            if (energy < 0.0f)
-            {
-                energy = 0.0f;
-            }
-            mFitness += energy;
-        }
-        break;
-    case Sim2D::FITNESS_SCORE:
-        mFitness = mScore;
-        break;
-    case Sim2D::FITNESS_SCORE_SUM:
-        if ((simTime % 10) == 0)
-        {
-            mFitness += mScore;
-        }
-        break;
-    case Sim2D::FITNESS_RANDOM:
-        if ((simTime % 1000) == 0)
-        {
-            mFitness = mDistFitnessRandom->uniform(0.0f, 1.0f);
-        }
+        mEnergySumAboveInit += energy;
     }
 
     // Update current laser target
@@ -557,6 +538,35 @@ void SimObj2D::process()
             mCurrentLaserTargetID = 0;
         }
     }
+}
+
+float SimObj2D::getFitness(int fitMeasure)
+{
+    float fit = 0.0f;
+
+    switch (fitMeasure)
+    {
+    case FITNESS_ENERGY:
+        fit = mEnergy;
+        break;
+    case FITNESS_ENERGY_SUM:
+        fit = mEnergySum;
+        break;
+    case FITNESS_ENERGY_SUM_ABOVE_INIT:
+        fit = mEnergySumAboveInit;
+        break;
+    case FITNESS_RANDOM:
+        fit = mDistFitnessRandom->uniform(0.0f, 1.0f);
+        break;
+    case FITNESS_SYNCH_SCORE:
+        fit = mSynchScore;
+        break;
+    case FITNESS_LASER_SCORE:
+        fit = mLaserScore;
+        break;
+    }
+
+    return fit;
 }
 
 void SimObj2D::perceive()
@@ -1263,7 +1273,7 @@ void SimObj2D::speak(Symbol* sym, float param)
         return;
     }
 
-    mScore += 1.0f;
+    mSynchScore += 1.0f;
     
     mLastSpeakTime = mSim2D->getTime();
 
@@ -1313,7 +1323,7 @@ void SimObj2D::addMessage(Message* msg)
         && ((mSim2D->getTime() - mLastMessageSent->mTime) <= 5)
         && (mLastMessageSent->mSymbol->equals(msg->mSymbol)))
     {
-        mScore += 1.0f;
+        mSynchScore += 1.0f;
     }
 }
 
@@ -1323,7 +1333,7 @@ void SimObj2D::processLaserHit(Laser2D* laser)
     SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
     if ((obj != NULL) && (laser->mEnergy > 0))
     {
-        obj->mScore += 0.001f;
+        obj->mLaserScore += 0.001f;
     }
 
     switch (laser->mType)
@@ -1359,7 +1369,7 @@ void SimObj2D::processLaserHit(Laser2D* laser)
 
         if ((obj != NULL) && (obj->mSpeciesID != mSpeciesID))
         {
-            obj->mScore += score;
+            obj->mLaserScore += score;
         }
 
         deltaEnergy(-laser->mEnergy);
@@ -1437,7 +1447,6 @@ Orbit<SimObj2D>::MethodType SimObj2D::mMethods[] = {
     {"addSymbolTable", &SimObj::addSymbolTable},
 	{"setSymbolName", &SimObj::setSymbolName},
 	{"setBirthRadius", &SimObj::setBirthRadius},
-	{"setFitnessMeasure", &SimObj::setFitnessMeasure},
     {"setBrain", &SimObj::setBrain},
     {"setKeepBodyOnHardDeath", &SimObj::setKeepBodyOnHardDeath},
     {"setKeepBodyOnExpirationDeath", &SimObj::setKeepBodyOnExpirationDeath},
@@ -1474,6 +1483,12 @@ Orbit<SimObj2D>::MethodType SimObj2D::mMethods[] = {
 };
 
 Orbit<SimObj2D>::NumberGlobalType SimObj2D::mNumberGlobals[] = {
+    {"FITNESS_ENERGY", FITNESS_ENERGY},
+    {"FITNESS_ENERGY_SUM", FITNESS_ENERGY_SUM},
+    {"FITNESS_ENERGY_SUM_ABOVE_INIT", FITNESS_ENERGY_SUM_ABOVE_INIT},
+    {"FITNESS_SYNCH_SCORE", FITNESS_SYNCH_SCORE},
+    {"FITNESS_LASER_SCORE", FITNESS_LASER_SCORE},
+    {"FITNESS_RANDOM", FITNESS_RANDOM},
     {"SHAPE_TRIANGLE", SHAPE_TRIANGLE},
     {"SHAPE_SQUARE", SHAPE_SQUARE},
     {"SHAPE_CIRCLE", SHAPE_CIRCLE},
