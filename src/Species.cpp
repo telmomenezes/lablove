@@ -38,6 +38,7 @@ Species::Species(lua_State* luaState)
 
     mBufferSize = 0;
     mKinFactor = 0.0f;
+    mKinMutation = true;
     mCurrentQueen = 0;
     mQueenState = 0;
     mSuperSister = NULL;
@@ -153,7 +154,15 @@ void Species::xoverMutateSend(int bodyID, bool init, SimObj* nearObj, SimObj* de
             SimObj* org1 = mBuffer[parent1];
             SimObj* org2 = mBuffer[parent2];
             mSuperSister = org1->recombine(org2);
-            mSuperSister->mutate(0.5f);
+
+            if (mKinMutation)
+            {
+                mSuperSister->mutate(0.5f);
+            }
+            else
+            {
+                mSuperSister->mutate(1.0f);
+            }
         }
         mQueenState++;
     }
@@ -233,7 +242,11 @@ void Species::xoverMutateSend(int bodyID, bool init, SimObj* nearObj, SimObj* de
     else
     {
         newOrganism = mSuperSister->clone();
-        newOrganism->mutate(0.5f);
+
+        if (mKinMutation)
+        {
+            newOrganism->mutate(0.5f);
+        }
     }
 
     // Set body ID
@@ -355,6 +368,7 @@ Orbit<Species>::MethodType Species::mMethods[] = {
     {"addSampleLog", &Species::addSampleLog},
     {"addDeathLog", &Species::addDeathLog},
     {"setKinFactor", &Species::setKinFactor},
+    {"setKinMutation", &Species::setKinMutation},
     {"setFitnessAging", &Species::setFitnessAging},
     {"setRecombineProb", &Species::setRecombineProb},
     {0,0}
@@ -388,6 +402,13 @@ int Species::setKinFactor(lua_State* luaState)
 {
     float factor = luaL_checknumber(luaState, 1);
     setKinFactor(factor);
+    return 0;
+}
+
+int Species::setKinMutation(lua_State* luaState)
+{
+    bool value = luaL_checkbool(luaState, 1);
+    setKinMutation(value);
     return 0;
 }
 

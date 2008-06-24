@@ -47,6 +47,7 @@ public:
     void setRecombineProb(float prob){mRecombineProb = prob;}
 
     void setKinFactor(float factor){mKinFactor = factor;}
+    void setKinMutation(bool value){mKinMutation = value;}
 
     void addSampleLog(Log* log);
     void addDeathLog(Log* log);
@@ -65,6 +66,7 @@ public:
     int addSampleLog(lua_State* luaState);
     int addDeathLog(lua_State* luaState);
     int setKinFactor(lua_State* luaState);
+    int setKinMutation(lua_State* luaState);
 
 protected:
     void xoverMutateSend(int bodyID, bool init=false, SimObj* nearObj=NULL, SimObj* deadObj=NULL);
@@ -81,6 +83,7 @@ protected:
     unsigned int mBufferSize;
     list<SimObj*>** mBodyGroupLists;
     float mKinFactor;
+    bool mKinMutation;
     unsigned int mCurrentQueen;
     unsigned int mQueenState;
     SimObj* mSuperSister;

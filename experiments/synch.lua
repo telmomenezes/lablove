@@ -62,7 +62,8 @@ agentBirthRadius = 100.0
 
 keepBodyOnExpire = true
 
-kinFactor = 0.0
+kinFactor = 1.0
+kinMutation = true
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
@@ -70,6 +71,7 @@ kinFactor = 0.0
 dofile("basic_command_line.lua")
 
 kinFactor = getNumberParameter("kin", kinFactor, "kin")
+kinMutation = getBoolParameter("kinmut", kinMutation, "kinmut")
 
 logBaseName = "_synch_"
 
@@ -190,6 +192,7 @@ agentSpecies:addGoal(SimObj2D.FITNESS_SYNCH_SCORE, bufferSize)
 agentSpecies:setFitnessAging(fitnessAging)
 agentSpecies:setRecombineProb(recombineProb)
 agentSpecies:setKinFactor(kinFactor)
+agentSpecies:setKinMutation(kinMutation)
 
 agentSpeciesIndex = popDyn:addSpecies(agentSpecies)
 popDyn:setEvolutionStopTime(evolutionStopTime)
