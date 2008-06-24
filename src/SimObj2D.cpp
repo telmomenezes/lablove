@@ -1277,6 +1277,10 @@ void SimObj2D::speak(Symbol* sym, float param)
     
     mLastSpeakTime = mSim2D->getTime();
 
+    if (mLastMessageSent != NULL)
+    {
+        delete mLastMessageSent;
+    }
     mLastMessageSent = new Message(3);
     mLastMessageSent->mSymbol = sym->clone();
     mLastMessageSent->mData[0] = 0;
