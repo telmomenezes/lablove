@@ -2640,13 +2640,15 @@ float Gridbrain::getDistance(Brain* brain)
     {
         if (conn1->mActive)
         {
+            GridbrainGeneTag* g1 = &(conn1->mGeneTag);
             GridbrainConnection* conn2 = gb->mConnections;
+            
+            bool done = false;
 
-            while (conn2 != NULL)
+            while ((conn2 != NULL) && (!done))
             {
                 if (conn2->mActive)
                 {
-                    GridbrainGeneTag* g1 = &(conn1->mGeneTag);
                     GridbrainGeneTag* g2 = &(conn2->mGeneTag);
 
                     if (g1->mGeneID == g2->mGeneID)
@@ -2655,11 +2657,13 @@ float Gridbrain::getDistance(Brain* brain)
                             && (g1->mTargID == g2->mTargID))
                         {
                             match += 1.0f;
+                            done = true;
                         }
                         else if ((g1->mOrigID == g2->mOrigID)
                             || (g1->mTargID == g2->mTargID))
                         {
                             match += 0.5f;
+                            done = true;
                         }
                     }
                 }
