@@ -73,6 +73,8 @@ public:
 
     virtual void popAdjust(vector<SimObj*>* popVec){}
 
+    virtual float getDistance(Brain* brain){return 0.0f;}
+
     virtual void printDebug(){}
 
 protected:

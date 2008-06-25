@@ -52,6 +52,7 @@ public:
     int setLogOnlyLast(lua_State* luaState);
 
 protected:
+    unsigned int mFitIndex;
     float mBestFitness;
     bool mFirstObject;
     string mBrainString;

@@ -39,6 +39,7 @@ Species::Species(lua_State* luaState)
     mBufferSize = 0;
     mKinFactor = 0.0f;
     mKinMutation = true;
+    mGroupFactor = 0.0f;
     mCurrentQueen = 0;
     mQueenState = 0;
     mSuperSister = NULL;
@@ -46,6 +47,9 @@ Species::Species(lua_State* luaState)
     mRecombineProb = 0.0f;
 
     mEvolutionOn = true;
+
+    mLogInterval = 0;
+    mFile = stdout;
 }
 
 Species::~Species()
@@ -55,6 +59,8 @@ Species::~Species()
         delete mBuffer[i];
     }
     mBuffer.clear();
+
+    fclose(mFile);
 }
 
 void Species::addGoal(int fitMeasure, unsigned int bufSize)
@@ -65,6 +71,13 @@ void Species::addGoal(int fitMeasure, unsigned int bufSize)
 
 void Species::init()
 {
+    for (list<Goal>::iterator iterGoal = mGoals.begin();
+        iterGoal != mGoals.end();
+        iterGoal++)
+    {
+        mBaseOrganism->addFitness((*iterGoal).mFitnessMeasure);
+    }
+
     for (unsigned int i = 0; i < mBufferSize; i++)
     {
         SimObj* obj = mBaseOrganism->clone();
@@ -252,6 +265,33 @@ void Species::xoverMutateSend(int bodyID, bool init, SimObj* nearObj, SimObj* de
     // Set body ID
     newOrganism->setBodyID(bodyID);
 
+    // Clear fitnesses
+    newOrganism->clearFitnesses();
+
+    
+    // Init group fitness
+    list<SimObj*>* objList = mSimulation->getObjectList();
+ 
+    for (list<SimObj*>::iterator iterObj = objList->begin();
+            iterObj != objList->end();
+            iterObj++)
+    {
+        SimObj* obj = (*iterObj);
+
+        if (obj->getSpeciesID() == mID)
+        {
+            for (list<Goal>::iterator iterGoal = mGoals.begin();
+                iterGoal != mGoals.end();
+                iterGoal++)
+            {
+                Fitness* fit1 = newOrganism->getFitness((*iterGoal).mFitnessMeasure);
+                obj->updateFitnesses();
+                Fitness* fit2 = obj->getFitness((*iterGoal).mFitnessMeasure);
+                fit1->mGroupFitness = fit1->mGroupFitness - fit2->mFitness;
+            }
+        }
+    }
+
     mSimulation->addObject(newOrganism, init);
    
     // Place object
@@ -295,6 +335,46 @@ void Species::onOrganismDeath(SimObj* org)
     // Remove
     mSimulation->removeObject(org, false);
 
+    // Update fitnesses
+    org->updateFitnesses();
+
+    // Group fitness calculations
+    list<SimObj*>* objList = mSimulation->getObjectList();
+ 
+    for (list<SimObj*>::iterator iterObj = objList->begin();
+            iterObj != objList->end();
+            iterObj++)
+    {
+        SimObj* obj = (*iterObj);
+
+        if (obj->getSpeciesID() == mID)
+        {
+            if (obj->getID() != org->getID())
+            {
+                for (list<Goal>::iterator iterGoal = mGoals.begin();
+                        iterGoal != mGoals.end();
+                        iterGoal++)
+                {
+                    Fitness* fit1 = org->getFitness((*iterGoal).mFitnessMeasure);
+                    obj->updateFitnesses();
+                    Fitness* fit2 = obj->getFitness((*iterGoal).mFitnessMeasure);
+                    fit1->mGroupFitness = fit1->mGroupFitness + fit2->mFitness;
+                    fit2->mGroupFitness = fit2->mGroupFitness + fit1->mFitness;
+                }
+            }
+        }
+    }
+    for (list<Goal>::iterator iterGoal = mGoals.begin();
+            iterGoal != mGoals.end();
+            iterGoal++)
+    {
+            Fitness* fit1 = org->getFitness((*iterGoal).mFitnessMeasure);
+            fit1->mGroupFitness = fit1->mGroupFitness / ((float)mPopulation);
+            fit1->mFinalFitness = (fit1->mFitness * (1.0f - mGroupFactor))
+                                    + (fit1->mGroupFitness * mGroupFactor);
+    }
+
+
     int bodyID = org->getBodyID();
 
     // Update death statistics
@@ -316,14 +396,14 @@ void Species::onOrganismDeath(SimObj* org)
         objPos += startPos;
         SimObj* org2 = mBuffer[objPos];
 
-        float fitness = org->getFitness((*iterGoal).mFitnessMeasure);
+        Fitness* fit1 = org->getFitness((*iterGoal).mFitnessMeasure);
+        Fitness* fit2 = org2->getFitness((*iterGoal).mFitnessMeasure);
 
-        if (fitness >= org2->mFitness)
+        if (fit1->mFinalFitness >= fit2->mFinalFitness)
         {
             delete mBuffer[objPos];
 
             SimObj* newObj = org->clone();
-            newObj->mFitness = fitness;
 
             mBuffer[objPos] = newObj;
 
@@ -331,7 +411,7 @@ void Species::onOrganismDeath(SimObj* org)
         }
         else
         {
-            org2->mFitness *= (1.0f - mFitnessAging);
+            fit2->mFinalFitness = fit2->mFinalFitness * (1.0f - mFitnessAging);
         }
 
         startPos += (*iterGoal).mSize;
@@ -361,6 +441,46 @@ void Species::onOrganismDeath(SimObj* org)
     delete org;
 }
 
+void Species::onCycle(llULINT time)
+{
+    if (mLogInterval == 0)
+    {
+        return;
+    }
+
+    if ((time % mLogInterval) == 0)
+    {
+        float comps = 0.0f;
+        float totalDistance = 0.0f;
+
+        for (unsigned int i = 0; i < mBufferSize; i++)
+        {
+            for (unsigned int j = i + 1; j < mBufferSize; j++)
+            {
+                SimObj* obj1 = mBuffer[i];
+                SimObj* obj2 = mBuffer[j];
+                totalDistance += obj1->getBrain()->getDistance(obj2->getBrain());
+                comps += 1.0f;
+            }
+        }
+
+        float avgDistance = totalDistance / comps;
+
+        fprintf(mFile, "%d, ", time / 1000);
+        fprintf(mFile, "%f\n", avgDistance);
+        fflush(mFile);
+    }
+}
+
+void Species::setLog(string filePath, unsigned int interval)
+{
+    mFile = fopen(filePath.c_str(), "w");
+    mLogInterval = interval * 1000;
+
+    fprintf(mFile, "time, avg_brain_distance\n");
+    fflush(mFile);
+}
+
 const char Species::mClassName[] = "Species";
 
 Orbit<Species>::MethodType Species::mMethods[] = {
@@ -369,8 +489,10 @@ Orbit<Species>::MethodType Species::mMethods[] = {
     {"addDeathLog", &Species::addDeathLog},
     {"setKinFactor", &Species::setKinFactor},
     {"setKinMutation", &Species::setKinMutation},
+    {"setGroupFactor", &Species::setGroupFactor},
     {"setFitnessAging", &Species::setFitnessAging},
     {"setRecombineProb", &Species::setRecombineProb},
+    {"setLog", &Species::setLog},
     {0,0}
 };
 
@@ -412,6 +534,13 @@ int Species::setKinMutation(lua_State* luaState)
     return 0;
 }
 
+int Species::setGroupFactor(lua_State* luaState)
+{
+    float factor = luaL_checknumber(luaState, 1);
+    setGroupFactor(factor);
+    return 0;
+}
+
 int Species::setFitnessAging(lua_State* luaState)
 {
     float aging = luaL_checknumber(luaState, 1);
@@ -423,6 +552,14 @@ int Species::setRecombineProb(lua_State* luaState)
 {
     float prob = luaL_checknumber(luaState, 1);
     setRecombineProb(prob);
+    return 0;
+}
+
+int Species::setLog(lua_State* luaState)
+{
+    string path = luaL_checkstring(luaState, 1);
+    unsigned int interval = luaL_checkint(luaState, 2);
+    setLog(path, interval);
     return 0;
 }
 

@@ -540,33 +540,37 @@ void SimObj2D::process()
     }
 }
 
-float SimObj2D::getFitness(int fitMeasure)
+void SimObj2D::updateFitnesses()
 {
-    float fit = 0.0f;
-
-    switch (fitMeasure)
+    for (map<int, Fitness>::iterator iterFit = mFitMap.begin();
+            iterFit != mFitMap.end();
+            iterFit++)
     {
-    case FITNESS_ENERGY:
-        fit = mEnergy;
-        break;
-    case FITNESS_ENERGY_SUM:
-        fit = mEnergySum;
-        break;
-    case FITNESS_ENERGY_SUM_ABOVE_INIT:
-        fit = mEnergySumAboveInit;
-        break;
-    case FITNESS_RANDOM:
-        fit = mDistFitnessRandom->uniform(0.0f, 1.0f);
-        break;
-    case FITNESS_SYNCH_SCORE:
-        fit = mSynchScore;
-        break;
-    case FITNESS_LASER_SCORE:
-        fit = mLaserScore;
-        break;
-    }
+        int type = (*iterFit).first;
+        Fitness* fit = &((*iterFit).second);
 
-    return fit;
+        switch (type)
+        {
+        case FITNESS_ENERGY:
+            fit->mFitness = mEnergy;
+            break;
+        case FITNESS_ENERGY_SUM:
+            fit->mFitness = mEnergySum;
+            break;
+        case FITNESS_ENERGY_SUM_ABOVE_INIT:
+            fit->mFitness = mEnergySumAboveInit;
+            break;
+        case FITNESS_RANDOM:
+            fit->mFitness = mDistFitnessRandom->uniform(0.0f, 1.0f);
+            break;
+        case FITNESS_SYNCH_SCORE:
+            fit->mFitness = mSynchScore;
+            break;
+        case FITNESS_LASER_SCORE:
+            fit->mFitness = mLaserScore;
+            break;
+        }
+    }
 }
 
 void SimObj2D::perceive()

@@ -26,8 +26,12 @@
 #include "Goal.h"
 
 #include <vector>
+#include <string>
+
+#include <stdio.h>
 
 using std::vector;
+using std::string;
 
 class Species
 {
@@ -48,6 +52,7 @@ public:
 
     void setKinFactor(float factor){mKinFactor = factor;}
     void setKinMutation(bool value){mKinMutation = value;}
+    void setGroupFactor(float factor){mGroupFactor = factor;}
 
     void addSampleLog(Log* log);
     void addDeathLog(Log* log);
@@ -55,6 +60,10 @@ public:
     void dumpStatistics(llULINT time, double realTime, Simulation* sim);
 
     void setEvolution(bool evo){mEvolutionOn = evo;}
+
+    void onCycle(llULINT time);
+
+    void setLog(string fileName, unsigned int interval);
 
     static const char mClassName[];
     static Orbit<Species>::MethodType mMethods[];
@@ -67,6 +76,8 @@ public:
     int addDeathLog(lua_State* luaState);
     int setKinFactor(lua_State* luaState);
     int setKinMutation(lua_State* luaState);
+    int setGroupFactor(lua_State* luaState);
+    int setLog(lua_State* luaState);
 
 protected:
     void xoverMutateSend(int bodyID, bool init=false, SimObj* nearObj=NULL, SimObj* deadObj=NULL);
@@ -84,6 +95,7 @@ protected:
     list<SimObj*>** mBodyGroupLists;
     float mKinFactor;
     bool mKinMutation;
+    float mGroupFactor;
     unsigned int mCurrentQueen;
     unsigned int mQueenState;
     SimObj* mSuperSister;
@@ -93,6 +105,9 @@ protected:
     float mRecombineProb;
 
     bool mEvolutionOn;
+
+    FILE* mFile;
+    unsigned int mLogInterval;
 };
 #endif
 

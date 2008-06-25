@@ -47,6 +47,7 @@ SET(SOURCE_FILES
     src/HexCell.cpp
     src/ScriptableObject.cpp
     src/SimObj.cpp
+    src/Fitness.cpp
     src/SimObj2D.cpp
     src/SimObjHex.cpp
     src/Target2D.cpp
@@ -68,7 +69,6 @@ SET(SOURCE_FILES
     src/GridbrainState.cpp
     src/GridbrainHistory.cpp
     src/PopulationDynamics.cpp
-    src/PopDynGenerations.cpp
     src/PopDynSEGA.cpp
     src/Species.cpp
     src/Goal.cpp

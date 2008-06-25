@@ -30,6 +30,7 @@ LogBestBrain::LogBestBrain(lua_State* luaState)
     mFileNameSuffix = "";
     mBrainString = "";
     mLogOnlyLast = false;
+    mFitIndex = 0;
 }
 
 LogBestBrain::~LogBestBrain()
@@ -38,9 +39,10 @@ LogBestBrain::~LogBestBrain()
 
 void LogBestBrain::process(SimObj* obj, Simulation* sim)
 {
-    if (mFirstObject || (obj->mFitness > mBestFitness))
+    float fitness = obj->getFitnessByIndex(mFitIndex)->mFitness;
+    if (mFirstObject || (fitness > mBestFitness))
     {
-        mBestFitness = obj->mFitness;
+        mBestFitness = fitness;
         mFirstObject = false;
 
         if (obj->mType == SimObj::TYPE_AGENT)

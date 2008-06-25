@@ -38,8 +38,6 @@ SimObj::SimObj(lua_State* luaState)
 
     mInitialized = false;
 
-    mFitness = 0.0f;
-
     mBirthRadius = 0.0f;
     mKeepBodyOnHardDeath = false;
     mKeepBodyOnExpirationDeath = false;
@@ -59,6 +57,13 @@ SimObj::SimObj(SimObj* obj)
     mBodyID = obj->mBodyID;
     mCreationTime = 0;
 
+    for (map<int, Fitness>::iterator iterFit = obj->mFitMap.begin();
+        iterFit != obj->mFitMap.end();
+        iterFit++)
+    {
+        mFitMap[(*iterFit).first] = (*iterFit).second;
+    }
+
     map<string, SymbolPointer>::iterator iterSymPointers;
     for (iterSymPointers = obj->mNamedSymbols.begin();
         iterSymPointers != obj->mNamedSymbols.end();
@@ -72,8 +77,6 @@ SimObj::SimObj(SimObj* obj)
     mBrain = NULL;
 
     mInitialized = false;
-
-    mFitness = 0.0f;
 
     mDeathType = DEATH_HARD;
 
@@ -286,12 +289,7 @@ string SimObj::getTableName(int table)
 
 bool SimObj::getFieldValue(string fieldName, float& value)
 {
-    if (fieldName == "fitness")
-    {
-        value = mFitness;
-        return true;
-    }
-    else if (fieldName.substr(0,  14) == "symtable_size_")
+    if (fieldName.substr(0,  14) == "symtable_size_")
     {
         string tableName = fieldName.substr(14, fieldName.size() - 14);
 
@@ -329,6 +327,33 @@ bool SimObj::getFieldValue(string fieldName, float& value)
         value = 0.0f;
         return false;
     }
+}
+
+void SimObj::addFitness(int type)
+{
+    mFitMap[type] = Fitness();
+}
+
+void SimObj::clearFitnesses()
+{
+    for (map<int, Fitness>::iterator iterFit = mFitMap.begin();
+            iterFit != mFitMap.end();
+            iterFit++)
+    {
+        (*iterFit).second.clear();
+    }
+}
+
+Fitness* SimObj::getFitnessByIndex(unsigned int index)
+{
+    map<int, Fitness>::iterator iterFit = mFitMap.begin();
+
+    for (unsigned int i = 0; i < index; i++)
+    {
+        iterFit++;
+    }
+
+    return &((*iterFit).second);
 }
 
 void SimObj::mutate(float factor)

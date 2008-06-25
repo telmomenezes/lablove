@@ -26,10 +26,9 @@
 #include "Brain.h"
 #include "Message.h"
 #include "types.h"
+#include "Fitness.h"
 
 #include "Orbit.h"
-
-#include "art.h"
 
 #include <map>
 #include <string>
@@ -102,8 +101,12 @@ public:
     bool getKeepBodyOnHardDeath(){return mKeepBodyOnHardDeath;}
     void setKeepBodyOnExpirationDeath(bool val){mKeepBodyOnExpirationDeath = val;}
     bool getKeepBodyOnExpirationDeath(){return mKeepBodyOnExpirationDeath;}
-
-    virtual float getFitness(int fitMeasure){return mFitness;}
+    
+    void addFitness(int type);
+    Fitness* getFitness(int type){return &mFitMap[type];}
+    Fitness* getFitnessByIndex(unsigned int index);
+    void clearFitnesses();
+    virtual void updateFitnesses(){}
     
     virtual void popAdjust(vector<SimObj*>* popVec);
 
@@ -122,8 +125,6 @@ public:
 
     llULINT mCreationTime;
     bool mInitialized;
-
-    float mFitness;
 
     int mBodyID;
 
@@ -145,6 +146,8 @@ protected:
     virtual void recombine(SimObj* parent1, SimObj* parent2);
 
     llULINT mID;
+
+    map<int, Fitness> mFitMap;
 
     map<string, SymbolPointer> mNamedSymbols;
 

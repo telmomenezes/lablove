@@ -178,6 +178,8 @@ public:
 
     void update();
 
+    virtual float getDistance(Brain* brain);
+
     static const char mClassName[];
     static Orbit<Gridbrain>::MethodType mMethods[];
     static Orbit<Gridbrain>::NumberGlobalType mNumberGlobals[];

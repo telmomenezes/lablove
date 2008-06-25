@@ -61,7 +61,7 @@ public:
     void setPos(float x, float y);
     void setRot(float rot);
 
-    virtual float getFitness(int fitMeasure);
+    virtual void updateFitnesses();
 
     virtual void draw();
 

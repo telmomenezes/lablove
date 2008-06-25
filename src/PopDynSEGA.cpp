@@ -100,6 +100,14 @@ void PopDynSEGA::onCycle(llULINT time, double realTime)
             (*iterSpecies).second->dumpStatistics(time, realTime, mSimulation);
         }
     }
+
+    for (map<unsigned int, Species*>::iterator iterSpecies = mSpecies.begin();
+        iterSpecies != mSpecies.end();
+        iterSpecies++)
+    {
+
+        (*iterSpecies).second->onCycle(time);
+    }
 }
 
 const char PopDynSEGA::mClassName[] = "PopDynSEGA";

@@ -2615,6 +2615,67 @@ int Gridbrain::getMemCellPos(llULINT id)
     return -1;
 }
 
+float Gridbrain::getDistance(Brain* brain)
+{
+    Gridbrain* gb = (Gridbrain*)brain;
+
+    float maxSize = (float)mActiveConnections;
+    float ac2 = (float)gb->mActiveConnections;
+
+    if (ac2 > maxSize)
+    {
+        maxSize = ac2;
+    }
+
+    if (maxSize == 0.0f)
+    {
+        return 0.0f;
+    }
+
+    float match = 0.0f;
+
+    GridbrainConnection* conn1 = mConnections;
+
+    while (conn1 != NULL)
+    {
+        if (conn1->mActive)
+        {
+            GridbrainConnection* conn2 = gb->mConnections;
+
+            while (conn2 != NULL)
+            {
+                if (conn2->mActive)
+                {
+                    GridbrainGeneTag* g1 = &(conn1->mGeneTag);
+                    GridbrainGeneTag* g2 = &(conn2->mGeneTag);
+
+                    if (g1->mGeneID == g2->mGeneID)
+                    {
+                        if ((g1->mOrigID == g2->mOrigID)
+                            && (g1->mTargID == g2->mTargID))
+                        {
+                            match += 1.0f;
+                        }
+                        else if ((g1->mOrigID == g2->mOrigID)
+                            || (g1->mTargID == g2->mTargID))
+                        {
+                            match += 0.5f;
+                        }
+                    }
+                }
+
+                conn2 = (GridbrainConnection*)conn2->mNextGlobalConnection;
+            }
+        }
+
+        conn1 = (GridbrainConnection*)conn1->mNextGlobalConnection;
+    }
+
+    match /= maxSize;
+
+    return (1.0f - match);
+}
+
 const char Gridbrain::mClassName[] = "Gridbrain";
 
 Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {

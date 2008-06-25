@@ -64,6 +64,7 @@ keepBodyOnExpire = true
 
 kinFactor = 0.0
 kinMutation = false
+groupFactor = 0.0
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
@@ -72,6 +73,7 @@ dofile("basic_command_line.lua")
 
 kinFactor = getNumberParameter("kin", kinFactor, "kin")
 kinMutation = getBoolParameter("kinmut", kinMutation, "kinmut")
+groupFactor = getNumberParameter("grp", groupFactor, "grp")
 
 logBaseName = "_synch_"
 
@@ -193,6 +195,7 @@ agentSpecies:setFitnessAging(fitnessAging)
 agentSpecies:setRecombineProb(recombineProb)
 agentSpecies:setKinFactor(kinFactor)
 agentSpecies:setKinMutation(kinMutation)
+agentSpecies:setGroupFactor(groupFactor)
 
 agentSpeciesIndex = popDyn:addSpecies(agentSpecies)
 popDyn:setEvolutionStopTime(evolutionStopTime)
@@ -268,6 +271,8 @@ if logBrains then
 end
 
 popDyn:setLogTimeInterval(logTimeInterval)
+
+agentSpecies:setLog("buf" .. logSuffix .. ".csv", logTimeInterval)
 
 -- Start Simulation
 --------------------------------------------------------------------------------
