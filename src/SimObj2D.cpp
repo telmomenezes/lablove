@@ -416,9 +416,16 @@ void SimObj2D::process()
             llULINT id = (*iterLaser).mOwnerID;
             SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
 
-            if ((obj != NULL) && (obj->mSpeciesID != mSpeciesID))
+            if (obj != NULL)
             {
-                obj->mLaserScore += mEnergy;
+                if (obj->mSpeciesID != mSpeciesID)
+                {
+                    obj->mLaserScore += mEnergy;
+                }
+                else
+                {
+                    obj->mLaserScore -= mEnergy;
+                }
             }
         }
 
@@ -1338,10 +1345,19 @@ void SimObj2D::addMessage(Message* msg)
 void SimObj2D::processLaserHit(Laser2D* laser)
 {
     llULINT id = laser->mOwnerID;
+    float score;
     SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
     if ((obj != NULL) && (laser->mEnergy > 0))
     {
-        obj->mLaserScore += 0.001f;
+        score = 0.001f;
+        if (obj->mSpeciesID != mSpeciesID)
+        {
+            obj->mLaserScore += score;
+        }
+        else
+        {
+            obj->mLaserScore -= score;
+        }
     }
 
     switch (laser->mType)
@@ -1369,15 +1385,22 @@ void SimObj2D::processLaserHit(Laser2D* laser)
         break;
     case Laser2D::LASER_ONE_HIT:
     default:
-        float score = laser->mEnergy;
+        score = laser->mEnergy;
         if (score > mEnergy)
         {
             score = mEnergy;
         }
 
-        if ((obj != NULL) && (obj->mSpeciesID != mSpeciesID))
+        if (obj != NULL)
         {
-            obj->mLaserScore += score;
+            if (obj->mSpeciesID != mSpeciesID)
+            {
+                obj->mLaserScore += score;
+            }
+            else
+            {
+                obj->mLaserScore -= score;
+            }
         }
 
         deltaEnergy(-laser->mEnergy);

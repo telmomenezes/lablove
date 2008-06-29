@@ -7,7 +7,7 @@ dofile("basic_defines.lua")
 -- Experiment Parameters
 --------------------------------------------------------------------------------
 
-numberOfTargets = 0--50
+numberOfTargets = 50
 numberOfAgents = 10
 
 agentSize = 10.0
@@ -61,6 +61,8 @@ changeInComponentProb = 0.2
 
 recombineProb = 0.25
 
+groupFactor = 0.8
+
 timeLimit = 0
 logTimeInterval = 100
 logBrains = true
@@ -107,7 +109,6 @@ sim:setTimeLimit(timeLimit)
 --------------------------------------------------------------------------------
 
 agent = SimObj2D()
-agent:setFitnessMeasure(Sim2D.FITNESS_SCORE)
 agent:setBirthRadius(agentBirthRadius)
 agent:setSize(agentSize)
 agent:setDrag(drag)
@@ -214,7 +215,7 @@ for i, comp in pairs(betaComponents) do
 end
 betaSet:addComponent(OUT, Sim2D.ACTION_GO)
 betaSet:addComponent(OUT, Sim2D.ACTION_ROTATE)
---betaSet:addComponent(OUT, Sim2D.ACTION_FIREB)
+betaSet:addComponent(OUT, Sim2D.ACTION_FIREB)
 if comm then
     betaSet:addComponent(OUT, Sim2D.ACTION_SPEAK, TAB_TO_SYM, colorTableCode, agentColor:getID())
 end
@@ -250,14 +251,17 @@ target:setSymbolName("color", colorTableCode, targetColor:getID())
 popDyn = PopDynSEGA()
 sim:setPopulationDynamics(popDyn)
 
-agentSpecies = Species(agent, numberOfAgents, bufferSize)
-targetSpecies = Species(target, numberOfTargets, 1)
-
+agentSpecies = Species(agent, numberOfAgents)
+agentSpecies:addGoal(SimObj2D.FITNESS_LASER_SCORE, bufferSize)
 agentSpecies:setFitnessAging(fitnessAging)
 agentSpecies:setRecombineProb(recombineProb)
-
+agentSpecies:setGroupFactor(groupFactor)
 agentSpeciesIndex = popDyn:addSpecies(agentSpecies)
+
+targetSpecies = Species(target, numberOfTargets)
+targetSpecies:addGoal(SimObj2D.FITNESS_RANDOM, 1)
 popDyn:addSpecies(targetSpecies)
+
 popDyn:setEvolutionStopTime(evolutionStopTime)
 
 
@@ -318,7 +322,7 @@ end
 
 stats = StatCommon()
 stats:setFile("log" .. logSuffix .. ".csv")
-stats:addField("fitness")
+stats:addField("laser_score")
 stats:addField("gb_connections")
 stats:addField("gb_active_connections")
 stats:addField("gb_active_components")
