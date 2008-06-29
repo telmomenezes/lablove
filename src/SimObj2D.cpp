@@ -116,6 +116,7 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     mEnergySumAboveInit = 0.0f;
     mSynchScore = 0.0f;
     mLaserScore = 0.0f;
+    mLaserScoreSum = 0.0f;
 }
 
 SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
@@ -223,6 +224,7 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
     mEnergySumAboveInit = 0.0f;
     mSynchScore = 0.0f;
     mLaserScore = 0.0f;
+    mLaserScoreSum = 0.0f;
 }
 
 SimObj2D::~SimObj2D()
@@ -525,6 +527,8 @@ void SimObj2D::process()
             energy = 0.0f;
         }
         mEnergySumAboveInit += energy;
+
+        mLaserScoreSum += mLaserScore;
     }
 
     // Update current laser target
@@ -575,6 +579,9 @@ void SimObj2D::updateFitnesses()
             break;
         case FITNESS_LASER_SCORE:
             fit->mFitness = mLaserScore;
+            break;
+        case FITNESS_LASER_SCORE_SUM:
+            fit->mFitness = mLaserScoreSum;
             break;
         }
     }
@@ -1519,6 +1526,7 @@ Orbit<SimObj2D>::NumberGlobalType SimObj2D::mNumberGlobals[] = {
     {"FITNESS_ENERGY_SUM_ABOVE_INIT", FITNESS_ENERGY_SUM_ABOVE_INIT},
     {"FITNESS_SYNCH_SCORE", FITNESS_SYNCH_SCORE},
     {"FITNESS_LASER_SCORE", FITNESS_LASER_SCORE},
+    {"FITNESS_LASER_SCORE_SUM", FITNESS_LASER_SCORE_SUM},
     {"FITNESS_RANDOM", FITNESS_RANDOM},
     {"SHAPE_TRIANGLE", SHAPE_TRIANGLE},
     {"SHAPE_SQUARE", SHAPE_SQUARE},

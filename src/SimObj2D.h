@@ -39,6 +39,7 @@ public:
     static const int FITNESS_RANDOM = 3;
     static const int FITNESS_SYNCH_SCORE = 4;
     static const int FITNESS_LASER_SCORE = 5;
+    static const int FITNESS_LASER_SCORE_SUM = 6;
 
     static const int SHAPE_TRIANGLE = 0;
     static const int SHAPE_SQUARE = 1;
@@ -202,6 +203,7 @@ public:
     float mEnergySumAboveInit;
     float mSynchScore;
     float mLaserScore;
+    float mLaserScoreSum;
 
 protected:
     virtual void onScanObject(SimObj2D* targ,

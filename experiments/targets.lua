@@ -7,7 +7,7 @@ dofile("basic_defines.lua")
 -- Experiment Parameters
 --------------------------------------------------------------------------------
 
-numberOfTargets = 50
+numberOfTargets = 20
 numberOfAgents = 10
 
 agentSize = 10.0
@@ -252,7 +252,7 @@ popDyn = PopDynSEGA()
 sim:setPopulationDynamics(popDyn)
 
 agentSpecies = Species(agent, numberOfAgents)
-agentSpecies:addGoal(SimObj2D.FITNESS_LASER_SCORE, bufferSize)
+agentSpecies:addGoal(SimObj2D.FITNESS_LASER_SCORE_SUM, bufferSize)
 agentSpecies:setFitnessAging(fitnessAging)
 agentSpecies:setRecombineProb(recombineProb)
 agentSpecies:setGroupFactor(groupFactor)
@@ -290,7 +290,7 @@ if humanAgent then
     human:setLaserCostFactor(laserCostFactor)
     human:setLaserHitDuration(laserHitDuration)
 
-    humanColor = SymbolRGB(82, 228, 241)
+    humanColor = SymbolRGB(255, 255, 255)
     symTable = SymbolTable(humanColor, colorTableCode)
     human:addSymbolTable(symTable)
     human:setSymbolName("color", colorTableCode, humanColor:getID())

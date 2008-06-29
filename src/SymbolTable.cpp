@@ -201,11 +201,17 @@ Symbol* SymbolTable::selectSymbol(Symbol* sym, SymbolTable* table2)
 
 Symbol* SymbolTable::getSymbol(llULINT id)
 {
-    if (mSymbols.count(id) == 0)
+    for (map<llULINT, Symbol*>::iterator iterSym = mSymbols.begin();
+            iterSym != mSymbols.end();
+            iterSym++)
     {
-        return NULL;
+        if ((*iterSym).first == id)
+        {
+            return (*iterSym).second;
+        }
     }
-    return mSymbols[id];
+
+    return NULL;
 }
 
 Symbol* SymbolTable::getReferenceSymbol()
