@@ -864,6 +864,8 @@ void SimObj2D::onScanObject(SimObj2D* targ,
     {
         unsigned int type = (*iterItem)->mType;
 
+        //printf("type: %d\n", type);
+
         switch (type)
         {
             case Sim2D::PERCEPTION_IN_CONTACT:
@@ -932,6 +934,7 @@ void SimObj2D::onScanObject(SimObj2D* targ,
                                                     item->mTargetSymTable,
                                                     item->mOrigSymID,
                                                     Simulation::BINDING_EQUALS);
+                //printf("simeq: %f\n", normalizedValue);
                 inBuffer[pos] = normalizedValue;
                 break;
 

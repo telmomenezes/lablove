@@ -71,6 +71,8 @@ void Species::addGoal(int fitMeasure, unsigned int bufSize)
 
 void Species::init()
 {
+    //mBaseOrganism->printDebug();
+
     for (list<Goal>::iterator iterGoal = mGoals.begin();
         iterGoal != mGoals.end();
         iterGoal++)
@@ -418,21 +420,25 @@ void Species::onOrganismDeath(SimObj* org)
     }
 
     // Find organism to place near
-    unsigned int refOrgNumber = mDistOrganism->iuniform(0, mPopulation - 1);
+    SimObj* refObj = NULL;
 
-    list<SimObj*>* objects = mSimulation->getObjectList();
-
-    list<SimObj*>::iterator iterObj = objects->begin();
-    SimObj* refObj;
-    unsigned int pos = 0;
-    while (pos <= refOrgNumber)
+    if (mPopulation > 1)
     {
-        refObj = (*iterObj);
-        if (refObj->getSpeciesID() == mID)
+        unsigned int refOrgNumber = mDistOrganism->iuniform(0, mPopulation - 1);
+
+        list<SimObj*>* objects = mSimulation->getObjectList();
+
+        list<SimObj*>::iterator iterObj = objects->begin();
+        unsigned int pos = 0;
+        while (pos <= refOrgNumber)
         {
-            pos++;
+            refObj = (*iterObj);
+            if (refObj->getSpeciesID() == mID)
+            {
+                pos++;
+            }
+            iterObj++;
         }
-        iterObj++;
     }
 
     // Replace

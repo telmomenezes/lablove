@@ -574,11 +574,12 @@ void Sim2D::drawAfterObjects()
         {
             SimObj2D* obj = (SimObj2D*)(*iterObj);
 
-            art_setColor(100, 100, 100, 100);
-            sprintf(text, "%f", obj->mEnergy);
-            art_drawText(obj->mX,
-                            obj->mY,
-                            text);
+            sprintf(text, "%d", obj->getID());
+
+            art_setColor(0, 0, 0, 255);
+            art_drawText(obj->mX, obj->mY, text);
+            art_setColor(255, 255, 255, 255);
+            art_drawText(obj->mX + 1, obj->mY + 1, text);
         }
     }
 
@@ -673,6 +674,22 @@ SimObj2D* Sim2D::getLineTarget(float x1, float y1, float x2, float y2, llULINT e
 
     //printf("*** cells: %d %d %d %d\n", cellX, cellY, targCellX, targCellY);
 
+    if (cellX < 0)
+    {
+        cellX = 0;
+    }
+    else if (cellX >= mWorldCellWidth)
+    {
+        cellX = mWorldCellWidth - 1;
+    }
+    if (cellY < 0)
+    {
+        cellY = 0;
+    }
+    else if (cellY >= mWorldCellLength)
+    {
+        cellY = mWorldCellLength - 1;
+    }
     if (targCellX < 0)
     {
         targCellX = 0;
@@ -790,6 +807,11 @@ SimObj2D* Sim2D::getLineTarget(float x1, float y1, float x2, float y2, llULINT e
         if (bestTarget != NULL)
         {
             //printf("colision! %d (%d, %d)\n", bestTarget->getID(), cellX, cellY);
+            float dx = bestTarget->mX - x1;
+            float dy = bestTarget->mY - y1;
+            dx *= dx;
+            dy *= dy;
+            float dist = sqrtf(dx + dy);
             return bestTarget;
         }
 

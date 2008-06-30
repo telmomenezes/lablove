@@ -34,7 +34,7 @@ mt_distribution* Gridbrain::mDistGridbrain = gDistManager.getNewDistribution();
 
 Gridbrain::Gridbrain(lua_State* luaState)
 {
-    mMaxInputDepth = 10;
+    mMaxInputDepth = 50;
     mComponents = NULL;
     mNumberOfComponents = 0;
     mConnections = NULL;

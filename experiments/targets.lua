@@ -12,9 +12,9 @@ numberOfAgents = 10
 
 agentSize = 10.0
 
-targetMinEnergy = 0.5
-targetMaxEnergy = 2.0
-targetSizeFactor = 10.0
+targetMinEnergy = 3.0
+targetMaxEnergy = 3.0
+targetSizeFactor = 3.0
 
 worldWidth = 500
 worldHeight = 500
@@ -77,7 +77,7 @@ comm = true
 
 agentBirthRadius = 100.0
 
-keepBodyOnExpire = true
+keepBodyOnExpire = false
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
@@ -109,7 +109,7 @@ sim:setTimeLimit(timeLimit)
 --------------------------------------------------------------------------------
 
 agent = SimObj2D()
-agent:setBirthRadius(agentBirthRadius)
+--agent:setBirthRadius(agentBirthRadius)
 agent:setSize(agentSize)
 agent:setDrag(drag)
 agent:setRotDrag(rotDrag)
