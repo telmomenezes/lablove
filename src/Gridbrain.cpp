@@ -35,7 +35,6 @@ mt_distribution* Gridbrain::mDistGridbrain = gDistManager.getNewDistribution();
 Gridbrain::Gridbrain(lua_State* luaState)
 {
     mMaxInputDepth = 50;
-    mComponents = NULL;
     mNumberOfComponents = 0;
     mConnections = NULL;
     mConnectionsCount = 0;
@@ -76,11 +75,6 @@ Gridbrain::~Gridbrain()
         GridbrainConnection* conn = mConnections;
         mConnections = (GridbrainConnection*)conn->mNextGlobalConnection;
         free(conn);
-    }
-    if (mComponents != NULL)
-    {
-        free(mComponents);
-        mComponents = NULL;
     }
     for (unsigned int i = 0; i < mGridsCount; i++)
     {
@@ -320,7 +314,10 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
         gb->addGrid(newGrid, "");
     }
 
-    gb->mComponents = (GridbrainComponent*)malloc(gb->mNumberOfComponents * sizeof(GridbrainComponent));
+    for (unsigned int i = 0; i < gb->mNumberOfComponents; i++)
+    {
+        gb->mComponents.push_back(GridbrainComponent());
+    }
 
     unsigned int offset = 0;
 
@@ -386,7 +383,7 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                 GridbrainComponent* comp = gb->getComponent(x, y, g);
                 if (comp->mType == GridbrainComponent::NUL)
                 {
-                    GridbrainComponent* newComp = newGrid->getRandomComponent(mOwner, gb->mComponents, &gb->mMemory);
+                    GridbrainComponent* newComp = newGrid->getRandomComponent(mOwner, &(gb->mComponents), &gb->mMemory);
                     comp->copyDefinitions(newComp);
                     #ifdef GB_VALIDATE
                     gb->isValid();
@@ -527,9 +524,12 @@ Grid* Gridbrain::getGrid(string name)
 
 void Gridbrain::init()
 {
-    if (mComponents == NULL)
+    if (mComponents.size() == 0)
     {
-        mComponents = (GridbrainComponent*)malloc(mNumberOfComponents * sizeof(GridbrainComponent));
+        for (unsigned int i = 0; i < mNumberOfComponents; i++)
+        {
+            mComponents.push_back(GridbrainComponent());
+        }
 
         // Init grids with NUL components
         unsigned int pos = 0;
@@ -546,10 +546,6 @@ void Gridbrain::init()
                     y < grid->getHeight();
                     y++)
                 {
-                    mComponents[pos].clearConnections();
-                    mComponents[pos].clearDefinitions();
-                    mComponents[pos].clearMetrics();
-
                     mComponents[pos].mOffset = pos;
                     mComponents[pos].mColumn = x;
                     mComponents[pos].mRow = y;
@@ -575,7 +571,7 @@ void Gridbrain::init()
                     y < grid->getHeight();
                     y++)
                 {
-                    GridbrainComponent* comp = grid->getRandomComponent(mOwner, mComponents, &mMemory);
+                    GridbrainComponent* comp = grid->getRandomComponent(mOwner, &mComponents, &mMemory);
                     mComponents[pos].copyDefinitions(comp);
                     #ifdef GB_VALIDATE
                     isValid();
@@ -1399,6 +1395,7 @@ void Gridbrain::addRandomConnections(unsigned int count)
         if (selectRandomConnection(x1, y1, g1, x2, y2, g2))
         {
             addConnection(x1, y1, g1, x2, y2, g2);
+            //printf("random conn: %d %d %d %d %d %d\n", x1, y1, g1, x2, y2, g2);
         }
     }
 }
@@ -1772,6 +1769,19 @@ void Gridbrain::cycle()
                         output = comp->mMemCell->mValue - comp->mInput;
 
                         break;
+                    case GridbrainComponent::DAND:
+                        //printf("DAND ");
+                        if (comp->mInputFlags.size() == comp->mInboundConnections)
+                        {
+                            output = 1.0f;
+                            comp->mInputFlags.clear();
+                        }
+                        else
+                        {
+                            output = 0.0f;
+                        }
+
+                        break;
                     default:
                         // TODO: this is an error. how to inform?
                         output = 0.0f;
@@ -1852,6 +1862,18 @@ void Gridbrain::cycle()
                                         targetComp->mInput = 0.0f;
                                     }
                                 }
+                                break;
+                            case GridbrainComponent::IN_FLAGS:
+                                if ((input > GB_THRESHOLD)
+                                    || (input < -GB_THRESHOLD))
+                                {
+                                    unsigned int inputCode = comp->mOffset;
+                                    if (targetComp->mInputFlags.count(inputCode) == 0)
+                                    {
+                                        targetComp->mInputFlags[inputCode] = true;
+                                    }
+                                }
+                                break;
                             }
 
                             /*printf("(%d, %d, %d)[%f] -> (%d, %d, %d)[%f]\n",

@@ -27,7 +27,9 @@
 #include "GridbrainMemCell.h"
 
 #include <string>
+#include <map>
 using std::string;
+using std::map;
 
 #define COMPONENT_INPUT_TYPE(compType, inputType) \
 switch(compType) \
@@ -47,6 +49,9 @@ case GridbrainComponent::NOT: \
 case GridbrainComponent::EQ: \
     inputType = GridbrainComponent::IN_EQ; \
     break; \
+case GridbrainComponent::DAND: \
+    inputType = GridbrainComponent::IN_FLAGS; \
+    break; \
 default: \
     inputType = GridbrainComponent::IN_SUM; \
     break; \
@@ -55,8 +60,8 @@ default: \
 class GridbrainComponent
 {
 public:
-    enum Type {NUL, IN, OUT, AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, MAX, MIN, AVG, CLK, MEMW, MEMC, MEMD};
-    enum InputType {IN_SUM, IN_TSUM, IN_MUL, IN_TMUL, IN_EQ};
+    enum Type {NUL, IN, OUT, AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, MAX, MIN, AVG, CLK, MEMW, MEMC, MEMD, DAND};
+    enum InputType {IN_SUM, IN_TSUM, IN_MUL, IN_TMUL, IN_EQ, IN_FLAGS};
     enum ConnType {CONN_IN, CONN_OUT, CONN_INOUT};
 
     GridbrainComponent(lua_State* luaState=NULL);
@@ -135,6 +140,8 @@ public:
     float mLastInput;
 
     GridbrainMemCell* mMemCell;
+
+    map<unsigned int, bool> mInputFlags;
 };
 
 #endif

@@ -44,7 +44,7 @@ public:
                 llULINT origSymID=0,
                 int targetSymTable=-1);
     GridbrainComponent* getRandom(SimObj* obj=NULL,
-                                    GridbrainComponent* components=NULL,
+                                    vector<GridbrainComponent>* components=NULL,
                                     map<llULINT, GridbrainMemCell>* memory=NULL,
                                     unsigned int startPos=0,
                                     unsigned int endPos=0);

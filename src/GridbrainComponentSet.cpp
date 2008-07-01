@@ -43,7 +43,7 @@ void GridbrainComponentSet::addComponent(GridbrainComponent* component)
 }
 
 GridbrainComponent* GridbrainComponentSet::getRandom(SimObj* obj,
-                                                        GridbrainComponent* components,
+                                                        vector<GridbrainComponent>* components,
                                                         map<llULINT, GridbrainMemCell>* memory,
                                                         unsigned int startPos,
                                                         unsigned int endPos)
@@ -94,7 +94,7 @@ GridbrainComponent* GridbrainComponentSet::getRandom(SimObj* obj,
                         found && (pos < endPos);
                         pos++)
                 {
-                    GridbrainComponent* comp2 = &components[pos];
+                    GridbrainComponent* comp2 = &((*components)[pos]);
 
                     if (comp->isEqual(comp2, false))
                     {

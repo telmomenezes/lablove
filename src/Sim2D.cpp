@@ -639,6 +639,11 @@ bool Sim2D::getFieldValue(SimObj* obj, string fieldName, float& value)
         value = ((SimObj2D*)obj)->mLaserScore;
         return true;
     }
+    else if (fieldName == "laser_score_sum")
+    {
+        value = ((SimObj2D*)obj)->mLaserScoreSum;
+        return true;
+    }
     else
     {
         return Simulation::getFieldValue(obj, fieldName, value);

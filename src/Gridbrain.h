@@ -289,7 +289,7 @@ protected:
 
     vector<Grid*> mGridsVec;
 
-    GridbrainComponent* mComponents;
+    vector<GridbrainComponent> mComponents;
     unsigned int mMaxInputDepth;
     unsigned int mNumberOfComponents;
     GridbrainConnection* mConnections;

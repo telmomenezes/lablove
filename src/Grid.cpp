@@ -159,7 +159,7 @@ void Grid::setComponentSet(GridbrainComponentSet* componentSet)
 }
 
 GridbrainComponent* Grid::getRandomComponent(SimObj* obj,
-                                                GridbrainComponent* components,
+                                                vector<GridbrainComponent>* components,
                                                 map<llULINT, GridbrainMemCell>* memory)
 {
     if (mComponentSet)

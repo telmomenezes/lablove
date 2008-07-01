@@ -20,6 +20,7 @@ CLK = GridbrainComponent.CLK
 MEMC = GridbrainComponent.MEMC
 MEMW = GridbrainComponent.MEMW
 MEMD = GridbrainComponent.MEMD
+DAND = GridbrainComponent.DAND
 
 NO_LINK = InterfaceItem.NO_LINK
 SYM_TO_SYM = InterfaceItem.SYM_TO_SYM

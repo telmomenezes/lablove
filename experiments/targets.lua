@@ -19,8 +19,8 @@ targetSizeFactor = 3.0
 worldWidth = 500
 worldHeight = 500
 
-alphaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, MAX, MIN, AVG, MEMW, MEMC}
-betaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, CLK, MEMW, MEMC}
+alphaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, MAX, MIN, AVG, MEMW, MEMC, DAND}
+betaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, CLK, MEMW, MEMC, DAND}
 
 viewRange = 300.0
 viewAngle = 350.0
@@ -32,7 +32,7 @@ initialEnergy = 1.0
 goCost = 0.001
 rotateCost = 0.001
 goForceScale = 0.3
-rotateForceScale = 0.006
+rotateForceScale = 0.003
 
 drag = 0.05
 rotDrag = 0.05
@@ -322,7 +322,7 @@ end
 
 stats = StatCommon()
 stats:setFile("log" .. logSuffix .. ".csv")
-stats:addField("laser_score")
+stats:addField("laser_score_sum")
 stats:addField("gb_connections")
 stats:addField("gb_active_connections")
 stats:addField("gb_active_components")

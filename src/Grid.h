@@ -56,7 +56,7 @@ public:
     
     unsigned int getOffset(){return mOffset;}
     GridbrainComponent* getRandomComponent(SimObj* obj,
-                                            GridbrainComponent* components,
+                                            vector<GridbrainComponent>* components,
                                             map<llULINT, GridbrainMemCell>* memory);
     void setInput(unsigned int number, unsigned int depth, float value);
     unsigned int addPerception(GridbrainComponent* per);

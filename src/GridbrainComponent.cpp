@@ -162,6 +162,8 @@ string GridbrainComponent::getName()
         return "MEMW";
     case MEMD:
         return "MEMD";
+    case DAND:
+        return "DAND";
     default:
         return "?";
     }
@@ -351,6 +353,7 @@ Orbit<GridbrainComponent>::NumberGlobalType GridbrainComponent::mNumberGlobals[]
     {"MEMC", MEMC},
     {"MEMW", MEMW},
     {"MEMD", MEMD},
+    {"DAND", DAND},
     {0,0}
 };
 
