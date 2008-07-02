@@ -351,6 +351,8 @@ void SimObj2D::draw()
         art_fillTriangle(x1, y1, x2, y2, x3, y3);
         art_drawTriangle(x1, y1, x2, y2, x3, y3);
 
+        //art_drawLine(mX, mY, mX + (cosf(a1) * 300.0f), mY + (sinf(a1) * 300.0f));
+
         break;
     case SHAPE_SQUARE:
         art_setRotation(mX, mY, mRot);
@@ -547,6 +549,8 @@ void SimObj2D::process()
                 mCurrentLaserTargetID = laserTarget->getID();
             }
         }
+
+        //printf("laser target: %d\n", mCurrentLaserTargetID);
     }
 }
 

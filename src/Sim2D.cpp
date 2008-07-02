@@ -917,6 +917,11 @@ void Sim2D::processLaserShots()
             || (laser->mY2 < 0))
         {
             iterLaser = mLaserShots.erase(iterLaser);
+
+            /*if (bestTarget == NULL)
+            {
+                printf("MISS\n");
+            }*/
         }
         else
         {

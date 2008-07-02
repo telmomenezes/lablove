@@ -14,7 +14,7 @@ agentSize = 10.0
 
 targetMinEnergy = 2.0
 targetMaxEnergy = 2.0
-targetSizeFactor = 4.0
+targetSizeFactor = 10.0
 
 worldWidth = 500
 worldHeight = 500
@@ -72,7 +72,7 @@ humanAgent = false
 
 evolutionStopTime = 0
 
-self = true
+self = false
 comm = true
 
 agentBirthRadius = 100.0

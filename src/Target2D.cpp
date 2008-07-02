@@ -47,7 +47,7 @@ Target2D::~Target2D()
 
 void Target2D::initSpeed()
 {
-    float speed = 0.0f;
+    float speed = 0.01f;
     float angle = mDistSpeed->uniform(0, M_PI);
 
     mSpeedX = cosf(angle) * speed;
@@ -69,29 +69,31 @@ void Target2D::init()
 
 void Target2D::process()
 {
-    mX += mSpeedX;
-    mY += mSpeedY;
+    float x = mX + mSpeedX;
+    float y = mY + mSpeedY;
 
-    if (mX < 0.0f)
+    if (x < 0.0f)
     {
-        mX = 0.0f;
+        x = 0.0f;
         mSpeedX = -mSpeedX;
     }
-    else if (mX > mSim2D->getWorldWidth())
+    else if (x > mSim2D->getWorldWidth())
     {
-        mX = mSim2D->getWorldWidth();
+        x = mSim2D->getWorldWidth();
         mSpeedX = -mSpeedX;
     }
-    if (mY < 0.0f)
+    if (y < 0.0f)
     {
-        mY = 0.0f;
+        y = 0.0f;
         mSpeedY = -mSpeedY;
     }
-    else if (mY > mSim2D->getWorldLength())
+    else if (y > mSim2D->getWorldLength())
     {
-        mY = mSim2D->getWorldLength();
+        y = mSim2D->getWorldLength();
         mSpeedY = -mSpeedY;
     }
+
+    setPos(x, y);
 }
 
 void Target2D::setEnergyLimits(float min, float max)
