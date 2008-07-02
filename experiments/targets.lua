@@ -7,7 +7,7 @@ dofile("basic_defines.lua")
 -- Experiment Parameters
 --------------------------------------------------------------------------------
 
-numberOfTargets = 5
+numberOfTargets = 1
 numberOfAgents = 10
 
 agentSize = 10.0
