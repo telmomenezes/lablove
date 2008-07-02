@@ -116,7 +116,7 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     mEnergySumAboveInit = 0.0f;
     mSynchScore = 0.0f;
     mLaserScore = 0.0f;
-    mLaserScoreSum = 0.0f;
+    mLaserAgeScore = 0.0f;
 }
 
 SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
@@ -224,7 +224,7 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
     mEnergySumAboveInit = 0.0f;
     mSynchScore = 0.0f;
     mLaserScore = 0.0f;
-    mLaserScoreSum = 0.0f;
+    mLaserAgeScore = 0.0f;
 }
 
 SimObj2D::~SimObj2D()
@@ -424,10 +424,6 @@ void SimObj2D::process()
                 {
                     obj->mLaserScore += mEnergy;
                 }
-                else
-                {
-                    obj->mLaserScore -= mEnergy;
-                }
             }
         }
 
@@ -527,26 +523,29 @@ void SimObj2D::process()
             energy = 0.0f;
         }
         mEnergySumAboveInit += energy;
-
-        mLaserScoreSum += mLaserScore;
     }
 
     // Update current laser target
     if (mType == TYPE_AGENT)
     {
+        float distance;
         SimObj2D* laserTarget = mSim2D->getLineTarget(mX,
                                                         mY,
                                                         mX + (cosf(mRot) * mLaserRange),
                                                         mY + (sinf(mRot) * mLaserRange),
-                                                        mID);
+                                                        mID,
+                                                        distance);
 
+        mCurrentLaserTargetID = 0;
+        
         if (laserTarget != NULL)
         {
-            mCurrentLaserTargetID = laserTarget->getID();
-        }
-        else
-        {
-            mCurrentLaserTargetID = 0;
+            float targRatio = distance / laserTarget->mSize;
+
+            if (targRatio < 0.5f)
+            {
+                mCurrentLaserTargetID = laserTarget->getID();
+            }
         }
     }
 }
@@ -580,8 +579,14 @@ void SimObj2D::updateFitnesses()
         case FITNESS_LASER_SCORE:
             fit->mFitness = mLaserScore;
             break;
-        case FITNESS_LASER_SCORE_SUM:
-            fit->mFitness = mLaserScoreSum;
+        case FITNESS_LASER_AGE_SCORE:
+            llULINT t0 = mCreationTime;
+            llULINT t1 = mSim2D->getTime();
+            float deltaTime = (float)(t1 - t0);
+            float maxAge = (float)mMaxAge;
+            float timeFactor = deltaTime / maxAge;
+            mLaserAgeScore = mLaserScore * timeFactor;
+            fit->mFitness = mLaserAgeScore;
             break;
         }
     }
@@ -1359,14 +1364,10 @@ void SimObj2D::processLaserHit(Laser2D* laser)
     SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
     if ((obj != NULL) && (laser->mEnergy > 0))
     {
-        score = 0.001f;
+        score = 0.1f;
         if (obj->mSpeciesID != mSpeciesID)
         {
             obj->mLaserScore += score;
-        }
-        else
-        {
-            obj->mLaserScore -= score;
         }
     }
 
@@ -1529,7 +1530,7 @@ Orbit<SimObj2D>::NumberGlobalType SimObj2D::mNumberGlobals[] = {
     {"FITNESS_ENERGY_SUM_ABOVE_INIT", FITNESS_ENERGY_SUM_ABOVE_INIT},
     {"FITNESS_SYNCH_SCORE", FITNESS_SYNCH_SCORE},
     {"FITNESS_LASER_SCORE", FITNESS_LASER_SCORE},
-    {"FITNESS_LASER_SCORE_SUM", FITNESS_LASER_SCORE_SUM},
+    {"FITNESS_LASER_AGE_SCORE", FITNESS_LASER_AGE_SCORE},
     {"FITNESS_RANDOM", FITNESS_RANDOM},
     {"SHAPE_TRIANGLE", SHAPE_TRIANGLE},
     {"SHAPE_SQUARE", SHAPE_SQUARE},

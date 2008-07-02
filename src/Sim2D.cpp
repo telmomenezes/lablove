@@ -639,9 +639,9 @@ bool Sim2D::getFieldValue(SimObj* obj, string fieldName, float& value)
         value = ((SimObj2D*)obj)->mLaserScore;
         return true;
     }
-    else if (fieldName == "laser_score_sum")
+    else if (fieldName == "laser_age_score")
     {
-        value = ((SimObj2D*)obj)->mLaserScoreSum;
+        value = ((SimObj2D*)obj)->mLaserAgeScore;
         return true;
     }
     else
@@ -650,7 +650,7 @@ bool Sim2D::getFieldValue(SimObj* obj, string fieldName, float& value)
     }
 }
 
-SimObj2D* Sim2D::getLineTarget(float x1, float y1, float x2, float y2, llULINT excludeID)
+SimObj2D* Sim2D::getLineTarget(float x1, float y1, float x2, float y2, llULINT excludeID, float &distance)
 {
     //printf("%f %f %f %f %d\n", x1, y1, x2, y2, excludeID);
     float dx = x2 - x1;
@@ -812,11 +812,11 @@ SimObj2D* Sim2D::getLineTarget(float x1, float y1, float x2, float y2, llULINT e
         if (bestTarget != NULL)
         {
             //printf("colision! %d (%d, %d)\n", bestTarget->getID(), cellX, cellY);
-            float dx = bestTarget->mX - x1;
-            float dy = bestTarget->mY - y1;
-            dx *= dx;
-            dy *= dy;
-            float dist = sqrtf(dx + dy);
+            float x0 = bestTarget->mX;
+            float y0 = bestTarget->mY;
+
+            distance = fabsf(((x2 - x1) * (y1 - y0)) - ((x1 - x0) * (y2 - y1))) / sqrtf(powf((x2 - x1), 2.0f) + powf((y2 - y1), 2.0f));
+
             return bestTarget;
         }
 
@@ -897,7 +897,8 @@ void Sim2D::processLaserShots()
         float x2 = laser->mX2;
         float y2 = laser->mY2;
 
-        SimObj2D* bestTarget = getLineTarget(x1, y1, x2, y2, laser->mOwnerID);
+        float distance;
+        SimObj2D* bestTarget = getLineTarget(x1, y1, x2, y2, laser->mOwnerID, distance);
         if (bestTarget != NULL)
         {
             //printf("colision! %d\n", bestTarget->getID());

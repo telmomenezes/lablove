@@ -18,14 +18,18 @@
  */
 
 #include "Target2D.h"
+#include "Sim2D.h"
 
 mt_distribution* Target2D::mDistEnergy = gDistManager.getNewDistribution();
+mt_distribution* Target2D::mDistSpeed = gDistManager.getNewDistribution();
 
 Target2D::Target2D(lua_State* luaState) : SimObj2D(luaState)
 {
     mMinEnergy = 0.0f;
     mMaxEnergy = 0.0f;
     mEnergySizeFactor = 0.0f;
+
+    initSpeed(); 
 }
 
 Target2D::Target2D(Target2D* obj) : SimObj2D(obj)
@@ -33,10 +37,21 @@ Target2D::Target2D(Target2D* obj) : SimObj2D(obj)
     mMinEnergy = obj->mMinEnergy;
     mMaxEnergy = obj->mMaxEnergy;
     mEnergySizeFactor = obj->mEnergySizeFactor;
+
+    initSpeed(); 
 }
 
 Target2D::~Target2D()
 {
+}
+
+void Target2D::initSpeed()
+{
+    float speed = 0.0f;
+    float angle = mDistSpeed->uniform(0, M_PI);
+
+    mSpeedX = cosf(angle) * speed;
+    mSpeedY = sinf(angle) * speed;
 }
 
 SimObj* Target2D::clone()
@@ -50,6 +65,33 @@ void Target2D::init()
     mSize = mEnergy * mEnergySizeFactor;
 
     SimObj2D::init();
+}
+
+void Target2D::process()
+{
+    mX += mSpeedX;
+    mY += mSpeedY;
+
+    if (mX < 0.0f)
+    {
+        mX = 0.0f;
+        mSpeedX = -mSpeedX;
+    }
+    else if (mX > mSim2D->getWorldWidth())
+    {
+        mX = mSim2D->getWorldWidth();
+        mSpeedX = -mSpeedX;
+    }
+    if (mY < 0.0f)
+    {
+        mY = 0.0f;
+        mSpeedY = -mSpeedY;
+    }
+    else if (mY > mSim2D->getWorldLength())
+    {
+        mY = mSim2D->getWorldLength();
+        mSpeedY = -mSpeedY;
+    }
 }
 
 void Target2D::setEnergyLimits(float min, float max)

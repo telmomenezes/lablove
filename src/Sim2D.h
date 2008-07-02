@@ -148,7 +148,7 @@ public:
     
     int setHuman(lua_State* luaState);
 
-    SimObj2D* getLineTarget(float x1, float y1, float x2, float y2, llULINT excludeID);
+    SimObj2D* getLineTarget(float x1, float y1, float x2, float y2, llULINT excludeID, float &distance);
 
 protected:
     virtual void onCycle();

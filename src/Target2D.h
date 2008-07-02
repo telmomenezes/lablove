@@ -33,6 +33,8 @@ public:
 
     virtual void init();
 
+    virtual void process();
+
     void setEnergyLimits(float min, float max);
     void setEnergySizeFactor(float factor){mEnergySizeFactor = factor;}
 
@@ -48,7 +50,13 @@ public:
     int setEnergySizeFactor(lua_State* luaState);
 
 protected:
+    void initSpeed();
+
     static mt_distribution* mDistEnergy;
+    static mt_distribution* mDistSpeed;
+
+    float mSpeedX;
+    float mSpeedY;
 };
 #endif
 

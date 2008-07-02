@@ -7,14 +7,14 @@ dofile("basic_defines.lua")
 -- Experiment Parameters
 --------------------------------------------------------------------------------
 
-numberOfTargets = 20
+numberOfTargets = 5
 numberOfAgents = 10
 
 agentSize = 10.0
 
-targetMinEnergy = 3.0
-targetMaxEnergy = 3.0
-targetSizeFactor = 3.0
+targetMinEnergy = 2.0
+targetMaxEnergy = 2.0
+targetSizeFactor = 4.0
 
 worldWidth = 500
 worldHeight = 500
@@ -252,7 +252,7 @@ popDyn = PopDynSEGA()
 sim:setPopulationDynamics(popDyn)
 
 agentSpecies = Species(agent, numberOfAgents)
-agentSpecies:addGoal(SimObj2D.FITNESS_LASER_SCORE_SUM, bufferSize)
+agentSpecies:addGoal(SimObj2D.FITNESS_LASER_AGE_SCORE, bufferSize)
 agentSpecies:setFitnessAging(fitnessAging)
 agentSpecies:setRecombineProb(recombineProb)
 agentSpecies:setGroupFactor(groupFactor)
@@ -322,7 +322,7 @@ end
 
 stats = StatCommon()
 stats:setFile("log" .. logSuffix .. ".csv")
-stats:addField("laser_score_sum")
+stats:addField("laser_age_score")
 stats:addField("gb_connections")
 stats:addField("gb_active_connections")
 stats:addField("gb_active_components")
