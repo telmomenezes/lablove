@@ -59,7 +59,7 @@ public:
     void addGrid(Grid* grid, string name);
     virtual void init();
 
-    virtual float* getInputBuffer(unsigned int channel);
+    virtual float* getInputBuffer(unsigned int channel, unsigned int id=0);
     virtual float* getOutputBuffer();
 
     GridbrainComponent* getComponent(unsigned int x,

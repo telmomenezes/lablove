@@ -69,7 +69,7 @@ void Species::addGoal(int fitMeasure, unsigned int bufSize)
     mBufferSize += bufSize;
 }
 
-void Species::init()
+void Species::init(unsigned int startBodyID)
 {
     //mBaseOrganism->printDebug();
 
@@ -90,7 +90,7 @@ void Species::init()
 
     for (unsigned int i = 0; i < mPopulation; i++)
     {
-        xoverMutateSend(i, true);
+        xoverMutateSend(i + startBodyID, true);
     }
 }
 

@@ -26,6 +26,10 @@ GridbrainMemCell::GridbrainMemCell()
     mWrite = 0.0f;
     mClear = false;
     mActive = false;
+    mSelected = 0.0f;
+    mSelCandidate = 0.0f;
+    mTriggered = false;
+    mValueFound = false;
 }
 
 GridbrainMemCell::~GridbrainMemCell()
@@ -34,17 +38,36 @@ GridbrainMemCell::~GridbrainMemCell()
 
 void GridbrainMemCell::cycle()
 {
+    if (mValueFound)
+    {
+        mSelected = mValue;
+    }
+    else
+    {
+        mSelected = mSelCandidate;
+    }
+
     if (mClear)
     {
         mValue = 0.0f;
     }
 
-    if ((mValue == 0.0f) && (mWrite != 0.0f))
+    if (mWrite != 0.0f)
     {
         mValue = mWrite;
+    }
+    else if (mSelected != 0.0f)
+    {
+        mValue = mSelected;
     }
 
     mWrite = 0.0f;
     mClear = false;
+
+    mSelCandidate = 0.0f;
+    mTriggered = false;
+    mValueFound = false;
+
+    //printf("value: %f\n", mValue);
 }
 

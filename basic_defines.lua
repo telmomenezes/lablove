@@ -21,6 +21,7 @@ MEMC = GridbrainComponent.MEMC
 MEMW = GridbrainComponent.MEMW
 MEMD = GridbrainComponent.MEMD
 DAND = GridbrainComponent.DAND
+SEL = GridbrainComponent.SEL
 
 NO_LINK = InterfaceItem.NO_LINK
 SYM_TO_SYM = InterfaceItem.SYM_TO_SYM

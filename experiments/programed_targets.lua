@@ -12,15 +12,12 @@ numberOfAgents = 10
 
 agentSize = 10.0
 
-targetMinEnergy = 2.0
-targetMaxEnergy = 2.0
+targetMinEnergy = 3.0
+targetMaxEnergy = 3.0
 targetSizeFactor = 10.0
 
 worldWidth = 500
 worldHeight = 500
-
-alphaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, MAX, MIN, AVG, MEMW, MEMC, DAND, SEL}
-betaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, CLK, MEMW, MEMC, DAND}
 
 viewRange = 300.0
 viewAngle = 350.0
@@ -49,7 +46,7 @@ speakInterval = 250
 
 compCount = 1
 bufferSize = 100
-fitnessAging = 0.5
+fitnessAging = 0.1
 
 addConnectionProb = 0.01
 removeConnectionProb = 0.01
@@ -59,7 +56,7 @@ splitConnectionProb = 0.01
 joinConnectionsProb = 0.01
 changeInComponentProb = 0.2
 
-recombineProb = 0.25
+recombineProb = 0.0
 
 groupFactor = 0.8
 
@@ -72,10 +69,10 @@ humanAgent = false
 
 evolutionStopTime = 0
 
-self = false
+self = true
 comm = true
 
-agentBirthRadius = 100.0
+agentBirthRadius = 0-100.0
 
 keepBodyOnExpire = false
 
@@ -84,9 +81,7 @@ keepBodyOnExpire = false
 
 dofile("basic_command_line.lua")
 
-groupFactor = getNumberParameter("grp", groupFactor, "grp")
-
-logBaseName = "_targets_"
+logBaseName = "_programed_targets_"
 
 logSuffix = logBaseName
             .. parameterString
@@ -147,81 +142,63 @@ agent:addMessageSymbolAcquisition(colorTableCode)
 
 brain = Gridbrain()
 
-brain:setMutateAddConnectionProb(addConnectionProb)
-brain:setMutateRemoveConnectionProb(removeConnectionProb)
-brain:setMutateChangeParamProb(changeParamProb)
-brain:setParamMutationStanDev(paramMutationStanDev)
-brain:setMutateSplitConnectionProb(splitConnectionProb)
-brain:setMutateJoinConnectionsProb(joinConnectionsProb)
-brain:setMutateChangeInactiveComponentProb(changeInComponentProb)
+brain:setMutateAddConnectionProb(0)
+brain:setMutateRemoveConnectionProb(0)
+brain:setMutateChangeParamProb(0)
+brain:setParamMutationStanDev(0)
+brain:setMutateSplitConnectionProb(0)
+brain:setMutateJoinConnectionsProb(0)
+brain:setMutateChangeInactiveComponentProb(0)
 
--- Objects Grid
-alphaSet = GridbrainComponentSet()
-for i, comp in pairs(alphaComponents) do
-    alphaSet:addComponent(comp)
-end
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_POSITION)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_DISTANCE)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_SIZE)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_LTARGET)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_LOF)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_CONV)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_CONVDIR)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_SYMEQ, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_ID)
-grid = Grid()
-grid:init(ALPHA, 0, 0)
-grid:setComponentSet(alphaSet)
-brain:addGrid(grid, "objects");
+grid1 = Grid()
+grid1:init(Grid.ALPHA, 4, 4)
+brain:addGrid(grid1, "objects");
 
--- Self Grid
-if self then
-    selfSet = GridbrainComponentSet()
-    for i, comp in pairs(alphaComponents) do
-        selfSet:addComponent(comp)
-    end
-    selfSet:addComponent(IN, Sim2D.PERCEPTION_ID)
-    selfSet:addComponent(IN, Sim2D.PERCEPTION_BLOCKED)
-    selfSet:addComponent(IN, Sim2D.PERCEPTION_COMPASS)
-    selfGrid = Grid()
-    selfGrid:init(ALPHA, 0, 0)
-    selfGrid:setComponentSet(selfSet)
-    brain:addGrid(selfGrid, "self")
-end
-
--- Sounds grid
-if comm then
-    soundSet = GridbrainComponentSet()
-    for i, comp in pairs(alphaComponents) do
-        soundSet:addComponent(comp)
-    end
-    soundSet:addComponent(IN, Sim2D.PERCEPTION_POSITION)
-    soundSet:addComponent(IN, Sim2D.PERCEPTION_DISTANCE)
-    soundSet:addComponent(IN, Sim2D.PERCEPTION_VALUE)
-    soundSet:addComponent(IN, Sim2D.PERCEPTION_SYMEQ, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
-    soundGrid = Grid()
-    soundGrid:init(ALPHA, 0, 0)
-    soundGrid:setComponentSet(soundSet)
-    brain:addGrid(soundGrid, "sounds");
-end
-
--- Beta Grid
-betaSet = GridbrainComponentSet()
-for i, comp in pairs(betaComponents) do
-    betaSet:addComponent(comp)
-end
-betaSet:addComponent(OUT, Sim2D.ACTION_GO)
-betaSet:addComponent(OUT, Sim2D.ACTION_ROTATE)
-betaSet:addComponent(OUT, Sim2D.ACTION_FIREB)
-if comm then
-    betaSet:addComponent(OUT, Sim2D.ACTION_SPEAK, TAB_TO_SYM, colorTableCode, agentColor:getID())
-end
-    
 grid2 = Grid()
-grid2:init(BETA, 0, 0)
-grid2:setComponentSet(betaSet)
+grid2:init(Grid.ALPHA, 1, 1)
+brain:addGrid(grid2, "sounds");
 
-brain:addGrid(grid2, "beta")
+grid3 = Grid()
+grid3:init(Grid.BETA, 3, 4)
+brain:addGrid(grid3, "beta")
+
+brain:init()
+
+brain:setComponent(0, 0, 0, IN, 0, Sim2D.PERCEPTION_LTARGET)
+brain:setComponent(0, 1, 0, IN, 0, Sim2D.PERCEPTION_SYMEQ, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
+brain:setComponent(0, 3, 0, IN, 0, Sim2D.PERCEPTION_LOF)
+brain:setComponent(1, 3, 0, NEG)
+brain:setComponent(1, 0, 0, IN, 0, Sim2D.PERCEPTION_POSITION)
+brain:setComponent(1, 1, 0, NOT)
+brain:setComponent(2, 1, 0, SEL, 0, 0, 0, 0, 0, 0)
+brain:setComponent(3, 1, 0, MUL)
+brain:setComponent(3, 2, 0, AND)
+
+brain:setComponent(0, 0, 1, IN, 0, Sim2D.PERCEPTION_SYMEQ, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
+
+brain:setComponent(0, 0, 2, CLK, 0.2)
+brain:setComponent(1, 0, 2, DAND)
+brain:setComponent(2, 0, 2, OUT, 0, Sim2D.ACTION_FIREB)
+brain:setComponent(2, 1, 2, OUT, 0, Sim2D.ACTION_ROTATE)
+brain:setComponent(2, 2, 2, OUT, 0, Sim2D.ACTION_GO)
+brain:setComponent(2, 3, 2, OUT, 0, Sim2D.ACTION_SPEAK, SYM_TO_SYM, colorTableCode, agentColor:getID())
+
+brain:addConnection(0, 0, 0, 3, 2, 0)
+brain:addConnection(0, 1, 0, 1, 1, 0)
+brain:addConnection(1, 0, 0, 3, 1, 0)
+brain:addConnection(1, 1, 0, 2, 1, 0)
+brain:addConnection(2, 1, 0, 3, 1, 0)
+brain:addConnection(2, 1, 0, 3, 2, 0)
+brain:addConnection(3, 1, 0, 2, 1, 2)
+brain:addConnection(3, 2, 0, 1, 0, 2)
+brain:addConnection(0, 3, 0, 1, 3, 0)
+brain:addConnection(1, 3, 0, 2, 2, 2)
+
+brain:addConnection(0, 0, 1, 0, 0, 2)
+
+brain:addConnection(1, 0, 2, 2, 0, 2)
+brain:addConnection(0, 0, 2, 1, 0, 2)
+brain:addConnection(0, 0, 2, 2, 3, 2)
 
 agent:setBrain(brain)
 

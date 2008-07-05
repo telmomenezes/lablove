@@ -44,7 +44,7 @@ public:
 
     virtual void init();
 
-    virtual float* getInputBuffer(unsigned int channel);
+    virtual float* getInputBuffer(unsigned int channel, unsigned int id=0);
     virtual float* getOutputBuffer(){return NULL;}
     virtual void cycle();
     virtual void mutate(float factor=1.0f){}

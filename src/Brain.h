@@ -49,7 +49,7 @@ public:
 
     list<InterfaceItem*>* getInputInterface(unsigned int channel);
     list<InterfaceItem*>* getOutputInterface();
-    virtual float* getInputBuffer(unsigned int channel)=0;
+    virtual float* getInputBuffer(unsigned int channel, unsigned int id=0)=0;
     virtual float* getOutputBuffer()=0;
     virtual void cycle()=0;
 

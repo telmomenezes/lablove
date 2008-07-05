@@ -44,13 +44,15 @@ void PopDynSEGA::init(Simulation* sim)
 {
     PopulationDynamics::init(sim);
 
+    unsigned int startBodyID = 0;
+
     for (map<unsigned int, Species*>::iterator iterSpecies = mSpecies.begin();
         iterSpecies != mSpecies.end();
         iterSpecies++)
     {
-
         (*iterSpecies).second->setSimulation(mSimulation);
-        (*iterSpecies).second->init();
+        (*iterSpecies).second->init(startBodyID);
+        startBodyID += (*iterSpecies).second->getPopulation();
     }
 }
 

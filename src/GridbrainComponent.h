@@ -41,6 +41,7 @@ case GridbrainComponent::AVG: \
     inputType = GridbrainComponent::IN_MUL; \
     break; \
 case GridbrainComponent::AND: \
+case GridbrainComponent::SEL: \
     inputType = GridbrainComponent::IN_TMUL; \
     break; \
 case GridbrainComponent::NOT: \
@@ -60,7 +61,7 @@ default: \
 class GridbrainComponent
 {
 public:
-    enum Type {NUL, IN, OUT, AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, MAX, MIN, AVG, CLK, MEMW, MEMC, MEMD, DAND};
+    enum Type {NUL, IN, OUT, AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, MAX, MIN, AVG, CLK, MEMW, MEMC, MEMD, DAND, SEL};
     enum InputType {IN_SUM, IN_TSUM, IN_MUL, IN_TMUL, IN_EQ, IN_FLAGS};
     enum ConnType {CONN_IN, CONN_OUT, CONN_INOUT};
 

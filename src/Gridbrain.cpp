@@ -1463,8 +1463,12 @@ void Gridbrain::cycle()
 
             for (unsigned int i = 0; i < inputDepth; i++)
             {
+                unsigned int inputID = 0;
+
                 if (grid->getType() == Grid::ALPHA)
                 {
+                    inputID = grid->getInputID(i);
+
                     // reset alpha components except aggregators
                     for (unsigned int i = 0; i < endIndex; i++)
                     {
@@ -1486,7 +1490,10 @@ void Gridbrain::cycle()
                         }
                         comp->mInput = 0;
                         comp->mForwardFlag = false;
+
                     }
+
+                    //printf("input id: %d, depth:%d\n", inputID, i);
                 }
 
                 for (unsigned int j = 0; j < endIndex; j++)
@@ -1780,6 +1787,71 @@ void Gridbrain::cycle()
                         {
                             output = 0.0f;
                         }
+
+                        break;
+                    case GridbrainComponent::SEL:
+                        //printf("SEL ");
+                        GridbrainMemCell* memCell;
+                        bool triggered;
+
+                        memCell = comp->mMemCell;
+                        if (comp->mInput == 0.0f)
+                        {
+                            triggered = false;
+                        }
+                        else
+                        {
+                            triggered = true;
+                        }
+
+                        if (inputID != 0)
+                        {
+                            if (triggered)
+                            {
+                                if (!memCell->mTriggered)
+                                {
+                                    memCell->mSelCandidate = (float)inputID;
+                                    memCell->mTriggered = false;
+                                    memCell->mValueFound = false;
+                                }
+                                else
+                                {
+                                    if (memCell->mSelCandidate != memCell->mSelected)
+                                    {
+                                        memCell->mSelCandidate = (float)inputID;
+                                    }
+                                }
+
+                                if (memCell->mValue == ((float)inputID))
+                                {
+                                    memCell->mValueFound = true;
+                                }
+                            }
+                            else if (comp->mInboundConnections == 0)
+                            {
+                                if (!memCell->mTriggered)
+                                {
+                                    if (memCell->mSelCandidate != memCell->mSelected)
+                                    {
+                                        memCell->mSelCandidate = (float)inputID;
+                                    }
+                                    if (memCell->mValue == ((float)inputID))
+                                    {
+                                        memCell->mValueFound = true;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (memCell->mValue == ((float)inputID))
+                        {
+                            output = 1.0f;
+                        }
+                        else
+                        {
+                            output = 0.0f;
+                        }
+                        //printf("val: %f inputID: %d\n", memCell->mValue, inputID);
 
                         break;
                     default:
@@ -2177,9 +2249,9 @@ void Gridbrain::calcDensityMetrics()
     }
 }
 
-float* Gridbrain::getInputBuffer(unsigned int channel)
+float* Gridbrain::getInputBuffer(unsigned int channel, unsigned int id)
 {
-    return mGridsVec[channel]->getInputBuffer();
+    return mGridsVec[channel]->getInputBuffer(id);
 }
 
 float* Gridbrain::getOutputBuffer()

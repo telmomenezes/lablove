@@ -164,6 +164,8 @@ string GridbrainComponent::getName()
         return "MEMD";
     case DAND:
         return "DAND";
+    case SEL:
+        return "SEL";
     default:
         return "?";
     }
@@ -195,6 +197,7 @@ bool GridbrainComponent::isProducer()
     case MEMC:
     case MEMW:
     case MEMD:
+    case SEL:
         return true;
     default:
         return false;
@@ -209,6 +212,7 @@ bool GridbrainComponent::isConsumer()
     case MEMC:
     case MEMW:
     case MEMD:
+    case SEL:
         return true;
     default:
         return false;
@@ -222,6 +226,7 @@ bool GridbrainComponent::isMemory()
     case MEMC:
     case MEMW:
     case MEMD:
+    case SEL:
         return true;
     default:
         return false;
@@ -354,6 +359,7 @@ Orbit<GridbrainComponent>::NumberGlobalType GridbrainComponent::mNumberGlobals[]
     {"MEMW", MEMW},
     {"MEMD", MEMD},
     {"DAND", DAND},
+    {"SEL", SEL},
     {0,0}
 };
 

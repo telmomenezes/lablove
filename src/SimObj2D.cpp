@@ -544,7 +544,7 @@ void SimObj2D::process()
         {
             float targRatio = distance / laserTarget->mSize;
 
-            if (targRatio < 0.5f)
+            if (targRatio < 0.75f)
             {
                 mCurrentLaserTargetID = laserTarget->getID();
             }
@@ -836,7 +836,8 @@ void SimObj2D::onScanObject(SimObj2D* targ,
         }
     }
 
-    float* inBuffer = mBrain->getInputBuffer(mChannelObjects);
+    //printf("bodyID: %d\n", targ->mBodyID);
+    float* inBuffer = mBrain->getInputBuffer(mChannelObjects, targ->mBodyID);
     if (inBuffer == NULL)
     {
         return;
@@ -1394,7 +1395,7 @@ void SimObj2D::processLaserHit(Laser2D* laser)
             }
         }
         mLaserHits.push_back(*laser);
-
+        
         //unsigned int timeSinceFired = mSim2D->getTime() - laser->mFireTime;
         //printf("laser delay: %d\n", timeSinceFired);
         break;

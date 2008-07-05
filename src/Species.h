@@ -39,7 +39,7 @@ public:
     Species(lua_State* luaState=NULL);
     virtual ~Species();
 
-    void init();
+    void init(unsigned int startBodyID);
 
     void onOrganismDeath(SimObj* org);
 
@@ -53,6 +53,8 @@ public:
     void setKinFactor(float factor){mKinFactor = factor;}
     void setKinMutation(bool value){mKinMutation = value;}
     void setGroupFactor(float factor){mGroupFactor = factor;}
+
+    unsigned int getPopulation(){return mPopulation;}
 
     void addSampleLog(Log* log);
     void addDeathLog(Log* log);

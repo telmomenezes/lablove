@@ -63,6 +63,7 @@ public:
     unsigned int addAction(GridbrainComponent* act);
     void initInputMatrix(unsigned int maxInputDepth);
     float* getInputMatrix(){return mInputMatrix;}
+    unsigned int getInputID(unsigned int depth);
     void initOutputVector();
     float* getOutputVector(){return mOutputVector;}
     GridbrainComponent* getPerception(unsigned int number);
@@ -77,7 +78,7 @@ public:
     void removeInputOutput();
     unsigned int getColTargCount(unsigned int col){return mColumnTargetCountVec[col];}
     void setColTargCount(unsigned int col, unsigned int count){mColumnTargetCountVec[col] = count;}
-    float* getInputBuffer();
+    float* getInputBuffer(unsigned int id);
 
     unsigned int getWriteX(){return mWriteX;}
     unsigned int getWriteY(){return mWriteY;}
@@ -124,6 +125,7 @@ protected:
     unsigned int mActionsCount;
 
     float* mInputMatrix;
+    unsigned int* mInputIDs;
     float* mOutputVector;
 
     GridbrainComponentSet* mComponentSet;

@@ -574,7 +574,7 @@ void Sim2D::drawAfterObjects()
         {
             SimObj2D* obj = (SimObj2D*)(*iterObj);
 
-            sprintf(text, "%d", obj->getID());
+            sprintf(text, "%d", obj->getBodyID());
 
             art_setColor(0, 0, 0, 255);
             art_drawText(obj->mX, obj->mY, text);

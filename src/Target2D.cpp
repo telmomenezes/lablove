@@ -69,6 +69,8 @@ void Target2D::init()
 
 void Target2D::process()
 {
+    SimObj2D::process();
+
     float x = mX + mSpeedX;
     float y = mY + mSpeedY;
 

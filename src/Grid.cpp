@@ -30,6 +30,7 @@ Grid::Grid(lua_State* luaState)
     mSize = 0;
     mOffset = 0;
     mInputMatrix = NULL;
+    mInputIDs = NULL;
     mOutputVector = NULL;
     mMaxInputDepth = 50;
     mInputDepth = 0;
@@ -62,6 +63,7 @@ Grid::Grid(const Grid& grid)
     mPerceptionsCount = 0;
     mActionsCount = 0;
     mInputMatrix = NULL;
+    mInputIDs = NULL;
     mOutputVector = NULL;
     mWriteX = 0;
     mWriteY = 0;
@@ -105,6 +107,11 @@ Grid::~Grid()
     {
         free(mInputMatrix);
         mInputMatrix = NULL;
+    }
+    if (mInputIDs != NULL)
+    {
+        free(mInputIDs);
+        mInputIDs = NULL;
     }
     if (mOutputVector != NULL)
     {
@@ -211,6 +218,7 @@ void Grid::initInputMatrix(unsigned int maxInputDepth)
     if (inputSize > 0)
     {
         mInputMatrix = (float*)malloc(inputSize * sizeof(float));
+        mInputIDs = (unsigned int*)malloc(mMaxInputDepth * sizeof(unsigned int));
     }
 }
 
@@ -246,6 +254,11 @@ void Grid::removeInputOutput()
         free(mInputMatrix);
         mInputMatrix = NULL;
     }
+    if (mInputIDs != NULL)
+    {
+        free(mInputIDs);
+        mInputIDs = NULL;
+    }
     if (mOutputVector != NULL)
     {
         free(mOutputVector);
@@ -265,16 +278,31 @@ unsigned int Grid::getXByOffset(unsigned int offset)
     return (internalOffset / mHeight);
 }
 
-float* Grid::getInputBuffer()
+float* Grid::getInputBuffer(unsigned int id)
 {
     if (mInputDepth >= mMaxInputDepth)
     {
         return NULL;
     }
     float* buffer = mInputMatrix + (mInputDepth * mPerceptionsCount);
+
+    if (mPerceptionsCount > 0)
+    {
+        mInputIDs[mInputDepth] = id;
+    }
     mInputDepth++;
 
     return buffer;
+}
+
+unsigned int Grid::getInputID(unsigned int depth)
+{
+    if (mPerceptionsCount == 0)
+    {
+        return 0;
+    }
+
+    return mInputIDs[depth];
 }
 
 void Grid::addColumn(GridCoord* gc)

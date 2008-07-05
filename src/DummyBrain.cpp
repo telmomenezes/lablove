@@ -95,7 +95,7 @@ void DummyBrain::init()
     mInputBuffer = (float*)malloc(perceptionsCount * 50 * sizeof(float));
 }
 
-float* DummyBrain::getInputBuffer(unsigned int channel)
+float* DummyBrain::getInputBuffer(unsigned int channel, unsigned int id)
 {
     unsigned int perceptionCount = mInputInterfacesVector[channel]->size();
     unsigned int offset = (mOffsetsVector[channel] * 50) + (mInputDepths[channel] * perceptionCount);
