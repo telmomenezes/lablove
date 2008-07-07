@@ -118,6 +118,8 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     mSynchScore = 0.0f;
     mLaserScore = 0.0f;
     mLaserAgeScore = 0.0f;
+
+    mLastBodyHit = 0;
 }
 
 SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
@@ -227,6 +229,8 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
     mSynchScore = 0.0f;
     mLaserScore = 0.0f;
     mLaserAgeScore = 0.0f;
+
+    mLastBodyHit = 0;
 }
 
 SimObj2D::~SimObj2D()
@@ -1373,10 +1377,18 @@ void SimObj2D::processLaserHit(Laser2D* laser)
     SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
     if ((obj != NULL) && (laser->mEnergy > 0))
     {
-        score = 0.1f;
+        score = mEnergy * 0.1f;
         if (obj->mSpeciesID != mSpeciesID)
         {
-            obj->mLaserScore += score;
+            if (obj->mLastBodyHit == 0)
+            {
+                obj->mLastBodyHit = mBodyID;
+            }
+
+            if (obj->mLastBodyHit == mBodyID)
+            {
+                obj->mLaserScore += score;
+            }
         }
     }
 

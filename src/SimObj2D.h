@@ -263,6 +263,8 @@ protected:
     bool mBlockedY;
 
     Message* mLastMessageSent;
+
+    unsigned int mLastBodyHit;
 };
 #endif
 

@@ -183,19 +183,17 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                     rightInactive = 0;
                     jump = minConnJump;
 
-                    if ((newGrid->getType() == Grid::ALPHA)
-                        && (x == (oldGrid->getWidth() - 1)))
+                    if (x == (oldGrid->getWidth() - 1))
                     {
                         GridCoord newCol = colCoord.rightOf();
                         newGrid->addColumn(&newCol);
                     }
-                    if ((newGrid->getType() == Grid::BETA)
-                        && (x == 0))
+                    else if (x == 0)
                     {
                         GridCoord newCol = colCoord.leftOf();
                         newGrid->addColumn(&newCol);
                     }
-                    if (minConnJump == 1)
+                    else if (minConnJump == 1)
                     {
                         GridCoord newCol = newGrid->getColCoordAfter(colCoord);
                         newGrid->addColumn(&newCol);
