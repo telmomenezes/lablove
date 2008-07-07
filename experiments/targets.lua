@@ -41,7 +41,7 @@ fireInterval = 1000
 laserLength = 25
 laserSpeed = 100.0
 laserRange = 300.0
-laserStrengthFactor = 3.0
+laserStrengthFactor = 1.0
 laserCostFactor = 0.1
 laserHitDuration = 5
 
