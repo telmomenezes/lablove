@@ -64,7 +64,7 @@ keepBodyOnExpire = true
 
 kinFactor = 0.0
 kinMutation = false
-groupFactor = 0.0
+groupFactor = 0.8
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
@@ -74,6 +74,8 @@ dofile("basic_command_line.lua")
 kinFactor = getNumberParameter("kin", kinFactor, "kin")
 kinMutation = getBoolParameter("kinmut", kinMutation, "kinmut")
 groupFactor = getNumberParameter("grp", groupFactor, "grp")
+changeParamProb = getNumberParameter("changeparamprob", changeParamProb, "par")
+paramMutationStanDev = getNumberParameter("parammutstandev", paramMutationStanDev, "psd")
 
 logBaseName = "_synch_"
 
