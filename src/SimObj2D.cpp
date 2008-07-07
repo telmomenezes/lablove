@@ -98,6 +98,7 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
 
     mFireInterval = 0;
     mLaserLength = 0.0f;
+    mLaserSpeed = 1.0f;
     mLaserRange = 0.0f;
     mLaserStrengthFactor = 0.0f;
     mLaserCostFactor = 0.0f;
@@ -193,6 +194,7 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
 
     mFireInterval = obj->mFireInterval;
     mLaserLength = obj->mLaserLength;
+    mLaserSpeed = obj->mLaserSpeed;
     mLaserRange = obj->mLaserRange;
     mLaserStrengthFactor = obj->mLaserStrengthFactor;
     mLaserCostFactor = obj->mLaserCostFactor;
@@ -407,10 +409,12 @@ void SimObj2D::process()
         }
         else
         {
+            //printf("time since fired %d\n", timeSinceFired);
             totalDamage += (*iterLaser).mEnergy;
             iterLaser++;
         }
     }
+
     if (totalDamage >= mEnergy)
     {
         for (list<Laser2D>::iterator iterLaser = mLaserHits.begin();
@@ -1254,7 +1258,7 @@ void SimObj2D::fire(unsigned int actionType, float strength)
     laser.mY1 = mY;
     laser.mAng = mRot;
     laser.mLength = mLaserLength;
-    laser.mSpeed = 1.0;
+    laser.mSpeed = mLaserSpeed;
     laser.mX2 = mX + (cosf(mRot) * mLaserLength);
     laser.mY2 = mY + (sinf(mRot) * mLaserLength);
     laser.mM = tanf(mRot);
@@ -1422,6 +1426,18 @@ void SimObj2D::processLaserHit(Laser2D* laser)
         deltaEnergy(-laser->mEnergy);
         break;
     }
+
+    Sim2D::VisualEvent* ve = (Sim2D::VisualEvent*)malloc(sizeof(Sim2D::VisualEvent));
+    ve->mType = Sim2D::VE_LASER;
+    ve->mX = mX;
+    ve->mY = mY;
+    ve->mRadius = 10.0f;
+    ve->mRed = 255;
+    ve->mGreen = 0;
+    ve->mBlue = 0;
+    ve->mStartTime = mSim2D->getTime();
+    ve->mEndTime = mSim2D->getTime() + 1000;
+    mSim2D->mVisualEvents.push_back(ve);
 }
 
 void SimObj2D::setColoringScale(string symbolName,
@@ -1520,6 +1536,7 @@ Orbit<SimObj2D>::MethodType SimObj2D::mMethods[] = {
     {"setColoringScale", &SimObj2D::setColoringScale},
     {"setFireInterval", &SimObj2D::setFireInterval},
     {"setLaserLength", &SimObj2D::setLaserLength},
+    {"setLaserSpeed", &SimObj2D::setLaserSpeed},
     {"setLaserRange", &SimObj2D::setLaserRange},
     {"setLaserStrengthFactor", &SimObj2D::setLaserStrengthFactor},
     {"setLaserCostFactor", &SimObj2D::setLaserCostFactor},
@@ -1706,6 +1723,13 @@ int SimObj2D::setLaserLength(lua_State* luaState)
 {
     float length = luaL_checknumber(luaState, 1);
     setLaserLength(length);
+    return 0;
+}
+
+int SimObj2D::setLaserSpeed(lua_State* luaState)
+{
+    float speed = luaL_checknumber(luaState, 1);
+    setLaserSpeed(speed);
     return 0;
 }
 

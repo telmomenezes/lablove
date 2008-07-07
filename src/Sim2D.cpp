@@ -583,6 +583,25 @@ void Sim2D::drawAfterObjects()
         }
     }
 
+    list<VisualEvent*>::iterator iterEvent = mVisualEvents.begin();
+
+    while (iterEvent != mVisualEvents.end())
+    {
+        VisualEvent* ve = (*iterEvent);
+
+        switch (ve->mType)
+        {
+        case VE_LASER:
+            unsigned int deltaTime = ve->mEndTime - ve->mStartTime;
+            unsigned int curTime = mSimulationTime - ve->mStartTime;
+            float alpha = (1.0f - (((float)curTime) / ((float)deltaTime))) * 255.0f;
+            art_setColor(ve->mRed, ve->mGreen, ve->mBlue, (unsigned int)alpha);
+            art_fillCircle(ve->mX, ve->mY, ve->mRadius);
+            break;
+        }
+        iterEvent++;
+    }
+
     art_clearScale();
     art_clearTranslation();
 
@@ -887,7 +906,7 @@ void Sim2D::processLaserShots()
 
         float x1 = laser->mX1;
         float y1 = laser->mY1;
-
+    
         laser->mX1 += cosf(laser->mAng) * laser->mSpeed;
         laser->mY1 += sinf(laser->mAng) * laser->mSpeed;
         laser->mX2 += cosf(laser->mAng) * laser->mSpeed;
@@ -947,6 +966,18 @@ void Sim2D::drawLaserShots()
 void Sim2D::fireLaser(Laser2D laser)
 {
     mLaserShots.push_back(laser);
+
+    Sim2D::VisualEvent* ve = (Sim2D::VisualEvent*)malloc(sizeof(VisualEvent));
+    ve->mType = VE_LASER;
+    ve->mX = laser.mX1;
+    ve->mY = laser.mY1;
+    ve->mRadius = 5.0f;
+    ve->mRed = 0;
+    ve->mGreen = 255;
+    ve->mBlue = 0;
+    ve->mStartTime = getTime();
+    ve->mEndTime = getTime() + 1000;
+    mVisualEvents.push_back(ve);
 }
 
 bool Sim2D::onKeyDown(Art_KeyCode key)

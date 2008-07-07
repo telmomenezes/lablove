@@ -102,6 +102,7 @@ public:
 
     void setFireInterval(unsigned int interval){mFireInterval = interval;}
     void setLaserLength(float length){mLaserLength = length;}
+    void setLaserSpeed(float speed){mLaserSpeed = speed;}
     void setLaserRange(float range){mLaserRange = range;}
     void setLaserStrengthFactor(float factor){mLaserStrengthFactor = factor;}
     void setLaserCostFactor(float factor){mLaserCostFactor = factor;}
@@ -140,6 +141,7 @@ public:
     int setColoringScale(lua_State* luaState);
     int setFireInterval(lua_State* luaState);
     int setLaserLength(lua_State* luaState);
+    int setLaserSpeed(lua_State* luaState);
     int setLaserRange(lua_State* luaState);
     int setLaserStrengthFactor(lua_State* luaState);
     int setLaserCostFactor(lua_State* luaState);
@@ -243,6 +245,7 @@ protected:
 
     unsigned int mFireInterval;
     float mLaserLength;
+    float mLaserSpeed;
     float mLaserRange;
     float mLaserStrengthFactor;
     float mLaserCostFactor;

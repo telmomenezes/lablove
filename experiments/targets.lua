@@ -39,10 +39,11 @@ rotDrag = 0.05
 
 fireInterval = 1000
 laserLength = 25
+laserSpeed = 100.0
 laserRange = 300.0
-laserStrengthFactor = 1.0
+laserStrengthFactor = 3.0
 laserCostFactor = 0.1
-laserHitDuration = 300
+laserHitDuration = 5
 
 soundRange = 500
 speakInterval = 250
@@ -124,6 +125,7 @@ agent:setSoundRange(soundRange)
 agent:setSpeakInterval(speakInterval)
 agent:setFireInterval(fireInterval)
 agent:setLaserLength(laserLength)
+agent:setLaserSpeed(laserSpeed)
 agent:setLaserRange(laserRange)
 agent:setLaserStrengthFactor(laserStrengthFactor)
 agent:setLaserCostFactor(laserCostFactor)
@@ -282,6 +284,7 @@ if humanAgent then
     human:setColoringSymbolName("color")
     human:setFireInterval(fireInterval)
     human:setLaserLength(laserLength)
+    human:setLaserSpeed(laserSpeed)
     human:setLaserRange(laserRange)
     human:setLaserStrengthFactor(laserStrengthFactor)
     human:setLaserCostFactor(laserCostFactor)

@@ -65,6 +65,7 @@ public:
     static const int ACTION_FIREB = 7;
 
     static const int VE_SPEAK = 0;
+    static const int VE_LASER = 1;
 
     typedef struct
     {
@@ -196,7 +197,6 @@ protected:
 
     list<SimObj2D*>* mCurrentCellList;
     list<SimObj2D*>::iterator mCurrentCellListIterator;
-
     llULINT mCollisionDetectionIteration;
 
     SimObj2D* mHumanAgent;
