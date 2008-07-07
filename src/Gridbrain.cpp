@@ -182,18 +182,15 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                     leftInactive = -1;
                     rightInactive = 0;
                     jump = minConnJump;
-
-                    if (x == (oldGrid->getWidth() - 1))
-                    {
-                        GridCoord newCol = colCoord.rightOf();
-                        newGrid->addColumn(&newCol);
-                    }
-                    else if (x == 0)
+                    
+                    if (x == 0)
                     {
                         GridCoord newCol = colCoord.leftOf();
                         newGrid->addColumn(&newCol);
                     }
-                    else if (minConnJump == 1)
+
+                    if ((x == (oldGrid->getWidth() - 1))
+                        || (minConnJump == 1))
                     {
                         GridCoord newCol = newGrid->getColCoordAfter(colCoord);
                         newGrid->addColumn(&newCol);
@@ -204,20 +201,15 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                 {
                     bool deleteCol = true;
 
-                    if (newGrid->getType() == Grid::ALPHA)
+                    if ((x == (oldGrid->getWidth() - 1))
+                        && (rightInactive == 0))
                     {
-                        if ((x == (oldGrid->getWidth() - 1))
-                            && (rightInactive == 0))
-                        {
-                            deleteCol = false;
-                        }
+                        deleteCol = false;
                     }
-                    else
+
+                    if (leftInactive == 0)
                     {
-                        if (leftInactive == 0)
-                        {
-                            deleteCol = false;
-                        }
+                        deleteCol = false;
                     }
 
                     if (jump == 2)
