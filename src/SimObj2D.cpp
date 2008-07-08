@@ -1315,8 +1315,19 @@ void SimObj2D::fire(unsigned int actionType, float strength)
         break;
     }
 
-    
-    laser.mEnergy = strength * mLaserStrengthFactor;
+    float lockTime = (float)mTargetLockTime;
+    float maxLockTime = ((float)mFireInterval) / 2.0f;
+
+    if (lockTime > maxLockTime)
+    {
+        lockTime = maxLockTime;
+    }
+
+    float lockFactor = lockTime / maxLockTime;
+
+    //printf("lock factor: %f\n", lockFactor);
+
+    laser.mEnergy = strength * mLaserStrengthFactor * lockFactor;
 
 
     laser.mRange = mLaserRange;
@@ -1399,7 +1410,8 @@ void SimObj2D::processLaserHit(Laser2D* laser)
     SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
     if ((obj != NULL) && (laser->mEnergy > 0))
     {
-        score = mEnergy * 0.1f;
+        score = laser->mEnergy * 0.1f;
+        //printf("score: %f\n", score);
         if (obj->mSpeciesID != mSpeciesID)
         {
             if (obj->mLastBodyHit == 0)
