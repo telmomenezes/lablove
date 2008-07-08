@@ -253,6 +253,7 @@ protected:
     unsigned int mFriendlyFire;
 
     llULINT mCurrentLaserTargetID;
+    unsigned int mTargetLockTime;
 
     list<InterfaceItem> mObjectSymbolAcquisition;
     list<InterfaceItem> mMessageSymbolAcquisition;

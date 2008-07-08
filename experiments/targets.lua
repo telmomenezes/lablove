@@ -14,7 +14,8 @@ agentSize = 10.0
 
 targetMinEnergy = 2.0
 targetMaxEnergy = 2.0
-targetSizeFactor = 10.0
+targetSizeFactor = 2.0
+targetSpeed = 0.05
 
 worldWidth = 500
 worldHeight = 500
@@ -32,7 +33,7 @@ initialEnergy = 1.0
 goCost = 0.001
 rotateCost = 0.001
 goForceScale = 0.3
-rotateForceScale = 0.005
+rotateForceScale = 0.05
 
 drag = 0.05
 rotDrag = 0.05
@@ -241,6 +242,7 @@ target:setEnergySizeFactor(targetSizeFactor)
 target:setShape(SimObj2D.SHAPE_CIRCLE)
 target:setColoringSymbolName("color")
 target:setLaserHitDuration(laserHitDuration)
+target:setSpeed(targetSpeed)
 
 symTable = SymbolTable(targetColor, colorTableCode)
 target:addSymbolTable(symTable)

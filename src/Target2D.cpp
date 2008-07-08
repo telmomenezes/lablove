@@ -28,8 +28,9 @@ Target2D::Target2D(lua_State* luaState) : SimObj2D(luaState)
     mMinEnergy = 0.0f;
     mMaxEnergy = 0.0f;
     mEnergySizeFactor = 0.0f;
+    mSpeed = 0.0f;
 
-    initSpeed(); 
+    initSpeed();
 }
 
 Target2D::Target2D(Target2D* obj) : SimObj2D(obj)
@@ -37,8 +38,9 @@ Target2D::Target2D(Target2D* obj) : SimObj2D(obj)
     mMinEnergy = obj->mMinEnergy;
     mMaxEnergy = obj->mMaxEnergy;
     mEnergySizeFactor = obj->mEnergySizeFactor;
+    mSpeed = obj->mSpeed;
 
-    initSpeed(); 
+    initSpeed();
 }
 
 Target2D::~Target2D()
@@ -47,11 +49,10 @@ Target2D::~Target2D()
 
 void Target2D::initSpeed()
 {
-    float speed = 0.01f;
     float angle = mDistSpeed->uniform(0, M_PI);
 
-    mSpeedX = cosf(angle) * speed;
-    mSpeedY = sinf(angle) * speed;
+    mSpeedX = cosf(angle) * mSpeed;
+    mSpeedY = sinf(angle) * mSpeed;
 }
 
 SimObj* Target2D::clone()
@@ -142,6 +143,7 @@ Orbit<Target2D>::MethodType Target2D::mMethods[] = {
     {"setEnergySizeFactor", &Target2D::setEnergySizeFactor},
     {"setEnergyLimits", &Target2D::setEnergyLimits},
     {"setEnergySizeFactor", &Target2D::setEnergySizeFactor},
+    {"setSpeed", &Target2D::setSpeed},
     {0,0}
 };
 
@@ -162,3 +164,9 @@ int Target2D::setEnergySizeFactor(lua_State* luaState)
     return 0;
 }
 
+int Target2D::setSpeed(lua_State* luaState)
+{
+    float speed = luaL_checknumber(luaState, 1);
+    setSpeed(speed);
+    return 0;
+}

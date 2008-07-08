@@ -33,6 +33,8 @@ public:
 
     virtual void init();
 
+    void setSpeed(float speed){mSpeed = speed;}
+
     virtual void process();
 
     void setEnergyLimits(float min, float max);
@@ -48,6 +50,7 @@ public:
 
     int setEnergyLimits(lua_State* luaState);
     int setEnergySizeFactor(lua_State* luaState);
+    int setSpeed(lua_State* luaState);
 
 protected:
     void initSpeed();
@@ -57,6 +60,7 @@ protected:
 
     float mSpeedX;
     float mSpeedY;
+    float mSpeed;
 };
 #endif
 

@@ -120,6 +120,8 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     mLaserAgeScore = 0.0f;
 
     mLastBodyHit = 0;
+    
+    mTargetLockTime = 0;
 }
 
 SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
@@ -231,6 +233,8 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
     mLaserAgeScore = 0.0f;
 
     mLastBodyHit = 0;
+
+    mTargetLockTime = 0;
 }
 
 SimObj2D::~SimObj2D()
@@ -546,18 +550,36 @@ void SimObj2D::process()
                                                         mID,
                                                         distance);
 
-        mCurrentLaserTargetID = 0;
-        
+
+        llULINT newTarget = 0;
+
         if (laserTarget != NULL)
         {
             float targRatio = distance / laserTarget->mSize;
 
             if (targRatio < 0.75f)
             {
-                mCurrentLaserTargetID = laserTarget->getID();
+                newTarget = laserTarget->getID();
             }
         }
 
+        if (newTarget != mCurrentLaserTargetID)
+        {
+            mCurrentLaserTargetID = newTarget;
+            mTargetLockTime = 0;
+        }
+        else
+        {
+            mTargetLockTime++;
+        }
+
+        if ((mCurrentLaserTargetID == 0)
+            || (laserTarget->mSpeciesID == mSpeciesID))
+        {
+            mTargetLockTime = 0;
+        }
+
+        //printf("lock: %d\n", mTargetLockTime);
         //printf("laser target: %d\n", mCurrentLaserTargetID);
     }
 }
