@@ -2503,7 +2503,7 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit2)
     buff[0] = 0.2;
     float* outBuff = mGridbrain.getOutputBuffer();
     mGridbrain.cycle();
-    CHECK_CLOSE(outBuff[0], 0.6f, 0.0001f);
+    CHECK_CLOSE(outBuff[0], 0.2f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit3)
@@ -2517,7 +2517,7 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit3)
     buff[0] = -0.1;
     float* outBuff = mGridbrain.getOutputBuffer();
     mGridbrain.cycle();
-    CHECK_CLOSE(outBuff[0], 0.6f, 0.0001f);
+    CHECK_CLOSE(outBuff[0], 1.0f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit4)

@@ -1936,6 +1936,12 @@ void Gridbrain::cycle()
                                     }
                                 }
                                 break;
+                            case GridbrainComponent::IN_FIRST:
+                                if (targetComp->mInput == 0.0f)
+                                {
+                                    targetComp->mInput = input;
+                                }
+                                break;
                             }
 
                             /*printf("(%d, %d, %d)[%f] -> (%d, %d, %d)[%f]\n",
