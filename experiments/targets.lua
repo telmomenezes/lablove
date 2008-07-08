@@ -62,7 +62,7 @@ changeInComponentProb = 0.2
 
 recombineProb = 0.25
 
-groupFactor = 0.8
+groupFactor = 0.5
 
 timeLimit = 0
 logTimeInterval = 100
@@ -134,7 +134,10 @@ agent:setKeepBodyOnExpirationDeath(keepBodyOnExpire)
 --agent:setKeepBodyOnHardDeath(true)
 
 agentColor = SymbolRGB(0, 0, 255)
+targetColor = SymbolRGB(255, 255, 255)
+
 symTable = SymbolTable(agentColor)
+symTable:addSymbol(targetColor)
 agent:addSymbolTable(symTable)
 symTable:setDynamic(true)
 symTable:setName("color")
@@ -169,7 +172,8 @@ alphaSet:addComponent(IN, Sim2D.PERCEPTION_LTARGET)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_LOF)
 --alphaSet:addComponent(IN, Sim2D.PERCEPTION_CONV)
 --alphaSet:addComponent(IN, Sim2D.PERCEPTION_CONVDIR)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_SYMEQ, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
+--alphaSet:addComponent(IN, Sim2D.PERCEPTION_SYMEQ, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
+alphaSet:addComponent(IN, Sim2D.PERCEPTION_SYMEQ, SYM_TO_SYM, colorTableCode, targetColor:getID(), colorTableCode)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_ID)
 grid = Grid()
 grid:init(ALPHA, 0, 0)
@@ -238,7 +242,6 @@ target:setShape(SimObj2D.SHAPE_CIRCLE)
 target:setColoringSymbolName("color")
 target:setLaserHitDuration(laserHitDuration)
 
-targetColor = SymbolRGB(255, 255, 255)
 symTable = SymbolTable(targetColor, colorTableCode)
 target:addSymbolTable(symTable)
 target:setSymbolName("color", colorTableCode, targetColor:getID())
