@@ -1835,7 +1835,7 @@ void Gridbrain::cycle()
 
                         if (memCell->mValue == ((float)inputID))
                         {
-                            output = 1.0f;
+                            output = comp->mInput;
                         }
                         else
                         {
