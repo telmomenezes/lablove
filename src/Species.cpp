@@ -20,6 +20,8 @@
 #include "Species.h"
 #include "Orbit.h"
 
+#include <sys/stat.h>
+
 mt_distribution* Species::mDistOrganism = gDistManager.getNewDistribution();
 mt_distribution* Species::mDistRecombine = gDistManager.getNewDistribution();
 
@@ -50,6 +52,8 @@ Species::Species(lua_State* luaState)
 
     mLogInterval = 0;
     mFile = stdout;
+
+    mBufferDumpDir = "";
 }
 
 Species::~Species()
@@ -138,6 +142,38 @@ void Species::dumpStatistics(llULINT time, double realTime, Simulation* sim)
         }
         (*iterLogs)->dump(time, realTime);
     }
+
+    if (mBufferDumpDir != "")
+    {
+        bufferDump(time, sim);
+    }
+}
+
+void Species::bufferDump(llULINT time, Simulation* sim)
+{
+    umask(0);
+    mkdir(mBufferDumpDir.c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
+
+    char fileName[255];
+    sprintf(fileName, "%s/data.txt", mBufferDumpDir.c_str());
+    FILE* globalFile = fopen(fileName, "w");
+    fprintf(globalFile, "object_number, fitness, group_fitness, final_fitness\n");
+
+    for (unsigned int i = 0; i < mBufferSize; i++)
+    {
+        SimObj* obj = mBuffer[i];
+        sprintf(fileName, "%s/brain%d.svg", mBufferDumpDir.c_str(), i);
+        FILE* file = fopen(fileName, "w");
+        fprintf(file, obj->getBrain()->write(obj, sim).c_str());
+        fflush(file);
+        fclose(file);
+
+        Fitness* fit = obj->getFitnessByIndex(0);
+        fprintf(globalFile, "%d, %f, %f, %f\n", i, fit->mFitness, fit->mGroupFitness, fit->mFinalFitness);
+    }
+
+    fflush(globalFile);
+    fclose(globalFile);
 }
 
 void Species::xoverMutateSend(int bodyID, bool init, SimObj* nearObj, SimObj* deadObj)
@@ -499,6 +535,7 @@ Orbit<Species>::MethodType Species::mMethods[] = {
     {"setFitnessAging", &Species::setFitnessAging},
     {"setRecombineProb", &Species::setRecombineProb},
     {"setLog", &Species::setLog},
+    {"setBufferDump", &Species::setBufferDump},
     {0,0}
 };
 
@@ -566,6 +603,13 @@ int Species::setLog(lua_State* luaState)
     string path = luaL_checkstring(luaState, 1);
     unsigned int interval = luaL_checkint(luaState, 2);
     setLog(path, interval);
+    return 0;
+}
+
+int Species::setBufferDump(lua_State* luaState)
+{
+    string path = luaL_checkstring(luaState, 1);
+    setBufferDump(path);
     return 0;
 }
 

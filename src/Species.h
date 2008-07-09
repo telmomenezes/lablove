@@ -66,6 +66,7 @@ public:
     void onCycle(llULINT time);
 
     void setLog(string fileName, unsigned int interval);
+    void setBufferDump(string dirName){mBufferDumpDir = dirName;}
 
     static const char mClassName[];
     static Orbit<Species>::MethodType mMethods[];
@@ -80,9 +81,11 @@ public:
     int setKinMutation(lua_State* luaState);
     int setGroupFactor(lua_State* luaState);
     int setLog(lua_State* luaState);
+    int setBufferDump(lua_State* luaState);
 
 protected:
     void xoverMutateSend(int bodyID, bool init=false, SimObj* nearObj=NULL, SimObj* deadObj=NULL);
+    void bufferDump(llULINT time, Simulation* sim);
 
     static mt_distribution* mDistOrganism;
     static mt_distribution* mDistRecombine;
@@ -110,6 +113,8 @@ protected:
 
     FILE* mFile;
     unsigned int mLogInterval;
+
+    string mBufferDumpDir;
 };
 #endif
 
