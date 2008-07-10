@@ -137,6 +137,9 @@ public:
 
     void fireLaser(Laser2D laser);
 
+    SimObj2D* getLineTarget(float x1, float y1, float x2, float y2, llULINT excludeID, float &distance);
+    bool segmentCollides(SimObj2D* obj, float x1, float y1, float x2, float y2);
+
     static float normalizeAngle(float angle);
 
     list<VisualEvent*> mVisualEvents;
@@ -148,8 +151,6 @@ public:
     int setWorldDimensions(lua_State* luaState);
     
     int setHuman(lua_State* luaState);
-
-    SimObj2D* getLineTarget(float x1, float y1, float x2, float y2, llULINT excludeID, float &distance);
 
 protected:
     virtual void onCycle();

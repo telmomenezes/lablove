@@ -1785,51 +1785,18 @@ void Gridbrain::cycle()
                         bool triggered;
 
                         memCell = comp->mMemCell;
-                        if (comp->mInput == 0.0f)
+
+                        if (memCell->mValue == ((float)inputID))
                         {
-                            triggered = false;
-                        }
-                        else
-                        {
-                            triggered = true;
+                            memCell->mValueFound = true;
                         }
 
-                        if (inputID != 0)
+                        if ((inputID != 0) && (comp->mInput != 0.0f))
                         {
-                            if (triggered)
+                            if (!memCell->mTriggered)
                             {
-                                if (!memCell->mTriggered)
-                                {
-                                    memCell->mSelCandidate = (float)inputID;
-                                    memCell->mTriggered = false;
-                                    memCell->mValueFound = false;
-                                }
-                                else
-                                {
-                                    if (memCell->mSelCandidate != memCell->mSelected)
-                                    {
-                                        memCell->mSelCandidate = (float)inputID;
-                                    }
-                                }
-
-                                if (memCell->mValue == ((float)inputID))
-                                {
-                                    memCell->mValueFound = true;
-                                }
-                            }
-                            else if (comp->mInboundConnections == 0)
-                            {
-                                if (!memCell->mTriggered)
-                                {
-                                    if (memCell->mSelCandidate != memCell->mSelected)
-                                    {
-                                        memCell->mSelCandidate = (float)inputID;
-                                    }
-                                    if (memCell->mValue == ((float)inputID))
-                                    {
-                                        memCell->mValueFound = true;
-                                    }
-                                }
+                                memCell->mSelCandidate = (float)inputID;
+                                memCell->mTriggered = true;
                             }
                         }
 

@@ -35,7 +35,6 @@ public:
     bool mActive;
 
     // SEL
-    float mSelected;
     float mSelCandidate;
     bool mTriggered;
     bool mValueFound;

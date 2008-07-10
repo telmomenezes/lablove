@@ -63,7 +63,7 @@ changeInComponentProb = 0.2
 
 recombineProb = 0.25
 
-groupFactor = 0.0--0.5
+groupFactor = 0.5
 
 timeLimit = 0
 logTimeInterval = 100
@@ -347,7 +347,7 @@ if logBrains then
     agentSpecies:addDeathLog(logBrain)
 end
 
---agentSpecies:setBufferDump("bdump" .. logSuffix)
+agentSpecies:setBufferDump("bdump" .. logSuffix)
 
 popDyn:setLogTimeInterval(logTimeInterval)
 

@@ -755,74 +755,16 @@ SimObj2D* Sim2D::getLineTarget(float x1, float y1, float x2, float y2, llULINT e
 
             if (obj->getID() != excludeID)
             {
-                //printf("obj: %d\n", obj->getID());
-                float objX = obj->mX;
-                float objY = obj->mY;
-                float r = obj->mSize;
-
-                float x_1 = x1 - objX;
-                float x_2 = x2 - objX;
-                float y_1 = y1 - objY;
-                float y_2 = y2 - objY;
-
-                float dx = x_2 - x_1;
-                float dy = y_2 - y_1;
-                float dr2 = (dx * dx) + (dy * dy);
-                float D = (x_1 * y_2) - (x_2 * y_1);
-
-                float colides = ((r * r) * dr2) - (D * D);
-
-                if (colides >= 0.0f)
+                if (segmentCollides(obj, x1, y1, x2, y2))
                 {
-                    float segmentColides = false;
+                    float dsX = obj->mX - x1;
+                    float dsY = obj->mY - y1;
+                    float dSource = (dsX * dsX) + (dsY * dsY);
 
-                    float colX1 = x1;
-                    float colX2 = x2;
-                    float colY1 = y1;
-                    float colY2 = y2;
-
-                    if (colX1 > colX2)
+                    if (dSource < mindSource)
                     {
-                        colX1 = x2;
-                        colX2 = x1;
-                    }
-                    if (colY1 > colY2)
-                    {
-                        colY1 = y2;
-                        colY2 = y1;
-                    }
-
-                    if (((objX + r) >= colX1)
-                        && ((objX - r) <= colX2)
-                        && ((objY + r) >= colY1)
-                        && ((objY - r) <= colY2))
-                    {
-                        segmentColides = true;
-                    }
-                    else
-                    {
-                        float dist1 = (x_1 * x_1) + (y_1 * y_1);
-                        float dist2 = (x_2 * x_2) + (y_2 * y_2);
-                        float dist = (obj->mSize * obj->mSize);
-
-                        if ((dist1 <= dist)
-                            || (dist2 <= dist))
-                        {
-                            segmentColides = true;
-                        }
-                    }
-
-                    if (segmentColides)
-                    {
-                        float dsX = obj->mX - x1;
-                        float dsY = obj->mY - y1;
-                        float dSource = (dsX * dsX) + (dsY * dsY);
-
-                        if (dSource < mindSource)
-                        {
-                            mindSource = dSource;
-                            bestTarget = (SimObj2D*)obj;
-                        }
+                        mindSource = dSource;
+                        bestTarget = (SimObj2D*)obj;
                     }
                 }
             }
@@ -894,6 +836,66 @@ SimObj2D* Sim2D::getLineTarget(float x1, float y1, float x2, float y2, llULINT e
     }
 
     return NULL;
+}
+
+bool Sim2D::segmentCollides(SimObj2D* obj, float x1, float y1, float x2, float y2)
+{
+    float objX = obj->mX;
+    float objY = obj->mY;
+    float r = obj->mSize;
+
+    float x_1 = x1 - objX;
+    float x_2 = x2 - objX;
+    float y_1 = y1 - objY;
+    float y_2 = y2 - objY;
+
+    float dx = x_2 - x_1;
+    float dy = y_2 - y_1;
+    float dr2 = (dx * dx) + (dy * dy);
+    float D = (x_1 * y_2) - (x_2 * y_1);
+
+    float colides = ((r * r) * dr2) - (D * D);
+
+    if (colides >= 0.0f)
+    {
+        float colX1 = x1;
+        float colX2 = x2;
+        float colY1 = y1;
+        float colY2 = y2;
+
+        if (colX1 > colX2)
+        {
+            colX1 = x2;
+            colX2 = x1;
+        }
+        if (colY1 > colY2)
+        {
+            colY1 = y2;
+            colY2 = y1;
+        }
+
+        if (((objX + r) >= colX1)
+            && ((objX - r) <= colX2)
+            && ((objY + r) >= colY1)
+            && ((objY - r) <= colY2))
+        {
+            return true;
+        }
+        else
+        {
+            float dist1 = (x_1 * x_1) + (y_1 * y_1);
+            float dist2 = (x_2 * x_2) + (y_2 * y_2);
+            float dist = (obj->mSize * obj->mSize);
+
+            if ((dist1 <= dist)
+               || (dist2 <= dist))
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 void Sim2D::processLaserShots()

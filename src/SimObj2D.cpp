@@ -121,6 +121,7 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
 
     mLastBodyHit = 0;
     
+    mCurrentLaserLockID = 0;
     mTargetLockTime = 0;
 }
 
@@ -234,6 +235,7 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
 
     mLastBodyHit = 0;
 
+    mCurrentLaserLockID = 0;
     mTargetLockTime = 0;
 }
 
@@ -539,43 +541,38 @@ void SimObj2D::process()
         mEnergySumAboveInit += energy;
     }
 
-    // Update current laser target
+    // Update laser data
     if (mType == TYPE_AGENT)
     {
         float distance;
-        SimObj2D* laserTarget = mSim2D->getLineTarget(mX,
-                                                        mY,
-                                                        mX + (cosf(mRot) * mLaserRange),
-                                                        mY + (sinf(mRot) * mLaserRange),
-                                                        mID,
-                                                        distance);
+        float x1 = mX;
+        float y1 = mY;
+        float x2 = mX + (cosf(mRot) * mLaserRange);
+        float y2 = mY + (sinf(mRot) * mLaserRange);
 
+        SimObj2D* laserTarget = mSim2D->getLineTarget(x1, y1, x2, y2, mID, distance);
 
-        llULINT newTarget = 0;
-
+        mCurrentLaserTargetID = 0;
         if (laserTarget != NULL)
         {
             float targRatio = distance / laserTarget->mSize;
 
             if (targRatio < 0.75f)
             {
-                newTarget = laserTarget->getID();
+                mCurrentLaserTargetID = laserTarget->getID();
             }
         }
 
-        if (newTarget != mCurrentLaserTargetID)
-        {
-            mCurrentLaserTargetID = newTarget;
-            mTargetLockTime = 0;
-        }
-        else
+        SimObj2D* objLock = (SimObj2D*)mSim2D->getObjectByID(mCurrentLaserLockID);
+
+        if ((objLock != NULL)
+            && mSim2D->segmentCollides(objLock, x1, y1, x2, y2))
         {
             mTargetLockTime++;
         }
-
-        if ((mCurrentLaserTargetID == 0)
-            || (laserTarget->mSpeciesID == mSpeciesID))
+        else
         {
+            mCurrentLaserLockID = mCurrentLaserTargetID;
             mTargetLockTime = 0;
         }
 
@@ -620,6 +617,9 @@ void SimObj2D::updateFitnesses()
             float maxAge = (float)mMaxAge;
             float timeFactor = deltaTime / maxAge;
             mLaserAgeScore = mLaserScore * timeFactor;
+
+            //mLaserAgeScore = ((float)mTargetLockTime) / 5000.0f;
+        
             fit->mFitness = mLaserAgeScore;
             break;
         }
@@ -1316,7 +1316,7 @@ void SimObj2D::fire(unsigned int actionType, float strength)
     }
 
     float lockTime = (float)mTargetLockTime;
-    float maxLockTime = ((float)mFireInterval) / 2.0f;
+    float maxLockTime = ((float)mFireInterval);
 
     if (lockTime > maxLockTime)
     {
