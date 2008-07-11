@@ -618,9 +618,8 @@ void SimObj2D::updateFitnesses()
             float timeFactor = deltaTime / maxAge;
             mLaserAgeScore = mLaserScore * timeFactor;
 
-            //mLaserAgeScore = ((float)mTargetLockTime) / 5000.0f;
-        
             fit->mFitness = mLaserAgeScore;
+
             break;
         }
     }

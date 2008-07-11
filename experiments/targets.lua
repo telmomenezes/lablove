@@ -51,7 +51,7 @@ speakInterval = 250
 
 compCount = 1
 bufferSize = 100
-fitnessAging = 0.5
+fitnessAging = 0.8
 
 addConnectionProb = 0.01
 removeConnectionProb = 0.01
