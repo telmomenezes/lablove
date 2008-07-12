@@ -63,7 +63,7 @@ changeInComponentProb = 0.2
 
 recombineProb = 0.25
 
-groupFactor = 0.5
+groupFactor = 0.8
 
 timeLimit = 0
 logTimeInterval = 100
