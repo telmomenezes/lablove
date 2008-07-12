@@ -157,7 +157,12 @@ void Species::bufferDump(llULINT time, Simulation* sim)
     char fileName[255];
     sprintf(fileName, "%s/data.txt", mBufferDumpDir.c_str());
     FILE* globalFile = fopen(fileName, "w");
-    fprintf(globalFile, "object_number, fitness, group_fitness, final_fitness\n");
+    fprintf(globalFile, "object_number");
+    for (unsigned int f = 0; f < mGoals.size(); f++)
+    {
+        fprintf(globalFile, ", fitness_%d, group_fitness_%d, final_fitness_%d", f, f, f);
+    }
+    fprintf(globalFile, "\n");
 
     for (unsigned int i = 0; i < mBufferSize; i++)
     {
@@ -168,8 +173,13 @@ void Species::bufferDump(llULINT time, Simulation* sim)
         fflush(file);
         fclose(file);
 
-        Fitness* fit = obj->getFitnessByIndex(0);
-        fprintf(globalFile, "%d, %f, %f, %f\n", i, fit->mFitness, fit->mGroupFitness, fit->mFinalFitness);
+        fprintf(globalFile, "%d", i);
+        for (unsigned int f = 0; f < mGoals.size(); f++)
+        {
+            Fitness* fit = obj->getFitnessByIndex(f);
+            fprintf(globalFile, ", %f, %f, %f", i, fit->mFitness, fit->mGroupFitness, fit->mFinalFitness);
+        }
+        fprintf(globalFile, "\n");
     }
 
     fflush(globalFile);

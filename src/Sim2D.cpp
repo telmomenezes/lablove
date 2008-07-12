@@ -653,14 +653,14 @@ bool Sim2D::getFieldValue(SimObj* obj, string fieldName, float& value)
         value = ((SimObj2D*)obj)->mSynchScore;
         return true;
     }
-    else if (fieldName == "laser_score")
+    else if (fieldName == "laser_hit_score")
     {
-        value = ((SimObj2D*)obj)->mLaserScore;
+        value = ((SimObj2D*)obj)->mLaserHitScore;
         return true;
     }
-    else if (fieldName == "laser_age_score")
+    else if (fieldName == "laser_eff_score")
     {
-        value = ((SimObj2D*)obj)->mLaserAgeScore;
+        value = ((SimObj2D*)obj)->mLaserEffScore;
         return true;
     }
     else

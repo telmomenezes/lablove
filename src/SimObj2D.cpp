@@ -116,8 +116,8 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     mEnergySum = 0.0f;
     mEnergySumAboveInit = 0.0f;
     mSynchScore = 0.0f;
-    mLaserScore = 0.0f;
-    mLaserAgeScore = 0.0f;
+    mLaserHitScore = 0.0f;
+    mLaserEffScore = 0.0f;
 
     mLastBodyHit = 0;
     
@@ -230,8 +230,8 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
     mEnergySum = 0.0f;
     mEnergySumAboveInit = 0.0f;
     mSynchScore = 0.0f;
-    mLaserScore = 0.0f;
-    mLaserAgeScore = 0.0f;
+    mLaserHitScore = 0.0f;
+    mLaserEffScore = 0.0f;
 
     mLastBodyHit = 0;
 
@@ -438,7 +438,7 @@ void SimObj2D::process()
             {
                 if (obj->mSpeciesID != mSpeciesID)
                 {
-                    obj->mLaserScore += mEnergy;
+                    obj->mLaserEffScore += mEnergy;
                 }
             }
         }
@@ -607,19 +607,11 @@ void SimObj2D::updateFitnesses()
         case FITNESS_SYNCH_SCORE:
             fit->mFitness = mSynchScore;
             break;
-        case FITNESS_LASER_SCORE:
-            fit->mFitness = mLaserScore;
+        case FITNESS_LASER_HIT_SCORE:
+            fit->mFitness = mLaserHitScore;
             break;
-        case FITNESS_LASER_AGE_SCORE:
-            llULINT t0 = mCreationTime;
-            llULINT t1 = mSim2D->getTime();
-            float deltaTime = (float)(t1 - t0);
-            float maxAge = (float)mMaxAge;
-            float timeFactor = deltaTime / maxAge;
-            mLaserAgeScore = mLaserScore * timeFactor;
-
-            fit->mFitness = mLaserAgeScore;
-
+        case FITNESS_LASER_EFF_SCORE:
+            fit->mFitness = mLaserEffScore;
             break;
         }
     }
@@ -1420,7 +1412,7 @@ void SimObj2D::processLaserHit(Laser2D* laser)
 
             if (obj->mLastBodyHit == mBodyID)
             {
-                obj->mLaserScore += score;
+                obj->mLaserHitScore += score;
             }
         }
     }
@@ -1460,11 +1452,7 @@ void SimObj2D::processLaserHit(Laser2D* laser)
         {
             if (obj->mSpeciesID != mSpeciesID)
             {
-                obj->mLaserScore += score;
-            }
-            else
-            {
-                obj->mLaserScore -= score;
+                obj->mLaserHitScore += score;
             }
         }
 
@@ -1596,8 +1584,8 @@ Orbit<SimObj2D>::NumberGlobalType SimObj2D::mNumberGlobals[] = {
     {"FITNESS_ENERGY_SUM", FITNESS_ENERGY_SUM},
     {"FITNESS_ENERGY_SUM_ABOVE_INIT", FITNESS_ENERGY_SUM_ABOVE_INIT},
     {"FITNESS_SYNCH_SCORE", FITNESS_SYNCH_SCORE},
-    {"FITNESS_LASER_SCORE", FITNESS_LASER_SCORE},
-    {"FITNESS_LASER_AGE_SCORE", FITNESS_LASER_AGE_SCORE},
+    {"FITNESS_LASER_HIT_SCORE", FITNESS_LASER_HIT_SCORE},
+    {"FITNESS_LASER_EFF_SCORE", FITNESS_LASER_EFF_SCORE},
     {"FITNESS_RANDOM", FITNESS_RANDOM},
     {"SHAPE_TRIANGLE", SHAPE_TRIANGLE},
     {"SHAPE_SQUARE", SHAPE_SQUARE},
