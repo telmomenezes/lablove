@@ -61,9 +61,9 @@ splitConnectionProb = 0.01
 joinConnectionsProb = 0.01
 changeInComponentProb = 0.2
 
-recombineProb = 0.25
+recombineProb = 1.0
 
-groupFactor = 0.8
+groupFactor = 0.5
 
 timeLimit = 0
 logTimeInterval = 100
