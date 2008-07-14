@@ -408,8 +408,8 @@ void Gridbrain::mutateChangeComponent(float prob)
         unsigned int gridNumber = mComponents[pos].mGrid;
         Grid* grid = mGridsVec[gridNumber];
 
-        GridbrainComponent* comp = grid->getRandomComponent(mOwner, &mComponents, &mMemory);
-        mComponents[pos].copyDefinitions(comp);
+        GridbrainComponent* comp = grid->getRandomComponent();
+        replaceComponent(pos, comp);
     }
 
     cleanInvalidConnections();
@@ -431,8 +431,8 @@ void Gridbrain::mutateChangeInactiveComponent(float prob)
             unsigned int gridNumber = comp->mGrid;
             Grid* grid = mGridsVec[gridNumber];
 
-            GridbrainComponent* comp2 = grid->getRandomComponent(mOwner, &mComponents, &mMemory);
-            comp->copyDefinitions(comp2);
+            GridbrainComponent* comp2 = grid->getRandomComponent();
+            replaceComponent(pos, comp2);
         }
     }
 

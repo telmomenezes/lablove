@@ -19,14 +19,21 @@
 
 #include "GridbrainComponent.h"
 
-GridbrainComponent GridbrainComponent::mNullComponent;
-
 GridbrainComponent::GridbrainComponent(lua_State* luaState)
 {
     clearDefinitions();
     clearPosition();
     clearConnections();
     clearMetrics();
+}
+
+GridbrainComponent::GridbrainComponent(const GridbrainComponent& comp)
+{
+    clearDefinitions();
+    clearPosition();
+    clearConnections();
+    clearMetrics();
+    copyDefinitions((GridbrainComponent*)(&comp));
 }
 
 GridbrainComponent::~GridbrainComponent()
@@ -327,7 +334,7 @@ bool GridbrainComponent::isEqual(GridbrainComponent* comp, bool sameGrid)
 void GridbrainComponent::print()
 {
     printf("%s", getName().c_str());
-    printf("(%d)", mSubType);
+    printf("(%d)[%d]", mSubType, mOrigSymID);
     printf("  [%d, %d, %d]", mColumn, mRow, mGrid);
 }
 

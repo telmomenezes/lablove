@@ -299,9 +299,9 @@ string Gridbrain::write(SimObj* obj, Simulation* sim)
 
 void Gridbrain::printDebug()
 {
-    //printf("\n\n== GRIDBRAIN ==\n");
+    printf("\n\n== GRIDBRAIN ==\n");
 
-    /*for (unsigned int i = 0; i < mGridsCount; i++)
+    for (unsigned int i = 0; i < mGridsCount; i++)
     {
         printf("Grid: %d\n", i);
         Grid* grid = mGridsVec[i];
@@ -310,13 +310,13 @@ void Gridbrain::printDebug()
             for (unsigned int x = 0; x < grid->getWidth(); x++)
             {
                 GridbrainComponent* comp = getComponent(x, y, i);
-                printf("%s\t", comp->getName().c_str());
+                printf("%s(%d)\t", comp->getName().c_str(), comp->mSubType);
             }
             printf("\n");
         }
     }
 
-    printf("CONNECTIONS:\n");*/
+    printf("CONNECTIONS:\n");
 
     GridbrainConnection* conn = mConnections;
     while (conn != NULL)

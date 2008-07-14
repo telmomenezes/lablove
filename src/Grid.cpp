@@ -162,21 +162,12 @@ void Grid::init(Type type, unsigned int width, unsigned int height)
 
 void Grid::setComponentSet(GridbrainComponentSet* componentSet)
 {
-    mComponentSet = componentSet;
+    mComponentSet = *componentSet;
 }
 
-GridbrainComponent* Grid::getRandomComponent(SimObj* obj,
-                                                vector<GridbrainComponent>* components,
-                                                map<llULINT, GridbrainMemCell>* memory)
+GridbrainComponent* Grid::getRandomComponent()
 {
-    if (mComponentSet)
-    {
-        return mComponentSet->getRandom(obj, components, memory, mOffset, mOffset + mSize);
-    }
-    else
-    {
-        return GridbrainComponent::getNullComponent();
-    }
+    return mComponentSet.getRandom();
 }
 
 void Grid::setInput(unsigned int number, unsigned int depth, float value)

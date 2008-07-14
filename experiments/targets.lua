@@ -61,7 +61,7 @@ splitConnectionProb = 0.01
 joinConnectionsProb = 0.01
 changeInComponentProb = 0.2
 
-recombineProb = 1.0
+recombineProb = 0.25
 
 groupFactor = 0.5
 
@@ -75,7 +75,7 @@ humanAgent = false
 evolutionStopTime = 0
 
 self = false
-comm = true
+comm = false
 
 agentBirthRadius = 100.0
 

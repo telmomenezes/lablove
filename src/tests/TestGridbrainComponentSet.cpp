@@ -39,7 +39,7 @@ struct GridbrainComponentSetFixture
     GridbrainComponentSet mSet;
 };
 
-TEST_FIXTURE(GridbrainComponentSetFixture, GridbrainComponentSetAddComponent)
+/*TEST_FIXTURE(GridbrainComponentSetFixture, GridbrainComponentSetAddComponent)
 {
     GridbrainComponent* comp = mSet.getRandom();
     CHECK_EQUAL(comp->mType, GridbrainComponent::OUT);
@@ -56,5 +56,5 @@ TEST_FIXTURE(GridbrainComponentSetFixture, GridbrainComponentSetAddAnotherCompon
     mSet.addComponent(GridbrainComponent::IN);
     GridbrainComponent* comp = mSet.getRandom();
     CHECK((comp->mType == GridbrainComponent::OUT) || (comp->mType == GridbrainComponent::IN));
-}
+}*/
 

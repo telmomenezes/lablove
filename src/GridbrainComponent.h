@@ -69,9 +69,8 @@ public:
     enum ConnType {CONN_IN, CONN_OUT, CONN_INOUT};
 
     GridbrainComponent(lua_State* luaState=NULL);
+    GridbrainComponent(const GridbrainComponent& comp);
     virtual ~GridbrainComponent();
-
-    static GridbrainComponent* getNullComponent(){return &mNullComponent;}
 
     void clearDefinitions();
     void clearPosition();
@@ -101,8 +100,6 @@ public:
     static const char mClassName[];
     static Orbit<GridbrainComponent>::MethodType mMethods[];
     static Orbit<GridbrainComponent>::NumberGlobalType mNumberGlobals[];
-
-    static GridbrainComponent mNullComponent;
 
     Type mType;
     int mSubType;

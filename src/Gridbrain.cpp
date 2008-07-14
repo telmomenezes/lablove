@@ -356,6 +356,14 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                 offset++;
             }
         }
+
+        newGrid->getComponentSet()->update(mOwner,
+                                            &(gb->mComponents),
+                                            &gb->mMemory,
+                                            newGrid->getOffset(),
+                                            newGrid->getOffset() + newGrid->getSize());
+        //printf("FIRST UPDATE**************\n");
+        //newGrid->getComponentSet()->print();
     }
 
     for (unsigned int g = 0; g < mGridsCount; g++)
@@ -373,8 +381,9 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                 GridbrainComponent* comp = gb->getComponent(x, y, g);
                 if (comp->mType == GridbrainComponent::NUL)
                 {
-                    GridbrainComponent* newComp = newGrid->getRandomComponent(mOwner, &(gb->mComponents), &gb->mMemory);
+                    GridbrainComponent* newComp = newGrid->getRandomComponent();
                     comp->copyDefinitions(newComp);
+                    newGrid->getComponentSet()->disable(newComp);
                     #ifdef GB_VALIDATE
                     gb->isValid();
                     #endif
@@ -545,32 +554,6 @@ void Gridbrain::init()
                 }
             }
         }
-
-        // Init grids with random components
-        pos = 0;
-
-        for (unsigned int i = 0; i < mGridsCount; i++)
-        {
-            Grid* grid = mGridsVec[i];
-
-            for (unsigned int x = 0;
-                x < grid->getWidth();
-                x++)
-            {
-                for (unsigned int y = 0;
-                    y < grid->getHeight();
-                    y++)
-                {
-                    GridbrainComponent* comp = grid->getRandomComponent(mOwner, &mComponents, &mMemory);
-                    mComponents[pos].copyDefinitions(comp);
-                    #ifdef GB_VALIDATE
-                    isValid();
-                    #endif
-
-                    pos++;
-                }
-            }
-        }
     }
 
     update(); 
@@ -702,6 +685,19 @@ GridbrainComponent* Gridbrain::getComponent(unsigned int x,
 
     unsigned int pos = (x * grid->getHeight()) + y + grid->getOffset();
     return &(mComponents[pos]);
+}
+
+void Gridbrain::replaceComponent(unsigned int pos, GridbrainComponent* comp)
+{
+    GridbrainComponent* oldComp = &(mComponents[pos]);
+    Grid* grid = mGridsVec[oldComp->mGrid];
+    GridbrainComponentSet* compSet = grid->getComponentSet();
+
+    compSet->enable(oldComp);
+
+    mComponents[pos].copyDefinitions(comp);
+
+    compSet->disable(comp);
 }
 
 void Gridbrain::addConnection(unsigned int xOrig,
@@ -2456,174 +2452,6 @@ bool Gridbrain::symbolUsed(int tableID, llULINT symbolID)
     }
 
     return false;
-}
-
-bool Gridbrain::swapComponents(GridbrainComponent* comp1, GridbrainComponent* comp2)
-{
-    unsigned int x1 = comp1->mColumn;
-    unsigned int y1 = comp1->mRow;
-    unsigned int x2 = comp2->mColumn;
-    unsigned int y2 = comp2->mRow;
-    unsigned int gridNumber = comp1->mGrid;
-
-    // Check if swap is possible
-    bool valid = true;
-    GridbrainConnection* conn = mConnections;
-    while (valid && (conn != NULL))
-    {
-        if (!conn->mInterGrid)
-        {
-            unsigned int connX1 = conn->mColumnOrig;
-            unsigned int connY1 = conn->mRowOrig;
-            unsigned int connX2 = conn->mColumnTarg;
-            unsigned int connY2 = conn->mRowTarg;
-            unsigned int connG1 = conn->mGridOrig;
-            unsigned int connG2 = conn->mGridTarg;
-
-            if ((connX1 == x1) 
-                && (connY1 == y1)
-                && (connG1 == gridNumber))
-            {
-                connX1 = x2;
-                connY1 = y2;
-            }
-            else if ((connX1 == x2)
-                && (connY1 == y2)
-                && (connG1 == gridNumber))
-            {
-                connX1 = x1;
-                connY1 = y1;
-            }
-            if ((connX2 == x1)
-                && (connY2 == y1)
-                && (connG2 == gridNumber))
-            {
-                connX2 = x2;
-                connY2 = y2;
-            }
-            else if ((connX2 == x2)
-                && (connY2 == y2)
-                && (connG2 == gridNumber))
-            {
-                connX2 = x1;
-                connY2 = y1;
-            }
-
-            if (connX1 >= connX2)
-            {
-                valid = false;
-            }
-        }
-        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
-    }
-
-    if (!valid)
-    {
-        return false;
-    }
-
-    // do swap
-
-    GridbrainComponent auxComp;
-    auxComp.copyDefinitions(comp1);
-    comp1->copyDefinitions(comp2);
-    comp2->copyDefinitions(&auxComp);
-    conn = mConnections;
-
-    list<GridbrainConnection*> addInTheEnd;
-
-    while (conn != NULL)
-    {
-        unsigned int newX1 = conn->mColumnOrig;
-        unsigned int newY1 = conn->mRowOrig;
-        unsigned int newG1 = conn->mGridOrig;
-        unsigned int newX2 = conn->mColumnTarg;
-        unsigned int newY2 = conn->mRowTarg;
-        unsigned int newG2 = conn->mGridTarg;
-        bool change = false;
-        GridbrainConnection* curConn = conn;
-
-        if ((conn->mColumnOrig == x1) 
-            && (conn->mRowOrig == y1)
-            && (conn->mGridOrig == gridNumber))
-        {
-            newX1 = x2;
-            newY1 = y2;
-            change = true;
-        }
-        else if ((conn->mColumnOrig == x2)
-            && (conn->mRowOrig == y2)
-            && (conn->mGridOrig == gridNumber))
-        {
-            newX1 = x1;
-            newY1 = y1;
-            change = true;
-        }
-        if ((conn->mColumnTarg == x1)
-            && (conn->mRowTarg == y1)
-            && (conn->mGridTarg == gridNumber))
-        {
-            newX2 = x2;
-            newY2 = y2;
-            change = true;
-        }
-        else if ((conn->mColumnTarg == x2)
-            && (conn->mRowTarg == y2)
-            && (conn->mGridTarg == gridNumber))
-        {
-            newX2 = x1;
-            newY2 = y1;
-            change = true;
-        }
-
-        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
-
-        if (change)
-        {
-            GridbrainGeneTag tag = curConn->mGeneTag;
-            removeConnection(curConn);
-
-            if (connectionExists(newX1, newY1, newG1, newX2, newY2, newG2))
-            {
-                GridbrainConnection* addConn = new GridbrainConnection();
-                addConn->mColumnOrig = newX1;
-                addConn->mRowOrig = newY1;
-                addConn->mGridOrig = newG1;
-                addConn->mColumnTarg = newX2;
-                addConn->mRowTarg = newY2;
-                addConn->mGridTarg = newG2;
-                addConn->mGeneTag = tag;
-                addInTheEnd.push_back(addConn);
-            }
-            else
-            {
-                addConnection(newX1, newY1, newG1, newX2, newY2, newG2, tag);
-            }
-        }
-    }
-
-    list<GridbrainConnection*>::iterator iterConn;
-
-    for (iterConn = addInTheEnd.begin();
-            iterConn != addInTheEnd.end();
-            iterConn++)
-    {
-        GridbrainConnection* addConn = (*iterConn);
-                    
-        addConnection(addConn->mColumnOrig,
-                        addConn->mRowOrig,
-                        addConn->mGridOrig,
-                        addConn->mColumnTarg,
-                        addConn->mRowTarg,
-                        addConn->mGridTarg,
-                        addConn->mGeneTag);
-
-        delete addConn;
-    }
-
-    addInTheEnd.clear();
-
-    return true;
 }
 
 void Gridbrain::linkMemory()

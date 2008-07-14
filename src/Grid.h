@@ -51,13 +51,12 @@ public:
     unsigned int getSize(){return mSize;}
 
     void setComponentSet(GridbrainComponentSet* componentSet);
+    GridbrainComponentSet* getComponentSet(){return &mComponentSet;}
 
     void setOffset(unsigned int offset){mOffset = offset;}
     
     unsigned int getOffset(){return mOffset;}
-    GridbrainComponent* getRandomComponent(SimObj* obj,
-                                            vector<GridbrainComponent>* components,
-                                            map<llULINT, GridbrainMemCell>* memory);
+    GridbrainComponent* getRandomComponent();
     void setInput(unsigned int number, unsigned int depth, float value);
     unsigned int addPerception(GridbrainComponent* per);
     unsigned int addAction(GridbrainComponent* act);
@@ -128,7 +127,7 @@ protected:
     unsigned int* mInputIDs;
     float* mOutputVector;
 
-    GridbrainComponentSet* mComponentSet;
+    GridbrainComponentSet mComponentSet;
 
     vector<GridbrainComponent*> mPerceptionsVec;
     vector<GridbrainComponent*> mActionsVec;

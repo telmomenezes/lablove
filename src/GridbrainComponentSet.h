@@ -34,6 +34,7 @@ class GridbrainComponentSet
 {
 public:
     GridbrainComponentSet(lua_State* luaState=NULL);
+    GridbrainComponentSet(const GridbrainComponentSet& comp);
     virtual ~GridbrainComponentSet();
 
     void addComponent(GridbrainComponent* component);
@@ -43,11 +44,18 @@ public:
                 int origSymTable=-1,
                 llULINT origSymID=0,
                 int targetSymTable=-1);
-    GridbrainComponent* getRandom(SimObj* obj=NULL,
-                                    vector<GridbrainComponent>* components=NULL,
-                                    map<llULINT, GridbrainMemCell>* memory=NULL,
-                                    unsigned int startPos=0,
-                                    unsigned int endPos=0);
+    GridbrainComponent* getRandom();
+
+    void update(SimObj* obj,
+                vector<GridbrainComponent>* components,
+                map<llULINT, GridbrainMemCell>* memory,
+                unsigned int start,
+                unsigned int end);
+
+    void disable(GridbrainComponent* comp);
+    void enable(GridbrainComponent* comp);
+
+    void print();
 
     static const char mClassName[];
     static Orbit<GridbrainComponentSet>::MethodType mMethods[];
@@ -56,10 +64,12 @@ public:
     int addComponent(lua_State* luaState);
 
     vector<GridbrainComponent*> mComponentVec;
-    unsigned int mSize;
+    vector<GridbrainComponent> mComponentSet;
 
 protected:
     static mt_distribution* mDistComponentSet;
+
+    GridbrainComponent mNullComponent;
 };
 #endif
 

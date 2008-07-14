@@ -138,6 +138,8 @@ public:
                 llULINT origSymID=0,
                 int targetSymTable=-1);
 
+    void replaceComponent(unsigned int pos, GridbrainComponent* comp);
+
     void setMutateAddConnectionProb(float prob){mMutateAddConnectionProb = prob;}
     void setMutateRemoveConnectionProb(float prob){mMutateRemoveConnectionProb = prob;}
     void setMutateChangeParamProb(float prob){mMutateChangeParamProb = prob;}
@@ -224,8 +226,6 @@ protected:
     void linkMemory();
 
     int getMemCellPos(llULINT id);
-
-    bool swapComponents(GridbrainComponent* comp1, GridbrainComponent* comp2);
 
     void mutateAddConnection(unsigned int popSize, float prob);
     void mutateRemoveConnection(unsigned int popSize, float prob);

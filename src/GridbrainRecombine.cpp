@@ -148,7 +148,23 @@ Gridbrain* Gridbrain::importComponent(Gridbrain* gbTarg,
         }
     }
 
-    compTarg->copyDefinitions(compOrig);
+    // Check for replacing component and clean
+    if (compOrig->isUnique())
+    {
+        unsigned int start = gridTarg->getOffset();
+        unsigned int end = start + gridTarg->getSize();
+        for (unsigned int i = start; i < end; i++)
+        {
+            GridbrainComponent* checkComp = &(brain->mComponents[i]);
+            if (checkComp->isEqual(compOrig))
+            {
+                GridbrainComponent* newComp = gridTarg->getRandomComponent();
+                brain->replaceComponent(i, newComp);
+            }
+        }
+    }
+
+    brain->replaceComponent(compTarg->mOffset, compOrig);
 
     return brain;
 }
@@ -629,11 +645,11 @@ void Gridbrain::recombineUnusedComponents(Gridbrain* gb1, Gridbrain* gb2)
 
                     if (choice1)
                     {
-                        comp->copyDefinitions(comp1);
+                        replaceComponent(comp->mOffset, comp1);
                     }
                     else if (choice2)
                     {
-                        comp->copyDefinitions(comp2);
+                        replaceComponent(comp->mOffset, comp2);
                     }
                 }
             }
