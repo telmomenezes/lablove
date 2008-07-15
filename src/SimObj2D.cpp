@@ -115,9 +115,11 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
 
     mEnergySum = 0.0f;
     mEnergySumAboveInit = 0.0f;
-    mSynchScore = 0.0f;
+    mMsgScore = 0.0f;
     mLaserHitScore = 0.0f;
     mLaserEffScore = 0.0f;
+    mCurrentSynchScore = 0.0f;
+    mBestSynchScore = 0.0f;
 
     mLastBodyHit = 0;
     
@@ -229,9 +231,11 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
 
     mEnergySum = 0.0f;
     mEnergySumAboveInit = 0.0f;
-    mSynchScore = 0.0f;
+    mMsgScore = 0.0f;
     mLaserHitScore = 0.0f;
     mLaserEffScore = 0.0f;
+    mCurrentSynchScore = 0.0f;
+    mBestSynchScore = 0.0f;
 
     mLastBodyHit = 0;
 
@@ -604,8 +608,11 @@ void SimObj2D::updateFitnesses()
         case FITNESS_RANDOM:
             fit->mFitness = mDistFitnessRandom->uniform(0.0f, 1.0f);
             break;
+        case FITNESS_MSG_SCORE:
+            fit->mFitness = mMsgScore;
+            break;
         case FITNESS_SYNCH_SCORE:
-            fit->mFitness = mSynchScore;
+            fit->mFitness = mBestSynchScore;
             break;
         case FITNESS_LASER_HIT_SCORE:
             fit->mFitness = mLaserHitScore;
@@ -1336,7 +1343,13 @@ void SimObj2D::speak(Symbol* sym, float param)
         return;
     }
 
-    mSynchScore += 1.0f;
+    mMsgScore += 1.0f;
+
+    mCurrentSynchScore = 1.0f;
+    if (mCurrentSynchScore > mBestSynchScore)
+    {
+        mBestSynchScore = mCurrentSynchScore;
+    }
     
     mLastSpeakTime = mSim2D->getTime();
 
@@ -1390,7 +1403,13 @@ void SimObj2D::addMessage(Message* msg)
         && ((mSim2D->getTime() - mLastMessageSent->mTime) <= 5)
         && (mLastMessageSent->mSymbol->equals(msg->mSymbol)))
     {
-        mSynchScore += 1.0f;
+        mMsgScore += 1.0f;
+
+        mCurrentSynchScore += 1.0f;
+        if (mCurrentSynchScore > mBestSynchScore)
+        {
+            mBestSynchScore = mCurrentSynchScore;
+        }
     }
 }
 
@@ -1583,6 +1602,7 @@ Orbit<SimObj2D>::NumberGlobalType SimObj2D::mNumberGlobals[] = {
     {"FITNESS_ENERGY", FITNESS_ENERGY},
     {"FITNESS_ENERGY_SUM", FITNESS_ENERGY_SUM},
     {"FITNESS_ENERGY_SUM_ABOVE_INIT", FITNESS_ENERGY_SUM_ABOVE_INIT},
+    {"FITNESS_MSG_SCORE", FITNESS_MSG_SCORE},
     {"FITNESS_SYNCH_SCORE", FITNESS_SYNCH_SCORE},
     {"FITNESS_LASER_HIT_SCORE", FITNESS_LASER_HIT_SCORE},
     {"FITNESS_LASER_EFF_SCORE", FITNESS_LASER_EFF_SCORE},

@@ -464,35 +464,33 @@ void Gridbrain::generateMemory(Gridbrain* originGB)
     {
         GridbrainComponent* comp = &(gb->mComponents[i]);
 
-        if (comp->isMemory())
+        if (comp->isMemory()
+            && comp->mActive
+            && (mMemory.count(comp->mOrigSymID) == 0))
         {
-            if (mMemory.count(comp->mOrigSymID) == 0)
-            {
-                mMemory[comp->mOrigSymID] = GridbrainMemCell();
-            }
-            
-            if (comp->mActive)
-            {
-                mMemory[comp->mOrigSymID].mActive = true;
-            }
+            mMemory[comp->mOrigSymID] = GridbrainMemCell();
         }
     }
 
-    bool grow = true;
+    mMemory[CURRENT_MEM_ID++] = GridbrainMemCell();
 
-    for (map<llULINT, GridbrainMemCell>::iterator iterMem = mMemory.begin();
-            grow && (iterMem != mMemory.end());
-            iterMem++)
+    // Correct components with invalid memory
+    for (unsigned int i = 0; i < gb->mNumberOfComponents; i++)
     {
-        if (!(*iterMem).second.mActive)
+        GridbrainComponent* comp = &(gb->mComponents[i]);
+
+        if (comp->isMemory()
+            && (mMemory.count(comp->mOrigSymID) == 0))
         {
-            grow = false;
-        }
-    }
+            unsigned int memPos = mDistComponents->iuniform(0, mMemory.size());
 
-    if (grow)
-    {
-        mMemory[CURRENT_MEM_ID++] = GridbrainMemCell();
+            map<llULINT, GridbrainMemCell>::iterator iterMem = mMemory.begin();
+            for (unsigned int i = 0; i < memPos; i++)
+            {
+                iterMem++;
+            }
+            comp->mOrigSymID = (*iterMem).first;
+        }
     }
 }
 

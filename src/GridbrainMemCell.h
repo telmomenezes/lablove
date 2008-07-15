@@ -32,8 +32,6 @@ public:
     float mWrite;
     bool mClear;
 
-    bool mActive;
-
     // SEL
     float mSelCandidate;
     bool mTriggered;

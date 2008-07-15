@@ -192,7 +192,7 @@ sim:setPopulationDynamics(popDyn)
 
 agentSpecies = Species(agent, numberOfAgents)
 
-agentSpecies:addGoal(SimObj2D.FITNESS_SYNCH_SCORE, bufferSize)
+agentSpecies:addGoal(SimObj2D.FITNESS_MSG_SCORE, bufferSize)
 agentSpecies:setFitnessAging(fitnessAging)
 agentSpecies:setRecombineProb(recombineProb)
 agentSpecies:setKinFactor(kinFactor)
@@ -254,7 +254,7 @@ end
 
 stats = StatCommon()
 stats:setFile("log" .. logSuffix .. ".csv")
-stats:addField("synch_score")
+stats:addField("msg_score")
 stats:addField("gb_connections")
 stats:addField("gb_active_connections")
 stats:addField("gb_active_components")

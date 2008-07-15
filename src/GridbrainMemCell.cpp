@@ -25,7 +25,6 @@ GridbrainMemCell::GridbrainMemCell()
     mValue = 0.0f;
     mWrite = 0.0f;
     mClear = false;
-    mActive = false;
     mSelCandidate = 0.0f;
     mTriggered = false;
     mValueFound = false;

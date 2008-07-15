@@ -648,9 +648,14 @@ bool Sim2D::getFieldValue(SimObj* obj, string fieldName, float& value)
         value = ((SimObj2D*)obj)->mEnergySumAboveInit;
         return true;
     }
+    else if (fieldName == "msg_score")
+    {
+        value = ((SimObj2D*)obj)->mMsgScore;
+        return true;
+    }
     else if (fieldName == "synch_score")
     {
-        value = ((SimObj2D*)obj)->mSynchScore;
+        value = ((SimObj2D*)obj)->mBestSynchScore;
         return true;
     }
     else if (fieldName == "laser_hit_score")
