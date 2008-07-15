@@ -489,7 +489,7 @@ void Gridbrain::repair()
         {
             replace = true;
         }
-        else if (comp->isUnique())
+        else if ((comp->isUnique()) && (comp->mOrigSymTable >= 0))
         {
             TableSet* ts = mOwner->mTableSet;
 
