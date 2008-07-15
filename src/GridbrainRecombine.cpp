@@ -20,37 +20,6 @@
 #include "Gridbrain.h"
 #include "SymbolTable.h"
 
-void Gridbrain::setSelectedSymbols(SimObj* obj)
-{
-    map<int, SymbolTable*>::iterator iterTables;
-    for (iterTables = obj->mSymbolTables.begin();
-        iterTables != obj->mSymbolTables.end();
-        iterTables++)
-    {
-        SymbolTable* table = (*iterTables).second;
-        int tableID = table->getID();
-
-        map<llULINT, Symbol*>::iterator iterSymbol;
-        for (iterSymbol = table->getSymbolMap()->begin();
-            iterSymbol != table->getSymbolMap()->end();
-            iterSymbol++)
-        {
-            Symbol* sym = (*iterSymbol).second;
-            llULINT symID = sym->mID;
-
-            if (!sym->mFixed)
-            {
-                sym->mSelected = false;
-
-                if (symbolUsed(tableID, symID))
-                {
-                    sym->mSelected = true;
-                }
-            }
-        }
-    }
-}
-
 void Gridbrain::clearRecombineInfo()
 {
     GridbrainConnection* conn = mConnections;

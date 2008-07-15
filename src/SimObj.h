@@ -20,9 +20,7 @@
 #if !defined(__INCLUDE_SIM_OBJ_H)
 #define __INCLUDE_SIM_OBJ_H
 
-#include "SymbolTable.h"
-#include "Symbol.h"
-#include "SymbolPointer.h"
+#include "TableSet.h"
 #include "Brain.h"
 #include "Message.h"
 #include "types.h"
@@ -128,7 +126,7 @@ public:
 
     int mBodyID;
 
-    map<int, SymbolTable*> mSymbolTables;
+    TableSet* mTableSet;
 
     static const char mClassName[];
     static Orbit<SimObj>::MethodType mMethods[];
@@ -148,8 +146,6 @@ protected:
     llULINT mID;
 
     map<int, Fitness> mFitMap;
-
-    map<string, SymbolPointer> mNamedSymbols;
 
     unsigned int mSpeciesID;
 

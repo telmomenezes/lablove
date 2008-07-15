@@ -21,8 +21,7 @@
 #define __INCLUDE_BRAIN_H
 
 #include "InterfaceItem.h"
-
-#include "art.h"
+#include "TableSet.h"
 
 #include <list>
 #include <vector>
@@ -76,6 +75,10 @@ public:
     virtual float getDistance(Brain* brain){return 0.0f;}
 
     virtual void printDebug(){}
+
+    virtual void markUsedSymbols(TableSet* tab){}
+
+    virtual void repair(){}
 
 protected:
     void clearInterfaces();

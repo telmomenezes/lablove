@@ -29,6 +29,8 @@
 #include <list>
 #include <string>
 
+#include "art.h"
+
 using std::list;
 using std::string;
 

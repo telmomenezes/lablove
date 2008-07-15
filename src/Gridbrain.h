@@ -125,8 +125,6 @@ public:
     virtual void mutate(float factor=1.0f);
     virtual Brain* recombine(Brain* brain);
 
-    virtual void setSelectedSymbols(SimObj* obj);
-
     void setComponent(unsigned int x,
                 unsigned int y,
                 unsigned int gridNumber,
@@ -179,8 +177,11 @@ public:
     void setAllActive(bool active){mAllActive = active;}
 
     void update();
+    virtual void repair();
 
     virtual float getDistance(Brain* brain);
+
+    virtual void markUsedSymbols(TableSet* tab);
 
     static const char mClassName[];
     static Orbit<Gridbrain>::MethodType mMethods[];

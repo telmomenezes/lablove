@@ -80,6 +80,7 @@ SET(SOURCE_FILES
     src/SymbolFloatVector.cpp
     src/SymbolUL.cpp
     src/SymbolTable.cpp
+    src/TableSet.cpp
     src/Log.cpp
     src/LogBestBrain.cpp
     src/Statistics.cpp

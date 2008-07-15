@@ -18,6 +18,7 @@
  */
 
 #include "DummyBrain.h"
+#include "art.h"
 
 DummyBrain::DummyBrain(unsigned int channelCount)
 {

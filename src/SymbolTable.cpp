@@ -161,31 +161,31 @@ Symbol* SymbolTable::selectSymbol(Symbol* sym, SymbolTable* table2)
 
     if (sym2 == NULL)
     {
-        if (sym1->mFixed || sym1->mSelected)
+        if (sym1->mFixed || sym1->mUsed)
         {
             return sym1->clone();
         }
         return NULL;
     }
 
-    if (sym1->mSelected && (!sym2->mSelected))
+    if (sym1->mUsed && (!sym2->mUsed))
     {
         return sym1->clone();
     }
-    if (sym2->mSelected && (!sym1->mSelected))
+    if (sym2->mUsed && (!sym1->mUsed))
     {
         return sym2->clone();
     }
-    if ((!sym1->mSelected)
-        && (!sym2->mSelected)
+    if ((!sym1->mUsed)
+        && (!sym2->mUsed)
         && (!sym1->mFixed))
     {
         return NULL;
     }
 
     // Prevent these symbols from being selected again
-    sym1->mSelected = false;
-    sym2->mSelected = false;
+    sym1->mUsed = false;
+    sym2->mUsed = false;
 
     unsigned int select = mDistRecombine->iuniform(0, 2);
 

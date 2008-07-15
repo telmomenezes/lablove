@@ -45,6 +45,8 @@ SimObj::SimObj(lua_State* luaState)
     mBrain = NULL;
 
     mDeathType = DEATH_HARD;
+
+    mTableSet = new TableSet();
 }
 
 SimObj::SimObj(SimObj* obj)
@@ -63,14 +65,11 @@ SimObj::SimObj(SimObj* obj)
     {
         mFitMap[(*iterFit).first] = (*iterFit).second;
     }
+    
+    mTableSet = new TableSet(obj->mTableSet);
 
-    map<string, SymbolPointer>::iterator iterSymPointers;
-    for (iterSymPointers = obj->mNamedSymbols.begin();
-        iterSymPointers != obj->mNamedSymbols.end();
-        iterSymPointers++)
-    {
-        mNamedSymbols[(*iterSymPointers).first] = (*iterSymPointers).second;
-    }
+    //printf("\n\n=================\n");
+    //mTableSet.printDebug();
 
     mType = obj->mType;
 
@@ -84,57 +83,13 @@ SimObj::SimObj(SimObj* obj)
     mKeepBodyOnHardDeath = obj->mKeepBodyOnHardDeath;
     mKeepBodyOnExpirationDeath = obj->mKeepBodyOnExpirationDeath;
 
-    map<int, SymbolTable*>::iterator iterTables;
-    for (iterTables = obj->mSymbolTables.begin();
-        iterTables != obj->mSymbolTables.end();
-        iterTables++)
-    {
-        mSymbolTables[(*iterTables).first] = new SymbolTable((*iterTables).second);
-    }
-
     if (mType == TYPE_AGENT)
     {
         mBrain = obj->mBrain->clone();
         mBrain->setOwner(this);
-
-        // Clean and expand symbol tables
-        map<int, SymbolTable*>::iterator iterTables;
-        for (iterTables = mSymbolTables.begin();
-            iterTables != mSymbolTables.end();
-            iterTables++)
-        {
-            SymbolTable* table = (*iterTables).second;
-
-            if (table->isDynamic())
-            {
-                int tableID = (*iterTables).first;
-                table->mUsedCount = 0;
-
-                map<llULINT, Symbol*>::iterator iterSymbol = table->getSymbolMap()->begin();
-                while (iterSymbol != table->getSymbolMap()->end())
-                {
-                    llULINT symbolID = (*iterSymbol).first;
-
-                    Symbol* sym = (*iterSymbol).second;
-                    iterSymbol++;
-
-                    sym->mUsed = mBrain->symbolUsed(tableID, symbolID);
-
-                    if (sym->mUsed)
-                    {
-                        table->mUsedCount++;
-                    }
-
-                    if ((!sym->mFixed) && (!sym->mUsed) && (!sym->mProtected))
-                    {
-                        table->getSymbolMap()->erase(symbolID);
-                        delete sym;
-                    }
-                }
-
-                table->grow();
-            }
-        }
+        mBrain->markUsedSymbols(mTableSet);
+        mTableSet->cleanAndGrow();
+        mBrain->repair();
     }
 }
 
@@ -146,19 +101,6 @@ SimObj::~SimObj()
         mBrain = NULL;
     }
 
-    map<int, SymbolTable*>::iterator iterTables;
-
-    for (iterTables = mSymbolTables.begin();
-        iterTables != mSymbolTables.end();
-        iterTables++)
-    {
-        delete (*iterTables).second;
-    }
-
-    mSymbolTables.clear();
-
-    mNamedSymbols.clear();
-
     for (list<Message*>::iterator iterMessage = mMessageList.begin();
             iterMessage != mMessageList.end();
             iterMessage++)
@@ -167,6 +109,12 @@ SimObj::~SimObj()
     }
 
     mMessageList.clear();
+
+    if (mTableSet != NULL)
+    {
+        delete mTableSet;
+        mTableSet = NULL;
+    }
 }
 
 SimObj* SimObj::clone()
@@ -199,92 +147,37 @@ void SimObj::compute()
 
 void SimObj::addSymbolTable(SymbolTable* table)
 {
-    mSymbolTables[table->getID()] = table;
+    mTableSet->addSymbolTable(table);
 }
 
 SymbolTable* SimObj::getSymbolTable(int id)
 {
-    if (mSymbolTables.count(id) == 0)
-    {
-        return NULL;
-    }
-    return mSymbolTables[id];
+    return mTableSet->getSymbolTable(id);
 }
 
 SymbolTable* SimObj::getSymbolTableByName(string name)
 {
-    map<int, SymbolTable*>::iterator iterTables;
-
-    for (iterTables = mSymbolTables.begin();
-        iterTables != mSymbolTables.end();
-        iterTables++)
-    {
-        if ((*iterTables).second->getName() == name)
-        {
-            return (*iterTables).second;
-        }
-    }
-
-    return NULL;
+    return mTableSet->getSymbolTableByName(name);
 }
 
 void SimObj::setSymbolName(string name, int table, llULINT id)
 {
-    SymbolPointer sp;
-    sp.mTable = table;
-    sp.mID = id;
-    mNamedSymbols[name] = sp;
+    mTableSet->setSymbolName(name, table, id);
 }
 
 Symbol* SimObj::getSymbolByName(string name)
 {
-    if (mNamedSymbols.count(name) == 0)
-    {
-        return NULL;
-    }
-    
-    SymbolPointer sp = mNamedSymbols[name];
-    SymbolTable* symTab = getSymbolTable(sp.mTable);
-
-    if (symTab == NULL)
-    {
-        return NULL;
-    }
-
-    return symTab->getSymbol(sp.mID);
+    return mTableSet->getSymbolByName(name);
 }
 
 string SimObj::getSymbolName(int table, llULINT id)
 {
-    for (map<string, SymbolPointer>::iterator iterName = mNamedSymbols.begin();
-            iterName != mNamedSymbols.end();
-            iterName++)
-    {
-        if (((*iterName).second.mTable == table)
-            && ((*iterName).second.mID == id))
-        {
-            return (*iterName).first;
-        }
-    }
-
-    return "?";
+    return mTableSet->getSymbolName(table, id);
 }
 
 string SimObj::getTableName(int table)
 {
-    SymbolTable* t = getSymbolTable(table);
-
-    if (t == NULL)
-    {
-        return "?";
-    }
-
-    if (t->getName() != "")
-    {
-        return t->getName();
-    }
-
-    return "?";
+    return mTableSet->getTableName(table);
 }
 
 bool SimObj::getFieldValue(string fieldName, float& value)
@@ -372,32 +265,12 @@ void SimObj::recombine(SimObj* parent1, SimObj* parent2)
     {
         newBrain = parent1->mBrain->recombine(parent2->mBrain);
 
-        newBrain->setSelectedSymbols(parent1);
-        newBrain->setSelectedSymbols(parent2);
+        newBrain->markUsedSymbols(parent1->mTableSet);
+        newBrain->markUsedSymbols(parent2->mTableSet);
         setBrain(newBrain);
     }
 
-    map<int, SymbolTable*>::iterator iterTables;
-
-    for (iterTables = mSymbolTables.begin();
-        iterTables != mSymbolTables.end();
-        iterTables++)
-    {
-        delete (*iterTables).second;
-    }
-
-    mSymbolTables.clear();
-
-    for (iterTables = parent1->mSymbolTables.begin();
-        iterTables != parent1->mSymbolTables.end();
-        iterTables++)
-    {
-        int tableID = (*iterTables).first;
-        SymbolTable* table1 = (*iterTables).second;
-        SymbolTable* table2 = parent2->getSymbolTable(tableID);
-
-        mSymbolTables[tableID] = table1->recombine(table2);
-    }
+    mTableSet->recombine(parent1->mTableSet, parent2->mTableSet);
 }
 
 SimObj* SimObj::recombine(SimObj* otherParent)
@@ -415,19 +288,7 @@ SimObj* SimObj::recombine(SimObj* otherParent)
 
 void SimObj::onAdd()
 {
-    // Reset symbol protections
-    map<int, SymbolTable*>::iterator iterTables;
-    for (iterTables = mSymbolTables.begin();
-        iterTables != mSymbolTables.end();
-        iterTables++)
-    {
-        SymbolTable* table = (*iterTables).second;
-
-        if (table->isDynamic())
-        {
-            table->resetProtections();
-        }
-    }
+    mTableSet->resetProtections();
 }
 
 void SimObj::setFloatDataFromSymbol(string symbolName, float& var)
@@ -469,13 +330,7 @@ void SimObj::emptyMessageList()
 
 void SimObj::printDebug()
 {
-    map<int, SymbolTable*>::iterator iterTables;
-    for (iterTables = mSymbolTables.begin();
-        iterTables != mSymbolTables.end();
-        iterTables++)
-    {
-        ((*iterTables).second)->printDebug();
-    }
+    mTableSet->printDebug();
 
     if (mBrain != NULL)
     {

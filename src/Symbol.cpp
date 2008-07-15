@@ -27,7 +27,6 @@ Symbol::Symbol()
     mFixed = true;
     mID = NEXT_SYMBOL_ID;
     NEXT_SYMBOL_ID++;
-    mSelected = false;
     mUsed = false;
     mProtected = false;
 }
@@ -37,7 +36,6 @@ Symbol::Symbol(Symbol* sym)
     mAlwaysRandom = sym->mAlwaysRandom;
     mFixed = sym->mFixed;
     mID = sym->mID;
-    mSelected = false;
     mUsed = false;
     mProtected = false;
 }

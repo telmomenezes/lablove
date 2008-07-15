@@ -474,22 +474,38 @@ void Gridbrain::generateMemory(Gridbrain* originGB)
 
     mMemory[CURRENT_MEM_ID++] = GridbrainMemCell();
 
-    // Correct components with invalid memory
-    for (unsigned int i = 0; i < gb->mNumberOfComponents; i++)
+    
+}
+
+void Gridbrain::repair()
+{
+    for (unsigned int i = 0; i < mNumberOfComponents; i++)
     {
-        GridbrainComponent* comp = &(gb->mComponents[i]);
+        bool replace = false;
+        GridbrainComponent* comp = &(mComponents[i]);
 
         if (comp->isMemory()
             && (mMemory.count(comp->mOrigSymID) == 0))
         {
-            unsigned int memPos = mDistComponents->iuniform(0, mMemory.size());
+            replace = true;
+        }
+        else if (comp->isUnique())
+        {
+            TableSet* ts = mOwner->mTableSet;
 
-            map<llULINT, GridbrainMemCell>::iterator iterMem = mMemory.begin();
-            for (unsigned int i = 0; i < memPos; i++)
+            if (!ts->symbolExists(comp->mOrigSymTable, comp->mOrigSymID))
             {
-                iterMem++;
+                replace = true;
             }
-            comp->mOrigSymID = (*iterMem).first;
+        }
+
+        if (replace)
+        {
+            unsigned int gridNumber = comp->mGrid;
+            Grid* grid = mGridsVec[gridNumber];
+
+            GridbrainComponent* newComp = grid->getRandomComponent();
+            replaceComponent(i, newComp);
         }
     }
 }
@@ -2442,7 +2458,8 @@ bool Gridbrain::symbolUsed(int tableID, llULINT symbolID)
     {
         GridbrainComponent* comp = &mComponents[i];
 
-        if ((comp->mOrigSymTable == tableID)
+        if (comp->mActive
+            && (comp->mOrigSymTable == tableID)
             && (comp->mOrigSymID == symbolID))
         {
             return true;
@@ -2460,18 +2477,6 @@ void Gridbrain::linkMemory()
 
         if (comp->isMemory())
         {
-            if (comp->mOrigSymID == 0)
-            {
-                unsigned int pos = mDistComponents->iuniform(0, mMemory.size());           
-                map<llULINT, GridbrainMemCell>::iterator iterCell = mMemory.begin();
-                for (unsigned int j = 0; j < pos; j++)
-                {
-                    iterCell++;
-                }
-                
-                comp->mOrigSymID = (*iterCell).first;
-            }
-
             if (comp->mMemCell == NULL)
             {
                 comp->mMemCell = &mMemory[comp->mOrigSymID];
@@ -2561,6 +2566,39 @@ float Gridbrain::getDistance(Brain* brain)
     match /= maxSize;
 
     return (1.0f - match);
+}
+
+void Gridbrain::markUsedSymbols(TableSet* tab)
+{
+    map<int, SymbolTable*>::iterator iterTables;
+    for (iterTables = tab->mSymbolTables.begin();
+        iterTables != tab->mSymbolTables.end();
+        iterTables++)
+    {
+        SymbolTable* table = (*iterTables).second;
+
+        if (table->isDynamic())
+        {
+            int tableID = (*iterTables).first;
+            table->mUsedCount = 0;
+
+            map<llULINT, Symbol*>::iterator iterSymbol = table->getSymbolMap()->begin();
+            while (iterSymbol != table->getSymbolMap()->end())
+            {
+                llULINT symbolID = (*iterSymbol).first;
+
+                Symbol* sym = (*iterSymbol).second;
+                iterSymbol++;
+
+                sym->mUsed = symbolUsed(tableID, symbolID);
+
+                if (sym->mUsed)
+                {
+                    table->mUsedCount++;
+                }
+            }
+        }
+    }
 }
 
 const char Gridbrain::mClassName[] = "Gridbrain";

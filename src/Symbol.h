@@ -60,8 +60,6 @@ public:
     bool mFixed;
     bool mProtected;
 
-    // for recombination purposes
-    bool mSelected;
     llULINT mID;
 
     bool mUsed;

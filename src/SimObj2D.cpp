@@ -1420,19 +1420,11 @@ void SimObj2D::processLaserHit(Laser2D* laser)
     SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
     if ((obj != NULL) && (laser->mEnergy > 0))
     {
-        score = laser->mEnergy * 0.1f;
+        score = laser->mEnergy;
         //printf("score: %f\n", score);
         if (obj->mSpeciesID != mSpeciesID)
         {
-            if (obj->mLastBodyHit == 0)
-            {
-                obj->mLastBodyHit = mBodyID;
-            }
-
-            if (obj->mLastBodyHit == mBodyID)
-            {
-                obj->mLaserHitScore += score;
-            }
+            obj->mLaserHitScore += score;
         }
     }
 
