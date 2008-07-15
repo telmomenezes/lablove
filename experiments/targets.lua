@@ -75,7 +75,7 @@ humanAgent = false
 evolutionStopTime = 0
 
 self = false
-comm = false
+comm = true
 
 agentBirthRadius = 100.0
 

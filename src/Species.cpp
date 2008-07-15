@@ -177,7 +177,7 @@ void Species::bufferDump(llULINT time, Simulation* sim)
         for (unsigned int f = 0; f < mGoals.size(); f++)
         {
             Fitness* fit = obj->getFitnessByIndex(f);
-            fprintf(globalFile, ", %f, %f, %f", i, fit->mFitness, fit->mGroupFitness, fit->mFinalFitness);
+            fprintf(globalFile, ", %f, %f, %f", fit->mFitness, fit->mGroupFitness, fit->mFinalFitness);
         }
         fprintf(globalFile, "\n");
     }
