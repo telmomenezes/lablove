@@ -218,10 +218,12 @@ public:
 
 protected:
     void generateMemory(Gridbrain* originGB=NULL);
+    void cleanAndGrowMemory();
 
     void initGridsIO();
     void calcConnectionCounts();
     void calcActive();
+    void calcActiveComponents();
     void calcDensityMetrics();
     void calcExpansion();
     void linkMemory();
@@ -280,6 +282,8 @@ protected:
     GridbrainGeneTag findGeneTag(GridbrainConnection* conn);
     virtual void popAdjust(vector<SimObj*>* popVec);
 
+    void printMemDebug();
+
     static llULINT CURRENT_MEM_ID;
 
     static mt_distribution* mDistConnections;
@@ -326,6 +330,8 @@ protected:
     map<llULINT, GridbrainMemCell> mMemory;
 
     RecombinationType mRecombinationType;
+
+    llULINT mLastMemID;
 };
 
 #endif

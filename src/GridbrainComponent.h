@@ -87,6 +87,8 @@ public:
     bool isUnique();
     bool isProducer();
     bool isConsumer();
+    void setProducer(bool val);
+    void setConsumer(bool val);
     bool isUsed();
     bool isEqual(GridbrainComponent* comp, bool sameGrid=true);
     bool isMemory();

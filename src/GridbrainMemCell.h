@@ -36,6 +36,10 @@ public:
     float mSelCandidate;
     bool mTriggered;
     bool mValueFound;
+
+    // Producer / Consumer
+    bool mProducer;
+    bool mConsumer;
 };
 #endif
 

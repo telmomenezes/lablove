@@ -28,6 +28,8 @@ GridbrainMemCell::GridbrainMemCell()
     mSelCandidate = 0.0f;
     mTriggered = false;
     mValueFound = false;
+    mProducer = false;
+    mConsumer = false;
 }
 
 GridbrainMemCell::~GridbrainMemCell()

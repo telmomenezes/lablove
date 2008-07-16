@@ -194,6 +194,11 @@ GridbrainComponent::ConnType GridbrainComponent::getConnectorType()
 
 bool GridbrainComponent::isProducer()
 {
+    if (isMemory())
+    {
+        return mMemCell->mProducer;
+    }
+
     switch(mType)
     {
     case IN:
@@ -201,10 +206,6 @@ bool GridbrainComponent::isProducer()
     case RAND:
     case ZERO:
     case CLK:
-    case MEMC:
-    case MEMW:
-    case MEMD:
-    case SEL:
         return true;
     default:
         return false;
@@ -213,16 +214,37 @@ bool GridbrainComponent::isProducer()
 
 bool GridbrainComponent::isConsumer()
 {
+    if (isMemory())
+    {
+        return mMemCell->mConsumer;
+    }
+
     switch(mType)
     {
     case OUT:
-    case MEMC:
-    case MEMW:
-    case MEMD:
-    case SEL:
         return true;
     default:
         return false;
+    }
+}
+
+void GridbrainComponent::setProducer(bool val)
+{
+    mProducer = val;
+
+    if (val && isMemory())
+    {
+        mMemCell->mProducer = true;
+    }
+}
+
+void GridbrainComponent::setConsumer(bool val)
+{
+    mConsumer = val;
+
+    if (val && isMemory())
+    {
+        mMemCell->mConsumer = true;
     }
 }
 
@@ -252,7 +274,7 @@ void GridbrainComponent::calcProducer(bool prod)
     {
         if (prod)
         {
-            mProducer = true;
+            setProducer(true);
         }
 
         GridbrainConnection* conn = mFirstConnection;
@@ -281,7 +303,7 @@ bool GridbrainComponent::calcConsumer()
         GridbrainComponent* targComp = (GridbrainComponent*)conn->mTargComponent;
         if (targComp->calcConsumer())
         {
-            mConsumer = true;
+            setConsumer(true);
             return true;
         }
 
@@ -293,7 +315,7 @@ bool GridbrainComponent::calcConsumer()
         return true;
     }
 
-    mConsumer = false;
+    setConsumer(false);
     return false;
 }
 

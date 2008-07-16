@@ -66,6 +66,8 @@ Gridbrain::Gridbrain(lua_State* luaState)
 
     mRecombinationType = RT_UNIFORM;
     mGeneGrouping = false;
+
+    mLastMemID = CURRENT_MEM_ID;
 }
 
 Gridbrain::~Gridbrain()
@@ -118,6 +120,8 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
     gb->mMutateChangeComponentProb = mMutateChangeComponentProb;
     gb->mMutateChangeInactiveComponentProb = mMutateChangeInactiveComponentProb;
     gb->mMutateSwapComponentProb = mMutateSwapComponentProb;
+
+    gb->mLastMemID = mLastMemID;
 
     for (map<string, int>::iterator iterChannel = mChannels.begin();
             iterChannel != mChannels.end();
@@ -439,8 +443,8 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
     }
 
     gb->generateMemory();
-
     gb->update();
+    gb->cleanAndGrowMemory();
 
     return gb;
 }
@@ -465,16 +469,77 @@ void Gridbrain::generateMemory(Gridbrain* originGB)
         GridbrainComponent* comp = &(gb->mComponents[i]);
 
         if (comp->isMemory()
-            && comp->mActive
             && (mMemory.count(comp->mOrigSymID) == 0))
         {
             mMemory[comp->mOrigSymID] = GridbrainMemCell();
         }
     }
 
-    mMemory[CURRENT_MEM_ID++] = GridbrainMemCell();
+    if (mMemory.size() == 0)
+    {
+        mMemory[mLastMemID] = GridbrainMemCell();
+    }
+}
 
-    
+void Gridbrain::cleanAndGrowMemory()
+{
+    bool inactiveCell = false;
+    bool lastIDFound = false;
+
+    map<llULINT, GridbrainMemCell>::iterator iterMem = mMemory.begin();
+
+    while (iterMem != mMemory.end())
+    {
+        map<llULINT, GridbrainMemCell>::iterator curIterMem = iterMem;
+        iterMem++;
+
+        if ((!(*curIterMem).second.mProducer)
+            || (!(*curIterMem).second.mConsumer))
+        {
+            if ((*curIterMem).first == mLastMemID)
+            {
+                lastIDFound = true;
+            }
+
+            if (inactiveCell)
+            {
+                mMemory.erase((*curIterMem).first);
+            }
+            else
+            {
+                inactiveCell = true;
+            }
+        }
+    }
+
+    if (!inactiveCell)
+    {
+        if (lastIDFound)
+        {
+            CURRENT_MEM_ID++;
+            mLastMemID = CURRENT_MEM_ID;
+        }
+        mMemory[mLastMemID] = GridbrainMemCell();
+    }
+
+    /*if (mMemory.size() > 1)
+    {
+        printMemDebug();
+    }*/
+}
+
+void Gridbrain::printMemDebug()
+{
+    printf("\n\n=======\nmem size: %d\n", mMemory.size());
+
+    map<llULINT, GridbrainMemCell>::iterator iterMem = mMemory.begin();
+    while (iterMem != mMemory.end())
+    {
+
+        printf("%d ", (*iterMem).first);
+        iterMem++;
+    }
+    printf("\n");
 }
 
 void Gridbrain::repair()
@@ -2036,7 +2101,7 @@ void Gridbrain::calcConnectionCounts()
     }
 }
 
-void Gridbrain::calcActive()
+void Gridbrain::calcActiveComponents()
 {
     // Reset component active/producer/consumer state
     for (unsigned int g = 0; g < mGridsCount; g++)
@@ -2092,13 +2157,36 @@ void Gridbrain::calcActive()
             }
         }
 
+        grid->mComponentSequenceSize = sequenceSize;
+    }
+}
+
+void Gridbrain::calcActive()
+{
+    // Reset memory active/producer/consumer state
+    for (map<llULINT, GridbrainMemCell>::iterator iterMem = mMemory.begin();
+            iterMem != mMemory.end();
+            iterMem++)
+    {
+        (*iterMem).second.mProducer = false;
+        (*iterMem).second.mConsumer = false;
+    }
+
+    // First time to determine memory producer/consumer state
+    calcActiveComponents();
+    // Second time to determine final values
+    calcActiveComponents();
+
+    for (unsigned int g = 0; g < mGridsCount; g++)
+    {
+        Grid* grid = mGridsVec[g];
+
         if (grid->mComponentSequence != NULL)
         {
             free(grid->mComponentSequence);
             grid->mComponentSequence = NULL;
         }
-        grid->mComponentSequence = (GridbrainComponent**)malloc(sequenceSize * sizeof(GridbrainComponent*));
-        grid->mComponentSequenceSize = sequenceSize;
+        grid->mComponentSequence = (GridbrainComponent**)malloc(grid->mComponentSequenceSize * sizeof(GridbrainComponent*));
 
         unsigned int pos = 0;
         for (unsigned int x = 0; x < grid->getWidth(); x++)
