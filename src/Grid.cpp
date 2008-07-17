@@ -41,7 +41,7 @@ Grid::Grid(lua_State* luaState)
     mComponentSequence = NULL;
     mComponentSequenceSize = 0;
 
-    mComponentSet = NULL;
+    mComponentSet = new GridbrainComponentSet();
 
     if (luaState)
     {
@@ -69,8 +69,8 @@ Grid::Grid(const Grid& grid)
     mWriteY = 0;
     mComponentSequence = NULL;
     mComponentSequenceSize = 0;
-
-    mComponentSet = grid.mComponentSet;
+    
+    mComponentSet = new GridbrainComponentSet(grid.mComponentSet);
 
     for (unsigned int i = 0; i < mWidth; i++)
     {
@@ -123,6 +123,11 @@ Grid::~Grid()
         free(mComponentSequence);
         mComponentSequence = NULL;
     }
+    if (mComponentSet != NULL)
+    {
+        delete mComponentSet;
+        mComponentSet = NULL;
+    }
 }
 
 void Grid::init(Type type, unsigned int width, unsigned int height)
@@ -162,12 +167,12 @@ void Grid::init(Type type, unsigned int width, unsigned int height)
 
 void Grid::setComponentSet(GridbrainComponentSet* componentSet)
 {
-    mComponentSet = *componentSet;
+    mComponentSet = componentSet;
 }
 
 GridbrainComponent* Grid::getRandomComponent()
 {
-    return mComponentSet.getRandom();
+    return mComponentSet->getRandom();
 }
 
 void Grid::setInput(unsigned int number, unsigned int depth, float value)

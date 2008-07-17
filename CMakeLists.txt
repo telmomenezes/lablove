@@ -61,11 +61,31 @@ SET(SOURCE_FILES
     src/GridbrainWrite.cpp
     src/Grid.cpp
     src/GridCoord.cpp
-    src/GridbrainComponent
+    src/GridbrainComponent.cpp
+    src/comps/CompNUL.cpp
+    src/comps/CompIN.cpp
+    src/comps/CompOUT.cpp
+    src/comps/CompSUM.cpp
+    src/comps/CompMAX.cpp
+    src/comps/CompMIN.cpp
+    src/comps/CompAVG.cpp
+    src/comps/CompMUL.cpp
+    src/comps/CompNOT.cpp
+    src/comps/CompAND.cpp
+    src/comps/CompINV.cpp
+    src/comps/CompNEG.cpp
+    src/comps/CompAMP.cpp
+    src/comps/CompMOD.cpp
+    src/comps/CompRAND.cpp
+    src/comps/CompEQ.cpp
+    src/comps/CompGTZ.cpp
+    src/comps/CompZERO.cpp
+    src/comps/CompCLK.cpp
+    src/comps/CompDMUL.cpp
+    src/comps/CompSEL.cpp
     src/GridbrainConnection.cpp
     src/GridbrainGeneTag.cpp
     src/GridbrainComponentSet.cpp
-    src/GridbrainMemCell.cpp
     src/GridbrainState.cpp
     src/GridbrainHistory.cpp
     src/PopulationDynamics.cpp

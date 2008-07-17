@@ -24,75 +24,42 @@
 #include "InterfaceItem.h"
 #include "Orbit.h"
 #include "types.h"
-#include "GridbrainMemCell.h"
 
 #include <string>
-#include <map>
 using std::string;
-using std::map;
-
-#define COMPONENT_INPUT_TYPE(compType, inputType) \
-switch(compType) \
-{ \
-case GridbrainComponent::MUL: \
-case GridbrainComponent::MAX: \
-case GridbrainComponent::MIN: \
-case GridbrainComponent::AVG: \
-case GridbrainComponent::SEL: \
-    inputType = GridbrainComponent::IN_MUL; \
-    break; \
-case GridbrainComponent::AND: \
-    inputType = GridbrainComponent::IN_TMUL; \
-    break; \
-case GridbrainComponent::NOT: \
-    inputType = GridbrainComponent::IN_TSUM; \
-    break; \
-case GridbrainComponent::EQ: \
-    inputType = GridbrainComponent::IN_EQ; \
-    break; \
-case GridbrainComponent::DAND: \
-    inputType = GridbrainComponent::IN_FLAGS; \
-    break; \
-case GridbrainComponent::OUT: \
-    inputType = GridbrainComponent::IN_FIRST; \
-    break; \
-default: \
-    inputType = GridbrainComponent::IN_SUM; \
-    break; \
-} \
 
 class GridbrainComponent
 {
 public:
-    enum Type {NUL, IN, OUT, AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, MAX, MIN, AVG, CLK, MEMW, MEMC, MEMD, DAND, SEL};
-    enum InputType {IN_SUM, IN_TSUM, IN_MUL, IN_TMUL, IN_EQ, IN_FLAGS, IN_FIRST};
+    enum Type {NUL, IN, OUT, AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, MAX, MIN, AVG, CLK, DMUL, SEL};
     enum ConnType {CONN_IN, CONN_OUT, CONN_INOUT};
 
+    static GridbrainComponent* createByType(Type type);
+
     GridbrainComponent(lua_State* luaState=NULL);
-    GridbrainComponent(const GridbrainComponent& comp);
     virtual ~GridbrainComponent();
 
-    void clearDefinitions();
-    void clearPosition();
-    void clearConnections();
+    virtual GridbrainComponent* clone(){return NULL;}
+
+    virtual void input(float value, int pin){}
+    virtual float output(unsigned int id){return 0.0f;}
+    virtual void reset(int pass){}
+
     void clearMetrics();
-    void copyDefinitions(GridbrainComponent* comp);
+
     void copyPosition(GridbrainComponent* comp);
+    void copyConnections(GridbrainComponent* comp);
 
+    virtual string getName(){return "?";}
+    virtual ConnType getConnectorType(){return CONN_INOUT;}
+
+    virtual bool isUnique(){return false;}
     
-    string getName();
-    ConnType getConnectorType();
-
-    bool isAggregator();
-    bool isUnique();
-    bool isProducer();
-    bool isConsumer();
-    void setProducer(bool val);
-    void setConsumer(bool val);
     bool isUsed();
     bool isEqual(GridbrainComponent* comp, bool sameGrid=true);
-    bool isMemory();
 
+    virtual bool isProducer(){return false;}
+    virtual bool isConsumer(){return false;}
     void calcProducer(bool prod);
     bool calcConsumer();
     bool calcActive();
@@ -106,18 +73,10 @@ public:
     Type mType;
     int mSubType;
     float mParam;
-    bool mInit;
+
     float mInput;
     float mOutput;
-    unsigned int mConnectionsCount;
-    unsigned int mInboundConnections;
-    GridbrainConnection* mFirstConnection;
-    GridbrainConnection* mFirstInConnection;
-    float mState;
-    bool mCycleFlag;
-    bool mForwardFlag;
-    float mPreState;
-    unsigned int mEvalCount;
+
     unsigned int mOffset;
     unsigned int mPerceptionPosition;
     unsigned int mActionPosition;
@@ -126,25 +85,25 @@ public:
     unsigned int mRow;
     unsigned int mGrid;
 
+    unsigned int mConnectionsCount;
+    unsigned int mInboundConnections;
+    GridbrainConnection* mFirstConnection;
+    GridbrainConnection* mFirstInConnection;
+
+    unsigned int mPossibleConnections;
+
     int mOrigSymTable;
     llULINT mOrigSymID;
     int mTargetSymTable;
     InterfaceItem::TableLinkType mTableLinkType;
-
-    unsigned int mPossibleConnections;
 
     unsigned int mDepth;
     bool mProducer;
     bool mConsumer;
     bool mActive;
 
-    llULINT mTimeToTrigger;
-    llULINT mTriggerInterval;
-    float mLastInput;
-
-    GridbrainMemCell* mMemCell;
-
-    map<unsigned int, bool> mInputFlags;
+protected:
+    virtual bool compare(GridbrainComponent* comp){return true;}
 };
 
 #endif

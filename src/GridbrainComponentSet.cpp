@@ -22,25 +22,34 @@
 
 mt_distribution* GridbrainComponentSet::mDistComponentSet = gDistManager.getNewDistribution();
 
+GridbrainComponentSet::GridbrainComponentSet()
+{
+}
+
 GridbrainComponentSet::GridbrainComponentSet(lua_State* luaState)
 {
 }
 
-GridbrainComponentSet::GridbrainComponentSet(const GridbrainComponentSet& comp)
+GridbrainComponentSet::GridbrainComponentSet(GridbrainComponentSet* comp)
 {
-    for (unsigned int i = 0; i < comp.mComponentVec.size(); i++)
+    for (unsigned int i = 0; i < comp->mComponentVec.size(); i++)
     {
-        mComponentVec.push_back(comp.mComponentVec[i]);
+        mComponentVec.push_back(comp->mComponentVec[i]);
     }
 }
 
 GridbrainComponentSet::~GridbrainComponentSet()
 {
+    for (unsigned int i = 0; i < mComponentSet.size(); i++)
+    {
+        delete mComponentSet[i];
+    }
+    mComponentSet.clear();
 }
 
 void GridbrainComponentSet::addComponent(GridbrainComponent* component)
 {
-    mComponentVec.push_back(component);
+    mComponentVec.push_back(component->clone());
 }
 
 GridbrainComponent* GridbrainComponentSet::getRandom()
@@ -55,7 +64,7 @@ GridbrainComponent* GridbrainComponentSet::getRandom()
     else
     {
         unsigned int pos = mDistComponentSet->iuniform(0, mComponentSet.size());
-        comp = &mComponentSet[pos];
+        comp = mComponentSet[pos];
         comp->mParam = mDistComponentSet->uniform(0.0f, 1.0f);
 
         return comp;
@@ -63,11 +72,14 @@ GridbrainComponent* GridbrainComponentSet::getRandom()
 }
 
 void GridbrainComponentSet::update(SimObj* obj,
-                                    vector<GridbrainComponent>* components,
-                                    map<llULINT, GridbrainMemCell>* memory,
+                                    vector<GridbrainComponent*>* components,
                                     unsigned int start,
                                     unsigned int end)
 {
+    for (unsigned int i = 0; i < mComponentSet.size(); i++)
+    {
+        delete mComponentSet[i];
+    }
     mComponentSet.clear();
 
     for (unsigned int i = 0; i < mComponentVec.size(); i++)
@@ -86,28 +98,14 @@ void GridbrainComponentSet::update(SimObj* obj,
                     iterSym++)
             {
                 llULINT symID = (*iterSym).first;
-                GridbrainComponent newComp;
-                newComp.copyDefinitions(comp);
-                newComp.mOrigSymID = symID;
-                mComponentSet.push_back(newComp);
-            }
-        }
-        else if (comp->isMemory())
-        {
-            for (map<llULINT, GridbrainMemCell>::iterator iterMem = memory->begin();
-                    iterMem != memory->end();
-                    iterMem++)
-            {
-                GridbrainComponent newComp;
-                newComp.copyDefinitions(comp);
-                newComp.mOrigSymID = (*iterMem).first;
+                GridbrainComponent* newComp = comp->clone();
+                newComp->mOrigSymID = symID;
                 mComponentSet.push_back(newComp);
             }
         }
         else
         {
-            GridbrainComponent newComp;
-            newComp.copyDefinitions(comp);
+            GridbrainComponent* newComp = comp->clone();
             mComponentSet.push_back(newComp);
         }
     }
@@ -116,7 +114,7 @@ void GridbrainComponentSet::update(SimObj* obj,
             pos < end;
             pos++)
     {
-        GridbrainComponent* comp = &((*components)[pos]);
+        GridbrainComponent* comp = (*components)[pos];
 
         if (comp->isUnique())
         {
@@ -132,12 +130,13 @@ void GridbrainComponentSet::disable(GridbrainComponent* comp)
         return;
     }
 
-    for (vector<GridbrainComponent>::iterator iterComp = mComponentSet.begin();
+    for (vector<GridbrainComponent*>::iterator iterComp = mComponentSet.begin();
             iterComp != mComponentSet.end();
             iterComp++)
     {
-        if ((*iterComp).isEqual(comp, false))
+        if ((*iterComp)->isEqual(comp, false))
         {
+            delete (*iterComp);
             mComponentSet.erase(iterComp);
             return;
         }
@@ -151,8 +150,7 @@ void GridbrainComponentSet::enable(GridbrainComponent* comp)
         return;
     }
 
-    GridbrainComponent newComp;
-    newComp.copyDefinitions(comp);
+    GridbrainComponent* newComp = comp->clone();
     mComponentSet.push_back(newComp);
 }
 
@@ -163,8 +161,7 @@ void GridbrainComponentSet::addComponent(GridbrainComponent::Type type,
                         llULINT origSymID,
                         int targetSymTable)
 {
-    GridbrainComponent* comp = new GridbrainComponent();
-    comp->mType = type;
+    GridbrainComponent* comp = GridbrainComponent::createByType(type);
     comp->mSubType = subType;
     comp->mOrigSymTable = origSymTable;
     comp->mTargetSymTable = targetSymTable;
@@ -177,7 +174,7 @@ void GridbrainComponentSet::print()
 {
     for (unsigned int i = 0; i < mComponentSet.size(); i++)
     {
-        GridbrainComponent* comp = &(mComponentSet[i]);
+        GridbrainComponent* comp = mComponentSet[i];
         printf("%s", comp->getName().c_str());
         printf("(%d)[%d] ", comp->mSubType, comp->mOrigSymID);
     }

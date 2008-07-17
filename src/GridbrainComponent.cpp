@@ -18,66 +18,36 @@
  */
 
 #include "GridbrainComponent.h"
+#include "comps/comps.h"
 
 GridbrainComponent::GridbrainComponent(lua_State* luaState)
 {
-    clearDefinitions();
-    clearPosition();
-    clearConnections();
-    clearMetrics();
-}
-
-GridbrainComponent::GridbrainComponent(const GridbrainComponent& comp)
-{
-    clearDefinitions();
-    clearPosition();
-    clearConnections();
-    clearMetrics();
-    copyDefinitions((GridbrainComponent*)(&comp));
-}
-
-GridbrainComponent::~GridbrainComponent()
-{
-}
-
-void GridbrainComponent::clearDefinitions()
-{
-    mType = NUL;
     mSubType = -1;
     mParam = 0;
-    mInit = false;
     mInput = 0;
     mOutput = 0;
-    mState = 0;
-    mPreState = 0;
-    mForwardFlag = false;
-    mCycleFlag = false;
     mPerceptionPosition = 0;
     mActionPosition = 0;
     mOrigSymTable = -1;
     mTargetSymTable = -1;
     mOrigSymID = 0;
     mTableLinkType = InterfaceItem::NO_LINK;
-    mTimeToTrigger = 0;
-    mTriggerInterval = 0;
-    mLastInput = 0.0f;
-    mMemCell = NULL;
-}
 
-void GridbrainComponent::clearPosition()
-{
     mOffset = 0;
     mColumn = 0;
     mRow = 0;
     mGrid = 0;
-}
 
-void GridbrainComponent::clearConnections()
-{
     mConnectionsCount = 0;
     mFirstConnection = NULL;
     mInboundConnections = 0;
     mFirstInConnection = NULL;
+
+    clearMetrics();
+}
+
+GridbrainComponent::~GridbrainComponent()
+{
 }
 
 void GridbrainComponent::clearMetrics()
@@ -88,18 +58,6 @@ void GridbrainComponent::clearMetrics()
     mActive = false;
 }
 
-void GridbrainComponent::copyDefinitions(GridbrainComponent* comp)
-{
-    mType = comp->mType;
-    mSubType = comp->mSubType;
-    mParam = comp->mParam;
-    mInit = false;
-    mOrigSymTable = comp->mOrigSymTable;
-    mTargetSymTable = comp->mTargetSymTable;
-    mOrigSymID = comp->mOrigSymID;
-    mTableLinkType = comp->mTableLinkType;
-}
-
 void GridbrainComponent::copyPosition(GridbrainComponent* comp)
 {
     mOffset = comp->mOffset;
@@ -108,158 +66,12 @@ void GridbrainComponent::copyPosition(GridbrainComponent* comp)
     mGrid = comp->mGrid;
 }
 
-bool GridbrainComponent::isAggregator()
+void GridbrainComponent::copyConnections(GridbrainComponent* comp)
 {
-    return ((mType == GridbrainComponent::MAX)
-            || (mType == GridbrainComponent::MIN)
-            || (mType == GridbrainComponent::AVG));
-}
-
-bool GridbrainComponent::isUnique()
-{
-    return ((mType == GridbrainComponent::IN)
-        || (mType == GridbrainComponent::OUT));
-}
-
-string GridbrainComponent::getName()
-{
-    switch(mType)
-    {
-    case NUL:
-        return "NUL";
-    case IN:
-        return "IN";
-    case OUT:
-        return "OUT";
-    case SUM:
-        return "SUM";
-    case MAX:
-        return "MAX";
-    case MIN:
-        return "MIN";
-    case AVG:
-        return "AVG";
-    case MUL:
-        return "MUL";
-    case NOT:
-        return "NOT";
-    case AND:
-        return "AND";
-    case INV:
-        return "INV";
-    case NEG:
-        return "NEG";
-    case MOD:
-        return "MOD";
-    case AMP:
-        return "AMP";
-    case RAND:
-        return "RAND";
-    case EQ:
-        return "EQ";
-    case GTZ:
-        return "GTZ";
-    case ZERO:
-        return "ZERO";
-    case CLK:
-        return "CLK";
-    case MEMC:
-        return "MEMC";
-    case MEMW:
-        return "MEMW";
-    case MEMD:
-        return "MEMD";
-    case DAND:
-        return "DAND";
-    case SEL:
-        return "SEL";
-    default:
-        return "?";
-    }
-}
-
-GridbrainComponent::ConnType GridbrainComponent::getConnectorType()
-{
-    switch(mType)
-    {
-    case IN:
-    case RAND:
-        return CONN_OUT;
-    case OUT:
-        return CONN_IN;
-    default:
-        return CONN_INOUT;
-    }
-}
-
-bool GridbrainComponent::isProducer()
-{
-    if (isMemory())
-    {
-        return mMemCell->mProducer;
-    }
-
-    switch(mType)
-    {
-    case IN:
-    case NOT:
-    case RAND:
-    case ZERO:
-    case CLK:
-        return true;
-    default:
-        return false;
-    }
-}
-
-bool GridbrainComponent::isConsumer()
-{
-    if (isMemory())
-    {
-        return mMemCell->mConsumer;
-    }
-
-    switch(mType)
-    {
-    case OUT:
-        return true;
-    default:
-        return false;
-    }
-}
-
-void GridbrainComponent::setProducer(bool val)
-{
-    mProducer = val;
-
-    if (val && isMemory())
-    {
-        mMemCell->mProducer = true;
-    }
-}
-
-void GridbrainComponent::setConsumer(bool val)
-{
-    mConsumer = val;
-
-    if (val && isMemory())
-    {
-        mMemCell->mConsumer = true;
-    }
-}
-
-bool GridbrainComponent::isMemory()
-{
-    switch(mType)
-    {
-    case MEMC:
-    case MEMW:
-    case MEMD:
-    case SEL:
-        return true;
-    default:
-        return false;
-    }
+    mConnectionsCount = comp->mConnectionsCount;
+    mInboundConnections = comp->mInboundConnections;
+    mFirstConnection = comp->mFirstConnection;
+    mFirstInConnection = comp->mFirstInConnection;
 }
 
 void GridbrainComponent::calcProducer(bool prod)
@@ -274,7 +86,7 @@ void GridbrainComponent::calcProducer(bool prod)
     {
         if (prod)
         {
-            setProducer(true);
+            mProducer = true;
         }
 
         GridbrainConnection* conn = mFirstConnection;
@@ -303,7 +115,7 @@ bool GridbrainComponent::calcConsumer()
         GridbrainComponent* targComp = (GridbrainComponent*)conn->mTargComponent;
         if (targComp->calcConsumer())
         {
-            setConsumer(true);
+            mConsumer = true;
             return true;
         }
 
@@ -315,7 +127,7 @@ bool GridbrainComponent::calcConsumer()
         return true;
     }
 
-    setConsumer(false);
+    mConsumer = false;
     return false;
 }
 
@@ -346,18 +158,88 @@ bool GridbrainComponent::isUsed()
 bool GridbrainComponent::isEqual(GridbrainComponent* comp, bool sameGrid)
 {
     return ((mType == comp->mType)
-            && (mSubType == comp->mSubType)
             && ((!sameGrid) || (mGrid == comp->mGrid))
-            && (mOrigSymTable == comp->mOrigSymTable)
-            && (mTargetSymTable == comp->mTargetSymTable)
-            && (mOrigSymID == comp->mOrigSymID));
+            && compare(comp));
 }
 
 void GridbrainComponent::print()
 {
     printf("%s", getName().c_str());
-    printf("(%d)[%d]", mSubType, mOrigSymID);
+    printf("(%d)", mSubType);
     printf("  [%d, %d, %d]", mColumn, mRow, mGrid);
+}
+
+GridbrainComponent* GridbrainComponent::createByType(Type type)
+{
+    switch(type)
+    {
+    case NUL:
+        return new CompNUL();
+        break;
+    case IN:
+        return new CompIN();
+        break;
+    case OUT:
+        return new CompOUT();
+        break;
+    case SUM:
+        return new CompSUM();
+        break;
+    case MAX:
+        return new CompMAX();
+        break;
+    case MIN:
+        return new CompMIN();
+        break;
+    case AVG:
+        return new CompAVG();
+        break;
+    case MUL:
+        return new CompMUL();
+        break;
+    case NOT:
+        return new CompNOT();
+        break;
+    case AND:
+        return new CompAND();
+        break;
+    case INV:
+        return new CompINV();
+        break;
+    case NEG:
+        return new CompNEG();
+        break;
+    case AMP:
+        return new CompAMP();
+        break;
+    case MOD:
+        return new CompMOD();
+        break;
+    case RAND:
+        return new CompRAND();
+        break;
+    case EQ:
+        return new CompEQ();
+        break;
+    case GTZ:
+        return new CompGTZ();
+        break;
+    case ZERO:
+        return new CompZERO();
+        break;
+    case CLK:
+        return new CompCLK();
+        break;
+    case DMUL:
+        return new CompDMUL();
+        break;
+    case SEL:
+        return new CompSEL();
+        break;
+    default:
+        return new CompNUL();
+        break;
+    }
 }
 
 const char GridbrainComponent::mClassName[] = "GridbrainComponent";
@@ -384,10 +266,7 @@ Orbit<GridbrainComponent>::NumberGlobalType GridbrainComponent::mNumberGlobals[]
     {"GTZ", GTZ},
     {"ZERO", ZERO},
     {"CLK", CLK},
-    {"MEMC", MEMC},
-    {"MEMW", MEMW},
-    {"MEMD", MEMD},
-    {"DAND", DAND},
+    {"DMUL", DMUL},
     {"SEL", SEL},
     {0,0}
 };

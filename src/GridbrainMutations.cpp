@@ -405,7 +405,7 @@ void Gridbrain::mutateChangeComponent(float prob)
         MUTATIONS_CHG_COMP++;
         int pos = mCompSeqPos;
 
-        unsigned int gridNumber = mComponents[pos].mGrid;
+        unsigned int gridNumber = mComponents[pos]->mGrid;
         Grid* grid = mGridsVec[gridNumber];
 
         GridbrainComponent* comp = grid->getRandomComponent();
@@ -424,7 +424,7 @@ void Gridbrain::mutateChangeInactiveComponent(float prob)
         MUTATIONS_CHG_IN_COMP++;
         int pos = mCompSeqPos;
 
-        GridbrainComponent* comp = &mComponents[pos];
+        GridbrainComponent* comp = mComponents[pos];
 
         if (!comp->mActive)
         {
@@ -448,10 +448,10 @@ void Gridbrain::mutateChangeParam(float prob)
         MUTATIONS_CHG_PARAM++;
         int pos = mCompSeqPos;
 
-        unsigned int gridNumber = mComponents[pos].mGrid;
+        unsigned int gridNumber = mComponents[pos]->mGrid;
         Grid* grid = mGridsVec[gridNumber];
 
-        GridbrainComponent* comp = &mComponents[pos];
+        GridbrainComponent* comp = mComponents[pos];
         float param = comp->mParam;
         param += mDistComponents->normal(0.0f, mParamMutationStanDev);
         if (param > 1.0f)

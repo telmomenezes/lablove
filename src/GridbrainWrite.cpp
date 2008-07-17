@@ -193,13 +193,6 @@ string Gridbrain::write(SimObj* obj, Simulation* sim)
                     svg += buffer;
                     labelY -= 10;
                 }
-                else if (comp->isMemory())
-                {
-                    labelY += 5;
-                    sprintf(buffer, "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"7\" fill=\"%s\">%d</text>\n", compX, labelY, color, getMemCellPos(comp->mOrigSymID));
-                    svg += buffer;
-                    labelY -= 10;
-                }
                 else if ((comp->mType == GridbrainComponent::AMP)
                     || (comp->mType == GridbrainComponent::CLK))
                 {

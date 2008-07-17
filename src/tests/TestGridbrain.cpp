@@ -20,6 +20,7 @@
 #include "UnitTest++.h"
 #include "Gridbrain.h"
 #include "Grid.h"
+#include "comps/comps.h"
 
 #include <stdexcept>
 
@@ -141,8 +142,8 @@ TEST_FIXTURE(GridbrainFixture2, GridbrainAddRandomConnections6)
 
 TEST_FIXTURE(GridbrainFixture, GridbrainAddRandomConnections7)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(1, 1, 0);
-    comp1->mType = GridbrainComponent::OUT;
+    GridbrainComponent* comp1 = new CompOUT();
+    mGridbrain.setComponent(1, 1, 0, comp1);
     mGridbrain.init();
     CHECK_EQUAL(mGridbrain.getConnectionsCount(), 0);
     mGridbrain.addRandomConnections(27);
@@ -152,8 +153,8 @@ TEST_FIXTURE(GridbrainFixture, GridbrainAddRandomConnections7)
 
 TEST_FIXTURE(GridbrainFixture, GridbrainAddRandomConnections8)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(1, 1, 0);
-    comp1->mType = GridbrainComponent::IN;
+    GridbrainComponent* comp1 = new CompIN();
+    mGridbrain.setComponent(1, 1, 0, comp1);
     mGridbrain.init();
     CHECK_EQUAL(mGridbrain.getConnectionsCount(), 0);
     mGridbrain.addRandomConnections(27);
@@ -163,10 +164,10 @@ TEST_FIXTURE(GridbrainFixture, GridbrainAddRandomConnections8)
 
 TEST_FIXTURE(GridbrainFixture, GridbrainAddRandomConnections9)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(1, 1, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 2, 0);
-    comp1->mType = GridbrainComponent::IN;
-    comp2->mType = GridbrainComponent::OUT;
+    GridbrainComponent* comp1 = new CompIN();
+    GridbrainComponent* comp2 = new CompOUT();
+    mGridbrain.setComponent(1, 1, 0, comp1);
+    mGridbrain.setComponent(1, 2, 0, comp2);
     mGridbrain.init();
     CHECK_EQUAL(mGridbrain.getConnectionsCount(), 0);
     mGridbrain.addRandomConnections(27);

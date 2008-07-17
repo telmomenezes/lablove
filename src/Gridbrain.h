@@ -31,7 +31,6 @@
 #include "GridbrainComponent.h"
 #include "GridbrainConnection.h"
 #include "GridbrainComponentSet.h"
-#include "GridbrainMemCell.h"
 #include "RandDistManager.h"
 #include "types.h"
 #include "SimObj.h"
@@ -125,6 +124,7 @@ public:
     virtual void mutate(float factor=1.0f);
     virtual Brain* recombine(Brain* brain);
 
+    void setComponent(unsigned int x, unsigned int y, unsigned int g, GridbrainComponent* comp);
     void setComponent(unsigned int x,
                 unsigned int y,
                 unsigned int gridNumber,
@@ -217,18 +217,12 @@ public:
     static void debugMutationsCount();
 
 protected:
-    void generateMemory(Gridbrain* originGB=NULL);
-    void cleanAndGrowMemory();
-
     void initGridsIO();
     void calcConnectionCounts();
     void calcActive();
     void calcActiveComponents();
     void calcDensityMetrics();
     void calcExpansion();
-    void linkMemory();
-
-    int getMemCellPos(llULINT id);
 
     void mutateAddConnection(unsigned int popSize, float prob);
     void mutateRemoveConnection(unsigned int popSize, float prob);
@@ -282,10 +276,6 @@ protected:
     GridbrainGeneTag findGeneTag(GridbrainConnection* conn);
     virtual void popAdjust(vector<SimObj*>* popVec);
 
-    void printMemDebug();
-
-    static llULINT CURRENT_MEM_ID;
-
     static mt_distribution* mDistConnections;
     static mt_distribution* mDistMutationsProb;
     static mt_distribution* mDistComponents;
@@ -294,7 +284,7 @@ protected:
 
     vector<Grid*> mGridsVec;
 
-    vector<GridbrainComponent> mComponents;
+    vector<GridbrainComponent*> mComponents;
     unsigned int mMaxInputDepth;
     unsigned int mNumberOfComponents;
     GridbrainConnection* mConnections;
@@ -326,8 +316,6 @@ protected:
     unsigned int mActiveActions;
 
     bool mGeneGrouping;
-
-    map<llULINT, GridbrainMemCell> mMemory;
 
     RecombinationType mRecombinationType;
 

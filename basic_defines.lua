@@ -17,10 +17,7 @@ EQ = GridbrainComponent.EQ
 GTZ = GridbrainComponent.GTZ
 ZERO = GridbrainComponent.ZERO
 CLK = GridbrainComponent.CLK
-MEMC = GridbrainComponent.MEMC
-MEMW = GridbrainComponent.MEMW
-MEMD = GridbrainComponent.MEMD
-DAND = GridbrainComponent.DAND
+DMUL = GridbrainComponent.DMUL
 SEL = GridbrainComponent.SEL
 
 NO_LINK = InterfaceItem.NO_LINK

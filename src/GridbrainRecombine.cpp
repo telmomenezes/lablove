@@ -38,7 +38,7 @@ GridbrainComponent* Gridbrain::findEquivalentComponent(GridbrainComponent* comp)
 
     for (unsigned int i = 0; i < mNumberOfComponents; i++)
     {
-        GridbrainComponent* comp2 = &mComponents[i];
+        GridbrainComponent* comp2 = mComponents[i];
 
         int eq = compEquivalence(comp, comp2, CET_NEW);
 
@@ -124,7 +124,7 @@ Gridbrain* Gridbrain::importComponent(Gridbrain* gbTarg,
         unsigned int end = start + gridTarg->getSize();
         for (unsigned int i = start; i < end; i++)
         {
-            GridbrainComponent* checkComp = &(brain->mComponents[i]);
+            GridbrainComponent* checkComp = brain->mComponents[i];
             if (checkComp->isEqual(compOrig))
             {
                 GridbrainComponent* newComp = gridTarg->getRandomComponent();
@@ -337,7 +337,7 @@ void Gridbrain::selectConnPaths(Gridbrain* gb1, Gridbrain* gb2)
     // Select paths
     for (unsigned int i = 0; i < gb1->mNumberOfComponents; i++)
     {
-        GridbrainComponent* comp1 = &gb1->mComponents[i];
+        GridbrainComponent* comp1 = gb1->mComponents[i];
 
         if (comp1->mActive
             && (comp1->mInboundConnections > 0)
@@ -367,7 +367,7 @@ void Gridbrain::selectConnPaths(Gridbrain* gb1, Gridbrain* gb2)
     }
     for (unsigned int i = 0; i < gb2->mNumberOfComponents; i++)
     {
-        GridbrainComponent* comp2 = &gb2->mComponents[i];
+        GridbrainComponent* comp2 = gb2->mComponents[i];
 
         if (comp2->mActive
             && (comp2->mInboundConnections > 0)
@@ -521,7 +521,6 @@ Brain* Gridbrain::recombine(Brain* brain)
 
     gbNew->recombineUnusedComponents(this, gb2);
 
-    gbNew->generateMemory();
     gbNew->update();
     
     /*printf(">>> CHILD\n");
@@ -538,7 +537,7 @@ bool Gridbrain::exists(GridbrainComponent* comp, unsigned int ex, unsigned int e
 
     for (unsigned int pos = startPos; pos < endPos; pos++)
     {
-        GridbrainComponent* comp2 = &mComponents[pos];
+        GridbrainComponent* comp2 = mComponents[pos];
 
         if ((comp2->mColumn != ex) || (comp2->mRow != ey))
         {
@@ -742,7 +741,7 @@ void Gridbrain::popAdjust(vector<SimObj*>* popVec)
 {
     for (unsigned int pos = 0; pos < mNumberOfComponents; pos++)
     {
-        GridbrainComponent* comp = &mComponents[pos];
+        GridbrainComponent* comp = mComponents[pos];
 
         GridbrainConnection* conn = comp->mFirstConnection;
         while (conn != NULL)

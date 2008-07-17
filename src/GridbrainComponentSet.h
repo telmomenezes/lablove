@@ -21,6 +21,7 @@
 #define __INCLUDE_GRIDBRAIN_COMPONENT_SET_H
 
 #include "GridbrainComponent.h"
+#include "comps/CompNUL.h"
 #include "Orbit.h"
 #include "RandDistManager.h"
 #include "SimObj.h"
@@ -33,8 +34,9 @@ using std::vector;
 class GridbrainComponentSet
 {
 public:
-    GridbrainComponentSet(lua_State* luaState=NULL);
-    GridbrainComponentSet(const GridbrainComponentSet& comp);
+    GridbrainComponentSet();
+    GridbrainComponentSet(lua_State* luaState);
+    GridbrainComponentSet(GridbrainComponentSet* comp);
     virtual ~GridbrainComponentSet();
 
     void addComponent(GridbrainComponent* component);
@@ -47,8 +49,7 @@ public:
     GridbrainComponent* getRandom();
 
     void update(SimObj* obj,
-                vector<GridbrainComponent>* components,
-                map<llULINT, GridbrainMemCell>* memory,
+                vector<GridbrainComponent*>* components,
                 unsigned int start,
                 unsigned int end);
 
@@ -64,12 +65,12 @@ public:
     int addComponent(lua_State* luaState);
 
     vector<GridbrainComponent*> mComponentVec;
-    vector<GridbrainComponent> mComponentSet;
+    vector<GridbrainComponent*> mComponentSet;
 
 protected:
     static mt_distribution* mDistComponentSet;
 
-    GridbrainComponent mNullComponent;
+    CompNUL mNullComponent;
 };
 #endif
 

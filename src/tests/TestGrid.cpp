@@ -28,7 +28,7 @@ struct GridFixture
         mWidth = 2;
         mHeight = 3;
         mGrid.init(mType, mWidth, mHeight);
-        mGrid2 = mGrid;
+        mGrid2.init(mType, mWidth, mHeight);
     }
 
     ~GridFixture(){}

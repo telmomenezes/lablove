@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -17,29 +17,32 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_GRIDBRAIN_MEM_CELL_H)
-#define __INCLUDE_GRIDBRAIN_MEM_CELL_H
+#ifndef _INCLUDE_GRIDBRAIN_COMPONENT_MUL_H
+#define _INCLUDE_GRIDBRAIN_COMPONENT_MUL_H
 
-class GridbrainMemCell
+#include "GridbrainComponent.h"
+
+class CompMUL : public GridbrainComponent
 {
 public:
-    GridbrainMemCell();
-    virtual ~GridbrainMemCell();
+    CompMUL();
+    virtual ~CompMUL();
 
-    void cycle();
+    virtual GridbrainComponent* clone();
 
-    float mValue;
-    float mWrite;
-    bool mClear;
+    virtual void input(float value, int pin);
+    virtual float output(unsigned int id);
+    virtual void reset(int pass);
 
-    // SEL
-    float mSelCandidate;
-    bool mTriggered;
-    bool mValueFound;
+    virtual string getName(){return "MUL";}
+    virtual ConnType getConnectorType(){return CONN_INOUT;}
 
-    // Producer / Consumer
-    bool mProducer;
-    bool mConsumer;
+    virtual bool isUnique(){return false;}
+    virtual bool compare(GridbrainComponent* comp){return true;}
+
+protected:
+    bool mInputFlag;
 };
+
 #endif
 

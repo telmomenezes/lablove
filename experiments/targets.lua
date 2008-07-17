@@ -20,8 +20,8 @@ targetSpeed = 0.05
 worldWidth = 500
 worldHeight = 500
 
-alphaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, MAX, MIN, AVG, MEMW, MEMC, DAND, SEL}
-betaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, CLK, MEMW, MEMC, DAND}
+alphaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, MAX, MIN, AVG, DMUL, SEL}
+betaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, CLK, DMUL}
 
 viewRange = 300.0
 viewAngle = 350.0

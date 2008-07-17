@@ -51,7 +51,7 @@ public:
     unsigned int getSize(){return mSize;}
 
     void setComponentSet(GridbrainComponentSet* componentSet);
-    GridbrainComponentSet* getComponentSet(){return &mComponentSet;}
+    GridbrainComponentSet* getComponentSet(){return mComponentSet;}
 
     void setOffset(unsigned int offset){mOffset = offset;}
     
@@ -127,7 +127,7 @@ protected:
     unsigned int* mInputIDs;
     float* mOutputVector;
 
-    GridbrainComponentSet mComponentSet;
+    GridbrainComponentSet* mComponentSet;
 
     vector<GridbrainComponent*> mPerceptionsVec;
     vector<GridbrainComponent*> mActionsVec;

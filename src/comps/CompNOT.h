@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * LabLOVE
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -17,48 +17,31 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "GridbrainMemCell.h"
-#include <stdio.h>
+#ifndef _INCLUDE_GRIDBRAIN_COMPONENT_NOT_H
+#define _INCLUDE_GRIDBRAIN_COMPONENT_NOT_H
 
-GridbrainMemCell::GridbrainMemCell()
+#include "GridbrainComponent.h"
+
+class CompNOT : public GridbrainComponent
 {
-    mValue = 0.0f;
-    mWrite = 0.0f;
-    mClear = false;
-    mSelCandidate = 0.0f;
-    mTriggered = false;
-    mValueFound = false;
-    mProducer = false;
-    mConsumer = false;
-}
+public:
+    CompNOT();
+    virtual ~CompNOT();
 
-GridbrainMemCell::~GridbrainMemCell()
-{
-}
+    virtual GridbrainComponent* clone();
 
-void GridbrainMemCell::cycle()
-{
-    if (mClear)
-    {
-        mValue = 0.0f;
-    }
+    virtual void input(float value, int pin);
+    virtual float output(unsigned int id);
+    virtual void reset(int pass);
 
-    if (mWrite != 0.0f)
-    {
-        mValue = mWrite;
-    }
-    else if (!mValueFound)
-    {
-        mValue = mSelCandidate;
-    }
+    virtual string getName(){return "NOT";}
+    virtual ConnType getConnectorType(){return CONN_INOUT;}
 
-    mWrite = 0.0f;
-    mClear = false;
+    virtual bool isUnique(){return false;}
+    virtual bool compare(GridbrainComponent* comp){return true;}
 
-    mSelCandidate = 0.0f;
-    mTriggered = false;
-    mValueFound = false;
+    virtual bool isProducer(){return true;}
+};
 
-    //printf("value: %f\n", mValue);
-}
+#endif
 
