@@ -41,5 +41,7 @@ public:
     virtual bool compare(GridbrainComponent* comp){return true;}
 };
 
+static CompNEG COMP_NEG;
+
 #endif
 

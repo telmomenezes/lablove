@@ -36,7 +36,7 @@ GridbrainComponent* CompNOT::clone()
 
 void CompNOT::reset(int pass)
 {
-    mInput = 0;
+    mInput = 0.0f;
 }
 
 void CompNOT::input(float value, int pin)

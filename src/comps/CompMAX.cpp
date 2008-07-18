@@ -22,6 +22,9 @@
 CompMAX::CompMAX()
 {
     mType = MAX;
+    mPass = 0;
+    mState = 0;
+    mTriggered = false;
 }
 
 CompMAX::~CompMAX()
@@ -37,13 +40,16 @@ void CompMAX::reset(int pass)
 {
     mInput = 0;
     mInputFlag = false;
-    mCycleFlag = false;
-    mPass = pass;
 
-    if (pass == 0)
+    // New gridbrain cycle
+    if ((pass == 0) && (mPass == 1))
     {
         mState = 0;
+        mCycleFlag = false;
+        mTriggered = false;
     }
+
+    mPass = pass;
 }
 
 void CompMAX::input(float value, int pin)
@@ -61,6 +67,8 @@ void CompMAX::input(float value, int pin)
 
 float CompMAX::output(unsigned int id)
 {
+    mOutput = 0.0f;
+
     if (mInput != 0)
     {
         if (!mCycleFlag)
@@ -71,24 +79,20 @@ float CompMAX::output(unsigned int id)
         }
         else
         {
-            if (mInput >= mState)
+            if (mPass == 0)
             {
-                mOutput = 1.0f;
-                mState = mInput;
-                if (mPass > 0)
+                if (mInput > mState)
                 {
-                    mState += 1.0f;
+                    mState = mInput;
+                    mOutput = 1.0f;
                 }
             }
-            else
+            else if ((mInput == mState) && (!mTriggered))
             {
-                mOutput = 0.0f;
+                mTriggered = true;
+                mOutput = 1.0f;
             }
         }
-    }
-    else
-    {
-        mOutput = 0.0f;
     }
 
     return mOutput;

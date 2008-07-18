@@ -124,7 +124,7 @@ public:
     virtual void mutate(float factor=1.0f);
     virtual Brain* recombine(Brain* brain);
 
-    void setComponent(unsigned int x, unsigned int y, unsigned int g, GridbrainComponent* comp);
+    GridbrainComponent* setComponent(unsigned int x, unsigned int y, unsigned int g, GridbrainComponent& comp);
     void setComponent(unsigned int x,
                 unsigned int y,
                 unsigned int gridNumber,
@@ -136,7 +136,7 @@ public:
                 llULINT origSymID=0,
                 int targetSymTable=-1);
 
-    void replaceComponent(unsigned int pos, GridbrainComponent* comp);
+    GridbrainComponent* replaceComponent(unsigned int pos, GridbrainComponent* comp);
 
     void setMutateAddConnectionProb(float prob){mMutateAddConnectionProb = prob;}
     void setMutateRemoveConnectionProb(float prob){mMutateRemoveConnectionProb = prob;}

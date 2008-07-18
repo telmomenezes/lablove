@@ -43,5 +43,7 @@ public:
     virtual bool isConsumer(){return true;}
 };
 
+static CompOUT COMP_OUT;
+
 #endif
 

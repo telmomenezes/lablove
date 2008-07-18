@@ -552,10 +552,10 @@ void Gridbrain::update()
     #endif
 }
 
-void Gridbrain::setComponent(unsigned int x, unsigned int y, unsigned int g, GridbrainComponent* comp)
+GridbrainComponent* Gridbrain::setComponent(unsigned int x, unsigned int y, unsigned int g, GridbrainComponent& comp)
 {
     GridbrainComponent* oldComp = getComponent(x, y, g);
-    replaceComponent(oldComp->mOffset, comp);
+    return replaceComponent(oldComp->mOffset, &comp);
 }
 
 void Gridbrain::setComponent(unsigned int x,
@@ -674,7 +674,7 @@ GridbrainComponent* Gridbrain::getComponent(unsigned int x,
     return mComponents[pos];
 }
 
-void Gridbrain::replaceComponent(unsigned int pos, GridbrainComponent* comp)
+GridbrainComponent* Gridbrain::replaceComponent(unsigned int pos, GridbrainComponent* comp)
 {
     GridbrainComponent* oldComp = mComponents[pos];
     Grid* grid = mGridsVec[oldComp->mGrid];
@@ -705,6 +705,8 @@ void Gridbrain::replaceComponent(unsigned int pos, GridbrainComponent* comp)
         conn->mTargComponent = newComp;
         conn = (GridbrainConnection*)conn->mNextInConnection;
     }
+
+    return newComp;
 }
 
 void Gridbrain::addConnection(unsigned int xOrig,
@@ -1394,18 +1396,16 @@ void Gridbrain::addRandomConnections(unsigned int count)
 
 void Gridbrain::cycle()
 {
-    // Reset all components
-    for (unsigned int gridNumber = 0; gridNumber < mGridsCount; gridNumber++)
+    // Reset beta grid
+    // Assume beta grid at the end
+    Grid* grid = mGridsVec[mGridsCount - 1];
+
+    unsigned int endIndex = grid->mComponentSequenceSize;
+
+    for (unsigned int i = 0; i < endIndex; i++)
     {
-        Grid* grid = mGridsVec[gridNumber];
-
-        unsigned int endIndex = grid->mComponentSequenceSize;
-
-        for (unsigned int i = 0; i < endIndex; i++)
-        {
-            GridbrainComponent* comp = grid->mComponentSequence[i];
-            comp->reset(0);
-        }
+        GridbrainComponent* comp = grid->mComponentSequence[i];
+        comp->reset(0);
     }
 
     // Evaluate grids
@@ -1455,10 +1455,8 @@ void Gridbrain::cycle()
                                 inputMatrix[comp->mPerceptionPosition
                                         + inputDepthOffset];
                         }
-                        if (pass == 1)
-                        {
-                            comp->reset(1);
-                        }
+
+                        comp->reset(pass);
                     }
                 }
 
@@ -1479,14 +1477,13 @@ void Gridbrain::cycle()
                     }
 
                     // propagate outputs (inside grid if fist alpha)
-
                     GridbrainConnection* conn = comp->mFirstConnection;
                     for (unsigned int k = 0; k < comp->mConnectionsCount; k++)
                     {
                         if ((!firstAlpha) || (!conn->mInterGrid))
                         {
                             GridbrainComponent* targetComp = (GridbrainComponent*)conn->mTargComponent;
-                            targetComp->input(output, k);
+                            targetComp->input(output, comp->mOffset);
                         }
                         conn = (GridbrainConnection*)conn->mNextConnection;
                     }

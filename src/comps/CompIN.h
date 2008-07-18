@@ -46,5 +46,7 @@ protected:
     float mState;
 };
 
+static CompIN COMP_IN;
+
 #endif
 

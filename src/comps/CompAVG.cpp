@@ -22,6 +22,9 @@
 CompAVG::CompAVG()
 {
     mType = AVG;
+    mState = 0;
+    mCount = 0;
+    mPass = 0;
 }
 
 CompAVG::~CompAVG()
@@ -37,13 +40,15 @@ void CompAVG::reset(int pass)
 {
     mInput = 0;
     mInputFlag = false;
-    mPass = pass;
 
-    if (pass == 0)
+    // New gridbrain cycle
+    if ((pass == 0) && (mPass == 1))
     {
         mState = 0;
-        mEvalCount = 0;
+        mCount = 0;
     }
+
+    mPass = pass;
 }
 
 void CompAVG::input(float value, int pin)
@@ -64,13 +69,13 @@ float CompAVG::output(unsigned int id)
     if ((mPass == 0) && (mInput != 0))
     {
         mState += mInput;
-        mEvalCount++;
+        mCount++;
     }
     
     mOutput= 0.0f;
-    if (mEvalCount > 0)
+    if (mCount > 0)
     {
-        mOutput = mState / ((float)mEvalCount);
+        mOutput = mState / ((float)mCount);
     }
 
     return mOutput;

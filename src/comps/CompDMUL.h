@@ -47,5 +47,7 @@ protected:
     map<int, float> mInputVals;
 };
 
+static CompDMUL COMP_DMUL;
+
 #endif
 

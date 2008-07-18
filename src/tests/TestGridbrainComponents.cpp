@@ -35,6 +35,12 @@ struct GridbrainCompFixture
         mGridbrain.init();
     }
 
+    void initAndCycle()
+    {
+        mGridbrain.init();
+        mGridbrain.cycle();
+    }
+
     ~GridbrainCompFixture(){}
 
     Gridbrain mGridbrain;
@@ -43,1838 +49,1447 @@ struct GridbrainCompFixture
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNUL1)
 {
-    GridbrainComponent* comp = new CompNUL();
-    mGridbrain.setComponent(0, 0, 0, comp);
-    mGridbrain.cycle();
+    GridbrainComponent* comp = mGridbrain.setComponent(0, 0, 0, COMP_NUL);
+    initAndCycle();
     CHECK_CLOSE(comp->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNUL2)
 {
-    GridbrainComponent* comp1 = new CompNOT();
-    mGridbrain.setComponent(0, 0, 0, comp1);
-    GridbrainComponent* comp2 = new CompNUL();
-    mGridbrain.setComponent(1, 0, 0, comp2);
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_NUL);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp2->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNUL3)
 {
-    GridbrainComponent* comp1 = new CompNOT();
-    mGridbrain.setComponent(0, 0, 0, comp1);
-    GridbrainComponent* comp2 = new CompAMP();
-    mGridbrain.setComponent(1, 0, 0, comp2);
-    GridbrainComponent* comp3 = new CompNUL();
-    mGridbrain.setComponent(2, 0, 0, comp3);
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NUL);
     comp2->mParam = 0.05;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNUL4)
 {
-    GridbrainComponent* comp1 = new CompNOT();
-    mGridbrain.setComponent(0, 0, 0, comp1);
-    GridbrainComponent* comp2 = new CompNOT();
-    mGridbrain.setComponent(0, 1, 0, comp2);
-    GridbrainComponent* comp3 = new CompNUL();
-    mGridbrain.setComponent(1, 0, 0, comp3);
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_NUL);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNUL5)
 {
-    GridbrainComponent* comp1 = new CompAND();
-    mGridbrain.setComponent(0, 0, 0, comp1);
-    GridbrainComponent* comp2 = new CompNOT();
-    mGridbrain.setComponent(0, 1, 0, comp2);
-    GridbrainComponent* comp3 = new CompNUL();
-    mGridbrain.setComponent(1, 0, 0, comp3);
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_AND);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_NUL);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNUL6)
 {
-    GridbrainComponent* comp1 = new CompNOT();
-    mGridbrain.setComponent(0, 0, 0, comp1);
-    GridbrainComponent* comp2 = new CompAMP();
-    mGridbrain.setComponent(1, 0, 0, comp2);
-    GridbrainComponent* comp3 = new CompNOT();
-    mGridbrain.setComponent(0, 1, 0, comp3);
-    GridbrainComponent* comp4 = new CompNUL();
-    mGridbrain.setComponent(2, 0, 0, comp4);
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_NUL);
     comp2->mParam = 0.05;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNUL7)
 {
-    GridbrainComponent* comp1 = new CompNOT();
-    mGridbrain.setComponent(0, 0, 0, comp1);
-    GridbrainComponent* comp2 = new CompAMP();
-    mGridbrain.setComponent(1, 0, 0, comp2);
-    GridbrainComponent* comp3 = new CompNUL();
-    mGridbrain.setComponent(2, 0, 0, comp3);
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NUL);
     comp2->mParam = 0.5;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNUL8)
 {
-    GridbrainComponent* comp1 = new CompNOT();
-    mGridbrain.setComponent(0, 0, 0, comp1);
-    GridbrainComponent* comp2 = new CompAMP();
-    mGridbrain.setComponent(1, 0, 0, comp2);
-    GridbrainComponent* comp3 = new CompNUL();
-    mGridbrain.setComponent(2, 0, 0, comp3);
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NUL);
     comp2->mParam = 0.05;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNUL9)
 {
-    GridbrainComponent* comp1 = new CompNOT();
-    mGridbrain.setComponent(0, 0, 0, comp1);
-    GridbrainComponent* comp2 = new CompAND();
-    mGridbrain.setComponent(0, 1, 0, comp2);
-    GridbrainComponent* comp3 = new CompAMP();
-    mGridbrain.setComponent(1, 0, 0, comp3);
-    GridbrainComponent* comp4 = new CompNUL();
-    mGridbrain.setComponent(2, 0, 0, comp4);
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_AND);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_NUL);
     comp3->mParam = 0.5;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNUL10)
 {
-    GridbrainComponent* comp1 = new CompNOT();
-    mGridbrain.setComponent(0, 0, 0, comp1);
-    GridbrainComponent* comp2 = new CompNOT();
-    mGridbrain.setComponent(0, 1, 0, comp2);
-    GridbrainComponent* comp3 = new CompAMP();
-    mGridbrain.setComponent(1, 0, 0, comp3);
-    GridbrainComponent* comp4 = new CompNUL();
-    mGridbrain.setComponent(2, 0, 0, comp4);
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_NUL);
     comp3->mParam = 0.5f;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNUL11)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NOT;
-    comp3->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_NUL);
     comp3->mParam = 0.05;
-    comp4->mType = GridbrainComponent::NUL;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNUL12)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(1, 1, 0);
-    GridbrainComponent* comp5 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NOT;
-    comp3->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(1, 1, 0, COMP_AMP);
+    GridbrainComponent* comp5 = mGridbrain.setComponent(2, 0, 0, COMP_NUL);
     comp3->mParam = 0.5;
-    comp4->mType = GridbrainComponent::AMP;
     comp4->mParam = 0.5;
-    comp5->mType = GridbrainComponent::NUL;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 1, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(1, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp5->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNOT1)
 {
-    GridbrainComponent* comp = mGridbrain.getComponent(0, 0, 0);
-    comp->mType = GridbrainComponent::NOT;
-    mGridbrain.cycle();
+    GridbrainComponent* comp = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    initAndCycle();
     CHECK_CLOSE(comp->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNOT2)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NOT;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_NOT);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp2->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNOT3)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NOT);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::NOT;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNOT4)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NOT;
-    comp3->mType = GridbrainComponent::NOT;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_NOT);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNOT5)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::AND;
-    comp2->mType = GridbrainComponent::NOT;
-    comp3->mType = GridbrainComponent::NOT;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_AND);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_NOT);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNOT6)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_NOT);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::NOT;
-    comp4->mType = GridbrainComponent::NOT;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNOT7)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(3, 0, 0, COMP_NOT);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::NOT;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNOT8)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(3, 0, 0, COMP_NOT);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::NOT;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNOT9)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_AND);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_NOT);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::AND;
-    comp4->mType = GridbrainComponent::NOT;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNOT10)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_NOT);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::NOT;
-    comp4->mType = GridbrainComponent::NOT;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNOT11)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_NOT);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::NOT;
-    comp4->mType = GridbrainComponent::NOT;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNOT12)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(1, 1, 0);
-    GridbrainComponent* comp5 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NOT;
-    comp3->mType = GridbrainComponent::AMP;
-    comp4->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 1, 0, COMP_AMP);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(1, 1, 0, COMP_AMP);
+    GridbrainComponent* comp5 = mGridbrain.setComponent(2, 0, 0, COMP_NOT);
     comp3->mParam = 0.5;
     comp4->mParam = 0.5;
-    comp5->mType = GridbrainComponent::NOT;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 1, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(1, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp5->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestZERO1)
 {
-    GridbrainComponent* comp = mGridbrain.getComponent(0, 0, 0);
-    comp->mType = GridbrainComponent::ZERO;
-    mGridbrain.cycle();
+    GridbrainComponent* comp = mGridbrain.setComponent(0, 0, 0, COMP_ZERO);
+    initAndCycle();
     CHECK_CLOSE(comp->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestZERO2)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::ZERO;
-    comp2->mType = GridbrainComponent::ZERO;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_ZERO);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_ZERO);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp2->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestZERO3)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::ZERO;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_ZERO);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_ZERO);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::ZERO;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestZERO4)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::ZERO;
-    comp2->mType = GridbrainComponent::ZERO;
-    comp3->mType = GridbrainComponent::ZERO;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_ZERO);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_ZERO);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_ZERO);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestZERO5)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::AND;
-    comp2->mType = GridbrainComponent::ZERO;
-    comp3->mType = GridbrainComponent::ZERO;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_AND);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_ZERO);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_ZERO);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestZERO6)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::ZERO;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_ZERO);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_ZERO);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_ZERO);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::ZERO;
-    comp4->mType = GridbrainComponent::ZERO;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestZERO7)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::ZERO;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_ZERO);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(3, 0, 0, COMP_ZERO);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::ZERO;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestZERO8)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::ZERO;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_ZERO);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(3, 0, 0, COMP_ZERO);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::ZERO;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestZERO9)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::ZERO;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_ZERO);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_AND);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_ZERO);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::AND;
-    comp4->mType = GridbrainComponent::ZERO;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestZERO10)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::ZERO;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_ZERO);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_ZERO);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_ZERO);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::ZERO;
-    comp4->mType = GridbrainComponent::ZERO;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestZERO11)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::ZERO;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_ZERO);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_ZERO);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_ZERO);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::ZERO;
-    comp4->mType = GridbrainComponent::ZERO;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestZERO12)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::ZERO;
-    comp2->mType = GridbrainComponent::ZERO;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::ZERO;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_ZERO);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_ZERO);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 1, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_ZERO);
     mGridbrain.addConnection(0, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 1, 0);
     mGridbrain.addConnection(1, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAMP1)
 {
-    GridbrainComponent* comp = mGridbrain.getComponent(0, 0, 0);
-    comp->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp = mGridbrain.setComponent(0, 0, 0, COMP_AMP);
     comp->mParam = 0.5;
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAMP2)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
     comp2->mParam = 0.5;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAMP3)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NOT;
-    comp3->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
     comp3->mParam = 0.5;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 2.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAMP4)
 {
-    GridbrainComponent* comp = mGridbrain.getComponent(0, 0, 0);
-    comp->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp = mGridbrain.setComponent(0, 0, 0, COMP_AMP);
     comp->mParam = 0.1;
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAMP5)
 {
-    GridbrainComponent* comp = mGridbrain.getComponent(0, 0, 0);
-    comp->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp = mGridbrain.setComponent(0, 0, 0, COMP_AMP);
     comp->mParam = 1.0;
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAMP6)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
     comp2->mParam = 0.1;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp2->mOutput, 0.11111f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAMP7)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
     comp2->mParam = 0.7;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp2->mOutput, 2.33333f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNEG1)
 {
-    GridbrainComponent* comp = mGridbrain.getComponent(0, 0, 0);
-    comp->mType = GridbrainComponent::NEG;
-    mGridbrain.cycle();
+    GridbrainComponent* comp = mGridbrain.setComponent(0, 0, 0, COMP_NEG);
+    initAndCycle();
     CHECK_CLOSE(comp->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNEG2)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NEG;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_NEG);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp2->mOutput, -1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNEG3)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::NEG;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, -0.0526316f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNEG4)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NOT;
-    comp3->mType = GridbrainComponent::NEG;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_NEG);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, -2.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNEG5)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::AND;
-    comp2->mType = GridbrainComponent::NOT;
-    comp3->mType = GridbrainComponent::NEG;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_AND);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_NEG);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, -1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNEG6)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::NOT;
-    comp4->mType = GridbrainComponent::NEG;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNEG7)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NEG;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::NEG;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_NEG);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(3, 0, 0, COMP_NEG);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, -1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNEG8)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(3, 0, 0, COMP_NEG);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::NEG;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0526316f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNEG9)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_AND);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::AND;
-    comp4->mType = GridbrainComponent::NEG;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, -1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNEG10)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::NOT;
-    comp4->mType = GridbrainComponent::NEG;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, -2.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestNEG11)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(1, 1, 0);
-    GridbrainComponent* comp5 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NOT;
-    comp3->mType = GridbrainComponent::AMP;
-    comp4->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(1, 1, 0, COMP_AMP);
+    GridbrainComponent* comp5 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
     comp3->mParam = 0.5;
     comp4->mParam = 0.5;
-    comp5->mType = GridbrainComponent::NEG;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 1, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(1, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp5->mOutput, -2.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMOD1)
 {
-    GridbrainComponent* comp = mGridbrain.getComponent(0, 0, 0);
-    comp->mType = GridbrainComponent::MOD;
-    mGridbrain.cycle();
+    GridbrainComponent* comp = mGridbrain.setComponent(0, 0, 0, COMP_MOD);
+    initAndCycle();
     CHECK_CLOSE(comp->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMOD2)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::MOD;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_MOD);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMOD3)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_MOD);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::MOD;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0526316f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMOD4)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NOT;
-    comp3->mType = GridbrainComponent::MOD;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_MOD);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 2.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMOD5)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::AND;
-    comp2->mType = GridbrainComponent::NOT;
-    comp3->mType = GridbrainComponent::MOD;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_AND);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_MOD);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMOD6)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_MOD);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::NOT;
-    comp4->mType = GridbrainComponent::MOD;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMOD7)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NEG;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::MOD;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_NEG);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(3, 0, 0, COMP_MOD);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMOD8)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(3, 0, 0, COMP_MOD);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::MOD;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0526316f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMOD9)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_AND);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_MOD);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::AND;
-    comp4->mType = GridbrainComponent::MOD;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMOD10)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_MOD);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::NOT;
-    comp4->mType = GridbrainComponent::MOD;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 2.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMOD11)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(1, 1, 0);
-    GridbrainComponent* comp5 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NOT;
-    comp3->mType = GridbrainComponent::AMP;
-    comp4->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(1, 1, 0, COMP_AMP);
+    GridbrainComponent* comp5 = mGridbrain.setComponent(2, 0, 0, COMP_MOD);
     comp3->mParam = 0.5;
     comp4->mParam = 0.5;
-    comp5->mType = GridbrainComponent::MOD;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 1, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(1, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp5->mOutput, 2.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAND1)
 {
-    GridbrainComponent* comp = mGridbrain.getComponent(0, 0, 0);
-    comp->mType = GridbrainComponent::AND;
-    mGridbrain.cycle();
+    GridbrainComponent* comp = mGridbrain.setComponent(0, 0, 0, COMP_AND);
+    initAndCycle();
     CHECK_CLOSE(comp->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAND2)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AND;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AND);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAND3)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_AND);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::AND;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAND4)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AND;
-    comp3->mType = GridbrainComponent::AND;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_AND);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_AND);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAND5)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NOT;
-    comp3->mType = GridbrainComponent::AND;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_AND);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAND6)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_AND);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::NOT;
-    comp4->mType = GridbrainComponent::AND;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAND7)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(3, 0, 0, COMP_AND);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::AND;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, -1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAND8)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(3, 0, 0, COMP_AND);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::AND;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAND9)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_AND);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_AND);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::AND;
-    comp4->mType = GridbrainComponent::AND;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAND10)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp5 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp5 = mGridbrain.setComponent(3, 0, 0, COMP_AND);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::NOT;
-    comp5->mType = GridbrainComponent::AND;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp5->mOutput, -1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAND11)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp5 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp5 = mGridbrain.setComponent(3, 0, 0, COMP_AND);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::NOT;
-    comp5->mType = GridbrainComponent::AND;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp5->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestAND12)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp5 = mGridbrain.getComponent(1, 1, 0);
-    GridbrainComponent* comp6 = mGridbrain.getComponent(2, 1, 0);
-    GridbrainComponent* comp7 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp5 = mGridbrain.setComponent(1, 1, 0, COMP_AMP);
+    GridbrainComponent* comp6 = mGridbrain.setComponent(2, 1, 0, COMP_NEG);
+    GridbrainComponent* comp7 = mGridbrain.setComponent(3, 0, 0, COMP_AND);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::NOT;
-    comp5->mType = GridbrainComponent::AMP;
     comp5->mParam = 0.5;
-    comp6->mType = GridbrainComponent::NEG;
-    comp7->mType = GridbrainComponent::AND;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 1, 0);
     mGridbrain.addConnection(1, 1, 0, 2, 1, 0);
     mGridbrain.addConnection(2, 1, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp7->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestSUM1)
 {
-    GridbrainComponent* comp = mGridbrain.getComponent(0, 0, 0);
-    comp->mType = GridbrainComponent::SUM;
-    mGridbrain.cycle();
+    GridbrainComponent* comp = mGridbrain.setComponent(0, 0, 0, COMP_SUM);
+    initAndCycle();
     CHECK_CLOSE(comp->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestSUM2)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::SUM;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_SUM);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestSUM3)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_SUM);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::SUM;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0526316f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestSUM4)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::SUM;
-    comp3->mType = GridbrainComponent::SUM;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_SUM);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_SUM);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestSUM5)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NOT;
-    comp3->mType = GridbrainComponent::SUM;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_SUM);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 2.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestSUM6)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_SUM);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::NOT;
-    comp4->mType = GridbrainComponent::SUM;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 1.0526316f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestSUM7)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(3, 0, 0, COMP_SUM);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::SUM;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, -1.0f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestSUM8)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(3, 0, 0, COMP_SUM);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::SUM;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, -0.0526316f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestSUM9)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_SUM);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_SUM);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::SUM;
-    comp4->mType = GridbrainComponent::SUM;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestSUM10)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp5 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp5 = mGridbrain.setComponent(3, 0, 0, COMP_SUM);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::NOT;
-    comp5->mType = GridbrainComponent::SUM;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp5->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestSUM11)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp5 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp5 = mGridbrain.setComponent(3, 0, 0, COMP_SUM);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::NOT;
-    comp5->mType = GridbrainComponent::SUM;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp5->mOutput, 0.947368, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestSUM12)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp5 = mGridbrain.getComponent(1, 1, 0);
-    GridbrainComponent* comp6 = mGridbrain.getComponent(2, 1, 0);
-    GridbrainComponent* comp7 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp5 = mGridbrain.setComponent(1, 1, 0, COMP_AMP);
+    GridbrainComponent* comp6 = mGridbrain.setComponent(2, 1, 0, COMP_NEG);
+    GridbrainComponent* comp7 = mGridbrain.setComponent(3, 0, 0, COMP_SUM);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::NOT;
-    comp5->mType = GridbrainComponent::AMP;
     comp5->mParam = 0.5;
-    comp6->mType = GridbrainComponent::NEG;
-    comp7->mType = GridbrainComponent::SUM;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 1, 0);
     mGridbrain.addConnection(1, 1, 0, 2, 1, 0);
     mGridbrain.addConnection(2, 1, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp7->mOutput, -2.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMUL1)
 {
-    GridbrainComponent* comp = mGridbrain.getComponent(0, 0, 0);
-    comp->mType = GridbrainComponent::MUL;
-    mGridbrain.cycle();
+    GridbrainComponent* comp = mGridbrain.setComponent(0, 0, 0, COMP_MUL);
+    initAndCycle();
     CHECK_CLOSE(comp->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMUL2)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::MUL;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_MUL);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMUL3)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_MUL);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::MUL;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0526316f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMUL4)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::MUL;
-    comp3->mType = GridbrainComponent::MUL;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_MUL);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_MUL);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMUL5)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NOT;
-    comp3->mType = GridbrainComponent::MUL;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_MUL);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMUL6)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_MUL);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::NOT;
-    comp4->mType = GridbrainComponent::MUL;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0526316f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMUL7)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(3, 0, 0, COMP_MUL);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::MUL;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, -1.0f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMUL8)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(3, 0, 0, COMP_MUL);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::MUL;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, -0.0526316f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMUL9)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_MUL);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_MUL);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::MUL;
-    comp4->mType = GridbrainComponent::MUL;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMUL10)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp5 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp5 = mGridbrain.setComponent(3, 0, 0, COMP_MUL);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::NOT;
-    comp5->mType = GridbrainComponent::MUL;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp5->mOutput, -1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMUL11)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp5 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp5 = mGridbrain.setComponent(3, 0, 0, COMP_MUL);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::NOT;
-    comp5->mType = GridbrainComponent::MUL;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp5->mOutput, -0.0526316f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestMUL12)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp5 = mGridbrain.getComponent(1, 1, 0);
-    GridbrainComponent* comp6 = mGridbrain.getComponent(2, 1, 0);
-    GridbrainComponent* comp7 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp5 = mGridbrain.setComponent(1, 1, 0, COMP_AMP);
+    GridbrainComponent* comp6 = mGridbrain.setComponent(2, 1, 0, COMP_NEG);
+    GridbrainComponent* comp7 = mGridbrain.setComponent(3, 0, 0, COMP_MUL);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::NOT;
-    comp5->mType = GridbrainComponent::AMP;
     comp5->mParam = 0.5;
-    comp6->mType = GridbrainComponent::NEG;
-    comp7->mType = GridbrainComponent::MUL;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 1, 0);
     mGridbrain.addConnection(1, 1, 0, 2, 1, 0);
     mGridbrain.addConnection(2, 1, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp7->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestEQ1)
 {
-    GridbrainComponent* comp = mGridbrain.getComponent(0, 0, 0);
-    comp->mType = GridbrainComponent::EQ;
-    mGridbrain.cycle();
+    GridbrainComponent* comp = mGridbrain.setComponent(0, 0, 0, COMP_EQ);
+    initAndCycle();
     CHECK_CLOSE(comp->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestEQ2)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::EQ;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_EQ);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestEQ3)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_EQ);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::EQ;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestEQ4)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::EQ;
-    comp3->mType = GridbrainComponent::EQ;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_EQ);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_EQ);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestEQ5)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NOT;
-    comp3->mType = GridbrainComponent::EQ;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_EQ);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestEQ6)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_EQ);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::NOT;
-    comp4->mType = GridbrainComponent::EQ;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestEQ7)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(3, 0, 0, COMP_EQ);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::EQ;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 1.0f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestEQ8)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(3, 0, 0, COMP_EQ);
     comp2->mParam = 0.05;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::EQ;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 1.0f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestEQ9)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_EQ);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_EQ);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::EQ;
-    comp4->mType = GridbrainComponent::EQ;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestEQ10)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp5 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp5 = mGridbrain.setComponent(3, 0, 0, COMP_EQ);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::NOT;
-    comp5->mType = GridbrainComponent::EQ;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp5->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestEQ11)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp5 = mGridbrain.getComponent(1, 1, 0);
-    GridbrainComponent* comp6 = mGridbrain.getComponent(2, 1, 0);
-    GridbrainComponent* comp7 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp5 = mGridbrain.setComponent(1, 1, 0, COMP_AMP);
+    GridbrainComponent* comp6 = mGridbrain.setComponent(2, 1, 0, COMP_NEG);
+    GridbrainComponent* comp7 = mGridbrain.setComponent(3, 0, 0, COMP_EQ);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::NOT;
-    comp5->mType = GridbrainComponent::AMP;
     comp5->mParam = 0.5;
-    comp6->mType = GridbrainComponent::NEG;
-    comp7->mType = GridbrainComponent::EQ;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 1, 0);
     mGridbrain.addConnection(1, 1, 0, 2, 1, 0);
     mGridbrain.addConnection(2, 1, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp7->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestGTZ1)
 {
-    GridbrainComponent* comp = mGridbrain.getComponent(0, 0, 0);
-    comp->mType = GridbrainComponent::GTZ;
-    mGridbrain.cycle();
+    GridbrainComponent* comp = mGridbrain.setComponent(0, 0, 0, COMP_GTZ);
+    initAndCycle();
     CHECK_CLOSE(comp->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestGTZ2)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::GTZ;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_GTZ);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestGTZ3)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NEG;
-    comp3->mType = GridbrainComponent::GTZ;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_NEG);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_GTZ);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestGTZ4)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(3, 0, 0, COMP_GTZ);
     comp2->mParam = 0.5;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::GTZ;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, 0.0f, 0.0001f);
 }
 
@@ -1889,26 +1504,26 @@ struct GridbrainCompFixture2
         mGridbrain.addGrid(mAlphaGrid, "alpha");
         mGridbrain.addGrid(mBetaGrid, "beta");
         mGridbrain.init();
-        GridbrainComponent* per1 = mGridbrain.getComponent(0, 0, 0);
-        GridbrainComponent* per2 = mGridbrain.getComponent(0, 1, 0);
-        GridbrainComponent* per3 = mGridbrain.getComponent(0, 2, 0);
-        per1->mType = GridbrainComponent::IN;
-        per2->mType = GridbrainComponent::IN;
-        per3->mType = GridbrainComponent::IN;
+        GridbrainComponent* per1 = mGridbrain.setComponent(0, 0, 0, COMP_IN);
+        GridbrainComponent* per2 = mGridbrain.setComponent(0, 1, 0, COMP_IN);
+        GridbrainComponent* per3 = mGridbrain.setComponent(0, 2, 0, COMP_IN);
         per1->mSubType = 0;
         per2->mSubType = 1;
         per3->mSubType = 2;
-        GridbrainComponent* act1 = mGridbrain.getComponent(2, 0, 1);
-        GridbrainComponent* act2 = mGridbrain.getComponent(2, 1, 1);
-        GridbrainComponent* act3 = mGridbrain.getComponent(2, 2, 1);
-        act1->mType = GridbrainComponent::OUT;
-        act2->mType = GridbrainComponent::OUT;
-        act3->mType = GridbrainComponent::OUT;
+        GridbrainComponent* act1 = mGridbrain.setComponent(2, 0, 1, COMP_OUT);
+        GridbrainComponent* act2 = mGridbrain.setComponent(2, 1, 1, COMP_OUT);
+        GridbrainComponent* act3 = mGridbrain.setComponent(2, 2, 1, COMP_OUT);
         act1->mSubType = 0;
         act2->mSubType = 1;
         act3->mSubType = 2;
         mGridbrain.setAllActive(true);
         mGridbrain.init();
+    }
+
+    void initAndCycle()
+    {
+        mGridbrain.init();
+        mGridbrain.cycle();
     }
 
     ~GridbrainCompFixture2(){}
@@ -1923,7 +1538,7 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainTwoLayersNoPerceptions)
     GridbrainComponent* per1 = mGridbrain.getComponent(0, 0, 0);
     GridbrainComponent* per2 = mGridbrain.getComponent(0, 1, 0);
     GridbrainComponent* per3 = mGridbrain.getComponent(0, 2, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(per1->mOutput, 0.0f, 0.0001f);
     CHECK_CLOSE(per2->mOutput, 0.0f, 0.0001f);
     CHECK_CLOSE(per3->mOutput, 0.0f, 0.0001f);
@@ -1938,7 +1553,7 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainIN1)
     buff[0] = 0.0;
     buff[1] = -0.5;
     buff[2] = 1.0;
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(per1->mOutput, 0.0f, 0.0001f);
     CHECK_CLOSE(per2->mOutput, -0.5f, 0.0001f);
     CHECK_CLOSE(per3->mOutput, 1.0f, 0.0001f);
@@ -1957,7 +1572,7 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainIN2)
     buff[0] = 0.3;
     buff[1] = -0.04;
     buff[2] = -1.0;
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(per1->mOutput, 0.3f, 0.0001f);
     CHECK_CLOSE(per2->mOutput, -0.04f, 0.0001f);
     CHECK_CLOSE(per3->mOutput, -1.0f, 0.0001f);
@@ -1965,9 +1580,11 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainIN2)
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainMAX1)
 {
-    GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
-    cmp1->mType = GridbrainComponent::MAX;
+    GridbrainComponent* cmp1 = mGridbrain.setComponent(1, 0, 0, COMP_MAX);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+
+    mGridbrain.init();
+
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.0;
     buff = mGridbrain.getInputBuffer(0);
@@ -1978,9 +1595,11 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainMAX1)
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainMAX2)
 {
-    GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
-    cmp1->mType = GridbrainComponent::MAX;
+    GridbrainComponent* cmp1 = mGridbrain.setComponent(1, 0, 0, COMP_MAX);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+
+    mGridbrain.init();
+
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.1;
     buff = mGridbrain.getInputBuffer(0);
@@ -1991,9 +1610,11 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainMAX2)
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainMAX3)
 {
-    GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
-    cmp1->mType = GridbrainComponent::MAX;
+    GridbrainComponent* cmp1 = mGridbrain.setComponent(1, 0, 0, COMP_MAX);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+
+    mGridbrain.init();
+
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.0;
     buff = mGridbrain.getInputBuffer(0);
@@ -2006,9 +1627,11 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainMAX3)
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainMAX4)
 {
-    GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
-    cmp1->mType = GridbrainComponent::MAX;
+    GridbrainComponent* cmp1 = mGridbrain.setComponent(1, 0, 0, COMP_MAX);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+
+    mGridbrain.init();
+
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.0;
     buff = mGridbrain.getInputBuffer(0);
@@ -2021,10 +1644,12 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainMAX4)
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainMAX5)
 {
-    GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
-    cmp1->mType = GridbrainComponent::MAX;
+    GridbrainComponent* cmp1 = mGridbrain.setComponent(1, 0, 0, COMP_MAX);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
+
+    mGridbrain.init();
+
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 1.0;
     buff[1] = 0.0;
@@ -2037,10 +1662,12 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainMAX5)
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainMAX6)
 {
-    GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
-    cmp1->mType = GridbrainComponent::MAX;
+    GridbrainComponent* cmp1 = mGridbrain.setComponent(1, 0, 0, COMP_MAX);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
+
+    mGridbrain.init();
+
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.2;
     buff[1] = 0.2;
@@ -2053,9 +1680,11 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainMAX6)
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainAVG1)
 {
-    GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
-    cmp1->mType = GridbrainComponent::AVG;
+    GridbrainComponent* cmp1 = mGridbrain.setComponent(1, 0, 0, COMP_AVG);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+
+    mGridbrain.init();
+
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 1.0;
     buff = mGridbrain.getInputBuffer(0);
@@ -2066,9 +1695,11 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainAVG1)
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainAVG2)
 {
-    GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
-    cmp1->mType = GridbrainComponent::AVG;
+    GridbrainComponent* cmp1 = mGridbrain.setComponent(1, 0, 0, COMP_AVG);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+
+    mGridbrain.init();
+
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 1.0;
     buff = mGridbrain.getInputBuffer(0);
@@ -2079,9 +1710,11 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainAVG2)
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainAVG3)
 {
-    GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
-    cmp1->mType = GridbrainComponent::AVG;
+    GridbrainComponent* cmp1 = mGridbrain.setComponent(1, 0, 0, COMP_AVG);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+
+    mGridbrain.init();
+
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 1.0;
     buff = mGridbrain.getInputBuffer(0);
@@ -2092,9 +1725,11 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainAVG3)
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainAVG4)
 {
-    GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
-    cmp1->mType = GridbrainComponent::AVG;
+    GridbrainComponent* cmp1 = mGridbrain.setComponent(1, 0, 0, COMP_AVG);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+
+    mGridbrain.init();
+
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 1.0;
     buff = mGridbrain.getInputBuffer(0);
@@ -2107,9 +1742,11 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainAVG4)
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainAVG5)
 {
-    GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
-    cmp1->mType = GridbrainComponent::AVG;
+    GridbrainComponent* cmp1 = mGridbrain.setComponent(1, 0, 0, COMP_AVG);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+
+    mGridbrain.init();
+
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.0;
     buff = mGridbrain.getInputBuffer(0);
@@ -2122,9 +1759,11 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainAVG5)
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainAVG6)
 {
-    GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
-    cmp1->mType = GridbrainComponent::AVG;
+    GridbrainComponent* cmp1 = mGridbrain.setComponent(1, 0, 0, COMP_AVG);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
+
+    mGridbrain.init();
+
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.0;
     buff = mGridbrain.getInputBuffer(0);
@@ -2137,10 +1776,12 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainAVG6)
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainAVG7)
 {
-    GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
-    cmp1->mType = GridbrainComponent::AVG;
+    GridbrainComponent* cmp1 = mGridbrain.setComponent(1, 0, 0, COMP_AVG);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
+
+    mGridbrain.init();
+
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.2;
     buff[1] = 0.2;
@@ -2153,10 +1794,12 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainAVG7)
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainAVG8)
 {
-    GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
-    cmp1->mType = GridbrainComponent::AVG;
+    GridbrainComponent* cmp1 = mGridbrain.setComponent(1, 0, 0, COMP_AVG);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
+
+    mGridbrain.init();
+
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 2.0;
     buff[1] = 3.0;
@@ -2169,203 +1812,172 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainAVG8)
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestINV1)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::INV;
-    mGridbrain.cycle();
+    GridbrainComponent* comp1 = mGridbrain.setComponent(1, 0, 0, COMP_INV);
+    initAndCycle();
     CHECK(comp1->mOutput > 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestINV2)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::INV;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_INV);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp2->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestINV3)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NEG;
-    comp3->mType = GridbrainComponent::INV;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_NEG);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_INV);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestINV4)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_INV);
     comp2->mParam = 0.1;
-    comp3->mType = GridbrainComponent::INV;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.888888f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestINV5)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(2, 0, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(3, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AMP;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_AMP);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(2, 0, 0, COMP_NEG);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(3, 0, 0, COMP_INV);
     comp2->mParam = 0.1;
-    comp3->mType = GridbrainComponent::NEG;
-    comp4->mType = GridbrainComponent::INV;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 3, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp4->mOutput, -0.888888f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestINV6)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NOT;
-    comp3->mType = GridbrainComponent::INV;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_INV);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestINV7)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(1, 1, 0);
-    GridbrainComponent* comp5 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NEG;
-    comp3->mType = GridbrainComponent::NOT;
-    comp4->mType = GridbrainComponent::NEG;
-    comp5->mType = GridbrainComponent::INV;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_NEG);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(1, 1, 0, COMP_NEG);
+    GridbrainComponent* comp5 = mGridbrain.setComponent(2, 0, 0, COMP_INV);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 1, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(1, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp5->mOutput, 0.0f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestINV8)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(2, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::NEG;
-    comp3->mType = GridbrainComponent::NOT;
-    comp4->mType = GridbrainComponent::INV;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_NEG);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 1, 0, COMP_NOT);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(2, 0, 0, COMP_INV);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 2, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK(comp4->mOutput > 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestRAND)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    comp1->mType = GridbrainComponent::RAND;
-    mGridbrain.cycle();
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_RAND);
+    initAndCycle();
     CHECK(comp1->mOutput >= -1.0f);
     CHECK(comp1->mOutput <= 1.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestCLK1)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::CLK;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_CLK);
     comp2->mParam = 0.1f;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
     for (unsigned int i = 0; i < 500; i++)
     {
-        mGridbrain.cycle();
+        initAndCycle();
         CHECK_CLOSE(comp2->mOutput, 0.0f, 0.0f);
     }
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
     for (unsigned int i = 0; i < 500; i++)
     {
-        mGridbrain.cycle();
+        initAndCycle();
         CHECK_CLOSE(comp2->mOutput, 0.0f, 0.0f);
     }
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestCLK2)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::CLK;
-    mGridbrain.cycle();
+    GridbrainComponent* comp1 = mGridbrain.setComponent(1, 0, 0, COMP_CLK);
+    initAndCycle();
     CHECK_CLOSE(comp1->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestCLK3)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::CLK;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(1, 0, 0, COMP_CLK);
     comp1->mParam = 0.1f;
     for (unsigned int i = 0; i < 500; i++)
     {
-        mGridbrain.cycle();
+        initAndCycle();
         CHECK_CLOSE(comp1->mOutput, 0.0f, 0.0f);
     }
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp1->mOutput, 1.0f, 0.0f);
     for (unsigned int i = 0; i < 500; i++)
     {
-        mGridbrain.cycle();
+        initAndCycle();
         CHECK_CLOSE(comp1->mOutput, 0.0f, 0.0f);
     }
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp1->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestCLK4)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::CLK;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(1, 0, 0, COMP_CLK);
     comp1->mParam = 0.2f;
     for (unsigned int i = 0; i < 1000; i++)
     {
-        mGridbrain.cycle();
+        initAndCycle();
         CHECK_CLOSE(comp1->mOutput, 0.0f, 0.0f);
     }
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp1->mOutput, 1.0f, 0.0f);
     for (unsigned int i = 0; i < 1000; i++)
     {
-        mGridbrain.cycle();
+        initAndCycle();
         CHECK_CLOSE(comp1->mOutput, 0.0f, 0.0f);
     }
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp1->mOutput, 1.0f, 0.0f);
 }
 
@@ -2403,17 +2015,19 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit3)
     buff = mGridbrain.getInputBuffer(0);
     buff[0] = -0.1;
     float* outBuff = mGridbrain.getOutputBuffer();
+
     mGridbrain.cycle();
     CHECK_CLOSE(outBuff[0], 1.0f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit4)
 {
-    GridbrainComponent* cmp1 = mGridbrain.getComponent(0, 0, 1);
-    cmp1->mType = GridbrainComponent::AND;
+    GridbrainComponent* cmp1 = mGridbrain.setComponent(0, 0, 1, COMP_AND);
     mGridbrain.addConnection(0, 0, 0, 0, 0, 1);
     mGridbrain.addConnection(0, 0, 1, 2, 0, 1);
- 
+
+    mGridbrain.init();
+
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 1.0;
     buff = mGridbrain.getInputBuffer(0);
@@ -2421,17 +2035,20 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit4)
     buff = mGridbrain.getInputBuffer(0);
     buff[0] = -0.2;
     float* outBuff = mGridbrain.getOutputBuffer();
+
     mGridbrain.cycle();
     CHECK_CLOSE(outBuff[0], 1.0f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit5)
 {
-    GridbrainComponent* cmp1 = mGridbrain.getComponent(0, 0, 1);
-    cmp1->mType = GridbrainComponent::AND;
+    GridbrainComponent* cmp1 = mGridbrain.setComponent(0, 0, 1, COMP_AND);
+
     mGridbrain.addConnection(0, 0, 0, 0, 0, 1);
     mGridbrain.addConnection(0, 0, 1, 2, 0, 1);
- 
+
+    mGridbrain.init();
+
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 1.0;
     buff = mGridbrain.getInputBuffer(0);
@@ -2439,21 +2056,22 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit5)
     buff = mGridbrain.getInputBuffer(0);
     buff[0] = -0.2;
     float* outBuff = mGridbrain.getOutputBuffer();
+
     mGridbrain.cycle();
     CHECK_CLOSE(outBuff[0], 0.0f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit6)
 {
-    GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* cmp2 = mGridbrain.getComponent(2, 0, 0);
-    cmp1->mType = GridbrainComponent::MAX;
-    cmp2->mType = GridbrainComponent::AND;
+    GridbrainComponent* cmp1 = mGridbrain.setComponent(1, 0, 0, COMP_MAX);
+    GridbrainComponent* cmp2 = mGridbrain.setComponent(2, 0, 0, COMP_AND);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 2, 0, 2, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 2, 0, 1);
+
+    mGridbrain.init();
  
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.1;
@@ -2468,21 +2086,22 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit6)
     buff[1] = 1.0;
     buff[2] = 0.0;
     float* outBuff = mGridbrain.getOutputBuffer();
+
     mGridbrain.cycle();
     CHECK_CLOSE(outBuff[0], 1.0f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit7)
 {
-    GridbrainComponent* cmp1 = mGridbrain.getComponent(1, 0, 0);
-    GridbrainComponent* cmp2 = mGridbrain.getComponent(2, 0, 0);
-    cmp1->mType = GridbrainComponent::MAX;
-    cmp2->mType = GridbrainComponent::AND;
+    GridbrainComponent* cmp1 = mGridbrain.setComponent(1, 0, 0, COMP_MAX);
+    GridbrainComponent* cmp2 = mGridbrain.setComponent(2, 0, 0, COMP_AND);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 2, 0, 2, 0, 0);
     mGridbrain.addConnection(1, 0, 0, 2, 0, 0);
     mGridbrain.addConnection(2, 0, 0, 2, 0, 1);
+
+    mGridbrain.init();
  
     float* buff = mGridbrain.getInputBuffer(0);
     buff[0] = 0.1;
@@ -2497,90 +2116,77 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainCircuit7)
     buff[1] = 1.0;
     buff[2] = 1.0;
     float* outBuff = mGridbrain.getOutputBuffer();
+
     mGridbrain.cycle();
     CHECK_CLOSE(outBuff[0], 0.0f, 0.0001f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestDMUL1)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::DMUL;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_DMUL);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp2->mOutput, 1.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestDMUL2)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::AND;
-    comp2->mType = GridbrainComponent::DMUL;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_AND);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(1, 0, 0, COMP_DMUL);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp2->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestDMUL3)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::AND;
-    comp3->mType = GridbrainComponent::DMUL;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_AND);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_DMUL);
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp2->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestDMUL4)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::CLK;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_CLK);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_DMUL);
     comp2->mParam = 0.1f;
-    comp3->mType = GridbrainComponent::DMUL;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     for (unsigned int i = 0; i < 500; i++)
     {
-        mGridbrain.cycle();
+        initAndCycle();
         CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
     }
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 1.0f, 0.0f);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestDMUL5)
 {
-    GridbrainComponent* comp1 = mGridbrain.getComponent(0, 0, 0);
-    GridbrainComponent* comp2 = mGridbrain.getComponent(0, 1, 0);
-    GridbrainComponent* comp3 = mGridbrain.getComponent(0, 2, 0);
-    GridbrainComponent* comp4 = mGridbrain.getComponent(1, 0, 0);
-    comp1->mType = GridbrainComponent::NOT;
-    comp2->mType = GridbrainComponent::CLK;
+    GridbrainComponent* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
+    GridbrainComponent* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_CLK);
+    GridbrainComponent* comp3 = mGridbrain.setComponent(0, 2, 0, COMP_AND);
+    GridbrainComponent* comp4 = mGridbrain.setComponent(1, 0, 0, COMP_DMUL);
     comp2->mParam = 0.1f;
-    comp3->mType = GridbrainComponent::AND;
-    comp4->mType = GridbrainComponent::DMUL;
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 2, 0, 1, 0, 0);
     for (unsigned int i = 0; i < 500; i++)
     {
-        mGridbrain.cycle();
+        initAndCycle();
         CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
     }
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
-    mGridbrain.cycle();
+    initAndCycle();
     CHECK_CLOSE(comp3->mOutput, 0.0f, 0.0f);
 }
 

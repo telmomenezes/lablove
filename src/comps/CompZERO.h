@@ -43,5 +43,7 @@ public:
     virtual bool isProducer(){return true;}
 };
 
+static CompZERO COMP_ZERO;
+
 #endif
 

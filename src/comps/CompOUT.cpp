@@ -41,7 +41,7 @@ GridbrainComponent* CompOUT::clone()
 
 void CompOUT::reset(int pass)
 {
-    mInput = 0;
+    mInput = 0.0f;
 }
 
 void CompOUT::input(float value, int pin)

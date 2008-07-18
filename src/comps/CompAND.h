@@ -44,5 +44,7 @@ protected:
     bool mInputFlag;
 };
 
+static CompAND COMP_AND;
+
 #endif
 

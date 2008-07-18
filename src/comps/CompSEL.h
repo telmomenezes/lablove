@@ -49,5 +49,7 @@ protected:
     int mPass;
 };
 
+static CompSEL COMP_SEL;
+
 #endif
 

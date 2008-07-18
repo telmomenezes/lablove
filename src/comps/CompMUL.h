@@ -44,5 +44,7 @@ protected:
     bool mInputFlag;
 };
 
+static CompMUL COMP_MUL;
+
 #endif
 

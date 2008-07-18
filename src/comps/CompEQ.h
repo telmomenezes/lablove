@@ -45,5 +45,7 @@ protected:
     float mState;
 };
 
+static CompEQ COMP_EQ;
+
 #endif
 

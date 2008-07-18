@@ -49,5 +49,7 @@ protected:
     float mLastInput;
 };
 
+static CompCLK COMP_CLK;
+
 #endif
 

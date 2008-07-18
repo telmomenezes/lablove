@@ -39,7 +39,10 @@ void CompDMUL::reset(int pass)
 
 void CompDMUL::input(float value, int pin)
 {
-    mInputVals[pin] = value;
+    if (value != 0.0f)
+    {
+        mInputVals[pin] = value;
+    }
 }
 
 float CompDMUL::output(unsigned int id)

@@ -43,9 +43,11 @@ public:
 protected:
     bool mInputFlag;
     float mState;
-    unsigned int mEvalCount;
+    unsigned int mCount;
     unsigned int mPass;
 };
+
+static CompAVG COMP_AVG;
 
 #endif
 

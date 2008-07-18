@@ -47,5 +47,7 @@ protected:
     static mt_distribution* mDistRand;
 };
 
+static CompRAND COMP_RAND;
+
 #endif
 

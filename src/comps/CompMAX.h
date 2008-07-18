@@ -45,7 +45,10 @@ protected:
     float mState;
     bool mCycleFlag;
     unsigned int mPass;
+    bool mTriggered;
 };
+
+static CompMAX COMP_MAX;
 
 #endif
 
