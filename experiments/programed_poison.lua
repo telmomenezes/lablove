@@ -54,64 +54,30 @@ logSuffix = "_programed_poison"
 -- Simulation
 --------------------------------------------------------------------------------
 
-sim = SimCont2D()
+sim = Sim2D()
 sim:setWorldDimensions(worldWidth, worldHeight, 250)
-sim:setViewRange(viewRange)
-sim:setViewAngle(viewAngle)
-sim:setGoCost(goCost)
-sim:setRotateCost(rotateCost)
-sim:setGoForceScale(goForceScale)
-sim:setRotateForceScale(rotateForceScale)
 sim:setSeedIndex(seedIndex)
 sim:setTimeLimit(timeLimit)
-sim:setFeedCenter(feedCenter)
 
 -- Agents
 --------------------------------------------------------------------------------
 
-agent = Agent()
+agent = SimObj2D()
 
-agent:setFitnessMeasure(SimCont2D.FITNESS_ENERGY_SUM_ABOVE_INIT)
-agent:addGraphic(GraphicTriangle())
-
-symSize = SymbolFloat(agentSize)
-symTable = SymbolTable(symSize)
-agent:addSymbolTable(symTable)
-sizeTableCode = symTable:getID()
-agent:setSymbolName("size", sizeTableCode, symSize:getID())
-
-symFriction = SymbolFloat(friction)
-symDrag = SymbolFloat(drag)
-symRotFriction = SymbolFloat(rotFriction)
-symRotDrag = SymbolFloat(rotDrag)
-symTable = SymbolTable(symFriction)
-symTable:addSymbol(symDrag)
-symTable:addSymbol(symRotFriction)
-symTable:addSymbol(symRotDrag)
-agent:addSymbolTable(symTable)
-physicsTableCode = symTable:getID()
-agent:setSymbolName("friction", physicsTableCode, symFriction:getID())
-agent:setSymbolName("drag", physicsTableCode, symDrag:getID())
-agent:setSymbolName("rot_friction", physicsTableCode, symRotFriction:getID())
-agent:setSymbolName("rot_drag", physicsTableCode, symRotDrag:getID())
-
-symInitialEnergy = SymbolFloat(initialEnergy)
-symMetabolism = SymbolFloat(metabolism)
-symTable = SymbolTable(symInitialEnergy)
-symTable:addSymbol(symMetabolism)
-agent:addSymbolTable(symTable)
-energyTableCode = symTable:getID()
-agent:setSymbolName("initial_energy", energyTableCode, symInitialEnergy:getID())
-agent:setSymbolName("metabolism", energyTableCode, symMetabolism:getID())
-
-symLowAgeLimit = SymbolUL(maxAge)
-symHighAgeLimit = SymbolUL(maxAge)
-symTable = SymbolTable(symLowAgeLimit)
-symTable:addSymbol(symHighAgeLimit)
-agent:addSymbolTable(symTable)
-ageTableCode = symTable:getID()
-agent:setSymbolName("low_age_limit", ageTableCode, symLowAgeLimit:getID())
-agent:setSymbolName("high_age_limit", ageTableCode, symHighAgeLimit:getID())
+agent:setSize(agentSize)
+agent:setDrag(drag)
+agent:setRotDrag(rotDrag)
+agent:setInitialEnergy(initialEnergy)
+agent:setMaxAge(maxAge)
+agent:setViewRange(viewRange)
+agent:setViewAngle(viewAngle)
+agent:setGoCost(goCost)
+agent:setRotateCost(rotateCost)
+agent:setGoForceScale(goForceScale)
+agent:setRotateForceScale(rotateForceScale)
+agent:setFeedCenter(feedCenter)
+agent:setShape(SimObj2D.SHAPE_TRIANGLE)
+agent:setColoringSymbolName("color")
 
 agentColor = SymbolRGB(0, 0, 255)
 symTable = SymbolTable(agentColor)
@@ -121,6 +87,7 @@ agent:setSymbolName("color", colorTableCode, agentColor:getID())
 
 agentFeed = SymbolFloat(0.0)
 agentFeedTable = SymbolTable(agentFeed)
+agentFeedTable:setName("food")
 agent:addSymbolTable(agentFeedTable)
 feedTableCode = agentFeedTable:getID()
 dummyTable = SymbolTable(agentFeed)
@@ -147,9 +114,9 @@ brain:addGrid(grid2, "beta")
 
 brain:init()
 
-brain:setComponent(0, 0, 0, IN, 0, SimCont2D.PERCEPTION_POSITION)
-brain:setComponent(0, 1, 0, IN, 0, SimCont2D.PERCEPTION_SYMBOL, SYM_TO_SYM, feedTableCode, agentFeed:getID(), foodTableCode)
-brain:setComponent(0, 2, 0, IN, 0, SimCont2D.PERCEPTION_TARGET)
+brain:setComponent(0, 0, 0, IN, 0, Sim2D.PERCEPTION_POSITION)
+brain:setComponent(0, 1, 0, IN, 0, Sim2D.PERCEPTION_SYMPRO, SYM_TO_SYM, feedTableCode, agentFeed:getID(), foodTableCode)
+brain:setComponent(0, 2, 0, IN, 0, Sim2D.PERCEPTION_TARGET)
 brain:setComponent(1, 1, 0, AMP, ((-1 / ((0.1 / feedCenter) + 1))) + 1)
 brain:setComponent(2, 1, 0, AND)
 brain:setComponent(3, 1, 0, NOT)
@@ -159,9 +126,9 @@ brain:setComponent(4, 1, 0, AND)
 brain:setComponent(4, 2, 0, AND)
 
 brain:setComponent(0, 0, 1, NOT)
-brain:setComponent(1, 0, 1, OUT, 0, SimCont2D.ACTION_ROTATE)
-brain:setComponent(1, 1, 1, OUT, 0, SimCont2D.ACTION_GO)
-brain:setComponent(1, 2, 1, OUT, 0, SimCont2D.ACTION_EATB)
+brain:setComponent(1, 0, 1, OUT, 0, Sim2D.ACTION_ROTATE)
+brain:setComponent(1, 1, 1, OUT, 0, Sim2D.ACTION_GO)
+brain:setComponent(1, 2, 1, OUT, 0, Sim2D.ACTION_EATB)
 
 brain:addConnection(0, 0, 0, 4, 0, 0)
 brain:addConnection(0, 0, 0, 3, 1, 0)
@@ -186,25 +153,11 @@ agent:setBrain(brain)
 -- Plants
 --------------------------------------------------------------------------------
 
-plant = GraphicalObject()
-
-symSize = SymbolFloat(plantSize)
-symTable = SymbolTable(symSize, sizeTableCode)
-plant:addSymbolTable(symTable)
-plant:setSymbolName("size", sizeTableCode, symSize:getID())
-
-symPlantInitialEnergy = SymbolFloat(1.0)
-symTable = SymbolTable(symPlantInitialEnergy, energyTableCode)
-plant:addSymbolTable(symTable)
-plant:setSymbolName("initial_energy", energyTableCode, symPlantInitialEnergy:getID())
-
-symLowAgeLimit = SymbolUL(maxAge)
-symHighAgeLimit = SymbolUL(maxAge)
-symTable = SymbolTable(symLowAgeLimit, ageTableCode)
-symTable:addSymbol(symHighAgeLimit)
-plant:addSymbolTable(symTable)
-plant:setSymbolName("low_age_limit", ageTableCode, symLowAgeLimit:getID())
-plant:setSymbolName("high_age_limit", ageTableCode, symHighAgeLimit:getID())
+plant = SimObj2D()
+--plant:setBirthRadius(50.0)
+plant:setSize(plantSize)
+plant:setInitialEnergy(1.0)
+plant:setMaxAge(maxAge)
 
 plantFood = SymbolFloat(0.0)
 plantFood:setAlwaysRandom()
@@ -212,39 +165,55 @@ plantFoodTable = SymbolTable(plantFood, foodTableCode)
 plant:addSymbolTable(plantFoodTable)
 plant:setSymbolName("food", foodTableCode, plantFood:getID())
 
-graphic = GraphicGradient()
-graphic:setSymbolName("food")
-graphic:setReferenceSymbol(agentFeed)
-graphic:setColor1(255, 0, 0)
-graphic:setColor2(0, 255, 0)
-graphic:setCenter(feedCenter)
-
-plant:addGraphic(graphic)
+plant:setShape(SimObj2D.SHAPE_SQUARE)
+plant:setColoringScale("food", plantFood, feedCenter, 255, 0, 0, 0, 255, 0)
 
 -- Population Dynamics
 --------------------------------------------------------------------------------
 
-popDyn = PopDynSpeciesBuffers()
+popDyn = PopDynSEGA()
 sim:setPopulationDynamics(popDyn)
 
-agentSpeciesIndex = popDyn:addSpecies(agent, numberOfAgents, 1, false)
-popDyn:addSpecies(plant, numberOfPlants, 1)
+agentSpecies = Species(agent, numberOfAgents)
+agentSpecies:addGoal(SimObj2D.FITNESS_ENERGY_SUM_ABOVE_INIT, 1)
+agentSpecies:setFitnessAging(0)
+agentSpecies:setRecombineProb(0)
+
+plantSpecies = Species(plant, numberOfPlants)
+plantSpecies:addGoal(SimObj2D.FITNESS_ENERGY, 1)
+
+agentSpeciesIndex = popDyn:addSpecies(agentSpecies)
+popDyn:addSpecies(plantSpecies)
 
 -- Logs and Statistics
 --------------------------------------------------------------------------------
 
 stats = StatCommon()
-stats:setFile("energy" .. logSuffix .. ".csv")
+stats:setFile("log" .. logSuffix .. ".csv")
 stats:addField("fitness")
 stats:addField("energy")
-popDyn:addDeathLog(agentSpeciesIndex, stats)
+stats:addField("gb_connections")
+stats:addField("gb_active_connections")
+stats:addField("gb_active_components")
+stats:addField("gb_grid_width_objects")
+stats:addField("gb_grid_height_objects")
+stats:addField("gb_grid_width_beta")
+stats:addField("gb_grid_height_beta")
+agentSpecies:addDeathLog(stats)
 
 if logBrains then
     logBrain = LogBestBrain()
-    logBrain:setFileNamePrefix("brain" .. logSuffix .. "t")
     logBrain:setFileNameSuffix(".svg")
-    popDyn:addDeathLog(agentSpeciesIndex, logBrain)
+    if logOnlyLastBrain then
+        logBrain:setLogOnlyLast(true)
+        logBrain:setFileNamePrefix("brain" .. logSuffix)
+    else
+        logBrain:setFileNamePrefix("brain" .. logSuffix .. "t")
+    end
+    agentSpecies:addDeathLog(logBrain)
 end
+
+popDyn:setLogTimeInterval(logTimeInterval)
 
 -- Start Simulation
 --------------------------------------------------------------------------------

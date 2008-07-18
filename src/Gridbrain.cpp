@@ -1396,6 +1396,8 @@ void Gridbrain::addRandomConnections(unsigned int count)
 
 void Gridbrain::cycle()
 {
+    //printf("========== BEGIN CYCLE ==========\n");
+
     // Reset beta grid
     // Assume beta grid at the end
     Grid* grid = mGridsVec[mGridsCount - 1];
@@ -1470,6 +1472,9 @@ void Gridbrain::cycle()
                     {
                         output = 0.0f;
                     }
+
+                    //comp->print();
+                    //printf(" => %f\n", output);
 
                     if (comp->mType == GridbrainComponent::OUT)
                     {
