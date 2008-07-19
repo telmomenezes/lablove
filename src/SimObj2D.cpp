@@ -1260,19 +1260,13 @@ void SimObj2D::fire(unsigned int actionType, float strength)
     float cost = mLaserCostFactor * strength;
     deltaEnergy(-cost);
 
-    bool doFire = true;
     if (((mSim2D->getTime() - mLastFireTime) <= mFireInterval)
         && (mLastFireTime != 0))
     {
-        doFire = false;
+        return;
     }
 
     mLastFireTime = mSim2D->getTime();
-
-    if (!doFire)
-    {
-        return;
-    }
 
     Laser2D laser;
 
