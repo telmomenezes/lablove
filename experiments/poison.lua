@@ -43,15 +43,15 @@ fitnessAging = 0.1
 
 addConnectionProb = 0.01
 removeConnectionProb = 0.01
-changeParamProb = 0.0
-paramMutationStanDev = 0.0
+changeParamProb = 0.02
+paramMutationStanDev = 2.5
 splitConnectionProb = 0.01
 joinConnectionsProb = 0.01
 changeComponentProb = 0.0
 changeInComponentProb = 0.2
 swapComponentProb = 0.0
 
-recombineProb = 1.0
+recombineProb = 0.25
 recTree = false
 recTerminal = false
 geneGrouping = false
