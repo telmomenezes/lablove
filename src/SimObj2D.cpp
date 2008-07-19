@@ -1463,7 +1463,7 @@ void SimObj2D::processLaserHit(Laser2D* laser)
         {
             if (obj->mSpeciesID != mSpeciesID)
             {
-                obj->mLaserHitScore += score;
+                obj->mLaserEffScore += score;
             }
         }
 

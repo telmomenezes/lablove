@@ -15,7 +15,7 @@ agentSize = 10.0
 targetMinEnergy = 2.0
 targetMaxEnergy = 2.0
 targetSizeFactor = 2.0
-targetSpeed = 0.05
+targetSpeed = 0.1
 
 worldWidth = 500
 worldHeight = 500
@@ -33,12 +33,12 @@ initialEnergy = 1.0
 goCost = 0.001
 rotateCost = 0.001
 goForceScale = 0.3
-rotateForceScale = 0.05
+rotateForceScale = 0.1
 
 drag = 0.05
 rotDrag = 0.05
 
-fireInterval = 1000
+fireInterval = 2000
 laserLength = 25
 laserSpeed = 100.0
 laserRange = 300.0

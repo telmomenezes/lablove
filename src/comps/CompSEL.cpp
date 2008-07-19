@@ -24,6 +24,9 @@ CompSEL::CompSEL()
     mType = SEL;
     mID = 0;
     mIDFound = false;
+    mIDCandidate = 0;
+    mTriggered = false;
+    mIDFound = false;
 }
 
 CompSEL::~CompSEL()
@@ -39,9 +42,8 @@ void CompSEL::reset(int pass)
 {
     mInput = 0.0f;
     mInputFlag = false;
-    mPass = pass;
 
-    if (mPass == 0)
+    if ((mPass == 1) && (pass == 0))
     {
         if (!mIDFound)
         {
@@ -52,6 +54,8 @@ void CompSEL::reset(int pass)
         mTriggered = false;
         mIDFound = false;
     }
+
+    mPass = pass;
 }
 
 void CompSEL::input(float value, int pin)
