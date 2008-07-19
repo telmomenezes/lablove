@@ -1553,7 +1553,7 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainIN1)
     buff[0] = 0.0;
     buff[1] = -0.5;
     buff[2] = 1.0;
-    initAndCycle();
+    mGridbrain.cycle();
     CHECK_CLOSE(per1->mOutput, 0.0f, 0.0001f);
     CHECK_CLOSE(per2->mOutput, -0.5f, 0.0001f);
     CHECK_CLOSE(per3->mOutput, 1.0f, 0.0001f);
@@ -1572,7 +1572,7 @@ TEST_FIXTURE(GridbrainCompFixture2, GridbrainIN2)
     buff[0] = 0.3;
     buff[1] = -0.04;
     buff[2] = -1.0;
-    initAndCycle();
+    mGridbrain.cycle();
     CHECK_CLOSE(per1->mOutput, 0.3f, 0.0001f);
     CHECK_CLOSE(per2->mOutput, -0.04f, 0.0001f);
     CHECK_CLOSE(per3->mOutput, -1.0f, 0.0001f);
