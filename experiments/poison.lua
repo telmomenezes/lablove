@@ -310,6 +310,8 @@ end
 
 popDyn:setLogTimeInterval(logTimeInterval)
 
+agentSpecies:setLog("buf" .. logSuffix .. ".csv", logTimeInterval)
+
 -- Start Simulation
 --------------------------------------------------------------------------------
 
