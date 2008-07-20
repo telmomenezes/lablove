@@ -29,7 +29,7 @@
 #include "Brain.h"
 #include "Grid.h"
 #include "Component.h"
-#include "GridbrainConnection.h"
+#include "Connection.h"
 #include "ComponentSet.h"
 #include "RandDistManager.h"
 #include "types.h"
@@ -53,7 +53,7 @@ public:
     virtual ~Gridbrain();
 
     virtual Brain* clone();
-    Gridbrain* clone(bool grow, ExpansionType expansion=ET_NONE, unsigned int targetGrid=0, GridCoord* gc=NULL);
+    Gridbrain* clone(bool grow, ExpansionType expansion=ET_NONE, unsigned int targetGrid=0, Coord* gc=NULL);
 
     void addGrid(Grid* grid, string name);
     virtual void init();
@@ -70,16 +70,16 @@ public:
                 unsigned int xTarg,
                 unsigned int yTarg,
                 unsigned int gTarg,
-                GridbrainGeneTag tag=GridbrainGeneTag());
-    void removeConnection(GridbrainConnection* conn);
+                GeneTag tag=GeneTag());
+    void removeConnection(Connection* conn);
     void removeConnection(unsigned int xOrig,
                 unsigned int yOrig,
                 unsigned int gOrig,
                 unsigned int xTarg,
                 unsigned int yTarg,
                 unsigned int gTarg);
-    GridbrainConnection* getRandomConnection();
-    GridbrainConnection* getConnection(unsigned int xOrig,
+    Connection* getRandomConnection();
+    Connection* getConnection(unsigned int xOrig,
                 unsigned int yOrig,
                 unsigned int gOrig,
                 unsigned int xTarg,
@@ -155,7 +155,7 @@ public:
 
     virtual string write(SimObj* obj, Simulation* sim);
     virtual void printDebug();
-    void printConnection(GridbrainConnection* conn);
+    void printConnection(Connection* conn);
 
     bool isConnectionValid(unsigned int xOrig,
                 unsigned int yOrig,
@@ -240,8 +240,8 @@ protected:
                                 unsigned int grid);
     
     void initRandomConnectionSequence(float selectionProb);
-    GridbrainConnection* nextRandomConnection();
-    GridbrainConnection* skipNextRandomConnection();
+    Connection* nextRandomConnection();
+    Connection* skipNextRandomConnection();
     void initRandomComponentSequence(float selectionProb);
     int nextRandomComponent();
 
@@ -266,14 +266,14 @@ protected:
                                 Component*& compTarg);
     Gridbrain* importConnection(Gridbrain* gbTarg,
                                 Gridbrain* gbOrig,
-                                GridbrainConnection* conn);
+                                Connection* conn);
 
     bool checkGene(llULINT geneID);
     bool isGeneSelected(llULINT geneID);
     bool selectGene(llULINT geneID, bool select);
 
     int compEquivalence(Component* comp1, Component* comp2, CompEquivalenceType eqType);
-    GridbrainGeneTag findGeneTag(GridbrainConnection* conn);
+    GeneTag findGeneTag(Connection* conn);
     virtual void popAdjust(vector<SimObj*>* popVec);
 
     static mt_distribution* mDistConnections;
@@ -287,7 +287,7 @@ protected:
     vector<Component*> mComponents;
     unsigned int mMaxInputDepth;
     unsigned int mNumberOfComponents;
-    GridbrainConnection* mConnections;
+    Connection* mConnections;
     unsigned int mConnectionsCount;
     unsigned int mGridsCount;
     unsigned int mFirstBetaIndex;
@@ -305,7 +305,7 @@ protected:
     float mMutateSwapComponentProb;
 
     float mConnSeqProb;
-    GridbrainConnection* mConnSeqCurrent;
+    Connection* mConnSeqCurrent;
     float mCompSeqProb;
     unsigned int mCompSeqPos;
 

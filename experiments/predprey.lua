@@ -213,7 +213,7 @@ function addAgentSpecies(name, pop, red, green, blue, feed, food, evo, size, com
     brain:setCloneConnectionsMode(Gridbrain.CC_ALL_PLUS)
     brain:setMutationScope(Gridbrain.MS_ALL)
 
-    alphaSet = GridbrainComponentSet()
+    alphaSet = ComponentSet()
     for i, comp in pairs(alphaComponents) do
         alphaSet:addComponent(comp)
     end
@@ -229,7 +229,7 @@ function addAgentSpecies(name, pop, red, green, blue, feed, food, evo, size, com
     brain:addGrid(grid, "objects");
 
     if comm then
-        soundSet = GridbrainComponentSet()
+        soundSet = ComponentSet()
         for i, comp in pairs(alphaComponents) do
             soundSet:addComponent(comp)
         end
@@ -244,7 +244,7 @@ function addAgentSpecies(name, pop, red, green, blue, feed, food, evo, size, com
         brain:addGrid(soundGrid, "sounds");
     end
 
-    selfSet = GridbrainComponentSet()
+    selfSet = ComponentSet()
     for i, comp in pairs(alphaComponents) do
         selfSet:addComponent(comp)
     end
@@ -259,7 +259,7 @@ function addAgentSpecies(name, pop, red, green, blue, feed, food, evo, size, com
 
     brain:addGrid(selfGrid, "self");
 
-    betaSet = GridbrainComponentSet()
+    betaSet = ComponentSet()
     for i, comp in pairs(betaComponents) do
         betaSet:addComponent(comp)
     end

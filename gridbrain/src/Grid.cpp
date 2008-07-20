@@ -75,12 +75,12 @@ Grid::Grid(const Grid& grid)
     for (unsigned int i = 0; i < mWidth; i++)
     {
         mColumnTargetCountVec.push_back(grid.mColumnTargetCountVec[i]);
-        GridCoord gc = grid.mColumnCoords[i];
+        Coord gc = grid.mColumnCoords[i];
         mColumnCoords.push_back(gc);
     }
     for (unsigned int i = 0; i < mHeight; i++)
     {
-        GridCoord gc = grid.mRowCoords[i];
+        Coord gc = grid.mRowCoords[i];
         mRowCoords.push_back(gc);
     }
 
@@ -142,7 +142,7 @@ void Grid::init(Type type, unsigned int width, unsigned int height)
 
         if (i == 0)
         {
-            mColumnCoords.push_back(GridCoord());
+            mColumnCoords.push_back(Coord());
         }
         else
         {
@@ -154,7 +154,7 @@ void Grid::init(Type type, unsigned int width, unsigned int height)
     {
         if (i == 0)
         {
-            mRowCoords.push_back(GridCoord());
+            mRowCoords.push_back(Coord());
         }
         else
         {
@@ -301,7 +301,7 @@ unsigned int Grid::getInputID(unsigned int depth)
     return mInputIDs[depth];
 }
 
-void Grid::addColumn(GridCoord* gc)
+void Grid::addColumn(Coord* gc)
 {
     mWidth++;
     mSize = mWidth * mHeight;
@@ -309,11 +309,11 @@ void Grid::addColumn(GridCoord* gc)
 
     if (gc == NULL)
     {
-        GridCoord ngc;
+        Coord ngc;
 
         if (mWidth == 1)
         {
-            ngc = GridCoord();
+            ngc = Coord();
             mColumnCoords.push_back(ngc);
         }
         else
@@ -324,9 +324,9 @@ void Grid::addColumn(GridCoord* gc)
     }
     else
     {   
-        GridCoord ngc = *gc;
+        Coord ngc = *gc;
 
-        vector<GridCoord>::iterator iterCoord = mColumnCoords.begin();
+        vector<Coord>::iterator iterCoord = mColumnCoords.begin();
         while ((iterCoord != mColumnCoords.end())
                 && ((*iterCoord).position(ngc) != 1))
         {
@@ -336,18 +336,18 @@ void Grid::addColumn(GridCoord* gc)
     }
 }
 
-void Grid::addRow(GridCoord* gc)
+void Grid::addRow(Coord* gc)
 {
     mHeight++;
     mSize = mWidth * mHeight;
 
     if (gc == NULL)
     {
-        GridCoord ngc;
+        Coord ngc;
 
         if (mHeight == 1)
         {
-            ngc = GridCoord();
+            ngc = Coord();
         }
         else
         {
@@ -357,9 +357,9 @@ void Grid::addRow(GridCoord* gc)
     }
     else
     {   
-        GridCoord ngc = *gc;
+        Coord ngc = *gc;
 
-        vector<GridCoord>::iterator iterCoord = mRowCoords.begin();
+        vector<Coord>::iterator iterCoord = mRowCoords.begin();
         while ((iterCoord != mRowCoords.end())
                 && ((*iterCoord).position(ngc) != 1))
         {
@@ -369,14 +369,14 @@ void Grid::addRow(GridCoord* gc)
     }
 }
 
-void Grid::deleteColumn(GridCoord col)
+void Grid::deleteColumn(Coord col)
 {
     if (mWidth == 0)
     {
         return;
     }
 
-    vector<GridCoord>::iterator iterCol = mColumnCoords.begin();
+    vector<Coord>::iterator iterCol = mColumnCoords.begin();
     vector<unsigned int>::iterator iterColTarg = mColumnTargetCountVec.begin();
     
     while ((iterCol != mColumnCoords.end())
@@ -393,14 +393,14 @@ void Grid::deleteColumn(GridCoord col)
     mSize = mWidth * mHeight;
 }
 
-void Grid::deleteRow(GridCoord row)
+void Grid::deleteRow(Coord row)
 {
     if (mHeight == 0)
     {
         return;
     }
 
-    vector<GridCoord>::iterator iterRow = mRowCoords.begin();
+    vector<Coord>::iterator iterRow = mRowCoords.begin();
     
     while ((iterRow != mRowCoords.end())
         && (!((*iterRow) == row)))
@@ -414,17 +414,17 @@ void Grid::deleteRow(GridCoord row)
     mSize = mWidth * mHeight;
 }
 
-GridCoord Grid::getColCoordAfter(GridCoord col)
+Coord Grid::getColCoordAfter(Coord col)
 {
     int x = getColumnByCoord(col);
-    GridCoord col1 = mColumnCoords[x];
+    Coord col1 = mColumnCoords[x];
 
     if (x == (mWidth - 1))
     {
         return col1.rightOf();
     }
 
-    GridCoord col2 = mColumnCoords[x + 1];
+    Coord col2 = mColumnCoords[x + 1];
 
     if (col1.getDepth() >= col2.getDepth())
     {
@@ -436,7 +436,7 @@ GridCoord Grid::getColCoordAfter(GridCoord col)
     }
 }
 
-int Grid::getColumnByCoord(GridCoord coord)
+int Grid::getColumnByCoord(Coord coord)
 {
     for (unsigned int i = 0; i < mWidth; i++)
     {
@@ -449,7 +449,7 @@ int Grid::getColumnByCoord(GridCoord coord)
     return -1;
 }
 
-int Grid::getRowByCoord(GridCoord coord)
+int Grid::getRowByCoord(Coord coord)
 {
     for (unsigned int i = 0; i < mHeight; i++)
     {

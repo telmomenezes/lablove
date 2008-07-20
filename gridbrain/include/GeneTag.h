@@ -22,16 +22,16 @@
 
 #include "types.h"
 
-class GridbrainGeneTag
+class GeneTag
 {
 public:
-    GridbrainGeneTag();
-    GridbrainGeneTag(const GridbrainGeneTag& tag);
-    virtual ~GridbrainGeneTag();
+    GeneTag();
+    GeneTag(const GeneTag& tag);
+    virtual ~GeneTag();
 
     static llULINT generateID();
-    bool isEquivalentOrigin(GridbrainGeneTag* tag);
-    bool isEquivalentTarget(GridbrainGeneTag* tag);
+    bool isEquivalentOrigin(GeneTag* tag);
+    bool isEquivalentTarget(GeneTag* tag);
 
     void print();
 

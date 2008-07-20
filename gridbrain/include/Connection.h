@@ -21,15 +21,15 @@
 #define _INCLUDE_GRIDBRAIN_CONNECTION_H
 
 #include "types.h"
-#include "GridbrainGeneTag.h"
+#include "GeneTag.h"
 
-class GridbrainConnection
+class Connection
 {
 public:
     enum SelectionState {SS_UNKNOWN, SS_SELECTED, SS_UNSELECTED};
     
-    GridbrainConnection();
-    virtual ~GridbrainConnection();
+    Connection();
+    virtual ~Connection();
 
     bool connectsNeighbourColumns();
 
@@ -52,7 +52,7 @@ public:
     bool mActive;
 
     SelectionState mSelectionState;
-    GridbrainGeneTag mGeneTag;
+    GeneTag mGeneTag;
 };
 
 #endif

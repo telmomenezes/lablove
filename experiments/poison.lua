@@ -166,7 +166,7 @@ brain:setMutateSwapComponentProb(swapComponentProb)
 brain:setRecombinationType(recType)
 brain:setGeneGrouping(geneGrouping)
 
-alphaSet = GridbrainComponentSet()
+alphaSet = ComponentSet()
 for i, comp in pairs(alphaComponents) do
     alphaSet:addComponent(comp)
 end
@@ -181,7 +181,7 @@ grid:setComponentSet(alphaSet)
 
 brain:addGrid(grid, "objects");
 
-betaSet = GridbrainComponentSet()
+betaSet = ComponentSet()
 for i, comp in pairs(betaComponents) do
     betaSet:addComponent(comp)
 end

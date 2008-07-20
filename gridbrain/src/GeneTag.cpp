@@ -17,47 +17,47 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "GridbrainGeneTag.h"
+#include "GeneTag.h"
 
 #include <stdio.h>
 
-llULINT GridbrainGeneTag::ID_SEQ = 0;
+llULINT GeneTag::ID_SEQ = 0;
 
-GridbrainGeneTag::GridbrainGeneTag()
+GeneTag::GeneTag()
 {
     mGeneID = 0;
     mOrigID = 0;
     mTargID = 0;
 }
 
-GridbrainGeneTag::GridbrainGeneTag(const GridbrainGeneTag& tag)
+GeneTag::GeneTag(const GeneTag& tag)
 {
     mGeneID = tag.mGeneID;
     mOrigID = tag.mOrigID;
     mTargID = tag.mTargID;
 }
 
-GridbrainGeneTag::~GridbrainGeneTag()
+GeneTag::~GeneTag()
 {
 }
 
-llULINT GridbrainGeneTag::generateID()
+llULINT GeneTag::generateID()
 {
     ID_SEQ++;
     return ID_SEQ;
 }
 
-bool GridbrainGeneTag::isEquivalentOrigin(GridbrainGeneTag* tag)
+bool GeneTag::isEquivalentOrigin(GeneTag* tag)
 {
     return ((mGeneID == tag->mGeneID) && (mTargID == tag->mTargID));
 }
 
-bool GridbrainGeneTag::isEquivalentTarget(GridbrainGeneTag* tag)
+bool GeneTag::isEquivalentTarget(GeneTag* tag)
 {
     return ((mGeneID == tag->mGeneID) && (mOrigID == tag->mOrigID));
 }
 
-void GridbrainGeneTag::print()
+void GeneTag::print()
 {
     printf(" g: %d", mGeneID);
     printf(" o: %d", mOrigID);

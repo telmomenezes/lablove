@@ -78,8 +78,8 @@ Gridbrain::~Gridbrain()
 
     while (mConnections != NULL)
     {
-        GridbrainConnection* conn = mConnections;
-        mConnections = (GridbrainConnection*)conn->mNextGlobalConnection;
+        Connection* conn = mConnections;
+        mConnections = (Connection*)conn->mNextGlobalConnection;
         free(conn);
     }
     for (unsigned int i = 0; i < mGridsCount; i++)
@@ -97,7 +97,7 @@ Brain* Gridbrain::clone()
     return clone(true);
 }
 
-Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int targetGrid, GridCoord* gc)
+Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int targetGrid, Coord* gc)
 {
     Gridbrain* gb = new Gridbrain();
 
@@ -156,7 +156,7 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
             {
                 bool activeCol = false;
                 unsigned int minConnJump = 9999999;
-                GridCoord colCoord = oldGrid->getColumnCoord(x);
+                Coord colCoord = oldGrid->getColumnCoord(x);
 
                 for (unsigned int y = 0;
                     y < oldGrid->getHeight();
@@ -167,7 +167,7 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                     {
                         activeCol = true;
 
-                        GridbrainConnection* conn = comp->mFirstConnection;
+                        Connection* conn = comp->mFirstConnection;
                         while (conn != NULL)
                         {
                             if (conn->mGridOrig == conn->mGridTarg)
@@ -178,7 +178,7 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                                     minConnJump = connJump;
                                 }
                             }
-                            conn = (GridbrainConnection*)conn->mNextConnection;
+                            conn = (Connection*)conn->mNextConnection;
                         }
                     }
                 }
@@ -191,14 +191,14 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                     
                     if (x == 0)
                     {
-                        GridCoord newCol = colCoord.leftOf();
+                        Coord newCol = colCoord.leftOf();
                         newGrid->addColumn(&newCol);
                     }
 
                     if ((x == (oldGrid->getWidth() - 1))
                         || (minConnJump == 1))
                     {
-                        GridCoord newCol = newGrid->getColCoordAfter(colCoord);
+                        Coord newCol = newGrid->getColCoordAfter(colCoord);
                         newGrid->addColumn(&newCol);
                         jump++;
                     }
@@ -247,7 +247,7 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                 y++)
             {
                 bool activeRow = false;
-                GridCoord rowCoord = oldGrid->getRowCoord(y);
+                Coord rowCoord = oldGrid->getRowCoord(y);
 
                 for (unsigned int x = 0;
                     x < oldGrid->getWidth();
@@ -321,14 +321,14 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
             x < newGrid->getWidth();
             x++)
         {
-            GridCoord xCoord = newGrid->getColumnCoord(x);
+            Coord xCoord = newGrid->getColumnCoord(x);
             int oldX = oldGrid->getColumnByCoord(xCoord);
 
             for (unsigned int y = 0;
                 y < newGrid->getHeight();
                 y++)
             {
-                GridCoord yCoord = newGrid->getRowCoord(y);
+                Coord yCoord = newGrid->getRowCoord(y);
                 int oldY = oldGrid->getRowByCoord(yCoord);
 
                 Component* oldComponent = NULL;
@@ -401,7 +401,7 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
 
     unsigned int lostConnections = 0;
 
-    GridbrainConnection* conn = mConnections;
+    Connection* conn = mConnections;
     while (conn != NULL)
     {
         int x1 = conn->mColumnOrig;
@@ -416,10 +416,10 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
         Grid* newGridOrig = gb->mGridsVec[g1];
         Grid* newGridTarg = gb->mGridsVec[g2];
 
-        GridCoord x1Coord = oldGridOrig->getColumnCoord(x1);
-        GridCoord y1Coord = oldGridOrig->getRowCoord(y1);
-        GridCoord x2Coord = oldGridTarg->getColumnCoord(x2);
-        GridCoord y2Coord = oldGridTarg->getRowCoord(y2);
+        Coord x1Coord = oldGridOrig->getColumnCoord(x1);
+        Coord y1Coord = oldGridOrig->getRowCoord(y1);
+        Coord x2Coord = oldGridTarg->getColumnCoord(x2);
+        Coord y2Coord = oldGridTarg->getRowCoord(y2);
 
         x1 = newGridOrig->getColumnByCoord(x1Coord);
         y1 = newGridOrig->getRowByCoord(y1Coord);
@@ -440,7 +440,7 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                 conn->mGeneTag);
         }
 
-        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+        conn = (Connection*)conn->mNextGlobalConnection;
     }
 
     gb->update();
@@ -692,18 +692,18 @@ Component* Gridbrain::replaceComponent(unsigned int pos, Component* comp)
     compSet->disable(comp);
 
     // Update connections
-    GridbrainConnection* conn = (GridbrainConnection*)newComp->mFirstConnection;
+    Connection* conn = (Connection*)newComp->mFirstConnection;
     while (conn != NULL)
     {
         conn->mOrigComponent = newComp;
-        conn = (GridbrainConnection*)conn->mNextConnection;
+        conn = (Connection*)conn->mNextConnection;
     }
 
-    conn = (GridbrainConnection*)newComp->mFirstInConnection;
+    conn = (Connection*)newComp->mFirstInConnection;
     while (conn != NULL)
     {
         conn->mTargComponent = newComp;
-        conn = (GridbrainConnection*)conn->mNextInConnection;
+        conn = (Connection*)conn->mNextInConnection;
     }
 
     return newComp;
@@ -715,7 +715,7 @@ void Gridbrain::addConnection(unsigned int xOrig,
                 unsigned int xTarg,
                 unsigned int yTarg,
                 unsigned int gTarg,
-                GridbrainGeneTag tag)
+                GeneTag tag)
 {
     /*printf("add connection: %d,%d,%d -> %d,%d,%d\n",
             xOrig,
@@ -759,7 +759,7 @@ void Gridbrain::addConnection(unsigned int xOrig,
 
     Component* comp = mComponents[orig];
     Component* targComp = mComponents[target];
-    GridbrainConnection* conn = (GridbrainConnection*)malloc(sizeof(GridbrainConnection));
+    Connection* conn = (Connection*)malloc(sizeof(Connection));
     conn->mColumnOrig = comp->mColumn;
     conn->mRowOrig = comp->mRow;
     conn->mGridOrig = comp->mGrid;
@@ -790,7 +790,7 @@ void Gridbrain::addConnection(unsigned int xOrig,
     {
         unsigned int offset = getRelativeOffset(comp, conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg);
 
-        GridbrainConnection* iterConn = comp->mFirstConnection;
+        Connection* iterConn = comp->mFirstConnection;
         bool inserted = false;
         while ((!inserted) && (iterConn != NULL))
         {
@@ -808,7 +808,7 @@ void Gridbrain::addConnection(unsigned int xOrig,
                 }
                 else
                 {
-                    ((GridbrainConnection*)(conn->mPrevConnection))->mNextConnection = conn;
+                    ((Connection*)(conn->mPrevConnection))->mNextConnection = conn;
                 }
 
                 inserted = true;
@@ -822,14 +822,14 @@ void Gridbrain::addConnection(unsigned int xOrig,
                 inserted = true;
             }
 
-            iterConn = (GridbrainConnection*)(iterConn->mNextConnection);
+            iterConn = (Connection*)(iterConn->mNextConnection);
         }
     }
 
     (comp->mConnectionsCount)++;
 
     // Insert in the beginning of the target's incoming connections list
-    GridbrainConnection* nextConn = targComp->mFirstInConnection;
+    Connection* nextConn = targComp->mFirstInConnection;
     conn->mNextInConnection = nextConn;
     conn->mPrevInConnection = NULL;
     targComp->mFirstInConnection = conn;
@@ -855,7 +855,7 @@ void Gridbrain::addConnection(unsigned int xOrig,
     mConnectionsCount++;
 }
 
-void Gridbrain::removeConnection(GridbrainConnection* conn)
+void Gridbrain::removeConnection(Connection* conn)
 {
     Component* comp = (Component*)conn->mOrigComponent;
     Component* targComp = (Component*)conn->mTargComponent;
@@ -864,45 +864,45 @@ void Gridbrain::removeConnection(GridbrainConnection* conn)
 
     if (conn->mPrevConnection)
     {
-        ((GridbrainConnection*)conn->mPrevConnection)->mNextConnection = conn->mNextConnection;
+        ((Connection*)conn->mPrevConnection)->mNextConnection = conn->mNextConnection;
     }
     else
     {
-        comp->mFirstConnection = (GridbrainConnection*)conn->mNextConnection;
+        comp->mFirstConnection = (Connection*)conn->mNextConnection;
     }
     if (conn->mNextConnection)
     {
-        ((GridbrainConnection*)conn->mNextConnection)->mPrevConnection = conn->mPrevConnection;
+        ((Connection*)conn->mNextConnection)->mPrevConnection = conn->mPrevConnection;
     }
 
     targComp->mInboundConnections--;
 
     if (conn->mPrevInConnection)
     {
-        ((GridbrainConnection*)conn->mPrevInConnection)->mNextInConnection = conn->mNextInConnection;
+        ((Connection*)conn->mPrevInConnection)->mNextInConnection = conn->mNextInConnection;
     }
     else
     {
-        targComp->mFirstInConnection = (GridbrainConnection*)conn->mNextInConnection;
+        targComp->mFirstInConnection = (Connection*)conn->mNextInConnection;
     }
     if (conn->mNextInConnection)
     {
-        ((GridbrainConnection*)conn->mNextInConnection)->mPrevInConnection = conn->mPrevInConnection;
+        ((Connection*)conn->mNextInConnection)->mPrevInConnection = conn->mPrevInConnection;
     }
 
     mConnectionsCount--;
     if (conn->mPrevGlobalConnection)
     {
-        ((GridbrainConnection*)conn->mPrevGlobalConnection)->mNextGlobalConnection =
+        ((Connection*)conn->mPrevGlobalConnection)->mNextGlobalConnection =
             conn->mNextGlobalConnection;
     }
     else
     {
-        mConnections = (GridbrainConnection*)conn->mNextGlobalConnection;
+        mConnections = (Connection*)conn->mNextGlobalConnection;
     }
     if (conn->mNextGlobalConnection)
     {
-        ((GridbrainConnection*)conn->mNextGlobalConnection)->mPrevGlobalConnection =
+        ((Connection*)conn->mNextGlobalConnection)->mPrevGlobalConnection =
             conn->mPrevGlobalConnection;
     }
 
@@ -916,14 +916,14 @@ void Gridbrain::removeConnection(unsigned int xOrig,
                 unsigned int yTarg,
                 unsigned int gTarg)
 {
-    GridbrainConnection* conn = getConnection(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg);
+    Connection* conn = getConnection(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg);
     if (conn != NULL)
     {
         removeConnection(conn);
     }
 }
 
-GridbrainConnection* Gridbrain::getConnection(unsigned int xOrig,
+Connection* Gridbrain::getConnection(unsigned int xOrig,
                 unsigned int yOrig,
                 unsigned int gOrig,
                 unsigned int xTarg,
@@ -935,7 +935,7 @@ GridbrainConnection* Gridbrain::getConnection(unsigned int xOrig,
     grid = mGridsVec[gTarg];
 
     Component* comp = mComponents[orig];
-    GridbrainConnection* conn = comp->mFirstConnection;
+    Connection* conn = comp->mFirstConnection;
 
     unsigned int i = 0;
     while ((conn) && (i < comp->mConnectionsCount))
@@ -947,7 +947,7 @@ GridbrainConnection* Gridbrain::getConnection(unsigned int xOrig,
             return conn;
         }
 
-        conn = (GridbrainConnection*)conn->mNextConnection;
+        conn = (Connection*)conn->mNextConnection;
         i++;
     }
 
@@ -961,7 +961,7 @@ bool Gridbrain::connectionExists(unsigned int xOrig,
                 unsigned int yTarg,
                 unsigned int gTarg)
 {
-    GridbrainConnection* conn = getConnection(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg);
+    Connection* conn = getConnection(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg);
     return conn != NULL;
 }
 
@@ -1031,7 +1031,7 @@ bool Gridbrain::selectRandomConnection(unsigned int &x1,
 
     // Determine relative offset (to origin component) of target
     Component* origComp = getComponent(x1, y1, g1);
-    GridbrainConnection* conn = origComp->mFirstConnection;
+    Connection* conn = origComp->mFirstConnection;
 
     while (conn != NULL)
     {
@@ -1047,7 +1047,7 @@ bool Gridbrain::selectRandomConnection(unsigned int &x1,
             targPos++;
         }
 
-        conn = (GridbrainConnection*)(conn->mNextConnection);
+        conn = (Connection*)(conn->mNextConnection);
     }
 
     // Get target component coordinates from relative offset
@@ -1482,7 +1482,7 @@ void Gridbrain::cycle()
                     }
 
                     // propagate outputs (inside grid if fist alpha)
-                    GridbrainConnection* conn = comp->mFirstConnection;
+                    Connection* conn = comp->mFirstConnection;
                     for (unsigned int k = 0; k < comp->mConnectionsCount; k++)
                     {
                         if ((!firstAlpha) || (!conn->mInterGrid))
@@ -1490,7 +1490,7 @@ void Gridbrain::cycle()
                             Component* targetComp = (Component*)conn->mTargComponent;
                             targetComp->input(output, comp->mOffset);
                         }
-                        conn = (GridbrainConnection*)conn->mNextConnection;
+                        conn = (Connection*)conn->mNextConnection;
                     }
                 }
 
@@ -1677,7 +1677,7 @@ void Gridbrain::calcActive()
         }
     }
 
-    GridbrainConnection* conn = mConnections;
+    Connection* conn = mConnections;
 
     mActiveConnections = 0;
     while (conn != NULL)
@@ -1695,7 +1695,7 @@ void Gridbrain::calcActive()
             conn->mActive = false;
         }
 
-        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+        conn = (Connection*)conn->mNextGlobalConnection;
     }
 }
 
@@ -1712,7 +1712,7 @@ void Gridbrain::calcDensityMetrics()
             {
                 Component* origComp = getComponent(x, y, g);
 
-                GridbrainConnection* conn = origComp->mFirstConnection;
+                Connection* conn = origComp->mFirstConnection;
 
                 while (conn != NULL)
                 {
@@ -1738,7 +1738,7 @@ void Gridbrain::calcDensityMetrics()
                         }
                     }
 
-                    conn = (GridbrainConnection*)conn->mNextConnection;
+                    conn = (Connection*)conn->mNextConnection;
                 }
             }
         }
@@ -1909,12 +1909,12 @@ bool Gridbrain::canCreateConnection(unsigned int xOrig,
 
 void Gridbrain::cleanInvalidConnections()
 {
-    GridbrainConnection* nextConn = mConnections;
+    Connection* nextConn = mConnections;
 
     while (nextConn != NULL)
     {
-        GridbrainConnection* conn = nextConn;
-        nextConn = (GridbrainConnection*)nextConn->mNextGlobalConnection;
+        Connection* conn = nextConn;
+        nextConn = (Connection*)nextConn->mNextGlobalConnection;
         if (!isConnectionValid(conn->mColumnOrig, conn->mRowOrig, conn->mGridOrig, conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg))
         {
             removeConnection(conn);
@@ -1924,7 +1924,7 @@ void Gridbrain::cleanInvalidConnections()
 
 bool Gridbrain::isValid()
 {
-    GridbrainConnection* conn = mConnections;
+    Connection* conn = mConnections;
 
     while (conn != NULL)
     {
@@ -1972,7 +1972,7 @@ bool Gridbrain::isValid()
             return false;
         }
 
-        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+        conn = (Connection*)conn->mNextGlobalConnection;
     }
 
     for (unsigned int i = 0; i < mGridsCount; i++)
@@ -2051,14 +2051,14 @@ float Gridbrain::getDistance(Brain* brain)
 
     float match = 0.0f;
 
-    GridbrainConnection* conn1 = mConnections;
+    Connection* conn1 = mConnections;
 
     while (conn1 != NULL)
     {
         if (conn1->mActive)
         {
-            GridbrainGeneTag* g1 = &(conn1->mGeneTag);
-            GridbrainConnection* conn2 = gb->mConnections;
+            GeneTag* g1 = &(conn1->mGeneTag);
+            Connection* conn2 = gb->mConnections;
             
             bool done = false;
 
@@ -2066,7 +2066,7 @@ float Gridbrain::getDistance(Brain* brain)
             {
                 if (conn2->mActive)
                 {
-                    GridbrainGeneTag* g2 = &(conn2->mGeneTag);
+                    GeneTag* g2 = &(conn2->mGeneTag);
 
                     if (g1->mGeneID == g2->mGeneID)
                     {
@@ -2085,11 +2085,11 @@ float Gridbrain::getDistance(Brain* brain)
                     }
                 }
 
-                conn2 = (GridbrainConnection*)conn2->mNextGlobalConnection;
+                conn2 = (Connection*)conn2->mNextGlobalConnection;
             }
         }
 
-        conn1 = (GridbrainConnection*)conn1->mNextGlobalConnection;
+        conn1 = (Connection*)conn1->mNextGlobalConnection;
     }
 
     match /= maxSize;

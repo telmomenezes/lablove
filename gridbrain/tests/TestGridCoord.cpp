@@ -18,103 +18,103 @@
  */
 
 #include "UnitTest++.h"
-#include "GridCoord.h"
+#include "Coord.h"
 
-TEST(CreateGridCoord)
+TEST(CreateCoord)
 {
-    GridCoord gc;
+    Coord gc;
     CHECK_EQUAL(gc.getDepth(), 0);
     CHECK_EQUAL(gc.getBranch(), 0);
 }
 
-TEST(CreateGridCoord2)
+TEST(CreateCoord2)
 {
-    GridCoord gc(1, 2);
+    Coord gc(1, 2);
     CHECK_EQUAL(gc.getDepth(), 1);
     CHECK_EQUAL(gc.getBranch(), 2);
 }
 
-TEST(GridCoordCopyConst)
+TEST(CoordCopyConst)
 {
-    GridCoord gc(3, 5);
-    GridCoord gc2 = gc;
+    Coord gc(3, 5);
+    Coord gc2 = gc;
     CHECK_EQUAL(gc2.getDepth(), 3);
     CHECK_EQUAL(gc2.getBranch(), 5);
 }
 
-TEST(GridCoordLeftOf)
+TEST(CoordLeftOf)
 {
-    GridCoord gc(3, 5);
-    GridCoord gc2 = gc.leftOf();
+    Coord gc(3, 5);
+    Coord gc2 = gc.leftOf();
     CHECK_EQUAL(gc2.getDepth(), 4);
     CHECK_EQUAL(gc2.getBranch(), 10);
 }
 
-TEST(GridCoordRightOf)
+TEST(CoordRightOf)
 {
-    GridCoord gc(3, 5);
-    GridCoord gc2 = gc.rightOf();
+    Coord gc(3, 5);
+    Coord gc2 = gc.rightOf();
     CHECK_EQUAL(gc2.getDepth(), 4);
     CHECK_EQUAL(gc2.getBranch(), 11);
 }
 
-TEST(GridCoordPosition)
+TEST(CoordPosition)
 {
-    GridCoord gc;
+    Coord gc;
     int pos;
-    pos = gc.position(GridCoord(1, 0));
+    pos = gc.position(Coord(1, 0));
     CHECK_EQUAL(pos, 1);
-    pos = gc.position(GridCoord(0, 0));
+    pos = gc.position(Coord(0, 0));
     CHECK_EQUAL(pos, 0);
-    pos = gc.position(GridCoord(1, 1));
+    pos = gc.position(Coord(1, 1));
     CHECK_EQUAL(pos, -1);
-    pos = gc.position(GridCoord(2, 0));
+    pos = gc.position(Coord(2, 0));
     CHECK_EQUAL(pos, 1);
-    pos = gc.position(GridCoord(2, 1));
+    pos = gc.position(Coord(2, 1));
     CHECK_EQUAL(pos, 1);
-    pos = gc.position(GridCoord(2, 2));
+    pos = gc.position(Coord(2, 2));
     CHECK_EQUAL(pos, -1);
-    pos = gc.position(GridCoord(2, 3));
+    pos = gc.position(Coord(2, 3));
     CHECK_EQUAL(pos, -1);
 }
 
-TEST(GridCoordPosition2)
+TEST(CoordPosition2)
 {
-    GridCoord gc(1, 1);
+    Coord gc(1, 1);
     int pos;
-    pos = gc.position(GridCoord(0, 0));
+    pos = gc.position(Coord(0, 0));
     CHECK_EQUAL(pos, 1);
-    pos = gc.position(GridCoord(1, 0));
+    pos = gc.position(Coord(1, 0));
     CHECK_EQUAL(pos, 1);
-    pos = gc.position(GridCoord(1, 1));
+    pos = gc.position(Coord(1, 1));
     CHECK_EQUAL(pos, 0);
-    pos = gc.position(GridCoord(2, 0));
+    pos = gc.position(Coord(2, 0));
     CHECK_EQUAL(pos, 1);
-    pos = gc.position(GridCoord(2, 1));
+    pos = gc.position(Coord(2, 1));
     CHECK_EQUAL(pos, 1);
-    pos = gc.position(GridCoord(2, 2));
+    pos = gc.position(Coord(2, 2));
     CHECK_EQUAL(pos, 1);
-    pos = gc.position(GridCoord(2, 3));
+    pos = gc.position(Coord(2, 3));
     CHECK_EQUAL(pos, -1);
 }
 
-TEST(GridCoordPosition3)
+TEST(CoordPosition3)
 {
-    GridCoord gc(2, 1);
+    Coord gc(2, 1);
     int pos;
-    pos = gc.position(GridCoord(0, 0));
+    pos = gc.position(Coord(0, 0));
     CHECK_EQUAL(pos, -1);
-    pos = gc.position(GridCoord(1, 0));
+    pos = gc.position(Coord(1, 0));
     CHECK_EQUAL(pos, 1);
-    pos = gc.position(GridCoord(1, 1));
+    pos = gc.position(Coord(1, 1));
     CHECK_EQUAL(pos, -1);
-    pos = gc.position(GridCoord(2, 0));
+    pos = gc.position(Coord(2, 0));
     CHECK_EQUAL(pos, 1);
-    pos = gc.position(GridCoord(2, 1));
+    pos = gc.position(Coord(2, 1));
     CHECK_EQUAL(pos, 0);
-    pos = gc.position(GridCoord(2, 2));
+    pos = gc.position(Coord(2, 2));
     CHECK_EQUAL(pos, -1);
-    pos = gc.position(GridCoord(2, 3));
+    pos = gc.position(Coord(2, 3));
     CHECK_EQUAL(pos, -1);
 }
 

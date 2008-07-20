@@ -17,47 +17,47 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "GridCoord.h"
+#include "Coord.h"
 
-GridCoord::GridCoord()
+Coord::Coord()
 {
     mDepth = 0;
     mBranch = 0;
 }
 
-GridCoord::GridCoord(llULINT depth, llULINT branch)
+Coord::Coord(llULINT depth, llULINT branch)
 {
     mDepth = depth;
     mBranch = branch;
 }
 
-GridCoord::GridCoord(const GridCoord& coord)
+Coord::Coord(const Coord& coord)
 {
     mDepth = coord.mDepth;
     mBranch = coord.mBranch;
 }
 
-GridCoord::~GridCoord()
+Coord::~Coord()
 {
 }
 
-GridCoord GridCoord::leftOf()
+Coord Coord::leftOf()
 {
     llULINT depth = mDepth + 1;
     llULINT branch = 2 * mBranch;
-    GridCoord gc(depth, branch);
+    Coord gc(depth, branch);
     return gc;
 }
 
-GridCoord GridCoord::rightOf()
+Coord Coord::rightOf()
 {
     llULINT depth = mDepth + 1;
     llULINT branch = (2 * mBranch) + 1;
-    GridCoord gc(depth, branch);
+    Coord gc(depth, branch);
     return gc;
 }
 
-bool GridCoord::operator==(const GridCoord &gc) const
+bool Coord::operator==(const Coord &gc) const
 {
     if ((mDepth == gc.mDepth) && (mBranch == gc.mBranch))
     {
@@ -67,7 +67,7 @@ bool GridCoord::operator==(const GridCoord &gc) const
     return false;
 }
 
-int GridCoord::position(GridCoord gc)
+int Coord::position(Coord gc)
 {
     llULINT d1 = mDepth;
     llULINT b1 = mBranch;
@@ -93,7 +93,7 @@ int GridCoord::position(GridCoord gc)
     llULINT deltaD;
     llULINT downB;
     int inversor;
-    GridCoord firstRight;
+    Coord firstRight;
 
     if (d1 > d2)
     {
@@ -135,14 +135,14 @@ int GridCoord::position(GridCoord gc)
     return result;
 }
 
-string GridCoord::toString()
+string Coord::toString()
 {
     char buf[255];
     sprintf(buf, "(%d, %d)", mDepth, mBranch);
     return string(buf);
 }
 
-bool GridCoord::isValid()
+bool Coord::isValid()
 {
     llULINT maxBranch = 1;
     for (llULINT i = 0; i < mDepth; i++)

@@ -22,12 +22,12 @@
 
 void Gridbrain::clearRecombineInfo()
 {
-    GridbrainConnection* conn = mConnections;
+    Connection* conn = mConnections;
 
     while (conn != NULL)
     {
-        conn->mSelectionState = GridbrainConnection::SS_UNKNOWN;
-        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+        conn->mSelectionState = Connection::SS_UNKNOWN;
+        conn = (Connection*)conn->mNextGlobalConnection;
     }
 }
 
@@ -73,8 +73,8 @@ Gridbrain* Gridbrain::importComponent(Gridbrain* gbTarg,
     Grid* gridOrig = gbOrig->getGrid(g);
     Grid* gridTarg = brain->getGrid(g);
 
-    GridCoord coordCol = gridOrig->getColumnCoord(origX);
-    GridCoord coordRow = gridOrig->getRowCoord(origY);
+    Coord coordCol = gridOrig->getColumnCoord(origX);
+    Coord coordRow = gridOrig->getRowCoord(origY);
 
     int targX = gridTarg->getColumnByCoord(coordCol);
     int targY = gridTarg->getRowByCoord(coordRow);
@@ -140,7 +140,7 @@ Gridbrain* Gridbrain::importComponent(Gridbrain* gbTarg,
 
 Gridbrain* Gridbrain::importConnection(Gridbrain* gbTarg,
                                         Gridbrain* gbOrig,
-                                        GridbrainConnection* conn)
+                                        Connection* conn)
 {
     Gridbrain* brain = gbTarg;
 
@@ -150,10 +150,10 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gbTarg,
     unsigned int g1 = orig->mGrid;
     unsigned int g2 = targ->mGrid;
 
-    GridCoord cX1;
-    GridCoord cY1;
-    GridCoord cX2;
-    GridCoord cY2;
+    Coord cX1;
+    Coord cY1;
+    Coord cX2;
+    Coord cY2;
 
     Component* eqOrig = brain->findEquivalentComponent(orig);
     Component* eqTarg = brain->findEquivalentComponent(targ);
@@ -202,7 +202,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gbTarg,
 
 bool Gridbrain::checkGene(llULINT geneID)
 {
-    GridbrainConnection* conn = mConnections;
+    Connection* conn = mConnections;
 
     while (conn != NULL)
     {
@@ -211,7 +211,7 @@ bool Gridbrain::checkGene(llULINT geneID)
             return true;
         }
 
-        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+        conn = (Connection*)conn->mNextGlobalConnection;
     }
 
     return false;
@@ -219,13 +219,13 @@ bool Gridbrain::checkGene(llULINT geneID)
 
 bool Gridbrain::isGeneSelected(llULINT geneID)
 {
-    GridbrainConnection* conn = mConnections;
+    Connection* conn = mConnections;
 
     while (conn != NULL)
     {
         if (conn->mGeneTag.mGeneID == geneID)
         {
-            if (conn->mSelectionState == GridbrainConnection::SS_SELECTED)
+            if (conn->mSelectionState == Connection::SS_SELECTED)
             {
                 return true;
             }
@@ -235,7 +235,7 @@ bool Gridbrain::isGeneSelected(llULINT geneID)
             }
         }
 
-        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+        conn = (Connection*)conn->mNextGlobalConnection;
     }
 
     return false;
@@ -243,7 +243,7 @@ bool Gridbrain::isGeneSelected(llULINT geneID)
 
 bool Gridbrain::selectGene(llULINT geneID, bool select)
 {
-    GridbrainConnection* conn = mConnections;
+    Connection* conn = mConnections;
 
     while (conn != NULL)
     {
@@ -251,25 +251,25 @@ bool Gridbrain::selectGene(llULINT geneID, bool select)
         {
             if (select)
             {
-                conn->mSelectionState = GridbrainConnection::SS_SELECTED;
+                conn->mSelectionState = Connection::SS_SELECTED;
             }
             else
             {
-                conn->mSelectionState = GridbrainConnection::SS_UNSELECTED;
+                conn->mSelectionState = Connection::SS_UNSELECTED;
             }
         }
 
-        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+        conn = (Connection*)conn->mNextGlobalConnection;
     }
 }
 
 void Gridbrain::selectConnUniform(Gridbrain* gb1, Gridbrain* gb2)
 {
     // Select connections, parent 1
-    GridbrainConnection* conn = gb1->mConnections;
+    Connection* conn = gb1->mConnections;
     while (conn != NULL)
     {
-        if (conn->mSelectionState == GridbrainConnection::SS_UNKNOWN)
+        if (conn->mSelectionState == Connection::SS_UNKNOWN)
         {
             if (gb2->checkGene(conn->mGeneTag.mGeneID))
             {
@@ -297,14 +297,14 @@ void Gridbrain::selectConnUniform(Gridbrain* gb1, Gridbrain* gb2)
             }
         }
 
-        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+        conn = (Connection*)conn->mNextGlobalConnection;
     }
 
     // Select connections, parent 2
     conn = gb2->mConnections;
     while (conn != NULL)
     {
-        if (conn->mSelectionState == GridbrainConnection::SS_UNKNOWN)
+        if (conn->mSelectionState == Connection::SS_UNKNOWN)
         {
             if (mDistRecombine->iuniform(0, 2) == 0)
             {
@@ -316,19 +316,19 @@ void Gridbrain::selectConnUniform(Gridbrain* gb1, Gridbrain* gb2)
             }
         }
 
-        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+        conn = (Connection*)conn->mNextGlobalConnection;
     }
 }
 
 void Gridbrain::selectPath(Component* comp)
 {
-    GridbrainConnection* conn = comp->mFirstInConnection;
+    Connection* conn = comp->mFirstInConnection;
     
     while (conn != NULL)
     {
         selectGene(conn->mGeneTag.mGeneID, true);
         selectPath((Component*)conn->mOrigComponent);
-        conn = (GridbrainConnection*)conn->mNextInConnection;
+        conn = (Connection*)conn->mNextInConnection;
     }
 }
 
@@ -386,10 +386,10 @@ void Gridbrain::selectConnPaths(Gridbrain* gb1, Gridbrain* gb2)
     }
 
     // Decide on overalping genes and unknown genes
-    GridbrainConnection* conn = gb1->mConnections;
+    Connection* conn = gb1->mConnections;
     while (conn != NULL)
     {
-        if (conn->mSelectionState == GridbrainConnection::SS_SELECTED)
+        if (conn->mSelectionState == Connection::SS_SELECTED)
         {
             if (gb2->isGeneSelected(conn->mGeneTag.mGeneID))
             {
@@ -403,7 +403,7 @@ void Gridbrain::selectConnPaths(Gridbrain* gb1, Gridbrain* gb2)
                 }
             }
         }
-        else if (conn->mSelectionState == GridbrainConnection::SS_UNKNOWN)
+        else if (conn->mSelectionState == Connection::SS_UNKNOWN)
         {
             if (!conn->mActive)
             {
@@ -438,12 +438,12 @@ void Gridbrain::selectConnPaths(Gridbrain* gb1, Gridbrain* gb2)
             }
         }
 
-        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+        conn = (Connection*)conn->mNextGlobalConnection;
     }
     conn = gb2->mConnections;
     while (conn != NULL)
     {
-        if (conn->mSelectionState == GridbrainConnection::SS_UNKNOWN)
+        if (conn->mSelectionState == Connection::SS_UNKNOWN)
         {
             if (!conn->mActive)
             {
@@ -462,7 +462,7 @@ void Gridbrain::selectConnPaths(Gridbrain* gb1, Gridbrain* gb2)
             }
         }
 
-        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+        conn = (Connection*)conn->mNextGlobalConnection;
     }
 }
 
@@ -492,12 +492,12 @@ Brain* Gridbrain::recombine(Brain* brain)
     gb2->printDebug();*/
 
     // Remove unselected connections from child
-    GridbrainConnection* conn = gbNew->mConnections;
+    Connection* conn = gbNew->mConnections;
     while (conn != NULL)
     {
-        GridbrainConnection* nextConn = (GridbrainConnection*)conn->mNextGlobalConnection;
+        Connection* nextConn = (Connection*)conn->mNextGlobalConnection;
 
-        if (conn->mSelectionState == GridbrainConnection::SS_UNSELECTED)
+        if (conn->mSelectionState == Connection::SS_UNSELECTED)
         {
             gbNew->removeConnection(conn);
         }
@@ -509,14 +509,14 @@ Brain* Gridbrain::recombine(Brain* brain)
     conn = gb2->mConnections;
     while (conn != NULL)
     {
-        if (conn->mSelectionState == GridbrainConnection::SS_SELECTED)
+        if (conn->mSelectionState == Connection::SS_SELECTED)
         {
             //printf("-> Import connection: ");
             //gb2->printConnection(conn);
             gbNew = importConnection(gbNew, gb2, conn);
         }
 
-        conn = (GridbrainConnection*)conn->mNextGlobalConnection;
+        conn = (Connection*)conn->mNextGlobalConnection;
     }
 
     gbNew->recombineUnusedComponents(this, gb2);
@@ -561,7 +561,7 @@ void Gridbrain::recombineUnusedComponents(Gridbrain* gb1, Gridbrain* gb2)
         
         for (unsigned int x = 0; x < gridChild->getWidth(); x++)
         {
-            GridCoord colCoord = gridChild->getColumnCoord(x);
+            Coord colCoord = gridChild->getColumnCoord(x);
             int x1 = gridP1->getColumnByCoord(colCoord);
             int x2 = gridP2->getColumnByCoord(colCoord);
 
@@ -571,7 +571,7 @@ void Gridbrain::recombineUnusedComponents(Gridbrain* gb1, Gridbrain* gb2)
 
                 if (!comp->isUsed())
                 {
-                    GridCoord rowCoord = gridChild->getRowCoord(y);
+                    Coord rowCoord = gridChild->getRowCoord(y);
                     int y1 = gridP1->getRowByCoord(rowCoord);
                     int y2 = gridP2->getRowByCoord(rowCoord);
 
@@ -659,10 +659,10 @@ int Gridbrain::compEquivalence(Component* comp1, Component* comp2, CompEquivalen
         break;
     }
 
-    GridbrainConnection* conn1 = (GridbrainConnection*)comp1->mFirstInConnection;
+    Connection* conn1 = (Connection*)comp1->mFirstInConnection;
     while (conn1 != NULL)
     {
-        GridbrainConnection* conn2 = (GridbrainConnection*)comp2->mFirstInConnection;
+        Connection* conn2 = (Connection*)comp2->mFirstInConnection;
         while (conn2 != NULL)
         {
             if (conn1->mGeneTag.isEquivalentOrigin(&(conn2->mGeneTag)))
@@ -670,15 +670,15 @@ int Gridbrain::compEquivalence(Component* comp1, Component* comp2, CompEquivalen
                 return 1;
             }
 
-            conn2 = (GridbrainConnection*)conn2->mNextInConnection;
+            conn2 = (Connection*)conn2->mNextInConnection;
         }
-        conn1 = (GridbrainConnection*)conn1->mNextInConnection;
+        conn1 = (Connection*)conn1->mNextInConnection;
     }
 
-    conn1 = (GridbrainConnection*)comp1->mFirstConnection;
+    conn1 = (Connection*)comp1->mFirstConnection;
     while (conn1 != NULL)
     {
-        GridbrainConnection* conn2 = (GridbrainConnection*)comp2->mFirstConnection;
+        Connection* conn2 = (Connection*)comp2->mFirstConnection;
         while (conn2 != NULL)
         {
             if (conn1->mGeneTag.isEquivalentTarget(&(conn2->mGeneTag)))
@@ -686,20 +686,20 @@ int Gridbrain::compEquivalence(Component* comp1, Component* comp2, CompEquivalen
                 return 1;
             }
 
-            conn2 = (GridbrainConnection*)conn2->mNextConnection;
+            conn2 = (Connection*)conn2->mNextConnection;
         }
-        conn1 = (GridbrainConnection*)conn1->mNextConnection;
+        conn1 = (Connection*)conn1->mNextConnection;
     }
 
     return 0;
 }
 
-GridbrainGeneTag Gridbrain::findGeneTag(GridbrainConnection* conn)
+GeneTag Gridbrain::findGeneTag(Connection* conn)
 {
     int bestEq = 0;
-    GridbrainGeneTag tag;
+    GeneTag tag;
 
-    GridbrainConnection* conn2 = mConnections;
+    Connection* conn2 = mConnections;
 
     while (conn2 != NULL)
     {
@@ -731,7 +731,7 @@ GridbrainGeneTag Gridbrain::findGeneTag(GridbrainConnection* conn)
             }
         }
 
-        conn2 = (GridbrainConnection*)conn2->mNextGlobalConnection;
+        conn2 = (Connection*)conn2->mNextGlobalConnection;
     }
 
     return tag;
@@ -743,7 +743,7 @@ void Gridbrain::popAdjust(vector<SimObj*>* popVec)
     {
         Component* comp = mComponents[pos];
 
-        GridbrainConnection* conn = comp->mFirstConnection;
+        Connection* conn = comp->mFirstConnection;
         while (conn != NULL)
         {
             // If no tag assigned, look for equivalent connection
@@ -773,14 +773,14 @@ void Gridbrain::popAdjust(vector<SimObj*>* popVec)
                 {
                     unsigned int pos = mDistRecombine->iuniform(0, count);
 
-                    GridbrainConnection* conn2;
+                    Connection* conn2;
 
                     if (pos < orig->mInboundConnections)
                     {
                         conn2 = orig->mFirstInConnection;
                         for (unsigned int i = 0; i < pos; i++)
                         {
-                            conn2 = (GridbrainConnection*)conn2->mNextInConnection;
+                            conn2 = (Connection*)conn2->mNextInConnection;
                         }
                     }
                     else
@@ -790,25 +790,25 @@ void Gridbrain::popAdjust(vector<SimObj*>* popVec)
                         conn2 = targ->mFirstConnection;
                         for (unsigned int i = 0; i < pos; i++)
                         {
-                            conn2 = (GridbrainConnection*)conn2->mNextConnection;
+                            conn2 = (Connection*)conn2->mNextConnection;
                         }
                     }
 
                     conn->mGeneTag.mGeneID = conn2->mGeneTag.mGeneID;
-                    conn->mGeneTag.mOrigID = GridbrainGeneTag::generateID();
-                    conn->mGeneTag.mTargID = GridbrainGeneTag::generateID();
+                    conn->mGeneTag.mOrigID = GeneTag::generateID();
+                    conn->mGeneTag.mTargID = GeneTag::generateID();
                 }
             }
 
             // If still no tag assigned, generate new gene
             if (conn->mGeneTag.mGeneID == 0)
             {
-                conn->mGeneTag.mGeneID = GridbrainGeneTag::generateID();
-                conn->mGeneTag.mOrigID = GridbrainGeneTag::generateID();
-                conn->mGeneTag.mTargID = GridbrainGeneTag::generateID();
+                conn->mGeneTag.mGeneID = GeneTag::generateID();
+                conn->mGeneTag.mOrigID = GeneTag::generateID();
+                conn->mGeneTag.mTargID = GeneTag::generateID();
             }
 
-            conn = (GridbrainConnection*)conn->mNextConnection;
+            conn = (Connection*)conn->mNextConnection;
         }
     }
 }

@@ -70,7 +70,7 @@ void Gridbrain::initRandomConnectionSequence(float selectionProb)
     mConnSeqCurrent = NULL;
 }
 
-GridbrainConnection* Gridbrain::nextRandomConnection()
+Connection* Gridbrain::nextRandomConnection()
 {
     if (mConnSeqProb == 1.0f)
     {
@@ -89,7 +89,7 @@ GridbrainConnection* Gridbrain::nextRandomConnection()
         }
         else
         {
-            mConnSeqCurrent = (GridbrainConnection*)mConnSeqCurrent->mNextGlobalConnection;
+            mConnSeqCurrent = (Connection*)mConnSeqCurrent->mNextGlobalConnection;
         }
 
         if (mConnSeqCurrent == NULL)
@@ -101,13 +101,13 @@ GridbrainConnection* Gridbrain::nextRandomConnection()
     return mConnSeqCurrent;
 }
 
-GridbrainConnection* Gridbrain::skipNextRandomConnection()
+Connection* Gridbrain::skipNextRandomConnection()
 {
     if (mConnSeqCurrent == NULL)
     {
         return NULL;
     }
-    mConnSeqCurrent = (GridbrainConnection*)mConnSeqCurrent->mNextGlobalConnection;
+    mConnSeqCurrent = (Connection*)mConnSeqCurrent->mNextGlobalConnection;
     return mConnSeqCurrent;
 }
 
@@ -162,7 +162,7 @@ int Gridbrain::nextRandomComponent()
     return mCompSeqPos;
 }
 
-GridbrainConnection* Gridbrain::getRandomConnection()
+Connection* Gridbrain::getRandomConnection()
 {
     if (mConnectionsCount == 0)
     {
@@ -170,13 +170,13 @@ GridbrainConnection* Gridbrain::getRandomConnection()
     }
 
     unsigned int pos;
-    GridbrainConnection* conn = mConnections;
+    Connection* conn = mConnections;
     pos = mDistConnections->iuniform(0, mConnectionsCount);
     
     unsigned int i = 0;
     while (i < pos)
     {
-        conn = (GridbrainConnection*)(conn->mNextGlobalConnection);
+        conn = (Connection*)(conn->mNextGlobalConnection);
         i++;
     }
 
@@ -207,7 +207,7 @@ void Gridbrain::mutateRemoveConnection(unsigned int popSize, float prob)
 
     for (unsigned int i = 0; i < count; i++)
     {
-        GridbrainConnection* conn = getRandomConnection();
+        Connection* conn = getRandomConnection();
         if (conn != NULL)
         {
             removeConnection(conn);
@@ -219,10 +219,10 @@ void Gridbrain::mutateSplitConnection(float prob)
 {
     initRandomConnectionSequence(prob);
 
-    GridbrainConnection* nextConn = nextRandomConnection();
+    Connection* nextConn = nextRandomConnection();
     while (nextConn != NULL)
     {
-        GridbrainConnection* conn = nextConn;
+        Connection* conn = nextConn;
         nextConn = nextRandomConnection();
 
         unsigned int g1 = conn->mGridOrig;
@@ -300,27 +300,27 @@ void Gridbrain::mutateSplitConnection(float prob)
         if (g3 != -1)
         {
             MUTATIONS_SPLIT_CONN++;
-            GridbrainGeneTag tag1 = conn->mGeneTag;
+            GeneTag tag1 = conn->mGeneTag;
 
             // remove 1->2 connection
             removeConnection(conn);
 
-            GridbrainGeneTag tag2;
-            GridbrainGeneTag tag3;
+            GeneTag tag2;
+            GeneTag tag3;
 
             llULINT geneID = tag1.mGeneID;
 
             if (geneID == 0)
             {
-                geneID = GridbrainGeneTag::generateID();
+                geneID = GeneTag::generateID();
             }
 
             tag2.mGeneID = geneID;
             tag3.mGeneID = geneID;
             tag2.mOrigID = tag1.mOrigID;
             tag3.mTargID = tag1.mTargID;
-            tag2.mTargID = GridbrainGeneTag::generateID();
-            tag3.mOrigID = GridbrainGeneTag::generateID();
+            tag2.mTargID = GeneTag::generateID();
+            tag3.mOrigID = GeneTag::generateID();
 
             /*printf(">>> split tags!\n");
             tag2.print();
@@ -345,10 +345,10 @@ void Gridbrain::mutateJoinConnections(float prob)
 {
     initRandomConnectionSequence(prob);
 
-    GridbrainConnection* nextConn = nextRandomConnection();
+    Connection* nextConn = nextRandomConnection();
     while (nextConn != NULL)
     {
-        GridbrainConnection* conn1 = nextConn;
+        Connection* conn1 = nextConn;
         nextConn = nextRandomConnection();
 
         unsigned int x = conn1->mColumnTarg;
@@ -357,11 +357,11 @@ void Gridbrain::mutateJoinConnections(float prob)
 
         Component* comp = getComponent(x, y, g);
 
-        GridbrainConnection* conn2 = comp->mFirstConnection;
+        Connection* conn2 = comp->mFirstConnection;
         while ((conn2 != NULL)
                 && (conn1->mGeneTag.mGeneID != conn2->mGeneTag.mGeneID))
         {
-            conn2 = (GridbrainConnection*)conn2->mNextConnection;
+            conn2 = (Connection*)conn2->mNextConnection;
         }
 
         if (conn2 != NULL)
@@ -378,7 +378,7 @@ void Gridbrain::mutateJoinConnections(float prob)
                 nextConn = skipNextRandomConnection();
             }
 
-            GridbrainGeneTag gt;
+            GeneTag gt;
             gt.mGeneID = conn1->mGeneTag.mGeneID;
             gt.mOrigID = conn1->mGeneTag.mOrigID;
             gt.mTargID = conn2->mGeneTag.mTargID;

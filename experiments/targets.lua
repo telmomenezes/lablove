@@ -162,7 +162,7 @@ brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeInactiveComponentProb(changeInComponentProb)
 
 -- Objects Grid
-alphaSet = GridbrainComponentSet()
+alphaSet = ComponentSet()
 for i, comp in pairs(alphaComponents) do
     alphaSet:addComponent(comp)
 end
@@ -183,7 +183,7 @@ brain:addGrid(grid, "objects");
 
 -- Self Grid
 if self then
-    selfSet = GridbrainComponentSet()
+    selfSet = ComponentSet()
     for i, comp in pairs(alphaComponents) do
         selfSet:addComponent(comp)
     end
@@ -198,7 +198,7 @@ end
 
 -- Sounds grid
 if comm then
-    soundSet = GridbrainComponentSet()
+    soundSet = ComponentSet()
     for i, comp in pairs(alphaComponents) do
         soundSet:addComponent(comp)
     end
@@ -213,7 +213,7 @@ if comm then
 end
 
 -- Beta Grid
-betaSet = GridbrainComponentSet()
+betaSet = ComponentSet()
 for i, comp in pairs(betaComponents) do
     betaSet:addComponent(comp)
 end

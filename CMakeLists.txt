@@ -79,11 +79,11 @@ SET(SOURCE_FILES
     gridbrain/src/GridbrainRecombine.cpp
     gridbrain/src/GridbrainWrite.cpp
     gridbrain/src/Grid.cpp
-    gridbrain/src/GridCoord.cpp
+    gridbrain/src/Coord.cpp
     gridbrain/src/Component.cpp
-    gridbrain/src/GridbrainConnection.cpp
-    gridbrain/src/GridbrainGeneTag.cpp
-    gridbrain/src/GridbrainComponentSet.cpp
+    gridbrain/src/Connection.cpp
+    gridbrain/src/GeneTag.cpp
+    gridbrain/src/ComponentSet.cpp
     gridbrain/src/RandDistManager.cpp
     gridbrain/mtwist/mtwist.c
     gridbrain/mtwist/randistrs.c

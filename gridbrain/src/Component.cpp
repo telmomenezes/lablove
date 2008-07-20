@@ -89,14 +89,14 @@ void Component::calcProducer(bool prod)
             mProducer = true;
         }
 
-        GridbrainConnection* conn = mFirstConnection;
+        Connection* conn = mFirstConnection;
 
         while (conn != NULL)
         {
             Component* targComp = (Component*)conn->mTargComponent;
             targComp->calcProducer(true);
 
-            conn = (GridbrainConnection*)conn->mNextConnection;
+            conn = (Connection*)conn->mNextConnection;
         }
     }
 }
@@ -108,7 +108,7 @@ bool Component::calcConsumer()
         return true;
     }
 
-    GridbrainConnection* conn = mFirstConnection;
+    Connection* conn = mFirstConnection;
 
     while (conn != NULL)
     {
@@ -119,7 +119,7 @@ bool Component::calcConsumer()
             return true;
         }
 
-        conn = (GridbrainConnection*)conn->mNextConnection;
+        conn = (Connection*)conn->mNextConnection;
     }
     
     if (isConsumer())

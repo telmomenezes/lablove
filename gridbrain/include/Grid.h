@@ -24,7 +24,7 @@
 #include "ComponentSet.h"
 #include "RandDistManager.h"
 #include "Orbit.h"
-#include "GridCoord.h"
+#include "Coord.h"
 
 #include <vector>
 #include <list>
@@ -83,16 +83,16 @@ public:
     unsigned int getWriteY(){return mWriteY;}
     void setWritePos(unsigned int x, unsigned int y){mWriteX = x; mWriteY = y;}
 
-    void addColumn(GridCoord* gc=NULL);
-    void addRow(GridCoord* gc=NULL);
-    void deleteColumn(GridCoord col);
-    void deleteRow(GridCoord row);
-    GridCoord getColCoordAfter(GridCoord col);
+    void addColumn(Coord* gc=NULL);
+    void addRow(Coord* gc=NULL);
+    void deleteColumn(Coord col);
+    void deleteRow(Coord row);
+    Coord getColCoordAfter(Coord col);
 
-    GridCoord getColumnCoord(unsigned int col){return mColumnCoords[col];}
-    GridCoord getRowCoord(unsigned int row){return mRowCoords[row];}
-    int getColumnByCoord(GridCoord coord);
-    int getRowByCoord(GridCoord coord);
+    Coord getColumnCoord(unsigned int col){return mColumnCoords[col];}
+    Coord getRowCoord(unsigned int row){return mRowCoords[row];}
+    int getColumnByCoord(Coord coord);
+    int getRowByCoord(Coord coord);
 
     bool isValid();
 
@@ -137,8 +137,8 @@ protected:
     unsigned int mWriteX;
     unsigned int mWriteY;
 
-    vector<GridCoord> mColumnCoords;
-    vector<GridCoord> mRowCoords;
+    vector<Coord> mColumnCoords;
+    vector<Coord> mRowCoords;
 };
 #endif
 

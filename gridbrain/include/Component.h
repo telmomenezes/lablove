@@ -20,7 +20,7 @@
 #ifndef _INCLUDE_GRIDBRAIN_COMPONENT_H
 #define _INCLUDE_GRIDBRAIN_COMPONENT_H
 
-#include "GridbrainConnection.h"
+#include "Connection.h"
 #include "InterfaceItem.h"
 #include "Orbit.h"
 #include "types.h"
@@ -87,8 +87,8 @@ public:
 
     unsigned int mConnectionsCount;
     unsigned int mInboundConnections;
-    GridbrainConnection* mFirstConnection;
-    GridbrainConnection* mFirstInConnection;
+    Connection* mFirstConnection;
+    Connection* mFirstInConnection;
 
     unsigned int mPossibleConnections;
 

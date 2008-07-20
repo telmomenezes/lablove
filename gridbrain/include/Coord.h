@@ -24,20 +24,20 @@
 #include <string>
 using std::string;
 
-class GridCoord
+class Coord
 {
 public:
-    GridCoord();
-    GridCoord(llULINT depth, llULINT branch);
-    GridCoord(const GridCoord& coord);
-    virtual ~GridCoord();
+    Coord();
+    Coord(llULINT depth, llULINT branch);
+    Coord(const Coord& coord);
+    virtual ~Coord();
 
-    bool operator==(const GridCoord &gc) const;
+    bool operator==(const Coord &gc) const;
 
-    GridCoord leftOf();
-    GridCoord rightOf();
+    Coord leftOf();
+    Coord rightOf();
 
-    int position(GridCoord gc);
+    int position(Coord gc);
 
     llULINT getDepth(){return mDepth;}
     llULINT getBranch(){return mBranch;}

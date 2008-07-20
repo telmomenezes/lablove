@@ -213,7 +213,7 @@ string Gridbrain::write(SimObj* obj, Simulation* sim)
         }
     }
 
-    GridbrainConnection* conn = mConnections;
+    Connection* conn = mConnections;
 
     while (conn != NULL)
     {
@@ -282,7 +282,7 @@ string Gridbrain::write(SimObj* obj, Simulation* sim)
         sprintf(buffer, "<text x=\"%f\" y=\"%f\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"8\" fill=\"red\">%f</text>\n", cLabelX, cLabelY, conn->mWeight);
         svg += buffer;*/
 
-        conn = (GridbrainConnection*)(conn->mNextGlobalConnection);
+        conn = (Connection*)(conn->mNextGlobalConnection);
     }
 
     svg += "</svg>\n";
@@ -311,16 +311,16 @@ void Gridbrain::printDebug()
 
     printf("CONNECTIONS:\n");
 
-    GridbrainConnection* conn = mConnections;
+    Connection* conn = mConnections;
     while (conn != NULL)
     {
         printConnection(conn);
 
-        conn = (GridbrainConnection*)(conn->mNextGlobalConnection);
+        conn = (Connection*)(conn->mNextGlobalConnection);
     }
 }
 
-void Gridbrain::printConnection(GridbrainConnection* conn)
+void Gridbrain::printConnection(Connection* conn)
 {
     Component* comp1 = (Component*)conn->mOrigComponent;
     Component* comp2 = (Component*)conn->mTargComponent;
@@ -333,13 +333,13 @@ void Gridbrain::printConnection(GridbrainConnection* conn)
 
     switch (conn->mSelectionState)
     {
-    case GridbrainConnection::SS_UNKNOWN:
+    case Connection::SS_UNKNOWN:
         printf(" *UNKNOWN*");
         break;
-    case GridbrainConnection::SS_SELECTED:
+    case Connection::SS_SELECTED:
         printf(" *SELECTED*");
         break;
-    case GridbrainConnection::SS_UNSELECTED:
+    case Connection::SS_UNSELECTED:
         printf(" *UNSELECTED*");
         break;
     }

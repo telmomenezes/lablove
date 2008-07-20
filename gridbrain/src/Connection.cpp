@@ -17,17 +17,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "GridbrainConnection.h"
+#include "Connection.h"
 
-GridbrainConnection::GridbrainConnection()
+Connection::Connection()
 {
 }
 
-GridbrainConnection::~GridbrainConnection()
+Connection::~Connection()
 {
 }
 
-bool GridbrainConnection::connectsNeighbourColumns()
+bool Connection::connectsNeighbourColumns()
 {
     return ((mGridOrig == mGridTarg)
         && ((mColumnTarg - mColumnOrig) == 1));
