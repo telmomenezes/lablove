@@ -141,8 +141,6 @@ ENDIF(MINGW)
 SET(UNIT_TEST_FILES
         ${UNIT_TEST_FILES}
         gridbrain/tests/Main.cpp
-        gridbrain/tests/TestSimulation.cpp
-        gridbrain/tests/TestSim2D.cpp
         gridbrain/tests/TestGrid.cpp
         gridbrain/tests/TestGridCoord.cpp
         gridbrain/tests/TestGridbrain.cpp
@@ -150,10 +148,7 @@ SET(UNIT_TEST_FILES
         gridbrain/tests/TestGridbrainRecombine.cpp
         gridbrain/tests/TestGridbrainComponents.cpp
         gridbrain/tests/TestGridbrainComponentSet.cpp
-        gridbrain/tests/TestSymbolBitString.cpp
-        gridbrain/tests/TestSymbolRGB.cpp
-        gridbrain/tests/TestSymbolFixedString.cpp
-        gridbrain/tests/TestSymbolFloat.cpp)
+        )
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     SET(EXTRA_SRC_FILES ${EXTRA_SRC_FILES} src/MacOSXSDL/SDLMain.m)
