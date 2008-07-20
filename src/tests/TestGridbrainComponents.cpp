@@ -20,7 +20,7 @@
 #include "UnitTest++.h"
 #include "Gridbrain.h"
 #include "Grid.h"
-#include "comps/comps.h"
+#include "comps.h"
 
 #include <stdexcept>
 

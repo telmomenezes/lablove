@@ -41,6 +41,7 @@
 #include "LogBestBrain.h"
 #include "StatCommon.h"
 #include "StatTime.h"
+#include "GridbrainLua.h"
 
 #if defined(__WIN32)
 #define WIN32_LEAN_AND_MEAN
@@ -173,6 +174,8 @@ int main(int argc, char *argv[])
 
     lua_register(luaState, "getCommandLineParameter", getCommandLineParameter);
     lua_register(luaState, "randomZeroToOne", randomZeroToOne);
+
+    gridbrainLuaRegister(luaState);
 
     int error = luaL_loadfile(luaState, gScriptFile.c_str()) || lua_pcall (luaState, 0, 0, 0);
     

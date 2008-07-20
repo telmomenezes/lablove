@@ -55,39 +55,6 @@ SET(SOURCE_FILES
     src/Brain.cpp
     src/InterfaceItem.cpp
     src/DummyBrain.cpp
-    src/Gridbrain.cpp
-    src/GridbrainMutations.cpp
-    src/GridbrainRecombine.cpp
-    src/GridbrainWrite.cpp
-    src/Grid.cpp
-    src/GridCoord.cpp
-    src/GridbrainComponent.cpp
-    src/comps/CompNUL.cpp
-    src/comps/CompIN.cpp
-    src/comps/CompOUT.cpp
-    src/comps/CompSUM.cpp
-    src/comps/CompMAX.cpp
-    src/comps/CompMIN.cpp
-    src/comps/CompAVG.cpp
-    src/comps/CompMUL.cpp
-    src/comps/CompNOT.cpp
-    src/comps/CompAND.cpp
-    src/comps/CompINV.cpp
-    src/comps/CompNEG.cpp
-    src/comps/CompAMP.cpp
-    src/comps/CompMOD.cpp
-    src/comps/CompRAND.cpp
-    src/comps/CompEQ.cpp
-    src/comps/CompGTZ.cpp
-    src/comps/CompZERO.cpp
-    src/comps/CompCLK.cpp
-    src/comps/CompDMUL.cpp
-    src/comps/CompSEL.cpp
-    src/GridbrainConnection.cpp
-    src/GridbrainGeneTag.cpp
-    src/GridbrainComponentSet.cpp
-    src/GridbrainState.cpp
-    src/GridbrainHistory.cpp
     src/PopulationDynamics.cpp
     src/PopDynSEGA.cpp
     src/Species.cpp
@@ -106,55 +73,87 @@ SET(SOURCE_FILES
     src/Statistics.cpp
     src/StatCommon.cpp
     src/StatTime.cpp
-    src/RandDistManager.cpp
     src/Message.cpp
-    src/mtwist/mtwist.c
-    src/mtwist/randistrs.c)
+    gridbrain/src/Gridbrain.cpp
+    gridbrain/src/GridbrainMutations.cpp
+    gridbrain/src/GridbrainRecombine.cpp
+    gridbrain/src/GridbrainWrite.cpp
+    gridbrain/src/Grid.cpp
+    gridbrain/src/GridCoord.cpp
+    gridbrain/src/GridbrainComponent.cpp
+    gridbrain/src/GridbrainConnection.cpp
+    gridbrain/src/GridbrainGeneTag.cpp
+    gridbrain/src/GridbrainComponentSet.cpp
+    gridbrain/src/RandDistManager.cpp
+    gridbrain/mtwist/mtwist.c
+    gridbrain/mtwist/randistrs.c
+    gridbrain/src/CompNUL.cpp
+    gridbrain/src/CompIN.cpp
+    gridbrain/src/CompOUT.cpp
+    gridbrain/src/CompSUM.cpp
+    gridbrain/src/CompMAX.cpp
+    gridbrain/src/CompMIN.cpp
+    gridbrain/src/CompAVG.cpp
+    gridbrain/src/CompMUL.cpp
+    gridbrain/src/CompNOT.cpp
+    gridbrain/src/CompAND.cpp
+    gridbrain/src/CompINV.cpp
+    gridbrain/src/CompNEG.cpp
+    gridbrain/src/CompAMP.cpp
+    gridbrain/src/CompMOD.cpp
+    gridbrain/src/CompRAND.cpp
+    gridbrain/src/CompEQ.cpp
+    gridbrain/src/CompGTZ.cpp
+    gridbrain/src/CompZERO.cpp
+    gridbrain/src/CompCLK.cpp
+    gridbrain/src/CompDMUL.cpp
+    gridbrain/src/CompSEL.cpp
+    )
 
 SET(UNIT_TEST_FILES
-    src/UnitTest++/AssertException.cpp
-    src/UnitTest++/Test.cpp
-    src/UnitTest++/Checks.cpp
-    src/UnitTest++/TestRunner.cpp
-    src/UnitTest++/TestResults.cpp
-    src/UnitTest++/TestReporter.cpp
-    src/UnitTest++/TestReporterStdout.cpp
-    src/UnitTest++/ReportAssert.cpp
-    src/UnitTest++/TestList.cpp
-    src/UnitTest++/TimeConstraint.cpp
-    src/UnitTest++/TestDetails.cpp
-    src/UnitTest++/MemoryOutStream.cpp
-    src/UnitTest++/DeferredTestReporter.cpp
-    src/UnitTest++/DeferredTestResult.cpp
-    src/UnitTest++/XmlTestReporter.cpp)
+    gridbrain/UnitTest++/AssertException.cpp
+    gridbrain/UnitTest++/Test.cpp
+    gridbrain/UnitTest++/Checks.cpp
+    gridbrain/UnitTest++/TestRunner.cpp
+    gridbrain/UnitTest++/TestResults.cpp
+    gridbrain/UnitTest++/TestReporter.cpp
+    gridbrain/UnitTest++/TestReporterStdout.cpp
+    gridbrain/UnitTest++/ReportAssert.cpp
+    gridbrain/UnitTest++/TestList.cpp
+    gridbrain/UnitTest++/TimeConstraint.cpp
+    gridbrain/UnitTest++/TestDetails.cpp
+    gridbrain/UnitTest++/MemoryOutStream.cpp
+    gridbrain/UnitTest++/DeferredTestReporter.cpp
+    gridbrain/UnitTest++/DeferredTestResult.cpp
+    gridbrain/UnitTest++/XmlTestReporter.cpp)
 
 IF(MINGW)
     SET(UNIT_TEST_FILES
         ${UNIT_TEST_FILES}
-        src/UnitTest++/Win32/TimeHelpers.cpp)
+        gridbrain/UnitTest++/Win32/TimeHelpers.cpp)
 ELSE(MINGW)
     SET(UNIT_TEST_FILES
         ${UNIT_TEST_FILES}
-        src/UnitTest++/Posix/SignalTranslator.cpp
-        src/UnitTest++/Posix/TimeHelpers.cpp)
+        gridbrain/UnitTest++/Posix/SignalTranslator.cpp
+        gridbrain/UnitTest++/Posix/TimeHelpers.cpp)
 ENDIF(MINGW)
 
 SET(UNIT_TEST_FILES
         ${UNIT_TEST_FILES}
-        src/tests/Main.cpp
-        src/tests/TestSimulation.cpp
-        src/tests/TestSim2D.cpp
-        src/tests/TestGrid.cpp
-        src/tests/TestGridCoord.cpp
-        src/tests/TestGridbrain.cpp
-        src/tests/TestGridbrainMutations.cpp
-        src/tests/TestGridbrainRecombine.cpp
-        src/tests/TestGridbrainComponents.cpp
-        src/tests/TestGridbrainComponentSet.cpp
-        src/tests/TestSymbolBitString.cpp
-        src/tests/TestSymbolRGB.cpp
-        src/tests/TestSymbolFixedString.cpp
-        src/tests/TestSymbolFloat.cpp)
+        gridbrain/tests/Main.cpp
+        gridbrain/tests/TestSimulation.cpp
+        gridbrain/tests/TestSim2D.cpp
+        gridbrain/tests/TestGrid.cpp
+        gridbrain/tests/TestGridCoord.cpp
+        gridbrain/tests/TestGridbrain.cpp
+        gridbrain/tests/TestGridbrainMutations.cpp
+        gridbrain/tests/TestGridbrainRecombine.cpp
+        gridbrain/tests/TestGridbrainComponents.cpp
+        gridbrain/tests/TestGridbrainComponentSet.cpp
+        gridbrain/tests/TestSymbolBitString.cpp
+        gridbrain/tests/TestSymbolRGB.cpp
+        gridbrain/tests/TestSymbolFixedString.cpp
+        gridbrain/tests/TestSymbolFloat.cpp)
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     SET(EXTRA_SRC_FILES ${EXTRA_SRC_FILES} src/MacOSXSDL/SDLMain.m)
@@ -166,8 +165,9 @@ INCLUDE(CMakeModules/FindLua.cmake)
 INCLUDE(CMakeModules/FindArtist.cmake)
 
 INCLUDE_DIRECTORIES("src")
-INCLUDE_DIRECTORIES("src/UnitTest++")
-INCLUDE_DIRECTORIES("src/mtwist")
+INCLUDE_DIRECTORIES("gridbrain/UnitTest++")
+INCLUDE_DIRECTORIES("gridbrain/mtwist")
+INCLUDE_DIRECTORIES("gridbrain/include")
 INCLUDE_DIRECTORIES(${Lua_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${Artist_INCLUDE_DIR})
 
