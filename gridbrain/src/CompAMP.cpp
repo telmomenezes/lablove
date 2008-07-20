@@ -28,7 +28,7 @@ CompAMP::~CompAMP()
 {
 }
 
-GridbrainComponent* CompAMP::clone()
+Component* CompAMP::clone()
 {
     CompAMP* comp = new CompAMP();
     comp->mParam = mParam;

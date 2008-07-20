@@ -68,7 +68,7 @@ Gridbrain::Gridbrain(lua_State* luaState)
 
 Gridbrain::~Gridbrain()
 {
-    for (vector<GridbrainComponent*>::iterator iterComp = mComponents.begin();
+    for (vector<Component*>::iterator iterComp = mComponents.begin();
             iterComp != mComponents.end();
             iterComp++)
     {
@@ -162,7 +162,7 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                     y < oldGrid->getHeight();
                     y++)
                 {
-                    GridbrainComponent* comp = getComponent(x, y, g);
+                    Component* comp = getComponent(x, y, g);
                     if (comp->mActive)
                     {
                         activeCol = true;
@@ -253,7 +253,7 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                     x < oldGrid->getWidth();
                     x++)
                 {
-                    GridbrainComponent* comp = getComponent(x, y, g);
+                    Component* comp = getComponent(x, y, g);
                     if (comp->mActive)
                     {
                         activeRow = true;
@@ -331,14 +331,14 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                 GridCoord yCoord = newGrid->getRowCoord(y);
                 int oldY = oldGrid->getRowByCoord(yCoord);
 
-                GridbrainComponent* oldComponent = NULL;
+                Component* oldComponent = NULL;
                 if ((oldX >= 0)
                     && (oldY >= 0))
                 {
                     oldComponent = getComponent(oldX, oldY, g);
                 }
 
-                GridbrainComponent* newComponent;
+                Component* newComponent;
 
                 if (oldComponent != NULL)
                 {
@@ -346,7 +346,7 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                 }
                 else
                 {
-                    newComponent = GridbrainComponent::createByType(GridbrainComponent::NUL);
+                    newComponent = Component::createByType(Component::NUL);
                 }
 
                 newComponent->mOffset = offset;
@@ -383,10 +383,10 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                 y < newGrid->getHeight();
                 y++)
             {
-                GridbrainComponent* comp = gb->getComponent(x, y, g);
-                if (comp->mType == GridbrainComponent::NUL)
+                Component* comp = gb->getComponent(x, y, g);
+                if (comp->mType == Component::NUL)
                 {
-                    GridbrainComponent* newComp = newGrid->getRandomComponent();
+                    Component* newComp = newGrid->getRandomComponent();
                     gb->replaceComponent(pos, newComp);
                     #ifdef GB_VALIDATE
                     gb->isValid();
@@ -453,7 +453,7 @@ void Gridbrain::repair()
     for (unsigned int i = 0; i < mNumberOfComponents; i++)
     {
         bool replace = false;
-        GridbrainComponent* comp = mComponents[i];
+        Component* comp = mComponents[i];
 
         if ((comp->isUnique()) && (comp->mOrigSymTable >= 0))
         {
@@ -470,7 +470,7 @@ void Gridbrain::repair()
             unsigned int gridNumber = comp->mGrid;
             Grid* grid = mGridsVec[gridNumber];
 
-            GridbrainComponent* newComp = grid->getRandomComponent();
+            Component* newComp = grid->getRandomComponent();
             replaceComponent(i, newComp);
         }
     }
@@ -507,7 +507,7 @@ void Gridbrain::init()
     {
         for (unsigned int i = 0; i < mNumberOfComponents; i++)
         {
-            mComponents.push_back(GridbrainComponent::createByType(GridbrainComponent::NUL));
+            mComponents.push_back(Component::createByType(Component::NUL));
         }
 
         // Init grids with NUL components
@@ -552,16 +552,16 @@ void Gridbrain::update()
     #endif
 }
 
-GridbrainComponent* Gridbrain::setComponent(unsigned int x, unsigned int y, unsigned int g, GridbrainComponent& comp)
+Component* Gridbrain::setComponent(unsigned int x, unsigned int y, unsigned int g, Component& comp)
 {
-    GridbrainComponent* oldComp = getComponent(x, y, g);
+    Component* oldComp = getComponent(x, y, g);
     return replaceComponent(oldComp->mOffset, &comp);
 }
 
 void Gridbrain::setComponent(unsigned int x,
                 unsigned int y,
                 unsigned int gridNumber,
-                GridbrainComponent::Type type,
+                Component::Type type,
                 float param,
                 int subType,
                 InterfaceItem::TableLinkType linkType,
@@ -569,9 +569,9 @@ void Gridbrain::setComponent(unsigned int x,
                 llULINT origSymID,
                 int targetSymTable)
 {
-    GridbrainComponent* oldComp = getComponent(x, y, gridNumber);
+    Component* oldComp = getComponent(x, y, gridNumber);
 
-    GridbrainComponent* newComp = GridbrainComponent::createByType(type);
+    Component* newComp = Component::createByType(type);
     newComp->mSubType = subType;
     newComp->mParam = param;
     newComp->mOrigSymTable = origSymTable;
@@ -603,8 +603,8 @@ void Gridbrain::initGridsIO()
                 j < grid->mComponentSequenceSize;
                 j++)
             {
-                GridbrainComponent* comp = grid->mComponentSequence[j];
-                if (comp->mType == GridbrainComponent::IN)
+                Component* comp = grid->mComponentSequence[j];
+                if (comp->mType == Component::IN)
                 {
                     int perPos = grid->addPerception(comp);
                     comp->mPerceptionPosition = perPos;
@@ -630,9 +630,9 @@ void Gridbrain::initGridsIO()
                 j < grid->mComponentSequenceSize;
                 j++)
             {
-                GridbrainComponent* comp = grid->mComponentSequence[j];
+                Component* comp = grid->mComponentSequence[j];
 
-                if (comp->mType == GridbrainComponent::OUT)
+                if (comp->mType == Component::OUT)
                 {
                     comp->mActionPosition = grid->addAction(comp);
                     InterfaceItem* item = new InterfaceItem();
@@ -650,7 +650,7 @@ void Gridbrain::initGridsIO()
     }
 }
 
-GridbrainComponent* Gridbrain::getComponent(unsigned int x,
+Component* Gridbrain::getComponent(unsigned int x,
                 unsigned int y,
                 unsigned int gridNumber)
 {
@@ -674,15 +674,15 @@ GridbrainComponent* Gridbrain::getComponent(unsigned int x,
     return mComponents[pos];
 }
 
-GridbrainComponent* Gridbrain::replaceComponent(unsigned int pos, GridbrainComponent* comp)
+Component* Gridbrain::replaceComponent(unsigned int pos, Component* comp)
 {
-    GridbrainComponent* oldComp = mComponents[pos];
+    Component* oldComp = mComponents[pos];
     Grid* grid = mGridsVec[oldComp->mGrid];
-    GridbrainComponentSet* compSet = grid->getComponentSet();
+    ComponentSet* compSet = grid->getComponentSet();
 
     compSet->enable(oldComp);
 
-    GridbrainComponent* newComp = comp->clone();
+    Component* newComp = comp->clone();
     newComp->copyPosition(oldComp);
     newComp->copyConnections(oldComp);
     delete oldComp;
@@ -757,8 +757,8 @@ void Gridbrain::addConnection(unsigned int xOrig,
     unsigned int orig = (xOrig * gridOrig->getHeight()) + yOrig + gridOrig->getOffset();
     unsigned int target = (xTarg * gridTarg->getHeight()) + yTarg + gridTarg->getOffset();
 
-    GridbrainComponent* comp = mComponents[orig];
-    GridbrainComponent* targComp = mComponents[target];
+    Component* comp = mComponents[orig];
+    Component* targComp = mComponents[target];
     GridbrainConnection* conn = (GridbrainConnection*)malloc(sizeof(GridbrainConnection));
     conn->mColumnOrig = comp->mColumn;
     conn->mRowOrig = comp->mRow;
@@ -857,8 +857,8 @@ void Gridbrain::addConnection(unsigned int xOrig,
 
 void Gridbrain::removeConnection(GridbrainConnection* conn)
 {
-    GridbrainComponent* comp = (GridbrainComponent*)conn->mOrigComponent;
-    GridbrainComponent* targComp = (GridbrainComponent*)conn->mTargComponent;
+    Component* comp = (Component*)conn->mOrigComponent;
+    Component* targComp = (Component*)conn->mTargComponent;
 
     comp->mConnectionsCount--;
 
@@ -934,7 +934,7 @@ GridbrainConnection* Gridbrain::getConnection(unsigned int xOrig,
     unsigned int orig = (xOrig * grid->getHeight()) + yOrig + grid->getOffset();
     grid = mGridsVec[gTarg];
 
-    GridbrainComponent* comp = mComponents[orig];
+    Component* comp = mComponents[orig];
     GridbrainConnection* conn = comp->mFirstConnection;
 
     unsigned int i = 0;
@@ -1007,7 +1007,7 @@ bool Gridbrain::selectRandomConnection(unsigned int &x1,
                 (row < height) && (!found);
                 row++)
             {
-                GridbrainComponent* comp = getComponent(col, row, g);
+                Component* comp = getComponent(col, row, g);
                 // Increment current position by the number of free connections in the curent component
                 curPos += comp->mPossibleConnections - comp->mConnectionsCount;
 
@@ -1030,7 +1030,7 @@ bool Gridbrain::selectRandomConnection(unsigned int &x1,
     }
 
     // Determine relative offset (to origin component) of target
-    GridbrainComponent* origComp = getComponent(x1, y1, g1);
+    Component* origComp = getComponent(x1, y1, g1);
     GridbrainConnection* conn = origComp->mFirstConnection;
 
     while (conn != NULL)
@@ -1051,7 +1051,7 @@ bool Gridbrain::selectRandomConnection(unsigned int &x1,
     }
 
     // Get target component coordinates from relative offset
-    GridbrainComponent* targComp = getCompByRelativeOffset(origComp, targPos);
+    Component* targComp = getCompByRelativeOffset(origComp, targPos);
     x2 = targComp->mColumn;
     y2 = targComp->mRow;
     g2 = targComp->mGrid;
@@ -1069,7 +1069,7 @@ bool Gridbrain::selectRandomOrigin(unsigned int &x1,
                 unsigned int g2)
 {
     unsigned int origins = 0;
-    GridbrainComponent* targetComp = getComponent(x2, y2, g2);
+    Component* targetComp = getComponent(x2, y2, g2);
 
     Grid* gridTarg = getGrid(g2);
 
@@ -1083,9 +1083,9 @@ bool Gridbrain::selectRandomOrigin(unsigned int &x1,
             {
                 for (unsigned int y = 0; y < grid->getHeight(); y++)
                 {
-                    GridbrainComponent* comp = getComponent(x, y, g);
+                    Component* comp = getComponent(x, y, g);
 
-                    if (comp->getConnectorType() != GridbrainComponent::CONN_IN)
+                    if (comp->getConnectorType() != Component::CONN_IN)
                     {
                         origins++;
                     }
@@ -1098,9 +1098,9 @@ bool Gridbrain::selectRandomOrigin(unsigned int &x1,
     {
         for (unsigned int y = 0; y < gridTarg->getHeight(); y++)
         {
-            GridbrainComponent* comp = getComponent(x, y, g2);
+            Component* comp = getComponent(x, y, g2);
 
-            if (comp->getConnectorType() != GridbrainComponent::CONN_IN)
+            if (comp->getConnectorType() != Component::CONN_IN)
             {
                 origins++;
             }
@@ -1127,9 +1127,9 @@ bool Gridbrain::selectRandomOrigin(unsigned int &x1,
             {
                 for (y1 = 0; y1 < grid->getHeight(); y1++)
                 {
-                    GridbrainComponent* comp = getComponent(x1, y1, g1);
+                    Component* comp = getComponent(x1, y1, g1);
 
-                    if ((comp->getConnectorType() != GridbrainComponent::CONN_IN)
+                    if ((comp->getConnectorType() != Component::CONN_IN)
                         && (!connectionExists(x1, y1, g1, x2, y2, g2)))
                     {
                         curPos++;
@@ -1148,9 +1148,9 @@ bool Gridbrain::selectRandomOrigin(unsigned int &x1,
     {
         for (y1 = 0; y1 < gridTarg->getHeight(); y1++)
         {
-            GridbrainComponent* comp = getComponent(x1, y1, g1);
+            Component* comp = getComponent(x1, y1, g1);
 
-            if ((comp->getConnectorType() != GridbrainComponent::CONN_IN)
+            if ((comp->getConnectorType() != Component::CONN_IN)
                 && (!connectionExists(x1, y1, g1, x2, y2, g2)))
             {
                 curPos++;
@@ -1173,7 +1173,7 @@ bool Gridbrain::selectRandomTarget(unsigned int x1,
                 unsigned int &g2)
 {
     unsigned int targets = 0;
-    GridbrainComponent* origComp = getComponent(x1, y1, g1);
+    Component* origComp = getComponent(x1, y1, g1);
 
     Grid* gridOrig = getGrid(g1);
 
@@ -1214,9 +1214,9 @@ bool Gridbrain::selectRandomTarget(unsigned int x1,
         {
             for (y2 = 0; y2 < grid->getHeight(); y2++)
             {
-                GridbrainComponent* comp = getComponent(x2, y2, g2);
+                Component* comp = getComponent(x2, y2, g2);
 
-                if ((comp->getConnectorType() != GridbrainComponent::CONN_OUT)
+                if ((comp->getConnectorType() != Component::CONN_OUT)
                     && (!connectionExists(x1, y1, g1, x2, y2, g2)))
                 {
                     curPos++;
@@ -1234,9 +1234,9 @@ bool Gridbrain::selectRandomTarget(unsigned int x1,
     {
         for (y2 = 0; y2 < gridOrig->getHeight(); y2++)
         {
-            GridbrainComponent* comp = getComponent(x2, y2, g2);
+            Component* comp = getComponent(x2, y2, g2);
 
-            if ((comp->getConnectorType() != GridbrainComponent::CONN_OUT)
+            if ((comp->getConnectorType() != Component::CONN_OUT)
                 && (!connectionExists(x1, y1, g1, x2, y2, g2)))
             {
                 curPos++;
@@ -1251,7 +1251,7 @@ bool Gridbrain::selectRandomTarget(unsigned int x1,
     return false;
 }
 
-unsigned int Gridbrain::getRelativeOffset(GridbrainComponent* compOrig,
+unsigned int Gridbrain::getRelativeOffset(Component* compOrig,
                                             unsigned int targX,
                                             unsigned int targY,
                                             unsigned int targG)
@@ -1287,8 +1287,8 @@ unsigned int Gridbrain::getRelativeOffset(GridbrainComponent* compOrig,
 
     for (unsigned int row = 0; row < targY; row++)
     {
-        GridbrainComponent* comp = getComponent(targX, row, targG);
-        if (comp->getConnectorType() != GridbrainComponent::CONN_OUT)
+        Component* comp = getComponent(targX, row, targG);
+        if (comp->getConnectorType() != Component::CONN_OUT)
         {
             offset++;
         }
@@ -1297,7 +1297,7 @@ unsigned int Gridbrain::getRelativeOffset(GridbrainComponent* compOrig,
     return offset;
 }
 
-GridbrainComponent* Gridbrain::getCompByRelativeOffset(GridbrainComponent* compOrig, unsigned int offset)
+Component* Gridbrain::getCompByRelativeOffset(Component* compOrig, unsigned int offset)
 {
     unsigned int x = compOrig->mColumn;
     unsigned int y = compOrig->mRow;
@@ -1355,8 +1355,8 @@ GridbrainComponent* Gridbrain::getCompByRelativeOffset(GridbrainComponent* compO
 
     while (row < grid->getHeight())
     {
-        GridbrainComponent* comp = getComponent(col, row, g);
-        if (comp->getConnectorType() != GridbrainComponent::CONN_OUT)
+        Component* comp = getComponent(col, row, g);
+        if (comp->getConnectorType() != Component::CONN_OUT)
         {
             curOffset++;
         }
@@ -1406,7 +1406,7 @@ void Gridbrain::cycle()
 
     for (unsigned int i = 0; i < endIndex; i++)
     {
-        GridbrainComponent* comp = grid->mComponentSequence[i];
+        Component* comp = grid->mComponentSequence[i];
         comp->reset(0);
     }
 
@@ -1450,8 +1450,8 @@ void Gridbrain::cycle()
 
                     for (unsigned int i = 0; i < endIndex; i++)
                     {
-                        GridbrainComponent* comp = grid->mComponentSequence[i];
-                        if (comp->mType == GridbrainComponent::IN)
+                        Component* comp = grid->mComponentSequence[i];
+                        if (comp->mType == Component::IN)
                         {
                             comp->mOutput =
                                 inputMatrix[comp->mPerceptionPosition
@@ -1464,7 +1464,7 @@ void Gridbrain::cycle()
 
                 for (unsigned int j = 0; j < endIndex; j++)
                 {
-                    GridbrainComponent* comp = grid->mComponentSequence[j];
+                    Component* comp = grid->mComponentSequence[j];
 
                     // compute component output
                     float output = comp->output(inputID);
@@ -1476,7 +1476,7 @@ void Gridbrain::cycle()
                     //comp->print();
                     //printf(" => %f\n", output);
 
-                    if (comp->mType == GridbrainComponent::OUT)
+                    if (comp->mType == Component::OUT)
                     {
                         outputVector[comp->mActionPosition] = output;
                     }
@@ -1487,7 +1487,7 @@ void Gridbrain::cycle()
                     {
                         if ((!firstAlpha) || (!conn->mInterGrid))
                         {
-                            GridbrainComponent* targetComp = (GridbrainComponent*)conn->mTargComponent;
+                            Component* targetComp = (Component*)conn->mTargComponent;
                             targetComp->input(output, comp->mOffset);
                         }
                         conn = (GridbrainConnection*)conn->mNextConnection;
@@ -1532,9 +1532,9 @@ void Gridbrain::calcConnectionCounts()
 
             for (unsigned int row = 0; row < height; row++)
             {
-                GridbrainComponent* comp = getComponent(col, row, g);
+                Component* comp = getComponent(col, row, g);
 
-                if (comp->getConnectorType() != GridbrainComponent::CONN_OUT)
+                if (comp->getConnectorType() != Component::CONN_OUT)
                 {
                     targetCount++;
                 }
@@ -1573,10 +1573,10 @@ void Gridbrain::calcConnectionCounts()
 
             for (unsigned int row = 0; row < height; row++)
             {
-                GridbrainComponent* comp = getComponent(col, row, g);
+                Component* comp = getComponent(col, row, g);
                 unsigned int compPossibleConnections = 0;
 
-                if (comp->getConnectorType() != GridbrainComponent::CONN_IN)
+                if (comp->getConnectorType() != Component::CONN_IN)
                 {
                     compPossibleConnections = possibleConnections;
                 }
@@ -1598,7 +1598,7 @@ void Gridbrain::calcActiveComponents()
         {
             for (unsigned int y = 0; y < grid->getHeight(); y++)
             {
-                GridbrainComponent* comp = getComponent(x, y, g);
+                Component* comp = getComponent(x, y, g);
                 comp->mActive = false;
                 comp->mProducer = false;
                 comp->mConsumer = false;
@@ -1618,7 +1618,7 @@ void Gridbrain::calcActiveComponents()
         {
             for (unsigned int y = 0; y < grid->getHeight(); y++)
             {
-                GridbrainComponent* comp = getComponent(x, y, g);
+                Component* comp = getComponent(x, y, g);
                 if (mAllActive)
                 {
                     comp->mActive = true;
@@ -1629,11 +1629,11 @@ void Gridbrain::calcActiveComponents()
                 }
                 if (comp->mActive)
                 {
-                    if (comp->mType == GridbrainComponent::IN)
+                    if (comp->mType == Component::IN)
                     {
                         mActivePerceptions++;
                     }
-                    else if (comp->mType == GridbrainComponent::OUT)
+                    else if (comp->mType == Component::OUT)
                     {
                         mActiveActions++;
                     }
@@ -1660,14 +1660,14 @@ void Gridbrain::calcActive()
             free(grid->mComponentSequence);
             grid->mComponentSequence = NULL;
         }
-        grid->mComponentSequence = (GridbrainComponent**)malloc(grid->mComponentSequenceSize * sizeof(GridbrainComponent*));
+        grid->mComponentSequence = (Component**)malloc(grid->mComponentSequenceSize * sizeof(Component*));
 
         unsigned int pos = 0;
         for (unsigned int x = 0; x < grid->getWidth(); x++)
         {
             for (unsigned int y = 0; y < grid->getHeight(); y++)
             {
-                GridbrainComponent* comp = getComponent(x, y, g);
+                Component* comp = getComponent(x, y, g);
                 if (comp->mActive)
                 {
                     grid->mComponentSequence[pos] = comp;
@@ -1682,8 +1682,8 @@ void Gridbrain::calcActive()
     mActiveConnections = 0;
     while (conn != NULL)
     {
-        GridbrainComponent* origComp = (GridbrainComponent*)conn->mOrigComponent;
-        GridbrainComponent* targComp = (GridbrainComponent*)conn->mTargComponent;
+        Component* origComp = (Component*)conn->mOrigComponent;
+        Component* targComp = (Component*)conn->mTargComponent;
 
         if (origComp->mActive && targComp->mActive)
         {
@@ -1710,13 +1710,13 @@ void Gridbrain::calcDensityMetrics()
         {
             for (unsigned int y = 0; y < grid->getHeight(); y++)
             {
-                GridbrainComponent* origComp = getComponent(x, y, g);
+                Component* origComp = getComponent(x, y, g);
 
                 GridbrainConnection* conn = origComp->mFirstConnection;
 
                 while (conn != NULL)
                 {
-                    GridbrainComponent* targComp = (GridbrainComponent*)conn->mTargComponent;
+                    Component* targComp = (Component*)conn->mTargComponent;
 
                     if (origComp->mActive && targComp->mActive)
                     {
@@ -1758,7 +1758,7 @@ void Gridbrain::calcDensityMetrics()
 
             for (unsigned int y = 0; y < grid->getHeight(); y++)
             {
-                GridbrainComponent* comp = getComponent(x, y, g);
+                Component* comp = getComponent(x, y, g);
 
                 if (comp->mDepth > maxDepth)
                 {
@@ -1831,7 +1831,7 @@ bool Gridbrain::getFieldValue(string fieldName, float& value)
         for (unsigned int i = 0; i < mNumberOfComponents; i++)
         {
             if (mComponents[i]->mActive
-                && (mComponents[i]->mType == GridbrainComponent::IN)
+                && (mComponents[i]->mType == Component::IN)
                 && (mComponents[i]->mOrigSymTable == tableCode))
             {
                 value++;
@@ -1876,13 +1876,13 @@ bool Gridbrain::isConnectionValid(unsigned int xOrig,
         return false;
     }
 
-    GridbrainComponent* compOrig = getComponent(xOrig, yOrig, gOrig);
-    if (compOrig->getConnectorType() == GridbrainComponent::CONN_IN)
+    Component* compOrig = getComponent(xOrig, yOrig, gOrig);
+    if (compOrig->getConnectorType() == Component::CONN_IN)
     {
         return false;
     }
-    GridbrainComponent* compTarg = getComponent(xTarg, yTarg, gTarg);
-    if (compTarg->getConnectorType() == GridbrainComponent::CONN_OUT)
+    Component* compTarg = getComponent(xTarg, yTarg, gTarg);
+    if (compTarg->getConnectorType() == Component::CONN_OUT)
     {
         return false;
     }
@@ -1958,8 +1958,8 @@ bool Gridbrain::isValid()
             return false;
         }
 
-        GridbrainComponent* compOrig = getComponent(conn->mColumnOrig, conn->mRowOrig, conn->mGridOrig);
-        GridbrainComponent* compTarg = getComponent(conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg);
+        Component* compOrig = getComponent(conn->mColumnOrig, conn->mRowOrig, conn->mGridOrig);
+        Component* compTarg = getComponent(conn->mColumnTarg, conn->mRowTarg, conn->mGridTarg);
 
         if (conn->mOrigComponent != compOrig)
         {
@@ -1986,7 +1986,7 @@ bool Gridbrain::isValid()
 
     for (unsigned int i = 0; i < mNumberOfComponents; i++)
     {
-        GridbrainComponent* comp1 = mComponents[i];
+        Component* comp1 = mComponents[i];
 
         if (comp1->isUnique())
         {
@@ -1994,7 +1994,7 @@ bool Gridbrain::isValid()
             {
                 if (j != i)
                 {
-                    GridbrainComponent* comp2 = mComponents[j];
+                    Component* comp2 = mComponents[j];
 
                     if (comp1->isEqual(comp2))
                     {
@@ -2019,7 +2019,7 @@ bool Gridbrain::symbolUsed(int tableID, llULINT symbolID)
 
     for (unsigned int i = 0; i < mNumberOfComponents; i++)
     {
-        GridbrainComponent* comp = mComponents[i];
+        Component* comp = mComponents[i];
 
         if (comp->mActive
             && (comp->mOrigSymTable == tableID)
@@ -2169,7 +2169,7 @@ int Gridbrain::setComponent(lua_State* luaState)
     unsigned int x = luaL_checkint(luaState, 1);
     unsigned int y = luaL_checkint(luaState, 2);
     unsigned int gridNumber = luaL_checkint(luaState, 3);
-    GridbrainComponent::Type type = (GridbrainComponent::Type)luaL_checkint(luaState, 4);
+    Component::Type type = (Component::Type)luaL_checkint(luaState, 4);
     float param = luaL_optnumber(luaState, 5, 0.0f);
     unsigned int subType = luaL_optint(luaState, 6, -1);
     InterfaceItem::TableLinkType linkType = (InterfaceItem::TableLinkType)(luaL_optint(luaState, 7, InterfaceItem::NO_LINK));

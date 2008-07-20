@@ -28,18 +28,18 @@
 #include <string>
 using std::string;
 
-class GridbrainComponent
+class Component
 {
 public:
     enum Type {NUL, IN, OUT, AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, MAX, MIN, AVG, CLK, DMUL, SEL};
     enum ConnType {CONN_IN, CONN_OUT, CONN_INOUT};
 
-    static GridbrainComponent* createByType(Type type);
+    static Component* createByType(Type type);
 
-    GridbrainComponent(lua_State* luaState=NULL);
-    virtual ~GridbrainComponent();
+    Component(lua_State* luaState=NULL);
+    virtual ~Component();
 
-    virtual GridbrainComponent* clone(){return NULL;}
+    virtual Component* clone(){return NULL;}
 
     virtual void input(float value, int pin){}
     virtual float output(unsigned int id){return 0.0f;}
@@ -47,8 +47,8 @@ public:
 
     void clearMetrics();
 
-    void copyPosition(GridbrainComponent* comp);
-    void copyConnections(GridbrainComponent* comp);
+    void copyPosition(Component* comp);
+    void copyConnections(Component* comp);
 
     virtual string getName(){return "?";}
     virtual ConnType getConnectorType(){return CONN_INOUT;}
@@ -56,7 +56,7 @@ public:
     virtual bool isUnique(){return false;}
     
     bool isUsed();
-    bool isEqual(GridbrainComponent* comp, bool sameGrid=true);
+    bool isEqual(Component* comp, bool sameGrid=true);
 
     virtual bool isProducer(){return false;}
     virtual bool isConsumer(){return false;}
@@ -67,8 +67,8 @@ public:
     void print();
 
     static const char mClassName[];
-    static Orbit<GridbrainComponent>::MethodType mMethods[];
-    static Orbit<GridbrainComponent>::NumberGlobalType mNumberGlobals[];
+    static Orbit<Component>::MethodType mMethods[];
+    static Orbit<Component>::NumberGlobalType mNumberGlobals[];
 
     Type mType;
     int mSubType;
@@ -103,7 +103,7 @@ public:
     bool mActive;
 
 protected:
-    virtual bool compare(GridbrainComponent* comp){return true;}
+    virtual bool compare(Component* comp){return true;}
 };
 
 #endif

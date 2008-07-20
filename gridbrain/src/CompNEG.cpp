@@ -28,7 +28,7 @@ CompNEG::~CompNEG()
 {
 }
 
-GridbrainComponent* CompNEG::clone()
+Component* CompNEG::clone()
 {
     return new CompNEG();
 }

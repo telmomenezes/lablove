@@ -41,7 +41,7 @@ Grid::Grid(lua_State* luaState)
     mComponentSequence = NULL;
     mComponentSequenceSize = 0;
 
-    mComponentSet = new GridbrainComponentSet();
+    mComponentSet = new ComponentSet();
 
     if (luaState)
     {
@@ -70,7 +70,7 @@ Grid::Grid(const Grid& grid)
     mComponentSequence = NULL;
     mComponentSequenceSize = 0;
     
-    mComponentSet = new GridbrainComponentSet(grid.mComponentSet);
+    mComponentSet = new ComponentSet(grid.mComponentSet);
 
     for (unsigned int i = 0; i < mWidth; i++)
     {
@@ -165,12 +165,12 @@ void Grid::init(Type type, unsigned int width, unsigned int height)
     mSize = mWidth * mHeight;
 }
 
-void Grid::setComponentSet(GridbrainComponentSet* componentSet)
+void Grid::setComponentSet(ComponentSet* componentSet)
 {
     mComponentSet = componentSet;
 }
 
-GridbrainComponent* Grid::getRandomComponent()
+Component* Grid::getRandomComponent()
 {
     return mComponentSet->getRandom();
 }
@@ -180,11 +180,11 @@ void Grid::setInput(unsigned int number, unsigned int depth, float value)
     mInputMatrix[(depth * mPerceptionsCount) + number] = value;
 }
 
-unsigned int Grid::addPerception(GridbrainComponent* per)
+unsigned int Grid::addPerception(Component* per)
 {
     for (unsigned int i = 0; i < mPerceptionsVec.size(); i++)
     {
-        GridbrainComponent* curPer = mPerceptionsVec[i];
+        Component* curPer = mPerceptionsVec[i];
 
         if ((curPer->mSubType == per->mSubType)
             && (curPer->mOrigSymTable == per->mOrigSymTable)
@@ -199,7 +199,7 @@ unsigned int Grid::addPerception(GridbrainComponent* per)
     return (mPerceptionsVec.size() - 1);
 }
 
-unsigned int Grid::addAction(GridbrainComponent* act)
+unsigned int Grid::addAction(Component* act)
 {
     mActionsVec.push_back(act);
     return (mActionsVec.size() - 1);
@@ -228,12 +228,12 @@ void Grid::initOutputVector()
     }
 }
 
-GridbrainComponent* Grid::getPerception(unsigned int number)
+Component* Grid::getPerception(unsigned int number)
 {
     return mPerceptionsVec[number];
 }
 
-GridbrainComponent* Grid::getAction(unsigned int number)
+Component* Grid::getAction(unsigned int number)
 {
     return mActionsVec[number];
 }
@@ -511,7 +511,7 @@ Orbit<Grid>::NumberGlobalType Grid::mNumberGlobals[] = {
 
 int Grid::setComponentSet(lua_State* luaState)
 {
-    GridbrainComponentSet* set = (GridbrainComponentSet*)Orbit<Grid>::pointer(luaState, 1);
+    ComponentSet* set = (ComponentSet*)Orbit<Grid>::pointer(luaState, 1);
     setComponentSet(set);
     return 0;
 }

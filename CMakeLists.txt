@@ -80,7 +80,7 @@ SET(SOURCE_FILES
     gridbrain/src/GridbrainWrite.cpp
     gridbrain/src/Grid.cpp
     gridbrain/src/GridCoord.cpp
-    gridbrain/src/GridbrainComponent.cpp
+    gridbrain/src/Component.cpp
     gridbrain/src/GridbrainConnection.cpp
     gridbrain/src/GridbrainGeneTag.cpp
     gridbrain/src/GridbrainComponentSet.cpp

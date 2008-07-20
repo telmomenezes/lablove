@@ -28,7 +28,7 @@ CompIN::~CompIN()
 {
 }
 
-GridbrainComponent* CompIN::clone()
+Component* CompIN::clone()
 {
     CompIN* comp = new CompIN();
     comp->mSubType = mSubType;
@@ -52,7 +52,7 @@ float CompIN::output(unsigned int id)
     return mOutput;
 }
 
-bool CompIN::compare(GridbrainComponent* comp)
+bool CompIN::compare(Component* comp)
 {
     return ((mSubType == comp->mSubType)
             && (mOrigSymTable == comp->mOrigSymTable)

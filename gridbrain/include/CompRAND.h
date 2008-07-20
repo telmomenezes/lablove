@@ -20,16 +20,16 @@
 #ifndef _INCLUDE_GRIDBRAIN_COMPONENT_RAND_H
 #define _INCLUDE_GRIDBRAIN_COMPONENT_RAND_H
 
-#include "GridbrainComponent.h"
+#include "Component.h"
 #include "RandDistManager.h"
 
-class CompRAND : public GridbrainComponent
+class CompRAND : public Component
 {
 public:
     CompRAND();
     virtual ~CompRAND();
 
-    virtual GridbrainComponent* clone();
+    virtual Component* clone();
 
     virtual void input(float value, int pin);
     virtual float output(unsigned int id);
@@ -39,7 +39,7 @@ public:
     virtual ConnType getConnectorType(){return CONN_INOUT;}
 
     virtual bool isUnique(){return false;}
-    virtual bool compare(GridbrainComponent* comp){return true;}
+    virtual bool compare(Component* comp){return true;}
 
     virtual bool isProducer(){return true;}
 

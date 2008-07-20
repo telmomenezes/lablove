@@ -29,7 +29,7 @@ CompNOT::~CompNOT()
 {
 }
 
-GridbrainComponent* CompNOT::clone()
+Component* CompNOT::clone()
 {
     return new CompNOT();
 }

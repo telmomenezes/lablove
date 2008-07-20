@@ -21,7 +21,7 @@
 #define __INCLUDE_GRID_H
 
 #include "ScriptableObject.h"
-#include "GridbrainComponentSet.h"
+#include "ComponentSet.h"
 #include "RandDistManager.h"
 #include "Orbit.h"
 #include "GridCoord.h"
@@ -50,23 +50,23 @@ public:
     unsigned int getHeight(){return mHeight;}
     unsigned int getSize(){return mSize;}
 
-    void setComponentSet(GridbrainComponentSet* componentSet);
-    GridbrainComponentSet* getComponentSet(){return mComponentSet;}
+    void setComponentSet(ComponentSet* componentSet);
+    ComponentSet* getComponentSet(){return mComponentSet;}
 
     void setOffset(unsigned int offset){mOffset = offset;}
     
     unsigned int getOffset(){return mOffset;}
-    GridbrainComponent* getRandomComponent();
+    Component* getRandomComponent();
     void setInput(unsigned int number, unsigned int depth, float value);
-    unsigned int addPerception(GridbrainComponent* per);
-    unsigned int addAction(GridbrainComponent* act);
+    unsigned int addPerception(Component* per);
+    unsigned int addAction(Component* act);
     void initInputMatrix(unsigned int maxInputDepth);
     float* getInputMatrix(){return mInputMatrix;}
     unsigned int getInputID(unsigned int depth);
     void initOutputVector();
     float* getOutputVector(){return mOutputVector;}
-    GridbrainComponent* getPerception(unsigned int number);
-    GridbrainComponent* getAction(unsigned int number);
+    Component* getPerception(unsigned int number);
+    Component* getAction(unsigned int number);
     void setInputDepth(unsigned int inputDepth){mInputDepth = inputDepth;}
     unsigned int getInputDepth(){return mInputDepth;}
     unsigned int getMaxInputDepth(){return mMaxInputDepth;}
@@ -96,7 +96,7 @@ public:
 
     bool isValid();
 
-    GridbrainComponent** mComponentSequence;
+    Component** mComponentSequence;
     unsigned int mComponentSequenceSize;
 
     unsigned int mMaxDepth;
@@ -127,10 +127,10 @@ protected:
     unsigned int* mInputIDs;
     float* mOutputVector;
 
-    GridbrainComponentSet* mComponentSet;
+    ComponentSet* mComponentSet;
 
-    vector<GridbrainComponent*> mPerceptionsVec;
-    vector<GridbrainComponent*> mActionsVec;
+    vector<Component*> mPerceptionsVec;
+    vector<Component*> mActionsVec;
 
     vector<unsigned int> mColumnTargetCountVec;
 

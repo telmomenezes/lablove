@@ -31,7 +31,7 @@ CompMAX::~CompMAX()
 {
 }
 
-GridbrainComponent* CompMAX::clone()
+Component* CompMAX::clone()
 {
     return new CompMAX();
 }

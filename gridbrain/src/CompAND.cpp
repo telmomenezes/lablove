@@ -29,7 +29,7 @@ CompAND::~CompAND()
 {
 }
 
-GridbrainComponent* CompAND::clone()
+Component* CompAND::clone()
 {
     return new CompAND();
 }

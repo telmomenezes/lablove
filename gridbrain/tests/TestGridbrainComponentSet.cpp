@@ -18,43 +18,43 @@
  */
 
 #include "UnitTest++.h"
-#include "GridbrainComponentSet.h"
+#include "ComponentSet.h"
 
-TEST(GridbrainComponentSetGetRandomFromEmpty)
+TEST(ComponentSetGetRandomFromEmpty)
 {
-    GridbrainComponentSet set;
-    GridbrainComponent* comp = set.getRandom();
-    CHECK_EQUAL(comp->mType, GridbrainComponent::NUL);
+    ComponentSet set;
+    Component* comp = set.getRandom();
+    CHECK_EQUAL(comp->mType, Component::NUL);
 }
 
-struct GridbrainComponentSetFixture
+struct ComponentSetFixture
 {
-    GridbrainComponentSetFixture()
+    ComponentSetFixture()
     {
-        mSet.addComponent(GridbrainComponent::OUT, 33);
+        mSet.addComponent(Component::OUT, 33);
     }
 
-    ~GridbrainComponentSetFixture(){}
+    ~ComponentSetFixture(){}
 
-    GridbrainComponentSet mSet;
+    ComponentSet mSet;
 };
 
-/*TEST_FIXTURE(GridbrainComponentSetFixture, GridbrainComponentSetAddComponent)
+/*TEST_FIXTURE(ComponentSetFixture, ComponentSetAddComponent)
 {
-    GridbrainComponent* comp = mSet.getRandom();
-    CHECK_EQUAL(comp->mType, GridbrainComponent::OUT);
+    Component* comp = mSet.getRandom();
+    CHECK_EQUAL(comp->mType, Component::OUT);
 }
 
-TEST_FIXTURE(GridbrainComponentSetFixture, GridbrainComponentSetAddComponentCheckSubType)
+TEST_FIXTURE(ComponentSetFixture, ComponentSetAddComponentCheckSubType)
 {
-    GridbrainComponent* comp = mSet.getRandom();
+    Component* comp = mSet.getRandom();
     CHECK_EQUAL(comp->mSubType, 33);
 }
 
-TEST_FIXTURE(GridbrainComponentSetFixture, GridbrainComponentSetAddAnotherComponent)
+TEST_FIXTURE(ComponentSetFixture, ComponentSetAddAnotherComponent)
 {
-    mSet.addComponent(GridbrainComponent::IN);
-    GridbrainComponent* comp = mSet.getRandom();
-    CHECK((comp->mType == GridbrainComponent::OUT) || (comp->mType == GridbrainComponent::IN));
+    mSet.addComponent(Component::IN);
+    Component* comp = mSet.getRandom();
+    CHECK((comp->mType == Component::OUT) || (comp->mType == Component::IN));
 }*/
 

@@ -28,7 +28,7 @@ CompINV::~CompINV()
 {
 }
 
-GridbrainComponent* CompINV::clone()
+Component* CompINV::clone()
 {
     return new CompINV();
 }

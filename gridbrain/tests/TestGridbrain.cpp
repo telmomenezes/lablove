@@ -173,8 +173,8 @@ TEST_FIXTURE(GridbrainFixture, GridbrainAddRandomConnections9)
 
 TEST_FIXTURE(GridbrainFixture, GridbrainGetComponent)
 {
-    GridbrainComponent* comp = mGridbrain.getComponent(0, 0, 0);
-    CHECK_EQUAL(comp->mType, GridbrainComponent::NUL);
+    Component* comp = mGridbrain.getComponent(0, 0, 0);
+    CHECK_EQUAL(comp->mType, Component::NUL);
     CHECK(mGridbrain.isValid());
 }
 

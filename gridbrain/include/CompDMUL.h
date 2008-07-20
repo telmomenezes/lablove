@@ -20,18 +20,18 @@
 #ifndef _INCLUDE_GRIDBRAIN_COMPONENT_DMUL_H
 #define _INCLUDE_GRIDBRAIN_COMPONENT_DMUL_H
 
-#include "GridbrainComponent.h"
+#include "Component.h"
 
 #include <map>
 using std::map;
 
-class CompDMUL : public GridbrainComponent
+class CompDMUL : public Component
 {
 public:
     CompDMUL();
     virtual ~CompDMUL();
 
-    virtual GridbrainComponent* clone();
+    virtual Component* clone();
 
     virtual void input(float value, int pin);
     virtual float output(unsigned int id);
@@ -41,7 +41,7 @@ public:
     virtual ConnType getConnectorType(){return CONN_INOUT;}
 
     virtual bool isUnique(){return false;}
-    virtual bool compare(GridbrainComponent* comp){return true;}
+    virtual bool compare(Component* comp){return true;}
 
 protected:
     map<int, float> mInputVals;

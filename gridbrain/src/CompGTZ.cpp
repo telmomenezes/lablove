@@ -28,7 +28,7 @@ CompGTZ::~CompGTZ()
 {
 }
 
-GridbrainComponent* CompGTZ::clone()
+Component* CompGTZ::clone()
 {
     return new CompGTZ();
 }

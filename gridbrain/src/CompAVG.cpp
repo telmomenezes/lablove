@@ -31,7 +31,7 @@ CompAVG::~CompAVG()
 {
 }
 
-GridbrainComponent* CompAVG::clone()
+Component* CompAVG::clone()
 {
     return new CompAVG();
 }

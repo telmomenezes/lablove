@@ -28,7 +28,7 @@ CompMUL::~CompMUL()
 {
 }
 
-GridbrainComponent* CompMUL::clone()
+Component* CompMUL::clone()
 {
     return new CompMUL();
 }

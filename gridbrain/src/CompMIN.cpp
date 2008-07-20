@@ -31,7 +31,7 @@ CompMIN::~CompMIN()
 {
 }
 
-GridbrainComponent* CompMIN::clone()
+Component* CompMIN::clone()
 {
     return new CompMIN();
 }

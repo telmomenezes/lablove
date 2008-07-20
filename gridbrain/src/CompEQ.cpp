@@ -28,7 +28,7 @@ CompEQ::~CompEQ()
 {
 }
 
-GridbrainComponent* CompEQ::clone()
+Component* CompEQ::clone()
 {
     return new CompEQ();
 }

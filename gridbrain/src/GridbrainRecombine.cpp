@@ -31,14 +31,14 @@ void Gridbrain::clearRecombineInfo()
     }
 }
 
-GridbrainComponent* Gridbrain::findEquivalentComponent(GridbrainComponent* comp)
+Component* Gridbrain::findEquivalentComponent(Component* comp)
 {
     int bestEq = 0;
-    GridbrainComponent* eqComp = NULL;
+    Component* eqComp = NULL;
 
     for (unsigned int i = 0; i < mNumberOfComponents; i++)
     {
-        GridbrainComponent* comp2 = mComponents[i];
+        Component* comp2 = mComponents[i];
 
         int eq = compEquivalence(comp, comp2, CET_NEW);
 
@@ -59,8 +59,8 @@ GridbrainComponent* Gridbrain::findEquivalentComponent(GridbrainComponent* comp)
 
 Gridbrain* Gridbrain::importComponent(Gridbrain* gbTarg,
                                         Gridbrain* gbOrig,
-                                        GridbrainComponent* compOrig,
-                                        GridbrainComponent*& compTarg)
+                                        Component* compOrig,
+                                        Component*& compTarg)
 {
     Gridbrain* brain = gbTarg;
 
@@ -124,10 +124,10 @@ Gridbrain* Gridbrain::importComponent(Gridbrain* gbTarg,
         unsigned int end = start + gridTarg->getSize();
         for (unsigned int i = start; i < end; i++)
         {
-            GridbrainComponent* checkComp = brain->mComponents[i];
+            Component* checkComp = brain->mComponents[i];
             if (checkComp->isEqual(compOrig))
             {
-                GridbrainComponent* newComp = gridTarg->getRandomComponent();
+                Component* newComp = gridTarg->getRandomComponent();
                 brain->replaceComponent(i, newComp);
             }
         }
@@ -144,8 +144,8 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gbTarg,
 {
     Gridbrain* brain = gbTarg;
 
-    GridbrainComponent* orig = (GridbrainComponent*)(conn->mOrigComponent);
-    GridbrainComponent* targ = (GridbrainComponent*)(conn->mTargComponent);
+    Component* orig = (Component*)(conn->mOrigComponent);
+    Component* targ = (Component*)(conn->mTargComponent);
 
     unsigned int g1 = orig->mGrid;
     unsigned int g2 = targ->mGrid;
@@ -155,8 +155,8 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gbTarg,
     GridCoord cX2;
     GridCoord cY2;
 
-    GridbrainComponent* eqOrig = brain->findEquivalentComponent(orig);
-    GridbrainComponent* eqTarg = brain->findEquivalentComponent(targ);
+    Component* eqOrig = brain->findEquivalentComponent(orig);
+    Component* eqTarg = brain->findEquivalentComponent(targ);
 
     Grid* grid1 = brain->getGrid(g1);
     Grid* grid2 = brain->getGrid(g2);
@@ -320,14 +320,14 @@ void Gridbrain::selectConnUniform(Gridbrain* gb1, Gridbrain* gb2)
     }
 }
 
-void Gridbrain::selectPath(GridbrainComponent* comp)
+void Gridbrain::selectPath(Component* comp)
 {
     GridbrainConnection* conn = comp->mFirstInConnection;
     
     while (conn != NULL)
     {
         selectGene(conn->mGeneTag.mGeneID, true);
-        selectPath((GridbrainComponent*)conn->mOrigComponent);
+        selectPath((Component*)conn->mOrigComponent);
         conn = (GridbrainConnection*)conn->mNextInConnection;
     }
 }
@@ -337,13 +337,13 @@ void Gridbrain::selectConnPaths(Gridbrain* gb1, Gridbrain* gb2)
     // Select paths
     for (unsigned int i = 0; i < gb1->mNumberOfComponents; i++)
     {
-        GridbrainComponent* comp1 = gb1->mComponents[i];
+        Component* comp1 = gb1->mComponents[i];
 
         if (comp1->mActive
             && (comp1->mInboundConnections > 0)
             && (comp1->mConnectionsCount == 0))
         {
-            GridbrainComponent* comp2 = gb2->findEquivalentComponent(comp1);
+            Component* comp2 = gb2->findEquivalentComponent(comp1);
 
             if (comp2 == NULL)
             {
@@ -367,13 +367,13 @@ void Gridbrain::selectConnPaths(Gridbrain* gb1, Gridbrain* gb2)
     }
     for (unsigned int i = 0; i < gb2->mNumberOfComponents; i++)
     {
-        GridbrainComponent* comp2 = gb2->mComponents[i];
+        Component* comp2 = gb2->mComponents[i];
 
         if (comp2->mActive
             && (comp2->mInboundConnections > 0)
             && (comp2->mConnectionsCount == 0))
         {
-            GridbrainComponent* comp1 = gb1->findEquivalentComponent(comp2);
+            Component* comp1 = gb1->findEquivalentComponent(comp2);
 
             if (comp1 == NULL)
             {
@@ -529,7 +529,7 @@ Brain* Gridbrain::recombine(Brain* brain)
     return gbNew;
 }
 
-bool Gridbrain::exists(GridbrainComponent* comp, unsigned int ex, unsigned int ey)
+bool Gridbrain::exists(Component* comp, unsigned int ex, unsigned int ey)
 {
     Grid* grid = mGridsVec[comp->mGrid];
     unsigned int startPos = grid->getOffset();
@@ -537,7 +537,7 @@ bool Gridbrain::exists(GridbrainComponent* comp, unsigned int ex, unsigned int e
 
     for (unsigned int pos = startPos; pos < endPos; pos++)
     {
-        GridbrainComponent* comp2 = mComponents[pos];
+        Component* comp2 = mComponents[pos];
 
         if ((comp2->mColumn != ex) || (comp2->mRow != ey))
         {
@@ -567,7 +567,7 @@ void Gridbrain::recombineUnusedComponents(Gridbrain* gb1, Gridbrain* gb2)
 
             for (unsigned int y = 0; y < gridChild->getHeight(); y++)
             {
-                GridbrainComponent* comp = getComponent(x, y, g);
+                Component* comp = getComponent(x, y, g);
 
                 if (!comp->isUsed())
                 {
@@ -575,8 +575,8 @@ void Gridbrain::recombineUnusedComponents(Gridbrain* gb1, Gridbrain* gb2)
                     int y1 = gridP1->getRowByCoord(rowCoord);
                     int y2 = gridP2->getRowByCoord(rowCoord);
 
-                    GridbrainComponent* comp1 = NULL;
-                    GridbrainComponent* comp2 = NULL;
+                    Component* comp1 = NULL;
+                    Component* comp2 = NULL;
                     bool choice1 = false;
                     bool choice2 = false;
 
@@ -625,7 +625,7 @@ void Gridbrain::recombineUnusedComponents(Gridbrain* gb1, Gridbrain* gb2)
     }
 }
 
-int Gridbrain::compEquivalence(GridbrainComponent* comp1, GridbrainComponent* comp2, CompEquivalenceType eqType)
+int Gridbrain::compEquivalence(Component* comp1, Component* comp2, CompEquivalenceType eqType)
 {
     if (!comp1->isEqual(comp2))
     {
@@ -705,10 +705,10 @@ GridbrainGeneTag Gridbrain::findGeneTag(GridbrainConnection* conn)
     {
         if (conn != conn2)
         {
-            GridbrainComponent* orig1 = (GridbrainComponent*)conn->mOrigComponent;
-            GridbrainComponent* targ1 = (GridbrainComponent*)conn->mTargComponent;
-            GridbrainComponent* orig2 = (GridbrainComponent*)conn2->mOrigComponent;
-            GridbrainComponent* targ2 = (GridbrainComponent*)conn2->mTargComponent;
+            Component* orig1 = (Component*)conn->mOrigComponent;
+            Component* targ1 = (Component*)conn->mTargComponent;
+            Component* orig2 = (Component*)conn2->mOrigComponent;
+            Component* targ2 = (Component*)conn2->mTargComponent;
 
             int eq1 = compEquivalence(orig1, orig2, CET_ORIGIN);
             int eq2 = compEquivalence(targ1, targ2, CET_TARGET);
@@ -741,7 +741,7 @@ void Gridbrain::popAdjust(vector<SimObj*>* popVec)
 {
     for (unsigned int pos = 0; pos < mNumberOfComponents; pos++)
     {
-        GridbrainComponent* comp = mComponents[pos];
+        Component* comp = mComponents[pos];
 
         GridbrainConnection* conn = comp->mFirstConnection;
         while (conn != NULL)
@@ -764,8 +764,8 @@ void Gridbrain::popAdjust(vector<SimObj*>* popVec)
             // If no tag assigned, try to associate with an existing gene
             if (mGeneGrouping && (conn->mGeneTag.mGeneID == 0))
             {
-                GridbrainComponent* orig = (GridbrainComponent*)conn->mOrigComponent;
-                GridbrainComponent* targ = (GridbrainComponent*)conn->mTargComponent;
+                Component* orig = (Component*)conn->mOrigComponent;
+                Component* targ = (Component*)conn->mTargComponent;
 
                 unsigned int count = orig->mInboundConnections + targ->mConnectionsCount;
 

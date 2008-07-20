@@ -29,8 +29,8 @@
 #include "DummyBrain.h"
 #include "Gridbrain.h"
 #include "Grid.h"
-#include "GridbrainComponent.h"
-#include "GridbrainComponentSet.h"
+#include "Component.h"
+#include "ComponentSet.h"
 #include "SymbolTable.h"
 #include "SymbolBitString.h"
 #include "SymbolRGB.h"
@@ -159,8 +159,8 @@ int main(int argc, char *argv[])
     Orbit<DummyBrain>::orbitRegister(luaState);
     Orbit<Gridbrain>::orbitRegister(luaState);
     Orbit<Grid>::orbitRegister(luaState);
-    Orbit<GridbrainComponent>::orbitRegister(luaState);
-    Orbit<GridbrainComponentSet>::orbitRegister(luaState);
+    Orbit<Component>::orbitRegister(luaState);
+    Orbit<ComponentSet>::orbitRegister(luaState);
     Orbit<SymbolTable>::orbitRegister(luaState);
     Orbit<SymbolBitString>::orbitRegister(luaState);
     Orbit<SymbolRGB>::orbitRegister(luaState);

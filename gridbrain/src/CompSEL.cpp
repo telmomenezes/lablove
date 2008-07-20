@@ -33,7 +33,7 @@ CompSEL::~CompSEL()
 {
 }
 
-GridbrainComponent* CompSEL::clone()
+Component* CompSEL::clone()
 {
     return new CompSEL();
 }

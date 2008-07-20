@@ -28,7 +28,7 @@ CompMOD::~CompMOD()
 {
 }
 
-GridbrainComponent* CompMOD::clone()
+Component* CompMOD::clone()
 {
     return new CompMOD();
 }

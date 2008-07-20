@@ -28,9 +28,9 @@
 
 #include "Brain.h"
 #include "Grid.h"
-#include "GridbrainComponent.h"
+#include "Component.h"
 #include "GridbrainConnection.h"
-#include "GridbrainComponentSet.h"
+#include "ComponentSet.h"
 #include "RandDistManager.h"
 #include "types.h"
 #include "SimObj.h"
@@ -61,7 +61,7 @@ public:
     virtual float* getInputBuffer(unsigned int channel, unsigned int id=0);
     virtual float* getOutputBuffer();
 
-    GridbrainComponent* getComponent(unsigned int x,
+    Component* getComponent(unsigned int x,
                 unsigned int y,
                 unsigned int gridNumber);
     void addConnection(unsigned int xOrig,
@@ -124,11 +124,11 @@ public:
     virtual void mutate(float factor=1.0f);
     virtual Brain* recombine(Brain* brain);
 
-    GridbrainComponent* setComponent(unsigned int x, unsigned int y, unsigned int g, GridbrainComponent& comp);
+    Component* setComponent(unsigned int x, unsigned int y, unsigned int g, Component& comp);
     void setComponent(unsigned int x,
                 unsigned int y,
                 unsigned int gridNumber,
-                GridbrainComponent::Type type,
+                Component::Type type,
                 float param=0.0f,
                 int subType=-1,
                 InterfaceItem::TableLinkType linkType=InterfaceItem::NO_LINK,
@@ -136,7 +136,7 @@ public:
                 llULINT origSymID=0,
                 int targetSymTable=-1);
 
-    GridbrainComponent* replaceComponent(unsigned int pos, GridbrainComponent* comp);
+    Component* replaceComponent(unsigned int pos, Component* comp);
 
     void setMutateAddConnectionProb(float prob){mMutateAddConnectionProb = prob;}
     void setMutateRemoveConnectionProb(float prob){mMutateRemoveConnectionProb = prob;}
@@ -247,23 +247,23 @@ protected:
 
     unsigned int generateEventCount(float eventProb, unsigned int popSize);
 
-    unsigned int getRelativeOffset(GridbrainComponent* compOrig,
+    unsigned int getRelativeOffset(Component* compOrig,
                                             unsigned int targX,
                                             unsigned int targY,
                                             unsigned int targG);
-    GridbrainComponent* getCompByRelativeOffset(GridbrainComponent* compOrig, unsigned int offset);
+    Component* getCompByRelativeOffset(Component* compOrig, unsigned int offset);
 
     void clearRecombineInfo();
     void selectConnUniform(Gridbrain* gb1, Gridbrain* gb2);
-    void selectPath(GridbrainComponent* comp);
+    void selectPath(Component* comp);
     void selectConnPaths(Gridbrain* gb1, Gridbrain* gb2);
-    bool exists(GridbrainComponent* comp, unsigned int ex, unsigned int ey);
+    bool exists(Component* comp, unsigned int ex, unsigned int ey);
     void recombineUnusedComponents(Gridbrain* gb1, Gridbrain* gb2);
-    GridbrainComponent* findEquivalentComponent(GridbrainComponent* comp);
+    Component* findEquivalentComponent(Component* comp);
     Gridbrain* importComponent(Gridbrain* gbTarg,
                                 Gridbrain* gbOrig,
-                                GridbrainComponent* compOrig,
-                                GridbrainComponent*& compTarg);
+                                Component* compOrig,
+                                Component*& compTarg);
     Gridbrain* importConnection(Gridbrain* gbTarg,
                                 Gridbrain* gbOrig,
                                 GridbrainConnection* conn);
@@ -272,7 +272,7 @@ protected:
     bool isGeneSelected(llULINT geneID);
     bool selectGene(llULINT geneID, bool select);
 
-    int compEquivalence(GridbrainComponent* comp1, GridbrainComponent* comp2, CompEquivalenceType eqType);
+    int compEquivalence(Component* comp1, Component* comp2, CompEquivalenceType eqType);
     GridbrainGeneTag findGeneTag(GridbrainConnection* conn);
     virtual void popAdjust(vector<SimObj*>* popVec);
 
@@ -284,7 +284,7 @@ protected:
 
     vector<Grid*> mGridsVec;
 
-    vector<GridbrainComponent*> mComponents;
+    vector<Component*> mComponents;
     unsigned int mMaxInputDepth;
     unsigned int mNumberOfComponents;
     GridbrainConnection* mConnections;

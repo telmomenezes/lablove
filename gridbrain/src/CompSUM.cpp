@@ -28,7 +28,7 @@ CompSUM::~CompSUM()
 {
 }
 
-GridbrainComponent* CompSUM::clone()
+Component* CompSUM::clone()
 {
     return new CompSUM();
 }

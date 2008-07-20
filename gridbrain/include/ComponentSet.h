@@ -20,7 +20,7 @@
 #ifndef __INCLUDE_GRIDBRAIN_COMPONENT_SET_H
 #define __INCLUDE_GRIDBRAIN_COMPONENT_SET_H
 
-#include "GridbrainComponent.h"
+#include "Component.h"
 #include "CompNUL.h"
 #include "Orbit.h"
 #include "RandDistManager.h"
@@ -31,41 +31,41 @@
 
 using std::vector;
 
-class GridbrainComponentSet
+class ComponentSet
 {
 public:
-    GridbrainComponentSet();
-    GridbrainComponentSet(lua_State* luaState);
-    GridbrainComponentSet(GridbrainComponentSet* comp);
-    virtual ~GridbrainComponentSet();
+    ComponentSet();
+    ComponentSet(lua_State* luaState);
+    ComponentSet(ComponentSet* comp);
+    virtual ~ComponentSet();
 
-    void addComponent(GridbrainComponent* component);
-    void addComponent(GridbrainComponent::Type type,
+    void addComponent(Component* component);
+    void addComponent(Component::Type type,
                 int subType=-1,
                 InterfaceItem::TableLinkType linkType=InterfaceItem::NO_LINK,
                 int origSymTable=-1,
                 llULINT origSymID=0,
                 int targetSymTable=-1);
-    GridbrainComponent* getRandom();
+    Component* getRandom();
 
     void update(SimObj* obj,
-                vector<GridbrainComponent*>* components,
+                vector<Component*>* components,
                 unsigned int start,
                 unsigned int end);
 
-    void disable(GridbrainComponent* comp);
-    void enable(GridbrainComponent* comp);
+    void disable(Component* comp);
+    void enable(Component* comp);
 
     void print();
 
     static const char mClassName[];
-    static Orbit<GridbrainComponentSet>::MethodType mMethods[];
-    static Orbit<GridbrainComponentSet>::NumberGlobalType mNumberGlobals[];
+    static Orbit<ComponentSet>::MethodType mMethods[];
+    static Orbit<ComponentSet>::NumberGlobalType mNumberGlobals[];
 
     int addComponent(lua_State* luaState);
 
-    vector<GridbrainComponent*> mComponentVec;
-    vector<GridbrainComponent*> mComponentSet;
+    vector<Component*> mComponentVec;
+    vector<Component*> mComponentSet;
 
 protected:
     static mt_distribution* mDistComponentSet;

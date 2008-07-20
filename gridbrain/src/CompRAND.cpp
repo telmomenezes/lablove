@@ -30,7 +30,7 @@ CompRAND::~CompRAND()
 {
 }
 
-GridbrainComponent* CompRAND::clone()
+Component* CompRAND::clone()
 {
     return new CompRAND();
 }

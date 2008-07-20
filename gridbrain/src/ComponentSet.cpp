@@ -17,20 +17,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "GridbrainComponentSet.h"
+#include "ComponentSet.h"
 #include "Gridbrain.h"
 
-mt_distribution* GridbrainComponentSet::mDistComponentSet = gDistManager.getNewDistribution();
+mt_distribution* ComponentSet::mDistComponentSet = gDistManager.getNewDistribution();
 
-GridbrainComponentSet::GridbrainComponentSet()
+ComponentSet::ComponentSet()
 {
 }
 
-GridbrainComponentSet::GridbrainComponentSet(lua_State* luaState)
+ComponentSet::ComponentSet(lua_State* luaState)
 {
 }
 
-GridbrainComponentSet::GridbrainComponentSet(GridbrainComponentSet* comp)
+ComponentSet::ComponentSet(ComponentSet* comp)
 {
     for (unsigned int i = 0; i < comp->mComponentVec.size(); i++)
     {
@@ -38,7 +38,7 @@ GridbrainComponentSet::GridbrainComponentSet(GridbrainComponentSet* comp)
     }
 }
 
-GridbrainComponentSet::~GridbrainComponentSet()
+ComponentSet::~ComponentSet()
 {
     for (unsigned int i = 0; i < mComponentSet.size(); i++)
     {
@@ -47,14 +47,14 @@ GridbrainComponentSet::~GridbrainComponentSet()
     mComponentSet.clear();
 }
 
-void GridbrainComponentSet::addComponent(GridbrainComponent* component)
+void ComponentSet::addComponent(Component* component)
 {
     mComponentVec.push_back(component->clone());
 }
 
-GridbrainComponent* GridbrainComponentSet::getRandom()
+Component* ComponentSet::getRandom()
 {
-    GridbrainComponent* comp;
+    Component* comp;
 
     if (mComponentSet.size() <= 0)
     {
@@ -71,8 +71,8 @@ GridbrainComponent* GridbrainComponentSet::getRandom()
     }
 }
 
-void GridbrainComponentSet::update(SimObj* obj,
-                                    vector<GridbrainComponent*>* components,
+void ComponentSet::update(SimObj* obj,
+                                    vector<Component*>* components,
                                     unsigned int start,
                                     unsigned int end)
 {
@@ -84,7 +84,7 @@ void GridbrainComponentSet::update(SimObj* obj,
 
     for (unsigned int i = 0; i < mComponentVec.size(); i++)
     {
-        GridbrainComponent* comp = mComponentVec[i];
+        Component* comp = mComponentVec[i];
 
         if (comp->mTableLinkType == InterfaceItem::TAB_TO_SYM)
         {
@@ -98,14 +98,14 @@ void GridbrainComponentSet::update(SimObj* obj,
                     iterSym++)
             {
                 llULINT symID = (*iterSym).first;
-                GridbrainComponent* newComp = comp->clone();
+                Component* newComp = comp->clone();
                 newComp->mOrigSymID = symID;
                 mComponentSet.push_back(newComp);
             }
         }
         else
         {
-            GridbrainComponent* newComp = comp->clone();
+            Component* newComp = comp->clone();
             mComponentSet.push_back(newComp);
         }
     }
@@ -114,7 +114,7 @@ void GridbrainComponentSet::update(SimObj* obj,
             pos < end;
             pos++)
     {
-        GridbrainComponent* comp = (*components)[pos];
+        Component* comp = (*components)[pos];
 
         if (comp->isUnique())
         {
@@ -123,14 +123,14 @@ void GridbrainComponentSet::update(SimObj* obj,
     }
 }
 
-void GridbrainComponentSet::disable(GridbrainComponent* comp)
+void ComponentSet::disable(Component* comp)
 {
     if (!comp->isUnique())
     {
         return;
     }
 
-    for (vector<GridbrainComponent*>::iterator iterComp = mComponentSet.begin();
+    for (vector<Component*>::iterator iterComp = mComponentSet.begin();
             iterComp != mComponentSet.end();
             iterComp++)
     {
@@ -143,25 +143,25 @@ void GridbrainComponentSet::disable(GridbrainComponent* comp)
     }
 }
 
-void GridbrainComponentSet::enable(GridbrainComponent* comp)
+void ComponentSet::enable(Component* comp)
 {
     if (!comp->isUnique())
     {
         return;
     }
 
-    GridbrainComponent* newComp = comp->clone();
+    Component* newComp = comp->clone();
     mComponentSet.push_back(newComp);
 }
 
-void GridbrainComponentSet::addComponent(GridbrainComponent::Type type,
+void ComponentSet::addComponent(Component::Type type,
                         int subType,
                         InterfaceItem::TableLinkType linkType,
                         int origSymTable,
                         llULINT origSymID,
                         int targetSymTable)
 {
-    GridbrainComponent* comp = GridbrainComponent::createByType(type);
+    Component* comp = Component::createByType(type);
     comp->mSubType = subType;
     comp->mOrigSymTable = origSymTable;
     comp->mTargetSymTable = targetSymTable;
@@ -170,27 +170,27 @@ void GridbrainComponentSet::addComponent(GridbrainComponent::Type type,
     addComponent(comp);
 }
 
-void GridbrainComponentSet::print()
+void ComponentSet::print()
 {
     for (unsigned int i = 0; i < mComponentSet.size(); i++)
     {
-        GridbrainComponent* comp = mComponentSet[i];
+        Component* comp = mComponentSet[i];
         printf("%s", comp->getName().c_str());
         printf("(%d)[%d] ", comp->mSubType, comp->mOrigSymID);
     }
     printf("\n");
 }
 
-const char GridbrainComponentSet::mClassName[] = "GridbrainComponentSet";
+const char ComponentSet::mClassName[] = "ComponentSet";
 
-Orbit<GridbrainComponentSet>::MethodType GridbrainComponentSet::mMethods[] = {
-    {"addComponent", &GridbrainComponentSet::addComponent},
+Orbit<ComponentSet>::MethodType ComponentSet::mMethods[] = {
+    {"addComponent", &ComponentSet::addComponent},
     {0,0}
 };
 
-Orbit<GridbrainComponentSet>::NumberGlobalType GridbrainComponentSet::mNumberGlobals[] = {{0,0}};
+Orbit<ComponentSet>::NumberGlobalType ComponentSet::mNumberGlobals[] = {{0,0}};
 
-int GridbrainComponentSet::addComponent(lua_State* luaState)
+int ComponentSet::addComponent(lua_State* luaState)
 {
     int type = luaL_checkint(luaState, 1);
     int subType = luaL_optint(luaState, 2, -1);
@@ -199,7 +199,7 @@ int GridbrainComponentSet::addComponent(lua_State* luaState)
     int origSymIndex = luaL_optint(luaState, 5, -1);
     int targetSymTable = luaL_optint(luaState, 6, -1);
 
-    addComponent((GridbrainComponent::Type)type,
+    addComponent((Component::Type)type,
                     subType,
                     linkType,
                     origSymTable,

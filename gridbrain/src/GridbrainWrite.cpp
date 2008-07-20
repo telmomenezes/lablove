@@ -141,7 +141,7 @@ string Gridbrain::write(SimObj* obj, Simulation* sim)
         {
             for (unsigned int y = 0; y < grid->getHeight(); y++)
             {
-                GridbrainComponent* comp = getComponent(x, y, i);
+                Component* comp = getComponent(x, y, i);
                 if (comp->mActive)
                 {
                     color = black;
@@ -164,11 +164,11 @@ string Gridbrain::write(SimObj* obj, Simulation* sim)
 
                 int labelY = compY + 3;
 
-                if ((comp->mType == GridbrainComponent::IN)
-                    || (comp->mType == GridbrainComponent::OUT))
+                if ((comp->mType == Component::IN)
+                    || (comp->mType == Component::OUT))
                 {
                     labelY += 5;
-                    string subName = sim->getInterfaceName(comp->mType == GridbrainComponent::IN, comp->mSubType);
+                    string subName = sim->getInterfaceName(comp->mType == Component::IN, comp->mSubType);
                     if (subName == "?")
                     {
                         subName = obj->getTableName(comp->mOrigSymTable);
@@ -193,11 +193,11 @@ string Gridbrain::write(SimObj* obj, Simulation* sim)
                     svg += buffer;
                     labelY -= 10;
                 }
-                else if ((comp->mType == GridbrainComponent::AMP)
-                    || (comp->mType == GridbrainComponent::CLK))
+                else if ((comp->mType == Component::AMP)
+                    || (comp->mType == Component::CLK))
                 {
                     labelY += 5;
-                    string subName = sim->getInterfaceName(comp->mType == GridbrainComponent::IN, comp->mSubType);
+                    string subName = sim->getInterfaceName(comp->mType == Component::IN, comp->mSubType);
                     if (subName == "?")
                     {
                         subName = obj->getTableName(comp->mOrigSymTable);
@@ -217,8 +217,8 @@ string Gridbrain::write(SimObj* obj, Simulation* sim)
 
     while (conn != NULL)
     {
-        GridbrainComponent* origComp = (GridbrainComponent*)conn->mOrigComponent;
-        GridbrainComponent* targComp = (GridbrainComponent*)conn->mTargComponent;
+        Component* origComp = (Component*)conn->mOrigComponent;
+        Component* targComp = (Component*)conn->mTargComponent;
         if (origComp->mActive && targComp->mActive)
         {
             color = black;
@@ -302,7 +302,7 @@ void Gridbrain::printDebug()
         {
             for (unsigned int x = 0; x < grid->getWidth(); x++)
             {
-                GridbrainComponent* comp = getComponent(x, y, i);
+                Component* comp = getComponent(x, y, i);
                 printf("%s(%d)\t", comp->getName().c_str(), comp->mSubType);
             }
             printf("\n");
@@ -322,8 +322,8 @@ void Gridbrain::printDebug()
 
 void Gridbrain::printConnection(GridbrainConnection* conn)
 {
-    GridbrainComponent* comp1 = (GridbrainComponent*)conn->mOrigComponent;
-    GridbrainComponent* comp2 = (GridbrainComponent*)conn->mTargComponent;
+    Component* comp1 = (Component*)conn->mOrigComponent;
+    Component* comp2 = (Component*)conn->mTargComponent;
 
     comp1->print();
     printf(" -> ");

@@ -30,7 +30,7 @@ CompCLK::~CompCLK()
 {
 }
 
-GridbrainComponent* CompCLK::clone()
+Component* CompCLK::clone()
 {
     CompCLK* comp = new CompCLK();
     comp->mParam = mParam;

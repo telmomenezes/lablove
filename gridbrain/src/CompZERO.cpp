@@ -28,7 +28,7 @@ CompZERO::~CompZERO()
 {
 }
 
-GridbrainComponent* CompZERO::clone()
+Component* CompZERO::clone()
 {
     return new CompZERO();
 }

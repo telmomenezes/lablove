@@ -28,7 +28,7 @@ CompNUL::~CompNUL()
 {
 }
 
-GridbrainComponent* CompNUL::clone()
+Component* CompNUL::clone()
 {
     return new CompNUL();
 }

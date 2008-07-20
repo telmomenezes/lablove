@@ -20,15 +20,15 @@
 #ifndef _INCLUDE_GRIDBRAIN_COMPONENT_OUT_H
 #define _INCLUDE_GRIDBRAIN_COMPONENT_OUT_H
 
-#include "GridbrainComponent.h"
+#include "Component.h"
 
-class CompOUT : public GridbrainComponent
+class CompOUT : public Component
 {
 public:
     CompOUT();
     virtual ~CompOUT();
 
-    virtual GridbrainComponent* clone();
+    virtual Component* clone();
 
     virtual void input(float value, int pin);
     virtual float output(unsigned int id);
@@ -38,7 +38,7 @@ public:
     virtual ConnType getConnectorType(){return CONN_IN;}
 
     virtual bool isUnique(){return true;}
-    virtual bool compare(GridbrainComponent* comp);
+    virtual bool compare(Component* comp);
 
     virtual bool isConsumer(){return true;}
 };

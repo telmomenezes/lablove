@@ -17,10 +17,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "GridbrainComponent.h"
+#include "Component.h"
 #include "comps.h"
 
-GridbrainComponent::GridbrainComponent(lua_State* luaState)
+Component::Component(lua_State* luaState)
 {
     mSubType = -1;
     mParam = 0;
@@ -46,11 +46,11 @@ GridbrainComponent::GridbrainComponent(lua_State* luaState)
     clearMetrics();
 }
 
-GridbrainComponent::~GridbrainComponent()
+Component::~Component()
 {
 }
 
-void GridbrainComponent::clearMetrics()
+void Component::clearMetrics()
 {
     mDepth = 0;
     mProducer = false;
@@ -58,7 +58,7 @@ void GridbrainComponent::clearMetrics()
     mActive = false;
 }
 
-void GridbrainComponent::copyPosition(GridbrainComponent* comp)
+void Component::copyPosition(Component* comp)
 {
     mOffset = comp->mOffset;
     mColumn = comp->mColumn;
@@ -66,7 +66,7 @@ void GridbrainComponent::copyPosition(GridbrainComponent* comp)
     mGrid = comp->mGrid;
 }
 
-void GridbrainComponent::copyConnections(GridbrainComponent* comp)
+void Component::copyConnections(Component* comp)
 {
     mConnectionsCount = comp->mConnectionsCount;
     mInboundConnections = comp->mInboundConnections;
@@ -74,7 +74,7 @@ void GridbrainComponent::copyConnections(GridbrainComponent* comp)
     mFirstInConnection = comp->mFirstInConnection;
 }
 
-void GridbrainComponent::calcProducer(bool prod)
+void Component::calcProducer(bool prod)
 {
     if (mProducer)
     {
@@ -93,7 +93,7 @@ void GridbrainComponent::calcProducer(bool prod)
 
         while (conn != NULL)
         {
-            GridbrainComponent* targComp = (GridbrainComponent*)conn->mTargComponent;
+            Component* targComp = (Component*)conn->mTargComponent;
             targComp->calcProducer(true);
 
             conn = (GridbrainConnection*)conn->mNextConnection;
@@ -101,7 +101,7 @@ void GridbrainComponent::calcProducer(bool prod)
     }
 }
 
-bool GridbrainComponent::calcConsumer()
+bool Component::calcConsumer()
 {
     if (mConsumer)
     {
@@ -112,7 +112,7 @@ bool GridbrainComponent::calcConsumer()
 
     while (conn != NULL)
     {
-        GridbrainComponent* targComp = (GridbrainComponent*)conn->mTargComponent;
+        Component* targComp = (Component*)conn->mTargComponent;
         if (targComp->calcConsumer())
         {
             mConsumer = true;
@@ -131,7 +131,7 @@ bool GridbrainComponent::calcConsumer()
     return false;
 }
 
-bool GridbrainComponent::calcActive()
+bool Component::calcActive()
 {
     calcProducer(false);
     calcConsumer();
@@ -141,7 +141,7 @@ bool GridbrainComponent::calcActive()
     return mActive;
 }
 
-bool GridbrainComponent::isUsed()
+bool Component::isUsed()
 {
     if (mConnectionsCount > 0)
     {
@@ -155,21 +155,21 @@ bool GridbrainComponent::isUsed()
     return false;
 }
 
-bool GridbrainComponent::isEqual(GridbrainComponent* comp, bool sameGrid)
+bool Component::isEqual(Component* comp, bool sameGrid)
 {
     return ((mType == comp->mType)
             && ((!sameGrid) || (mGrid == comp->mGrid))
             && compare(comp));
 }
 
-void GridbrainComponent::print()
+void Component::print()
 {
     printf("%s", getName().c_str());
     printf("(%d)", mSubType);
     printf("  [%d, %d, %d]", mColumn, mRow, mGrid);
 }
 
-GridbrainComponent* GridbrainComponent::createByType(Type type)
+Component* Component::createByType(Type type)
 {
     switch(type)
     {
@@ -242,11 +242,11 @@ GridbrainComponent* GridbrainComponent::createByType(Type type)
     }
 }
 
-const char GridbrainComponent::mClassName[] = "GridbrainComponent";
+const char Component::mClassName[] = "Component";
 
-Orbit<GridbrainComponent>::MethodType GridbrainComponent::mMethods[] = {{0,0}};
+Orbit<Component>::MethodType Component::mMethods[] = {{0,0}};
 
-Orbit<GridbrainComponent>::NumberGlobalType GridbrainComponent::mNumberGlobals[] = {
+Orbit<Component>::NumberGlobalType Component::mNumberGlobals[] = {
     {"NUL", NUL},
     {"IN", IN},
     {"OUT", OUT},
