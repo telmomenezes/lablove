@@ -22,16 +22,11 @@
 
 Component::Component(lua_State* luaState)
 {
-    mSubType = -1;
     mParam = 0;
     mInput = 0;
     mOutput = 0;
     mPerceptionPosition = 0;
     mActionPosition = 0;
-    mOrigSymTable = -1;
-    mTargetSymTable = -1;
-    mOrigSymID = 0;
-    mTableLinkType = InterfaceItem::NO_LINK;
 
     mOffset = 0;
     mColumn = 0;
@@ -165,7 +160,7 @@ bool Component::isEqual(Component* comp, bool sameGrid)
 void Component::print()
 {
     printf("%s", getName().c_str());
-    printf("(%d)", mSubType);
+    printf("(%s)", getLabel().c_str());
     printf("  [%d, %d, %d]", mColumn, mRow, mGrid);
 }
 

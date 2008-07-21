@@ -26,6 +26,8 @@
 #include <math.h>
 #include <stdexcept>
 
+Simulation* Simulation::CURRENT = NULL;
+
 Simulation::Simulation(lua_State* luaState)
 {
     mSimulationTime = 0;
@@ -38,6 +40,8 @@ Simulation::Simulation(lua_State* luaState)
 
     mDrawGraphics = true;
     mDrawThisCycle = true;
+
+    CURRENT = this;
 }
 
 Simulation::~Simulation()

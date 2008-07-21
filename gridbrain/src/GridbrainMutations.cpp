@@ -23,6 +23,7 @@
 #include <string.h>
 #include <stdexcept>
 #include <float.h>
+#include <math.h>
 
 long Gridbrain::MUTATIONS_ADD_CONN = 0;
 long Gridbrain::MUTATIONS_REM_CONN = 0;

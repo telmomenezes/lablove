@@ -47,7 +47,7 @@ void LogBestBrain::process(SimObj* obj, Simulation* sim)
 
         if (obj->mType == SimObj::TYPE_AGENT)
         {
-            mBrainString = obj->getBrain()->write(obj, sim);
+            mBrainString = obj->getBrain()->write();
         }
     }
 }

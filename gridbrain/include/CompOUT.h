@@ -38,9 +38,17 @@ public:
     virtual ConnType getConnectorType(){return CONN_IN;}
 
     virtual bool isUnique(){return true;}
+    virtual bool isOutput(){return true;}
+
     virtual bool compare(Component* comp);
 
     virtual bool isConsumer(){return true;}
+
+    void setOutputType(unsigned int type){mOutputType = type;}
+    unsigned int getOutputType(){return mOutputType;}
+
+protected:
+    unsigned int mOutputType;
 };
 
 static CompOUT COMP_OUT;

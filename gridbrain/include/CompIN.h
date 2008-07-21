@@ -38,11 +38,17 @@ public:
     virtual ConnType getConnectorType(){return CONN_OUT;}
 
     virtual bool isUnique(){return true;}
+    virtual bool isInput(){return true;}
+
     virtual bool compare(Component* comp);
 
     virtual bool isProducer(){return true;}
 
+    void setInputType(unsigned int type){mInputType = type;}
+    unsigned int getInputType(){return mInputType;}
+
 protected:
+    unsigned int mInputType;
     float mState;
 };
 

@@ -3,8 +3,6 @@
 -- Amount of energy gathered from food is realtive to symbol_distance(feed,food)
 -- Food will be poisonous if symbol_distance(feed,food) > 0.5
 
-dofile("basic_defines.lua")
-
 -- Experiment Parameters
 --------------------------------------------------------------------------------
 

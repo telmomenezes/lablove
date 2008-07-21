@@ -17,29 +17,33 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_SIM_OBJ_HEX_H)
-#define __INCLUDE_SIM_OBJ_HEX_H
+#ifndef _INCLUDE_GRIDBRAIN_COMPONENT_ACT_H
+#define _INCLUDE_GRIDBRAIN_COMPONENT_ACT_H
 
-#include "SimObj2D.h"
+#include "CompOUT.h"
 #include "Orbit.h"
+#include "Interface.h"
 
-class SimObjHex : public SimObj2D
+class CompACT : public CompOUT, Interface
 {
 public:
-    SimObjHex(lua_State* luaState=NULL);
-    SimObjHex(SimObjHex* obj);
-    virtual ~SimObjHex();
-    virtual SimObj* clone();
-    
-    int mChannelTerrain;
-    int mHexX;
-    int mHexY;
+    CompACT(lua_State* luaState=NULL);
+    virtual ~CompACT();
 
-    bool mHumanPaint;
+    virtual Component* clone();
+
+    virtual string getName(){return "ACT";}
+
+    virtual bool compare(Component* comp);
+
+    virtual string getLabel();
 
     static const char mClassName[];
-    static Orbit<SimObjHex>::MethodType mMethods[];
-    static Orbit<SimObjHex>::NumberGlobalType mNumberGlobals[];
+    static Orbit<CompACT>::MethodType mMethods[];
+    static Orbit<CompACT>::NumberGlobalType mNumberGlobals[];
 };
+
+static CompACT COMP_ACT;
+
 #endif
 

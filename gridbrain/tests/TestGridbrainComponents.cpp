@@ -1504,18 +1504,18 @@ struct GridbrainCompFixture2
         mGridbrain.addGrid(mAlphaGrid, "alpha");
         mGridbrain.addGrid(mBetaGrid, "beta");
         mGridbrain.init();
-        Component* per1 = mGridbrain.setComponent(0, 0, 0, COMP_IN);
-        Component* per2 = mGridbrain.setComponent(0, 1, 0, COMP_IN);
-        Component* per3 = mGridbrain.setComponent(0, 2, 0, COMP_IN);
-        per1->mSubType = 0;
-        per2->mSubType = 1;
-        per3->mSubType = 2;
-        Component* act1 = mGridbrain.setComponent(2, 0, 1, COMP_OUT);
-        Component* act2 = mGridbrain.setComponent(2, 1, 1, COMP_OUT);
-        Component* act3 = mGridbrain.setComponent(2, 2, 1, COMP_OUT);
-        act1->mSubType = 0;
-        act2->mSubType = 1;
-        act3->mSubType = 2;
+        in1.setInputType(1);
+        in2.setInputType(2);
+        in3.setInputType(3);
+        Component* per1 = mGridbrain.setComponent(0, 0, 0, in1);
+        Component* per2 = mGridbrain.setComponent(0, 1, 0, in2);
+        Component* per3 = mGridbrain.setComponent(0, 2, 0, in3);
+        out1.setOutputType(1);
+        out2.setOutputType(2);
+        out3.setOutputType(3);
+        Component* act1 = mGridbrain.setComponent(2, 0, 1, out1);
+        Component* act2 = mGridbrain.setComponent(2, 1, 1, out2);
+        Component* act3 = mGridbrain.setComponent(2, 2, 1, out3);
         mGridbrain.setAllActive(true);
         mGridbrain.init();
     }
@@ -1531,6 +1531,13 @@ struct GridbrainCompFixture2
     Gridbrain mGridbrain;
     Grid* mAlphaGrid;
     Grid* mBetaGrid;
+   
+    CompIN in1;
+    CompIN in2;
+    CompIN in3;
+    CompOUT out1;
+    CompOUT out2;
+    CompOUT out3;
 };
 
 TEST_FIXTURE(GridbrainCompFixture2, GridbrainTwoLayersNoPerceptions)

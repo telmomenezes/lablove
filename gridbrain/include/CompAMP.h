@@ -39,6 +39,8 @@ public:
 
     virtual bool isUnique(){return false;}
     virtual bool compare(Component* comp){return true;}
+
+    virtual string getLabel();
 };
 
 static CompAMP COMP_AMP;

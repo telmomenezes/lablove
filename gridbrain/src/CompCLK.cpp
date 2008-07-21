@@ -82,3 +82,10 @@ float CompCLK::output(unsigned int id)
     return mOutput;
 }
 
+string CompCLK::getLabel()
+{
+    char buffer[255];
+    sprintf(buffer, "%f", mParam);
+    return buffer;
+}
+

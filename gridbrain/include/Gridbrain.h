@@ -26,15 +26,10 @@
 
 #include <stdio.h>
 
-#include "Brain.h"
 #include "Grid.h"
 #include "Component.h"
 #include "Connection.h"
-#include "ComponentSet.h"
 #include "RandDistManager.h"
-#include "types.h"
-#include "SimObj.h"
-#include "Simulation.h"
 
 #include <vector>
 #include <string>
@@ -42,7 +37,7 @@
 using std::vector;
 using std::string;
 
-class Gridbrain : public Brain
+class Gridbrain
 {
 public:
     enum ExpansionType {ET_NONE, ET_COLUMN, ET_ROW};
@@ -52,18 +47,18 @@ public:
     Gridbrain(lua_State* luaState=NULL);
     virtual ~Gridbrain();
 
-    virtual Brain* clone();
-    Gridbrain* clone(bool grow, ExpansionType expansion=ET_NONE, unsigned int targetGrid=0, Coord* gc=NULL);
+    Gridbrain* clone(bool grow=true, ExpansionType expansion=ET_NONE, unsigned int targetGrid=0, Coord* gc=NULL);
 
     void addGrid(Grid* grid, string name);
-    virtual void init();
+    void init();
 
-    virtual float* getInputBuffer(unsigned int channel, unsigned int id=0);
-    virtual float* getOutputBuffer();
+    float* getInputBuffer(unsigned int channel, unsigned int id=0);
+    float* getOutputBuffer();
 
     Component* getComponent(unsigned int x,
                 unsigned int y,
                 unsigned int gridNumber);
+    Component* getComponent(unsigned int pos){return mComponents[pos];}
     void addConnection(unsigned int xOrig,
                 unsigned int yOrig,
                 unsigned int gOrig,
@@ -121,20 +116,10 @@ public:
 
     virtual void draw(){}
 
-    virtual void mutate(float factor=1.0f);
-    virtual Brain* recombine(Brain* brain);
+    void mutate(float factor=1.0f);
+    Gridbrain* recombine(Gridbrain* brain);
 
     Component* setComponent(unsigned int x, unsigned int y, unsigned int g, Component& comp);
-    void setComponent(unsigned int x,
-                unsigned int y,
-                unsigned int gridNumber,
-                Component::Type type,
-                float param=0.0f,
-                int subType=-1,
-                InterfaceItem::TableLinkType linkType=InterfaceItem::NO_LINK,
-                int origSymTable=-1,
-                llULINT origSymID=0,
-                int targetSymTable=-1);
 
     Component* replaceComponent(unsigned int pos, Component* comp);
 
@@ -151,10 +136,10 @@ public:
     void setRecombinationType(RecombinationType type){mRecombinationType = type;}
     void setGeneGrouping(bool val){mGeneGrouping = val;}
 
-    virtual bool getFieldValue(string fieldName, float& value);
+    bool getFieldValue(string fieldName, float& value);
 
-    virtual string write(SimObj* obj, Simulation* sim);
-    virtual void printDebug();
+    string write();
+    void printDebug();
     void printConnection(Connection* conn);
 
     bool isConnectionValid(unsigned int xOrig,
@@ -172,16 +157,21 @@ public:
     void cleanInvalidConnections();
     bool isValid();
 
-    virtual bool symbolUsed(int tableID, llULINT symbolID);
-
     void setAllActive(bool active){mAllActive = active;}
 
     void update();
-    virtual void repair();
 
-    virtual float getDistance(Brain* brain);
+    float getDistance(Gridbrain* brain);
 
-    virtual void markUsedSymbols(TableSet* tab);
+    void generateGenes(vector<Gridbrain*>* brainVec);
+
+    int getChannelByName(string name);
+    string getChannelName(int chan);
+    list<Component*>* getInputInterface(unsigned int channel);
+    list<Component*>* getOutputInterface();
+
+    unsigned int getNumberOfComponents(){return mNumberOfComponents;}
+    unsigned int getGridsCount(){return mGridsCount;}
 
     static const char mClassName[];
     static Orbit<Gridbrain>::MethodType mMethods[];
@@ -274,7 +264,8 @@ protected:
 
     int compEquivalence(Component* comp1, Component* comp2, CompEquivalenceType eqType);
     GeneTag findGeneTag(Connection* conn);
-    virtual void popAdjust(vector<SimObj*>* popVec);
+
+    void clearInterfaces();
 
     static mt_distribution* mDistConnections;
     static mt_distribution* mDistMutationsProb;
@@ -319,7 +310,9 @@ protected:
 
     RecombinationType mRecombinationType;
 
-    llULINT mLastMemID;
+    vector<list<Component*>*> mInputInterfacesVector;
+    list<Component*> mOutputInterface;
+    map<string, int> mChannels;
 };
 
 #endif

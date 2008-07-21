@@ -18,10 +18,10 @@
  */
 
 #include "Gridbrain.h"
-#include "Simulation.h"
 
 #include <string.h>
 #include <stdexcept>
+#include <math.h>
 
 #define GRID_MARGIN 50
 #define COMPONENT_SIDE 40
@@ -99,7 +99,7 @@ void Gridbrain::getComponentWritePos(unsigned int& posX,
     posY = gridY + (y * (COMPONENT_SIDE + COMPONENT_MARGIN)) + (COMPONENT_SIDE / 2) + GRID_TITLE;
 }
 
-string Gridbrain::write(SimObj* obj, Simulation* sim)
+string Gridbrain::write()
 {
     string svg;
     char buffer[1000];
@@ -164,50 +164,26 @@ string Gridbrain::write(SimObj* obj, Simulation* sim)
 
                 int labelY = compY + 3;
 
-                if ((comp->mType == Component::IN)
-                    || (comp->mType == Component::OUT))
+                string label = comp->getLabel();
+                if (comp->getLabel() != "")
                 {
                     labelY += 5;
-                    string subName = sim->getInterfaceName(comp->mType == Component::IN, comp->mSubType);
-                    if (subName == "?")
-                    {
-                        subName = obj->getTableName(comp->mOrigSymTable);
-                        sprintf(buffer, "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"7\" fill=\"%s\">%s(%d)</text>\n", compX, labelY, color, subName.c_str(), obj->getSymbolTable(comp->mOrigSymTable)->getSymbolPos(comp->mOrigSymID));
-            
-                        /*int symPos = mOwner->getSymbolTable(comp->mOrigSymTable)->getSymbolPos(comp->mOrigSymID);
-                        printf("color[%d](%d)", comp->mOrigSymTable, symPos);
-                        printf("(%d)", comp->mOrigSymID);
-                        printf(" objID: %d\n", mOwner->getID());
-
-                        if (symPos < 0)
-                        {
-                            printf("######### DEBUG OWNER (%d)\n", mOwner->getID());
-                            mOwner->printDebug();
-                            throw std::runtime_error("xxx");
-                        }*/
-                    }
-                    else
-                    {
-                        sprintf(buffer, "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"7\" fill=\"%s\">%s</text>\n", compX, labelY, color, subName.c_str());
-                    }
-                    svg += buffer;
-                    labelY -= 10;
-                }
-                else if ((comp->mType == Component::AMP)
-                    || (comp->mType == Component::CLK))
-                {
-                    labelY += 5;
-                    string subName = sim->getInterfaceName(comp->mType == Component::IN, comp->mSubType);
-                    if (subName == "?")
-                    {
-                        subName = obj->getTableName(comp->mOrigSymTable);
-                    }
-                    sprintf(buffer, "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"7\" fill=\"%s\">%f</text>\n", compX, labelY, color, comp->mParam);
+                    sprintf(buffer,
+                        "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"7\" fill=\"%s\">%s</text>\n",
+                        compX,
+                        labelY,
+                        color,
+                        label.c_str());
                     svg += buffer;
                     labelY -= 10;
                 }
 
-                sprintf(buffer, "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"10\" fill=\"%s\">%s</text>\n", compX, labelY, color, comp->getName().c_str());
+                sprintf(buffer,
+                        "<text x=\"%d\" y=\"%d\" font-family=\"Arial\" text-anchor=\"middle\" font-size=\"10\" fill=\"%s\">%s</text>\n",
+                        compX,
+                        labelY,
+                        color,
+                        comp->getName().c_str());
                 svg += buffer;
             }
         }
@@ -303,7 +279,7 @@ void Gridbrain::printDebug()
             for (unsigned int x = 0; x < grid->getWidth(); x++)
             {
                 Component* comp = getComponent(x, y, i);
-                printf("%s(%d)\t", comp->getName().c_str(), comp->mSubType);
+                printf("%s(%s)\t", comp->getName().c_str(), comp->getLabel().c_str());
             }
             printf("\n");
         }

@@ -43,18 +43,12 @@ SET(SOURCE_FILES
     src/Simulation.cpp
     src/SimArtist.cpp
     src/Sim2D.cpp
-    src/SimHex.cpp
-    src/HexCell.cpp
     src/ScriptableObject.cpp
     src/SimObj.cpp
     src/Fitness.cpp
     src/SimObj2D.cpp
-    src/SimObjHex.cpp
     src/Target2D.cpp
     src/Laser2D.cpp
-    src/Brain.cpp
-    src/InterfaceItem.cpp
-    src/DummyBrain.cpp
     src/PopulationDynamics.cpp
     src/PopDynSEGA.cpp
     src/Species.cpp
@@ -74,6 +68,8 @@ SET(SOURCE_FILES
     src/StatCommon.cpp
     src/StatTime.cpp
     src/Message.cpp
+    src/CompPER.cpp
+    src/CompACT.cpp
     gridbrain/src/Gridbrain.cpp
     gridbrain/src/GridbrainMutations.cpp
     gridbrain/src/GridbrainRecombine.cpp

@@ -1128,71 +1128,69 @@ bool Sim2D::onMouseWheel(bool up)
     return true;
 }
 
-string Sim2D::getInterfaceName(bool input, int type)
+string Sim2D::getPerceptionName(int type)
 {
-    if (input)
+    switch (type)
     {
-        switch (type)
-        {
-        case PERCEPTION_IN_CONTACT:
-            return "contact";
-        case PERCEPTION_TARGET:
-            return "target";
-        case PERCEPTION_POSITION:
-            return "position";
-        case PERCEPTION_ORIENTATION:
-            return "orientation";
-        case PERCEPTION_DISTANCE:
-            return "distance";
-        case PERCEPTION_SIZE:
-            return "size";
-        case PERCEPTION_ENERGY:
-            return "energy";
-        case PERCEPTION_CAN_SPEAK:
-            return "canspeak";
-        case PERCEPTION_CAN_FIRE:
-            return "canfire";
-        case PERCEPTION_LTARGET:
-            return "ltarg";
-        case PERCEPTION_LOF:
-            return "lof";
-        case PERCEPTION_CONV:
-            return "conv";
-        case PERCEPTION_CONVDIR:
-            return "convdir";
-        case PERCEPTION_ID:
-            return "id";
-        case PERCEPTION_BLOCKED:
-            return "blocked";
-        case PERCEPTION_COMPASS:
-            return "compass";
-        case PERCEPTION_VALUE:
-            return "value";
-        default:
-            return "?";
-        }
+    case PERCEPTION_IN_CONTACT:
+        return "contact";
+    case PERCEPTION_TARGET:
+        return "target";
+    case PERCEPTION_POSITION:
+        return "position";
+    case PERCEPTION_ORIENTATION:
+        return "orientation";
+    case PERCEPTION_DISTANCE:
+        return "distance";
+    case PERCEPTION_SIZE:
+        return "size";
+    case PERCEPTION_ENERGY:
+        return "energy";
+    case PERCEPTION_CAN_SPEAK:
+        return "canspeak";
+    case PERCEPTION_CAN_FIRE:
+        return "canfire";
+    case PERCEPTION_LTARGET:
+        return "ltarg";
+    case PERCEPTION_LOF:
+        return "lof";
+    case PERCEPTION_CONV:
+        return "conv";
+    case PERCEPTION_CONVDIR:
+        return "convdir";
+    case PERCEPTION_ID:
+        return "id";
+    case PERCEPTION_BLOCKED:
+        return "blocked";
+    case PERCEPTION_COMPASS:
+        return "compass";
+    case PERCEPTION_VALUE:
+        return "value";
+    default:
+        return "";
     }
-    else
+}
+
+string Sim2D::getActionName(int type)
+{
+    switch (type)
     {
-        switch (type)
-        {
-        case ACTION_GO:
-            return "go";
-        case ACTION_ROTATE:
-            return "rotate";
-        case ACTION_EAT:
-            return "eat";
-        case ACTION_EATB:
-            return "eatB";
-        case ACTION_SPEAK:
-            return "speak";
-        case ACTION_FIRE:
-            return "fire";
-        case ACTION_FIREB:
-            return "fireB";
-        default:
-            return "?";
-        }
+    case ACTION_GO:
+        return "go";
+    case ACTION_ROTATE:
+        return "rotate";
+    case ACTION_EAT:
+        return "eat";
+    case ACTION_EATB:
+        return "eatB";
+    case ACTION_SPEAK:
+        return "speak";
+    case ACTION_FIRE:
+        return "fire";
+    case ACTION_FIREB:
+        return "fireB";
+    default:
+        return "";
     }
 }
 

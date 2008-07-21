@@ -21,7 +21,7 @@
 #define __INCLUDE_SIM_OBJ_H
 
 #include "TableSet.h"
-#include "Brain.h"
+#include "Gridbrain.h"
 #include "Message.h"
 #include "types.h"
 #include "Fitness.h"
@@ -74,8 +74,8 @@ public:
     virtual SimObj* recombine(SimObj* otherParent);
     virtual void mutate(float factor=1.0f);
 
-    void setBrain(Brain* brain);
-    Brain* getBrain(){return mBrain;}
+    void setBrain(Gridbrain* brain);
+    Gridbrain* getBrain(){return mBrain;}
 
     virtual void compute();
 
@@ -106,13 +106,15 @@ public:
     void clearFitnesses();
     virtual void updateFitnesses(){}
     
-    virtual void popAdjust(vector<SimObj*>* popVec);
-
     virtual void addMessage(Message* msg){mMessageList.push_back(msg);}
     list<Message*>* getMessageList(){return &mMessageList;}
     void emptyMessageList();
 
     virtual void printDebug();
+
+    void repairBrain();
+    bool symbolUsed(int tableID, llULINT symbolID);
+    void markUsedSymbols(TableSet* tab);
 
     void setDeathType(DeathType type){mDeathType = type;}
     DeathType getDeathType(){return mDeathType;}
@@ -142,6 +144,7 @@ public:
 
 protected:
     virtual void recombine(SimObj* parent1, SimObj* parent2);
+    void generateGridSets();
 
     llULINT mID;
 
@@ -153,7 +156,7 @@ protected:
     bool mKeepBodyOnHardDeath;
     bool mKeepBodyOnExpirationDeath;
 
-    Brain* mBrain;
+    Gridbrain* mBrain;
     list<Message*> mMessageList;
 
     DeathType mDeathType;

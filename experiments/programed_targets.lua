@@ -2,8 +2,6 @@
 -- Agents evolve to shoot at targets
 --------------------------------------------------------------------------------
 
-dofile("basic_defines.lua")
-
 -- Experiment Parameters
 --------------------------------------------------------------------------------
 
@@ -167,24 +165,24 @@ brain:addGrid(grid3, "beta")
 
 brain:init()
 
-brain:setComponent(0, 0, 0, IN, 0, Sim2D.PERCEPTION_LTARGET)
-brain:setComponent(0, 1, 0, IN, 0, Sim2D.PERCEPTION_SYMEQ, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
-brain:setComponent(0, 3, 0, IN, 0, Sim2D.PERCEPTION_LOF)
-brain:setComponent(1, 3, 0, NEG)
-brain:setComponent(1, 0, 0, IN, 0, Sim2D.PERCEPTION_POSITION)
-brain:setComponent(1, 1, 0, NOT)
-brain:setComponent(2, 1, 0, SEL, 0, 0, 0, 0, 0, 0)
-brain:setComponent(3, 1, 0, MUL)
-brain:setComponent(3, 2, 0, AND)
+brain:setComponent(0, 0, 0, PER(Sim2D.PERCEPTION_LTARGET))
+brain:setComponent(0, 1, 0, PER(Sim2D.PERCEPTION_SYMEQ, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode))
+brain:setComponent(0, 3, 0, PER(Sim2D.PERCEPTION_LOF))
+brain:setComponent(1, 3, 0, NEG())
+brain:setComponent(1, 0, 0, IN(Sim2D.PERCEPTION_POSITION))
+brain:setComponent(1, 1, 0, NOT())
+brain:setComponent(2, 1, 0, SEL())
+brain:setComponent(3, 1, 0, MUL())
+brain:setComponent(3, 2, 0, AND())
 
-brain:setComponent(0, 0, 1, IN, 0, Sim2D.PERCEPTION_SYMEQ, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
+brain:setComponent(0, 0, 1, IN())
 
-brain:setComponent(0, 0, 2, CLK, 0.2)
-brain:setComponent(1, 0, 2, DAND)
-brain:setComponent(2, 0, 2, OUT, 0, Sim2D.ACTION_FIREB)
-brain:setComponent(2, 1, 2, OUT, 0, Sim2D.ACTION_ROTATE)
-brain:setComponent(2, 2, 2, OUT, 0, Sim2D.ACTION_GO)
-brain:setComponent(2, 3, 2, OUT, 0, Sim2D.ACTION_SPEAK, SYM_TO_SYM, colorTableCode, agentColor:getID())
+--brain:setComponent(0, 0, 2, CLK(0.2))
+brain:setComponent(1, 0, 2, DMUL())
+brain:setComponent(2, 0, 2, ACT(Sim2D.ACTION_FIREB))
+brain:setComponent(2, 1, 2, ACT(Sim2D.ACTION_ROTATE))
+brain:setComponent(2, 2, 2, ACT(Sim2D.ACTION_GO))
+brain:setComponent(2, 3, 2, ACT(Sim2D.ACTION_SPEAK, colorTableCode, agentColor:getID()))
 
 brain:addConnection(0, 0, 0, 3, 2, 0)
 brain:addConnection(0, 1, 0, 1, 1, 0)

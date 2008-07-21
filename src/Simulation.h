@@ -37,6 +37,8 @@ using std::string;
 class Simulation
 {
 public:
+    static Simulation* CURRENT;
+
     enum BindingType {BINDING_EQUALS, BINDING_PROXIMITY};
 
     Simulation(lua_State* luaState=NULL);
@@ -73,7 +75,8 @@ public:
 
     virtual bool getFieldValue(SimObj* obj, string fieldName, float& value);
 
-    virtual string getInterfaceName(bool input, int type){return "";}
+    virtual string getPerceptionName(int type){return "";}
+    virtual string getActionName(int type){return "";}
 
     float calcSymbolsBinding(SimObj* origObj,
                             SimObj* targetObj,

@@ -18,11 +18,13 @@
  */
 
 #include "Gridbrain.h"
+#include "ComponentSet.h"
 
 #include <stdlib.h>
 #include <string.h>
 #include <stdexcept>
 #include <float.h>
+#include <math.h>
 
 mt_distribution* Gridbrain::mDistConnections = gDistManager.getNewDistribution();
 mt_distribution* Gridbrain::mDistMutationsProb = gDistManager.getNewDistribution();
@@ -90,11 +92,8 @@ Gridbrain::~Gridbrain()
         }
     }
     mGridsCount = 0;
-}
 
-Brain* Gridbrain::clone()
-{
-    return clone(true);
+    clearInterfaces();
 }
 
 Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int targetGrid, Coord* gc)
@@ -125,16 +124,12 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
     gb->mMutateChangeInactiveComponentProb = mMutateChangeInactiveComponentProb;
     gb->mMutateSwapComponentProb = mMutateSwapComponentProb;
 
-    gb->mLastMemID = mLastMemID;
-
     for (map<string, int>::iterator iterChannel = mChannels.begin();
             iterChannel != mChannels.end();
             iterChannel++)
     {
         gb->mChannels[(*iterChannel).first] = (*iterChannel).second;
     }
-
-    gb->mOwner = mOwner;
 
     gb->mRecombinationType = mRecombinationType;
     gb->mGeneGrouping = mGeneGrouping;
@@ -362,8 +357,7 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
 
         
 
-        newGrid->getComponentSet()->update(mOwner,
-                                            &(gb->mComponents),
+        newGrid->getComponentSet()->update(gb,
                                             newGrid->getOffset(),
                                             newGrid->getOffset() + newGrid->getSize());
         //printf("FIRST UPDATE**************\n");
@@ -448,34 +442,6 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
     return gb;
 }
 
-void Gridbrain::repair()
-{
-    for (unsigned int i = 0; i < mNumberOfComponents; i++)
-    {
-        bool replace = false;
-        Component* comp = mComponents[i];
-
-        if ((comp->isUnique()) && (comp->mOrigSymTable >= 0))
-        {
-            TableSet* ts = mOwner->mTableSet;
-
-            if (!ts->symbolExists(comp->mOrigSymTable, comp->mOrigSymID))
-            {
-                replace = true;
-            }
-        }
-
-        if (replace)
-        {
-            unsigned int gridNumber = comp->mGrid;
-            Grid* grid = mGridsVec[gridNumber];
-
-            Component* newComp = grid->getRandomComponent();
-            replaceComponent(i, newComp);
-        }
-    }
-}
-
 void Gridbrain::addGrid(Grid* grid, string name)
 {
     int number = mGridsVec.size();
@@ -558,34 +524,10 @@ Component* Gridbrain::setComponent(unsigned int x, unsigned int y, unsigned int 
     return replaceComponent(oldComp->mOffset, &comp);
 }
 
-void Gridbrain::setComponent(unsigned int x,
-                unsigned int y,
-                unsigned int gridNumber,
-                Component::Type type,
-                float param,
-                int subType,
-                InterfaceItem::TableLinkType linkType,
-                int origSymTable,
-                llULINT origSymID,
-                int targetSymTable)
-{
-    Component* oldComp = getComponent(x, y, gridNumber);
-
-    Component* newComp = Component::createByType(type);
-    newComp->mSubType = subType;
-    newComp->mParam = param;
-    newComp->mOrigSymTable = origSymTable;
-    newComp->mTargetSymTable = targetSymTable;
-    newComp->mOrigSymID = origSymID;
-    newComp->mTableLinkType = linkType;
-
-    replaceComponent(oldComp->mOffset, newComp);
-}
-
 void Gridbrain::initGridsIO()
 {
     clearInterfaces();
-
+    
     for (unsigned int i = 0; i < mGridsCount; i++)
     {
         Grid* grid = mGridsVec[i];
@@ -594,9 +536,9 @@ void Gridbrain::initGridsIO()
     
         if (grid->getType() == Grid::ALPHA)
         {
-            list<InterfaceItem*>* interface;
+            list<Component*>* interface;
 
-            interface = new list<InterfaceItem*>();
+            interface = new list<Component*>();
             mInputInterfacesVector.push_back(interface);
 
             for (unsigned int j = 0;
@@ -604,20 +546,14 @@ void Gridbrain::initGridsIO()
                 j++)
             {
                 Component* comp = grid->mComponentSequence[j];
-                if (comp->mType == Component::IN)
+                if (comp->isInput())
                 {
                     int perPos = grid->addPerception(comp);
                     comp->mPerceptionPosition = perPos;
 
                     if (perPos >= interface->size())
                     {
-                        InterfaceItem* item = new InterfaceItem();
-                        item->mType = comp->mSubType;
-                        item->mOrigSymTable = comp->mOrigSymTable;
-                        item->mTargetSymTable = comp->mTargetSymTable;
-                        item->mOrigSymID = comp->mOrigSymID;
-                        item->mTableLinkType = comp->mTableLinkType;
-                        interface->push_back(item);
+                        interface->push_back(comp);
                     }
                 }
             }
@@ -632,16 +568,10 @@ void Gridbrain::initGridsIO()
             {
                 Component* comp = grid->mComponentSequence[j];
 
-                if (comp->mType == Component::OUT)
+                if (comp->isOutput())
                 {
                     comp->mActionPosition = grid->addAction(comp);
-                    InterfaceItem* item = new InterfaceItem();
-                    item->mType = comp->mSubType;
-                    item->mOrigSymTable = comp->mOrigSymTable;
-                    item->mTargetSymTable = comp->mTargetSymTable;
-                    item->mOrigSymID = comp->mOrigSymID;
-                    item->mTableLinkType = comp->mTableLinkType;
-                    mOutputInterface.push_back(item);
+                    mOutputInterface.push_back(comp);
                 }
             }
 
@@ -1821,25 +1751,6 @@ bool Gridbrain::getFieldValue(string fieldName, float& value)
         value = mActiveActions;
         return true;
     }
-    else if (fieldName.substr(0,  28) == "gb_active_perceptions_table_")
-    {
-        string strTableCode = fieldName.substr(28, fieldName.size() - 28);
-        int tableCode;
-        sscanf(strTableCode.c_str(), "%d", &tableCode);
-
-        value = 0;
-        for (unsigned int i = 0; i < mNumberOfComponents; i++)
-        {
-            if (mComponents[i]->mActive
-                && (mComponents[i]->mType == Component::IN)
-                && (mComponents[i]->mOrigSymTable == tableCode))
-            {
-                value++;
-            }
-        }
-
-        return true;
-    }
     else if (fieldName.substr(0,  14) == "gb_grid_width_")
     {
         string gridName = fieldName.substr(14, fieldName.size() - 14);
@@ -1861,7 +1772,7 @@ bool Gridbrain::getFieldValue(string fieldName, float& value)
         return true;
     }
 
-    return Brain::getFieldValue(fieldName, value);
+    return false;
 }
 
 bool Gridbrain::isConnectionValid(unsigned int xOrig,
@@ -2014,25 +1925,7 @@ bool Gridbrain::isValid()
     return true;
 }
 
-bool Gridbrain::symbolUsed(int tableID, llULINT symbolID)
-{
-
-    for (unsigned int i = 0; i < mNumberOfComponents; i++)
-    {
-        Component* comp = mComponents[i];
-
-        if (comp->mActive
-            && (comp->mOrigSymTable == tableID)
-            && (comp->mOrigSymID == symbolID))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-float Gridbrain::getDistance(Brain* brain)
+float Gridbrain::getDistance(Gridbrain* brain)
 {
     Gridbrain* gb = (Gridbrain*)brain;
 
@@ -2097,37 +1990,55 @@ float Gridbrain::getDistance(Brain* brain)
     return (1.0f - match);
 }
 
-void Gridbrain::markUsedSymbols(TableSet* tab)
+void Gridbrain::clearInterfaces()
 {
-    map<int, SymbolTable*>::iterator iterTables;
-    for (iterTables = tab->mSymbolTables.begin();
-        iterTables != tab->mSymbolTables.end();
-        iterTables++)
+    for (vector<list<Component*>*>::iterator iterInterface = mInputInterfacesVector.begin();
+        iterInterface != mInputInterfacesVector.end();
+        iterInterface++)
     {
-        SymbolTable* table = (*iterTables).second;
+        list<Component*>* interface = (*iterInterface);
 
-        if (table->isDynamic())
+        interface->clear();
+        delete interface;
+    }
+    mInputInterfacesVector.clear();
+
+    mOutputInterface.clear();
+}
+
+list<Component*>* Gridbrain::getInputInterface(unsigned int channel)
+{
+    return mInputInterfacesVector[channel];
+}
+
+list<Component*>* Gridbrain::getOutputInterface()
+{
+    return &mOutputInterface;
+}
+
+int Gridbrain::getChannelByName(string name)
+{
+    if (mChannels.count(name) == 0)
+    {
+        return -1;
+    }
+
+    return mChannels[name];
+}
+
+string Gridbrain::getChannelName(int chan)
+{
+    for (map<string, int>::iterator iterChan = mChannels.begin();
+        iterChan != mChannels.end();
+        iterChan++)
+    {
+        if ((*iterChan).second == chan)
         {
-            int tableID = (*iterTables).first;
-            table->mUsedCount = 0;
-
-            map<llULINT, Symbol*>::iterator iterSymbol = table->getSymbolMap()->begin();
-            while (iterSymbol != table->getSymbolMap()->end())
-            {
-                llULINT symbolID = (*iterSymbol).first;
-
-                Symbol* sym = (*iterSymbol).second;
-                iterSymbol++;
-
-                sym->mUsed = symbolUsed(tableID, symbolID);
-
-                if (sym->mUsed)
-                {
-                    table->mUsedCount++;
-                }
-            }
+            return (*iterChan).first;
         }
     }
+
+    return "";
 }
 
 const char Gridbrain::mClassName[] = "Gridbrain";
@@ -2168,25 +2079,18 @@ int Gridbrain::setComponent(lua_State* luaState)
 {
     unsigned int x = luaL_checkint(luaState, 1);
     unsigned int y = luaL_checkint(luaState, 2);
-    unsigned int gridNumber = luaL_checkint(luaState, 3);
-    Component::Type type = (Component::Type)luaL_checkint(luaState, 4);
-    float param = luaL_optnumber(luaState, 5, 0.0f);
-    unsigned int subType = luaL_optint(luaState, 6, -1);
-    InterfaceItem::TableLinkType linkType = (InterfaceItem::TableLinkType)(luaL_optint(luaState, 7, InterfaceItem::NO_LINK));
-    int origSymTable = luaL_optint(luaState, 8, -1);
-    int origSymIndex = luaL_optint(luaState, 9, -1);
-    int targetSymTable = luaL_optint(luaState, 10, -1);
-
-    setComponent(x, y, gridNumber, type, param, subType, linkType, origSymTable, origSymIndex, targetSymTable);
+    unsigned int g = luaL_checkint(luaState, 3);
+    Component* comp = (Component*)(Orbit<Gridbrain>::pointer(luaState, 4));
+    setComponent(x, y, g, *comp);
     return 0;
 }
 
 int Gridbrain::addGrid(lua_State* luaState)
 {
-        Grid* grid = (Grid*)(Orbit<Gridbrain>::pointer(luaState, 1));
-        string name = luaL_checkstring(luaState, 2);
-        addGrid(grid, name);
-        return 0;
+    Grid* grid = (Grid*)(Orbit<Gridbrain>::pointer(luaState, 1));
+    string name = luaL_checkstring(luaState, 2);
+    addGrid(grid, name);
+    return 0;
 }
 
 int Gridbrain::addConnection(lua_State* luaState)

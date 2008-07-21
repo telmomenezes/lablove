@@ -4,8 +4,6 @@
 -- Food will be poisonous if symbol_binding(feed,food) < feedCenter
 --------------------------------------------------------------------------------
 
-dofile("basic_defines.lua")
-
 -- Experiment Parameters
 --------------------------------------------------------------------------------
 
@@ -176,7 +174,7 @@ alphaSet:addComponent(IN, Sim2D.PERCEPTION_TARGET)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_SYMPRO, SYM_TO_SYM, feedTableCode, agentFeed:getID(), foodTableCode)
 
 grid = Grid()
-grid:init(ALPHA, 0, 0)
+grid:init(Grid.ALPHA, 0, 0)
 grid:setComponentSet(alphaSet)
 
 brain:addGrid(grid, "objects");
@@ -190,7 +188,7 @@ betaSet:addComponent(OUT, Sim2D.ACTION_ROTATE)
 betaSet:addComponent(OUT, Sim2D.ACTION_EATB)
     
 grid2 = Grid()
-grid2:init(BETA, 0, 0)
+grid2:init(Grid.BETA, 0, 0)
 grid2:setComponentSet(betaSet)
 
 brain:addGrid(grid2, "beta")

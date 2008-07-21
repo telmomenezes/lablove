@@ -21,9 +21,7 @@
 #define _INCLUDE_GRIDBRAIN_COMPONENT_H
 
 #include "Connection.h"
-#include "InterfaceItem.h"
 #include "Orbit.h"
-#include "types.h"
 
 #include <string>
 using std::string;
@@ -54,7 +52,11 @@ public:
     virtual ConnType getConnectorType(){return CONN_INOUT;}
 
     virtual bool isUnique(){return false;}
+    virtual bool isInput(){return false;}
+    virtual bool isOutput(){return false;}
     
+    virtual string getLabel(){return "";}
+
     bool isUsed();
     bool isEqual(Component* comp, bool sameGrid=true);
 
@@ -64,14 +66,13 @@ public:
     bool calcConsumer();
     bool calcActive();
 
-    void print();
+    virtual void print();
 
     static const char mClassName[];
     static Orbit<Component>::MethodType mMethods[];
     static Orbit<Component>::NumberGlobalType mNumberGlobals[];
 
     Type mType;
-    int mSubType;
     float mParam;
 
     float mInput;
@@ -91,11 +92,6 @@ public:
     Connection* mFirstInConnection;
 
     unsigned int mPossibleConnections;
-
-    int mOrigSymTable;
-    llULINT mOrigSymID;
-    int mTargetSymTable;
-    InterfaceItem::TableLinkType mTableLinkType;
 
     unsigned int mDepth;
     bool mProducer;

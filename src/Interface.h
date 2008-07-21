@@ -17,14 +17,34 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#if !defined(__INCLUDE_HEX_CELL_H)
-#define __INCLUDE_HEX_CELL_H
+#ifndef _INCLUDE_INTERFACE_H
+#define _INCLUDE_INTERFACE_H
 
-class HexCell
+#include "types.h"
+
+class Interface
 {
 public:
-    HexCell();
-    virtual ~HexCell();
+    Interface(){}
+    virtual ~Interface(){}
+
+    void setSymbolLink(int origTable, llULINT origID, int targTable, bool dynamic);
+
+    int getOrigSymTable(){return mOrigSymTable;}
+    llULINT getOrigSymID(){return mOrigSymID;}
+    int getTargetSymTable(){return mTargetSymTable;}
+    bool isDynamic(){return mDynamic;}
+
+    void setOrigSymTable(int table){mOrigSymTable = table;}
+    void setOrigSymID(llULINT id){mOrigSymID = id;}
+    void setTargetSymTable(int table){mTargetSymTable = table;}
+
+protected:
+    int mOrigSymTable;
+    llULINT mOrigSymID;
+    int mTargetSymTable;
+    bool mDynamic;
 };
+
 #endif
 

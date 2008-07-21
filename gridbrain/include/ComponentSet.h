@@ -24,12 +24,12 @@
 #include "CompNUL.h"
 #include "Orbit.h"
 #include "RandDistManager.h"
-#include "SimObj.h"
-#include "types.h"
 
 #include <vector>
 
 using std::vector;
+
+class Gridbrain;
 
 class ComponentSet
 {
@@ -40,18 +40,9 @@ public:
     virtual ~ComponentSet();
 
     void addComponent(Component* component);
-    void addComponent(Component::Type type,
-                int subType=-1,
-                InterfaceItem::TableLinkType linkType=InterfaceItem::NO_LINK,
-                int origSymTable=-1,
-                llULINT origSymID=0,
-                int targetSymTable=-1);
     Component* getRandom();
 
-    void update(SimObj* obj,
-                vector<Component*>* components,
-                unsigned int start,
-                unsigned int end);
+    void update(Gridbrain* gb, unsigned int start, unsigned int end);
 
     void disable(Component* comp);
     void enable(Component* comp);

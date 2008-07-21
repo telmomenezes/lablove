@@ -133,7 +133,8 @@ public:
     void startCollisionDetection(float x, float y, float rad);
     SimObj2D* nextCollision(float& distance, float& angle);
 
-    virtual string getInterfaceName(bool input, int type);
+    virtual string getPerceptionName(int type);
+    virtual string getActionName(int type);
 
     void fireLaser(Laser2D laser);
 

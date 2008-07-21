@@ -31,11 +31,7 @@ CompOUT::~CompOUT()
 Component* CompOUT::clone()
 {
     CompOUT* comp = new CompOUT();
-    comp->mSubType = mSubType;
-    comp->mOrigSymTable = mOrigSymTable;
-    comp->mOrigSymID = mOrigSymID;
-    comp->mTargetSymTable = mTargetSymTable;
-    comp->mTableLinkType = mTableLinkType;
+    comp->mOutputType = mOutputType;
     return comp;
 }
 
@@ -60,9 +56,7 @@ float CompOUT::output(unsigned int id)
 
 bool CompOUT::compare(Component* comp)
 {
-    return ((mSubType == comp->mSubType)
-            && (mOrigSymTable == comp->mOrigSymTable)
-            && (mTargetSymTable == comp->mTargetSymTable)
-            && (mOrigSymID == comp->mOrigSymID));
+    CompOUT* compOUT = (CompOUT*)comp;
+    return (mOutputType == compOUT->mOutputType);
 }
 

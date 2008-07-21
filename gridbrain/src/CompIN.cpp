@@ -31,11 +31,7 @@ CompIN::~CompIN()
 Component* CompIN::clone()
 {
     CompIN* comp = new CompIN();
-    comp->mSubType = mSubType;
-    comp->mOrigSymTable = mOrigSymTable;
-    comp->mOrigSymID = mOrigSymID;
-    comp->mTargetSymTable = mTargetSymTable;
-    comp->mTableLinkType = mTableLinkType;
+    comp->mInputType = mInputType;
     return comp;
 }
 
@@ -54,9 +50,7 @@ float CompIN::output(unsigned int id)
 
 bool CompIN::compare(Component* comp)
 {
-    return ((mSubType == comp->mSubType)
-            && (mOrigSymTable == comp->mOrigSymTable)
-            && (mTargetSymTable == comp->mTargetSymTable)
-            && (mOrigSymID == comp->mOrigSymID));
+    CompIN* compIN = (CompIN*)comp;
+    return (mInputType == compIN->mInputType);
 }
 

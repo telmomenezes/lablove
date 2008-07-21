@@ -18,7 +18,6 @@
  */
 
 #include "Gridbrain.h"
-#include "SymbolTable.h"
 
 void Gridbrain::clearRecombineInfo()
 {
@@ -466,7 +465,7 @@ void Gridbrain::selectConnPaths(Gridbrain* gb1, Gridbrain* gb2)
     }
 }
 
-Brain* Gridbrain::recombine(Brain* brain)
+Gridbrain* Gridbrain::recombine(Gridbrain* brain)
 {
     //printf("\n\n=== START RECOMBINE ===\n");
 
@@ -737,7 +736,7 @@ GeneTag Gridbrain::findGeneTag(Connection* conn)
     return tag;
 }
 
-void Gridbrain::popAdjust(vector<SimObj*>* popVec)
+void Gridbrain::generateGenes(vector<Gridbrain*>* brainVec)
 {
     for (unsigned int pos = 0; pos < mNumberOfComponents; pos++)
     {
@@ -752,55 +751,15 @@ void Gridbrain::popAdjust(vector<SimObj*>* popVec)
                 conn->mGeneTag = findGeneTag(conn);
 
                 unsigned int vecPos = 0;
-                while ((conn->mGeneTag.mGeneID == 0) && (vecPos < popVec->size()))
+                while ((conn->mGeneTag.mGeneID == 0) && (vecPos < brainVec->size()))
                 {
-                    SimObj* obj = (*popVec)[vecPos];
-                    Gridbrain* gb = (Gridbrain*)obj->getBrain();
+                    Gridbrain* gb = (*brainVec)[vecPos];
                     conn->mGeneTag = gb->findGeneTag(conn);
                     vecPos++;
                 }
             }
 
-            // If no tag assigned, try to associate with an existing gene
-            if (mGeneGrouping && (conn->mGeneTag.mGeneID == 0))
-            {
-                Component* orig = (Component*)conn->mOrigComponent;
-                Component* targ = (Component*)conn->mTargComponent;
-
-                unsigned int count = orig->mInboundConnections + targ->mConnectionsCount;
-
-                if (count > 0)
-                {
-                    unsigned int pos = mDistRecombine->iuniform(0, count);
-
-                    Connection* conn2;
-
-                    if (pos < orig->mInboundConnections)
-                    {
-                        conn2 = orig->mFirstInConnection;
-                        for (unsigned int i = 0; i < pos; i++)
-                        {
-                            conn2 = (Connection*)conn2->mNextInConnection;
-                        }
-                    }
-                    else
-                    {
-                        pos -= orig->mInboundConnections;
-
-                        conn2 = targ->mFirstConnection;
-                        for (unsigned int i = 0; i < pos; i++)
-                        {
-                            conn2 = (Connection*)conn2->mNextConnection;
-                        }
-                    }
-
-                    conn->mGeneTag.mGeneID = conn2->mGeneTag.mGeneID;
-                    conn->mGeneTag.mOrigID = GeneTag::generateID();
-                    conn->mGeneTag.mTargID = GeneTag::generateID();
-                }
-            }
-
-            // If still no tag assigned, generate new gene
+            // If no tag assigned, generate new gene
             if (conn->mGeneTag.mGeneID == 0)
             {
                 conn->mGeneTag.mGeneID = GeneTag::generateID();

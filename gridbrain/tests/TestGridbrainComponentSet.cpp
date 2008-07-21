@@ -27,34 +27,3 @@ TEST(ComponentSetGetRandomFromEmpty)
     CHECK_EQUAL(comp->mType, Component::NUL);
 }
 
-struct ComponentSetFixture
-{
-    ComponentSetFixture()
-    {
-        mSet.addComponent(Component::OUT, 33);
-    }
-
-    ~ComponentSetFixture(){}
-
-    ComponentSet mSet;
-};
-
-/*TEST_FIXTURE(ComponentSetFixture, ComponentSetAddComponent)
-{
-    Component* comp = mSet.getRandom();
-    CHECK_EQUAL(comp->mType, Component::OUT);
-}
-
-TEST_FIXTURE(ComponentSetFixture, ComponentSetAddComponentCheckSubType)
-{
-    Component* comp = mSet.getRandom();
-    CHECK_EQUAL(comp->mSubType, 33);
-}
-
-TEST_FIXTURE(ComponentSetFixture, ComponentSetAddAnotherComponent)
-{
-    mSet.addComponent(Component::IN);
-    Component* comp = mSet.getRandom();
-    CHECK((comp->mType == Component::OUT) || (comp->mType == Component::IN));
-}*/
-

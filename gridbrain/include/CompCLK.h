@@ -42,6 +42,8 @@ public:
 
     virtual bool isProducer(){return true;}
 
+    virtual string getLabel();
+
 protected:
     bool mInit;
     llULINT mTimeToTrigger;

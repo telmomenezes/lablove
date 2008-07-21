@@ -20,6 +20,9 @@
 #include "SimObj.h"
 #include "SymbolFloat.h"
 #include "SymbolUL.h"
+#include "Interface.h"
+#include "CompPER.h"
+#include "CompACT.h"
 #include <stdlib.h>
 
 llULINT SimObj::CURRENT_ID = 1;
@@ -86,10 +89,10 @@ SimObj::SimObj(SimObj* obj)
     if (mType == TYPE_AGENT)
     {
         mBrain = obj->mBrain->clone();
-        mBrain->setOwner(this);
-        mBrain->markUsedSymbols(mTableSet);
+        generateGridSets();
+        markUsedSymbols(mTableSet);
         mTableSet->cleanAndGrow();
-        mBrain->repair();
+        repairBrain();
     }
 }
 
@@ -122,7 +125,7 @@ SimObj* SimObj::clone()
     return new SimObj(this);
 }
 
-void SimObj::setBrain(Brain* brain)
+void SimObj::setBrain(Gridbrain* brain)
 {
     mType = TYPE_AGENT;
 
@@ -131,7 +134,6 @@ void SimObj::setBrain(Brain* brain)
         delete mBrain;
     }
     mBrain = brain;
-    mBrain->setOwner(this);
     mBrain->init();
 }
 
@@ -259,15 +261,15 @@ void SimObj::mutate(float factor)
 
 void SimObj::recombine(SimObj* parent1, SimObj* parent2)
 {
-    Brain* newBrain;
+    Gridbrain* newBrain;
 
     if (mType == TYPE_AGENT)
     {
         newBrain = parent1->mBrain->recombine(parent2->mBrain);
 
-        newBrain->markUsedSymbols(parent1->mTableSet);
-        newBrain->markUsedSymbols(parent2->mTableSet);
         setBrain(newBrain);
+        markUsedSymbols(parent1->mTableSet);
+        markUsedSymbols(parent2->mTableSet);
     }
 
     mTableSet->recombine(parent1->mTableSet, parent2->mTableSet);
@@ -309,14 +311,6 @@ void SimObj::setULDataFromSymbol(string symbolName, llULINT& var)
     }
 }
 
-void SimObj::popAdjust(vector<SimObj*>* popVec)
-{
-    if (mBrain != NULL)
-    {
-        mBrain->popAdjust(popVec);
-    }
-}
-
 void SimObj::emptyMessageList()
 {
     for (list<Message*>::iterator iterMessage = mMessageList.begin();
@@ -335,6 +329,156 @@ void SimObj::printDebug()
     if (mBrain != NULL)
     {
         mBrain->printDebug();
+    }
+}
+
+void SimObj::generateGridSets()
+{
+    if (mBrain == NULL)
+    {
+        return;
+    }
+
+    for (unsigned int g = 0; g < mBrain->getGridsCount(); g++)
+    {
+        ComponentSet* set = mBrain->getGrid(g)->getComponentSet();
+
+        for (unsigned int i = 0; i < set->mComponentSet.size(); i++)
+        {
+            delete set->mComponentSet[i];
+        }
+        set->mComponentSet.clear();
+
+        for (unsigned int i = 0; i < set->mComponentVec.size(); i++)
+        {
+            Component* comp = set->mComponentVec[i];
+
+            if ((comp->isInput() || comp->isOutput())
+                && (((Interface*)comp)->isDynamic()))
+            {
+                Interface* intf = (Interface*)comp;
+
+                SymbolTable* table = getSymbolTable(intf->getOrigSymTable());
+                intf->setOrigSymID(table->getRandomSymbolId());
+
+                map<llULINT, Symbol*>* symbols = table->getSymbolMap();
+
+                for (map<llULINT, Symbol*>::iterator iterSym = symbols->begin();
+                        iterSym != symbols->end();
+                        iterSym++)
+                {
+                    llULINT symID = (*iterSym).first;
+                    Interface* newComp = (Interface*)comp->clone();
+                    newComp->setOrigSymID(symID);
+                    set->mComponentSet.push_back((Component*)newComp);
+                }
+            }
+            else
+            {
+                Component* newComp = comp->clone();
+                set->mComponentSet.push_back(newComp);
+            }
+        }
+    }
+}
+
+void SimObj::repairBrain()
+{
+    if (mBrain == NULL)
+    {
+        return;
+    }
+
+    for (unsigned int i = 0; i < mBrain->getNumberOfComponents(); i++)
+    {
+        Component* comp = mBrain->getComponent(i);
+        Interface* intf = NULL;
+
+        if (comp->isInput())
+        {
+            CompPER* per = (CompPER*)comp;
+            intf = (Interface*)per;
+        }
+        else if (comp->isOutput())
+        {
+            CompACT* act = (CompACT*)comp;
+            intf = (Interface*)act;
+        }
+
+        if (intf != NULL)
+        {
+            if (intf->getOrigSymTable() >= 0)
+            {
+                TableSet* ts = mTableSet;
+
+                if (!ts->symbolExists(intf->getOrigSymTable(), intf->getOrigSymID()))
+                {
+                    unsigned int gridNumber = comp->mGrid;
+                    Grid* grid = mBrain->getGrid(gridNumber);
+
+                    Component* newComp = grid->getRandomComponent();
+                    mBrain->replaceComponent(i, newComp);
+                }
+            }
+        }
+    }
+}
+
+bool SimObj::symbolUsed(int tableID, llULINT symbolID)
+{
+    if (mBrain == NULL)
+    {
+        return false;
+    }
+
+    for (unsigned int i = 0; i < mBrain->getNumberOfComponents(); i++)
+    {
+        Component* comp = mBrain->getComponent(i);
+
+        if ((comp->mActive) && (comp->isInput() || comp->isOutput()))
+        {
+            Interface* intf = (Interface*)comp;
+            if ((intf->getOrigSymTable() == tableID)
+                && (intf->getOrigSymID() == symbolID))
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+void SimObj::markUsedSymbols(TableSet* tab)
+{
+    map<int, SymbolTable*>::iterator iterTables;
+    for (iterTables = tab->mSymbolTables.begin();
+        iterTables != tab->mSymbolTables.end();
+        iterTables++)
+    {
+        SymbolTable* table = (*iterTables).second;
+
+        if (table->isDynamic())
+        {
+            int tableID = (*iterTables).first;
+            table->mUsedCount = 0;
+
+            map<llULINT, Symbol*>::iterator iterSymbol = table->getSymbolMap()->begin();
+            while (iterSymbol != table->getSymbolMap()->end())
+            {
+                llULINT symbolID = (*iterSymbol).first;
+
+                Symbol* sym = (*iterSymbol).second;
+                iterSymbol++;
+
+                sym->mUsed = symbolUsed(tableID, symbolID);
+
+                if (sym->mUsed)
+                {
+                    table->mUsedCount++;
+                }
+            }
+        }
     }
 }
 
@@ -377,7 +521,7 @@ int SimObj::setBirthRadius(lua_State* luaState)
 
 int SimObj::setBrain(lua_State* luaState)
 {
-    Brain* brain = (Brain*)Orbit<SimObj>::pointer(luaState, 1);
+    Gridbrain* brain = (Gridbrain*)Orbit<SimObj>::pointer(luaState, 1);
     setBrain(brain);
     return 0;
 }

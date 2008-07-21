@@ -17,13 +17,36 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "HexCell.h"
+#ifndef _INCLUDE_GRIDBRAIN_COMPONENT_PER_H
+#define _INCLUDE_GRIDBRAIN_COMPONENT_PER_H
 
-HexCell::HexCell()
+#include "CompIN.h"
+#include "Orbit.h"
+#include "types.h"
+#include "Interface.h"
+
+class CompPER : public CompIN, Interface
 {
-}
+public:
+    CompPER(lua_State* luaState=NULL);
+    virtual ~CompPER();
 
-HexCell::~HexCell()
-{   
-}
+    virtual Component* clone();
+
+    virtual string getName(){return "PER";}
+
+    virtual bool compare(Component* comp);
+
+    virtual string getLabel();
+
+    virtual void print();
+
+    static const char mClassName[];
+    static Orbit<CompPER>::MethodType mMethods[];
+    static Orbit<CompPER>::NumberGlobalType mNumberGlobals[];
+};
+
+static CompPER COMP_PER;
+
+#endif
 

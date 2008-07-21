@@ -36,6 +36,10 @@ ComponentSet::ComponentSet(ComponentSet* comp)
     {
         mComponentVec.push_back(comp->mComponentVec[i]);
     }
+    for (unsigned int i = 0; i < comp->mComponentSet.size(); i++)
+    {
+        mComponentSet.push_back(comp->mComponentSet[i]->clone());
+    }
 }
 
 ComponentSet::~ComponentSet()
@@ -71,50 +75,13 @@ Component* ComponentSet::getRandom()
     }
 }
 
-void ComponentSet::update(SimObj* obj,
-                                    vector<Component*>* components,
-                                    unsigned int start,
-                                    unsigned int end)
+void ComponentSet::update(Gridbrain* gb, unsigned int start, unsigned int end)
 {
-    for (unsigned int i = 0; i < mComponentSet.size(); i++)
-    {
-        delete mComponentSet[i];
-    }
-    mComponentSet.clear();
-
-    for (unsigned int i = 0; i < mComponentVec.size(); i++)
-    {
-        Component* comp = mComponentVec[i];
-
-        if (comp->mTableLinkType == InterfaceItem::TAB_TO_SYM)
-        {
-            SymbolTable* table = obj->getSymbolTable(comp->mOrigSymTable);
-            comp->mOrigSymID = table->getRandomSymbolId();
-
-            map<llULINT, Symbol*>* symbols = table->getSymbolMap();
-
-            for (map<llULINT, Symbol*>::iterator iterSym = symbols->begin();
-                    iterSym != symbols->end();
-                    iterSym++)
-            {
-                llULINT symID = (*iterSym).first;
-                Component* newComp = comp->clone();
-                newComp->mOrigSymID = symID;
-                mComponentSet.push_back(newComp);
-            }
-        }
-        else
-        {
-            Component* newComp = comp->clone();
-            mComponentSet.push_back(newComp);
-        }
-    }
-
     for (unsigned int pos = start;
             pos < end;
             pos++)
     {
-        Component* comp = (*components)[pos];
+        Component* comp = gb->getComponent(pos);
 
         if (comp->isUnique())
         {
@@ -154,29 +121,12 @@ void ComponentSet::enable(Component* comp)
     mComponentSet.push_back(newComp);
 }
 
-void ComponentSet::addComponent(Component::Type type,
-                        int subType,
-                        InterfaceItem::TableLinkType linkType,
-                        int origSymTable,
-                        llULINT origSymID,
-                        int targetSymTable)
-{
-    Component* comp = Component::createByType(type);
-    comp->mSubType = subType;
-    comp->mOrigSymTable = origSymTable;
-    comp->mTargetSymTable = targetSymTable;
-    comp->mOrigSymID = origSymID;
-    comp->mTableLinkType = linkType;
-    addComponent(comp);
-}
-
 void ComponentSet::print()
 {
     for (unsigned int i = 0; i < mComponentSet.size(); i++)
     {
         Component* comp = mComponentSet[i];
-        printf("%s", comp->getName().c_str());
-        printf("(%d)[%d] ", comp->mSubType, comp->mOrigSymID);
+        comp->print();
     }
     printf("\n");
 }
@@ -192,20 +142,8 @@ Orbit<ComponentSet>::NumberGlobalType ComponentSet::mNumberGlobals[] = {{0,0}};
 
 int ComponentSet::addComponent(lua_State* luaState)
 {
-    int type = luaL_checkint(luaState, 1);
-    int subType = luaL_optint(luaState, 2, -1);
-    InterfaceItem::TableLinkType linkType = (InterfaceItem::TableLinkType)(luaL_optint(luaState, 3, InterfaceItem::NO_LINK));
-    int origSymTable = luaL_optint(luaState, 4, -1);
-    int origSymIndex = luaL_optint(luaState, 5, -1);
-    int targetSymTable = luaL_optint(luaState, 6, -1);
-
-    addComponent((Component::Type)type,
-                    subType,
-                    linkType,
-                    origSymTable,
-                    origSymIndex,
-                    targetSymTable);
-
+    Component* comp = (Component*)(Orbit<Component>::pointer(luaState, 1));
+    addComponent(comp);
     return 0;
 }
 

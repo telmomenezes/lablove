@@ -88,6 +88,7 @@ void Species::init(unsigned int startBodyID)
     {
         SimObj* obj = mBaseOrganism->clone();
         mBuffer.push_back(obj);
+        mBrainBuffer.push_back(obj->getBrain());
     }
 
     mQueenState = (int)(((float)mPopulation) * mKinFactor) + 1;
@@ -169,7 +170,7 @@ void Species::bufferDump(llULINT time, Simulation* sim)
         SimObj* obj = mBuffer[i];
         sprintf(fileName, "%s/brain%d.svg", mBufferDumpDir.c_str(), i);
         FILE* file = fopen(fileName, "w");
-        fprintf(file, obj->getBrain()->write(obj, sim).c_str());
+        fprintf(file, obj->getBrain()->write().c_str());
         fflush(file);
         fclose(file);
 
@@ -449,13 +450,17 @@ void Species::onOrganismDeath(SimObj* org)
 
         if (fit1->mFinalFitness >= fit2->mFinalFitness)
         {
-            delete mBuffer[objPos];
-
             SimObj* newObj = org->clone();
+            Gridbrain* mBrain = newObj->getBrain();
 
+            if (mBrain != NULL)
+            {
+                mBrain->generateGenes(&mBrainBuffer);
+                mBrainBuffer[objPos] = newObj->getBrain();
+            }
+
+            delete mBuffer[objPos];
             mBuffer[objPos] = newObj;
-
-            org->popAdjust(&mBuffer);
         }
         else
         {

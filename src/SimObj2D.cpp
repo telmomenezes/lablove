@@ -20,6 +20,8 @@
 #include "SimObj2D.h"
 #include "Sim2D.h"
 #include "SymbolRGB.h"
+#include "CompPER.h"
+#include "CompACT.h"
 
 #include <stdexcept>
 
@@ -211,13 +213,13 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
     mCurrentLaserTargetID = 0;
     mObjSymAcqCounter = 0;
 
-    for (list<InterfaceItem>::iterator iterItem = obj->mObjectSymbolAcquisition.begin();
+    for (list<SymbolPointer>::iterator iterItem = obj->mObjectSymbolAcquisition.begin();
         iterItem != obj->mObjectSymbolAcquisition.end();
         iterItem++)
     {
         mObjectSymbolAcquisition.push_back(*iterItem);
     }
-    for (list<InterfaceItem>::iterator iterItem = obj->mMessageSymbolAcquisition.begin();
+    for (list<SymbolPointer>::iterator iterItem = obj->mMessageSymbolAcquisition.begin();
         iterItem != obj->mMessageSymbolAcquisition.end();
         iterItem++)
     {
@@ -691,13 +693,13 @@ void SimObj2D::perceive()
             Message* msg = (*iterMessage);
 
             // Message symbol acquisition
-            for (list<InterfaceItem>::iterator iterItem = mMessageSymbolAcquisition.begin();
+            for (list<SymbolPointer>::iterator iterItem = mMessageSymbolAcquisition.begin();
                 iterItem != mMessageSymbolAcquisition.end();
                 iterItem++)
             {
-                InterfaceItem item = *iterItem;
+                SymbolPointer item = *iterItem;
         
-                SymbolTable* origTable = getSymbolTable(item.mOrigSymTable);
+                SymbolTable* origTable = getSymbolTable(item.mTable);
 
                 if (origTable != NULL)
                 {
@@ -705,20 +707,21 @@ void SimObj2D::perceive()
                 }
             }
 
-            list<InterfaceItem*>* interface = mBrain->getInputInterface(mChannelSounds);
+            list<Component*>* interface = mBrain->getInputInterface(mChannelSounds);
             float* inBuffer = mBrain->getInputBuffer(mChannelSounds);
 
             if (inBuffer != NULL)
             {
                 unsigned int pos = 0;
                 float normalizedValue;
-                InterfaceItem* item;
 
-                for (list<InterfaceItem*>::iterator iterItem = interface->begin();
+                for (list<Component*>::iterator iterItem = interface->begin();
                     iterItem != interface->end();
                     iterItem++)
                 {
-                    unsigned int type = (*iterItem)->mType;
+                    Interface* intf = (Interface*)(*iterItem);
+                    CompPER* per = (CompPER*)per;
+                    unsigned int type = per->getInputType();
 
                     switch (type)
                     {
@@ -738,20 +741,18 @@ void SimObj2D::perceive()
                             break;
 
                         case Sim2D::PERCEPTION_SYMPRO:
-                            item = (*iterItem);
                             normalizedValue = mSim2D->calcSymbolsBinding(this,
-                                                    item->mOrigSymTable,
-                                                    item->mOrigSymID,
+                                                    intf->getOrigSymTable(),
+                                                    intf->getOrigSymID(),
                                                     msg->mSymbol,
                                                     Simulation::BINDING_PROXIMITY);
                             inBuffer[pos] = normalizedValue;
                             break;
 
                         case Sim2D::PERCEPTION_SYMEQ:
-                            item = (*iterItem);
                             normalizedValue = mSim2D->calcSymbolsBinding(this,
-                                                    item->mOrigSymTable,
-                                                    item->mOrigSymID,
+                                                    intf->getOrigSymTable(),
+                                                    intf->getOrigSymID(),
                                                     msg->mSymbol,
                                                     Simulation::BINDING_EQUALS);
                             inBuffer[pos] = normalizedValue;
@@ -767,17 +768,18 @@ void SimObj2D::perceive()
     // Perceive self
     if (mChannelSelf >= 0)
     {
-        list<InterfaceItem*>* interface = mBrain->getInputInterface(mChannelSelf);
+        list<Component*>* interface = mBrain->getInputInterface(mChannelSelf);
         float* inBuffer = mBrain->getInputBuffer(mChannelSelf);
         unsigned int pos = 0;
         float normalizedValue;
         float ratio;
 
-        for (list<InterfaceItem*>::iterator iterItem = interface->begin();
+        for (list<Component*>::iterator iterItem = interface->begin();
             iterItem != interface->end();
             iterItem++)
         {
-            unsigned int type = (*iterItem)->mType;
+            CompPER* per = (CompPER*)(*iterItem);
+            unsigned int type = per->getInputType();
 
             switch (type)
             {
@@ -846,14 +848,14 @@ void SimObj2D::onScanObject(SimObj2D* targ,
     if (mObjSymAcqCounter >= 250)
     {
         mObjSymAcqCounter = 0;
-        for (list<InterfaceItem>::iterator iterItem = mObjectSymbolAcquisition.begin();
+        for (list<SymbolPointer>::iterator iterItem = mObjectSymbolAcquisition.begin();
             iterItem != mObjectSymbolAcquisition.end();
             iterItem++)
         {
-            InterfaceItem item = *iterItem;
+            SymbolPointer item = *iterItem;
 
-            SymbolTable* origTable = getSymbolTable(item.mOrigSymTable);
-            SymbolTable* targTable = targ->getSymbolTable(item.mTargetSymTable);
+            SymbolTable* origTable = getSymbolTable(item.mTable);
+            SymbolTable* targTable = targ->getSymbolTable(item.mTable);
 
             if ((origTable != NULL)
                 && (targTable != NULL))
@@ -891,16 +893,17 @@ void SimObj2D::onScanObject(SimObj2D* targ,
     float dX;
     float dY;
     float ltAng;
-    InterfaceItem* item;
 
-    list<InterfaceItem*>* interface = mBrain->getInputInterface(mChannelObjects);
+    list<Component*>* interface = mBrain->getInputInterface(mChannelObjects);
     unsigned int pos = 0;
 
-    for (list<InterfaceItem*>::iterator iterItem = interface->begin();
+    for (list<Component*>::iterator iterItem = interface->begin();
         iterItem != interface->end();
         iterItem++)
     {
-        unsigned int type = (*iterItem)->mType;
+        CompPER* per = (CompPER*)(*iterItem);
+        Interface* intf = (Interface*)per;
+        unsigned int type = per->getInputType();
 
         //printf("type: %d\n", type);
 
@@ -954,25 +957,23 @@ void SimObj2D::onScanObject(SimObj2D* targ,
                 break;
 
             case Sim2D::PERCEPTION_SYMPRO:
-                item = (*iterItem);
                 normalizedValue = mSim2D->calcSymbolsBinding(this,
                                                     targ,
-                                                    item->mOrigSymTable,
-                                                    item->mTargetSymTable,
-                                                    item->mOrigSymID,
+                                                    intf->getOrigSymTable(),
+                                                    intf->getTargetSymTable(),
+                                                    intf->getOrigSymID(),
                                                     Simulation::BINDING_PROXIMITY);
                 inBuffer[pos] = normalizedValue;
                 break;
 
             case Sim2D::PERCEPTION_SYMEQ:
-                item = (*iterItem);
                 normalizedValue = mSim2D->calcSymbolsBinding(this,
                                                     targ,
-                                                    item->mOrigSymTable,
-                                                    item->mTargetSymTable,
-                                                    item->mOrigSymID,
+                                                    intf->getOrigSymTable(),
+                                                    intf->getTargetSymTable(),
+                                                    intf->getOrigSymID(),
                                                     Simulation::BINDING_EQUALS);
-                //printf("simeq: %f\n", normalizedValue);
+
                 inBuffer[pos] = normalizedValue;
                 break;
 
@@ -1092,17 +1093,19 @@ void SimObj2D::act()
     }
     else
     {
-        list<InterfaceItem*>* interface = mBrain->getOutputInterface();
+        list<Component*>* interface = mBrain->getOutputInterface();
         float* outBuffer = mBrain->getOutputBuffer();
         unsigned int pos = 0;
 
-        for (list<InterfaceItem*>::iterator iterItem = interface->begin();
+        for (list<Component*>::iterator iterItem = interface->begin();
             iterItem != interface->end();
             iterItem++)
         {
             float output = outBuffer[pos];
 
-            int actionType = (*iterItem)->mType;
+            CompACT* act = (CompACT*)(*iterItem);
+            Interface* intf = (Interface*)act;
+            int actionType = act->getOutputType();
 
             if (output != 0.0f)
             {
@@ -1123,11 +1126,11 @@ void SimObj2D::act()
                         actionEat = actionType;
                         break;
                     case Sim2D::ACTION_SPEAK:
-                        table = getSymbolTable((*iterItem)->mOrigSymTable);
+                        table = getSymbolTable(intf->getOrigSymTable());
 
                         if (table != NULL)
                         {
-                            Symbol* sym = table->getSymbol((*iterItem)->mOrigSymID);
+                            Symbol* sym = table->getSymbol(intf->getOrigSymID());
                             //printf("id: %d\n", (*iterItem)->mOrigSymID);
 
                             if (sym != NULL)
@@ -1513,18 +1516,17 @@ bool SimObj2D::getFieldValue(string fieldName, float& value)
     }
 }
 
-void SimObj2D::addObjectSymbolAcquisition(int origTable, int targTable)
+void SimObj2D::addObjectSymbolAcquisition(int table)
 {
-    InterfaceItem item;
-    item.mOrigSymTable = origTable;
-    item.mTargetSymTable = targTable;
+    SymbolPointer item;
+    item.mTable = table;
     mObjectSymbolAcquisition.push_back(item);
 }
 
 void SimObj2D::addMessageSymbolAcquisition(int table)
 {
-    InterfaceItem item;
-    item.mOrigSymTable = table;
+    SymbolPointer item;
+    item.mTable = table;
     mObjectSymbolAcquisition.push_back(item);
 }
 
@@ -1802,9 +1804,8 @@ int SimObj2D::setLaserHitDuration(lua_State* luaState)
 
 int SimObj2D::addObjectSymbolAcquisition(lua_State* luaState)
 {
-    int origTable = luaL_checkint(luaState, 1);
-    int targTable = luaL_checkint(luaState, 2);
-    addObjectSymbolAcquisition(origTable, targTable);
+    int table = luaL_checkint(luaState, 1);
+    addObjectSymbolAcquisition(table);
     return 0;
 }
 

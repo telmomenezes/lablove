@@ -2,8 +2,6 @@
 -- Agents evolve to synchronize communication
 --------------------------------------------------------------------------------
 
-dofile("basic_defines.lua")
-
 -- Experiment Parameters
 --------------------------------------------------------------------------------
 
@@ -149,7 +147,7 @@ alphaSet:addComponent(IN, Sim2D.PERCEPTION_POSITION)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_DISTANCE)
 alphaSet:addComponent(IN, Sim2D.PERCEPTION_ID)
 grid = Grid()
-grid:init(ALPHA, 0, 0)
+grid:init(Grid.ALPHA, 0, 0)
 grid:setComponentSet(alphaSet)
 brain:addGrid(grid, "objects");
 
@@ -163,7 +161,7 @@ soundSet:addComponent(IN, Sim2D.PERCEPTION_DISTANCE)
 soundSet:addComponent(IN, Sim2D.PERCEPTION_VALUE)
 soundSet:addComponent(IN, Sim2D.PERCEPTION_SYMEQ, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
 soundGrid = Grid()
-soundGrid:init(ALPHA, 0, 0)
+soundGrid:init(Grid.ALPHA, 0, 0)
 soundGrid:setComponentSet(soundSet)
 brain:addGrid(soundGrid, "sounds");
 
@@ -177,7 +175,7 @@ betaSet:addComponent(OUT, Sim2D.ACTION_ROTATE)
 betaSet:addComponent(OUT, Sim2D.ACTION_SPEAK, TAB_TO_SYM, colorTableCode, agentColor:getID())
     
 grid2 = Grid()
-grid2:init(BETA, 0, 0)
+grid2:init(Grid.BETA, 0, 0)
 grid2:setComponentSet(betaSet)
 
 brain:addGrid(grid2, "beta")

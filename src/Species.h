@@ -91,6 +91,7 @@ protected:
     static mt_distribution* mDistRecombine;
 
     vector<SimObj*> mBuffer;
+    vector<Gridbrain*> mBrainBuffer;
     list<Goal> mGoals; 
     SimObj* mBaseOrganism;
     list<Log*> mDeathLogs;

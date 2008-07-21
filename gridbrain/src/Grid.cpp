@@ -186,10 +186,7 @@ unsigned int Grid::addPerception(Component* per)
     {
         Component* curPer = mPerceptionsVec[i];
 
-        if ((curPer->mSubType == per->mSubType)
-            && (curPer->mOrigSymTable == per->mOrigSymTable)
-            && (curPer->mTargetSymTable == per->mTargetSymTable)
-            && (curPer->mOrigSymID == per->mOrigSymID))
+        if (curPer->isEqual(per))
         {
             return i;
         }

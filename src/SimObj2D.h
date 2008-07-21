@@ -111,7 +111,7 @@ public:
 
     virtual bool getFieldValue(string fieldName, float& value);
 
-    void addObjectSymbolAcquisition(int origTable, int targTable);
+    void addObjectSymbolAcquisition(int table);
     void addMessageSymbolAcquisition(int table);
 
     virtual void addMessage(Message* msg);
@@ -259,8 +259,8 @@ protected:
     llULINT mCurrentLaserLockID;
     unsigned int mTargetLockTime;
 
-    list<InterfaceItem> mObjectSymbolAcquisition;
-    list<InterfaceItem> mMessageSymbolAcquisition;
+    list<SymbolPointer> mObjectSymbolAcquisition;
+    list<SymbolPointer> mMessageSymbolAcquisition;
 
     unsigned int mObjSymAcqCounter;
 

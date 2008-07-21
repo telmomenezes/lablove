@@ -2,8 +2,6 @@
 -- Agents evolve to shoot at targets
 --------------------------------------------------------------------------------
 
-dofile("basic_defines.lua")
-
 -- Experiment Parameters
 --------------------------------------------------------------------------------
 
@@ -20,8 +18,8 @@ targetSpeed = 0.1
 worldWidth = 500
 worldHeight = 500
 
-alphaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, MAX, MIN, AVG, DMUL, SEL}
-betaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, CLK, DMUL}
+alphaComponents = {AND(), NOT(), SUM(), MUL(), INV(), NEG(), MOD(), AMP(), RAND(), EQ(), GTZ(), ZERO(), MAX(), MIN(), AVG(), DMUL(), SEL()}
+betaComponents = {AND(), NOT(), SUM(), MUL(), INV(), NEG(), MOD(), AMP(), RAND(), EQ(), GTZ(), ZERO(), CLK(), DMUL()}
 
 viewRange = 300.0
 viewAngle = 350.0
@@ -166,18 +164,14 @@ alphaSet = ComponentSet()
 for i, comp in pairs(alphaComponents) do
     alphaSet:addComponent(comp)
 end
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_POSITION)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_DISTANCE)
---alphaSet:addComponent(IN, Sim2D.PERCEPTION_SIZE)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_LTARGET)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_LOF)
---alphaSet:addComponent(IN, Sim2D.PERCEPTION_CONV)
---alphaSet:addComponent(IN, Sim2D.PERCEPTION_CONVDIR)
---alphaSet:addComponent(IN, Sim2D.PERCEPTION_SYMEQ, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_SYMEQ, SYM_TO_SYM, colorTableCode, targetColor:getID(), colorTableCode)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_ID)
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_POSITION))
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_DISTANCE))
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_LTARGET))
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_LOF))
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_SYMEQ, colorTableCode, targetColor:getID(), colorTableCode, false))
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_ID))
 grid = Grid()
-grid:init(ALPHA, 0, 0)
+grid:init(Grid.ALPHA, 0, 0)
 grid:setComponentSet(alphaSet)
 brain:addGrid(grid, "objects");
 
@@ -187,11 +181,11 @@ if self then
     for i, comp in pairs(alphaComponents) do
         selfSet:addComponent(comp)
     end
-    selfSet:addComponent(IN, Sim2D.PERCEPTION_ID)
-    selfSet:addComponent(IN, Sim2D.PERCEPTION_BLOCKED)
-    selfSet:addComponent(IN, Sim2D.PERCEPTION_COMPASS)
+    selfSet:addComponent(PER(Sim2D.PERCEPTION_ID))
+    selfSet:addComponent(PER(Sim2D.PERCEPTION_BLOCKED))
+    selfSet:addComponent(PER(Sim2D.PERCEPTION_COMPASS))
     selfGrid = Grid()
-    selfGrid:init(ALPHA, 0, 0)
+    selfGrid:init(Grid.ALPHA, 0, 0)
     selfGrid:setComponentSet(selfSet)
     brain:addGrid(selfGrid, "self")
 end
@@ -202,12 +196,12 @@ if comm then
     for i, comp in pairs(alphaComponents) do
         soundSet:addComponent(comp)
     end
-    soundSet:addComponent(IN, Sim2D.PERCEPTION_POSITION)
-    soundSet:addComponent(IN, Sim2D.PERCEPTION_DISTANCE)
-    soundSet:addComponent(IN, Sim2D.PERCEPTION_VALUE)
-    soundSet:addComponent(IN, Sim2D.PERCEPTION_SYMEQ, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
+    soundSet:addComponent(PER(Sim2D.PERCEPTION_POSITION))
+    soundSet:addComponent(PER(Sim2D.PERCEPTION_DISTANCE))
+    soundSet:addComponent(PER(Sim2D.PERCEPTION_VALUE))
+    soundSet:addComponent(PER(Sim2D.PERCEPTION_SYMEQ, colorTableCode, agentColor:getID(), colorTableCode, true))
     soundGrid = Grid()
-    soundGrid:init(ALPHA, 0, 0)
+    soundGrid:init(Grid.ALPHA, 0, 0)
     soundGrid:setComponentSet(soundSet)
     brain:addGrid(soundGrid, "sounds");
 end
@@ -217,15 +211,15 @@ betaSet = ComponentSet()
 for i, comp in pairs(betaComponents) do
     betaSet:addComponent(comp)
 end
-betaSet:addComponent(OUT, Sim2D.ACTION_GO)
-betaSet:addComponent(OUT, Sim2D.ACTION_ROTATE)
-betaSet:addComponent(OUT, Sim2D.ACTION_FIREB)
+betaSet:addComponent(ACT(Sim2D.ACTION_GO))
+betaSet:addComponent(ACT(Sim2D.ACTION_ROTATE))
+betaSet:addComponent(ACT(Sim2D.ACTION_FIREB))
 if comm then
-    betaSet:addComponent(OUT, Sim2D.ACTION_SPEAK, TAB_TO_SYM, colorTableCode, agentColor:getID())
+    betaSet:addComponent(ACT(Sim2D.ACTION_SPEAK, colorTableCode, agentColor:getID(), colorTableCode, true))
 end
     
 grid2 = Grid()
-grid2:init(BETA, 0, 0)
+grid2:init(Grid.BETA, 0, 0)
 grid2:setComponentSet(betaSet)
 
 brain:addGrid(grid2, "beta")

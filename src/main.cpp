@@ -17,16 +17,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "Simulation.h"
 #include "Sim2D.h"
-#include "SimHex.h"
 #include "SimObj.h"
 #include "SimObj2D.h"
-#include "SimObjHex.h"
 #include "Target2D.h"
 #include "PopDynSEGA.h"
 #include "Species.h"
-#include "InterfaceItem.h"
-#include "DummyBrain.h"
 #include "Gridbrain.h"
 #include "Grid.h"
 #include "Component.h"
@@ -42,6 +39,8 @@
 #include "StatCommon.h"
 #include "StatTime.h"
 #include "GridbrainLua.h"
+#include "CompPER.h"
+#include "CompACT.h"
 
 #if defined(__WIN32)
 #define WIN32_LEAN_AND_MEAN
@@ -148,15 +147,11 @@ int main(int argc, char *argv[])
     luaopen_debug(luaState);
     
     Orbit<Sim2D>::orbitRegister(luaState);
-    Orbit<SimHex>::orbitRegister(luaState);
     Orbit<SimObj>::orbitRegister(luaState);
     Orbit<SimObj2D>::orbitRegister(luaState);
     Orbit<Target2D>::orbitRegister(luaState);
-    Orbit<SimObjHex>::orbitRegister(luaState);
     Orbit<PopDynSEGA>::orbitRegister(luaState);
     Orbit<Species>::orbitRegister(luaState);
-    Orbit<InterfaceItem>::orbitRegister(luaState);
-    Orbit<DummyBrain>::orbitRegister(luaState);
     Orbit<Gridbrain>::orbitRegister(luaState);
     Orbit<Grid>::orbitRegister(luaState);
     Orbit<Component>::orbitRegister(luaState);
@@ -171,6 +166,8 @@ int main(int argc, char *argv[])
     Orbit<LogBestBrain>::orbitRegister(luaState);
     Orbit<StatCommon>::orbitRegister(luaState);
     Orbit<StatTime>::orbitRegister(luaState);
+    Orbit<CompPER>::orbitRegister(luaState);
+    Orbit<CompACT>::orbitRegister(luaState);
 
     lua_register(luaState, "getCommandLineParameter", getCommandLineParameter);
     lua_register(luaState, "randomZeroToOne", randomZeroToOne);
