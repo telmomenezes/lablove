@@ -21,7 +21,6 @@
 
 CompEQ::CompEQ()
 {
-    mType = EQ;
 }
 
 CompEQ::~CompEQ()
@@ -30,7 +29,9 @@ CompEQ::~CompEQ()
 
 Component* CompEQ::clone()
 {
-    return new CompEQ();
+    CompEQ* comp = new CompEQ();
+    comp->mType = mType;
+    return comp;
 }
 
 void CompEQ::reset(int pass)

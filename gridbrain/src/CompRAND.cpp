@@ -23,7 +23,6 @@ mt_distribution* CompRAND::mDistRand = gDistManager.getNewDistribution();
 
 CompRAND::CompRAND()
 {
-    mType = RAND;
 }
 
 CompRAND::~CompRAND()
@@ -32,7 +31,9 @@ CompRAND::~CompRAND()
 
 Component* CompRAND::clone()
 {
-    return new CompRAND();
+    CompRAND* comp = new CompRAND();
+    comp->mType = mType;
+    return comp;
 }
 
 void CompRAND::reset(int pass)

@@ -21,7 +21,6 @@
 
 CompGTZ::CompGTZ()
 {
-    mType = GTZ;
 }
 
 CompGTZ::~CompGTZ()
@@ -30,7 +29,9 @@ CompGTZ::~CompGTZ()
 
 Component* CompGTZ::clone()
 {
-    return new CompGTZ();
+    CompGTZ* comp = new CompGTZ();
+    comp->mType = mType;
+    return comp;
 }
 
 void CompGTZ::reset(int pass)

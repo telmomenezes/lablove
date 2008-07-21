@@ -21,7 +21,6 @@
 
 CompSEL::CompSEL()
 {
-    mType = SEL;
     mID = 0;
     mIDFound = false;
     mIDCandidate = 0;
@@ -35,7 +34,9 @@ CompSEL::~CompSEL()
 
 Component* CompSEL::clone()
 {
-    return new CompSEL();
+    CompSEL* comp = new CompSEL();
+    comp->mType = mType;
+    return comp;
 }
 
 void CompSEL::reset(int pass)

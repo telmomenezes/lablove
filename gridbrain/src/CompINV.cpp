@@ -21,7 +21,6 @@
 
 CompINV::CompINV()
 {
-    mType = INV;
 }
 
 CompINV::~CompINV()
@@ -30,7 +29,9 @@ CompINV::~CompINV()
 
 Component* CompINV::clone()
 {
-    return new CompINV();
+    CompINV* comp = new CompINV();
+    comp->mType = mType;
+    return comp;
 }
 
 void CompINV::reset(int pass)

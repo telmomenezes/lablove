@@ -34,6 +34,8 @@ class Gridbrain;
 class ComponentSet
 {
 public:
+    static int CURRENT_COMP_TYPE;
+
     ComponentSet();
     ComponentSet(lua_State* luaState);
     ComponentSet(ComponentSet* comp);

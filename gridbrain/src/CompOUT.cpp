@@ -21,7 +21,7 @@
 
 CompOUT::CompOUT()
 {
-    mType = OUT;
+    mType = -4;
 }
 
 CompOUT::~CompOUT()
@@ -31,6 +31,7 @@ CompOUT::~CompOUT()
 Component* CompOUT::clone()
 {
     CompOUT* comp = new CompOUT();
+    comp->mType = mType;
     comp->mOutputType = mOutputType;
     return comp;
 }

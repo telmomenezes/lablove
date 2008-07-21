@@ -21,7 +21,7 @@
 
 CompIN::CompIN()
 {
-    mType = IN;
+    mType = -3;
 }
 
 CompIN::~CompIN()
@@ -31,6 +31,7 @@ CompIN::~CompIN()
 Component* CompIN::clone()
 {
     CompIN* comp = new CompIN();
+    comp->mType = mType;
     comp->mInputType = mInputType;
     return comp;
 }

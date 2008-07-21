@@ -21,7 +21,7 @@
 
 CompNUL::CompNUL()
 {
-    mType = NUL;
+    mType = -2;
 }
 
 CompNUL::~CompNUL()
@@ -30,7 +30,9 @@ CompNUL::~CompNUL()
 
 Component* CompNUL::clone()
 {
-    return new CompNUL();
+    CompNUL* comp = new CompNUL();
+    comp->mType = mType;
+    return comp;
 }
 
 void CompNUL::reset(int pass)

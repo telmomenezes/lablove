@@ -21,7 +21,6 @@
 
 CompAVG::CompAVG()
 {
-    mType = AVG;
     mState = 0;
     mCount = 0;
     mPass = 0;
@@ -33,7 +32,9 @@ CompAVG::~CompAVG()
 
 Component* CompAVG::clone()
 {
-    return new CompAVG();
+    CompAVG* comp = new CompAVG();
+    comp->mType = mType;
+    return comp;
 }
 
 void CompAVG::reset(int pass)

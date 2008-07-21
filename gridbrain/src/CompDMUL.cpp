@@ -21,7 +21,6 @@
 
 CompDMUL::CompDMUL()
 {
-    mType = DMUL;
 }
 
 CompDMUL::~CompDMUL()
@@ -30,7 +29,9 @@ CompDMUL::~CompDMUL()
 
 Component* CompDMUL::clone()
 {
-    return new CompDMUL();
+    CompDMUL* comp = new CompDMUL();
+    comp->mType = mType;
+    return comp;
 }
 
 void CompDMUL::reset(int pass)

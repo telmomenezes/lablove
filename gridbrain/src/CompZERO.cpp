@@ -21,7 +21,6 @@
 
 CompZERO::CompZERO()
 {
-    mType = ZERO;
 }
 
 CompZERO::~CompZERO()
@@ -30,7 +29,9 @@ CompZERO::~CompZERO()
 
 Component* CompZERO::clone()
 {
-    return new CompZERO();
+    CompZERO* comp = new CompZERO();
+    comp->mType = mType;
+    return comp;
 }
 
 void CompZERO::reset(int pass)

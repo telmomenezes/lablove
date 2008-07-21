@@ -21,7 +21,6 @@
 
 CompSUM::CompSUM()
 {
-    mType = SUM;
 }
 
 CompSUM::~CompSUM()
@@ -30,7 +29,9 @@ CompSUM::~CompSUM()
 
 Component* CompSUM::clone()
 {
-    return new CompSUM();
+    CompSUM* comp = new CompSUM();
+    comp->mType = mType;
+    return comp;
 }
 
 void CompSUM::reset(int pass)

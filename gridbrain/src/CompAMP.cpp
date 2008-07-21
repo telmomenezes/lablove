@@ -21,7 +21,6 @@
 
 CompAMP::CompAMP()
 {
-    mType = AMP;
 }
 
 CompAMP::~CompAMP()
@@ -31,6 +30,7 @@ CompAMP::~CompAMP()
 Component* CompAMP::clone()
 {
     CompAMP* comp = new CompAMP();
+    comp->mType = mType;
     comp->mParam = mParam;
     return comp;
 }

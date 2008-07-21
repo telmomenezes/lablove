@@ -53,6 +53,7 @@ CompACT::~CompACT()
 Component* CompACT::clone()
 {
     CompACT* comp = new CompACT();
+    comp->mType = mType;
     comp->mOutputType = mOutputType;
     comp->mOrigSymTable = mOrigSymTable;
     comp->mOrigSymID = mOrigSymID;

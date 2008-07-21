@@ -20,6 +20,7 @@
 #include "ComponentSet.h"
 #include "Gridbrain.h"
 
+int ComponentSet::CURRENT_COMP_TYPE = 0;
 mt_distribution* ComponentSet::mDistComponentSet = gDistManager.getNewDistribution();
 
 ComponentSet::ComponentSet()
@@ -53,6 +54,7 @@ ComponentSet::~ComponentSet()
 
 void ComponentSet::addComponent(Component* component)
 {
+    component->mType = CURRENT_COMP_TYPE++;
     mComponentVec.push_back(component->clone());
 }
 

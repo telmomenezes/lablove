@@ -22,7 +22,6 @@
 
 CompAND::CompAND()
 {
-    mType = AND;
 }
 
 CompAND::~CompAND()
@@ -31,7 +30,9 @@ CompAND::~CompAND()
 
 Component* CompAND::clone()
 {
-    return new CompAND();
+    CompAND* comp = new CompAND();
+    comp->mType = mType;
+    return comp;
 }
 
 void CompAND::reset(int pass)

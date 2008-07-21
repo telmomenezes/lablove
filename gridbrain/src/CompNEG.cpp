@@ -21,7 +21,6 @@
 
 CompNEG::CompNEG()
 {
-    mType = NEG;
 }
 
 CompNEG::~CompNEG()
@@ -30,7 +29,9 @@ CompNEG::~CompNEG()
 
 Component* CompNEG::clone()
 {
-    return new CompNEG();
+    CompNEG* comp = new CompNEG();
+    comp->mType = mType;
+    return comp;
 }
 
 void CompNEG::reset(int pass)

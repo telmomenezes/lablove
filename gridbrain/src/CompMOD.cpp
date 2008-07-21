@@ -21,7 +21,6 @@
 
 CompMOD::CompMOD()
 {
-    mType = MOD;
 }
 
 CompMOD::~CompMOD()
@@ -30,7 +29,9 @@ CompMOD::~CompMOD()
 
 Component* CompMOD::clone()
 {
-    return new CompMOD();
+    CompMOD* comp = new CompMOD();
+    comp->mType = mType;
+    return comp;
 }
 
 void CompMOD::reset(int pass)

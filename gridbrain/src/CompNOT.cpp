@@ -22,7 +22,6 @@
 
 CompNOT::CompNOT()
 {
-    mType = NOT;
 }
 
 CompNOT::~CompNOT()
@@ -31,7 +30,9 @@ CompNOT::~CompNOT()
 
 Component* CompNOT::clone()
 {
-    return new CompNOT();
+    CompNOT* comp = new CompNOT();
+    comp->mType = mType;
+    return comp;
 }
 
 void CompNOT::reset(int pass)

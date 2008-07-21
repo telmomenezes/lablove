@@ -21,7 +21,6 @@
 
 CompMIN::CompMIN()
 {
-    mType = MIN;
     mPass = 0;
     mState = 0;
     mTriggered = false;
@@ -33,7 +32,9 @@ CompMIN::~CompMIN()
 
 Component* CompMIN::clone()
 {
-    return new CompMIN();
+    CompMIN* comp = new CompMIN();
+    comp->mType = mType;
+    return comp;
 }
 
 void CompMIN::reset(int pass)

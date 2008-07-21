@@ -341,7 +341,7 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                 }
                 else
                 {
-                    newComponent = Component::createByType(Component::NUL);
+                    newComponent = new CompNUL();
                 }
 
                 newComponent->mOffset = offset;
@@ -378,7 +378,7 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                 y++)
             {
                 Component* comp = gb->getComponent(x, y, g);
-                if (comp->mType == Component::NUL)
+                if (comp->isNUL())
                 {
                     Component* newComp = newGrid->getRandomComponent();
                     gb->replaceComponent(pos, newComp);
@@ -473,7 +473,7 @@ void Gridbrain::init()
     {
         for (unsigned int i = 0; i < mNumberOfComponents; i++)
         {
-            mComponents.push_back(Component::createByType(Component::NUL));
+            mComponents.push_back(new CompNUL());
         }
 
         // Init grids with NUL components
@@ -1381,7 +1381,7 @@ void Gridbrain::cycle()
                     for (unsigned int i = 0; i < endIndex; i++)
                     {
                         Component* comp = grid->mComponentSequence[i];
-                        if (comp->mType == Component::IN)
+                        if (comp->isInput())
                         {
                             comp->mOutput =
                                 inputMatrix[comp->mPerceptionPosition
@@ -1406,7 +1406,7 @@ void Gridbrain::cycle()
                     //comp->print();
                     //printf(" => %f\n", output);
 
-                    if (comp->mType == Component::OUT)
+                    if (comp->isOutput())
                     {
                         outputVector[comp->mActionPosition] = output;
                     }
@@ -1559,11 +1559,11 @@ void Gridbrain::calcActiveComponents()
                 }
                 if (comp->mActive)
                 {
-                    if (comp->mType == Component::IN)
+                    if (comp->isInput())
                     {
                         mActivePerceptions++;
                     }
-                    else if (comp->mType == Component::OUT)
+                    else if (comp->isOutput())
                     {
                         mActiveActions++;
                     }

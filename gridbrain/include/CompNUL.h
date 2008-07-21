@@ -38,6 +38,7 @@ public:
     virtual ConnType getConnectorType(){return CONN_INOUT;}
 
     virtual bool isUnique(){return false;}
+    virtual bool isNUL(){return true;}
     virtual bool compare(Component* comp){return true;}
 };
 

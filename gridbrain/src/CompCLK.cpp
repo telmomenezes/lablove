@@ -21,7 +21,6 @@
 
 CompCLK::CompCLK()
 {
-    mType = CLK;
     mInit = false;
     mLastInput = 0.0f;
 }
@@ -33,6 +32,7 @@ CompCLK::~CompCLK()
 Component* CompCLK::clone()
 {
     CompCLK* comp = new CompCLK();
+    comp->mType = mType;
     comp->mParam = mParam;
     return comp;
 }

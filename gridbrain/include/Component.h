@@ -29,10 +29,7 @@ using std::string;
 class Component
 {
 public:
-    enum Type {NUL, IN, OUT, AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, MAX, MIN, AVG, CLK, DMUL, SEL};
     enum ConnType {CONN_IN, CONN_OUT, CONN_INOUT};
-
-    static Component* createByType(Type type);
 
     Component(lua_State* luaState=NULL);
     virtual ~Component();
@@ -54,6 +51,7 @@ public:
     virtual bool isUnique(){return false;}
     virtual bool isInput(){return false;}
     virtual bool isOutput(){return false;}
+    virtual bool isNUL(){return false;}
     
     virtual string getLabel(){return "";}
 
@@ -72,7 +70,7 @@ public:
     static Orbit<Component>::MethodType mMethods[];
     static Orbit<Component>::NumberGlobalType mNumberGlobals[];
 
-    Type mType;
+    int mType;
     float mParam;
 
     float mInput;

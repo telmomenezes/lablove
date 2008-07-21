@@ -21,7 +21,6 @@
 
 CompMAX::CompMAX()
 {
-    mType = MAX;
     mPass = 0;
     mState = 0;
     mTriggered = false;
@@ -33,7 +32,9 @@ CompMAX::~CompMAX()
 
 Component* CompMAX::clone()
 {
-    return new CompMAX();
+    CompMAX* comp = new CompMAX();
+    comp->mType = mType;
+    return comp;
 }
 
 void CompMAX::reset(int pass)

@@ -53,6 +53,7 @@ CompPER::~CompPER()
 Component* CompPER::clone()
 {
     CompPER* comp = new CompPER();
+    comp->mType = mType;
     comp->mInputType = mInputType;
     comp->mOrigSymTable = mOrigSymTable;
     comp->mOrigSymID = mOrigSymID;

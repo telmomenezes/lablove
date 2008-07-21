@@ -24,6 +24,6 @@ TEST(ComponentSetGetRandomFromEmpty)
 {
     ComponentSet set;
     Component* comp = set.getRandom();
-    CHECK_EQUAL(comp->mType, Component::NUL);
+    CHECK(comp->isNUL());
 }
 

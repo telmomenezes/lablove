@@ -22,6 +22,7 @@
 
 Component::Component(lua_State* luaState)
 {
+    mType = -1;
     mParam = 0;
     mInput = 0;
     mOutput = 0;
@@ -164,105 +165,9 @@ void Component::print()
     printf("  [%d, %d, %d]", mColumn, mRow, mGrid);
 }
 
-Component* Component::createByType(Type type)
-{
-    switch(type)
-    {
-    case NUL:
-        return new CompNUL();
-        break;
-    case IN:
-        return new CompIN();
-        break;
-    case OUT:
-        return new CompOUT();
-        break;
-    case SUM:
-        return new CompSUM();
-        break;
-    case MAX:
-        return new CompMAX();
-        break;
-    case MIN:
-        return new CompMIN();
-        break;
-    case AVG:
-        return new CompAVG();
-        break;
-    case MUL:
-        return new CompMUL();
-        break;
-    case NOT:
-        return new CompNOT();
-        break;
-    case AND:
-        return new CompAND();
-        break;
-    case INV:
-        return new CompINV();
-        break;
-    case NEG:
-        return new CompNEG();
-        break;
-    case AMP:
-        return new CompAMP();
-        break;
-    case MOD:
-        return new CompMOD();
-        break;
-    case RAND:
-        return new CompRAND();
-        break;
-    case EQ:
-        return new CompEQ();
-        break;
-    case GTZ:
-        return new CompGTZ();
-        break;
-    case ZERO:
-        return new CompZERO();
-        break;
-    case CLK:
-        return new CompCLK();
-        break;
-    case DMUL:
-        return new CompDMUL();
-        break;
-    case SEL:
-        return new CompSEL();
-        break;
-    default:
-        return new CompNUL();
-        break;
-    }
-}
-
 const char Component::mClassName[] = "Component";
 
 Orbit<Component>::MethodType Component::mMethods[] = {{0,0}};
 
-Orbit<Component>::NumberGlobalType Component::mNumberGlobals[] = {
-    {"NUL", NUL},
-    {"IN", IN},
-    {"OUT", OUT},
-    {"SUM", SUM},
-    {"MAX", MAX},
-    {"MIN", MIN},
-    {"AVG", AVG},
-    {"MUL", MUL},
-    {"NOT", NOT},
-    {"AND", AND},
-    {"INV", INV},
-    {"NEG", NEG},
-    {"AMP", AMP},
-    {"MOD", MOD},
-    {"RAND", RAND},
-    {"EQ", EQ},
-    {"GTZ", GTZ},
-    {"ZERO", ZERO},
-    {"CLK", CLK},
-    {"DMUL", DMUL},
-    {"SEL", SEL},
-    {0,0}
-};
+Orbit<Component>::NumberGlobalType Component::mNumberGlobals[] = {{0,0}};
 
