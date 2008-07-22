@@ -47,9 +47,8 @@ laserHitDuration = 5
 soundRange = 500
 speakInterval = 250
 
-compCount = 1
 bufferSize = 100
-fitnessAging = 0.8
+fitnessAging = 0.5
 
 addConnectionProb = 0.01
 removeConnectionProb = 0.01
@@ -59,7 +58,7 @@ splitConnectionProb = 0.01
 joinConnectionsProb = 0.01
 changeInComponentProb = 0.2
 
-recombineProb = 0.25
+recombineProb = 1.0
 
 groupFactor = 0.5
 
@@ -71,9 +70,6 @@ logOnlyLastBrain = true
 humanAgent = false
 
 evolutionStopTime = 0
-
-self = false
-comm = true
 
 agentBirthRadius = 100.0
 
@@ -174,36 +170,18 @@ grid:init(Grid.ALPHA, 0, 0)
 grid:setComponentSet(alphaSet)
 brain:addGrid(grid, "objects");
 
--- Self Grid
-if self then
-    selfSet = ComponentSet()
-    for i, comp in pairs(alphaComponents) do
-        selfSet:addComponent(comp)
-    end
-    selfSet:addComponent(PER(Sim2D.PERCEPTION_ID))
-    selfSet:addComponent(PER(Sim2D.PERCEPTION_BLOCKED))
-    selfSet:addComponent(PER(Sim2D.PERCEPTION_COMPASS))
-    selfGrid = Grid()
-    selfGrid:init(Grid.ALPHA, 0, 0)
-    selfGrid:setComponentSet(selfSet)
-    brain:addGrid(selfGrid, "self")
+soundSet = ComponentSet()
+for i, comp in pairs(alphaComponents) do
+    soundSet:addComponent(comp)
 end
-
--- Sounds grid
-if comm then
-    soundSet = ComponentSet()
-    for i, comp in pairs(alphaComponents) do
-        soundSet:addComponent(comp)
-    end
-    soundSet:addComponent(PER(Sim2D.PERCEPTION_POSITION))
-    soundSet:addComponent(PER(Sim2D.PERCEPTION_DISTANCE))
-    soundSet:addComponent(PER(Sim2D.PERCEPTION_VALUE))
-    soundSet:addComponent(PER(Sim2D.PERCEPTION_SYMEQ, colorTableCode, agentColor:getID(), colorTableCode, true))
-    soundGrid = Grid()
-    soundGrid:init(Grid.ALPHA, 0, 0)
-    soundGrid:setComponentSet(soundSet)
-    brain:addGrid(soundGrid, "sounds");
-end
+soundSet:addComponent(PER(Sim2D.PERCEPTION_POSITION))
+soundSet:addComponent(PER(Sim2D.PERCEPTION_DISTANCE))
+soundSet:addComponent(PER(Sim2D.PERCEPTION_VALUE))
+soundSet:addComponent(PER(Sim2D.PERCEPTION_SYMEQ, colorTableCode, agentColor:getID(), colorTableCode, true))
+soundGrid = Grid()
+soundGrid:init(Grid.ALPHA, 0, 0)
+soundGrid:setComponentSet(soundSet)
+brain:addGrid(soundGrid, "sounds");
 
 -- Beta Grid
 betaSet = ComponentSet()
@@ -213,9 +191,7 @@ end
 betaSet:addComponent(ACT(Sim2D.ACTION_GO))
 betaSet:addComponent(ACT(Sim2D.ACTION_ROTATE))
 betaSet:addComponent(ACT(Sim2D.ACTION_FIREB))
-if comm then
-    betaSet:addComponent(ACT(Sim2D.ACTION_SPEAK, colorTableCode, agentColor:getID(), colorTableCode, true))
-end
+betaSet:addComponent(ACT(Sim2D.ACTION_SPEAK, colorTableCode, agentColor:getID(), colorTableCode, true))
     
 grid2 = Grid()
 grid2:init(Grid.BETA, 0, 0)
