@@ -16,8 +16,8 @@ plantSize = 10.0
 worldWidth = 1000
 worldHeight = 1000
 
-alphaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, GTZ, ZERO, MAX, AVG, SEL}
-betaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, GTZ, ZERO, CLK}
+alphaComponents = {AND(), NOT(), SUM(), MUL(), INV(), NEG(), MOD(), AMP(), RAND(), EQ(), GTZ(), ZERO(), MAX(), MIN(), AVG(), DMUL(), SEL(), MEM()}
+betaComponents = {AND(), NOT(), SUM(), MUL(), INV(), NEG(), MOD(), AMP(), RAND(), EQ(), GTZ(), ZERO(), CLK(), DMUL(), MEM(), TMEM()}
 
 viewRange = 150.0
 viewAngle = 170.0
@@ -37,7 +37,7 @@ feedCenter = 0.25
 
 compCount = 1
 bufferSize = 100
-fitnessAging = 0.1
+fitnessAging = 0.5
 
 addConnectionProb = 0.01
 removeConnectionProb = 0.01
@@ -50,9 +50,6 @@ changeInComponentProb = 0.2
 swapComponentProb = 0.0
 
 recombineProb = 0.25
-recTree = false
-recTerminal = false
-geneGrouping = false
 
 timeLimit = 0
 logTimeInterval = 100
@@ -82,19 +79,7 @@ bufferSize = getNumberParameter("buffersize", bufferSize, "buf")
 compCount = getNumberParameter("compcount", compCount, "cc")
 fitnessAging = getNumberParameter("fitnessaging", fitnessAging, "agi")
 evolutionStopTime = getNumberParameter("evostop", evolutionStopTime, "est")
-recTree = getBoolParameter("rectree", recTree, "rectree")
-recTerminal = getBoolParameter("recterm", recTerminal, "recterm")
 --viewRange = getNumberParameter("viewrange", viewRange, "vr")
-
-recType = Gridbrain.RT_UNIFORM
-
-if recTree then
-    if recTerminal then
-        recType = Gridbrain.RT_TREE_TERMINAL
-    else
-        recType = Gridbrain.RT_TREE
-    end
-end
 
 logBaseName = "_poison_"
 
@@ -161,17 +146,15 @@ brain:setMutateJoinConnectionsProb(joinConnectionsProb)
 brain:setMutateChangeComponentProb(changeComponentProb)
 brain:setMutateChangeInactiveComponentProb(changeInComponentProb)
 brain:setMutateSwapComponentProb(swapComponentProb)
-brain:setRecombinationType(recType)
-brain:setGeneGrouping(geneGrouping)
 
 alphaSet = ComponentSet()
 for i, comp in pairs(alphaComponents) do
     alphaSet:addComponent(comp)
 end
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_POSITION)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_DISTANCE)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_TARGET)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_SYMPRO, SYM_TO_SYM, feedTableCode, agentFeed:getID(), foodTableCode)
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_POSITION))
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_DISTANCE))
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_TARGET))
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_SYMPRO, feedTableCode, agentFeed:getID(), foodTableCode))
 
 grid = Grid()
 grid:init(Grid.ALPHA, 0, 0)
@@ -183,9 +166,9 @@ betaSet = ComponentSet()
 for i, comp in pairs(betaComponents) do
     betaSet:addComponent(comp)
 end
-betaSet:addComponent(OUT, Sim2D.ACTION_GO)
-betaSet:addComponent(OUT, Sim2D.ACTION_ROTATE)
-betaSet:addComponent(OUT, Sim2D.ACTION_EATB)
+betaSet:addComponent(ACT(Sim2D.ACTION_GO))
+betaSet:addComponent(ACT(Sim2D.ACTION_ROTATE))
+betaSet:addComponent(ACT(Sim2D.ACTION_EATB))
     
 grid2 = Grid()
 grid2:init(Grid.BETA, 0, 0)
