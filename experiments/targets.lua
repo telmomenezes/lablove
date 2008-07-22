@@ -18,8 +18,8 @@ targetSpeed = 0.1
 worldWidth = 500
 worldHeight = 500
 
-alphaComponents = {AND(), NOT(), SUM(), MUL(), INV(), NEG(), MOD(), AMP(), RAND(), EQ(), GTZ(), ZERO(), MAX(), MIN(), AVG(), DMUL(), SEL()}
-betaComponents = {AND(), NOT(), SUM(), MUL(), INV(), NEG(), MOD(), AMP(), RAND(), EQ(), GTZ(), ZERO(), CLK(), DMUL()}
+alphaComponents = {AND(), NOT(), SUM(), MUL(), INV(), NEG(), MOD(), AMP(), RAND(), EQ(), GTZ(), ZERO(), MAX(), MIN(), AVG(), DMUL(), SEL(), MEM()}
+betaComponents = {AND(), NOT(), SUM(), MUL(), INV(), NEG(), MOD(), AMP(), RAND(), EQ(), GTZ(), ZERO(), CLK(), DMUL(), MEM(), TMEM()}
 
 viewRange = 300.0
 viewAngle = 350.0
@@ -169,7 +169,6 @@ alphaSet:addComponent(PER(Sim2D.PERCEPTION_DISTANCE))
 alphaSet:addComponent(PER(Sim2D.PERCEPTION_LTARGET))
 alphaSet:addComponent(PER(Sim2D.PERCEPTION_LOF))
 alphaSet:addComponent(PER(Sim2D.PERCEPTION_SYMEQ, colorTableCode, targetColor:getID(), colorTableCode, false))
-alphaSet:addComponent(PER(Sim2D.PERCEPTION_ID))
 grid = Grid()
 grid:init(Grid.ALPHA, 0, 0)
 grid:setComponentSet(alphaSet)
@@ -250,8 +249,8 @@ popDyn = PopDynSEGA()
 sim:setPopulationDynamics(popDyn)
 
 agentSpecies = Species(agent, numberOfAgents)
-agentSpecies:addGoal(SimObj2D.FITNESS_LASER_HIT_SCORE, bufferSize)
-agentSpecies:addGoal(SimObj2D.FITNESS_LASER_EFF_SCORE, bufferSize)
+agentSpecies:addGoal(SimObj2D.FITNESS_LOCK_SCORE, bufferSize)
+agentSpecies:addGoal(SimObj2D.FITNESS_LASER_SCORE, bufferSize)
 agentSpecies:addGoal(SimObj2D.FITNESS_SYNCH_SCORE, bufferSize)
 agentSpecies:setFitnessAging(fitnessAging)
 agentSpecies:setRecombineProb(recombineProb)
@@ -323,8 +322,8 @@ end
 
 stats = StatCommon()
 stats:setFile("log" .. logSuffix .. ".csv")
-stats:addField("laser_hit_score")
-stats:addField("laser_eff_score")
+stats:addField("lock_score")
+stats:addField("laser_score")
 stats:addField("synch_score")
 stats:addField("gb_connections")
 stats:addField("gb_active_connections")

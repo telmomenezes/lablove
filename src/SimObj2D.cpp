@@ -118,8 +118,8 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     mEnergySum = 0.0f;
     mEnergySumAboveInit = 0.0f;
     mMsgScore = 0.0f;
-    mLaserHitScore = 0.0f;
-    mLaserEffScore = 0.0f;
+    mLaserScore = 0.0f;
+    mLockScore = 0.0f;
     mCurrentSynchScore = 0.0f;
     mBestSynchScore = 0.0f;
 
@@ -234,8 +234,8 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
     mEnergySum = 0.0f;
     mEnergySumAboveInit = 0.0f;
     mMsgScore = 0.0f;
-    mLaserHitScore = 0.0f;
-    mLaserEffScore = 0.0f;
+    mLaserScore = 0.0f;
+    mLockScore = 0.0f;
     mCurrentSynchScore = 0.0f;
     mBestSynchScore = 0.0f;
 
@@ -444,7 +444,7 @@ void SimObj2D::process()
             {
                 if (obj->mSpeciesID != mSpeciesID)
                 {
-                    obj->mLaserEffScore += mEnergy;
+                    obj->mLaserScore += mEnergy;
                 }
             }
         }
@@ -582,6 +582,11 @@ void SimObj2D::process()
             mTargetLockTime = 0;
         }
 
+        if (mTargetLockTime > mLockScore)
+        {
+            mLockScore = mTargetLockTime;
+        }
+
         //printf("lock: %d\n", mTargetLockTime);
         //printf("laser target: %d\n", mCurrentLaserTargetID);
     }
@@ -616,11 +621,11 @@ void SimObj2D::updateFitnesses()
         case FITNESS_SYNCH_SCORE:
             fit->mFitness = mBestSynchScore;
             break;
-        case FITNESS_LASER_HIT_SCORE:
-            fit->mFitness = mLaserHitScore;
+        case FITNESS_LASER_SCORE:
+            fit->mFitness = mLaserScore;
             break;
-        case FITNESS_LASER_EFF_SCORE:
-            fit->mFitness = mLaserEffScore;
+        case FITNESS_LOCK_SCORE:
+            fit->mFitness = mLockScore;
             break;
         }
     }
@@ -1310,19 +1315,7 @@ void SimObj2D::fire(unsigned int actionType, float strength)
         break;
     }
 
-    float lockTime = (float)mTargetLockTime;
-    float maxLockTime = ((float)mFireInterval);
-
-    if (lockTime > maxLockTime)
-    {
-        lockTime = maxLockTime;
-    }
-
-    float lockFactor = lockTime / maxLockTime;
-
-    //printf("lock factor: %f\n", lockFactor);
-
-    laser.mEnergy = strength * mLaserStrengthFactor * lockFactor;
+    laser.mEnergy = strength * mLaserStrengthFactor;
 
 
     laser.mRange = mLaserRange;
@@ -1417,11 +1410,11 @@ void SimObj2D::processLaserHit(Laser2D* laser)
     SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
     if ((obj != NULL) && (laser->mEnergy > 0))
     {
-        score = laser->mEnergy;
+        score = laser->mEnergy * 0.1f;
         //printf("score: %f\n", score);
         if (obj->mSpeciesID != mSpeciesID)
         {
-            obj->mLaserHitScore += score;
+            obj->mLaserScore += score;
         }
     }
 
@@ -1460,7 +1453,7 @@ void SimObj2D::processLaserHit(Laser2D* laser)
         {
             if (obj->mSpeciesID != mSpeciesID)
             {
-                obj->mLaserEffScore += score;
+                obj->mLaserScore += score;
             }
         }
 
@@ -1592,8 +1585,8 @@ Orbit<SimObj2D>::NumberGlobalType SimObj2D::mNumberGlobals[] = {
     {"FITNESS_ENERGY_SUM_ABOVE_INIT", FITNESS_ENERGY_SUM_ABOVE_INIT},
     {"FITNESS_MSG_SCORE", FITNESS_MSG_SCORE},
     {"FITNESS_SYNCH_SCORE", FITNESS_SYNCH_SCORE},
-    {"FITNESS_LASER_HIT_SCORE", FITNESS_LASER_HIT_SCORE},
-    {"FITNESS_LASER_EFF_SCORE", FITNESS_LASER_EFF_SCORE},
+    {"FITNESS_LASER_SCORE", FITNESS_LASER_SCORE},
+    {"FITNESS_LOCK_SCORE", FITNESS_LOCK_SCORE},
     {"FITNESS_RANDOM", FITNESS_RANDOM},
     {"SHAPE_TRIANGLE", SHAPE_TRIANGLE},
     {"SHAPE_SQUARE", SHAPE_SQUARE},
