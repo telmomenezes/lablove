@@ -569,7 +569,7 @@ void SimObj2D::process()
             }
         }
 
-        SimObj2D* objLock = (SimObj2D*)mSim2D->getObjectByID(mCurrentLaserLockID);
+        /*SimObj2D* objLock = (SimObj2D*)mSim2D->getObjectByID(mCurrentLaserLockID);
 
         if ((objLock != NULL)
             && mSim2D->segmentCollides(objLock, x1, y1, x2, y2))
@@ -580,13 +580,12 @@ void SimObj2D::process()
         {
             mCurrentLaserLockID = mCurrentLaserTargetID;
             mTargetLockTime = 0;
-        }
+        }*/
         
         //objLock = (SimObj2D*)mSim2D->getObjectByID(mCurrentLaserLockID);
-        objLock = (SimObj2D*)mSim2D->getObjectByID(mCurrentLaserTargetID);
 
-        if ((objLock != NULL)
-            && (objLock->mSpeciesID != mSpeciesID))
+        if ((laserTarget != NULL)
+            && (laserTarget->mSpeciesID != mSpeciesID))
         {
             mLockScore += 1;
             //if (mTargetLockTime > mLockScore)
