@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,6 +18,9 @@
  */
 
 #include "CompMIN.h"
+
+namespace gb
+{
 
 CompMIN::CompMIN()
 {
@@ -97,5 +100,7 @@ float CompMIN::output(unsigned int id)
     }
 
     return mOutput;
+}
+
 }
 

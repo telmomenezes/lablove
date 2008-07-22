@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -17,14 +17,5 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "ScriptableObject.h"
-
-ScriptableObject::ScriptableObject()
-{
-    mCreatedByScript = false;
-}
-
-ScriptableObject::~ScriptableObject()
-{
-}
+typedef unsigned long long llULINT;
 

@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -24,6 +24,9 @@
 #include <stdexcept>
 #include <float.h>
 #include <math.h>
+
+namespace gb
+{
 
 long Gridbrain::MUTATIONS_ADD_CONN = 0;
 long Gridbrain::MUTATIONS_REM_CONN = 0;
@@ -301,27 +304,27 @@ void Gridbrain::mutateSplitConnection(float prob)
         if (g3 != -1)
         {
             MUTATIONS_SPLIT_CONN++;
-            GeneTag tag1 = conn->mGeneTag;
+            Gene tag1 = conn->mGene;
 
             // remove 1->2 connection
             removeConnection(conn);
 
-            GeneTag tag2;
-            GeneTag tag3;
+            Gene tag2;
+            Gene tag3;
 
             llULINT geneID = tag1.mGeneID;
 
             if (geneID == 0)
             {
-                geneID = GeneTag::generateID();
+                geneID = Gene::generateID();
             }
 
             tag2.mGeneID = geneID;
             tag3.mGeneID = geneID;
             tag2.mOrigID = tag1.mOrigID;
             tag3.mTargID = tag1.mTargID;
-            tag2.mTargID = GeneTag::generateID();
-            tag3.mOrigID = GeneTag::generateID();
+            tag2.mTargID = Gene::generateID();
+            tag3.mOrigID = Gene::generateID();
 
             /*printf(">>> split tags!\n");
             tag2.print();
@@ -360,7 +363,7 @@ void Gridbrain::mutateJoinConnections(float prob)
 
         Connection* conn2 = comp->mFirstConnection;
         while ((conn2 != NULL)
-                && (conn1->mGeneTag.mGeneID != conn2->mGeneTag.mGeneID))
+                && (conn1->mGene.mGeneID != conn2->mGene.mGeneID))
         {
             conn2 = (Connection*)conn2->mNextConnection;
         }
@@ -379,10 +382,10 @@ void Gridbrain::mutateJoinConnections(float prob)
                 nextConn = skipNextRandomConnection();
             }
 
-            GeneTag gt;
-            gt.mGeneID = conn1->mGeneTag.mGeneID;
-            gt.mOrigID = conn1->mGeneTag.mOrigID;
-            gt.mTargID = conn2->mGeneTag.mTargID;
+            Gene gt;
+            gt.mGeneID = conn1->mGene.mGeneID;
+            gt.mOrigID = conn1->mGene.mOrigID;
+            gt.mTargID = conn2->mGene.mTargID;
 
             addConnection(conn1->mColumnOrig,
                         conn1->mRowOrig,
@@ -478,5 +481,7 @@ void Gridbrain::debugMutationsCount()
             MUTATIONS_CHG_IN_COMP,
             MUTATIONS_SWP_COMP);
     fflush(stdout);
+}
+
 }
 

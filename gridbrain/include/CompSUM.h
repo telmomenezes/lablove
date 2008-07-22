@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -22,6 +22,9 @@
 
 #include "Component.h"
 
+namespace gb
+{
+
 class CompSUM : public Component
 {
 public:
@@ -42,6 +45,8 @@ public:
 };
 
 static CompSUM COMP_SUM;
+
+}
 
 #endif
 

@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,6 +18,9 @@
  */
 
 #include "CompRAND.h"
+
+namespace gb
+{
 
 mt_distribution* CompRAND::mDistRand = gDistManager.getNewDistribution();
 
@@ -49,5 +52,7 @@ float CompRAND::output(unsigned int id)
 
     mOutput = mDistRand->uniform(-1.0f, 1.0f);
     return mOutput;
+}
+
 }
 

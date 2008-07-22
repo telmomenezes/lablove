@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -21,6 +21,9 @@
 #define _INCLUDE_GRIDBRAIN_COMPONENT_OUT_H
 
 #include "Component.h"
+
+namespace gb
+{
 
 class CompOUT : public Component
 {
@@ -52,6 +55,8 @@ protected:
 };
 
 static CompOUT COMP_OUT;
+
+}
 
 #endif
 

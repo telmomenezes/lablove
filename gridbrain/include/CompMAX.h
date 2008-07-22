@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -21,6 +21,9 @@
 #define _INCLUDE_GRIDBRAIN_COMPONENT_MAX_H
 
 #include "Component.h"
+
+namespace gb
+{
 
 class CompMAX : public Component
 {
@@ -49,6 +52,8 @@ protected:
 };
 
 static CompMAX COMP_MAX;
+
+}
 
 #endif
 

@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -19,6 +19,9 @@
 
 #include "Connection.h"
 
+namespace gb
+{
+
 Connection::Connection()
 {
 }
@@ -31,5 +34,7 @@ bool Connection::connectsNeighbourColumns()
 {
     return ((mGridOrig == mGridTarg)
         && ((mColumnTarg - mColumnOrig) == 1));
+}
+
 }
 

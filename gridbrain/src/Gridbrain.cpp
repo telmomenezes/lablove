@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -26,13 +26,16 @@
 #include <float.h>
 #include <math.h>
 
+namespace gb
+{
+
 mt_distribution* Gridbrain::mDistConnections = gDistManager.getNewDistribution();
 mt_distribution* Gridbrain::mDistMutationsProb = gDistManager.getNewDistribution();
 mt_distribution* Gridbrain::mDistComponents = gDistManager.getNewDistribution();
 mt_distribution* Gridbrain::mDistRecombine = gDistManager.getNewDistribution();
 mt_distribution* Gridbrain::mDistGridbrain = gDistManager.getNewDistribution();
 
-Gridbrain::Gridbrain(lua_State* luaState)
+Gridbrain::Gridbrain()
 {
     mMaxInputDepth = 50;
     mNumberOfComponents = 0;
@@ -63,9 +66,6 @@ Gridbrain::Gridbrain(lua_State* luaState)
     mActiveActions = 0;
     mActiveConnections = 0;
     mAllActive = false;
-
-    mRecombinationType = RT_UNIFORM;
-    mGeneGrouping = false;
 }
 
 Gridbrain::~Gridbrain()
@@ -130,9 +130,6 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
     {
         gb->mChannels[(*iterChannel).first] = (*iterChannel).second;
     }
-
-    gb->mRecombinationType = mRecombinationType;
-    gb->mGeneGrouping = mGeneGrouping;
 
     for (unsigned int g = 0; g < mGridsCount; g++)
     {
@@ -431,7 +428,7 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
                 x2,
                 y2,
                 g2,
-                conn->mGeneTag);
+                conn->mGene);
         }
 
         conn = (Connection*)conn->mNextGlobalConnection;
@@ -645,7 +642,7 @@ void Gridbrain::addConnection(unsigned int xOrig,
                 unsigned int xTarg,
                 unsigned int yTarg,
                 unsigned int gTarg,
-                GeneTag tag)
+                Gene tag)
 {
     /*printf("add connection: %d,%d,%d -> %d,%d,%d\n",
             xOrig,
@@ -698,7 +695,7 @@ void Gridbrain::addConnection(unsigned int xOrig,
     conn->mGridTarg = targComp->mGrid;
     conn->mOrigComponent = comp;
     conn->mTargComponent = targComp;
-    conn->mGeneTag = tag;
+    conn->mGene = tag;
 
     if (conn->mGridOrig == conn->mGridTarg)
     {
@@ -1950,7 +1947,7 @@ float Gridbrain::getDistance(Gridbrain* brain)
     {
         if (conn1->mActive)
         {
-            GeneTag* g1 = &(conn1->mGeneTag);
+            Gene* g1 = &(conn1->mGene);
             Connection* conn2 = gb->mConnections;
             
             bool done = false;
@@ -1959,7 +1956,7 @@ float Gridbrain::getDistance(Gridbrain* brain)
             {
                 if (conn2->mActive)
                 {
-                    GeneTag* g2 = &(conn2->mGeneTag);
+                    Gene* g2 = &(conn2->mGene);
 
                     if (g1->mGeneID == g2->mGeneID)
                     {
@@ -2041,159 +2038,5 @@ string Gridbrain::getChannelName(int chan)
     return "";
 }
 
-const char Gridbrain::mClassName[] = "Gridbrain";
-
-Orbit<Gridbrain>::MethodType Gridbrain::mMethods[] = {
-    {"init", &Gridbrain::init},
-    {"setComponent", &Gridbrain::setComponent},
-    {"addGrid", &Gridbrain::addGrid},
-    {"addConnection", &Gridbrain::addConnection},
-    {"addRandomConnections", &Gridbrain::addRandomConnections},
-    {"setMutateAddConnectionProb", &Gridbrain::setMutateAddConnectionProb},
-    {"setMutateRemoveConnectionProb", &Gridbrain::setMutateRemoveConnectionProb},
-    {"setMutateChangeParamProb", &Gridbrain::setMutateChangeParamProb},
-    {"setParamMutationStanDev", &Gridbrain::setParamMutationStanDev},
-    {"setMutateSplitConnectionProb", &Gridbrain::setMutateSplitConnectionProb},
-    {"setMutateJoinConnectionsProb", &Gridbrain::setMutateJoinConnectionsProb},
-    {"setMutateChangeComponentProb", &Gridbrain::setMutateChangeComponentProb},
-    {"setMutateChangeInactiveComponentProb", &Gridbrain::setMutateChangeInactiveComponentProb},
-    {"setMutateSwapComponentProb", &Gridbrain::setMutateSwapComponentProb},
-    {"setRecombinationType", &Gridbrain::setRecombinationType},
-    {"setGeneGrouping", &Gridbrain::setGeneGrouping},
-    {"setMaxInputDepth", &Gridbrain::setMaxInputDepth},
-    {0,0}
-};
-
-Orbit<Gridbrain>::NumberGlobalType Gridbrain::mNumberGlobals[] = {
-    {"RT_UNIFORM", RT_UNIFORM},
-    {"RT_PATHS", RT_PATHS},
-    {0,0}};
-
-int Gridbrain::init(lua_State* luaState)
-{
-        init();
-        return 0;
-}
-
-int Gridbrain::setComponent(lua_State* luaState)
-{
-    unsigned int x = luaL_checkint(luaState, 1);
-    unsigned int y = luaL_checkint(luaState, 2);
-    unsigned int g = luaL_checkint(luaState, 3);
-    Component* comp = (Component*)(Orbit<Gridbrain>::pointer(luaState, 4));
-    setComponent(x, y, g, *comp);
-    return 0;
-}
-
-int Gridbrain::addGrid(lua_State* luaState)
-{
-    Grid* grid = (Grid*)(Orbit<Gridbrain>::pointer(luaState, 1));
-    string name = luaL_checkstring(luaState, 2);
-    addGrid(grid, name);
-    return 0;
-}
-
-int Gridbrain::addConnection(lua_State* luaState)
-{
-    unsigned int xOrig = luaL_checkint(luaState, 1);
-    unsigned int yOrig = luaL_checkint(luaState, 2);
-    unsigned int gOrig = luaL_checkint(luaState, 3);
-    unsigned int xTarg = luaL_checkint(luaState, 4);
-    unsigned int yTarg = luaL_checkint(luaState, 5);
-    unsigned int gTarg = luaL_checkint(luaState, 6);
-
-    addConnection(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg);
-    return 0;
-}
-
-int Gridbrain::addRandomConnections(lua_State* luaState)
-{
-    unsigned int count = luaL_checkint(luaState, 1);
-    addRandomConnections(count);
-    return 0;
-}
-
-int Gridbrain::setMutateAddConnectionProb(lua_State* luaState)
-{
-    float prob = luaL_checknumber(luaState, 1);
-    setMutateAddConnectionProb(prob);
-    return 0;
-}
-
-int Gridbrain::setMutateRemoveConnectionProb(lua_State* luaState)
-{
-    float prob = luaL_checknumber(luaState, 1);
-    setMutateRemoveConnectionProb(prob);
-    return 0;
-}
-
-int Gridbrain::setMutateChangeParamProb(lua_State* luaState)
-{
-    float prob = luaL_checknumber(luaState, 1);
-    setMutateChangeParamProb(prob);
-    return 0;
-}
-
-int Gridbrain::setMutateSplitConnectionProb(lua_State* luaState)
-{
-    float prob = luaL_checknumber(luaState, 1);
-    setMutateSplitConnectionProb(prob);
-    return 0;
-}
-
-int Gridbrain::setMutateJoinConnectionsProb(lua_State* luaState)
-{
-    float prob = luaL_checknumber(luaState, 1);
-    setMutateJoinConnectionsProb(prob);
-    return 0;
-}
-
-int Gridbrain::setMutateChangeComponentProb(lua_State* luaState)
-{
-    float prob = luaL_checknumber(luaState, 1);
-    setMutateChangeComponentProb(prob);
-    return 0;
-}
-
-int Gridbrain::setMutateChangeInactiveComponentProb(lua_State* luaState)
-{
-    float prob = luaL_checknumber(luaState, 1);
-    setMutateChangeInactiveComponentProb(prob);
-    return 0;
-}
-
-int Gridbrain::setMutateSwapComponentProb(lua_State* luaState)
-{
-    float prob = luaL_checknumber(luaState, 1);
-    setMutateSwapComponentProb(prob);
-    return 0;
-}
-
-int Gridbrain::setParamMutationStanDev(lua_State* luaState)
-{
-    float sd = luaL_checknumber(luaState, 1);
-    setParamMutationStanDev(sd);
-    return 0;
-}
-
-int Gridbrain::setRecombinationType(lua_State* luaState)
-{
-    RecombinationType type = (RecombinationType)luaL_checkint(luaState, 1);
-    setRecombinationType(type);
-    return 0;
-}
-
-int Gridbrain::setGeneGrouping(lua_State* luaState)
-{
-    bool val = luaL_checkbool(luaState, 1);
-    setGeneGrouping(val);
-    return 0;
-}
-
-int Gridbrain::setMaxInputDepth(lua_State* luaState)
-{
-    unsigned int depth = luaL_checkint(luaState, 1);
-    setMaxInputDepth(depth);
-    return 0;
 }
 

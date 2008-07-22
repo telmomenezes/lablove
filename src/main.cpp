@@ -24,10 +24,6 @@
 #include "Target2D.h"
 #include "PopDynSEGA.h"
 #include "Species.h"
-#include "Gridbrain.h"
-#include "Grid.h"
-#include "Component.h"
-#include "ComponentSet.h"
 #include "SymbolTable.h"
 #include "SymbolBitString.h"
 #include "SymbolRGB.h"
@@ -152,10 +148,6 @@ int main(int argc, char *argv[])
     Orbit<Target2D>::orbitRegister(luaState);
     Orbit<PopDynSEGA>::orbitRegister(luaState);
     Orbit<Species>::orbitRegister(luaState);
-    Orbit<Gridbrain>::orbitRegister(luaState);
-    Orbit<Grid>::orbitRegister(luaState);
-    Orbit<Component>::orbitRegister(luaState);
-    Orbit<ComponentSet>::orbitRegister(luaState);
     Orbit<SymbolTable>::orbitRegister(luaState);
     Orbit<SymbolBitString>::orbitRegister(luaState);
     Orbit<SymbolRGB>::orbitRegister(luaState);

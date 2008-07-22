@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -21,6 +21,9 @@
 #define _INCLUDE_GRIDBRAIN_COMPONENT_EQ_H
 
 #include "Component.h"
+
+namespace gb
+{
 
 class CompEQ : public Component
 {
@@ -46,6 +49,8 @@ protected:
 };
 
 static CompEQ COMP_EQ;
+
+}
 
 #endif
 

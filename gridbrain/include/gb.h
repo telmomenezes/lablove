@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -17,30 +17,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef _INCLUDE_GRIDBRAIN_GENE_TAG_H
-#define _INCLUDE_GRIDBRAIN_GENE_TAG_H
-
-#include "types.h"
-
-class GeneTag
-{
-public:
-    GeneTag();
-    GeneTag(const GeneTag& tag);
-    virtual ~GeneTag();
-
-    static llULINT generateID();
-    bool isEquivalentOrigin(GeneTag* tag);
-    bool isEquivalentTarget(GeneTag* tag);
-
-    void print();
-
-    static llULINT ID_SEQ;
-
-    llULINT mGeneID;
-    llULINT mOrigID;
-    llULINT mTargID;
-};
-
-#endif
+#include "Gridbrain.h"
+#include "Grid.h"
+#include "ComponentSet.h"
+#include "CompNUL.h"
+#include "CompIN.h"
+#include "CompOUT.h"
+#include "CompSUM.h"
+#include "CompMAX.h"
+#include "CompMIN.h"
+#include "CompAVG.h"
+#include "CompMUL.h"
+#include "CompNOT.h"
+#include "CompAND.h"
+#include "CompINV.h"
+#include "CompNEG.h"
+#include "CompAMP.h"
+#include "CompMOD.h"
+#include "CompRAND.h"
+#include "CompEQ.h"
+#include "CompGTZ.h"
+#include "CompZERO.h"
+#include "CompCLK.h"
+#include "CompDMUL.h"
+#include "CompSEL.h"
 

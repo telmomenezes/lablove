@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -23,6 +23,9 @@
 #include "types.h"
 #include <string>
 using std::string;
+
+namespace gb
+{
 
 class Coord
 {
@@ -51,5 +54,8 @@ protected:
     llULINT mDepth;
     llULINT mBranch;
 };
+
+}
+
 #endif
 

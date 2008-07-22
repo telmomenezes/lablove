@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -22,6 +22,9 @@
 
 #include "Component.h"
 #include "RandDistManager.h"
+
+namespace gb
+{
 
 class CompRAND : public Component
 {
@@ -48,6 +51,8 @@ protected:
 };
 
 static CompRAND COMP_RAND;
+
+}
 
 #endif
 

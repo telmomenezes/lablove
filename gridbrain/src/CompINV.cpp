@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,6 +18,9 @@
  */
 
 #include "CompINV.h"
+
+namespace gb
+{
 
 CompINV::CompINV()
 {
@@ -65,5 +68,7 @@ float CompINV::output(unsigned int id)
     }
 
     return mOutput;
+}
+
 }
 

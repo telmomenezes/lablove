@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -20,8 +20,10 @@
 #ifndef _INCLUDE_GRIDBRAIN_CONNECTION_H
 #define _INCLUDE_GRIDBRAIN_CONNECTION_H
 
-#include "types.h"
-#include "GeneTag.h"
+#include "Gene.h"
+
+namespace gb
+{
 
 class Connection
 {
@@ -52,8 +54,10 @@ public:
     bool mActive;
 
     SelectionState mSelectionState;
-    GeneTag mGeneTag;
+    Gene mGene;
 };
+
+}
 
 #endif
 

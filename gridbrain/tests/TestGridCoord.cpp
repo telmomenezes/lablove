@@ -20,6 +20,8 @@
 #include "UnitTest++.h"
 #include "Coord.h"
 
+using namespace gb;
+
 TEST(CreateCoord)
 {
     Coord gc;

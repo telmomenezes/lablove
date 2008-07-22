@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -21,6 +21,9 @@
 #define _INCLUDE_GRIDBRAIN_COMPONENT_MUL_H
 
 #include "Component.h"
+
+namespace gb
+{
 
 class CompMUL : public Component
 {
@@ -45,6 +48,8 @@ protected:
 };
 
 static CompMUL COMP_MUL;
+
+}
 
 #endif
 

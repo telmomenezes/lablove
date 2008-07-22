@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -21,17 +21,19 @@
 #define _INCLUDE_GRIDBRAIN_COMPONENT_H
 
 #include "Connection.h"
-#include "Orbit.h"
 
 #include <string>
 using std::string;
+
+namespace gb
+{
 
 class Component
 {
 public:
     enum ConnType {CONN_IN, CONN_OUT, CONN_INOUT};
 
-    Component(lua_State* luaState=NULL);
+    Component();
     virtual ~Component();
 
     virtual Component* clone(){return NULL;}
@@ -66,10 +68,6 @@ public:
 
     virtual void print();
 
-    static const char mClassName[];
-    static Orbit<Component>::MethodType mMethods[];
-    static Orbit<Component>::NumberGlobalType mNumberGlobals[];
-
     int mType;
     float mParam;
 
@@ -99,6 +97,8 @@ public:
 protected:
     virtual bool compare(Component* comp){return true;}
 };
+
+}
 
 #endif
 

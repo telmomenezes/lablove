@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -19,6 +19,9 @@
 
 #include "CompAND.h"
 #include "Gridbrain.h"
+
+namespace gb
+{
 
 CompAND::CompAND()
 {
@@ -74,5 +77,7 @@ float CompAND::output(unsigned int id)
         mOutput = 0.0f;
     }
     return mOutput;
+}
+
 }
 

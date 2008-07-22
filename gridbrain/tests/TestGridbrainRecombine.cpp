@@ -23,6 +23,8 @@
 
 #include <stdexcept>
 
+using namespace gb;
+
 struct GridbrainRecFixture
 {
     GridbrainRecFixture()

@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -19,6 +19,9 @@
 
 #include "CompNOT.h"
 #include "Gridbrain.h"
+
+namespace gb
+{
 
 CompNOT::CompNOT()
 {
@@ -63,5 +66,7 @@ float CompNOT::output(unsigned int id)
     }
 
     return mOutput;
+}
+
 }
 

@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -21,6 +21,9 @@
 #define _INCLUDE_GRIDBRAIN_COMPONENT_ZERO_H
 
 #include "Component.h"
+
+namespace gb
+{
 
 class CompZERO : public Component
 {
@@ -44,6 +47,8 @@ public:
 };
 
 static CompZERO COMP_ZERO;
+
+}
 
 #endif
 

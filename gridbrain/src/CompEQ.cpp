@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,6 +18,9 @@
  */
 
 #include "CompEQ.h"
+
+namespace gb
+{
 
 CompEQ::CompEQ()
 {
@@ -60,5 +63,7 @@ float CompEQ::output(unsigned int id)
 {
     mOutput = mInput;
     return mOutput;
+}
+
 }
 

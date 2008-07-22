@@ -25,6 +25,9 @@
 #include "types.h"
 #include "Interface.h"
 
+namespace gb
+{
+
 class CompPER : public CompIN, Interface
 {
 public:
@@ -49,4 +52,6 @@ public:
 static CompPER COMP_PER;
 
 #endif
+
+}
 

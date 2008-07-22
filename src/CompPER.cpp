@@ -20,6 +20,9 @@
 #include "CompPER.h"
 #include "Simulation.h"
 
+namespace gb
+{
+
 CompPER::CompPER(lua_State* luaState)
 {
     if (luaState)
@@ -97,4 +100,6 @@ void CompPER::print()
 const char CompPER::mClassName[] = "PER";
 Orbit<CompPER>::MethodType CompPER::mMethods[] = {{0,0}};
 Orbit<CompPER>::NumberGlobalType CompPER::mNumberGlobals[] = {{0,0}};
+
+}
 

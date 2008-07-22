@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,6 +18,9 @@
  */
 
 #include "CompIN.h"
+
+namespace gb
+{
 
 CompIN::CompIN()
 {
@@ -53,5 +56,7 @@ bool CompIN::compare(Component* comp)
 {
     CompIN* compIN = (CompIN*)comp;
     return (mInputType == compIN->mInputType);
+}
+
 }
 

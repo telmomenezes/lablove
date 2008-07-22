@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,6 +18,9 @@
  */
 
 #include "CompMAX.h"
+
+namespace gb
+{
 
 CompMAX::CompMAX()
 {
@@ -97,5 +100,7 @@ float CompMAX::output(unsigned int id)
     }
 
     return mOutput;
+}
+
 }
 

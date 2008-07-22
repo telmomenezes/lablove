@@ -20,6 +20,9 @@
 #include "CompACT.h"
 #include "Simulation.h"
 
+namespace gb
+{
+
 CompACT::CompACT(lua_State* luaState)
 {
     if (luaState)
@@ -88,4 +91,6 @@ string CompACT::getLabel()
 const char CompACT::mClassName[] = "ACT";
 Orbit<CompACT>::MethodType CompACT::mMethods[] = {{0,0}};
 Orbit<CompACT>::NumberGlobalType CompACT::mNumberGlobals[] = {{0,0}};
+
+}
 

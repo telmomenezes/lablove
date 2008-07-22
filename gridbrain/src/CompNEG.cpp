@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,6 +18,9 @@
  */
 
 #include "CompNEG.h"
+
+namespace gb
+{
 
 CompNEG::CompNEG()
 {
@@ -48,5 +51,7 @@ float CompNEG::output(unsigned int id)
 {
     mOutput = -mInput;
     return mOutput;
+}
+
 }
 

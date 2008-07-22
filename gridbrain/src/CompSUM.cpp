@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,6 +18,9 @@
  */
 
 #include "CompSUM.h"
+
+namespace gb
+{
 
 CompSUM::CompSUM()
 {
@@ -48,5 +51,7 @@ float CompSUM::output(unsigned int id)
 {
     mOutput = mInput;
     return mOutput;
+}
+
 }
 

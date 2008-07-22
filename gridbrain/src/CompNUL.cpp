@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,6 +18,9 @@
  */
 
 #include "CompNUL.h"
+
+namespace gb
+{
 
 CompNUL::CompNUL()
 {
@@ -46,5 +49,7 @@ void CompNUL::input(float value, int pin)
 float CompNUL::output(unsigned int id)
 {
     return 0.0f;
+}
+
 }
 

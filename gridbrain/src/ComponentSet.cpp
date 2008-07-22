@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -20,14 +20,13 @@
 #include "ComponentSet.h"
 #include "Gridbrain.h"
 
+namespace gb
+{
+
 int ComponentSet::CURRENT_COMP_TYPE = 0;
 mt_distribution* ComponentSet::mDistComponentSet = gDistManager.getNewDistribution();
 
 ComponentSet::ComponentSet()
-{
-}
-
-ComponentSet::ComponentSet(lua_State* luaState)
 {
 }
 
@@ -133,19 +132,5 @@ void ComponentSet::print()
     printf("\n");
 }
 
-const char ComponentSet::mClassName[] = "ComponentSet";
-
-Orbit<ComponentSet>::MethodType ComponentSet::mMethods[] = {
-    {"addComponent", &ComponentSet::addComponent},
-    {0,0}
-};
-
-Orbit<ComponentSet>::NumberGlobalType ComponentSet::mNumberGlobals[] = {{0,0}};
-
-int ComponentSet::addComponent(lua_State* luaState)
-{
-    Component* comp = (Component*)(Orbit<Component>::pointer(luaState, 1));
-    addComponent(comp);
-    return 0;
 }
 

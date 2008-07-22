@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -19,10 +19,13 @@
 
 #include "Grid.h"
 
+namespace gb
+{
+
 mt_distribution* Grid::mDistRowsAndColumns = gDistManager.getNewDistribution();
 mt_distribution* Grid::mDistXover = gDistManager.getNewDistribution();
 
-Grid::Grid(lua_State* luaState)
+Grid::Grid()
 {
     mType = ALPHA;
     mWidth = 0;
@@ -43,10 +46,7 @@ Grid::Grid(lua_State* luaState)
 
     mComponentSet = new ComponentSet();
 
-    if (luaState)
-    {
-        mCreatedByScript = true;
-    }
+    mCreatedByScript = false;
 
     mMaxDepth = 0;
     mMaxActiveCol = 0;
@@ -492,33 +492,5 @@ bool Grid::isValid()
     return true;
 }
 
-const char Grid::mClassName[] = "Grid";
-
-Orbit<Grid>::MethodType Grid::mMethods[] = {
-    {"setComponentSet", &Grid::setComponentSet},
-    {"init", &Grid::init},
-    {0,0}
-};
-
-Orbit<Grid>::NumberGlobalType Grid::mNumberGlobals[] = {
-    {"ALPHA", ALPHA},
-    {"BETA", BETA},
-    {0,0}
-};
-
-int Grid::setComponentSet(lua_State* luaState)
-{
-    ComponentSet* set = (ComponentSet*)Orbit<Grid>::pointer(luaState, 1);
-    setComponentSet(set);
-    return 0;
-}
-
-int Grid::init(lua_State* luaState)
-{
-    Type type = (Type)luaL_checkint(luaState, 1);
-    unsigned int width = luaL_checkint(luaState, 2);
-    unsigned int height = luaL_checkint(luaState, 3);
-    init(type, width, height);
-    return 0;
 }
 

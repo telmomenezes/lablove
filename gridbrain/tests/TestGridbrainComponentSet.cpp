@@ -20,6 +20,8 @@
 #include "UnitTest++.h"
 #include "ComponentSet.h"
 
+using namespace gb;
+
 TEST(ComponentSetGetRandomFromEmpty)
 {
     ComponentSet set;

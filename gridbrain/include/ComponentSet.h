@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -22,12 +22,14 @@
 
 #include "Component.h"
 #include "CompNUL.h"
-#include "Orbit.h"
 #include "RandDistManager.h"
 
 #include <vector>
 
 using std::vector;
+
+namespace gb
+{
 
 class Gridbrain;
 
@@ -37,7 +39,6 @@ public:
     static int CURRENT_COMP_TYPE;
 
     ComponentSet();
-    ComponentSet(lua_State* luaState);
     ComponentSet(ComponentSet* comp);
     virtual ~ComponentSet();
 
@@ -51,12 +52,6 @@ public:
 
     void print();
 
-    static const char mClassName[];
-    static Orbit<ComponentSet>::MethodType mMethods[];
-    static Orbit<ComponentSet>::NumberGlobalType mNumberGlobals[];
-
-    int addComponent(lua_State* luaState);
-
     vector<Component*> mComponentVec;
     vector<Component*> mComponentSet;
 
@@ -65,5 +60,8 @@ protected:
 
     CompNUL mNullComponent;
 };
+
+}
+
 #endif
 

@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -25,6 +25,9 @@
 #include <map>
 using std::map;
 
+namespace gb
+{
+
 class CompDMUL : public Component
 {
 public:
@@ -48,6 +51,8 @@ protected:
 };
 
 static CompDMUL COMP_DMUL;
+
+}
 
 #endif
 

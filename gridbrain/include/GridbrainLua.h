@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -21,7 +21,247 @@
 #define __INCLUDE_GRIDBRAIN_LUA_H
 
 #include "Orbit.h"
-#include "comps.h"
+#include "gb.h"
+
+namespace gb
+{
+
+class LuaGridbrain : public Gridbrain
+{
+public:
+    LuaGridbrain(lua_State* luaState){}
+    virtual ~LuaGridbrain(){}
+
+    static const char mClassName[];
+    static Orbit<LuaGridbrain>::MethodType mMethods[];
+    static Orbit<LuaGridbrain>::NumberGlobalType mNumberGlobals[];
+
+    int init(lua_State* luaState);
+    int setComponent(lua_State* luaState);
+    int addGrid(lua_State* luaState);
+    int addConnection(lua_State* luaState);
+    int addRandomConnections(lua_State* luaState);
+    int setMutateAddConnectionProb(lua_State* luaState);
+    int setMutateRemoveConnectionProb(lua_State* luaState);
+    int setMutateChangeParamProb(lua_State* luaState);
+    int setMutateSplitConnectionProb(lua_State* luaState);
+    int setMutateJoinConnectionsProb(lua_State* luaState);
+    int setMutateChangeComponentProb(lua_State* luaState);
+    int setMutateChangeInactiveComponentProb(lua_State* luaState);
+    int setMutateSwapComponentProb(lua_State* luaState);
+    int setParamMutationStanDev(lua_State* luaState);
+    int setMaxInputDepth(lua_State* luaState);
+};
+
+const char LuaGridbrain::mClassName[] = "Gridbrain";
+
+Orbit<LuaGridbrain>::MethodType LuaGridbrain::mMethods[] = {
+    {"init", &LuaGridbrain::init},
+    {"setComponent", &LuaGridbrain::setComponent},
+    {"addGrid", &LuaGridbrain::addGrid},
+    {"addConnection", &LuaGridbrain::addConnection},
+    {"addRandomConnections", &LuaGridbrain::addRandomConnections},
+    {"setMutateAddConnectionProb", &LuaGridbrain::setMutateAddConnectionProb},
+    {"setMutateRemoveConnectionProb", &LuaGridbrain::setMutateRemoveConnectionProb},
+    {"setMutateChangeParamProb", &LuaGridbrain::setMutateChangeParamProb},
+    {"setParamMutationStanDev", &LuaGridbrain::setParamMutationStanDev},
+    {"setMutateSplitConnectionProb", &LuaGridbrain::setMutateSplitConnectionProb},
+    {"setMutateJoinConnectionsProb", &LuaGridbrain::setMutateJoinConnectionsProb},
+    {"setMutateChangeComponentProb", &LuaGridbrain::setMutateChangeComponentProb},
+    {"setMutateChangeInactiveComponentProb", &LuaGridbrain::setMutateChangeInactiveComponentProb},
+    {"setMutateSwapComponentProb", &LuaGridbrain::setMutateSwapComponentProb},
+    {"setMaxInputDepth", &LuaGridbrain::setMaxInputDepth},
+    {0,0}
+};
+
+Orbit<LuaGridbrain>::NumberGlobalType LuaGridbrain::mNumberGlobals[] = {{0,0}};
+
+int LuaGridbrain::init(lua_State* luaState)
+{
+    Gridbrain::init();
+    return 0;
+}
+
+int LuaGridbrain::setComponent(lua_State* luaState)
+{
+    unsigned int x = luaL_checkint(luaState, 1);
+    unsigned int y = luaL_checkint(luaState, 2);
+    unsigned int g = luaL_checkint(luaState, 3);
+    Component* comp = (Component*)(Orbit<LuaGridbrain>::pointer(luaState, 4));
+    Gridbrain::setComponent(x, y, g, *comp);
+    return 0;
+}
+
+int LuaGridbrain::addGrid(lua_State* luaState)
+{
+    Grid* grid = (Grid*)(Orbit<LuaGridbrain>::pointer(luaState, 1));
+    string name = luaL_checkstring(luaState, 2);
+    Gridbrain::addGrid(grid, name);
+    return 0;
+}
+
+int LuaGridbrain::addConnection(lua_State* luaState)
+{
+    unsigned int xOrig = luaL_checkint(luaState, 1);
+    unsigned int yOrig = luaL_checkint(luaState, 2);
+    unsigned int gOrig = luaL_checkint(luaState, 3);
+    unsigned int xTarg = luaL_checkint(luaState, 4);
+    unsigned int yTarg = luaL_checkint(luaState, 5);
+    unsigned int gTarg = luaL_checkint(luaState, 6);
+
+    Gridbrain::addConnection(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg);
+    return 0;
+}
+
+int LuaGridbrain::addRandomConnections(lua_State* luaState)
+{
+    unsigned int count = luaL_checkint(luaState, 1);
+    Gridbrain::addRandomConnections(count);
+    return 0;
+}
+
+int LuaGridbrain::setMutateAddConnectionProb(lua_State* luaState)
+{
+    float prob = luaL_checknumber(luaState, 1);
+    Gridbrain::setMutateAddConnectionProb(prob);
+    return 0;
+}
+
+int LuaGridbrain::setMutateRemoveConnectionProb(lua_State* luaState)
+{
+    float prob = luaL_checknumber(luaState, 1);
+    Gridbrain::setMutateRemoveConnectionProb(prob);
+    return 0;
+}
+
+int LuaGridbrain::setMutateChangeParamProb(lua_State* luaState)
+{
+    float prob = luaL_checknumber(luaState, 1);
+    Gridbrain::setMutateChangeParamProb(prob);
+    return 0;
+}
+
+int LuaGridbrain::setMutateSplitConnectionProb(lua_State* luaState)
+{
+    float prob = luaL_checknumber(luaState, 1);
+    Gridbrain::setMutateSplitConnectionProb(prob);
+    return 0;
+}
+
+int LuaGridbrain::setMutateJoinConnectionsProb(lua_State* luaState)
+{
+    float prob = luaL_checknumber(luaState, 1);
+    Gridbrain::setMutateJoinConnectionsProb(prob);
+    return 0;
+}
+
+int LuaGridbrain::setMutateChangeComponentProb(lua_State* luaState)
+{
+    float prob = luaL_checknumber(luaState, 1);
+    Gridbrain::setMutateChangeComponentProb(prob);
+    return 0;
+}
+
+int LuaGridbrain::setMutateChangeInactiveComponentProb(lua_State* luaState)
+{
+    float prob = luaL_checknumber(luaState, 1);
+    Gridbrain::setMutateChangeInactiveComponentProb(prob);
+    return 0;
+}
+
+int LuaGridbrain::setMutateSwapComponentProb(lua_State* luaState)
+{
+    float prob = luaL_checknumber(luaState, 1);
+    Gridbrain::setMutateSwapComponentProb(prob);
+    return 0;
+}
+
+int LuaGridbrain::setParamMutationStanDev(lua_State* luaState)
+{
+    float sd = luaL_checknumber(luaState, 1);
+    Gridbrain::setParamMutationStanDev(sd);
+    return 0;
+}
+
+int LuaGridbrain::setMaxInputDepth(lua_State* luaState)
+{
+    unsigned int depth = luaL_checkint(luaState, 1);
+    Gridbrain::setMaxInputDepth(depth);
+    return 0;
+}
+
+class LuaGrid : public Grid
+{
+public:
+    LuaGrid(lua_State* luaState){mCreatedByScript = true;}
+    virtual ~LuaGrid(){}
+
+    static const char mClassName[];
+    static Orbit<LuaGrid>::MethodType mMethods[];
+    static Orbit<LuaGrid>::NumberGlobalType mNumberGlobals[];
+
+    int setComponentSet(lua_State* luaState);
+    int init(lua_State* luaState);
+};
+
+const char LuaGrid::mClassName[] = "Grid";
+
+Orbit<LuaGrid>::MethodType LuaGrid::mMethods[] = {
+    {"setComponentSet", &LuaGrid::setComponentSet},
+    {"init", &LuaGrid::init},
+    {0,0}
+};
+
+Orbit<LuaGrid>::NumberGlobalType LuaGrid::mNumberGlobals[] = {
+    {"ALPHA", ALPHA},
+    {"BETA", BETA},
+    {0,0}
+};
+
+int LuaGrid::setComponentSet(lua_State* luaState)
+{
+    ComponentSet* set = (ComponentSet*)Orbit<LuaGrid>::pointer(luaState, 1);
+    Grid::setComponentSet(set);
+    return 0;
+}
+
+int LuaGrid::init(lua_State* luaState)
+{
+    Type type = (Type)luaL_checkint(luaState, 1);
+    unsigned int width = luaL_checkint(luaState, 2);
+    unsigned int height = luaL_checkint(luaState, 3);
+    Grid::init(type, width, height);
+    return 0;
+}
+
+class LuaComponentSet : public ComponentSet
+{
+public:
+    LuaComponentSet(lua_State* luaState){}
+    virtual ~LuaComponentSet(){}
+
+    static const char mClassName[];
+    static Orbit<LuaComponentSet>::MethodType mMethods[];
+    static Orbit<LuaComponentSet>::NumberGlobalType mNumberGlobals[];
+
+    int addComponent(lua_State* luaState);
+};
+
+const char LuaComponentSet::mClassName[] = "ComponentSet";
+
+Orbit<LuaComponentSet>::MethodType LuaComponentSet::mMethods[] = {
+    {"addComponent", &LuaComponentSet::addComponent},
+    {0,0}
+};
+
+Orbit<LuaComponentSet>::NumberGlobalType LuaComponentSet::mNumberGlobals[] = {{0,0}};
+
+int LuaComponentSet::addComponent(lua_State* luaState)
+{
+    Component* comp = (Component*)(Orbit<LuaComponentSet>::pointer(luaState, 1));
+    ComponentSet::addComponent(comp);
+    return 0;
+}
 
 class LuaCompNUL : public CompNUL
 {
@@ -324,6 +564,9 @@ Orbit<LuaCompSEL>::NumberGlobalType LuaCompSEL::mNumberGlobals[] = {{0,0}};
 
 void gridbrainLuaRegister(lua_State* luaState)
 {
+    Orbit<LuaGridbrain>::orbitRegister(luaState);
+    Orbit<LuaGrid>::orbitRegister(luaState);
+    Orbit<LuaComponentSet>::orbitRegister(luaState);
     Orbit<LuaCompNUL>::orbitRegister(luaState);
     Orbit<LuaCompIN>::orbitRegister(luaState);
     Orbit<LuaCompOUT>::orbitRegister(luaState);
@@ -346,5 +589,8 @@ void gridbrainLuaRegister(lua_State* luaState)
     Orbit<LuaCompDMUL>::orbitRegister(luaState);
     Orbit<LuaCompSEL>::orbitRegister(luaState);
 }
+
+}
+
 #endif
 

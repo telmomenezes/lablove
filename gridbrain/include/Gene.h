@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -17,50 +17,35 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "GeneTag.h"
+#ifndef _INCLUDE_GRIDBRAIN_GENE_H
+#define _INCLUDE_GRIDBRAIN_GENE_H
 
-#include <stdio.h>
+#include "types.h"
 
-llULINT GeneTag::ID_SEQ = 0;
-
-GeneTag::GeneTag()
+namespace gb
 {
-    mGeneID = 0;
-    mOrigID = 0;
-    mTargID = 0;
+
+class Gene
+{
+public:
+    Gene();
+    Gene(const Gene& tag);
+    virtual ~Gene();
+
+    static llULINT generateID();
+    bool isEquivalentOrigin(Gene* tag);
+    bool isEquivalentTarget(Gene* tag);
+
+    void print();
+
+    static llULINT ID_SEQ;
+
+    llULINT mGeneID;
+    llULINT mOrigID;
+    llULINT mTargID;
+};
+
 }
 
-GeneTag::GeneTag(const GeneTag& tag)
-{
-    mGeneID = tag.mGeneID;
-    mOrigID = tag.mOrigID;
-    mTargID = tag.mTargID;
-}
-
-GeneTag::~GeneTag()
-{
-}
-
-llULINT GeneTag::generateID()
-{
-    ID_SEQ++;
-    return ID_SEQ;
-}
-
-bool GeneTag::isEquivalentOrigin(GeneTag* tag)
-{
-    return ((mGeneID == tag->mGeneID) && (mTargID == tag->mTargID));
-}
-
-bool GeneTag::isEquivalentTarget(GeneTag* tag)
-{
-    return ((mGeneID == tag->mGeneID) && (mOrigID == tag->mOrigID));
-}
-
-void GeneTag::print()
-{
-    printf(" g: %d", mGeneID);
-    printf(" o: %d", mOrigID);
-    printf(" t: %d", mTargID);
-}
+#endif
 

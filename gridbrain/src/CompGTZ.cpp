@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,6 +18,9 @@
  */
 
 #include "CompGTZ.h"
+
+namespace gb
+{
 
 CompGTZ::CompGTZ()
 {
@@ -56,5 +59,7 @@ float CompGTZ::output(unsigned int id)
     }
 
     return mOutput;
+}
+
 }
 

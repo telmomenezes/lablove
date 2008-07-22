@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,6 +18,9 @@
  */
 
 #include "CompCLK.h"
+
+namespace gb
+{
 
 CompCLK::CompCLK()
 {
@@ -87,5 +90,7 @@ string CompCLK::getLabel()
     char buffer[255];
     sprintf(buffer, "%f", mParam);
     return buffer;
+}
+
 }
 

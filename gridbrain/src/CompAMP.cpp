@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,6 +18,9 @@
  */
 
 #include "CompAMP.h"
+
+namespace gb
+{
 
 CompAMP::CompAMP()
 {
@@ -64,5 +67,7 @@ string CompAMP::getLabel()
     char buffer[255];
     sprintf(buffer, "%f", mParam);
     return buffer;
+}
+
 }
 

@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,6 +18,9 @@
  */
 
 #include "CompMOD.h"
+
+namespace gb
+{
 
 CompMOD::CompMOD()
 {
@@ -54,5 +57,7 @@ float CompMOD::output(unsigned int id)
     }
 
     return mOutput;
+}
+
 }
 

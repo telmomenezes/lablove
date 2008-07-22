@@ -20,6 +20,8 @@
 #include "UnitTest++.h"
 #include "Grid.h"
 
+using namespace gb;
+
 struct GridFixture
 {
     GridFixture()

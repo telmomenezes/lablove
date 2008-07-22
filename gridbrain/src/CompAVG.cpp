@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,6 +18,9 @@
  */
 
 #include "CompAVG.h"
+
+namespace gb
+{
 
 CompAVG::CompAVG()
 {
@@ -80,5 +83,7 @@ float CompAVG::output(unsigned int id)
     }
 
     return mOutput;
+}
+
 }
 

@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,6 +18,9 @@
  */
 
 #include "CompSEL.h"
+
+namespace gb
+{
 
 CompSEL::CompSEL()
 {
@@ -102,5 +105,7 @@ float CompSEL::output(unsigned int id)
     }
 
     return mOutput;
+}
+
 }
 

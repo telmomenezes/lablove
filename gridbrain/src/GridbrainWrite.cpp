@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -27,6 +27,9 @@
 #define COMPONENT_SIDE 40
 #define COMPONENT_MARGIN 50
 #define GRID_TITLE 10
+
+namespace gb
+{
 
 void Gridbrain::initGridWritePositions()
 {
@@ -305,7 +308,7 @@ void Gridbrain::printConnection(Connection* conn)
     printf(" -> ");
     comp2->print();
 
-    conn->mGeneTag.print();
+    conn->mGene.print();
 
     switch (conn->mSelectionState)
     {
@@ -321,5 +324,7 @@ void Gridbrain::printConnection(Connection* conn)
     }
 
     printf("\n");
+}
+
 }
 

@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,6 +18,9 @@
  */
 
 #include "CompOUT.h"
+
+namespace gb
+{
 
 CompOUT::CompOUT()
 {
@@ -59,5 +62,7 @@ bool CompOUT::compare(Component* comp)
 {
     CompOUT* compOUT = (CompOUT*)comp;
     return (mOutputType == compOUT->mOutputType);
+}
+
 }
 

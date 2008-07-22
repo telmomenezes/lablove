@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,6 +18,9 @@
  */
 
 #include "Coord.h"
+
+namespace gb
+{
 
 Coord::Coord()
 {
@@ -157,5 +160,7 @@ bool Coord::isValid()
     }
 
     return true;
+}
+
 }
 

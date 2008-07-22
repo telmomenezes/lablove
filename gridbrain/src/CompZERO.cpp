@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,6 +18,9 @@
  */
 
 #include "CompZERO.h"
+
+namespace gb
+{
 
 CompZERO::CompZERO()
 {
@@ -56,5 +59,7 @@ float CompZERO::output(unsigned int id)
     }
 
     return mOutput;
+}
+
 }
 

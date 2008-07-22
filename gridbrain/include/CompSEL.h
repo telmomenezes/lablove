@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -21,6 +21,9 @@
 #define _INCLUDE_GRIDBRAIN_COMPONENT_SEL_H
 
 #include "Component.h"
+
+namespace gb
+{
 
 class CompSEL : public Component
 {
@@ -50,6 +53,8 @@ protected:
 };
 
 static CompSEL COMP_SEL;
+
+}
 
 #endif
 

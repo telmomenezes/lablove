@@ -1,5 +1,5 @@
 /*
- * LOVE Lab
+ * Gridbrain 
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -25,6 +25,9 @@
 
 using std::list;
 
+namespace gb
+{
+
 class RandDistManager
 {
 public:
@@ -41,6 +44,8 @@ protected:
 };
 
 static RandDistManager gDistManager;
+
+}
 
 #endif
 

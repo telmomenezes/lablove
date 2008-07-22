@@ -24,6 +24,9 @@
 #include "Orbit.h"
 #include "Interface.h"
 
+namespace gb
+{
+
 class CompACT : public CompOUT, Interface
 {
 public:
@@ -44,6 +47,8 @@ public:
 };
 
 static CompACT COMP_ACT;
+
+}
 
 #endif
 

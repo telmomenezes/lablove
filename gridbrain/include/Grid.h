@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -20,10 +20,8 @@
 #ifndef __INCLUDE_GRID_H
 #define __INCLUDE_GRID_H
 
-#include "ScriptableObject.h"
 #include "ComponentSet.h"
 #include "RandDistManager.h"
-#include "Orbit.h"
 #include "Coord.h"
 
 #include <vector>
@@ -34,12 +32,15 @@ using std::vector;
 using std::list;
 using std::map;
 
-class Grid : public ScriptableObject
+namespace gb
+{
+
+class Grid
 {
 public:
     enum Type {ALPHA, BETA};
 
-    Grid(lua_State* luaState=NULL);
+    Grid();
     Grid(const Grid& grid);
     virtual ~Grid();
 
@@ -102,12 +103,7 @@ public:
     unsigned int mMaxDepth;
     unsigned int mMaxActiveCol;
 
-    static const char mClassName[];
-    static Orbit<Grid>::MethodType mMethods[];
-    static Orbit<Grid>::NumberGlobalType mNumberGlobals[];
-
-    int setComponentSet(lua_State* luaState);
-    int init(lua_State* luaState);
+    bool mCreatedByScript;
 
 protected:
     static mt_distribution* mDistRowsAndColumns;
@@ -140,5 +136,8 @@ protected:
     vector<Coord> mColumnCoords;
     vector<Coord> mRowCoords;
 };
+
+}
+
 #endif
 

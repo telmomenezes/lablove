@@ -43,7 +43,6 @@ SET(SOURCE_FILES
     src/Simulation.cpp
     src/SimArtist.cpp
     src/Sim2D.cpp
-    src/ScriptableObject.cpp
     src/SimObj.cpp
     src/Fitness.cpp
     src/SimObj2D.cpp
@@ -78,7 +77,7 @@ SET(SOURCE_FILES
     gridbrain/src/Coord.cpp
     gridbrain/src/Component.cpp
     gridbrain/src/Connection.cpp
-    gridbrain/src/GeneTag.cpp
+    gridbrain/src/Gene.cpp
     gridbrain/src/ComponentSet.cpp
     gridbrain/src/RandDistManager.cpp
     gridbrain/mtwist/mtwist.c

@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -21,6 +21,9 @@
 #define _INCLUDE_GRIDBRAIN_COMPONENT_MIN_H
 
 #include "Component.h"
+
+namespace gb
+{
 
 class CompMIN : public Component
 {
@@ -49,6 +52,8 @@ protected:
 };
 
 static CompMIN COMP_MIN;
+
+}
 
 #endif
 

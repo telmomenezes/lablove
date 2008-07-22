@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,9 +18,12 @@
  */
 
 #include "Component.h"
-#include "comps.h"
+#include "gb.h"
 
-Component::Component(lua_State* luaState)
+namespace gb
+{
+
+Component::Component()
 {
     mType = -1;
     mParam = 0;
@@ -165,9 +168,5 @@ void Component::print()
     printf("  [%d, %d, %d]", mColumn, mRow, mGrid);
 }
 
-const char Component::mClassName[] = "Component";
-
-Orbit<Component>::MethodType Component::mMethods[] = {{0,0}};
-
-Orbit<Component>::NumberGlobalType Component::mNumberGlobals[] = {{0,0}};
+}
 

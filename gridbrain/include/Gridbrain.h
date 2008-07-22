@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -37,14 +37,16 @@
 using std::vector;
 using std::string;
 
+namespace gb
+{
+
 class Gridbrain
 {
 public:
     enum ExpansionType {ET_NONE, ET_COLUMN, ET_ROW};
     enum CompEquivalenceType {CET_ORIGIN, CET_TARGET, CET_NEW};
-    enum RecombinationType {RT_UNIFORM, RT_PATHS};
 
-    Gridbrain(lua_State* luaState=NULL);
+    Gridbrain();
     virtual ~Gridbrain();
 
     Gridbrain* clone(bool grow=true, ExpansionType expansion=ET_NONE, unsigned int targetGrid=0, Coord* gc=NULL);
@@ -65,7 +67,7 @@ public:
                 unsigned int xTarg,
                 unsigned int yTarg,
                 unsigned int gTarg,
-                GeneTag tag=GeneTag());
+                Gene tag=Gene());
     void removeConnection(Connection* conn);
     void removeConnection(unsigned int xOrig,
                 unsigned int yOrig,
@@ -133,9 +135,6 @@ public:
     void setMutateChangeInactiveComponentProb(float prob){mMutateChangeInactiveComponentProb = prob;}
     void setMutateSwapComponentProb(float prob){mMutateSwapComponentProb = prob;}
 
-    void setRecombinationType(RecombinationType type){mRecombinationType = type;}
-    void setGeneGrouping(bool val){mGeneGrouping = val;}
-
     bool getFieldValue(string fieldName, float& value);
 
     string write();
@@ -172,28 +171,6 @@ public:
 
     unsigned int getNumberOfComponents(){return mNumberOfComponents;}
     unsigned int getGridsCount(){return mGridsCount;}
-
-    static const char mClassName[];
-    static Orbit<Gridbrain>::MethodType mMethods[];
-    static Orbit<Gridbrain>::NumberGlobalType mNumberGlobals[];
-
-    int init(lua_State* luaState);
-    int setComponent(lua_State* luaState);
-    int addGrid(lua_State* luaState);
-    int addConnection(lua_State* luaState);
-    int addRandomConnections(lua_State* luaState);
-    int setMutateAddConnectionProb(lua_State* luaState);
-    int setMutateRemoveConnectionProb(lua_State* luaState);
-    int setMutateChangeParamProb(lua_State* luaState);
-    int setMutateSplitConnectionProb(lua_State* luaState);
-    int setMutateJoinConnectionsProb(lua_State* luaState);
-    int setMutateChangeComponentProb(lua_State* luaState);
-    int setMutateChangeInactiveComponentProb(lua_State* luaState);
-    int setMutateSwapComponentProb(lua_State* luaState);
-    int setParamMutationStanDev(lua_State* luaState);
-    int setRecombinationType(lua_State* luaState);
-    int setGeneGrouping(lua_State* luaState);
-    int setMaxInputDepth(lua_State* luaState);
 
     static long MUTATIONS_ADD_CONN;
     static long MUTATIONS_REM_CONN;
@@ -245,8 +222,6 @@ protected:
 
     void clearRecombineInfo();
     void selectConnUniform(Gridbrain* gb1, Gridbrain* gb2);
-    void selectPath(Component* comp);
-    void selectConnPaths(Gridbrain* gb1, Gridbrain* gb2);
     bool exists(Component* comp, unsigned int ex, unsigned int ey);
     void recombineUnusedComponents(Gridbrain* gb1, Gridbrain* gb2);
     Component* findEquivalentComponent(Component* comp);
@@ -263,7 +238,7 @@ protected:
     bool selectGene(llULINT geneID, bool select);
 
     int compEquivalence(Component* comp1, Component* comp2, CompEquivalenceType eqType);
-    GeneTag findGeneTag(Connection* conn);
+    Gene findGene(Connection* conn);
 
     void clearInterfaces();
 
@@ -306,14 +281,12 @@ protected:
     unsigned int mActivePerceptions;
     unsigned int mActiveActions;
 
-    bool mGeneGrouping;
-
-    RecombinationType mRecombinationType;
-
     vector<list<Component*>*> mInputInterfacesVector;
     list<Component*> mOutputInterface;
     map<string, int> mChannels;
 };
+
+}
 
 #endif
 

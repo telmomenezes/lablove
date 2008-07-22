@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -17,25 +17,55 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "CompNUL.h"
-#include "CompIN.h"
-#include "CompOUT.h"
-#include "CompSUM.h"
-#include "CompMAX.h"
-#include "CompMIN.h"
-#include "CompAVG.h"
-#include "CompMUL.h"
-#include "CompNOT.h"
-#include "CompAND.h"
-#include "CompINV.h"
-#include "CompNEG.h"
-#include "CompAMP.h"
-#include "CompMOD.h"
-#include "CompRAND.h"
-#include "CompEQ.h"
-#include "CompGTZ.h"
-#include "CompZERO.h"
-#include "CompCLK.h"
-#include "CompDMUL.h"
-#include "CompSEL.h"
+#include "Gene.h"
+
+#include <stdio.h>
+
+namespace gb
+{
+
+llULINT Gene::ID_SEQ = 0;
+
+Gene::Gene()
+{
+    mGeneID = 0;
+    mOrigID = 0;
+    mTargID = 0;
+}
+
+Gene::Gene(const Gene& tag)
+{
+    mGeneID = tag.mGeneID;
+    mOrigID = tag.mOrigID;
+    mTargID = tag.mTargID;
+}
+
+Gene::~Gene()
+{
+}
+
+llULINT Gene::generateID()
+{
+    ID_SEQ++;
+    return ID_SEQ;
+}
+
+bool Gene::isEquivalentOrigin(Gene* tag)
+{
+    return ((mGeneID == tag->mGeneID) && (mTargID == tag->mTargID));
+}
+
+bool Gene::isEquivalentTarget(Gene* tag)
+{
+    return ((mGeneID == tag->mGeneID) && (mOrigID == tag->mOrigID));
+}
+
+void Gene::print()
+{
+    printf(" g: %d", mGeneID);
+    printf(" o: %d", mOrigID);
+    printf(" t: %d", mTargID);
+}
+
+}
 

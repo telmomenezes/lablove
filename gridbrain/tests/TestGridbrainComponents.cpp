@@ -18,11 +18,11 @@
  */
 
 #include "UnitTest++.h"
-#include "Gridbrain.h"
-#include "Grid.h"
-#include "comps.h"
+#include "gb.h"
 
 #include <stdexcept>
+
+using namespace gb;
 
 struct GridbrainCompFixture
 {

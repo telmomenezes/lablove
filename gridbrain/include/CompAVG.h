@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -21,6 +21,9 @@
 #define _INCLUDE_GRIDBRAIN_COMPONENT_AVG_H
 
 #include "Component.h"
+
+namespace gb
+{
 
 class CompAVG : public Component
 {
@@ -48,6 +51,8 @@ protected:
 };
 
 static CompAVG COMP_AVG;
+
+}
 
 #endif
 

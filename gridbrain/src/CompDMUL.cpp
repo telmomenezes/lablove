@@ -1,5 +1,5 @@
 /*
- * LabLOVE
+ * Gridbrain
  * Copyright (C) 2007 Telmo Menezes.
  * telmo@telmomenezes.com
  *
@@ -18,6 +18,9 @@
  */
 
 #include "CompDMUL.h"
+
+namespace gb
+{
 
 CompDMUL::CompDMUL()
 {
@@ -67,5 +70,7 @@ float CompDMUL::output(unsigned int id)
     }
 
     return mOutput;
+}
+
 }
 
