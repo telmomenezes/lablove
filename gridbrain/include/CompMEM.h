@@ -17,31 +17,39 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "Gridbrain.h"
-#include "Grid.h"
-#include "ComponentSet.h"
-#include "types.h"
-#include "CompNUL.h"
-#include "CompIN.h"
-#include "CompOUT.h"
-#include "CompSUM.h"
-#include "CompMAX.h"
-#include "CompMIN.h"
-#include "CompAVG.h"
-#include "CompMUL.h"
-#include "CompNOT.h"
-#include "CompAND.h"
-#include "CompINV.h"
-#include "CompNEG.h"
-#include "CompAMP.h"
-#include "CompMOD.h"
-#include "CompRAND.h"
-#include "CompEQ.h"
-#include "CompGTZ.h"
-#include "CompZERO.h"
-#include "CompCLK.h"
-#include "CompDMUL.h"
-#include "CompSEL.h"
-#include "CompMEM.h"
-#include "CompTMEM.h"
+#ifndef _INCLUDE_GRIDBRAIN_COMPONENT_MEM_H
+#define _INCLUDE_GRIDBRAIN_COMPONENT_MEM_H
+
+#include "Component.h"
+
+namespace gb
+{
+
+class CompMEM : public Component
+{
+public:
+    CompMEM();
+    virtual ~CompMEM();
+
+    virtual Component* clone();
+
+    virtual void input(float value, int pin);
+    virtual float output(unsigned int id);
+    virtual void reset(int pass);
+
+    virtual string getName(){return "MEM";}
+    virtual ConnType getConnectorType(){return CONN_INOUT;}
+
+    virtual bool isUnique(){return false;}
+    virtual bool compare(Component* comp){return true;}
+
+protected:
+    float mState;
+};
+
+static CompMEM COMP_MEM;
+
+}
+
+#endif
 

@@ -560,7 +560,33 @@ const char LuaCompSEL::mClassName[] = "SEL";
 Orbit<LuaCompSEL>::MethodType LuaCompSEL::mMethods[] = {{0,0}};
 Orbit<LuaCompSEL>::NumberGlobalType LuaCompSEL::mNumberGlobals[] = {{0,0}};
 
+class LuaCompMEM : public CompMEM
+{
+public:
+    LuaCompMEM(lua_State* luaState=NULL){}
+    virtual ~LuaCompMEM(){}
 
+    static const char mClassName[];
+    static Orbit<LuaCompMEM>::MethodType mMethods[];
+    static Orbit<LuaCompMEM>::NumberGlobalType mNumberGlobals[];
+};
+const char LuaCompMEM::mClassName[] = "MEM";
+Orbit<LuaCompMEM>::MethodType LuaCompMEM::mMethods[] = {{0,0}};
+Orbit<LuaCompMEM>::NumberGlobalType LuaCompMEM::mNumberGlobals[] = {{0,0}};
+
+class LuaCompTMEM : public CompTMEM
+{
+public:
+    LuaCompTMEM(lua_State* luaState=NULL){}
+    virtual ~LuaCompTMEM(){}
+
+    static const char mClassName[];
+    static Orbit<LuaCompTMEM>::MethodType mMethods[];
+    static Orbit<LuaCompTMEM>::NumberGlobalType mNumberGlobals[];
+};
+const char LuaCompTMEM::mClassName[] = "TMEM";
+Orbit<LuaCompTMEM>::MethodType LuaCompTMEM::mMethods[] = {{0,0}};
+Orbit<LuaCompTMEM>::NumberGlobalType LuaCompTMEM::mNumberGlobals[] = {{0,0}};
 
 void gridbrainLuaRegister(lua_State* luaState)
 {
@@ -588,6 +614,8 @@ void gridbrainLuaRegister(lua_State* luaState)
     Orbit<LuaCompCLK>::orbitRegister(luaState);
     Orbit<LuaCompDMUL>::orbitRegister(luaState);
     Orbit<LuaCompSEL>::orbitRegister(luaState);
+    Orbit<LuaCompMEM>::orbitRegister(luaState);
+    Orbit<LuaCompTMEM>::orbitRegister(luaState);
 }
 
 }

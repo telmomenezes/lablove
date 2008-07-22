@@ -103,6 +103,8 @@ SET(SOURCE_FILES
     gridbrain/src/CompCLK.cpp
     gridbrain/src/CompDMUL.cpp
     gridbrain/src/CompSEL.cpp
+    gridbrain/src/CompMEM.cpp
+    gridbrain/src/CompTMEM.cpp
     )
 
 SET(UNIT_TEST_FILES

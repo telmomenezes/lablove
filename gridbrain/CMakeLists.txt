@@ -74,6 +74,8 @@ SET(SOURCE_FILES
     src/CompCLK.cpp
     src/CompDMUL.cpp
     src/CompSEL.cpp
+    src/CompMEM.cpp
+    src/CompTMEM.cpp
     )
 
 SET(UNIT_TEST_FILES
