@@ -587,11 +587,19 @@ void SimObj2D::process()
         if ((laserTarget != NULL)
             && (laserTarget->mSpeciesID != mSpeciesID))
         {
-            mLockScore += 1;
-            //if (mTargetLockTime > mLockScore)
-            //{
-                //mLockScore = mTargetLockTime;
-            //}
+            if (mCurrentLaserTargetID == mCurrentLaserLockID)
+            {
+                mTargetLockTime += 1;
+            }
+            else
+            {
+                mTargetLockTime = 0;
+                mCurrentLaserLockID = mCurrentLaserTargetID;
+            }
+            if (mTargetLockTime > mLockScore)
+            {
+                mLockScore = mTargetLockTime;
+            }
         }
 
         //printf("lock: %d\n", mTargetLockTime);
