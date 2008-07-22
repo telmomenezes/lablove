@@ -410,7 +410,7 @@ void SimObj2D::setViewRange(float range)
 
 void SimObj2D::process()
 {
-    llULINT simTime = mSim2D->getTime();
+    gbULINT simTime = mSim2D->getTime();
 
     // Process laser hit list
     float totalDamage = 0.0f;
@@ -437,7 +437,7 @@ void SimObj2D::process()
             iterLaser != mLaserHits.end();
             iterLaser++)
         {
-            llULINT id = (*iterLaser).mOwnerID;
+            gbULINT id = (*iterLaser).mOwnerID;
             SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
 
             if (obj != NULL)
@@ -1412,7 +1412,7 @@ void SimObj2D::addMessage(Message* msg)
 
 void SimObj2D::processLaserHit(Laser2D* laser)
 {
-    llULINT id = laser->mOwnerID;
+    gbULINT id = laser->mOwnerID;
     float score;
     SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
     if ((obj != NULL) && (laser->mEnergy > 0))
@@ -1530,7 +1530,7 @@ void SimObj2D::addMessageSymbolAcquisition(int table)
     mObjectSymbolAcquisition.push_back(item);
 }
 
-void SimObj2D::setMaxAge(llULINT maxAgeLow, llULINT maxAgeHigh)
+void SimObj2D::setMaxAge(gbULINT maxAgeLow, gbULINT maxAgeHigh)
 {
     mMaxAgeLow = maxAgeLow;
 
@@ -1648,8 +1648,8 @@ int SimObj2D::setInitialEnergy(lua_State* luaState)
 
 int SimObj2D::setMaxAge(lua_State* luaState)
 {
-    llULINT maxAgeLow = luaL_checkint(luaState, 1);
-    llULINT maxAgeHigh = luaL_optint(luaState, 2, 0);
+    gbULINT maxAgeLow = luaL_checkint(luaState, 1);
+    gbULINT maxAgeHigh = luaL_optint(luaState, 2, 0);
     setMaxAge(maxAgeLow, maxAgeHigh);
     return 0;
 }

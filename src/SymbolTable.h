@@ -42,19 +42,19 @@ public:
 
     SymbolTable* recombine(SymbolTable* table2);
 
-    Symbol* getSymbol(llULINT id);
+    Symbol* getSymbol(gbULINT id);
     Symbol* getReferenceSymbol();
-    llULINT addSymbol(Symbol* sym);
-    llULINT addRandomSymbol();
+    gbULINT addSymbol(Symbol* sym);
+    gbULINT addRandomSymbol();
     int getID(){return mID;}
-    llULINT getRandomSymbolId();
+    gbULINT getRandomSymbolId();
 
     void grow();
     void resetProtections();
 
     void acquireSymbol(Symbol* sym);
 
-    map<llULINT, Symbol*>* getSymbolMap(){return &mSymbols;}
+    map<gbULINT, Symbol*>* getSymbolMap(){return &mSymbols;}
 
     void setDynamic(bool dyn){mDynamic = dyn;}
     bool isDynamic(){return mDynamic;}
@@ -64,7 +64,7 @@ public:
 
     unsigned int getSize(){return mSymbols.size();}
 
-    int getSymbolPos(llULINT symID);
+    int getSymbolPos(gbULINT symID);
 
     void printDebug();
 
@@ -89,8 +89,8 @@ protected:
     static mt_distribution* mDistRecombine;
 
     int mID;
-    llULINT mReferenceSymbolID;
-    map<llULINT, Symbol*> mSymbols;
+    gbULINT mReferenceSymbolID;
+    map<gbULINT, Symbol*> mSymbols;
     bool mDynamic;
     string mName;
 };

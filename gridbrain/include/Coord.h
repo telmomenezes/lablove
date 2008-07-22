@@ -31,7 +31,7 @@ class Coord
 {
 public:
     Coord();
-    Coord(llULINT depth, llULINT branch);
+    Coord(gbULINT depth, gbULINT branch);
     Coord(const Coord& coord);
     virtual ~Coord();
 
@@ -42,8 +42,8 @@ public:
 
     int position(Coord gc);
 
-    llULINT getDepth(){return mDepth;}
-    llULINT getBranch(){return mBranch;}
+    gbULINT getDepth(){return mDepth;}
+    gbULINT getBranch(){return mBranch;}
 
     string toString();
 
@@ -51,8 +51,8 @@ public:
 
 
 protected:
-    llULINT mDepth;
-    llULINT mBranch;
+    gbULINT mDepth;
+    gbULINT mBranch;
 };
 
 }

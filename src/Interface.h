@@ -28,20 +28,20 @@ public:
     Interface(){}
     virtual ~Interface(){}
 
-    void setSymbolLink(int origTable, llULINT origID, int targTable, bool dynamic);
+    void setSymbolLink(int origTable, gbULINT origID, int targTable, bool dynamic);
 
     int getOrigSymTable(){return mOrigSymTable;}
-    llULINT getOrigSymID(){return mOrigSymID;}
+    gbULINT getOrigSymID(){return mOrigSymID;}
     int getTargetSymTable(){return mTargetSymTable;}
     bool isDynamic(){return mDynamic;}
 
     void setOrigSymTable(int table){mOrigSymTable = table;}
-    void setOrigSymID(llULINT id){mOrigSymID = id;}
+    void setOrigSymID(gbULINT id){mOrigSymID = id;}
     void setTargetSymTable(int table){mTargetSymTable = table;}
 
 protected:
     int mOrigSymTable;
-    llULINT mOrigSymID;
+    gbULINT mOrigSymID;
     int mTargetSymTable;
     bool mDynamic;
 };

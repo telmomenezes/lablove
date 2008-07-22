@@ -54,7 +54,7 @@ Simulation::~Simulation()
     mObjects.clear();
 }
 
-SimObj* Simulation::getObjectByID(llULINT id)
+SimObj* Simulation::getObjectByID(gbULINT id)
 {
     for (list<SimObj*>::iterator iterObj = mObjects.begin();
             iterObj != mObjects.end();
@@ -201,7 +201,7 @@ float Simulation::calcSymbolsBinding(SimObj* origObj,
                                     SimObj* targetObj,
                                     int origSymTable,
                                     int targetSymTable,
-                                    llULINT origSymID,
+                                    gbULINT origSymID,
                                     BindingType type)
 {
     SymbolTable* targetTable = targetObj->getSymbolTable(targetSymTable);
@@ -223,7 +223,7 @@ float Simulation::calcSymbolsBinding(SimObj* origObj,
 
 float Simulation::calcSymbolsBinding(SimObj* obj,
                                     int symTable,
-                                    llULINT symID,
+                                    gbULINT symID,
                                     Symbol* symbol,
                                     BindingType type)
 {
@@ -259,7 +259,7 @@ float Simulation::calcSymbolsBinding(SimObj* obj,
     return binding;
 }
 
-void Simulation::setTimeLimit(llULINT limit)
+void Simulation::setTimeLimit(gbULINT limit)
 {
     mTimeLimit = limit * 1000;
 }

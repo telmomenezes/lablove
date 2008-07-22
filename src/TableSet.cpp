@@ -69,10 +69,10 @@ void TableSet::cleanAndGrow()
 
         if (table->isDynamic())
         {
-            map<llULINT, Symbol*>::iterator iterSymbol = table->getSymbolMap()->begin();
+            map<gbULINT, Symbol*>::iterator iterSymbol = table->getSymbolMap()->begin();
             while (iterSymbol != table->getSymbolMap()->end())
             {
-                llULINT symbolID = (*iterSymbol).first;
+                gbULINT symbolID = (*iterSymbol).first;
 
                 Symbol* sym = (*iterSymbol).second;
                 iterSymbol++;
@@ -120,7 +120,7 @@ SymbolTable* TableSet::getSymbolTableByName(string name)
     return NULL;
 }
 
-void TableSet::setSymbolName(string name, int table, llULINT id)
+void TableSet::setSymbolName(string name, int table, gbULINT id)
 {
     SymbolPointer sp;
     sp.mTable = table;
@@ -146,7 +146,7 @@ Symbol* TableSet::getSymbolByName(string name)
     return symTab->getSymbol(sp.mID);
 }
 
-string TableSet::getSymbolName(int table, llULINT id)
+string TableSet::getSymbolName(int table, gbULINT id)
 {
     for (map<string, SymbolPointer>::iterator iterName = mNamedSymbols.begin();
             iterName != mNamedSymbols.end();
@@ -231,7 +231,7 @@ void TableSet::printDebug()
     }
 }
 
-bool TableSet::symbolExists(int table, llULINT sym)
+bool TableSet::symbolExists(int table, gbULINT sym)
 {
     SymbolTable* symTab = getSymbolTable(table);
 

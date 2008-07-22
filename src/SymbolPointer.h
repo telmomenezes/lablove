@@ -40,7 +40,7 @@ public:
     virtual ~SymbolPointer(){}
 
     int mTable;
-    llULINT mID;
+    gbULINT mID;
 };
 #endif
 

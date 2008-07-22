@@ -32,17 +32,17 @@ public:
     Gene(const Gene& tag);
     virtual ~Gene();
 
-    static llULINT generateID();
+    static gbULINT generateID();
     bool isEquivalentOrigin(Gene* tag);
     bool isEquivalentTarget(Gene* tag);
 
     void print();
 
-    static llULINT ID_SEQ;
+    static gbULINT ID_SEQ;
 
-    llULINT mGeneID;
-    llULINT mOrigID;
-    llULINT mTargID;
+    gbULINT mGeneID;
+    gbULINT mOrigID;
+    gbULINT mTargID;
 };
 
 }

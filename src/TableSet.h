@@ -42,14 +42,14 @@ public:
     void addSymbolTable(SymbolTable* table);
     SymbolTable* getSymbolTable(int id);
     SymbolTable* getSymbolTableByName(string name);
-    void setSymbolName(string name, int table, llULINT id);
+    void setSymbolName(string name, int table, gbULINT id);
     Symbol* getSymbolByName(string name);
-    string getSymbolName(int table, llULINT id);
+    string getSymbolName(int table, gbULINT id);
     string getTableName(int table);
     void recombine(TableSet* parent1, TableSet* parent2);
     void resetProtections();
     void printDebug();
-    bool symbolExists(int table, llULINT sym);
+    bool symbolExists(int table, gbULINT sym);
 
     map<int, SymbolTable*> mSymbolTables;
     map<string, SymbolPointer> mNamedSymbols;

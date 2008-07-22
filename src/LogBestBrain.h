@@ -37,7 +37,7 @@ public:
     virtual void init(){}
 
     virtual void process(SimObj* obj, Simulation* sim);
-    virtual void dump(llULINT time, double realTime);
+    virtual void dump(gbULINT time, double realTime);
 
     void setFileNamePrefix(string prefix){mFileNamePrefix = prefix;}
     void setFileNameSuffix(string suffix){mFileNameSuffix = suffix;}

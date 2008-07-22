@@ -71,7 +71,7 @@ public:
     void setDrag(float drag){mDrag = drag;}
     void setRotDrag(float rotDrag){mRotDrag = rotDrag;}
     void setInitialEnergy(float energy){mInitialEnergy = energy;}
-    void setMaxAge(llULINT maxAgeLow, llULINT maxAgeHigh=0);
+    void setMaxAge(gbULINT maxAgeLow, gbULINT maxAgeHigh=0);
 
     void deltaEnergy(double delta);
 
@@ -165,10 +165,10 @@ public:
     float mImpulseRot;
     float mInitialEnergy;
     float mEnergy;
-    llULINT mMaxAge;
-    llULINT mMaxAgeLow;
-    llULINT mMaxAgeHigh;
-    llULINT mAgeLimit;
+    gbULINT mMaxAge;
+    gbULINT mMaxAgeLow;
+    gbULINT mMaxAgeHigh;
+    gbULINT mAgeLimit;
     float mViewRange;
     float mViewAngle;
     float mHalfViewAngle;
@@ -182,8 +182,8 @@ public:
     float mSoundRange;
     unsigned int mSpeakInterval;
 
-    llULINT mCollisionDetectionIteration;
-    llULINT mLastSpeakTime;
+    gbULINT mCollisionDetectionIteration;
+    gbULINT mLastSpeakTime;
 
     int mChannelObjects;
     int mChannelSounds;
@@ -200,7 +200,7 @@ public:
     bool mHumanSpeak;
     bool mHumanFire;
 
-    llULINT mLastFireTime;
+    gbULINT mLastFireTime;
 
     float mEnergySum;
     float mEnergySumAboveInit;
@@ -255,8 +255,8 @@ protected:
     unsigned int mLaserHitDuration;
     unsigned int mFriendlyFire;
 
-    llULINT mCurrentLaserTargetID;
-    llULINT mCurrentLaserLockID;
+    gbULINT mCurrentLaserTargetID;
+    gbULINT mCurrentLaserLockID;
     unsigned int mTargetLockTime;
 
     list<SymbolPointer> mObjectSymbolAcquisition;

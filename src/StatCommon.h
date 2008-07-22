@@ -37,7 +37,7 @@ public:
     virtual void init();
 
     virtual void process(SimObj* obj, Simulation* sim);
-    virtual void dump(llULINT time, double realTime);
+    virtual void dump(gbULINT time, double realTime);
 
     static const char mClassName[];
     static Orbit<StatCommon>::MethodType mMethods[];
@@ -45,7 +45,7 @@ public:
 
 protected:
     list<list<float> > mValueLists;
-    llULINT mCount;
+    gbULINT mCount;
 };
 #endif
 

@@ -31,7 +31,7 @@ SymbolUL::SymbolUL(lua_State* luaState)
     mMax = luaL_optint(luaState, 3, 100);
 }
 
-SymbolUL::SymbolUL(llULINT value, llULINT min, llULINT max)
+SymbolUL::SymbolUL(gbULINT value, gbULINT min, gbULINT max)
 {
     mUL = value;
     mMin = min;

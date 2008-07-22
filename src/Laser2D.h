@@ -42,13 +42,13 @@ public:
     float mB;
     int mDirX;
     int mDirY;
-    llULINT mOwnerID;
+    gbULINT mOwnerID;
     unsigned int mOwnerSpecies;
     LaserType mType;
     float mEnergy;
     float mRange;
     float mDistanceTraveled;
-    llULINT mFireTime;
+    gbULINT mFireTime;
 };
 #endif
 

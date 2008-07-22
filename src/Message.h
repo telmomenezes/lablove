@@ -34,7 +34,7 @@ public:
     unsigned int mType;
     float* mData;
     unsigned int mDataSize;
-    llULINT mTime;
+    gbULINT mTime;
 };
 #endif
 

@@ -56,7 +56,7 @@ protected:
     Art_Layer* mLogo;
 
     double mInitialRealTime;
-    llULINT mLastSimulationTime;
+    gbULINT mLastSimulationTime;
     double mLastRealTime;
     double mCPS;
     string mSimulationTimeText;

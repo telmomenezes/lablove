@@ -62,12 +62,12 @@ public:
     bool mFixed;
     bool mProtected;
 
-    llULINT mID;
+    gbULINT mID;
 
     bool mUsed;
 
 protected:
-    static llULINT NEXT_SYMBOL_ID;
+    static gbULINT NEXT_SYMBOL_ID;
 };
 #endif
 

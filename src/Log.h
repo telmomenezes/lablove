@@ -33,7 +33,7 @@ public:
     virtual void init(){}
 
     virtual void process(SimObj* obj, Simulation* sim)=0;
-    virtual void dump(llULINT time, double realTime)=0;
+    virtual void dump(gbULINT time, double realTime)=0;
 };
 #endif
 

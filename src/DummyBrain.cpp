@@ -112,7 +112,7 @@ void DummyBrain::addPerception(string name,
                                 unsigned int channel,
                                 unsigned int type,
                                 int origSymTable,
-                                llULINT origSymID,
+                                gbULINT origSymID,
                                 int targetSymTable)
 {
     InterfaceItem* item = new InterfaceItem();

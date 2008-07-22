@@ -32,13 +32,13 @@ public:
     virtual ~PopDynSEGA();
 
     virtual void init(Simulation* sim);
-    virtual void onCycle(llULINT time, double realTime);
+    virtual void onCycle(gbULINT time, double realTime);
     virtual void onOrganismDeath(SimObj* org);
 
     virtual unsigned int addSpecies(Species* species);
 
-    void setLogTimeInterval(llULINT interval){mLogTimeInterval = interval * 1000;}
-    void setEvolutionStopTime(unsigned int time){mEvolutionStopTime = ((llULINT)time) * 1000;}
+    void setLogTimeInterval(gbULINT interval){mLogTimeInterval = interval * 1000;}
+    void setEvolutionStopTime(unsigned int time){mEvolutionStopTime = ((gbULINT)time) * 1000;}
 
     static const char mClassName[];
     static Orbit<PopDynSEGA>::MethodType mMethods[];
@@ -52,9 +52,9 @@ protected:
     static unsigned int CURRENT_SPECIES_ID;
 
     map<unsigned int, Species*> mSpecies;
-    llULINT mLogTimeInterval;
+    gbULINT mLogTimeInterval;
 
-    llULINT mEvolutionStopTime;
+    gbULINT mEvolutionStopTime;
     bool mEvolutionOn;
 };
 #endif

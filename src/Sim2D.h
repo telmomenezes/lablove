@@ -73,8 +73,8 @@ public:
         float mX;
         float mY;
         float mRadius;
-        llULINT mStartTime;
-        llULINT mEndTime;
+        gbULINT mStartTime;
+        gbULINT mEndTime;
         int mRed;
         int mGreen;
         int mBlue;
@@ -138,7 +138,7 @@ public:
 
     void fireLaser(Laser2D laser);
 
-    SimObj2D* getLineTarget(float x1, float y1, float x2, float y2, llULINT excludeID, float &distance);
+    SimObj2D* getLineTarget(float x1, float y1, float x2, float y2, gbULINT excludeID, float &distance);
     bool segmentCollides(SimObj2D* obj, float x1, float y1, float x2, float y2);
 
     static float normalizeAngle(float angle);
@@ -199,7 +199,7 @@ protected:
 
     list<SimObj2D*>* mCurrentCellList;
     list<SimObj2D*>::iterator mCurrentCellListIterator;
-    llULINT mCollisionDetectionIteration;
+    gbULINT mCollisionDetectionIteration;
 
     SimObj2D* mHumanAgent;
 

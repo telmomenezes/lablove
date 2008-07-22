@@ -312,7 +312,7 @@ void Gridbrain::mutateSplitConnection(float prob)
             Gene tag2;
             Gene tag3;
 
-            llULINT geneID = tag1.mGeneID;
+            gbULINT geneID = tag1.mGeneID;
 
             if (geneID == 0)
             {

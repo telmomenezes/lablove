@@ -25,7 +25,7 @@
 #include "CompACT.h"
 #include <stdlib.h>
 
-llULINT SimObj::CURRENT_ID = 1;
+gbULINT SimObj::CURRENT_ID = 1;
 
 SimObj::SimObj(lua_State* luaState)
 {
@@ -162,7 +162,7 @@ SymbolTable* SimObj::getSymbolTableByName(string name)
     return mTableSet->getSymbolTableByName(name);
 }
 
-void SimObj::setSymbolName(string name, int table, llULINT id)
+void SimObj::setSymbolName(string name, int table, gbULINT id)
 {
     mTableSet->setSymbolName(name, table, id);
 }
@@ -172,7 +172,7 @@ Symbol* SimObj::getSymbolByName(string name)
     return mTableSet->getSymbolByName(name);
 }
 
-string SimObj::getSymbolName(int table, llULINT id)
+string SimObj::getSymbolName(int table, gbULINT id)
 {
     return mTableSet->getSymbolName(table, id);
 }
@@ -302,7 +302,7 @@ void SimObj::setFloatDataFromSymbol(string symbolName, float& var)
     }
 }
 
-void SimObj::setULDataFromSymbol(string symbolName, llULINT& var)
+void SimObj::setULDataFromSymbol(string symbolName, gbULINT& var)
 {
     SymbolUL* symUL = (SymbolUL*)getSymbolByName(symbolName);
     if (symUL != NULL)
@@ -361,13 +361,13 @@ void SimObj::generateGridSets()
                 SymbolTable* table = getSymbolTable(intf->getOrigSymTable());
                 intf->setOrigSymID(table->getRandomSymbolId());
 
-                map<llULINT, Symbol*>* symbols = table->getSymbolMap();
+                map<gbULINT, Symbol*>* symbols = table->getSymbolMap();
 
-                for (map<llULINT, Symbol*>::iterator iterSym = symbols->begin();
+                for (map<gbULINT, Symbol*>::iterator iterSym = symbols->begin();
                         iterSym != symbols->end();
                         iterSym++)
                 {
-                    llULINT symID = (*iterSym).first;
+                    gbULINT symID = (*iterSym).first;
                     Interface* newComp = (Interface*)comp->clone();
                     newComp->setOrigSymID(symID);
                     set->mComponentSet.push_back((Component*)newComp);
@@ -424,7 +424,7 @@ void SimObj::repairBrain()
     }
 }
 
-bool SimObj::symbolUsed(int tableID, llULINT symbolID)
+bool SimObj::symbolUsed(int tableID, gbULINT symbolID)
 {
     if (mBrain == NULL)
     {
@@ -463,10 +463,10 @@ void SimObj::markUsedSymbols(TableSet* tab)
             int tableID = (*iterTables).first;
             table->mUsedCount = 0;
 
-            map<llULINT, Symbol*>::iterator iterSymbol = table->getSymbolMap()->begin();
+            map<gbULINT, Symbol*>::iterator iterSymbol = table->getSymbolMap()->begin();
             while (iterSymbol != table->getSymbolMap()->end())
             {
-                llULINT symbolID = (*iterSymbol).first;
+                gbULINT symbolID = (*iterSymbol).first;
 
                 Symbol* sym = (*iterSymbol).second;
                 iterSymbol++;

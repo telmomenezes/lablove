@@ -53,7 +53,7 @@ public:
     virtual void addObject(SimObj* obj, bool init=false);
     virtual void removeObject(SimObj* obj, bool deleteObj=true);
     list<SimObj*>* getObjectList(){return &mObjects;}
-    SimObj* getObjectByID(llULINT id);
+    SimObj* getObjectByID(gbULINT id);
 
     virtual SimObj* getObjectByScreenPos(int x, int y){return NULL;}
 
@@ -69,7 +69,7 @@ public:
     void setSelectedObject(SimObj* object);
     SimObj* getSelectedObject(){return mSelectedObject;}
 
-    llULINT getTime(){return mSimulationTime;}
+    gbULINT getTime(){return mSimulationTime;}
 
     void setSeedIndex(int index=-1);
 
@@ -82,15 +82,15 @@ public:
                             SimObj* targetObj,
                             int origSymTable,
                             int targetSymTable,
-                            llULINT origSymID,
+                            gbULINT origSymID,
                             BindingType type);
     float calcSymbolsBinding(SimObj* obj,
                                     int symTable,
-                                    llULINT symID,
+                                    gbULINT symID,
                                     Symbol* symbol,
                                     BindingType type);
 
-    void setTimeLimit(llULINT limit);
+    void setTimeLimit(gbULINT limit);
 
     int addObject(lua_State* luaState);
     int run(lua_State* luaState);
@@ -103,7 +103,7 @@ protected:
     
     static RandDistManager mDistManager;
 
-    llULINT mSimulationTime;
+    gbULINT mSimulationTime;
     PopulationDynamics* mPopulationDynamics;
 
     bool mStop;
@@ -113,7 +113,7 @@ protected:
 
     SimObj* mSelectedObject;
     
-    llULINT mTimeLimit;
+    gbULINT mTimeLimit;
 
     bool mDrawGraphics;
     bool mDrawThisCycle;

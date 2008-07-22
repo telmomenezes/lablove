@@ -78,7 +78,7 @@ void PopDynSEGA::onOrganismDeath(SimObj* org)
     mSpecies[speciesID]->onOrganismDeath(org);
 }
 
-void PopDynSEGA::onCycle(llULINT time, double realTime)
+void PopDynSEGA::onCycle(gbULINT time, double realTime)
 {
     if (mEvolutionOn
         && (mEvolutionStopTime > 0)
@@ -125,7 +125,7 @@ Orbit<PopDynSEGA>::NumberGlobalType PopDynSEGA::mNumberGlobals[] = {{0,0}};
 
 int PopDynSEGA::setLogTimeInterval(lua_State* luaState)
 {
-    llULINT interval = luaL_checkint(luaState, 1);
+    gbULINT interval = luaL_checkint(luaState, 1);
     setLogTimeInterval(interval);
     return 0;
 }

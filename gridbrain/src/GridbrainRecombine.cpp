@@ -202,7 +202,7 @@ Gridbrain* Gridbrain::importConnection(Gridbrain* gbTarg,
     return brain;
 }
 
-bool Gridbrain::checkGene(llULINT geneID)
+bool Gridbrain::checkGene(gbULINT geneID)
 {
     Connection* conn = mConnections;
 
@@ -219,7 +219,7 @@ bool Gridbrain::checkGene(llULINT geneID)
     return false;
 }
 
-bool Gridbrain::isGeneSelected(llULINT geneID)
+bool Gridbrain::isGeneSelected(gbULINT geneID)
 {
     Connection* conn = mConnections;
 
@@ -243,7 +243,7 @@ bool Gridbrain::isGeneSelected(llULINT geneID)
     return false;
 }
 
-bool Gridbrain::selectGene(llULINT geneID, bool select)
+bool Gridbrain::selectGene(gbULINT geneID, bool select)
 {
     Connection* conn = mConnections;
 

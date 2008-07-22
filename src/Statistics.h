@@ -45,7 +45,7 @@ public:
     void addField(string fieldName);
     void setFile(string filePath);
     virtual void process(SimObj* obj, Simulation* sim)=0;
-    virtual void dump(llULINT time, double realTime)=0;
+    virtual void dump(gbULINT time, double realTime)=0;
 
     int addField(lua_State* luaState);
     int setFile(lua_State* luaState);

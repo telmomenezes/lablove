@@ -46,7 +46,7 @@ public:
     enum Type {TYPE_OBJECT, TYPE_AGENT};
     enum DeathType {DEATH_HARD, DEATH_EXPIRED};
 
-    static llULINT CURRENT_ID;
+    static gbULINT CURRENT_ID;
 
     SimObj(lua_State* luaState=NULL);
     SimObj(SimObj* obj);
@@ -55,7 +55,7 @@ public:
 
     virtual void init(){}
 
-    llULINT getID(){return mID;}
+    gbULINT getID(){return mID;}
 
     virtual void process(){}
     virtual void perceive(){}
@@ -70,8 +70,8 @@ public:
     int getBodyID(){return mBodyID;}
     void setBodyID(int id){mBodyID = id;}
 
-    llULINT getCreationTime(){return mCreationTime;}
-    void setCreationTime(llULINT time){mCreationTime = time;}
+    gbULINT getCreationTime(){return mCreationTime;}
+    void setCreationTime(gbULINT time){mCreationTime = time;}
 
     virtual SimObj* recombine(SimObj* otherParent);
     virtual void mutate(float factor=1.0f);
@@ -85,13 +85,13 @@ public:
     SymbolTable* getSymbolTable(int id);
     SymbolTable* getSymbolTableByName(string name);
 
-    void setSymbolName(string name, int table, llULINT id);
+    void setSymbolName(string name, int table, gbULINT id);
     Symbol* getSymbolByName(string name);
-    string getSymbolName(int table, llULINT id);
+    string getSymbolName(int table, gbULINT id);
     string getTableName(int table);
 
     void setFloatDataFromSymbol(string symbolName, float& var);
-    void setULDataFromSymbol(string symbolName, llULINT& var);
+    void setULDataFromSymbol(string symbolName, gbULINT& var);
 
     virtual bool getFieldValue(string fieldName, float& value);
 
@@ -115,7 +115,7 @@ public:
     virtual void printDebug();
 
     void repairBrain();
-    bool symbolUsed(int tableID, llULINT symbolID);
+    bool symbolUsed(int tableID, gbULINT symbolID);
     void markUsedSymbols(TableSet* tab);
 
     void setDeathType(DeathType type){mDeathType = type;}
@@ -125,7 +125,7 @@ public:
 
     Type mType;
 
-    llULINT mCreationTime;
+    gbULINT mCreationTime;
     bool mInitialized;
 
     int mBodyID;
@@ -148,7 +148,7 @@ protected:
     virtual void recombine(SimObj* parent1, SimObj* parent2);
     void generateGridSets();
 
-    llULINT mID;
+    gbULINT mID;
 
     map<int, Fitness> mFitMap;
 

@@ -29,7 +29,7 @@ class SymbolUL : public Symbol
 {
 public:
     SymbolUL(lua_State* luaState);
-    SymbolUL(llULINT value, llULINT min=0, llULINT max=1);
+    SymbolUL(gbULINT value, gbULINT min=0, gbULINT max=1);
     SymbolUL(SymbolUL* sym);
     virtual ~SymbolUL();
     virtual Symbol* clone();
@@ -40,9 +40,9 @@ public:
     virtual void initRandom();
     virtual void mutate();
 
-    llULINT getUL(){return mUL;}
-    llULINT getMin(){return mMin;}
-    llULINT getMax(){return mMax;}
+    gbULINT getUL(){return mUL;}
+    gbULINT getMin(){return mMin;}
+    gbULINT getMax(){return mMax;}
 
     virtual string toString();
 
@@ -53,9 +53,9 @@ public:
 protected:
     static mt_distribution* mDistUL;
 
-    llULINT mUL;
-    llULINT mMax;
-    llULINT mMin;
+    gbULINT mUL;
+    gbULINT mMax;
+    gbULINT mMin;
 };
 #endif
 

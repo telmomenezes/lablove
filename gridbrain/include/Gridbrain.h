@@ -233,9 +233,9 @@ protected:
                                 Gridbrain* gbOrig,
                                 Connection* conn);
 
-    bool checkGene(llULINT geneID);
-    bool isGeneSelected(llULINT geneID);
-    bool selectGene(llULINT geneID, bool select);
+    bool checkGene(gbULINT geneID);
+    bool isGeneSelected(gbULINT geneID);
+    bool selectGene(gbULINT geneID, bool select);
 
     int compEquivalence(Component* comp1, Component* comp2, CompEquivalenceType eqType);
     Gene findGene(Connection* conn);

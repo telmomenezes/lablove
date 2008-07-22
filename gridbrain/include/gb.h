@@ -20,6 +20,7 @@
 #include "Gridbrain.h"
 #include "Grid.h"
 #include "ComponentSet.h"
+#include "types.h"
 #include "CompNUL.h"
 #include "CompIN.h"
 #include "CompOUT.h"

@@ -33,14 +33,14 @@ public:
     virtual void init();
 
     virtual void process(SimObj* obj, Simulation* sim){}
-    virtual void dump(llULINT time, double realTime);
+    virtual void dump(gbULINT time, double realTime);
 
     static const char mClassName[];
     static Orbit<StatTime>::MethodType mMethods[];
     static Orbit<StatTime>::NumberGlobalType mNumberGlobals[];
 
 protected:
-    llULINT mLastSimTime;
+    gbULINT mLastSimTime;
     double mLastRealTime;
 };
 #endif

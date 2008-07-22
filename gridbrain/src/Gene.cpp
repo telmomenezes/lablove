@@ -24,7 +24,7 @@
 namespace gb
 {
 
-llULINT Gene::ID_SEQ = 0;
+gbULINT Gene::ID_SEQ = 0;
 
 Gene::Gene()
 {
@@ -44,7 +44,7 @@ Gene::~Gene()
 {
 }
 
-llULINT Gene::generateID()
+gbULINT Gene::generateID()
 {
     ID_SEQ++;
     return ID_SEQ;

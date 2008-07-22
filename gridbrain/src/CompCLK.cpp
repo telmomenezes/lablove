@@ -44,7 +44,7 @@ void CompCLK::reset(int pass)
 {
     if (!mInit)
     {
-        mTriggerInterval = (llULINT)(5000.0f * mParam);
+        mTriggerInterval = (gbULINT)(5000.0f * mParam);
         mTimeToTrigger = mTriggerInterval;
         mInit = true;
     }

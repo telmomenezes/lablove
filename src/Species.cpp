@@ -120,7 +120,7 @@ void Species::addDeathLog(Log* log)
     mDeathLogs.push_back(log);
 }
 
-void Species::dumpStatistics(llULINT time, double realTime, Simulation* sim)
+void Species::dumpStatistics(gbULINT time, double realTime, Simulation* sim)
 {
     // Dump death statistics
     for (list<Log*>::iterator iterLogs = mDeathLogs.begin();
@@ -150,7 +150,7 @@ void Species::dumpStatistics(llULINT time, double realTime, Simulation* sim)
     }
 }
 
-void Species::bufferDump(llULINT time, Simulation* sim)
+void Species::bufferDump(gbULINT time, Simulation* sim)
 {
     umask(0);
     mkdir(mBufferDumpDir.c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
@@ -498,7 +498,7 @@ void Species::onOrganismDeath(SimObj* org)
     delete org;
 }
 
-void Species::onCycle(llULINT time)
+void Species::onCycle(gbULINT time)
 {
     if (mLogInterval == 0)
     {

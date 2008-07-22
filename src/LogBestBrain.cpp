@@ -52,7 +52,7 @@ void LogBestBrain::process(SimObj* obj, Simulation* sim)
     }
 }
 
-void LogBestBrain::dump(llULINT time, double realTime)
+void LogBestBrain::dump(gbULINT time, double realTime)
 {
     char fileName[255];
     if (mLogOnlyLast)

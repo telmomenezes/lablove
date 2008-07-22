@@ -32,7 +32,7 @@ public:
     virtual ~PopulationDynamics();
 
     virtual void init(Simulation* sim);
-    virtual void onCycle(llULINT time, double realTime)=0;
+    virtual void onCycle(gbULINT time, double realTime)=0;
     virtual void onOrganismDeath(SimObj* org)=0;
 
 protected:

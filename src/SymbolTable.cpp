@@ -49,7 +49,7 @@ SymbolTable::SymbolTable(SymbolTable* table)
     mDynamic = table->mDynamic;
     mName = table->mName;
 
-    map<llULINT, Symbol*>::iterator iterSymbol;
+    map<gbULINT, Symbol*>::iterator iterSymbol;
     for (iterSymbol = table->mSymbols.begin();
         iterSymbol != table->mSymbols.end();
         iterSymbol++)
@@ -67,7 +67,7 @@ SymbolTable::SymbolTable(SymbolTable* table)
 
 SymbolTable::~SymbolTable()
 {
-    map<llULINT, Symbol*>::iterator iterSymbol;
+    map<gbULINT, Symbol*>::iterator iterSymbol;
     for (iterSymbol = mSymbols.begin();
         iterSymbol != mSymbols.end();
         iterSymbol++)
@@ -102,7 +102,7 @@ SymbolTable* SymbolTable::recombine(SymbolTable* table2)
     SymbolTable* table = new SymbolTable();
 
     // Scan first parent
-    map<llULINT, Symbol*>::iterator iterSymbol;
+    map<gbULINT, Symbol*>::iterator iterSymbol;
     for (iterSymbol = mSymbols.begin();
         iterSymbol != mSymbols.end();
         iterSymbol++)
@@ -199,9 +199,9 @@ Symbol* SymbolTable::selectSymbol(Symbol* sym, SymbolTable* table2)
     }
 }
 
-Symbol* SymbolTable::getSymbol(llULINT id)
+Symbol* SymbolTable::getSymbol(gbULINT id)
 {
-    for (map<llULINT, Symbol*>::iterator iterSym = mSymbols.begin();
+    for (map<gbULINT, Symbol*>::iterator iterSym = mSymbols.begin();
             iterSym != mSymbols.end();
             iterSym++)
     {
@@ -219,9 +219,9 @@ Symbol* SymbolTable::getReferenceSymbol()
     return mSymbols[mReferenceSymbolID];
 }
 
-llULINT SymbolTable::addSymbol(Symbol* sym)
+gbULINT SymbolTable::addSymbol(Symbol* sym)
 {
-    llULINT id = sym->mID;
+    gbULINT id = sym->mID;
 
     if (mSymbols.count(id) == 0)
     {
@@ -234,7 +234,7 @@ llULINT SymbolTable::addSymbol(Symbol* sym)
     return id;
 }
 
-llULINT SymbolTable::addRandomSymbol()
+gbULINT SymbolTable::addRandomSymbol()
 {
     Symbol* sym = mSymbols[mReferenceSymbolID]->clone();
     sym->initRandom();
@@ -243,11 +243,11 @@ llULINT SymbolTable::addRandomSymbol()
     return addSymbol(sym);
 }
 
-llULINT SymbolTable::getRandomSymbolId()
+gbULINT SymbolTable::getRandomSymbolId()
 {
     unsigned int index = mDistIndex->iuniform(0, mSymbols.size());
     
-    map<llULINT, Symbol*>::iterator iterSymbol = mSymbols.begin();
+    map<gbULINT, Symbol*>::iterator iterSymbol = mSymbols.begin();
 
     for (unsigned int i = 0; i < index; i++)
     {
@@ -264,7 +264,7 @@ void SymbolTable::grow()
 
 void SymbolTable::resetProtections()
 {
-    map<llULINT, Symbol*>::iterator iterSymbol;
+    map<gbULINT, Symbol*>::iterator iterSymbol;
     for (iterSymbol = mSymbols.begin();
         iterSymbol != mSymbols.end();
         iterSymbol++)
@@ -276,7 +276,7 @@ void SymbolTable::resetProtections()
 void SymbolTable::acquireSymbol(Symbol* sym)
 {
     //printf("attempt to acquire %s[%d]\n", sym->toString().c_str(), sym->mID);
-    llULINT id = sym->mID;
+    gbULINT id = sym->mID;
 
     if (mSymbols.count(id) != 0)
     {
@@ -290,10 +290,10 @@ void SymbolTable::acquireSymbol(Symbol* sym)
     //printf("ACQUIRE!!!!!!!! %s\n", newSym->toString().c_str());
 }
 
-int SymbolTable::getSymbolPos(llULINT symID)
+int SymbolTable::getSymbolPos(gbULINT symID)
 {
     int pos = 0;
-    map<llULINT, Symbol*>::iterator iterSymbol;
+    map<gbULINT, Symbol*>::iterator iterSymbol;
     for (iterSymbol = mSymbols.begin();
         iterSymbol != mSymbols.end();
         iterSymbol++)
@@ -312,7 +312,7 @@ void SymbolTable::printDebug()
 {
     printf("Table %d '%s'\n", mID, mName.c_str());
 
-    map<llULINT, Symbol*>::iterator iterSymbol;
+    map<gbULINT, Symbol*>::iterator iterSymbol;
     for (iterSymbol = mSymbols.begin();
         iterSymbol != mSymbols.end();
         iterSymbol++)
@@ -325,7 +325,7 @@ void SymbolTable::printDebug()
 int SymbolTable::addSymbol(lua_State* luaState)
 {
     Symbol* sym = (Symbol*)Orbit<SymbolTable>::pointer(luaState, 1);
-    llULINT id = addSymbol(sym);
+    gbULINT id = addSymbol(sym);
     lua_pushnumber(luaState, id);
     return 1;
 }

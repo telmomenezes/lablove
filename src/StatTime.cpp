@@ -35,13 +35,13 @@ void StatTime::init()
     fflush(mFile);
 }
 
-void StatTime::dump(llULINT time, double realTime)
+void StatTime::dump(gbULINT time, double realTime)
 {
     double cps = 0.0f;
 
     if (time != 0)
     {
-        llULINT deltaSim = time - mLastSimTime;
+        gbULINT deltaSim = time - mLastSimTime;
         double deltaReal = realTime - mLastRealTime;
         cps = ((double)deltaSim) / deltaReal;
     }

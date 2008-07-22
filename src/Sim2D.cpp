@@ -674,7 +674,7 @@ bool Sim2D::getFieldValue(SimObj* obj, string fieldName, float& value)
     }
 }
 
-SimObj2D* Sim2D::getLineTarget(float x1, float y1, float x2, float y2, llULINT excludeID, float &distance)
+SimObj2D* Sim2D::getLineTarget(float x1, float y1, float x2, float y2, gbULINT excludeID, float &distance)
 {
     //printf("%f %f %f %f %d\n", x1, y1, x2, y2, excludeID);
     float dx = x2 - x1;

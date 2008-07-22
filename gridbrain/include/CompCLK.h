@@ -49,8 +49,8 @@ public:
 
 protected:
     bool mInit;
-    llULINT mTimeToTrigger;
-    llULINT mTriggerInterval;
+    gbULINT mTimeToTrigger;
+    gbULINT mTriggerInterval;
     float mLastInput;
 };
 

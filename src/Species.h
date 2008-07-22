@@ -59,11 +59,11 @@ public:
     void addSampleLog(Log* log);
     void addDeathLog(Log* log);
 
-    void dumpStatistics(llULINT time, double realTime, Simulation* sim);
+    void dumpStatistics(gbULINT time, double realTime, Simulation* sim);
 
     void setEvolution(bool evo){mEvolutionOn = evo;}
 
-    void onCycle(llULINT time);
+    void onCycle(gbULINT time);
 
     void setLog(string fileName, unsigned int interval);
     void setBufferDump(string dirName){mBufferDumpDir = dirName;}
@@ -85,7 +85,7 @@ public:
 
 protected:
     void xoverMutateSend(int bodyID, bool init=false, SimObj* nearObj=NULL, SimObj* deadObj=NULL);
-    void bufferDump(llULINT time, Simulation* sim);
+    void bufferDump(gbULINT time, Simulation* sim);
 
     static mt_distribution* mDistOrganism;
     static mt_distribution* mDistRecombine;

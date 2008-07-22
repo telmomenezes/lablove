@@ -19,7 +19,7 @@
 
 #include "Symbol.h"
 
-llULINT Symbol::NEXT_SYMBOL_ID = 0;
+gbULINT Symbol::NEXT_SYMBOL_ID = 0;
 
 Symbol::Symbol()
 {

@@ -28,7 +28,7 @@ Coord::Coord()
     mBranch = 0;
 }
 
-Coord::Coord(llULINT depth, llULINT branch)
+Coord::Coord(gbULINT depth, gbULINT branch)
 {
     mDepth = depth;
     mBranch = branch;
@@ -46,16 +46,16 @@ Coord::~Coord()
 
 Coord Coord::leftOf()
 {
-    llULINT depth = mDepth + 1;
-    llULINT branch = 2 * mBranch;
+    gbULINT depth = mDepth + 1;
+    gbULINT branch = 2 * mBranch;
     Coord gc(depth, branch);
     return gc;
 }
 
 Coord Coord::rightOf()
 {
-    llULINT depth = mDepth + 1;
-    llULINT branch = (2 * mBranch) + 1;
+    gbULINT depth = mDepth + 1;
+    gbULINT branch = (2 * mBranch) + 1;
     Coord gc(depth, branch);
     return gc;
 }
@@ -72,10 +72,10 @@ bool Coord::operator==(const Coord &gc) const
 
 int Coord::position(Coord gc)
 {
-    llULINT d1 = mDepth;
-    llULINT b1 = mBranch;
-    llULINT d2 = gc.mDepth;
-    llULINT b2 = gc.mBranch;
+    gbULINT d1 = mDepth;
+    gbULINT b1 = mBranch;
+    gbULINT d2 = gc.mDepth;
+    gbULINT b2 = gc.mBranch;
 
     if (d1 == d2)
     {
@@ -93,8 +93,8 @@ int Coord::position(Coord gc)
         }
     }
 
-    llULINT deltaD;
-    llULINT downB;
+    gbULINT deltaD;
+    gbULINT downB;
     int inversor;
     Coord firstRight;
 
@@ -147,8 +147,8 @@ string Coord::toString()
 
 bool Coord::isValid()
 {
-    llULINT maxBranch = 1;
-    for (llULINT i = 0; i < mDepth; i++)
+    gbULINT maxBranch = 1;
+    for (gbULINT i = 0; i < mDepth; i++)
     {
         maxBranch *= 2;
     }

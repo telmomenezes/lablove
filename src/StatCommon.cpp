@@ -71,7 +71,7 @@ void StatCommon::process(SimObj* obj, Simulation* sim)
     mCount++;
 }
 
-void StatCommon::dump(llULINT time, double realTime)
+void StatCommon::dump(gbULINT time, double realTime)
 {
     fprintf(mFile, "%d", time / 1000);
     fprintf(mFile, ",%d", mCount);
