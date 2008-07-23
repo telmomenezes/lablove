@@ -10,9 +10,9 @@ numberOfAgents = 10
 
 agentSize = 10.0
 
-targetMinEnergy = 2.0
-targetMaxEnergy = 2.0
-targetSizeFactor = 2.0
+targetMinEnergy = 1.1
+targetMaxEnergy = 1.1
+targetSizeFactor = 4.0
 targetSpeed = 0.1
 
 worldWidth = 500
@@ -36,7 +36,7 @@ rotateForceScale = 0.1
 drag = 0.05
 rotDrag = 0.05
 
-fireInterval = 2000
+fireInterval = 1000
 laserLength = 25
 laserSpeed = 100.0
 laserRange = 300.0

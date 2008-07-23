@@ -601,6 +601,13 @@ void SimObj2D::process()
                 mLockScore = mTargetLockTime;
             }
         }
+        else
+        {
+            if (mTargetLockTime > 0)
+            {
+                mTargetLockTime--;
+            }
+        }
 
         //printf("lock: %d\n", mTargetLockTime);
         //printf("laser target: %d\n", mCurrentLaserTargetID);
@@ -1330,8 +1337,11 @@ void SimObj2D::fire(unsigned int actionType, float strength)
         break;
     }
 
-    laser.mEnergy = strength * mLaserStrengthFactor;
+    float maxAge = (float)mMaxAge;
+    float lockTime = (float)mTargetLockTime;
+    float lockFactor = lockTime / maxAge;
 
+    laser.mEnergy = strength * mLaserStrengthFactor * lockFactor;
 
     laser.mRange = mLaserRange;
     laser.mDistanceTraveled = 0.0f;
