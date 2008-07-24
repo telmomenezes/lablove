@@ -125,6 +125,8 @@ public:
 
     Component* replaceComponent(unsigned int pos, Component* comp);
 
+    void updateComponentSets();
+
     void setMutateAddConnectionProb(float prob){mMutateAddConnectionProb = prob;}
     void setMutateRemoveConnectionProb(float prob){mMutateRemoveConnectionProb = prob;}
     void setMutateChangeParamProb(float prob){mMutateChangeParamProb = prob;}

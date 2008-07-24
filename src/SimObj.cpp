@@ -422,6 +422,8 @@ void SimObj::repairBrain()
             }
         }
     }
+
+    mBrain->updateComponentSets();
 }
 
 bool SimObj::symbolUsed(int tableID, gbULINT symbolID)

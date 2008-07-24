@@ -135,7 +135,7 @@ Gridbrain* Gridbrain::importComponent(Gridbrain* gbTarg,
         }
     }
 
-    brain->replaceComponent(compTarg->mOffset, compOrig);
+    compTarg = brain->replaceComponent(compTarg->mOffset, compOrig);
 
     return brain;
 }

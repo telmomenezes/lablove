@@ -634,6 +634,17 @@ Component* Gridbrain::replaceComponent(unsigned int pos, Component* comp)
     return newComp;
 }
 
+void Gridbrain::updateComponentSets()
+{
+    for (unsigned int g = 0; g < mGridsCount; g++)
+    {
+        Grid* grid = mGridsVec[g];
+        grid->getComponentSet()->update(this,
+                                        grid->getOffset(),
+                                        grid->getOffset() + grid->getSize());
+    }
+}
+
 void Gridbrain::addConnection(unsigned int xOrig,
                 unsigned int yOrig,
                 unsigned int gOrig,
