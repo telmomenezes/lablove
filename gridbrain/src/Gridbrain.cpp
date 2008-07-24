@@ -352,8 +352,6 @@ Gridbrain* Gridbrain::clone(bool grow, ExpansionType expansion, unsigned int tar
             }
         }
 
-        
-
         newGrid->getComponentSet()->update(gb,
                                             newGrid->getOffset(),
                                             newGrid->getOffset() + newGrid->getSize());

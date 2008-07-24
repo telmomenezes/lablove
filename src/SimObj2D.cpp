@@ -747,7 +747,7 @@ void SimObj2D::perceive()
                     iterItem++)
                 {
                     Interface* intf = (Interface*)(*iterItem);
-                    CompPER* per = (CompPER*)per;
+                    CompPER* per = (CompPER*)(*iterItem);
                     unsigned int type = per->getInputType();
 
                     switch (type)
