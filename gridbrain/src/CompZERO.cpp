@@ -37,7 +37,7 @@ Component* CompZERO::clone()
     return comp;
 }
 
-void CompZERO::reset(int pass)
+void CompZERO::reset(int pass, unsigned int entity)
 {
     mInput = 0.0f;
 }
@@ -47,7 +47,7 @@ void CompZERO::input(float value, int pin)
     mInput += value;
 }
 
-float CompZERO::output(unsigned int id)
+float CompZERO::output()
 {
     if (mInput == 0.0f)
     {

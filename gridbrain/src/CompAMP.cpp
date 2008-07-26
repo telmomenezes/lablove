@@ -38,7 +38,7 @@ Component* CompAMP::clone()
     return comp;
 }
 
-void CompAMP::reset(int pass)
+void CompAMP::reset(int pass, unsigned int entity)
 {
     mInput = 0.0f;
 }
@@ -48,7 +48,7 @@ void CompAMP::input(float value, int pin)
     mInput += value;
 }
 
-float CompAMP::output(unsigned int id)
+float CompAMP::output()
 {
     if ((mParam == 1.0f) && (mInput == 0.0f))
     {

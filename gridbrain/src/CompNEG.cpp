@@ -37,7 +37,7 @@ Component* CompNEG::clone()
     return comp;
 }
 
-void CompNEG::reset(int pass)
+void CompNEG::reset(int pass, unsigned int entity)
 {
     mInput = 0.0f;
 }
@@ -47,7 +47,7 @@ void CompNEG::input(float value, int pin)
     mInput += value;
 }
 
-float CompNEG::output(unsigned int id)
+float CompNEG::output()
 {
     mOutput = -mInput;
     return mOutput;

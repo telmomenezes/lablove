@@ -37,7 +37,7 @@ Component* CompINV::clone()
     return comp;
 }
 
-void CompINV::reset(int pass)
+void CompINV::reset(int pass, unsigned int entity)
 {
     mInput = 0.0f;
 }
@@ -47,7 +47,7 @@ void CompINV::input(float value, int pin)
     mInput += value;
 }
 
-float CompINV::output(unsigned int id)
+float CompINV::output()
 {
     float inVal = mInput;
     if (inVal > 1.0f)

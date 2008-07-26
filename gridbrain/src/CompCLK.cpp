@@ -40,7 +40,7 @@ Component* CompCLK::clone()
     return comp;
 }
 
-void CompCLK::reset(int pass)
+void CompCLK::reset(int pass, unsigned int entity)
 {
     if (!mInit)
     {
@@ -57,7 +57,7 @@ void CompCLK::input(float value, int pin)
     mInput += value;
 }
 
-float CompCLK::output(unsigned int id)
+float CompCLK::output()
 {
     mOutput = 0.0f;
 

@@ -40,7 +40,7 @@ Component* CompMIN::clone()
     return comp;
 }
 
-void CompMIN::reset(int pass)
+void CompMIN::reset(int pass, unsigned int entity)
 {
     mInput = 0;
     mInputFlag = false;
@@ -69,7 +69,7 @@ void CompMIN::input(float value, int pin)
     }
 }
 
-float CompMIN::output(unsigned int id)
+float CompMIN::output()
 {
     mOutput = 0.0f;
 

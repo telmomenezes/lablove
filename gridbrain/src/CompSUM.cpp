@@ -37,7 +37,7 @@ Component* CompSUM::clone()
     return comp;
 }
 
-void CompSUM::reset(int pass)
+void CompSUM::reset(int pass, unsigned int entity)
 {
     mInput = 0.0f;
 }
@@ -47,7 +47,7 @@ void CompSUM::input(float value, int pin)
     mInput += value;
 }
 
-float CompSUM::output(unsigned int id)
+float CompSUM::output()
 {
     mOutput = mInput;
     return mOutput;

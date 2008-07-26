@@ -38,7 +38,7 @@ Component* CompNOT::clone()
     return comp;
 }
 
-void CompNOT::reset(int pass)
+void CompNOT::reset(int pass, unsigned int entity)
 {
     mInput = 0.0f;
 }
@@ -54,7 +54,7 @@ void CompNOT::input(float value, int pin)
     mInput += inVal;
 }
 
-float CompNOT::output(unsigned int id)
+float CompNOT::output()
 {
     if (mInput == 0.0f)
     {

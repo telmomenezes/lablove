@@ -1343,7 +1343,7 @@ void Gridbrain::cycle()
     for (unsigned int i = 0; i < endIndex; i++)
     {
         Component* comp = grid->mComponentSequence[i];
-        comp->reset(0);
+        comp->reset(0, 0);
     }
 
     // Evaluate grids
@@ -1394,7 +1394,7 @@ void Gridbrain::cycle()
                                         + inputDepthOffset];
                         }
 
-                        comp->reset(pass);
+                        comp->reset(pass, inputID);
                     }
                 }
 
@@ -1403,7 +1403,7 @@ void Gridbrain::cycle()
                     Component* comp = grid->mComponentSequence[j];
 
                     // compute component output
-                    float output = comp->output(inputID);
+                    float output = comp->output();
                     if (isnan(output))
                     {
                         output = 0.0f;

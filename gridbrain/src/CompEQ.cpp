@@ -37,7 +37,7 @@ Component* CompEQ::clone()
     return comp;
 }
 
-void CompEQ::reset(int pass)
+void CompEQ::reset(int pass, unsigned int entity)
 {
     mInputFlag = false;
 }
@@ -59,7 +59,7 @@ void CompEQ::input(float value, int pin)
     }
 }
 
-float CompEQ::output(unsigned int id)
+float CompEQ::output()
 {
     mOutput = mInput;
     return mOutput;

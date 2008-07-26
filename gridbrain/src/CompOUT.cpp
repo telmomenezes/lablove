@@ -39,7 +39,7 @@ Component* CompOUT::clone()
     return comp;
 }
 
-void CompOUT::reset(int pass)
+void CompOUT::reset(int pass, unsigned int entity)
 {
     mInput = 0.0f;
 }
@@ -52,7 +52,7 @@ void CompOUT::input(float value, int pin)
     }
 }
 
-float CompOUT::output(unsigned int id)
+float CompOUT::output()
 {
     mOutput = mInput;
     return mOutput;

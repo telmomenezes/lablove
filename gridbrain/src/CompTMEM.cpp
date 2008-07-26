@@ -40,7 +40,7 @@ Component* CompTMEM::clone()
     return comp;
 }
 
-void CompTMEM::reset(int pass)
+void CompTMEM::reset(int pass, unsigned int entity)
 {
     if (!mInit)
     {
@@ -57,7 +57,7 @@ void CompTMEM::input(float value, int pin)
     mInput += value;
 }
 
-float CompTMEM::output(unsigned int id)
+float CompTMEM::output()
 {
     if (mInput != 0.0f)
     {

@@ -37,7 +37,7 @@ Component* CompMOD::clone()
     return comp;
 }
 
-void CompMOD::reset(int pass)
+void CompMOD::reset(int pass, unsigned int entity)
 {
     mInput = 0.0f;
 }
@@ -47,7 +47,7 @@ void CompMOD::input(float value, int pin)
     mInput += value;
 }
 
-float CompMOD::output(unsigned int id)
+float CompMOD::output()
 {
     mOutput = mInput;
 

@@ -38,7 +38,7 @@ Component* CompNUL::clone()
     return comp;
 }
 
-void CompNUL::reset(int pass)
+void CompNUL::reset(int pass, unsigned int entity)
 {
 }
 
@@ -46,7 +46,7 @@ void CompNUL::input(float value, int pin)
 {
 }
 
-float CompNUL::output(unsigned int id)
+float CompNUL::output()
 {
     return 0.0f;
 }

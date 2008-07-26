@@ -38,9 +38,9 @@ public:
 
     virtual Component* clone(){return NULL;}
 
+    virtual void reset(int pass, unsigned int entity){}
     virtual void input(float value, int pin){}
-    virtual float output(unsigned int id){return 0.0f;}
-    virtual void reset(int pass){}
+    virtual float output(){return 0.0f;}
 
     void clearMetrics();
 

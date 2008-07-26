@@ -42,7 +42,7 @@ Component* CompSEL::clone()
     return comp;
 }
 
-void CompSEL::reset(int pass)
+void CompSEL::reset(int pass, unsigned int entity)
 {
     mInput = 0.0f;
     mInputFlag = false;
@@ -60,6 +60,7 @@ void CompSEL::reset(int pass)
     }
 
     mPass = pass;
+    mEntity = entity;
 }
 
 void CompSEL::input(float value, int pin)
@@ -75,27 +76,27 @@ void CompSEL::input(float value, int pin)
     }
 }
 
-float CompSEL::output(unsigned int id)
+float CompSEL::output()
 {
     bool triggered;
 
     if (mPass == 1)
     {
-        if (mID == id)
+        if (mID == mEntity)
         {
             mIDFound = true;
         }
-        if ((id != 0) && (mInput != 0.0f))
+        if ((mEntity != 0) && (mInput != 0.0f))
         {
             if (!mTriggered)
             {
-                mIDCandidate = id;
+                mIDCandidate = mEntity;
                 mTriggered = true;
             }
         }
     }
 
-    if (mID == id)
+    if (mID == mEntity)
     {
         mOutput = mInput;
     }

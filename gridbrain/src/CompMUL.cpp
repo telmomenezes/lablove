@@ -37,7 +37,7 @@ Component* CompMUL::clone()
     return comp;
 }
 
-void CompMUL::reset(int pass)
+void CompMUL::reset(int pass, unsigned int entity)
 {
     mInput = 0.0f;
     mInputFlag = false;
@@ -56,7 +56,7 @@ void CompMUL::input(float value, int pin)
     }
 }
 
-float CompMUL::output(unsigned int id)
+float CompMUL::output()
 {
     mOutput = mInput;
     return mOutput;

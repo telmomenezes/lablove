@@ -38,7 +38,7 @@ Component* CompAND::clone()
     return comp;
 }
 
-void CompAND::reset(int pass)
+void CompAND::reset(int pass, unsigned int entity)
 {
     mInput = 0.0f;
     mInputFlag = false;
@@ -62,7 +62,7 @@ void CompAND::input(float value, int pin)
     }
 }
 
-float CompAND::output(unsigned int id)
+float CompAND::output()
 {
     if (mInput > 0.0f)
     {

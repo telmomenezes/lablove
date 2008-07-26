@@ -40,7 +40,7 @@ Component* CompMAX::clone()
     return comp;
 }
 
-void CompMAX::reset(int pass)
+void CompMAX::reset(int pass, unsigned int entity)
 {
     mInput = 0;
     mInputFlag = false;
@@ -69,7 +69,7 @@ void CompMAX::input(float value, int pin)
     }
 }
 
-float CompMAX::output(unsigned int id)
+float CompMAX::output()
 {
     mOutput = 0.0f;
 

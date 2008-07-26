@@ -33,9 +33,9 @@ public:
 
     virtual Component* clone();
 
+    virtual void reset(int pass, unsigned int entity);
     virtual void input(float value, int pin);
-    virtual float output(unsigned int id);
-    virtual void reset(int pass);
+    virtual float output();
 
     virtual string getName(){return "SEL";}
     virtual ConnType getConnectorType(){return CONN_INOUT;}
@@ -50,6 +50,7 @@ protected:
     bool mTriggered;
     bool mIDFound;
     int mPass;
+    unsigned int mEntity;
 };
 
 static CompSEL COMP_SEL;

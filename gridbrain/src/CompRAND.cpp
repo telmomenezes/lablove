@@ -39,7 +39,7 @@ Component* CompRAND::clone()
     return comp;
 }
 
-void CompRAND::reset(int pass)
+void CompRAND::reset(int pass, unsigned int entity)
 {
 }
 
@@ -47,7 +47,7 @@ void CompRAND::input(float value, int pin)
 {
 }
 
-float CompRAND::output(unsigned int id)
+float CompRAND::output()
 {
 
     mOutput = mDistRand->uniform(-1.0f, 1.0f);

@@ -37,7 +37,7 @@ Component* CompDMUL::clone()
     return comp;
 }
 
-void CompDMUL::reset(int pass)
+void CompDMUL::reset(int pass, unsigned int entity)
 {
 }
 
@@ -49,7 +49,7 @@ void CompDMUL::input(float value, int pin)
     }
 }
 
-float CompDMUL::output(unsigned int id)
+float CompDMUL::output()
 {
     if (mInputVals.size() == mInboundConnections)
     {

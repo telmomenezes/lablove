@@ -37,7 +37,7 @@ Component* CompGTZ::clone()
     return comp;
 }
 
-void CompGTZ::reset(int pass)
+void CompGTZ::reset(int pass, unsigned int entity)
 {
     mInput = 0.0f;
 }
@@ -47,7 +47,7 @@ void CompGTZ::input(float value, int pin)
     mInput += value;
 }
 
-float CompGTZ::output(unsigned int id)
+float CompGTZ::output()
 {
     if (mInput > 0.0f)
     {

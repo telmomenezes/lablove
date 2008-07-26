@@ -40,7 +40,7 @@ Component* CompAVG::clone()
     return comp;
 }
 
-void CompAVG::reset(int pass)
+void CompAVG::reset(int pass, unsigned int entity)
 {
     mInput = 0;
     mInputFlag = false;
@@ -68,7 +68,7 @@ void CompAVG::input(float value, int pin)
     }
 }
 
-float CompAVG::output(unsigned int id)
+float CompAVG::output()
 {
     if ((mPass == 0) && (mInput != 0))
     {

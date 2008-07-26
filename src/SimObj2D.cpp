@@ -1337,9 +1337,14 @@ void SimObj2D::fire(unsigned int actionType, float strength)
         break;
     }
 
-    float maxAge = (float)mMaxAge;
+    float maxTime = (float)mFireInterval;
     float lockTime = (float)mTargetLockTime;
-    float lockFactor = lockTime / maxAge;
+
+    if (lockTime > maxTime)
+    {
+        lockTime = maxTime;
+    }
+    float lockFactor = lockTime / maxTime;
 
     laser.mEnergy = strength * mLaserStrengthFactor * lockFactor;
 
