@@ -12,8 +12,8 @@ agentSize = 10.0
 worldWidth = 500
 worldHeight = 500
 
-alphaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, MAX, MIN, AVG, MEMW, MEMC}
-betaComponents = {AND, NOT, SUM, MUL, INV, NEG, MOD, AMP, RAND, EQ, GTZ, ZERO, CLK, MEMW, MEMC}
+alphaComponents = {AND(), NOT(), SUM(), MUL(), INV(), NEG(), MOD(), AMP(), RAND(), EQ(), GTZ(), ZERO(), MAX(), MIN(), AVG(), DMUL(), SEL(), MEM()}
+betaComponents = {AND(), NOT(), SUM(), MUL(), INV(), NEG(), MOD(), AMP(), RAND(), EQ(), GTZ(), ZERO(), CLK(), DMUL(), MEM(), TMEM()}
 
 viewRange = 300.0
 viewAngle = 350.0
@@ -143,9 +143,8 @@ alphaSet = ComponentSet()
 for i, comp in pairs(alphaComponents) do
     alphaSet:addComponent(comp)
 end
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_POSITION)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_DISTANCE)
-alphaSet:addComponent(IN, Sim2D.PERCEPTION_ID)
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_POSITION))
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_DISTANCE))
 grid = Grid()
 grid:init(Grid.ALPHA, 0, 0)
 grid:setComponentSet(alphaSet)
@@ -156,10 +155,10 @@ soundSet = ComponentSet()
 for i, comp in pairs(alphaComponents) do
     soundSet:addComponent(comp)
 end
-soundSet:addComponent(IN, Sim2D.PERCEPTION_POSITION)
-soundSet:addComponent(IN, Sim2D.PERCEPTION_DISTANCE)
-soundSet:addComponent(IN, Sim2D.PERCEPTION_VALUE)
-soundSet:addComponent(IN, Sim2D.PERCEPTION_SYMEQ, TAB_TO_SYM, colorTableCode, agentColor:getID(), colorTableCode)
+soundSet:addComponent(PER(Sim2D.PERCEPTION_POSITION))
+soundSet:addComponent(PER(Sim2D.PERCEPTION_DISTANCE))
+soundSet:addComponent(PER(Sim2D.PERCEPTION_VALUE))
+soundSet:addComponent(PER(Sim2D.PERCEPTION_SYMEQ, colorTableCode, agentColor:getID(), colorTableCode, true))
 soundGrid = Grid()
 soundGrid:init(Grid.ALPHA, 0, 0)
 soundGrid:setComponentSet(soundSet)
@@ -170,9 +169,9 @@ betaSet = ComponentSet()
 for i, comp in pairs(betaComponents) do
     betaSet:addComponent(comp)
 end
-betaSet:addComponent(OUT, Sim2D.ACTION_GO)
-betaSet:addComponent(OUT, Sim2D.ACTION_ROTATE)
-betaSet:addComponent(OUT, Sim2D.ACTION_SPEAK, TAB_TO_SYM, colorTableCode, agentColor:getID())
+betaSet:addComponent(ACT(Sim2D.ACTION_GO))
+betaSet:addComponent(ACT(Sim2D.ACTION_ROTATE))
+betaSet:addComponent(ACT(Sim2D.ACTION_SPEAK, colorTableCode, agentColor:getID()))
     
 grid2 = Grid()
 grid2:init(Grid.BETA, 0, 0)
@@ -190,7 +189,7 @@ sim:setPopulationDynamics(popDyn)
 
 agentSpecies = Species(agent, numberOfAgents)
 
-agentSpecies:addGoal(SimObj2D.FITNESS_MSG_SCORE, bufferSize)
+agentSpecies:addGoal(SimObj2D.FITNESS_SYNCH_SCORE, bufferSize)
 agentSpecies:setFitnessAging(fitnessAging)
 agentSpecies:setRecombineProb(recombineProb)
 agentSpecies:setKinFactor(kinFactor)
