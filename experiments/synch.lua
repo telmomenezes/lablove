@@ -171,7 +171,7 @@ for i, comp in pairs(betaComponents) do
 end
 betaSet:addComponent(ACT(Sim2D.ACTION_GO))
 betaSet:addComponent(ACT(Sim2D.ACTION_ROTATE))
-betaSet:addComponent(ACT(Sim2D.ACTION_SPEAK, colorTableCode, agentColor:getID()))
+betaSet:addComponent(ACT(Sim2D.ACTION_SPEAK, colorTableCode, agentColor:getID(), colorTableCode, true))
     
 grid2 = Grid()
 grid2:init(Grid.BETA, 0, 0)
