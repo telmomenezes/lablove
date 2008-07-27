@@ -269,6 +269,8 @@ if logBrains then
     agentSpecies:addDeathLog(logBrain)
 end
 
+agentSpecies:setBufferDump("bdump" .. logSuffix)
+
 popDyn:setLogTimeInterval(logTimeInterval)
 
 agentSpecies:setLog("buf" .. logSuffix .. ".csv", logTimeInterval)
