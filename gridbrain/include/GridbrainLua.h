@@ -521,7 +521,11 @@ Orbit<LuaCompZERO>::NumberGlobalType LuaCompZERO::mNumberGlobals[] = {{0,0}};
 class LuaCompCLK : public CompCLK
 {
 public:
-    LuaCompCLK(lua_State* luaState=NULL){}
+    LuaCompCLK(lua_State* luaState=NULL)
+    {
+        float param = luaL_optnumber(luaState, 1, 0.0f);
+        mParam = param;
+    }
     virtual ~LuaCompCLK(){}
 
     static const char mClassName[];

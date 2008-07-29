@@ -569,7 +569,7 @@ void SimObj2D::process()
             }
         }
 
-        /*SimObj2D* objLock = (SimObj2D*)mSim2D->getObjectByID(mCurrentLaserLockID);
+        SimObj2D* objLock = (SimObj2D*)mSim2D->getObjectByID(mCurrentLaserLockID);
 
         if ((objLock != NULL)
             && mSim2D->segmentCollides(objLock, x1, y1, x2, y2))
@@ -580,34 +580,9 @@ void SimObj2D::process()
         {
             mCurrentLaserLockID = mCurrentLaserTargetID;
             mTargetLockTime = 0;
-        }*/
+        }
         
         //objLock = (SimObj2D*)mSim2D->getObjectByID(mCurrentLaserLockID);
-
-        if ((laserTarget != NULL)
-            && (laserTarget->mSpeciesID != mSpeciesID))
-        {
-            if (mCurrentLaserTargetID == mCurrentLaserLockID)
-            {
-                mTargetLockTime += 1;
-            }
-            else
-            {
-                mTargetLockTime = 0;
-                mCurrentLaserLockID = mCurrentLaserTargetID;
-            }
-            if (mTargetLockTime > mLockScore)
-            {
-                mLockScore = mTargetLockTime;
-            }
-        }
-        else
-        {
-            if (mTargetLockTime > 0)
-            {
-                mTargetLockTime--;
-            }
-        }
 
         //printf("lock: %d\n", mTargetLockTime);
         //printf("laser target: %d\n", mCurrentLaserTargetID);
@@ -1337,7 +1312,7 @@ void SimObj2D::fire(unsigned int actionType, float strength)
         break;
     }
 
-    float maxTime = (float)mFireInterval;
+    float maxTime = (float)mMaxAgeHigh;
     float lockTime = (float)mTargetLockTime;
 
     if (lockTime > maxTime)
@@ -1441,6 +1416,7 @@ void SimObj2D::processLaserHit(Laser2D* laser)
     if ((obj != NULL) && (laser->mEnergy > 0))
     {
         score = laser->mEnergy * 0.1f;
+
         //printf("score: %f\n", score);
         if (obj->mSpeciesID != mSpeciesID)
         {

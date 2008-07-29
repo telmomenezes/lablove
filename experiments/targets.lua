@@ -225,7 +225,6 @@ popDyn = PopDynSEGA()
 sim:setPopulationDynamics(popDyn)
 
 agentSpecies = Species(agent, numberOfAgents)
-agentSpecies:addGoal(SimObj2D.FITNESS_LOCK_SCORE, bufferSize)
 agentSpecies:addGoal(SimObj2D.FITNESS_LASER_SCORE, bufferSize)
 agentSpecies:addGoal(SimObj2D.FITNESS_SYNCH_SCORE, bufferSize)
 agentSpecies:setFitnessAging(fitnessAging)

@@ -177,7 +177,7 @@ brain:setComponent(3, 2, 0, AND())
 
 brain:setComponent(0, 0, 1, IN())
 
---brain:setComponent(0, 0, 2, CLK(0.2))
+brain:setComponent(0, 0, 2, CLK(0.2))
 brain:setComponent(1, 0, 2, DMUL())
 brain:setComponent(2, 0, 2, ACT(Sim2D.ACTION_FIREB))
 brain:setComponent(2, 1, 2, ACT(Sim2D.ACTION_ROTATE))
@@ -228,7 +228,7 @@ popDyn = PopDynSEGA()
 sim:setPopulationDynamics(popDyn)
 
 agentSpecies = Species(agent, numberOfAgents)
-agentSpecies:addGoal(SimObj2D.FITNESS_LASER_HIT_SCORE, bufferSize)
+agentSpecies:addGoal(SimObj2D.FITNESS_LASER_SCORE, bufferSize)
 agentSpecies:setFitnessAging(fitnessAging)
 agentSpecies:setRecombineProb(recombineProb)
 agentSpecies:setGroupFactor(groupFactor)
@@ -298,7 +298,7 @@ end
 
 stats = StatCommon()
 stats:setFile("log" .. logSuffix .. ".csv")
-stats:addField("laser_age_score")
+stats:addField("laser_score")
 stats:addField("gb_connections")
 stats:addField("gb_active_connections")
 stats:addField("gb_active_components")
