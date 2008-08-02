@@ -72,8 +72,8 @@ dofile("basic_command_line.lua")
 kinFactor = getNumberParameter("kin", kinFactor, "kin")
 kinMutation = getBoolParameter("kinmut", kinMutation, "kinmut")
 groupFactor = getNumberParameter("grp", groupFactor, "grp")
-changeParamProb = getNumberParameter("changeparamprob", changeParamProb, "par")
-paramMutationStanDev = getNumberParameter("parammutstandev", paramMutationStanDev, "psd")
+changeParamProb = getNumberParameter("par", changeParamProb, "par")
+paramMutationStanDev = getNumberParameter("psd", paramMutationStanDev, "psd")
 
 logBaseName = "_synch_"
 
