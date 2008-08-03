@@ -42,7 +42,7 @@ laserSpeed = 100.0
 laserRange = 300.0
 laserStrengthFactor = 1.0
 laserCostFactor = 0.1
-laserHitDuration = 5
+laserHitDuration = 2
 
 soundRange = 500
 speakInterval = 250

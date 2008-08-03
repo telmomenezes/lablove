@@ -21,6 +21,7 @@
 #define _INCLUDE_GRIDBRAIN_COMPONENT_CLK_H
 
 #include "Component.h"
+#include "RandDistManager.h"
 
 namespace gb
 {
@@ -48,6 +49,8 @@ public:
     virtual string getLabel();
 
 protected:
+    static mt_distribution* mDistRand;
+
     bool mInit;
     gbULINT mTimeToTrigger;
     gbULINT mTriggerInterval;

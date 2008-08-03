@@ -1312,7 +1312,7 @@ void SimObj2D::fire(unsigned int actionType, float strength)
         break;
     }
 
-    float maxTime = (float)mMaxAgeHigh;
+    float maxTime = (float)mFireInterval;
     float lockTime = (float)mTargetLockTime;
 
     if (lockTime > maxTime)

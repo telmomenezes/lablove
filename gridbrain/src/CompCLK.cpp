@@ -22,6 +22,8 @@
 namespace gb
 {
 
+mt_distribution* CompCLK::mDistRand = gDistManager.getNewDistribution();
+
 CompCLK::CompCLK()
 {
     mInit = false;
@@ -45,7 +47,8 @@ void CompCLK::reset(int pass, unsigned int entity)
     if (!mInit)
     {
         mTriggerInterval = (gbULINT)(5000.0f * mParam);
-        mTimeToTrigger = mTriggerInterval;
+        //mTimeToTrigger = mTriggerInterval;
+        mTimeToTrigger = mDistRand->iuniform(0, mTriggerInterval);
         mInit = true;
     }
 
