@@ -173,12 +173,12 @@ popDyn = PopDynSEGA()
 sim:setPopulationDynamics(popDyn)
 
 agentSpecies = Species(agent, numberOfAgents)
-agentSpecies:addGoal(SimObj2D.FITNESS_ENERGY_SUM_ABOVE_INIT, 1)
+agentSpecies:addGoal(1, SimObj2D.FITNESS_ENERGY_SUM_ABOVE_INIT)
 agentSpecies:setFitnessAging(0)
 agentSpecies:setRecombineProb(0)
 
 plantSpecies = Species(plant, numberOfPlants)
-plantSpecies:addGoal(SimObj2D.FITNESS_ENERGY, 1)
+plantSpecies:addGoal(1, SimObj2D.FITNESS_ENERGY)
 
 agentSpeciesIndex = popDyn:addSpecies(agentSpecies)
 popDyn:addSpecies(plantSpecies)

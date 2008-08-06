@@ -67,9 +67,9 @@ Species::~Species()
     fclose(mFile);
 }
 
-void Species::addGoal(int fitMeasure, unsigned int bufSize)
+void Species::addGoal(unsigned int bufSize, int fitMeasure, int domFitMeasure)
 {
-    mGoals.push_back(Goal(fitMeasure, bufSize));
+    mGoals.push_back(Goal(bufSize, fitMeasure, domFitMeasure));
     mBufferSize += bufSize;
 }
 
@@ -447,8 +447,11 @@ void Species::onOrganismDeath(SimObj* org)
 
         Fitness* fit1 = org->getFitness((*iterGoal).mFitnessMeasure);
         Fitness* fit2 = org2->getFitness((*iterGoal).mFitnessMeasure);
+        Fitness* fitDom1 = org->getFitness((*iterGoal).mDominantFitnessMeasure);
+        Fitness* fitDom2 = org2->getFitness((*iterGoal).mDominantFitnessMeasure);
 
-        if (fit1->mFinalFitness >= fit2->mFinalFitness)
+        if ((fitDom1->mFinalFitness >= fitDom2->mFinalFitness)
+            && (fit1->mFinalFitness >= fit2->mFinalFitness))
         {
             SimObj* newObj = org->clone();
             Gridbrain* mBrain = newObj->getBrain();
@@ -464,6 +467,7 @@ void Species::onOrganismDeath(SimObj* org)
         }
         else
         {
+            fitDom2->mFinalFitness = fitDom2->mFinalFitness * (1.0f - mFitnessAging);
             fit2->mFinalFitness = fit2->mFinalFitness * (1.0f - mFitnessAging);
         }
 
@@ -558,9 +562,10 @@ Orbit<Species>::NumberGlobalType Species::mNumberGlobals[] = {{0,0}};
 
 int Species::addGoal(lua_State* luaState)
 {
-    int fitMeasure = luaL_checkint(luaState, 1);
-    unsigned int bufSize = luaL_checkint(luaState, 2);
-    addGoal(fitMeasure, bufSize);
+    unsigned int bufSize = luaL_checkint(luaState, 1);
+    int fitMeasure = luaL_checkint(luaState, 2);
+    int domFitMeasure = luaL_optint(luaState, 3, -1);
+    addGoal(bufSize, fitMeasure, domFitMeasure);
     return 0;
 }
 

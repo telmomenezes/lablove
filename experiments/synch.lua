@@ -189,7 +189,7 @@ sim:setPopulationDynamics(popDyn)
 
 agentSpecies = Species(agent, numberOfAgents)
 
-agentSpecies:addGoal(SimObj2D.FITNESS_SYNCH_SCORE, bufferSize)
+agentSpecies:addGoal(bufferSize, SimObj2D.FITNESS_SYNCH_SCORE)
 agentSpecies:setFitnessAging(fitnessAging)
 agentSpecies:setRecombineProb(recombineProb)
 agentSpecies:setKinFactor(kinFactor)

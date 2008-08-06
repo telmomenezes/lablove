@@ -228,14 +228,14 @@ popDyn = PopDynSEGA()
 sim:setPopulationDynamics(popDyn)
 
 agentSpecies = Species(agent, numberOfAgents)
-agentSpecies:addGoal(SimObj2D.FITNESS_LASER_SCORE, bufferSize)
+agentSpecies:addGoal(bufferSize, SimObj2D.FITNESS_LASER_SCORE)
 agentSpecies:setFitnessAging(fitnessAging)
 agentSpecies:setRecombineProb(recombineProb)
 agentSpecies:setGroupFactor(groupFactor)
 agentSpeciesIndex = popDyn:addSpecies(agentSpecies)
 
 targetSpecies = Species(target, numberOfTargets)
-targetSpecies:addGoal(SimObj2D.FITNESS_RANDOM, 1)
+targetSpecies:addGoal(1, SimObj2D.FITNESS_RANDOM)
 popDyn:addSpecies(targetSpecies)
 
 popDyn:setEvolutionStopTime(evolutionStopTime)

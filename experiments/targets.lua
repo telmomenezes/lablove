@@ -36,7 +36,7 @@ rotateForceScale = 0.1
 drag = 0.05
 rotDrag = 0.05
 
-fireInterval = 1000
+fireInterval = 500
 laserLength = 25
 laserSpeed = 100.0
 laserRange = 300.0
@@ -225,15 +225,16 @@ popDyn = PopDynSEGA()
 sim:setPopulationDynamics(popDyn)
 
 agentSpecies = Species(agent, numberOfAgents)
-agentSpecies:addGoal(SimObj2D.FITNESS_LASER_SCORE, bufferSize)
-agentSpecies:addGoal(SimObj2D.FITNESS_SYNCH_SCORE, bufferSize)
+agentSpecies:addGoal(bufferSize, SimObj2D.FITNESS_LOCK_SCORE, SimObj2D.FITNESS_TARGET_SCORE)
+agentSpecies:addGoal(bufferSize, SimObj2D.FITNESS_SYNCH_SCORE, SimObj2D.FITNESS_TARGET_SCORE)
+agentSpecies:addGoal(bufferSize, SimObj2D.FITNESS_TARGET_SCORE)
 agentSpecies:setFitnessAging(fitnessAging)
 agentSpecies:setRecombineProb(recombineProb)
 agentSpecies:setGroupFactor(groupFactor)
 agentSpeciesIndex = popDyn:addSpecies(agentSpecies)
 
 targetSpecies = Species(target, numberOfTargets)
-targetSpecies:addGoal(SimObj2D.FITNESS_RANDOM, 1)
+targetSpecies:addGoal(1, SimObj2D.FITNESS_RANDOM)
 popDyn:addSpecies(targetSpecies)
 
 popDyn:setEvolutionStopTime(evolutionStopTime)
@@ -297,8 +298,8 @@ end
 
 stats = StatCommon()
 stats:setFile("log" .. logSuffix .. ".csv")
+stats:addField("target_score")
 stats:addField("lock_score")
-stats:addField("laser_score")
 stats:addField("synch_score")
 stats:addField("gb_connections")
 stats:addField("gb_active_connections")

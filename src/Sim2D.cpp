@@ -663,6 +663,11 @@ bool Sim2D::getFieldValue(SimObj* obj, string fieldName, float& value)
         value = ((SimObj2D*)obj)->mLaserScore;
         return true;
     }
+    else if (fieldName == "target_score")
+    {
+        value = ((SimObj2D*)obj)->mTargetScore;
+        return true;
+    }
     else if (fieldName == "lock_score")
     {
         value = ((SimObj2D*)obj)->mLockScore;

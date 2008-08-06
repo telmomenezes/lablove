@@ -19,15 +19,23 @@
 
 #include "Goal.h"
 
-Goal::Goal(int fitMeasure, unsigned int size)
+Goal::Goal(unsigned int size, int fitMeasure, int domFitMeasure)
 {
     mFitnessMeasure = fitMeasure;
+    mDominantFitnessMeasure = domFitMeasure;
+
+    if (mDominantFitnessMeasure == -1)
+    {
+        mFitnessMeasure = mDominantFitnessMeasure;
+    }
+
     mSize = size;
 }
 
 Goal::Goal(const Goal& g)
 {
     mFitnessMeasure = g.mFitnessMeasure;
+    mDominantFitnessMeasure = g.mDominantFitnessMeasure;
     mSize = g.mSize;
 }
 

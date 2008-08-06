@@ -36,6 +36,7 @@ Laser2D::Laser2D()
     mOwnerSpecies = 0;
     mType = LASER_ONE_HIT;
     mEnergy = 0;
+    mMaxDamage = 0;
     mRange = 0;
     mDistanceTraveled = 0;
     mFireTime = 0;

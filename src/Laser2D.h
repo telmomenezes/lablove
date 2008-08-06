@@ -46,6 +46,7 @@ public:
     unsigned int mOwnerSpecies;
     LaserType mType;
     float mEnergy;
+    float mMaxDamage;
     float mRange;
     float mDistanceTraveled;
     gbULINT mFireTime;
