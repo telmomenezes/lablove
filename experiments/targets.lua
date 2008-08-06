@@ -53,13 +53,15 @@ fitnessAging = 0.5
 addConnectionProb = 0.01
 removeConnectionProb = 0.01
 changeParamProb = 0.01
-paramMutationStanDev = 2.5
+paramMutationStanDev = 1.0
 splitConnectionProb = 0.01
 joinConnectionsProb = 0.01
 changeInComponentProb = 0.2
 
 recombineProb = 1.0
 
+kinFactor = 0.0
+kinMutation = false
 groupFactor = 0.5
 
 timeLimit = 0
@@ -80,6 +82,8 @@ keepBodyOnExpire = false
 
 dofile("basic_command_line.lua")
 
+kinFactor = getNumberParameter("kin", kinFactor, "kin")
+kinMutation = getBoolParameter("kinmut", kinMutation, "kinmut")
 groupFactor = getNumberParameter("grp", groupFactor, "grp")
 
 logBaseName = "_targets_"
@@ -230,7 +234,10 @@ agentSpecies:addGoal(bufferSize, SimObj2D.FITNESS_SYNCH_SCORE, SimObj2D.FITNESS_
 agentSpecies:addGoal(bufferSize, SimObj2D.FITNESS_TARGET_SCORE)
 agentSpecies:setFitnessAging(fitnessAging)
 agentSpecies:setRecombineProb(recombineProb)
+agentSpecies:setKinFactor(kinFactor)
+agentSpecies:setKinMutation(kinMutation)
 agentSpecies:setGroupFactor(groupFactor)
+
 agentSpeciesIndex = popDyn:addSpecies(agentSpecies)
 
 targetSpecies = Species(target, numberOfTargets)
