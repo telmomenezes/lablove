@@ -34,9 +34,7 @@ Laser2D::Laser2D()
     mDirY = 0;
     mOwnerID = 0;
     mOwnerSpecies = 0;
-    mType = LASER_ONE_HIT;
     mEnergy = 0;
-    mMaxDamage = 0;
     mRange = 0;
     mDistanceTraveled = 0;
     mFireTime = 0;
@@ -61,7 +59,6 @@ Laser2D::Laser2D(const Laser2D& laser)
     mDirY = laser.mDirY;
     mOwnerID = laser.mOwnerID;
     mOwnerSpecies = laser.mOwnerSpecies;
-    mType = laser.mType;
     mEnergy = laser.mEnergy;
     mRange = laser.mRange;
     mDistanceTraveled = laser.mDistanceTraveled;

@@ -25,8 +25,6 @@
 class Laser2D
 {
 public:
-    enum LaserType {LASER_ONE_HIT, LASER_COMULATIVE};
-
     Laser2D();
     virtual ~Laser2D();
     Laser2D(const Laser2D& laser);
@@ -44,9 +42,7 @@ public:
     int mDirY;
     gbULINT mOwnerID;
     unsigned int mOwnerSpecies;
-    LaserType mType;
     float mEnergy;
-    float mMaxDamage;
     float mRange;
     float mDistanceTraveled;
     gbULINT mFireTime;

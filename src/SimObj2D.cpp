@@ -441,10 +441,6 @@ void SimObj2D::process()
         {
             //printf("time since fired %d\n", timeSinceFired);
             float laserEnergy = (*iterLaser).mEnergy;
-            if (laserEnergy > (*iterLaser).mMaxDamage)
-            {
-                laserEnergy = (*iterLaser).mMaxDamage;
-            }
             totalDamage += laserEnergy;
             iterLaser++;
         }
@@ -463,8 +459,7 @@ void SimObj2D::process()
             {
                 if (obj->mSpeciesID != mSpeciesID)
                 {
-                    //obj->mLaserScore += mEnergy * 1000.0f;
-                    obj->mTargetScore += mEnergy;
+                    obj->mTargetScore += 1.0f;
                 }
             }
         }
@@ -1324,24 +1319,16 @@ void SimObj2D::fire(unsigned int actionType, float strength)
     laser.mOwnerID = mID;
     laser.mOwnerSpecies = mSpeciesID;
 
-    switch (actionType)
-    {
-    case Sim2D::ACTION_FIREB:
-        laser.mType = Laser2D::LASER_COMULATIVE;
-        break;
-    case Sim2D::ACTION_FIRE:
-    default:
-        laser.mType = Laser2D::LASER_ONE_HIT;
-        break;
-    }
-
     float maxTime = (float)mFireInterval;
     float lockTime = (float)mTargetLockTime;
 
     float lockFactor = lockTime / maxTime;
+    if (lockFactor > 1.0f)
+    {
+        lockFactor = 1.0f;
+    }
 
     laser.mEnergy = strength * mLaserStrengthFactor * lockFactor;
-    laser.mMaxDamage = mLaserStrengthFactor;
 
     laser.mRange = mLaserRange;
     laser.mDistanceTraveled = 0.0f;
@@ -1431,62 +1418,49 @@ void SimObj2D::addMessage(Message* msg)
 void SimObj2D::processLaserHit(Laser2D* laser)
 {
     gbULINT id = laser->mOwnerID;
-    float score;
+    float score = 0.0f;
+
+    for (list<Laser2D>::iterator iterLaser = mLaserHits.begin();
+        iterLaser != mLaserHits.end();
+        iterLaser++)
+    {
+        if (((*iterLaser).mOwnerID) == id)
+        {
+            return;
+        }
+
+        // Track friendly fire
+        if (((*iterLaser).mOwnerSpecies) == mSpeciesID)
+        {
+            mFriendlyFire++;
+        }
+    }
+    mLaserHits.push_back(*laser);
+        
+    //unsigned int timeSinceFired = mSim2D->getTime() - laser->mFireTime;
+    //printf("laser delay: %d\n", timeSinceFired);
+
+    // Laser score
     SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
     if ((obj != NULL) && (laser->mEnergy > 0))
     {
-        score = laser->mEnergy;
-        //printf("score: %f\n", score);
         if (obj->mSpeciesID != mSpeciesID)
         {
+            for (list<Laser2D>::iterator iterLaser = mLaserHits.begin();
+                iterLaser != mLaserHits.end();
+                iterLaser++)
+            {
+                if (((*iterLaser).mOwnerSpecies) != mSpeciesID)
+                {
+                    score += (*iterLaser).mEnergy;
+                }
+            }
+
             if (score > obj->mLaserScore)
             {
                 obj->mLaserScore = score;
             }
         }
-    }
-
-    switch (laser->mType)
-    {
-    case Laser2D::LASER_COMULATIVE:
-        for (list<Laser2D>::iterator iterLaser = mLaserHits.begin();
-            iterLaser != mLaserHits.end();
-            iterLaser++)
-        {
-            if (((*iterLaser).mOwnerID) == id)
-            {
-                return;
-            }
-
-            // Track friendly fire
-            if (((*iterLaser).mOwnerSpecies) == mSpeciesID)
-            {
-                mFriendlyFire++;
-            }
-        }
-        mLaserHits.push_back(*laser);
-        
-        //unsigned int timeSinceFired = mSim2D->getTime() - laser->mFireTime;
-        //printf("laser delay: %d\n", timeSinceFired);
-        break;
-    case Laser2D::LASER_ONE_HIT:
-    default:
-        score = laser->mEnergy;
-        if (score > mEnergy)
-        {
-            score = mEnergy;
-        }
-
-        if (obj != NULL)
-        {
-            if (obj->mSpeciesID != mSpeciesID)
-            {
-                obj->mTargetScore += score;
-            }
-        }
-
-        deltaEnergy(-laser->mEnergy);
-        break;
     }
 
     Sim2D::VisualEvent* ve = (Sim2D::VisualEvent*)malloc(sizeof(Sim2D::VisualEvent));
