@@ -46,7 +46,7 @@ public:
     void setID(unsigned int id);
     void setSimulation(Simulation* sim){mSimulation = sim;}
     
-    void addGoal(unsigned int bufSize, int fitMeasure, int domFitMeasure=-1);
+    void addGoal(unsigned int bufSize, int fitMeasure);
     void setFitnessAging(float aging){mFitnessAging = aging;}
     void setRecombineProb(float prob){mRecombineProb = prob;}
 

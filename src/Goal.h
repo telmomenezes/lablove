@@ -23,12 +23,11 @@
 class Goal
 {
 public:
-    Goal(unsigned int size, int fitMeasure, int domFitMeasure);
+    Goal(unsigned int size, int fitMeasure);
     Goal(const Goal& g);
     virtual ~Goal();
 
     int mFitnessMeasure;
-    int mDominantFitnessMeasure;
     unsigned int mSize;
 };
 #endif

@@ -67,9 +67,9 @@ Species::~Species()
     fclose(mFile);
 }
 
-void Species::addGoal(unsigned int bufSize, int fitMeasure, int domFitMeasure)
+void Species::addGoal(unsigned int bufSize, int fitMeasure)
 {
-    mGoals.push_back(Goal(bufSize, fitMeasure, domFitMeasure));
+    mGoals.push_back(Goal(bufSize, fitMeasure));
     mBufferSize += bufSize;
 }
 
@@ -447,11 +447,8 @@ void Species::onOrganismDeath(SimObj* org)
 
         Fitness* fit1 = org->getFitness((*iterGoal).mFitnessMeasure);
         Fitness* fit2 = org2->getFitness((*iterGoal).mFitnessMeasure);
-        Fitness* fitDom1 = org->getFitness((*iterGoal).mDominantFitnessMeasure);
-        Fitness* fitDom2 = org2->getFitness((*iterGoal).mDominantFitnessMeasure);
 
-        if ((fitDom1->mFinalFitness >= fitDom2->mFinalFitness)
-            && (fit1->mFinalFitness >= fit2->mFinalFitness))
+        if (fit1->mFinalFitness >= fit2->mFinalFitness)
         {
             SimObj* newObj = org->clone();
             Gridbrain* mBrain = newObj->getBrain();
@@ -467,7 +464,6 @@ void Species::onOrganismDeath(SimObj* org)
         }
         else
         {
-            fitDom2->mFinalFitness = fitDom2->mFinalFitness * (1.0f - mFitnessAging);
             fit2->mFinalFitness = fit2->mFinalFitness * (1.0f - mFitnessAging);
         }
 
@@ -564,8 +560,7 @@ int Species::addGoal(lua_State* luaState)
 {
     unsigned int bufSize = luaL_checkint(luaState, 1);
     int fitMeasure = luaL_checkint(luaState, 2);
-    int domFitMeasure = luaL_optint(luaState, 3, -1);
-    addGoal(bufSize, fitMeasure, domFitMeasure);
+    addGoal(bufSize, fitMeasure);
     return 0;
 }
 
