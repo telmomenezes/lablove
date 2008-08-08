@@ -36,16 +36,16 @@ rotateForceScale = 0.1
 drag = 0.05
 rotDrag = 0.05
 
-fireInterval = 500
+fireInterval = 1000
 laserLength = 25
 laserSpeed = 100.0
 laserRange = 300.0
 laserStrengthFactor = 1.0
-laserCostFactor = 0.1
+laserCostFactor = 0.05
 laserHitDuration = 2
 
 soundRange = 500
-speakInterval = 250
+speakInterval = 1000
 
 bufferSize = 100
 fitnessAging = 0.5
