@@ -1078,6 +1078,7 @@ void SimObj2D::act()
     float actionRotateParam = 0.0f;
     float actionSpeakParam = -99999999.9f;
     float actionFireParam = 0.0f;
+    Symbol* actionFireSymbol = NULL;
 
     if (mHumanControlled)
     {
@@ -1162,8 +1163,19 @@ void SimObj2D::act()
                         break;
                     case Sim2D::ACTION_FIRE:
                     case Sim2D::ACTION_FIREB:
-                        actionFire = actionType;
-                        actionFireParam += output;
+                        table = getSymbolTable(intf->getOrigSymTable());
+
+                        if (table != NULL)
+                        {
+                            Symbol* sym = table->getSymbol(intf->getOrigSymID());
+
+                            if (sym != NULL)
+                            {
+                                actionFireParam = output;
+                                actionFireSymbol = sym;
+                                actionFire = Sim2D::ACTION_FIREB;
+                            }
+                        }
                         break;
                 }
             }
@@ -1213,7 +1225,7 @@ void SimObj2D::act()
     }
     if (actionFire != Sim2D::ACTION_NULL)
     {
-        fire(actionFire, actionFireParam);
+        fire(actionFire, actionFireParam, actionFireSymbol);
     }
 }
 
@@ -1278,7 +1290,7 @@ void SimObj2D::eat(SimObj2D* target, unsigned int actionType)
     }
 }
 
-void SimObj2D::fire(unsigned int actionType, float strength)
+void SimObj2D::fire(unsigned int actionType, float strength, Symbol* sym)
 {
     float cost = mLaserCostFactor * strength;
     deltaEnergy(-cost);
@@ -1334,6 +1346,8 @@ void SimObj2D::fire(unsigned int actionType, float strength)
     laser.mDistanceTraveled = 0.0f;
 
     mSim2D->fireLaser(laser);
+
+    sendMessage(sym, strength);
 }
 
 void SimObj2D::speak(Symbol* sym, float param)
@@ -1366,6 +1380,18 @@ void SimObj2D::speak(Symbol* sym, float param)
     mLastMessageSent->mData[2] = param;
     mLastMessageSent->mTime = mLastSpeakTime;
 
+    sendMessage(sym, param);
+}
+
+void SimObj2D::sendMessage(Symbol* sym, float param)
+{
+    Message msg(3);
+    msg.mSymbol = sym->clone();
+    msg.mData[0] = 0;
+    msg.mData[1] = 0;
+    msg.mData[2] = param;
+    msg.mTime = mLastSpeakTime;
+
     mSim2D->startCollisionDetection(mX, mY, mSoundRange);
 
     SimObj* target;
@@ -1377,10 +1403,10 @@ void SimObj2D::speak(Symbol* sym, float param)
         if ((target->mType == SimObj::TYPE_AGENT)
             && (target != this))
         {
-            Message* msg = new Message(mLastMessageSent);
-            msg->mData[0] = distance;
-            msg->mData[1] = Sim2D::normalizeAngle(angle + M_PI);
-            target->addMessage(msg);
+            Message* msgSend = new Message(&msg);
+            msgSend->mData[0] = distance;
+            msgSend->mData[1] = Sim2D::normalizeAngle(angle + M_PI);
+            target->addMessage(msgSend);
         }
     }
 
@@ -1446,6 +1472,7 @@ void SimObj2D::processLaserHit(Laser2D* laser)
     {
         if (obj->mSpeciesID != mSpeciesID)
         {
+            float laserCount = 0;
             for (list<Laser2D>::iterator iterLaser = mLaserHits.begin();
                 iterLaser != mLaserHits.end();
                 iterLaser++)
@@ -1453,8 +1480,11 @@ void SimObj2D::processLaserHit(Laser2D* laser)
                 if (((*iterLaser).mOwnerSpecies) != mSpeciesID)
                 {
                     score += (*iterLaser).mEnergy;
+                    laserCount += 1.0f;
                 }
             }
+
+            score *= laserCount;
 
             if (score > obj->mLaserScore)
             {

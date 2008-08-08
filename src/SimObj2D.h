@@ -221,7 +221,8 @@ protected:
     void rotate(float force);
     void eat(SimObj2D* target, unsigned int actionType);
     void speak(Symbol* sym, float param);
-    void fire(unsigned int actionType, float strength);
+    void sendMessage(Symbol* sym, float param);
+    void fire(unsigned int actionType, float strength, Symbol* sym);
 
     static mt_distribution* mDistFitnessRandom;
 

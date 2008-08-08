@@ -24,8 +24,8 @@ betaComponents = {AND(), NOT(), SUM(), MUL(), INV(), NEG(), MOD(), AMP(), RAND()
 viewRange = 300.0
 viewAngle = 350.0
 
-maxAgeLow = 4500
-maxAgeHigh = 5500
+maxAgeLow = 9500
+maxAgeHigh = 10500
 
 initialEnergy = 1.0
 goCost = 0.001
@@ -36,16 +36,13 @@ rotateForceScale = 0.1
 drag = 0.05
 rotDrag = 0.05
 
-fireInterval = 1000
+fireInterval = 2000
 laserLength = 25
 laserSpeed = 100.0
 laserRange = 300.0
 laserStrengthFactor = 1.0
 laserCostFactor = 0.05
 laserHitDuration = 2
-
-soundRange = 500
-speakInterval = 1000
 
 bufferSize = 100
 fitnessAging = 0.5
@@ -58,7 +55,7 @@ splitConnectionProb = 0.01
 joinConnectionsProb = 0.01
 changeInComponentProb = 0.2
 
-recombineProb = 1.0
+recombineProb = 0.25
 
 kinFactor = 0.0
 kinMutation = false
@@ -120,8 +117,7 @@ agent:setGoForceScale(goForceScale)
 agent:setRotateForceScale(rotateForceScale)
 agent:setShape(SimObj2D.SHAPE_TRIANGLE)
 agent:setColoringSymbolName("color")
-agent:setSoundRange(soundRange)
-agent:setSpeakInterval(speakInterval)
+agent:setSoundRange(500)
 agent:setFireInterval(fireInterval)
 agent:setLaserLength(laserLength)
 agent:setLaserSpeed(laserSpeed)
@@ -194,8 +190,7 @@ for i, comp in pairs(betaComponents) do
 end
 betaSet:addComponent(ACT(Sim2D.ACTION_GO))
 betaSet:addComponent(ACT(Sim2D.ACTION_ROTATE))
-betaSet:addComponent(ACT(Sim2D.ACTION_FIREB))
-betaSet:addComponent(ACT(Sim2D.ACTION_SPEAK, colorTableCode, agentColor:getID(), colorTableCode, true))
+betaSet:addComponent(ACT(Sim2D.ACTION_FIREB, colorTableCode, agentColor:getID(), colorTableCode, false))
     
 grid2 = Grid()
 grid2:init(Grid.BETA, 0, 0)
@@ -230,7 +225,6 @@ sim:setPopulationDynamics(popDyn)
 
 agentSpecies = Species(agent, numberOfAgents)
 agentSpecies:addGoal(bufferSize, SimObj2D.FITNESS_LASER_SCORE)
-agentSpecies:addGoal(bufferSize, SimObj2D.FITNESS_SYNCH_SCORE)
 agentSpecies:setFitnessAging(fitnessAging)
 agentSpecies:setRecombineProb(recombineProb)
 agentSpecies:setKinFactor(kinFactor)
@@ -304,9 +298,8 @@ end
 
 stats = StatCommon()
 stats:setFile("log" .. logSuffix .. ".csv")
-stats:addField("target_score")
 stats:addField("laser_score")
-stats:addField("synch_score")
+stats:addField("target_score")
 stats:addField("gb_connections")
 stats:addField("gb_active_connections")
 stats:addField("gb_active_components")
