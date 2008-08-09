@@ -1295,17 +1295,17 @@ void SimObj2D::fire(unsigned int actionType, float strength, Symbol* sym)
     float cost = mLaserCostFactor * strength;
     deltaEnergy(-cost);
 
-    if (((mSim2D->getTime() - mLastFireTime) <= mFireInterval)
+    /*if (((mSim2D->getTime() - mLastFireTime) <= mFireInterval)
         && (mLastFireTime != 0))
     {
         return;
     }
 
-    mLastFireTime = mSim2D->getTime();
+    mLastFireTime = mSim2D->getTime();*/
 
     Laser2D laser;
 
-    laser.mFireTime = mLastFireTime;
+    laser.mFireTime = mSim2D->getTime();
 
     laser.mX1 = mX;
     laser.mY1 = mY;

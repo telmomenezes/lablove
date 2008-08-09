@@ -48,6 +48,8 @@ public:
 
     virtual string getLabel();
 
+    void reset();
+
 protected:
     static mt_distribution* mDistRand;
 

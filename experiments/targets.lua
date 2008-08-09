@@ -41,7 +41,7 @@ laserLength = 25
 laserSpeed = 100.0
 laserRange = 300.0
 laserStrengthFactor = 1.0
-laserCostFactor = 0.05
+laserCostFactor = 0.1
 laserHitDuration = 2
 
 bufferSize = 100

@@ -1950,8 +1950,9 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestCLK2)
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestCLK3)
 {
-    Component* comp1 = mGridbrain.setComponent(1, 0, 0, COMP_CLK);
+    CompCLK* comp1 = (CompCLK*)mGridbrain.setComponent(1, 0, 0, COMP_CLK);
     comp1->mParam = 0.1f;
+    comp1->reset();
     for (unsigned int i = 0; i < 500; i++)
     {
         initAndCycle();
@@ -1970,8 +1971,9 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestCLK3)
 
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestCLK4)
 {
-    Component* comp1 = mGridbrain.setComponent(1, 0, 0, COMP_CLK);
+    CompCLK* comp1 = (CompCLK*)mGridbrain.setComponent(1, 0, 0, COMP_CLK);
     comp1->mParam = 0.2f;
+    comp1->reset();
     for (unsigned int i = 0; i < 1000; i++)
     {
         initAndCycle();
@@ -2160,9 +2162,10 @@ TEST_FIXTURE(GridbrainCompFixture, GridbrainTestDMUL3)
 TEST_FIXTURE(GridbrainCompFixture, GridbrainTestDMUL4)
 {
     Component* comp1 = mGridbrain.setComponent(0, 0, 0, COMP_NOT);
-    Component* comp2 = mGridbrain.setComponent(0, 1, 0, COMP_CLK);
+    CompCLK* comp2 = (CompCLK*)mGridbrain.setComponent(0, 1, 0, COMP_CLK);
     Component* comp3 = mGridbrain.setComponent(1, 0, 0, COMP_DMUL);
     comp2->mParam = 0.1f;
+    comp2->reset();
     mGridbrain.addConnection(0, 0, 0, 1, 0, 0);
     mGridbrain.addConnection(0, 1, 0, 1, 0, 0);
     for (unsigned int i = 0; i < 500; i++)

@@ -95,5 +95,12 @@ string CompCLK::getLabel()
     return buffer;
 }
 
+void CompCLK::reset()
+{
+    mTriggerInterval = (gbULINT)(5000.0f * mParam);
+    mTimeToTrigger = mTriggerInterval;
+    mInit = true;
+}
+
 }
 
