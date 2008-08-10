@@ -1468,28 +1468,39 @@ void SimObj2D::processLaserHit(Laser2D* laser)
 
     // Laser score
     SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
+
     if ((obj != NULL) && (laser->mEnergy > 0))
     {
-        if (obj->mSpeciesID != mSpeciesID)
+        float laserCount = 0;
+
+        list<SimObj*>* objList = mSim2D->getObjectList();
+
+        for (list<SimObj*>::iterator iterObj = objList->begin();
+                iterObj != objList->end();
+                iterObj++)
         {
-            float laserCount = 0;
-            for (list<Laser2D>::iterator iterLaser = mLaserHits.begin();
-                iterLaser != mLaserHits.end();
-                iterLaser++)
+            SimObj2D* targObj = (SimObj2D*)(*iterObj);
+
+            if (obj->mSpeciesID != targObj->mSpeciesID)
             {
-                if (((*iterLaser).mOwnerSpecies) != mSpeciesID)
+                for (list<Laser2D>::iterator iterLaser = mLaserHits.begin();
+                    iterLaser != mLaserHits.end();
+                    iterLaser++)
                 {
-                    score += (*iterLaser).mEnergy;
-                    laserCount += 1.0f;
+                    if (((*iterLaser).mOwnerSpecies) != mSpeciesID)
+                    {
+                        score += (*iterLaser).mEnergy;
+                        laserCount += 1.0f;
+                    }
                 }
             }
+        }
 
-            score *= laserCount;
+        score *= laserCount;
 
-            if (score > obj->mLaserScore)
-            {
-                obj->mLaserScore = score;
-            }
+        if (score > obj->mLaserScore)
+        {
+            obj->mLaserScore = score;
         }
     }
 
