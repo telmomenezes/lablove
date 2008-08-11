@@ -536,6 +536,24 @@ const char LuaCompCLK::mClassName[] = "CLK";
 Orbit<LuaCompCLK>::MethodType LuaCompCLK::mMethods[] = {{0,0}};
 Orbit<LuaCompCLK>::NumberGlobalType LuaCompCLK::mNumberGlobals[] = {{0,0}};
 
+class LuaCompCLKG : public CompCLKG
+{
+public:
+    LuaCompCLKG(lua_State* luaState=NULL)
+    {
+        float param = luaL_optnumber(luaState, 1, 0.0f);
+        mParam = param;
+    }
+    virtual ~LuaCompCLKG(){}
+
+    static const char mClassName[];
+    static Orbit<LuaCompCLKG>::MethodType mMethods[];
+    static Orbit<LuaCompCLKG>::NumberGlobalType mNumberGlobals[];
+};
+const char LuaCompCLKG::mClassName[] = "CLKG";
+Orbit<LuaCompCLKG>::MethodType LuaCompCLKG::mMethods[] = {{0,0}};
+Orbit<LuaCompCLKG>::NumberGlobalType LuaCompCLKG::mNumberGlobals[] = {{0,0}};
+
 class LuaCompDMUL : public CompDMUL
 {
 public:
@@ -616,6 +634,7 @@ void gridbrainLuaRegister(lua_State* luaState)
     Orbit<LuaCompGTZ>::orbitRegister(luaState);
     Orbit<LuaCompZERO>::orbitRegister(luaState);
     Orbit<LuaCompCLK>::orbitRegister(luaState);
+    Orbit<LuaCompCLKG>::orbitRegister(luaState);
     Orbit<LuaCompDMUL>::orbitRegister(luaState);
     Orbit<LuaCompSEL>::orbitRegister(luaState);
     Orbit<LuaCompMEM>::orbitRegister(luaState);

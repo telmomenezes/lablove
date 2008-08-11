@@ -101,6 +101,7 @@ SET(SOURCE_FILES
     gridbrain/src/CompGTZ.cpp
     gridbrain/src/CompZERO.cpp
     gridbrain/src/CompCLK.cpp
+    gridbrain/src/CompCLKG.cpp
     gridbrain/src/CompDMUL.cpp
     gridbrain/src/CompSEL.cpp
     gridbrain/src/CompMEM.cpp

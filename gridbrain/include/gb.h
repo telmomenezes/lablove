@@ -40,6 +40,7 @@
 #include "CompGTZ.h"
 #include "CompZERO.h"
 #include "CompCLK.h"
+#include "CompCLKG.h"
 #include "CompDMUL.h"
 #include "CompSEL.h"
 #include "CompMEM.h"
