@@ -1483,11 +1483,11 @@ void SimObj2D::processLaserHit(Laser2D* laser)
 
             if (obj->mSpeciesID != targObj->mSpeciesID)
             {
-                for (list<Laser2D>::iterator iterLaser = mLaserHits.begin();
-                    iterLaser != mLaserHits.end();
+                for (list<Laser2D>::iterator iterLaser = targObj->mLaserHits.begin();
+                    iterLaser != targObj->mLaserHits.end();
                     iterLaser++)
                 {
-                    if (((*iterLaser).mOwnerSpecies) != mSpeciesID)
+                    if (((*iterLaser).mOwnerSpecies) == obj->mSpeciesID)
                     {
                         score += (*iterLaser).mEnergy;
                         laserCount += 1.0f;
@@ -1496,7 +1496,7 @@ void SimObj2D::processLaserHit(Laser2D* laser)
             }
         }
 
-        score *= laserCount;
+        //score *= laserCount;
 
         if (score > obj->mLaserScore)
         {
