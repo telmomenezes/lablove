@@ -70,6 +70,7 @@ float CompCLK::output()
         if ((mLastInput == 0.0f) && (mInput != 0.0f))
         {
             mTimeToTrigger = 0;
+            mLastInput = mInput;
         }
                         
         if (mTimeToTrigger == 0)
@@ -82,8 +83,6 @@ float CompCLK::output()
             mTimeToTrigger--;
         }
     }
-
-    mLastInput = mInput;
 
     return mOutput;
 }
