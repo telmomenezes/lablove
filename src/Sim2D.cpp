@@ -523,7 +523,17 @@ void Sim2D::drawBeforeObjects()
         }
     }
 
-    list<VisualEvent*>::iterator iterEvent = mVisualEvents.begin();
+    list<VisualEvent*>::iterator iterEvent;
+
+    while (mVisualEvents.size() > 100)
+    {
+        iterEvent = mVisualEvents.begin();
+        VisualEvent* ve = (*iterEvent);
+        mVisualEvents.erase(iterEvent);
+        free(ve);
+    }
+
+    iterEvent = mVisualEvents.begin();
 
     while (iterEvent != mVisualEvents.end())
     {
