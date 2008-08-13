@@ -212,6 +212,8 @@ public:
     float mCurrentSynchScore;
     float mBestSynchScore;
 
+    list<Laser2D> mLaserHits;
+
 protected:
     virtual void onScanObject(SimObj2D* targ,
                                 float distance,
@@ -229,8 +231,6 @@ protected:
     SimObj2D* mTargetObject;
     float mDistanceToTargetObject;
     float* mCurrentTargetInputBuffer;
-
-    list<Laser2D> mLaserHits;
 
     int mRed;
     int mGreen;

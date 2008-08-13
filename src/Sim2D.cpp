@@ -992,6 +992,33 @@ void Sim2D::fireLaser(Laser2D laser)
     mVisualEvents.push_back(ve);
 }
 
+void Sim2D::incrementLaserScores(int speciesID)
+{
+    for (list<SimObj*>::iterator iterObj = mObjects.begin();
+            iterObj != mObjects.end();
+            iterObj++)
+    {
+        SimObj2D* targObj = (SimObj2D*)(*iterObj);
+
+        if (targObj->getSpeciesID() != speciesID)
+        {
+            for (list<Laser2D>::iterator iterLaser = targObj->mLaserHits.begin();
+                 iterLaser != targObj->mLaserHits.end();
+                 iterLaser++)
+            {
+                if (((*iterLaser).mOwnerSpecies) == speciesID)
+                {
+                    SimObj2D* obj = (SimObj2D*)getObjectByID((*iterLaser).mOwnerID);
+                    if (obj != NULL)
+                    {
+                        obj->mLaserScore += (*iterLaser).mEnergy;
+                    }
+                }
+            }
+        }
+    }   
+}
+
 bool Sim2D::onKeyDown(Art_KeyCode key)
 {
     if (SimArtist::onKeyDown(key))

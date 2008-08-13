@@ -137,6 +137,7 @@ public:
     virtual string getActionName(int type);
 
     void fireLaser(Laser2D laser);
+    void incrementLaserScores(int speciesID);
 
     SimObj2D* getLineTarget(float x1, float y1, float x2, float y2, gbULINT excludeID, float &distance);
     bool segmentCollides(SimObj2D* obj, float x1, float y1, float x2, float y2);

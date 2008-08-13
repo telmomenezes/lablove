@@ -1466,6 +1466,13 @@ void SimObj2D::processLaserHit(Laser2D* laser)
     //unsigned int timeSinceFired = mSim2D->getTime() - laser->mFireTime;
     //printf("laser delay: %d\n", timeSinceFired);
 
+    // Increment laser scores
+    if ((laser->mEnergy > 0) && (laser->mOwnerSpecies != mSpeciesID))
+    {
+        mSim2D->incrementLaserScores(laser->mOwnerSpecies);
+    }
+
+    /*
     // Laser score
     SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
 
@@ -1503,6 +1510,7 @@ void SimObj2D::processLaserHit(Laser2D* laser)
             obj->mLaserScore = score;
         }
     }
+    */
 
     Sim2D::VisualEvent* ve = (Sim2D::VisualEvent*)malloc(sizeof(Sim2D::VisualEvent));
     ve->mType = Sim2D::VE_LASER;
