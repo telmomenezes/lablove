@@ -319,7 +319,7 @@ if logBrains then
     agentSpecies:addDeathLog(logBrain)
 end
 
-agentSpecies:setBufferDump("bdump" .. logSuffix)
+--agentSpecies:setBufferDump("bdump" .. logSuffix)
 
 popDyn:setLogTimeInterval(logTimeInterval)
 
