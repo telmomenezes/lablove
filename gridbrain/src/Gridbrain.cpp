@@ -866,7 +866,22 @@ Connection* Gridbrain::getConnection(unsigned int xOrig,
                 unsigned int yTarg,
                 unsigned int gTarg)
 {
+    if (gOrig >= mGridsCount)
+    {
+        return NULL;
+    }
+
     Grid* grid = mGridsVec[gOrig];
+
+    if (xOrig >= grid->getWidth())
+    {
+        return NULL;
+    }
+    if (yOrig >= grid->getHeight())
+    {
+        return NULL;
+    }
+
     unsigned int orig = (xOrig * grid->getHeight()) + yOrig + grid->getOffset();
     grid = mGridsVec[gTarg];
 
