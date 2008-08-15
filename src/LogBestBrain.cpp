@@ -65,9 +65,13 @@ void LogBestBrain::dump(gbULINT time, double realTime)
         sprintf(fileName, "%s%d%s", mFileNamePrefix.c_str(), t, mFileNameSuffix.c_str());
     }    
     FILE* file = fopen(fileName, "w");
-    fprintf(file, mBrainString.c_str());
-    fflush(file);
-    fclose(file);
+
+    if (file != NULL)
+    {
+        fprintf(file, mBrainString.c_str());
+        fflush(file);
+        fclose(file);
+    }
 
     mFirstObject = true;
     mBrainString = "";

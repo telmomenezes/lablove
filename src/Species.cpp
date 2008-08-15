@@ -158,33 +158,39 @@ void Species::bufferDump(gbULINT time, Simulation* sim)
     char fileName[255];
     sprintf(fileName, "%s/data.txt", mBufferDumpDir.c_str());
     FILE* globalFile = fopen(fileName, "w");
-    fprintf(globalFile, "object_number");
-    for (unsigned int f = 0; f < mGoals.size(); f++)
+    if (globalFile != NULL)
     {
-        fprintf(globalFile, ", fitness_%d, group_fitness_%d, final_fitness_%d", f, f, f);
-    }
-    fprintf(globalFile, "\n");
-
-    for (unsigned int i = 0; i < mBufferSize; i++)
-    {
-        SimObj* obj = mBuffer[i];
-        sprintf(fileName, "%s/brain%d.svg", mBufferDumpDir.c_str(), i);
-        FILE* file = fopen(fileName, "w");
-        fprintf(file, obj->getBrain()->write().c_str());
-        fflush(file);
-        fclose(file);
-
-        fprintf(globalFile, "%d", i);
+        fprintf(globalFile, "object_number");
         for (unsigned int f = 0; f < mGoals.size(); f++)
         {
-            Fitness* fit = obj->getFitnessByIndex(f);
-            fprintf(globalFile, ", %f, %f, %f", fit->mFitness, fit->mGroupFitness, fit->mFinalFitness);
+            fprintf(globalFile, ", fitness_%d, group_fitness_%d, final_fitness_%d", f, f, f);
         }
         fprintf(globalFile, "\n");
-    }
 
-    fflush(globalFile);
-    fclose(globalFile);
+        for (unsigned int i = 0; i < mBufferSize; i++)
+        {
+            SimObj* obj = mBuffer[i];
+            sprintf(fileName, "%s/brain%d.svg", mBufferDumpDir.c_str(), i);
+            FILE* file = fopen(fileName, "w");
+            if (file != NULL)
+            {
+                fprintf(file, obj->getBrain()->write().c_str());
+                fflush(file);
+                fclose(file);
+            }
+
+            fprintf(globalFile, "%d", i);
+            for (unsigned int f = 0; f < mGoals.size(); f++)
+            {
+                Fitness* fit = obj->getFitnessByIndex(f);
+                fprintf(globalFile, ", %f, %f, %f", fit->mFitness, fit->mGroupFitness, fit->mFinalFitness);
+            }
+            fprintf(globalFile, "\n");
+        }
+
+        fflush(globalFile);
+        fclose(globalFile);
+    }
 }
 
 void Species::xoverMutateSend(int bodyID, bool init, SimObj* nearObj, SimObj* deadObj)
