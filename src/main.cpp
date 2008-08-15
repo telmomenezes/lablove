@@ -131,6 +131,7 @@ int main(int argc, char *argv[])
 {
     parseCommandLine(argc, argv);
     lua_State* luaState = lua_open();
+    free(luaState);
 
     // Disable LUA's garbage collector
     lua_gc(luaState, LUA_GCSTOP, 0);    
