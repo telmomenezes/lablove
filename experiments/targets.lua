@@ -307,19 +307,19 @@ stats:addField("symtable_used_color")
 stats:addField("friendly_fire")
 agentSpecies:addDeathLog(stats)
 
---if logBrains then
---    logBrain = LogBestBrain()
---    logBrain:setFileNameSuffix(".svg")
---    if logOnlyLastBrain then
---        logBrain:setLogOnlyLast(true)
---        logBrain:setFileNamePrefix("brain" .. logSuffix)
---    else
---        logBrain:setFileNamePrefix("brain" .. logSuffix .. "t")
---    end
---    agentSpecies:addDeathLog(logBrain)
---end
+if logBrains then
+    logBrain = LogBestBrain()
+    logBrain:setFileNameSuffix(".svg")
+    if logOnlyLastBrain then
+        logBrain:setLogOnlyLast(true)
+        logBrain:setFileNamePrefix("brain" .. logSuffix)
+    else
+        logBrain:setFileNamePrefix("brain" .. logSuffix .. "t")
+    end
+    agentSpecies:addDeathLog(logBrain)
+end
 
---agentSpecies:setBufferDump("bdump" .. logSuffix)
+agentSpecies:setBufferDump("bdump" .. logSuffix)
 
 popDyn:setLogTimeInterval(logTimeInterval)
 
