@@ -46,8 +46,6 @@ Grid::Grid()
 
     mComponentSet = new ComponentSet();
 
-    mCreatedByScript = false;
-
     mMaxDepth = 0;
     mMaxActiveCol = 0;
 }

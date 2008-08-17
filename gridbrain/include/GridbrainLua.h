@@ -193,7 +193,7 @@ int LuaGridbrain::setMaxInputDepth(lua_State* luaState)
 class LuaGrid : public Grid
 {
 public:
-    LuaGrid(lua_State* luaState){mCreatedByScript = true;}
+    LuaGrid(lua_State* luaState){}
     virtual ~LuaGrid(){}
 
     static const char mClassName[];

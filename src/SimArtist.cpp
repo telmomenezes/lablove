@@ -33,6 +33,8 @@ SimArtist::SimArtist(lua_State* luaState)
     mTargetFPS = 60;
 
     mFrameDuration = 1.0f / (double)mTargetFPS;
+
+    mFont = NULL;
 }
 
 SimArtist::~SimArtist()
@@ -56,7 +58,10 @@ void SimArtist::initGraphics(unsigned int width,
         mDrawGraphics = false;
     }
 
-    mFont = art_loadFont("media/vera/Vera.ttf", 8);
+    if (mFont == NULL)
+    {
+        mFont = art_loadFont("media/vera/Vera.ttf", 8);
+    }
 }
 
 void SimArtist::run()

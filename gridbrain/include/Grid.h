@@ -103,8 +103,6 @@ public:
     unsigned int mMaxDepth;
     unsigned int mMaxActiveCol;
 
-    bool mCreatedByScript;
-
 protected:
     static mt_distribution* mDistRowsAndColumns;
     static mt_distribution* mDistXover;

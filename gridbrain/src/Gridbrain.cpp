@@ -86,10 +86,7 @@ Gridbrain::~Gridbrain()
     }
     for (unsigned int i = 0; i < mGridsCount; i++)
     {
-        if (!mGridsVec[i]->mCreatedByScript)
-        {
-            delete mGridsVec[i];
-        }
+        delete mGridsVec[i];
     }
     mGridsCount = 0;
 
