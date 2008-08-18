@@ -140,8 +140,8 @@ colorTableCode = symTable:getID()
 agent:setSymbolName("color", colorTableCode, agentColor:getID())
 
 -- Symbols acquisition
-agent:addObjectSymbolAcquisition(colorTableCode, colorTableCode)
-agent:addMessageSymbolAcquisition(colorTableCode)
+--agent:addObjectSymbolAcquisition(colorTableCode, colorTableCode)
+--agent:addMessageSymbolAcquisition(colorTableCode)
 
 -- Agent Brain
 

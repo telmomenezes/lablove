@@ -958,11 +958,6 @@ void Sim2D::processLaserShots()
             || (laser->mY2 < 0))
         {
             iterLaser = mLaserShots.erase(iterLaser);
-
-            /*if (bestTarget == NULL)
-            {
-                printf("MISS\n");
-            }*/
         }
         else
         {
@@ -989,17 +984,14 @@ void Sim2D::fireLaser(Laser2D laser)
 {
     mLaserShots.push_back(laser);
 
-    Sim2D::VisualEvent* ve = (Sim2D::VisualEvent*)malloc(sizeof(VisualEvent));
-    ve->mType = VE_LASER;
-    ve->mX = laser.mX1;
-    ve->mY = laser.mY1;
-    ve->mRadius = 5.0f;
-    ve->mRed = 0;
-    ve->mGreen = 255;
-    ve->mBlue = 0;
-    ve->mStartTime = getTime();
-    ve->mEndTime = getTime() + 1000;
-    mVisualEvents.push_back(ve);
+    addVisualEvent(VE_LASER,
+                    laser.mX1,
+                    laser.mY1,
+                    5.0f,
+                    1000,
+                    0,
+                    255,
+                    0);
 }
 
 void Sim2D::incrementLaserScores(int speciesID)
@@ -1255,6 +1247,35 @@ float Sim2D::normalizeAngle(float angle)
     }
 
     return angle;
+}
+
+void Sim2D::addVisualEvent(int type,
+                            float x,
+                            float y,
+                            float radius,
+                            int duration,
+                            int red,
+                            int green,
+                            int blue)
+{
+    bool draw = mDrawGraphics && mDrawThisCycle;
+
+    if (!draw)
+    {
+        return;
+    }
+
+    Sim2D::VisualEvent* ve = (VisualEvent*)malloc(sizeof(VisualEvent));
+    ve->mType = type;
+    ve->mX = x;
+    ve->mY = y;
+    ve->mRadius = radius;
+    ve->mRed = red;
+    ve->mGreen = green;
+    ve->mBlue = blue;
+    ve->mStartTime = getTime();
+    ve->mEndTime = getTime() + duration;
+    mVisualEvents.push_back(ve);
 }
 
 const char Sim2D::mClassName[] = "Sim2D";

@@ -144,6 +144,15 @@ public:
 
     static float normalizeAngle(float angle);
 
+    void addVisualEvent(int type,
+                        float x,
+                        float y,
+                        float radius,
+                        int duration,
+                        int red,
+                        int green,
+                        int blue);
+
     list<VisualEvent*> mVisualEvents;
     
     static const char mClassName[];

@@ -1410,17 +1410,14 @@ void SimObj2D::sendMessage(Symbol* sym, float param)
         }
     }
 
-    Sim2D::VisualEvent* ve = (Sim2D::VisualEvent*)malloc(sizeof(Sim2D::VisualEvent));
-    ve->mType = Sim2D::VE_SPEAK;
-    ve->mX = mX;
-    ve->mY = mY;
-    ve->mRadius = mSoundRange;
-    ve->mRed = sym->getRed();
-    ve->mGreen = sym->getGreen();
-    ve->mBlue = sym->getBlue();
-    ve->mStartTime = mSim2D->getTime();
-    ve->mEndTime = mSim2D->getTime() + mSpeakInterval;
-    mSim2D->mVisualEvents.push_back(ve);
+    mSim2D->addVisualEvent(Sim2D::VE_SPEAK,
+                    mX,
+                    mY,
+                    mSoundRange,
+                    mSpeakInterval,
+                    sym->getRed(),
+                    sym->getGreen(),
+                    sym->getBlue());
 }
 
 void SimObj2D::addMessage(Message* msg)
@@ -1512,17 +1509,14 @@ void SimObj2D::processLaserHit(Laser2D* laser)
     }
     */
 
-    Sim2D::VisualEvent* ve = (Sim2D::VisualEvent*)malloc(sizeof(Sim2D::VisualEvent));
-    ve->mType = Sim2D::VE_LASER;
-    ve->mX = mX;
-    ve->mY = mY;
-    ve->mRadius = 10.0f;
-    ve->mRed = 255;
-    ve->mGreen = 0;
-    ve->mBlue = 0;
-    ve->mStartTime = mSim2D->getTime();
-    ve->mEndTime = mSim2D->getTime() + 1000;
-    mSim2D->mVisualEvents.push_back(ve);
+    mSim2D->addVisualEvent(Sim2D::VE_LASER,
+                    mX,
+                    mY,
+                    10.0f,
+                    1000,
+                    255,
+                    0,
+                    0);
 }
 
 void SimObj2D::setColoringScale(string symbolName,
