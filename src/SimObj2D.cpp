@@ -119,6 +119,7 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     mEnergySumAboveInit = 0.0f;
     mMsgScore = 0.0f;
     mLaserScore = 0.0f;
+    mBestLaserScore = 0.0f;
     mTargetScore = 0.0f;
     mLockScore = 0.0f;
     mCurrentSynchScore = 0.0f;
@@ -236,6 +237,7 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
     mEnergySumAboveInit = 0.0f;
     mMsgScore = 0.0f;
     mLaserScore = 0.0f;
+    mBestLaserScore = 0.0f;
     mTargetScore = 0.0f;
     mLockScore = 0.0f;
     mCurrentSynchScore = 0.0f;
@@ -634,7 +636,7 @@ void SimObj2D::updateFitnesses()
             fit->mFitness = mBestSynchScore;
             break;
         case FITNESS_LASER_SCORE:
-            fit->mFitness = mLaserScore;
+            fit->mFitness = mBestLaserScore;
             break;
         case FITNESS_TARGET_SCORE:
             fit->mFitness = mTargetScore;
@@ -1292,6 +1294,9 @@ void SimObj2D::eat(SimObj2D* target, unsigned int actionType)
 
 void SimObj2D::fire(unsigned int actionType, float strength, Symbol* sym)
 {
+    // reset laser score
+    mLaserScore = 0.0f;
+
     float cost = mLaserCostFactor * strength;
     deltaEnergy(-cost);
 

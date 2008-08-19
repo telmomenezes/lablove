@@ -207,6 +207,7 @@ public:
     float mEnergySumAboveInit;
     float mMsgScore;
     float mLaserScore;
+    float mBestLaserScore;
     float mTargetScore;
     float mLockScore;
     float mCurrentSynchScore;

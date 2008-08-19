@@ -1014,6 +1014,10 @@ void Sim2D::incrementLaserScores(int speciesID)
                     if (obj != NULL)
                     {
                         obj->mLaserScore += (*iterLaser).mEnergy;
+                        if (obj->mLaserScore > obj->mBestLaserScore)
+                        {
+                            obj->mBestLaserScore = obj->mLaserScore;
+                        }
                     }
                 }
             }
@@ -1258,9 +1262,7 @@ void Sim2D::addVisualEvent(int type,
                             int green,
                             int blue)
 {
-    bool draw = mDrawGraphics && mDrawThisCycle;
-
-    if (!draw)
+    if (!mDrawGraphics)
     {
         return;
     }
