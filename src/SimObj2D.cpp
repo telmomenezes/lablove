@@ -124,6 +124,12 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     mLockScore = 0.0f;
     mCurrentSynchScore = 0.0f;
     mBestSynchScore = 0.0f;
+    mIntraDistScore = 0.0f;
+    mIntraProxScore = 0.0f;
+    mInterDistScore = 0.0f;
+    mInterProxScore = 0.0f;
+    mDistanceFitness = 0.0f;
+    mProximityFitness = 0.0f;
 
     mLastBodyHit = 0;
     
@@ -242,6 +248,12 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
     mLockScore = 0.0f;
     mCurrentSynchScore = 0.0f;
     mBestSynchScore = 0.0f;
+    mIntraDistScore = 0.0f;
+    mIntraProxScore = 0.0f;
+    mInterDistScore = 0.0f;
+    mInterProxScore = 0.0f;
+    mDistanceFitness = 0.0f;
+    mProximityFitness = 0.0f;
 
     mLastBodyHit = 0;
 
@@ -427,6 +439,11 @@ void SimObj2D::process()
     }
 
     gbULINT simTime = mSim2D->getTime();
+
+    if ((simTime % 100) == 0)
+    {
+        calcProxDistScores();
+    }
 
     // Process laser hit list
     float totalDamage = 0.0f;
@@ -643,6 +660,12 @@ void SimObj2D::updateFitnesses()
             break;
         case FITNESS_LOCK_SCORE:
             fit->mFitness = mLockScore;
+            break;
+        case FITNESS_DISTANCE:
+            fit->mFitness = mDistanceFitness;
+            break;
+        case FITNESS_PROXIMITY:
+            fit->mFitness = mProximityFitness;
             break;
         }
     }
@@ -1587,6 +1610,50 @@ void SimObj2D::setMaxAge(gbULINT maxAgeLow, gbULINT maxAgeHigh)
     }
 }
 
+void SimObj2D::calcProxDistScores()
+{
+    float w = mSim2D->getWorldWidth();
+    float h = mSim2D->getWorldLength();
+    
+    float maxDist = sqrtf((powf(w, 2)) + (h, 2));
+
+    float x1 = mX;
+    float y1 = mY;
+
+    list<SimObj*>* objList = mSim2D->getObjectList();
+
+    for (list<SimObj*>::iterator iterObj = objList->begin();
+            iterObj != objList->end();
+            iterObj++)
+    {
+        SimObj2D* targObj = (SimObj2D*)(*iterObj);
+
+        if (targObj->mID != mID)
+        {
+            float x2 = targObj->mX;
+            float y2 = targObj->mY;
+
+            float dist = sqrtf((powf((x1 - x2), 2)) + (powf((y1 - y2), 2)));
+            dist /= maxDist;
+            float prox = 1.0f - dist;
+
+            if (mSpeciesID == targObj->mSpeciesID)
+            {
+                mIntraDistScore += dist;
+                mIntraProxScore += prox;
+            }
+            else
+            {
+                mInterDistScore += dist;
+                mInterProxScore += prox;
+            }
+        }
+    }
+
+    mDistanceFitness = mIntraProxScore + mInterDistScore;
+    mProximityFitness = mIntraProxScore + mInterProxScore;
+}
+
 const char SimObj2D::mClassName[] = "SimObj2D";
 
 Orbit<SimObj2D>::MethodType SimObj2D::mMethods[] = {
@@ -1639,6 +1706,8 @@ Orbit<SimObj2D>::NumberGlobalType SimObj2D::mNumberGlobals[] = {
     {"FITNESS_TARGET_SCORE", FITNESS_TARGET_SCORE},
     {"FITNESS_LOCK_SCORE", FITNESS_LOCK_SCORE},
     {"FITNESS_RANDOM", FITNESS_RANDOM},
+    {"FITNESS_DISTANCE", FITNESS_DISTANCE},
+    {"FITNESS_PROXIMITY", FITNESS_PROXIMITY},
     {"SHAPE_TRIANGLE", SHAPE_TRIANGLE},
     {"SHAPE_SQUARE", SHAPE_SQUARE},
     {"SHAPE_CIRCLE", SHAPE_CIRCLE},

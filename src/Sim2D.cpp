@@ -683,6 +683,16 @@ bool Sim2D::getFieldValue(SimObj* obj, string fieldName, float& value)
         value = ((SimObj2D*)obj)->mLockScore;
         return true;
     }
+    else if (fieldName == "distance_fitness")
+    {
+        value = ((SimObj2D*)obj)->mDistanceFitness;
+        return true;
+    }
+    else if (fieldName == "proximity_fitness")
+    {
+        value = ((SimObj2D*)obj)->mProximityFitness;
+        return true;
+    }
     else
     {
         return Simulation::getFieldValue(obj, fieldName, value);

@@ -42,6 +42,8 @@ public:
     static const int FITNESS_LASER_SCORE = 6;
     static const int FITNESS_TARGET_SCORE = 7;
     static const int FITNESS_LOCK_SCORE = 8;
+    static const int FITNESS_DISTANCE = 9;
+    static const int FITNESS_PROXIMITY = 10;
 
     static const int SHAPE_TRIANGLE = 0;
     static const int SHAPE_SQUARE = 1;
@@ -212,6 +214,12 @@ public:
     float mLockScore;
     float mCurrentSynchScore;
     float mBestSynchScore;
+    float mIntraDistScore;
+    float mIntraProxScore;
+    float mInterDistScore;
+    float mInterProxScore;
+    float mDistanceFitness;
+    float mProximityFitness;
 
     list<Laser2D> mLaserHits;
 
@@ -226,6 +234,8 @@ protected:
     void speak(Symbol* sym, float param);
     void sendMessage(Symbol* sym, float param);
     void fire(unsigned int actionType, float strength, Symbol* sym);
+
+    void calcProxDistScores();
 
     static mt_distribution* mDistFitnessRandom;
 

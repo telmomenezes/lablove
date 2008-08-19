@@ -170,7 +170,7 @@ protected:
 
     void processLaserShots();
     void drawLaserShots();
-        
+
     static mt_distribution* mDistAge;
     static mt_distribution* mDistPosition;
 
