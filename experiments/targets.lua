@@ -320,6 +320,7 @@ if logBrains then
 end
 
 agentSpecies:setBufferDump("bdump" .. logSuffix)
+agentSpecies:setLog("buf" .. logSuffix .. ".csv", logTimeInterval)
 
 popDyn:setLogTimeInterval(logTimeInterval)
 
