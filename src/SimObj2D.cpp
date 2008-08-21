@@ -890,7 +890,7 @@ void SimObj2D::onScanObject(SimObj2D* targ,
     // Object symbol acquisition
     mObjSymAcqCounter++;
 
-    if (mObjSymAcqCounter >= 250)
+    if (mObjSymAcqCounter >= 100)
     {
         mObjSymAcqCounter = 0;
         for (list<SymbolPointer>::iterator iterItem = mObjectSymbolAcquisition.begin();

@@ -72,7 +72,7 @@ SimObj::SimObj(SimObj* obj)
     mTableSet = new TableSet(obj->mTableSet);
 
     //printf("\n\n=================\n");
-    //mTableSet.printDebug();
+    //mTableSet->printDebug();
 
     mType = obj->mType;
 
@@ -352,12 +352,21 @@ void SimObj::generateGridSets()
         for (unsigned int i = 0; i < set->mComponentVec.size(); i++)
         {
             Component* comp = set->mComponentVec[i];
-
-            if ((comp->isInput() || comp->isOutput())
-                && (((Interface*)comp)->isDynamic()))
+    
+            Interface* intf = NULL;
+            if (comp->isInput())
             {
-                Interface* intf = (Interface*)comp;
+                CompPER* compPER = (CompPER*)comp;
+                intf = (Interface*)compPER;
+            }
+            else if (comp->isOutput())
+            {
+                CompACT* compACT = (CompACT*)comp;
+                intf = (Interface*)compACT;
+            }
 
+            if ((intf != NULL) && (intf->isDynamic()))
+            {
                 SymbolTable* table = getSymbolTable(intf->getOrigSymTable());
                 intf->setOrigSymID(table->getRandomSymbolId());
 
@@ -368,9 +377,20 @@ void SimObj::generateGridSets()
                         iterSym++)
                 {
                     gbULINT symID = (*iterSym).first;
-                    Interface* newComp = (Interface*)comp->clone();
-                    newComp->setOrigSymID(symID);
-                    set->mComponentSet.push_back((Component*)newComp);
+                    Component* newComp = comp->clone();
+                    Interface* newIntf = NULL;
+                    if (newComp->isInput())
+                    {
+                        CompPER* compPER = (CompPER*)newComp;
+                        newIntf = (Interface*)compPER;
+                    }
+                    else if (newComp->isOutput())
+                    {
+                        CompACT* compACT = (CompACT*)newComp;
+                        newIntf = (Interface*)compACT;
+                    }
+                    newIntf->setOrigSymID(symID);
+                    set->mComponentSet.push_back(newComp);
                 }
             }
             else

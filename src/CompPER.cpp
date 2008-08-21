@@ -62,6 +62,7 @@ Component* CompPER::clone()
     comp->mOrigSymID = mOrigSymID;
     comp->mTargetSymTable = mTargetSymTable;
     comp->mDynamic = mDynamic;
+
     return comp;
 }
 

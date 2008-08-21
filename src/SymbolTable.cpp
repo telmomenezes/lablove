@@ -275,7 +275,6 @@ void SymbolTable::resetProtections()
 
 void SymbolTable::acquireSymbol(Symbol* sym)
 {
-    //printf("attempt to acquire %s[%d]\n", sym->toString().c_str(), sym->mID);
     gbULINT id = sym->mID;
 
     if (mSymbols.count(id) != 0)
@@ -287,7 +286,6 @@ void SymbolTable::acquireSymbol(Symbol* sym)
     Symbol* newSym = sym->clone();
     newSym->mProtected = true;
     mSymbols[id] = newSym;
-    //printf("ACQUIRE!!!!!!!! %s\n", newSym->toString().c_str());
 }
 
 int SymbolTable::getSymbolPos(gbULINT symID)
