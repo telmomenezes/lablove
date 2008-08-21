@@ -140,8 +140,8 @@ colorTableCode = symTable:getID()
 agent:setSymbolName("color", colorTableCode, agentColor:getID())
 
 -- Symbols acquisition
-agent:addObjectSymbolAcquisition(colorTableCode, colorTableCode)
-agent:addMessageSymbolAcquisition(colorTableCode)
+--agent:addObjectSymbolAcquisition(colorTableCode, colorTableCode)
+--agent:addMessageSymbolAcquisition(colorTableCode)
 
 -- Agent Brain
 
@@ -164,7 +164,7 @@ alphaSet:addComponent(PER(Sim2D.PERCEPTION_POSITION))
 alphaSet:addComponent(PER(Sim2D.PERCEPTION_DISTANCE))
 alphaSet:addComponent(PER(Sim2D.PERCEPTION_LTARGET))
 alphaSet:addComponent(PER(Sim2D.PERCEPTION_LOF))
-alphaSet:addComponent(PER(Sim2D.PERCEPTION_SYMEQ, colorTableCode, agentColor:getID(), colorTableCode, true))
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_SYMEQ, colorTableCode, targetColor:getID(), colorTableCode, false))
 grid = Grid()
 grid:init(Grid.ALPHA, 0, 0)
 grid:setComponentSet(alphaSet)
@@ -177,7 +177,7 @@ end
 soundSet:addComponent(PER(Sim2D.PERCEPTION_POSITION))
 soundSet:addComponent(PER(Sim2D.PERCEPTION_DISTANCE))
 soundSet:addComponent(PER(Sim2D.PERCEPTION_VALUE))
-soundSet:addComponent(PER(Sim2D.PERCEPTION_SYMEQ, colorTableCode, agentColor:getID(), colorTableCode, true))
+soundSet:addComponent(PER(Sim2D.PERCEPTION_SYMEQ, colorTableCode, agentColor:getID(), colorTableCode, false))
 soundGrid = Grid()
 soundGrid:init(Grid.ALPHA, 0, 0)
 soundGrid:setComponentSet(soundSet)
