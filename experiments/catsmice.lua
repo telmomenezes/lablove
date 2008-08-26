@@ -32,11 +32,11 @@ rotateForceScale = 0.1
 drag = 0.05
 rotDrag = 0.05
 
-fireInterval = 2000
+fireInterval = 1
 laserLength = 25
 laserSpeed = 100.0
 laserRange = 300.0
-laserStrengthFactor = 1.0
+laserStrengthFactor = 2.0
 laserCostFactor = 0.1
 laserHitDuration = 2
 
@@ -66,7 +66,7 @@ evolutionStopTime = 0
 
 agentBirthRadius = 100.0
 
-keepBodyOnExpire = true
+keepBodyOnExpire = false
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
@@ -100,7 +100,7 @@ fireColor = SymbolRGB(255, 0, 0)
 --------------------------------------------------------------------------------
 
 cat = SimObj2D()
---agent:setBirthRadius(agentBirthRadius)
+cat:setBirthRadius(agentBirthRadius)
 cat:setSize(agentSize)
 cat:setDrag(drag)
 cat:setRotDrag(rotDrag)
@@ -199,7 +199,7 @@ cat:setBrain(brain)
 --------------------------------------------------------------------------------
 
 mouse = SimObj2D()
---agent:setBirthRadius(agentBirthRadius)
+mouse:setBirthRadius(agentBirthRadius)
 mouse:setSize(agentSize)
 mouse:setDrag(drag)
 mouse:setRotDrag(rotDrag)
@@ -299,8 +299,9 @@ mouse:setBrain(brain)
 popDyn = PopDynSEGA()
 sim:setPopulationDynamics(popDyn)
 
-catSpecies = Species(cat, numberOfAgents)
-catSpecies:addGoal(bufferSize, SimObj2D.FITNESS_PROXIMITY)
+catSpecies = Species(cat, numberOfAgents, bufferSize)
+--catSpecies:addGoal(SimObj2D.FITNESS_INTRA_PROX)
+catSpecies:addGoal(SimObj2D.FITNESS_INTER_PROX)
 catSpecies:setFitnessAging(fitnessAging)
 catSpecies:setRecombineProb(recombineProb)
 catSpecies:setKinFactor(kinFactor)
@@ -308,8 +309,9 @@ catSpecies:setKinMutation(kinMutation)
 catSpecies:setGroupFactor(groupFactor)
 popDyn:addSpecies(catSpecies)
 
-mouseSpecies = Species(mouse, numberOfAgents)
-mouseSpecies:addGoal(bufferSize, SimObj2D.FITNESS_DISTANCE)
+mouseSpecies = Species(mouse, numberOfAgents, bufferSize)
+--mouseSpecies:addGoal(SimObj2D.FITNESS_INTRA_PROX)
+mouseSpecies:addGoal(SimObj2D.FITNESS_INTER_DIST)
 mouseSpecies:setFitnessAging(fitnessAging)
 mouseSpecies:setRecombineProb(recombineProb)
 mouseSpecies:setKinFactor(kinFactor)
@@ -324,7 +326,8 @@ popDyn:setEvolutionStopTime(evolutionStopTime)
 
 stats = StatCommon()
 stats:setFile("log_cat" .. logSuffix .. ".csv")
-stats:addField("proximity_fitness")
+stats:addField("inter_prox_score")
+stats:addField("inter_dist")
 stats:addField("gb_connections")
 stats:addField("gb_active_connections")
 stats:addField("gb_active_components")
@@ -333,7 +336,8 @@ catSpecies:addDeathLog(stats)
 
 stats = StatCommon()
 stats:setFile("log_mouse" .. logSuffix .. ".csv")
-stats:addField("distance_fitness")
+stats:addField("inter_dist_score")
+stats:addField("inter_dist")
 stats:addField("gb_connections")
 stats:addField("gb_active_connections")
 stats:addField("gb_active_components")

@@ -19,16 +19,18 @@
 
 #include "Goal.h"
 
-Goal::Goal(unsigned int size, int fitMeasure)
+Goal::Goal(int fitMeasure, float factor)
 {
     mFitnessMeasure = fitMeasure;
-    mSize = size;
+    mFactor = factor;
+    mBestFitness = 0;
 }
 
 Goal::Goal(const Goal& g)
 {
     mFitnessMeasure = g.mFitnessMeasure;
-    mSize = g.mSize;
+    mFactor = g.mFactor;
+    mBestFitness = 0;
 }
 
 Goal::~Goal()

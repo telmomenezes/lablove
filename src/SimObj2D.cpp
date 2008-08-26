@@ -128,8 +128,10 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     mIntraProxScore = 0.0f;
     mInterDistScore = 0.0f;
     mInterProxScore = 0.0f;
-    mDistanceFitness = 0.0f;
-    mProximityFitness = 0.0f;
+    mIntraDist = 0.0f;
+    mIntraProx = 0.0f;
+    mInterDist = 0.0f;
+    mInterProx = 0.0f;
 
     mLastBodyHit = 0;
     
@@ -252,8 +254,10 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
     mIntraProxScore = 0.0f;
     mInterDistScore = 0.0f;
     mInterProxScore = 0.0f;
-    mDistanceFitness = 0.0f;
-    mProximityFitness = 0.0f;
+    mIntraDist = 0.0f;
+    mIntraProx = 0.0f;
+    mInterDist = 0.0f;
+    mInterProx = 0.0f;
 
     mLastBodyHit = 0;
 
@@ -661,12 +665,23 @@ void SimObj2D::updateFitnesses()
         case FITNESS_LOCK_SCORE:
             fit->mFitness = mLockScore;
             break;
-        case FITNESS_DISTANCE:
-            fit->mFitness = mDistanceFitness;
+        case FITNESS_INTER_DIST:
+            fit->mFitness = mInterDistScore;
             break;
-        case FITNESS_PROXIMITY:
-            fit->mFitness = mProximityFitness;
+        case FITNESS_INTRA_DIST:
+            fit->mFitness = mIntraDistScore;
             break;
+        case FITNESS_INTER_PROX:
+            fit->mFitness = mInterProxScore;
+            break;
+        case FITNESS_INTRA_PROX:
+            fit->mFitness = mIntraProxScore;
+            break;
+        }
+
+        if (fit->mFitness < 0.0f)
+        {
+            fit->mFitness = 0.0f;
         }
     }
 }
@@ -1610,15 +1625,37 @@ void SimObj2D::setMaxAge(gbULINT maxAgeLow, gbULINT maxAgeHigh)
     }
 }
 
+void SimObj2D::onAdd()
+{
+    SimObj::onAdd();
+    calcProxDist();
+}
+
 void SimObj2D::calcProxDistScores()
 {
-    float w = mSim2D->getWorldWidth();
-    float h = mSim2D->getWorldLength();
-    
-    float maxDist = sqrtf((powf(w, 2)) + (h, 2));
+    float oldIntraDist = mIntraDist;
+    float oldInterDist = mInterDist;
+    float oldIntraProx = mIntraProx;
+    float oldInterProx = mInterProx;
+    calcProxDist();
+    mIntraDistScore += mIntraDist - oldIntraDist;
+    mInterDistScore += mInterDist - oldInterDist;
+    mIntraProxScore += mIntraProx - oldIntraProx;
+    mInterProxScore += mInterProx - oldInterProx;
+}
 
+void SimObj2D::calcProxDist()
+{
     float x1 = mX;
     float y1 = mY;
+
+    float w = mSim2D->getWorldWidth();
+    float h = mSim2D->getWorldLength();
+
+    float maxDist = sqrtf((powf(w, 2)) + (h, 2));
+
+    mIntraDist = maxDist;
+    mInterDist = maxDist;
 
     list<SimObj*>* objList = mSim2D->getObjectList();
 
@@ -1634,24 +1671,26 @@ void SimObj2D::calcProxDistScores()
             float y2 = targObj->mY;
 
             float dist = sqrtf((powf((x1 - x2), 2)) + (powf((y1 - y2), 2)));
-            dist /= maxDist;
-            float prox = 1.0f - dist;
 
             if (mSpeciesID == targObj->mSpeciesID)
             {
-                mIntraDistScore += dist;
-                mIntraProxScore += prox;
+                if (mIntraDist > dist)
+                {
+                    mIntraDist = dist;
+                }
             }
             else
             {
-                mInterDistScore += dist;
-                mInterProxScore += prox;
+                if (mInterDist > dist)
+                {
+                    mInterDist = dist;
+                }
             }
         }
     }
 
-    mDistanceFitness = mIntraProxScore + mInterDistScore;
-    mProximityFitness = mIntraProxScore + mInterProxScore;
+    mIntraProx = maxDist - mIntraDist;
+    mInterProx = maxDist - mInterDist;
 }
 
 const char SimObj2D::mClassName[] = "SimObj2D";
@@ -1706,8 +1745,10 @@ Orbit<SimObj2D>::NumberGlobalType SimObj2D::mNumberGlobals[] = {
     {"FITNESS_TARGET_SCORE", FITNESS_TARGET_SCORE},
     {"FITNESS_LOCK_SCORE", FITNESS_LOCK_SCORE},
     {"FITNESS_RANDOM", FITNESS_RANDOM},
-    {"FITNESS_DISTANCE", FITNESS_DISTANCE},
-    {"FITNESS_PROXIMITY", FITNESS_PROXIMITY},
+    {"FITNESS_INTER_DIST", FITNESS_INTER_DIST},
+    {"FITNESS_INTRA_DIST", FITNESS_INTRA_DIST},
+    {"FITNESS_INTER_PROX", FITNESS_INTER_PROX},
+    {"FITNESS_INTRA_PROX", FITNESS_INTRA_PROX},
     {"SHAPE_TRIANGLE", SHAPE_TRIANGLE},
     {"SHAPE_SQUARE", SHAPE_SQUARE},
     {"SHAPE_CIRCLE", SHAPE_CIRCLE},

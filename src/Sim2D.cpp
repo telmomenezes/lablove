@@ -683,14 +683,34 @@ bool Sim2D::getFieldValue(SimObj* obj, string fieldName, float& value)
         value = ((SimObj2D*)obj)->mLockScore;
         return true;
     }
-    else if (fieldName == "distance_fitness")
+    else if (fieldName == "inter_dist")
     {
-        value = ((SimObj2D*)obj)->mDistanceFitness;
+        value = ((SimObj2D*)obj)->mInterDist;
         return true;
     }
-    else if (fieldName == "proximity_fitness")
+    else if (fieldName == "intra_dist")
     {
-        value = ((SimObj2D*)obj)->mProximityFitness;
+        value = ((SimObj2D*)obj)->mIntraDist;
+        return true;
+    }
+    else if (fieldName == "inter_dist_score")
+    {
+        value = ((SimObj2D*)obj)->mInterDistScore;
+        return true;
+    }
+    else if (fieldName == "intra_dist_score")
+    {
+        value = ((SimObj2D*)obj)->mIntraDistScore;
+        return true;
+    }
+    else if (fieldName == "inter_prox_score")
+    {
+        value = ((SimObj2D*)obj)->mInterDistScore;
+        return true;
+    }
+    else if (fieldName == "intra_prox_score")
+    {
+        value = ((SimObj2D*)obj)->mIntraDistScore;
         return true;
     }
     else

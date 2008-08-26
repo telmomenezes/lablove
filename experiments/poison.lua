@@ -202,13 +202,13 @@ plant:setColoringScale("food", plantFood, feedCenter, 255, 0, 0, 0, 255, 0)
 popDyn = PopDynSEGA()
 sim:setPopulationDynamics(popDyn)
 
-agentSpecies = Species(agent, numberOfAgents)
-agentSpecies:addGoal(bufferSize, SimObj2D.FITNESS_ENERGY_SUM_ABOVE_INIT)
+agentSpecies = Species(agent, numberOfAgents, bufferSize)
+agentSpecies:addGoal(SimObj2D.FITNESS_ENERGY_SUM_ABOVE_INIT)
 agentSpecies:setFitnessAging(fitnessAging)
 agentSpecies:setRecombineProb(recombineProb)
 
-plantSpecies = Species(plant, numberOfPlants)
-plantSpecies:addGoal(1, SimObj2D.FITNESS_ENERGY)
+plantSpecies = Species(plant, numberOfPlants, 1)
+plantSpecies:addGoal(SimObj2D.FITNESS_ENERGY)
 
 agentSpeciesIndex = popDyn:addSpecies(agentSpecies)
 popDyn:addSpecies(plantSpecies)

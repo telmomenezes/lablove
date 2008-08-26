@@ -223,8 +223,8 @@ target:setSymbolName("color", colorTableCode, targetColor:getID())
 popDyn = PopDynSEGA()
 sim:setPopulationDynamics(popDyn)
 
-agentSpecies = Species(agent, numberOfAgents)
-agentSpecies:addGoal(bufferSize, SimObj2D.FITNESS_LASER_SCORE)
+agentSpecies = Species(agent, numberOfAgents, bufferSize)
+agentSpecies:addGoal(SimObj2D.FITNESS_LASER_SCORE)
 agentSpecies:setFitnessAging(fitnessAging)
 agentSpecies:setRecombineProb(recombineProb)
 agentSpecies:setKinFactor(kinFactor)
@@ -233,8 +233,8 @@ agentSpecies:setGroupFactor(groupFactor)
 
 agentSpeciesIndex = popDyn:addSpecies(agentSpecies)
 
-targetSpecies = Species(target, numberOfTargets)
-targetSpecies:addGoal(1, SimObj2D.FITNESS_RANDOM)
+targetSpecies = Species(target, numberOfTargets, 1)
+targetSpecies:addGoal(SimObj2D.FITNESS_RANDOM)
 popDyn:addSpecies(targetSpecies)
 
 popDyn:setEvolutionStopTime(evolutionStopTime)

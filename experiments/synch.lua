@@ -187,9 +187,9 @@ agent:setBrain(brain)
 popDyn = PopDynSEGA()
 sim:setPopulationDynamics(popDyn)
 
-agentSpecies = Species(agent, numberOfAgents)
+agentSpecies = Species(agent, numberOfAgents, bufferSize)
 
-agentSpecies:addGoal(bufferSize, SimObj2D.FITNESS_SYNCH_SCORE)
+agentSpecies:addGoal(SimObj2D.FITNESS_SYNCH_SCORE)
 agentSpecies:setFitnessAging(fitnessAging)
 agentSpecies:setRecombineProb(recombineProb)
 agentSpecies:setKinFactor(kinFactor)

@@ -31,14 +31,15 @@ Species::Species(lua_State* luaState)
     {
         mBaseOrganism = (SimObj*)Orbit<Species>::pointer(luaState, 1);
         mPopulation = luaL_checkint(luaState, 2);
+        mBufferSize = luaL_checkint(luaState, 3);
     }
     else
     {
         mBaseOrganism = NULL;
         mPopulation = 0;
+        mBufferSize = 0;
     }
 
-    mBufferSize = 0;
     mKinFactor = 0.0f;
     mKinMutation = true;
     mGroupFactor = 0.0f;
@@ -67,10 +68,9 @@ Species::~Species()
     fclose(mFile);
 }
 
-void Species::addGoal(unsigned int bufSize, int fitMeasure)
+void Species::addGoal(int fitMeasure, float factor)
 {
-    mGoals.push_back(Goal(bufSize, fitMeasure));
-    mBufferSize += bufSize;
+    mGoals.push_back(Goal(fitMeasure, factor));
 }
 
 void Species::init(unsigned int startBodyID)
@@ -441,39 +441,55 @@ void Species::onOrganismDeath(SimObj* org)
     }
 
     // Challenges
-    unsigned int startPos = 0;
+    unsigned int objPos = mDistOrganism->iuniform(0, mBufferSize);
+    SimObj* org2 = mBuffer[objPos];
+    float totalFitness1 = 0.0f;
+    float totalFitness2 = 0.0f;
 
     for (list<Goal>::iterator iterGoal = mGoals.begin();
         iterGoal != mGoals.end();
         iterGoal++)
     {   
-        unsigned int objPos = mDistOrganism->iuniform(0, (*iterGoal).mSize);
-        objPos += startPos;
-        SimObj* org2 = mBuffer[objPos];
-
         Fitness* fit1 = org->getFitness((*iterGoal).mFitnessMeasure);
         Fitness* fit2 = org2->getFitness((*iterGoal).mFitnessMeasure);
+        float fitness1 = fit1->mFinalFitness;
+        float fitness2 = fit2->mFinalFitness;
 
-        if (fit1->mFinalFitness >= fit2->mFinalFitness)
+        if (fitness1 > (*iterGoal).mBestFitness)
         {
-            SimObj* newObj = org->clone();
-            Gridbrain* mBrain = newObj->getBrain();
-
-            if (mBrain != NULL)
-            {
-                mBrain->generateGenes(&mBrainBuffer);
-                mBrainBuffer[objPos] = newObj->getBrain();
-            }
-
-            delete mBuffer[objPos];
-            mBuffer[objPos] = newObj;
+            (*iterGoal).mBestFitness = fitness1;
         }
-        else
+
+        fitness1 /= (*iterGoal).mBestFitness;
+        fitness2 /= (*iterGoal).mBestFitness;
+
+        totalFitness1 += fitness1;
+        totalFitness2 += fitness2;
+    }
+
+    if (totalFitness1 >= totalFitness2)
+    {
+        SimObj* newObj = org->clone();
+        Gridbrain* mBrain = newObj->getBrain();
+
+        if (mBrain != NULL)
         {
+            mBrain->generateGenes(&mBrainBuffer);
+            mBrainBuffer[objPos] = newObj->getBrain();
+        }
+
+        delete mBuffer[objPos];
+        mBuffer[objPos] = newObj;
+    }
+    else
+    {
+        for (list<Goal>::iterator iterGoal = mGoals.begin();
+                iterGoal != mGoals.end();
+                iterGoal++)
+        {   
+            Fitness* fit2 = org2->getFitness((*iterGoal).mFitnessMeasure);
             fit2->mFinalFitness = fit2->mFinalFitness * (1.0f - mFitnessAging);
         }
-
-        startPos += (*iterGoal).mSize;
     }
 
     // Find organism to place near
@@ -564,9 +580,9 @@ Orbit<Species>::NumberGlobalType Species::mNumberGlobals[] = {{0,0}};
 
 int Species::addGoal(lua_State* luaState)
 {
-    unsigned int bufSize = luaL_checkint(luaState, 1);
-    int fitMeasure = luaL_checkint(luaState, 2);
-    addGoal(bufSize, fitMeasure);
+    int fitMeasure = luaL_checkint(luaState, 1);
+    float factor = luaL_optnumber(luaState, 2, 1.0f);
+    addGoal(fitMeasure, factor);
     return 0;
 }
 
