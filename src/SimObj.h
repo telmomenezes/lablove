@@ -132,6 +132,8 @@ public:
 
     TableSet* mTableSet;
 
+    bool mHumanControlled;
+
     static const char mClassName[];
     static Orbit<SimObj>::MethodType mMethods[];
     static Orbit<SimObj>::NumberGlobalType mNumberGlobals[];

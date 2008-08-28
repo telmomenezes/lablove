@@ -234,8 +234,6 @@ if humanAgent then
     human:setShape(SimObj2D.SHAPE_TRIANGLE)
     human:setColoringSymbolName("color")
 
-
-    
     humanColor = SymbolRGB(82, 228, 241)
     symTable = SymbolTable(humanColor, colorTableCode)
     human:addSymbolTable(symTable)
@@ -245,16 +243,6 @@ if humanAgent then
     humanFeedTable = SymbolTable(humanFeed, feedTableCode)
     human:addSymbolTable(humanFeedTable)
     human:setSymbolName("feed", feedTableCode, humanFeed:getID())
-
-    dummyBrain = DummyBrain(1)
-    dummyBrain:setChannelName(0, "objects")
-    dummyBrain:addPerception("Position", 0, Sim2D.PERCEPTION_POSITION)
-    dummyBrain:addPerception("Orientation", 0, Sim2D.PERCEPTION_ORIENTATION)
-    dummyBrain:addPerception("Distance", 0, Sim2D.PERCEPTION_DISTANCE)
-    dummyBrain:addPerception("Feed", 0, Sim2D.PERCEPTION_SYMBOL, feedTableCode, humanFeed:getID(), foodTableCode)
-    dummyBrain:addPerception("Target", 0, Sim2D.PERCEPTION_TARGET)
-
-    human:setBrain(dummyBrain)
 
     sim:addObject(human)
     human:setPos(300, 300)

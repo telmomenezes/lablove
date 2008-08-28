@@ -199,7 +199,6 @@ public:
 
     Sim2D* mSim2D;
 
-    bool mHumanControlled;
     bool mHumanGo;
     bool mHumanRotateLeft;
     bool mHumanRotateRight;

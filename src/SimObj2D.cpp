@@ -70,7 +70,6 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     mChannelSelf = -1;
     mChannelBeta = -1;
 
-    mHumanControlled = false;
     mHumanGo = false;
     mHumanRotateLeft = false;
     mHumanRotateRight = false;
@@ -183,7 +182,6 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
     mChannelSelf = obj->mChannelSelf;
     mChannelBeta = obj->mChannelBeta;
 
-    mHumanControlled = obj->mHumanControlled;
     mHumanGo = false;
     mHumanRotateLeft = false;
     mHumanRotateRight = false;
@@ -468,6 +466,8 @@ void SimObj2D::process()
             iterLaser++;
         }
     }
+
+    
 
     if (totalDamage >= mEnergy)
     {
@@ -926,13 +926,6 @@ void SimObj2D::onScanObject(SimObj2D* targ,
         }
     }
 
-    //printf("bodyID: %d\n", targ->mBodyID);
-    float* inBuffer = mBrain->getInputBuffer(mChannelObjects, targ->mBodyID);
-    if (inBuffer == NULL)
-    {
-        return;
-    }
-
     bool isTarget = false;
 
     // TODO: use the nearest to angle 0 instead of the closest distance?
@@ -944,6 +937,12 @@ void SimObj2D::onScanObject(SimObj2D* targ,
             mDistanceToTargetObject = distance;
             isTarget = true;
         }
+    }
+
+    float* inBuffer = mBrain->getInputBuffer(mChannelObjects, targ->mBodyID);
+    if (inBuffer == NULL)
+    {
+        return;
     }
 
     float normalizedValue;
@@ -1139,7 +1138,7 @@ void SimObj2D::act()
         }
         if (mHumanEat)
         {
-            actionEat = Sim2D::ACTION_EAT;
+            actionEat = Sim2D::ACTION_EATB;
         }
         if (mHumanSpeak)
         {
@@ -1288,6 +1287,11 @@ void SimObj2D::eat(SimObj2D* target, unsigned int actionType)
 {
     if (target)
     {
+        if (target->mEnergy <= 0.0f)
+        {
+            return;
+        }
+
         Symbol* sym1 = getSymbolByName("feed");
         if (sym1 == NULL)
         {
@@ -1325,6 +1329,7 @@ void SimObj2D::eat(SimObj2D* target, unsigned int actionType)
             float energy = target->mEnergy;
             deltaEnergy(energyFactor * energy);
             target->deltaEnergy(-energy);
+            printf("energy: %f\n", energyFactor * energy);
             break;
         }
     }
@@ -1428,6 +1433,11 @@ void SimObj2D::speak(Symbol* sym, float param)
 
 void SimObj2D::sendMessage(Symbol* sym, float param)
 {
+    if (sym == NULL)
+    {
+        return;
+    }
+
     Message msg(3);
     msg.mSymbol = sym->clone();
     msg.mData[0] = 0;
@@ -1511,46 +1521,6 @@ void SimObj2D::processLaserHit(Laser2D* laser)
     {
         mSim2D->incrementLaserScores(laser->mOwnerSpecies);
     }
-
-    /*
-    // Laser score
-    SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
-
-    if ((obj != NULL) && (laser->mEnergy > 0))
-    {
-        float laserCount = 0;
-
-        list<SimObj*>* objList = mSim2D->getObjectList();
-
-        for (list<SimObj*>::iterator iterObj = objList->begin();
-                iterObj != objList->end();
-                iterObj++)
-        {
-            SimObj2D* targObj = (SimObj2D*)(*iterObj);
-
-            if (obj->mSpeciesID != targObj->mSpeciesID)
-            {
-                for (list<Laser2D>::iterator iterLaser = targObj->mLaserHits.begin();
-                    iterLaser != targObj->mLaserHits.end();
-                    iterLaser++)
-                {
-                    if (((*iterLaser).mOwnerSpecies) == obj->mSpeciesID)
-                    {
-                        score += (*iterLaser).mEnergy;
-                        laserCount += 1.0f;
-                    }
-                }
-            }
-        }
-
-        //score *= laserCount;
-
-        if (score > obj->mLaserScore)
-        {
-            obj->mLaserScore = score;
-        }
-    }
-    */
 
     mSim2D->addVisualEvent(Sim2D::VE_LASER,
                     mX,

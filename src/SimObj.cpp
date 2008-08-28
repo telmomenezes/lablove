@@ -50,6 +50,8 @@ SimObj::SimObj(lua_State* luaState)
     mDeathType = DEATH_HARD;
 
     mTableSet = new TableSet();
+
+    mHumanControlled = false;
 }
 
 SimObj::SimObj(SimObj* obj)
@@ -85,6 +87,8 @@ SimObj::SimObj(SimObj* obj)
     mBirthRadius = obj->mBirthRadius;
     mKeepBodyOnHardDeath = obj->mKeepBodyOnHardDeath;
     mKeepBodyOnExpirationDeath = obj->mKeepBodyOnExpirationDeath;
+
+    mHumanControlled = obj->mHumanControlled;
 
     if (mType == TYPE_AGENT)
     {
