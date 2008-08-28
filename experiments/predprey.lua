@@ -182,6 +182,7 @@ for i, comp in pairs(alphaComponents) do
 end
 alphaSet:addComponent(PER(Sim2D.PERCEPTION_POSITION))
 alphaSet:addComponent(PER(Sim2D.PERCEPTION_DISTANCE))
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_TARGET))
 alphaSet:addComponent(PER(Sim2D.PERCEPTION_LTARGET))
 alphaSet:addComponent(PER(Sim2D.PERCEPTION_LOF))
 alphaSet:addComponent(PER(Sim2D.PERCEPTION_ORIENTATION))
@@ -292,6 +293,7 @@ for i, comp in pairs(alphaComponents) do
 end
 alphaSet:addComponent(PER(Sim2D.PERCEPTION_POSITION))
 alphaSet:addComponent(PER(Sim2D.PERCEPTION_DISTANCE))
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_TARGET))
 alphaSet:addComponent(PER(Sim2D.PERCEPTION_LTARGET))
 alphaSet:addComponent(PER(Sim2D.PERCEPTION_LOF))
 alphaSet:addComponent(PER(Sim2D.PERCEPTION_ORIENTATION))
