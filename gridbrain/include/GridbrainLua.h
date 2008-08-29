@@ -437,7 +437,11 @@ Orbit<LuaCompNEG>::NumberGlobalType LuaCompNEG::mNumberGlobals[] = {{0,0}};
 class LuaCompAMP : public CompAMP
 {
 public:
-    LuaCompAMP(lua_State* luaState=NULL){}
+    LuaCompAMP(lua_State* luaState=NULL)
+    {
+        float param = luaL_optnumber(luaState, 1, 0.0f);
+        mParam = param;
+    }
     virtual ~LuaCompAMP(){}
 
     static const char mClassName[];

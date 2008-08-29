@@ -102,7 +102,6 @@ sim:setTimeLimit(timeLimit)
 
 agent = SimObj2D()
 
-
 agent:setSize(agentSize)
 agent:setDrag(drag)
 agent:setRotDrag(rotDrag)

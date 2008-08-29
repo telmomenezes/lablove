@@ -1329,7 +1329,6 @@ void SimObj2D::eat(SimObj2D* target, unsigned int actionType)
             float energy = target->mEnergy;
             deltaEnergy(energyFactor * energy);
             target->deltaEnergy(-energy);
-            printf("energy: %f\n", energyFactor * energy);
             break;
         }
     }

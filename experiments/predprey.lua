@@ -110,119 +110,29 @@ preyColor = SymbolRGB(255, 255, 255)
 plantColor = SymbolRGB(0, 255, 0)
 fireColor = SymbolRGB(255, 100, 0)
 
--- Predators
+-- Plants
 --------------------------------------------------------------------------------
 
-pred = SimObj2D()
-pred:setBirthRadius(agentBirthRadius)
-pred:setSize(agentSize)
-pred:setDrag(drag)
-pred:setRotDrag(rotDrag)
-pred:setInitialEnergy(initialEnergy)
-pred:setMaxAge(maxAgeLow, maxAgeHigh)
-pred:setViewRange(viewRange)
-pred:setViewAngle(viewAngle)
-pred:setGoCost(goCost)
-pred:setRotateCost(rotateCost)
-pred:setGoForceScale(goForceScale)
-pred:setRotateForceScale(rotateForceScale)
-pred:setShape(SimObj2D.SHAPE_TRIANGLE)
-pred:setColoringSymbolName("color")
-pred:setSoundRange(500)
-pred:setFireInterval(fireInterval)
-pred:setLaserLength(laserLength)
-pred:setLaserSpeed(laserSpeed)
-pred:setLaserRange(laserRange)
-pred:setLaserStrengthFactor(laserStrengthFactor)
-pred:setLaserCostFactor(laserCostFactor)
-pred:setLaserHitDuration(laserHitDuration)
-pred:setKeepBodyOnExpirationDeath(keepBodyOnExpire)
-pred:setFeedCenter(0.5)
+plant = SimObj2D()
+--plant:setBirthRadius(50.0)
+plant:setSize(plantSize)
+plant:setInitialEnergy(1.0)
+plant:setMaxAge(maxAgeHigh)
+plant:setShape(SimObj2D.SHAPE_SQUARE)
+plant:setLaserHitDuration(laserHitDuration)
+plant:setColoringSymbolName("color")
 
-predFoodSym = SymbolFloat(predFood)
-predFoodTable = SymbolTable(predFoodSym)
-foodTableCode = predFoodTable:getID()
-pred:addSymbolTable(predFoodTable)
-pred:setSymbolName("food", foodTableCode, predFoodSym:getID())
+plantFoodSym = SymbolFloat(plantFood)
+plantFoodTable = SymbolTable(plantFoodSym, foodTableCode)
+foodTableCode = plantFoodTable:getID()
+plant:addSymbolTable(plantFoodTable)
+plant:setSymbolName("food", foodTableCode, plantFoodSym:getID())
 
-predFeedSym = SymbolFloat(predFeed)
-predFeedTable = SymbolTable(predFeedSym)
-pred:addSymbolTable(predFeedTable)
-feedTableCode = predFeedTable:getID()
-pred:setSymbolName("feed", feedTableCode, predFeedSym:getID())
-
-predSymTable = SymbolTable(predColor)
-predSymTable:addSymbol(fireColor)
-pred:addSymbolTable(predSymTable)
-predSymTable:setDynamic(true)
-predSymTable:setName("color")
-colorTableCode = predSymTable:getID()
-pred:setSymbolName("color", colorTableCode, predColor:getID())
-
--- Symbols acquisition
-pred:addObjectSymbolAcquisition(colorTableCode, colorTableCode)
-pred:addMessageSymbolAcquisition(colorTableCode)
-
--- Agent Brain
-
-brain = Gridbrain()
-
-brain:setMutateAddConnectionProb(addConnectionProb)
-brain:setMutateRemoveConnectionProb(removeConnectionProb)
-brain:setMutateChangeParamProb(changeParamProb)
-brain:setParamMutationStanDev(paramMutationStanDev)
-brain:setMutateSplitConnectionProb(splitConnectionProb)
-brain:setMutateJoinConnectionsProb(joinConnectionsProb)
-brain:setMutateChangeInactiveComponentProb(changeInComponentProb)
-
--- Objects Grid
-alphaSet = ComponentSet()
-for i, comp in pairs(alphaComponents) do
-    alphaSet:addComponent(comp)
-end
-alphaSet:addComponent(PER(Sim2D.PERCEPTION_POSITION))
-alphaSet:addComponent(PER(Sim2D.PERCEPTION_DISTANCE))
-alphaSet:addComponent(PER(Sim2D.PERCEPTION_TARGET))
-alphaSet:addComponent(PER(Sim2D.PERCEPTION_LTARGET))
-alphaSet:addComponent(PER(Sim2D.PERCEPTION_LOF))
-alphaSet:addComponent(PER(Sim2D.PERCEPTION_ORIENTATION))
-alphaSet:addComponent(PER(Sim2D.PERCEPTION_SYMEQ, colorTableCode, predColor:getID(), colorTableCode, true))
-grid = Grid()
-grid:init(Grid.ALPHA, 0, 0)
-grid:setComponentSet(alphaSet)
-brain:addGrid(grid, "objects");
-
-soundSet = ComponentSet()
-for i, comp in pairs(alphaComponents) do
-    soundSet:addComponent(comp)
-end
-soundSet:addComponent(PER(Sim2D.PERCEPTION_POSITION))
-soundSet:addComponent(PER(Sim2D.PERCEPTION_DISTANCE))
-soundSet:addComponent(PER(Sim2D.PERCEPTION_VALUE))
-soundSet:addComponent(PER(Sim2D.PERCEPTION_SYMEQ, colorTableCode, predColor:getID(), colorTableCode, true))
-soundGrid = Grid()
-soundGrid:init(Grid.ALPHA, 0, 0)
-soundGrid:setComponentSet(soundSet)
-brain:addGrid(soundGrid, "sounds");
-
--- Beta Grid
-betaSet = ComponentSet()
-for i, comp in pairs(betaComponents) do
-    betaSet:addComponent(comp)
-end
-betaSet:addComponent(ACT(Sim2D.ACTION_GO))
-betaSet:addComponent(ACT(Sim2D.ACTION_ROTATE))
-betaSet:addComponent(ACT(Sim2D.ACTION_EATB))
-betaSet:addComponent(ACT(Sim2D.ACTION_FIREB, colorTableCode, fireColor:getID(), colorTableCode, false))
-betaSet:addComponent(ACT(Sim2D.ACTION_SPEAK, colorTableCode, predColor:getID(), colorTableCode, true))
-    
-grid2 = Grid()
-grid2:init(Grid.BETA, 0, 0)
-grid2:setComponentSet(betaSet)
-
-brain:addGrid(grid2, "beta")
-
-pred:setBrain(brain)
+plantSymTable = SymbolTable(plantColor)
+plant:addSymbolTable(plantSymTable)
+colorTableCode = plantSymTable:getID()
+plantSymTable:setName("color")
+plant:setSymbolName("color", colorTableCode, plantColor:getID())
 
 -- Preys
 --------------------------------------------------------------------------------
@@ -259,9 +169,10 @@ prey:addSymbolTable(preyFoodTable)
 prey:setSymbolName("food", foodTableCode, preyFoodSym:getID())
 
 preyFeedSym = SymbolFloat(preyFeed)
-preyFeedTable = SymbolTable(preyFeedSym, feedTableCode)
+preyFeedTable = SymbolTable(preyFeedSym)
+feedTableCode = preyFeedTable:getID()
 prey:addSymbolTable(preyFeedTable)
-pred:setSymbolName("feed", feedTableCode, preyFeedSym:getID())
+prey:setSymbolName("feed", feedTableCode, preyFeedSym:getID())
 
 preySymTable = SymbolTable(preyColor, colorTableCode)
 preySymTable:addSymbol(fireColor)
@@ -335,27 +246,116 @@ brain:addGrid(grid2, "beta")
 
 prey:setBrain(brain)
 
--- Plants
+-- Predators
 --------------------------------------------------------------------------------
 
-plant = SimObj2D()
---plant:setBirthRadius(50.0)
-plant:setSize(plantSize)
-plant:setInitialEnergy(1.0)
-plant:setMaxAge(maxAgeHigh)
-plant:setShape(SimObj2D.SHAPE_SQUARE)
-plant:setLaserHitDuration(laserHitDuration)
-plant:setColoringSymbolName("color")
+pred = SimObj2D()
+pred:setBirthRadius(agentBirthRadius)
+pred:setSize(agentSize)
+pred:setDrag(drag)
+pred:setRotDrag(rotDrag)
+pred:setInitialEnergy(initialEnergy)
+pred:setMaxAge(maxAgeLow, maxAgeHigh)
+pred:setViewRange(viewRange)
+pred:setViewAngle(viewAngle)
+pred:setGoCost(goCost)
+pred:setRotateCost(rotateCost)
+pred:setGoForceScale(goForceScale)
+pred:setRotateForceScale(rotateForceScale)
+pred:setShape(SimObj2D.SHAPE_TRIANGLE)
+pred:setColoringSymbolName("color")
+pred:setSoundRange(500)
+pred:setFireInterval(fireInterval)
+pred:setLaserLength(laserLength)
+pred:setLaserSpeed(laserSpeed)
+pred:setLaserRange(laserRange)
+pred:setLaserStrengthFactor(laserStrengthFactor)
+pred:setLaserCostFactor(laserCostFactor)
+pred:setLaserHitDuration(laserHitDuration)
+pred:setKeepBodyOnExpirationDeath(keepBodyOnExpire)
+pred:setFeedCenter(0.5)
 
-plantFoodSym = SymbolFloat(plantFood)
-plantFoodTable = SymbolTable(plantFoodSym, foodTableCode)
-plant:addSymbolTable(plantFoodTable)
-plant:setSymbolName("food", foodTableCode, plantFoodSym:getID())
+predFoodSym = SymbolFloat(predFood)
+predFoodTable = SymbolTable(predFoodSym, foodTableCode)
+pred:addSymbolTable(predFoodTable)
+pred:setSymbolName("food", foodTableCode, predFoodSym:getID())
 
-plantSymTable = SymbolTable(plantColor, colorTableCode)
-plant:addSymbolTable(plantSymTable)
-plantSymTable:setName("color")
-plant:setSymbolName("color", colorTableCode, plantColor:getID())
+predFeedSym = SymbolFloat(predFeed)
+predFeedTable = SymbolTable(predFeedSym, feedTableCode)
+pred:addSymbolTable(predFeedTable)
+pred:setSymbolName("feed", feedTableCode, predFeedSym:getID())
+
+predSymTable = SymbolTable(predColor, colorTableCode)
+predSymTable:addSymbol(fireColor)
+pred:addSymbolTable(predSymTable)
+predSymTable:setDynamic(true)
+predSymTable:setName("color")
+pred:setSymbolName("color", colorTableCode, predColor:getID())
+
+-- Symbols acquisition
+pred:addObjectSymbolAcquisition(colorTableCode, colorTableCode)
+pred:addMessageSymbolAcquisition(colorTableCode)
+
+-- Agent Brain
+
+brain = Gridbrain()
+
+brain:setMutateAddConnectionProb(addConnectionProb)
+brain:setMutateRemoveConnectionProb(removeConnectionProb)
+brain:setMutateChangeParamProb(changeParamProb)
+brain:setParamMutationStanDev(paramMutationStanDev)
+brain:setMutateSplitConnectionProb(splitConnectionProb)
+brain:setMutateJoinConnectionsProb(joinConnectionsProb)
+brain:setMutateChangeInactiveComponentProb(changeInComponentProb)
+
+-- Objects Grid
+alphaSet = ComponentSet()
+for i, comp in pairs(alphaComponents) do
+    alphaSet:addComponent(comp)
+end
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_POSITION))
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_DISTANCE))
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_TARGET))
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_LTARGET))
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_LOF))
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_ORIENTATION))
+alphaSet:addComponent(PER(Sim2D.PERCEPTION_SYMEQ, colorTableCode, predColor:getID(), colorTableCode, true))
+grid = Grid()
+grid:init(Grid.ALPHA, 0, 0)
+grid:setComponentSet(alphaSet)
+brain:addGrid(grid, "objects");
+
+soundSet = ComponentSet()
+for i, comp in pairs(alphaComponents) do
+    soundSet:addComponent(comp)
+end
+soundSet:addComponent(PER(Sim2D.PERCEPTION_POSITION))
+soundSet:addComponent(PER(Sim2D.PERCEPTION_DISTANCE))
+soundSet:addComponent(PER(Sim2D.PERCEPTION_VALUE))
+soundSet:addComponent(PER(Sim2D.PERCEPTION_SYMEQ, colorTableCode, predColor:getID(), colorTableCode, true))
+soundGrid = Grid()
+soundGrid:init(Grid.ALPHA, 0, 0)
+soundGrid:setComponentSet(soundSet)
+brain:addGrid(soundGrid, "sounds");
+
+-- Beta Grid
+betaSet = ComponentSet()
+for i, comp in pairs(betaComponents) do
+    betaSet:addComponent(comp)
+end
+betaSet:addComponent(ACT(Sim2D.ACTION_GO))
+betaSet:addComponent(ACT(Sim2D.ACTION_ROTATE))
+betaSet:addComponent(ACT(Sim2D.ACTION_EATB))
+betaSet:addComponent(ACT(Sim2D.ACTION_FIREB, colorTableCode, fireColor:getID(), colorTableCode, false))
+betaSet:addComponent(ACT(Sim2D.ACTION_SPEAK, colorTableCode, predColor:getID(), colorTableCode, true))
+    
+grid2 = Grid()
+grid2:init(Grid.BETA, 0, 0)
+grid2:setComponentSet(betaSet)
+
+brain:addGrid(grid2, "beta")
+
+pred:setBrain(brain)
 
 -- Population Dynamics
 --------------------------------------------------------------------------------
@@ -422,7 +422,6 @@ if humanAgent then
 
     humanFeed = SymbolFloat(humanFeed)
     humanFeedTable = SymbolTable(humanFeed, feedTableCode)
-    humanFeedTable:setName("food")
     human:addSymbolTable(humanFeedTable)
     human:setSymbolName("feed", feedTableCode, humanFeed:getID())
 
