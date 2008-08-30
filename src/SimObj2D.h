@@ -36,16 +36,17 @@ public:
     static const int FITNESS_ENERGY = 0;
     static const int FITNESS_ENERGY_SUM = 1;
     static const int FITNESS_ENERGY_SUM_ABOVE_INIT = 2;
-    static const int FITNESS_RANDOM = 3;
-    static const int FITNESS_MSG_SCORE = 4;
-    static const int FITNESS_SYNCH_SCORE = 5;
-    static const int FITNESS_LASER_SCORE = 6;
-    static const int FITNESS_TARGET_SCORE = 7;
-    static const int FITNESS_LOCK_SCORE = 8;
-    static const int FITNESS_INTER_DIST = 9;
-    static const int FITNESS_INTRA_DIST = 10;
-    static const int FITNESS_INTER_PROX = 11;
-    static const int FITNESS_INTRA_PROX = 12;
+    static const int FITNESS_ENERGY_GAINED_SUM = 3;
+    static const int FITNESS_RANDOM = 4;
+    static const int FITNESS_MSG_SCORE = 5;
+    static const int FITNESS_SYNCH_SCORE = 6;
+    static const int FITNESS_LASER_SCORE = 7;
+    static const int FITNESS_TARGET_SCORE = 8;
+    static const int FITNESS_LOCK_SCORE = 9;
+    static const int FITNESS_INTER_DIST = 10;
+    static const int FITNESS_INTRA_DIST = 11;
+    static const int FITNESS_INTER_PROX = 12;
+    static const int FITNESS_INTRA_PROX = 13;
 
     static const int SHAPE_TRIANGLE = 0;
     static const int SHAPE_SQUARE = 1;
@@ -210,6 +211,8 @@ public:
 
     float mEnergySum;
     float mEnergySumAboveInit;
+    float mEnergyGained;
+    float mEnergyGainedSum;
     float mMsgScore;
     float mLaserScore;
     float mBestLaserScore;

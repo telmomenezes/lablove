@@ -69,12 +69,19 @@ agentBirthRadius = 0--100.0
 
 keepBodyOnExpire = false
 
+preyRand = false;
+predRand = false;
+
 humanAgent = false
 
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
 
 dofile("basic_command_line.lua")
+
+groupFactor = getNumberParameter("grp", groupFactor, "grp")
+preyRand = getBoolParameter("preyrand", preyRand, "preyrand")
+predRand = getBoolParameter("predrand", predRand, "predrand")
 
 logBaseName = "_predprey_"
 
@@ -364,7 +371,11 @@ popDyn = PopDynSEGA()
 sim:setPopulationDynamics(popDyn)
 
 predSpecies = Species(pred, numberOfPredators, bufferSize)
-predSpecies:addGoal(SimObj2D.FITNESS_ENERGY_SUM_ABOVE_INIT)
+if predRand then
+    predSpecies:addGoal(SimObj2D.FITNESS_RANDOM)
+else
+    predSpecies:addGoal(SimObj2D.FITNESS_ENERGY_GAINED_SUM)
+end
 predSpecies:setFitnessAging(fitnessAging)
 predSpecies:setRecombineProb(recombineProb)
 predSpecies:setKinFactor(kinFactor)
@@ -373,7 +384,11 @@ predSpecies:setGroupFactor(groupFactor)
 popDyn:addSpecies(predSpecies)
 
 preySpecies = Species(prey, numberOfPreys, bufferSize)
-preySpecies:addGoal(SimObj2D.FITNESS_ENERGY_SUM_ABOVE_INIT)
+if preyRand then
+    preySpecies:addGoal(SimObj2D.FITNESS_RANDOM)
+else
+    preySpecies:addGoal(SimObj2D.FITNESS_ENERGY_GAINED_SUM)
+end
 preySpecies:setFitnessAging(fitnessAging)
 preySpecies:setRecombineProb(recombineProb)
 preySpecies:setKinFactor(kinFactor)
@@ -456,7 +471,7 @@ end
 
 stats = StatCommon()
 stats:setFile("log_pred" .. logSuffix .. ".csv")
-stats:addField("energy_sum_above_init")
+stats:addField("energy_gained_sum")
 stats:addField("gb_connections")
 stats:addField("gb_active_connections")
 stats:addField("gb_active_components")
@@ -469,7 +484,7 @@ predSpecies:addDeathLog(stats)
 
 stats = StatCommon()
 stats:setFile("log_prey" .. logSuffix .. ".csv")
-stats:addField("energy_sum_above_init")
+stats:addField("energy_gained_sum")
 stats:addField("gb_connections")
 stats:addField("gb_active_connections")
 stats:addField("gb_active_components")

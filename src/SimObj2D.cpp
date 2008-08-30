@@ -116,6 +116,8 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
 
     mEnergySum = 0.0f;
     mEnergySumAboveInit = 0.0f;
+    mEnergyGained = 0.0f;
+    mEnergyGainedSum = 0.0f;
     mMsgScore = 0.0f;
     mLaserScore = 0.0f;
     mBestLaserScore = 0.0f;
@@ -241,6 +243,8 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
 
     mEnergySum = 0.0f;
     mEnergySumAboveInit = 0.0f;
+    mEnergyGained = 0.0f;
+    mEnergyGainedSum = 0.0f;
     mMsgScore = 0.0f;
     mLaserScore = 0.0f;
     mBestLaserScore = 0.0f;
@@ -467,8 +471,6 @@ void SimObj2D::process()
         }
     }
 
-    
-
     if (totalDamage >= mEnergy)
     {
         for (list<Laser2D>::iterator iterLaser = mLaserHits.begin();
@@ -583,6 +585,13 @@ void SimObj2D::process()
             energy = 0.0f;
         }
         mEnergySumAboveInit += energy;
+
+        mEnergyGainedSum += mEnergyGained;
+
+        if (mEnergyGainedSum < 0.0f)
+        {
+            mEnergyGainedSum = 0.0f;
+        }
     }
 
     // Update laser data
@@ -646,6 +655,9 @@ void SimObj2D::updateFitnesses()
             break;
         case FITNESS_ENERGY_SUM_ABOVE_INIT:
             fit->mFitness = mEnergySumAboveInit;
+            break;
+        case FITNESS_ENERGY_GAINED_SUM:
+            fit->mFitness = mEnergyGainedSum;
             break;
         case FITNESS_RANDOM:
             fit->mFitness = mDistFitnessRandom->uniform(0.0f, 1.0f);
@@ -1328,6 +1340,7 @@ void SimObj2D::eat(SimObj2D* target, unsigned int actionType)
 
             float energy = target->mEnergy;
             deltaEnergy(energyFactor * energy);
+            mEnergyGained += energyFactor * energy;
             target->deltaEnergy(-energy);
             break;
         }
@@ -1708,6 +1721,7 @@ Orbit<SimObj2D>::NumberGlobalType SimObj2D::mNumberGlobals[] = {
     {"FITNESS_ENERGY", FITNESS_ENERGY},
     {"FITNESS_ENERGY_SUM", FITNESS_ENERGY_SUM},
     {"FITNESS_ENERGY_SUM_ABOVE_INIT", FITNESS_ENERGY_SUM_ABOVE_INIT},
+    {"FITNESS_ENERGY_GAINED_SUM", FITNESS_ENERGY_GAINED_SUM},
     {"FITNESS_MSG_SCORE", FITNESS_MSG_SCORE},
     {"FITNESS_SYNCH_SCORE", FITNESS_SYNCH_SCORE},
     {"FITNESS_LASER_SCORE", FITNESS_LASER_SCORE},
