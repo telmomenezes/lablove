@@ -188,7 +188,7 @@ popDyn:addSpecies(plantSpecies)
 
 stats = StatCommon()
 stats:setFile("log" .. logSuffix .. ".csv")
-stats:addField("fitness")
+stats:addField("energy_sum_above_init")
 stats:addField("energy")
 stats:addField("gb_connections")
 stats:addField("gb_active_connections")

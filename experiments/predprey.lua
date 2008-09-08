@@ -19,7 +19,7 @@ alphaComponents = {AND(), NOT(), SUM(), MUL(), INV(), NEG(), MOD(), AMP(), RAND(
 betaComponents = {AND(), NOT(), SUM(), MUL(), INV(), NEG(), MOD(), AMP(), RAND(), EQ(), GTZ(), ZERO(), CLK(), DMUL(), MEM(), TMEM()}
 
 viewRange = 300.0
-viewAngle = 170.0
+viewAngle = 350.0
 
 maxAgeLow = 5000
 maxAgeHigh = 5000
@@ -374,7 +374,7 @@ predSpecies = Species(pred, numberOfPredators, bufferSize)
 if predRand then
     predSpecies:addGoal(SimObj2D.FITNESS_RANDOM)
 else
-    predSpecies:addGoal(SimObj2D.FITNESS_ENERGY_GAINED_SUM)
+    predSpecies:addGoal(SimObj2D.FITNESS_ENERGY_SUM_ABOVE_INIT)
 end
 predSpecies:setFitnessAging(fitnessAging)
 predSpecies:setRecombineProb(recombineProb)
@@ -387,7 +387,7 @@ preySpecies = Species(prey, numberOfPreys, bufferSize)
 if preyRand then
     preySpecies:addGoal(SimObj2D.FITNESS_RANDOM)
 else
-    preySpecies:addGoal(SimObj2D.FITNESS_ENERGY_GAINED_SUM)
+    preySpecies:addGoal(SimObj2D.FITNESS_ENERGY_SUM_ABOVE_INIT)
 end
 preySpecies:setFitnessAging(fitnessAging)
 preySpecies:setRecombineProb(recombineProb)
@@ -471,7 +471,7 @@ end
 
 stats = StatCommon()
 stats:setFile("log_pred" .. logSuffix .. ".csv")
-stats:addField("energy_gained_sum")
+stats:addField("energy_sum_above_init")
 stats:addField("gb_connections")
 stats:addField("gb_active_connections")
 stats:addField("gb_active_components")
@@ -484,7 +484,7 @@ predSpecies:addDeathLog(stats)
 
 stats = StatCommon()
 stats:setFile("log_prey" .. logSuffix .. ".csv")
-stats:addField("energy_gained_sum")
+stats:addField("energy_sum_above_init")
 stats:addField("gb_connections")
 stats:addField("gb_active_connections")
 stats:addField("gb_active_components")
