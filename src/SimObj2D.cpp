@@ -475,7 +475,9 @@ void SimObj2D::process()
         }
     }
 
-    if (totalDamage >= mEnergy)
+    if (mTarget
+        && (totalDamage >= mEnergy)
+        && (mEnergy > 0.0f))
     {
         for (list<Laser2D>::iterator iterLaser = mLaserHits.begin();
             iterLaser != mLaserHits.end();
