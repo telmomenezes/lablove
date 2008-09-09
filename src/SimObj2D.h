@@ -124,6 +124,9 @@ public:
 
     virtual void addMessage(Message* msg);
 
+    void setTarget(bool target){mTarget = target;}
+    bool isTarget(){return mTarget;}
+
     static const char mClassName[];
     static Orbit<SimObj2D>::MethodType mMethods[];
     static Orbit<SimObj2D>::NumberGlobalType mNumberGlobals[];
@@ -157,6 +160,7 @@ public:
     int setLaserHitDuration(lua_State* luaState);
     int addObjectSymbolAcquisition(lua_State* luaState);
     int addMessageSymbolAcquisition(lua_State* luaState);
+    int setTarget(lua_State* luaState);
 
     float mX;
     float mY;
@@ -293,6 +297,8 @@ protected:
     Message* mLastMessageSent;
 
     unsigned int mLastBodyHit;
+
+    bool mTarget;
 };
 #endif
 

@@ -138,6 +138,8 @@ SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
     
     mCurrentLaserLockID = 0;
     mTargetLockTime = 0;
+
+    mTarget = true;
 }
 
 SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
@@ -265,6 +267,8 @@ SimObj2D::SimObj2D(SimObj2D* obj) : SimObj(obj)
 
     mCurrentLaserLockID = 0;
     mTargetLockTime = 0;
+
+    mTarget = obj->mTarget;
 }
 
 SimObj2D::~SimObj2D()
@@ -1529,7 +1533,9 @@ void SimObj2D::processLaserHit(Laser2D* laser)
     //printf("laser delay: %d\n", timeSinceFired);
 
     // Increment laser scores
-    if ((laser->mEnergy > 0) && (laser->mOwnerSpecies != mSpeciesID))
+    if (mTarget
+        && (laser->mEnergy > 0)
+        && (laser->mOwnerSpecies != mSpeciesID))
     {
         mSim2D->incrementLaserScores(laser->mOwnerSpecies);
     }
@@ -1714,6 +1720,7 @@ Orbit<SimObj2D>::MethodType SimObj2D::mMethods[] = {
     {"setLaserHitDuration", &SimObj2D::setLaserHitDuration},
     {"addObjectSymbolAcquisition", &SimObj2D::addObjectSymbolAcquisition},
     {"addMessageSymbolAcquisition", &SimObj2D::addMessageSymbolAcquisition},
+    {"setTarget", &SimObj2D::setTarget},
     {0,0}
 };
 
@@ -1950,6 +1957,13 @@ int SimObj2D::addMessageSymbolAcquisition(lua_State* luaState)
 {
     int table = luaL_checkint(luaState, 1);
     addMessageSymbolAcquisition(table);
+    return 0;
+}
+
+int SimObj2D::setTarget(lua_State* luaState)
+{
+    bool target = luaL_checkbool(luaState, 1);
+    setTarget(target);
     return 0;
 }
 
