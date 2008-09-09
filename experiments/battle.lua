@@ -370,7 +370,7 @@ if blueRand then
     blueSpecies:addGoal(SimObj2D.FITNESS_RANDOM)
 else
     blueSpecies:addGoal(SimObj2D.FITNESS_LASER_SCORE)
-    blueSpecies:addGoal(SimObj2D.FITNESS_ENERGY_SUM_ABOVE_INIT)
+    blueSpecies:addGoal(SimObj2D.FITNESS_ENERGY_GAINED_SUM)
 end
 blueSpecies:setFitnessAging(fitnessAging)
 blueSpecies:setRecombineProb(recombineProb)
@@ -382,7 +382,7 @@ if redRand then
     redSpecies:addGoal(SimObj2D.FITNESS_RANDOM)
 else
     redSpecies:addGoal(SimObj2D.FITNESS_LASER_SCORE)
-    redSpecies:addGoal(SimObj2D.FITNESS_ENERGY_SUM_ABOVE_INIT)
+    redSpecies:addGoal(SimObj2D.FITNESS_ENERGY_GAINED_SUM)
 end
 redSpecies:setFitnessAging(fitnessAging)
 redSpecies:setRecombineProb(recombineProb)
@@ -464,7 +464,7 @@ end
 
 stats = StatCommon()
 stats:setFile("log_blue" .. logSuffix .. ".csv")
-stats:addField("energy_sum_above_init")
+stats:addField("energy_gained_sum")
 stats:addField("laser_score")
 stats:addField("target_score")
 stats:addField("gb_connections")
@@ -478,7 +478,7 @@ blueSpecies:addDeathLog(stats)
 
 stats = StatCommon()
 stats:setFile("log_red" .. logSuffix .. ".csv")
-stats:addField("energy_sum_above_init")
+stats:addField("energy_gained_sum")
 stats:addField("laser_score")
 stats:addField("target_score")
 stats:addField("gb_connections")
