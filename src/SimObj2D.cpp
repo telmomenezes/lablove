@@ -475,22 +475,23 @@ void SimObj2D::process()
         }
     }
 
-    if (mTarget
-        && (totalDamage >= mEnergy)
-        && (mEnergy > 0.0f))
+    if (totalDamage >= mEnergy)
     {
-        for (list<Laser2D>::iterator iterLaser = mLaserHits.begin();
-            iterLaser != mLaserHits.end();
-            iterLaser++)
+        if (mTarget && (mEnergy > 0.0f))
         {
-            gbULINT id = (*iterLaser).mOwnerID;
-            SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
-
-            if (obj != NULL)
+            for (list<Laser2D>::iterator iterLaser = mLaserHits.begin();
+                iterLaser != mLaserHits.end();
+                iterLaser++)
             {
-                if (obj->mSpeciesID != mSpeciesID)
+                gbULINT id = (*iterLaser).mOwnerID;
+                SimObj2D* obj = (SimObj2D*)(mSim2D->getObjectByID(id));
+
+                if (obj != NULL)
                 {
-                    obj->mTargetScore += 1.0f;
+                    if (obj->mSpeciesID != mSpeciesID)
+                    {
+                        obj->mTargetScore += 1.0f;
+                    }
                 }
             }
         }

@@ -675,7 +675,7 @@ bool Sim2D::getFieldValue(SimObj* obj, string fieldName, float& value)
     }
     else if (fieldName == "laser_score")
     {
-        value = ((SimObj2D*)obj)->mLaserScore;
+        value = ((SimObj2D*)obj)->mBestLaserScore;
         return true;
     }
     else if (fieldName == "target_score")
