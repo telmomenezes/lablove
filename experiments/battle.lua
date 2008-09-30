@@ -24,7 +24,7 @@ viewAngle = 350.0
 maxAgeLow = 9500
 maxAgeHigh = 10500
 
-initialEnergy = 1.0
+initialEnergy = 0.1
 goCost = 0.001
 rotateCost = 0.001
 goForceScale = 0.3
@@ -370,7 +370,7 @@ if blueRand then
     blueSpecies:addGoal(SimObj2D.FITNESS_RANDOM)
 else
     blueSpecies:addGoal(SimObj2D.FITNESS_LASER_SCORE)
-    blueSpecies:addGoal(SimObj2D.FITNESS_ENERGY_GAINED_SUM)
+    --blueSpecies:addGoal(SimObj2D.FITNESS_ENERGY_GAINED_SUM)
 end
 blueSpecies:setFitnessAging(fitnessAging)
 blueSpecies:setRecombineProb(recombineProb)
@@ -382,7 +382,7 @@ if redRand then
     redSpecies:addGoal(SimObj2D.FITNESS_RANDOM)
 else
     redSpecies:addGoal(SimObj2D.FITNESS_LASER_SCORE)
-    redSpecies:addGoal(SimObj2D.FITNESS_ENERGY_GAINED_SUM)
+    --redSpecies:addGoal(SimObj2D.FITNESS_ENERGY_GAINED_SUM)
 end
 redSpecies:setFitnessAging(fitnessAging)
 redSpecies:setRecombineProb(recombineProb)
