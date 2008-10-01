@@ -658,6 +658,11 @@ bool Sim2D::getFieldValue(SimObj* obj, string fieldName, float& value)
         value = ((SimObj2D*)obj)->mEnergySumAboveInit;
         return true;
     }
+    else if (fieldName == "energy_gained")
+    {
+        value = ((SimObj2D*)obj)->mEnergyGained;
+        return true;
+    }
     else if (fieldName == "energy_gained_sum")
     {
         value = ((SimObj2D*)obj)->mEnergyGainedSum;

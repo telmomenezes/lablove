@@ -98,10 +98,8 @@ sim:setTimeLimit(timeLimit)
 -- Food network
 --------------------------------------------------------------------------------
 
-blueFood = 0
 blueFeed = 0
-redFood = 1
-redFeed = 1
+redFeed = 0
 plantFood = 1
 humanFeed = 0
 
@@ -125,14 +123,11 @@ plant:setLaserHitDuration(laserHitDuration)
 plant:setColoringSymbolName("color")
 plant:setTarget(false)
 
-plantFoodSym = SymbolFloat(0.0)
-plantFoodSym:setAlwaysRandom()
+plantFoodSym = SymbolFloat(plantFood)
 plantFoodTable = SymbolTable(plantFoodSym, foodTableCode)
 foodTableCode = plantFoodTable:getID()
 plant:addSymbolTable(plantFoodTable)
 plant:setSymbolName("food", foodTableCode, plantFoodSym:getID())
-
-plant:setColoringScale("food", plantFoodSym, 0.5, 255, 255, 255, 0, 255, 0)
 
 plantSymTable = SymbolTable(plantColor)
 plant:addSymbolTable(plantSymTable)
@@ -169,10 +164,10 @@ red:setLaserHitDuration(laserHitDuration)
 red:setKeepBodyOnExpirationDeath(keepBodyOnExpire)
 red:setFeedCenter(0.5)
 
-redFoodSym = SymbolFloat(redFood)
-redFoodTable = SymbolTable(redFoodSym, foodTableCode)
-red:addSymbolTable(redFoodTable)
-red:setSymbolName("food", foodTableCode, redFoodSym:getID())
+--redFoodSym = SymbolFloat(redFood)
+--redFoodTable = SymbolTable(redFoodSym, foodTableCode)
+--red:addSymbolTable(redFoodTable)
+--red:setSymbolName("food", foodTableCode, redFoodSym:getID())
 
 redFeedSym = SymbolFloat(redFeed)
 redFeedTable = SymbolTable(redFeedSym)
@@ -279,10 +274,10 @@ blue:setLaserHitDuration(laserHitDuration)
 blue:setKeepBodyOnExpirationDeath(keepBodyOnExpire)
 blue:setFeedCenter(0.5)
 
-blueFoodSym = SymbolFloat(blueFood)
-blueFoodTable = SymbolTable(blueFoodSym, foodTableCode)
-blue:addSymbolTable(blueFoodTable)
-blue:setSymbolName("food", foodTableCode, blueFoodSym:getID())
+--blueFoodSym = SymbolFloat(blueFood)
+--blueFoodTable = SymbolTable(blueFoodSym, foodTableCode)
+--blue:addSymbolTable(blueFoodTable)
+--blue:setSymbolName("food", foodTableCode, blueFoodSym:getID())
 
 blueFeedSym = SymbolFloat(blueFeed)
 blueFeedTable = SymbolTable(blueFeedSym, feedTableCode)
