@@ -459,7 +459,7 @@ end
 
 stats = StatCommon()
 stats:setFile("log_blue" .. logSuffix .. ".csv")
-stats:addField("energy_gained_sum")
+stats:addField("energy_gained")
 stats:addField("laser_score")
 stats:addField("target_score")
 stats:addField("gb_connections")
@@ -473,7 +473,7 @@ blueSpecies:addDeathLog(stats)
 
 stats = StatCommon()
 stats:setFile("log_red" .. logSuffix .. ".csv")
-stats:addField("energy_gained_sum")
+stats:addField("energy_gained")
 stats:addField("laser_score")
 stats:addField("target_score")
 stats:addField("gb_connections")
