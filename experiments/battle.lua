@@ -24,7 +24,7 @@ viewAngle = 350.0
 maxAgeLow = 9500
 maxAgeHigh = 10500
 
-initialEnergy = 0.1
+initialEnergy = 1.0
 goCost = 0.001
 rotateCost = 0.001
 goForceScale = 0.3
