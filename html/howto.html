@@ -1,3 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>
+        LabLOVE - Welcome
+    </title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+  </head>
+  
+  <body>
+  <div id="frame">
+    <div id="header">
+      <img src="lablove.gif"></img>
+      <h2>Laboratory of Life on a Virtual Environment</h2>
+    </div>
+    <div id="leftbar">
+        <a href="index.html">Welcome</a>
+        <a href="http://sourceforge.net/project/showfiles.php?group_id=189296">Download</a>
+        <a href="install.html">Install</a>
+        <a href="howto.html">How to use</a>
+        <a href="http://telmomenezes.com">Author</a>
+        <a href="license.html">License</a>
+	</div>
+
+    <div id="centerbar">
+
+
+<h1>How to Use</h1>
+
+LabLOVE is a tool written in C++, but it embeds the <a href="http://www.lua.org">Lua</a> interpreter for easy experiment configuration. While the definition of new experimental environments requires the extensions and recompilation of LabLOVE, experiments using environments and features already provided may be easily defined using Lua scripts. In this page we will show you how to define experiments through Lua scripting, with no need for recompilation.
+
+<h2>Launching an Experiment</h2>
+When you launch LabLOVE by using the command <code>./lablove</code> from the command line, the Lua file <code>default.lua</code>, which must be in the same directory, is executed.
+
+Here is a typical <code>default.lua</code>:
+
+<pre><code>
+<strong>default.lua:</strong>
+experiment = "experiments/battle.lua"
+
+expParam = getCommandLineParameter("exp");
+if expParam ~= "" then experiment = expParam end
+
+dofile(experiment)
+</code></pre>
+
+The first line assigns the path to the experiment that we want to execute to variable <code>experiment</code>. This way we can change the default experiment by just changing this definition. The next lines verify if an experiment path was provided through the command line. If it was, it overwrites <code>experiment</code>. Finally, the experiment script is executed.
+<p>
+We encourage you not to alter any lines in this file except the first one. This way you keep the option of launching and experiment through command line parameters, for example:
+
+<pre><code>
+./lablove -exp experiments/xpto.lua
+</code></pre>
+
+will launch the experiment defined by the script <code>xpto.lua</code> in directory <code>experiments</code>. The LabLOVE distribution comes with several experiment definitions, contained in the <code>experiments</code> directory. We suggest you to try them and observe the scripts.
+
+<h2>Defining an Experiment</h2>
+
+To illustrate how to define a LabLOVE experiment through Lua scripting, we will dissect the <code>experiments/battle.lua</code> file, which is included in the distribution.
+<p>
+In the battle experiment, the world is populated with two species of agents and food items. The two species are equal, except for their color. Agents are rewarded for their ability to shoot individuals from the other species. They can increase their chances of survival and have access to more energy for shooting by consuming food items.
+<p>
+The first part of the script consists of a sequence of value assignments to variables. This variables represent the several parameters of the experiment. By placing all these definitions at the beginning, we can easily tweak the experiment parameters latter:
+
+<pre><code>
 -- Battle
 -- Two species with antagonic goals co-evolve
 --------------------------------------------------------------------------------
@@ -15,8 +80,10 @@ plantSize = 10.0
 worldWidth = 1000
 worldHeight = 1000
 
-alphaComponents = {AND(), NOT(), SUM(), MUL(), INV(), NEG(), MOD(), AMP(), RAND(), EQ(), GTZ(), ZERO(), MAX(), MIN(), AVG(), DMUL(), SEL(), MEM()}
-betaComponents = {AND(), NOT(), SUM(), MUL(), INV(), NEG(), MOD(), AMP(), RAND(), EQ(), GTZ(), ZERO(), CLK(), DMUL(), MEM(), TMEM()}
+alphaComponents = {AND(), NOT(), SUM(), MUL(), INV(), NEG(), MOD(), AMP(), RAND(),
+                   EQ(), GTZ(), ZERO(), MAX(), MIN(), AVG(), DMUL(), SEL(), MEM()}
+betaComponents = {AND(), NOT(), SUM(), MUL(), INV(), NEG(), MOD(), AMP(), RAND(),
+                  EQ(), GTZ(), ZERO(), CLK(), DMUL(), MEM(), TMEM()}
 
 viewRange = 300.0
 viewAngle = 350.0
@@ -70,6 +137,17 @@ blueRand = false
 
 humanAgent = false
 
+</code></pre>
+In the next section of the code, we define command line parameters that can be used to override some of the values previously defined. This is useful for automating experimentation with several parameters, for example when using a cluster job submission system.
+<p>
+The first line executes a Lua script that defines auxiliary functions to parse command line parameters. For example, we have the <code>getNumberParameter(name, currentValue, code)</code> function. This functions checks if there is a numeric parameter in the command line arguments with the name provided. If there is, it returns its value, otherwise it returns <code>currentValue</code>. Notice that we pass the variables that we defined previously for the parameters. These function also append information to the <code>parameterString</code> global variable.
+<p>
+In this section we also define the value for the <code>logSuffix</code> variable, because it uses the <code>parameterString</code>. The <code>logSuffix</code> is used as a suffix for the names of log files generated by the experiment. This mechanism is useful to tag the log files with information about the parameter values used.
+<p>
+The line <code>groupFactor = getNumberParameter("grp", groupFactor, "grp")</code> causes the <code>grp</code> command line parameter to be valid, so if we execute the command: <code>./lablove -grp 0.8</code>, this causes the battle experiment to be launched with a group factor of 0.8. Also, the group factor value used is registered in the log file names with the string <code>grp0.8</code>.
+
+<pre><code>
+
 -- Command line, log file names, etc
 --------------------------------------------------------------------------------
 
@@ -86,6 +164,14 @@ logSuffix = logBaseName
             .. "s"
             .. seedIndex
 
+</code></pre>
+
+The next step is to initialize the main simulation object. In this case we use <code>Sim2D</code>, a 2D continuous simulation environment currently provided with LabLOVE.
+<p>
+Notice that the <code>object:method()</code> notation is used to call methods on objects. We call methods to set the world dimensions, as well as the random number generator seed and the simulation time limit.
+
+<pre><code>
+
 -- Simulation
 --------------------------------------------------------------------------------
 
@@ -94,6 +180,12 @@ sim:setWorldDimensions(worldWidth, worldHeight, 250)
 
 sim:setSeedIndex(seedIndex)
 sim:setTimeLimit(timeLimit)
+
+</code></pre>
+
+Next we define food network variables and symbols to represent the colors of the several species:
+
+<pre><code>
 
 -- Food network
 --------------------------------------------------------------------------------
@@ -110,11 +202,16 @@ blueColor = SymbolRGB(0, 0, 255)
 redColor = SymbolRGB(255, 0, 0)
 plantColor = SymbolRGB(0, 255, 0)
 
+</code></pre>
+Now it is time to initialize the base object of each species in the simulation. We start with plants, which are the food items. Plants are not considered agents, since they are passive objects without brains.
+<p>
+Again, initialization consists of crating an object of the appropriate type and calling its methods to parameterize it.
+<pre><code>
+
 -- Plants
 --------------------------------------------------------------------------------
 
 plant = SimObj2D()
---plant:setBirthRadius(50.0)
 plant:setSize(plantSize)
 plant:setInitialEnergy(1.0)
 plant:setMaxAge(maxAgeHigh)
@@ -134,6 +231,12 @@ plant:addSymbolTable(plantSymTable)
 colorTableCode = plantSymTable:getID()
 plantSymTable:setName("color")
 plant:setSymbolName("color", colorTableCode, plantColor:getID())
+
+</code></pre>
+Now we initialize the base object for the red species. The initialization of an agent base object is more complex, since it also requires the initialization of a brain, but the mechanism is the same.
+<p>
+After generic object parameterization, we create an instance of a gridbrain. The appropriate number of grids are created. A component set is assigned to each grid, including perception and action components. It is by assigning perception and action components to grids that we determine the sensory capabilities of an agent, and what it is capable of doing. Grids are assigned to the gridbrain, and the gridbrain to the agent.
+<pre><code>
 
 -- Reds
 --------------------------------------------------------------------------------
@@ -163,11 +266,6 @@ red:setLaserCostFactor(laserCostFactor)
 red:setLaserHitDuration(laserHitDuration)
 red:setKeepBodyOnExpirationDeath(keepBodyOnExpire)
 red:setFeedCenter(0.5)
-
---redFoodSym = SymbolFloat(redFood)
---redFoodTable = SymbolTable(redFoodSym, foodTableCode)
---red:addSymbolTable(redFoodTable)
---red:setSymbolName("food", foodTableCode, redFoodSym:getID())
 
 redFeedSym = SymbolFloat(redFeed)
 redFeedTable = SymbolTable(redFeedSym)
@@ -244,6 +342,10 @@ grid2:setComponentSet(betaSet)
 brain:addGrid(grid2, "beta")
 
 red:setBrain(brain)
+
+</code></pre>
+The same thing is now done for the blue species. In a scenario with many species, an interesting alternative would be to define a species initialization function, that takes as parameters the features of the species that can vary. In this case, the parameter used would be the color of the species.
+<pre><code>
 
 -- Blues
 --------------------------------------------------------------------------------
@@ -354,6 +456,12 @@ brain:addGrid(grid2, "beta")
 
 blue:setBrain(brain)
 
+</code></pre>
+Next we initialize the population dynamics module, which takes care of object creation and removal. We create an instance of <code>PopDynSEGA</code>, which implements the Simulation Embedded Genetic Algorithm (SEGA). The population dynamics object is then assigned to the simulation object.
+<p>
+Then we create a <code>Species</code> object for each species: blue agents, red agents and plants. When creating a species object, we specify the base object for the species, the population size and the species genetic buffer size. The species objects are where we define he evolutionary goals of the species, as well as some evolutionary parameters like recombination probability, group factor and fitness ageing. Each species object is added to the population dynamics object.
+<pre><code>
+
 -- Population Dynamics
 --------------------------------------------------------------------------------
 
@@ -365,7 +473,6 @@ if blueRand then
     blueSpecies:addGoal(SimObj2D.FITNESS_RANDOM)
 else
     blueSpecies:addGoal(SimObj2D.FITNESS_LASER_SCORE)
-    --blueSpecies:addGoal(SimObj2D.FITNESS_ENERGY_GAINED_SUM)
 end
 blueSpecies:setFitnessAging(fitnessAging)
 blueSpecies:setRecombineProb(recombineProb)
@@ -388,6 +495,12 @@ plantSpecies:addGoal(SimObj2D.FITNESS_RANDOM)
 popDyn:addSpecies(plantSpecies)
 
 popDyn:setEvolutionStopTime(evolutionStopTime)
+
+</code></pre>
+We now define a human agent, if the value of variable <code>humanAgent</code> is <code>true</code>. This is similar to defining a base agent object, but instead of adding it to a species object, we add it directly to the simulation. We then set its initial position in the world and set it as the human controlled object in the simulation object.
+<p>
+A human agent is controlled by a human through the keyboard. In this case, arrow keys cause the agent to move, the "e" key causes to eat to attempt to eat the nearest object and the space key causes it to fire a shot.
+<pre><code>
 
 -- Human Agent
 --------------------------------------------------------------------------------
@@ -453,6 +566,16 @@ if humanAgent then
     sim:setHuman(human)
 end
 
+</code></pre>
+
+In the following segment we initialize the logging modules. These modules record information about the history of the simulation in <a href="http://en.wikipedia.org/wiki/Comma-separated_values">comma separated values (csv)</a> files. One <code>StatCommon</code> module is created for each agent species. This modules provides basic statistical information about the set of dead agents in a species for periods of the simulation. We set the file name associated with each module, using the previously defined <code>logSuffix</code>. We then set the object fields for which we wish to gather data. A column in the log file will be generated for the average, median, maximum, minimum and standard deviation of each field. A row will be generated every p simulation cycles, where p is the log interval. We assign each <code>StatCommon</code> object to their respective specie's object.
+<p>
+If the <code>logBrains</code> variable has the value <code>true</code>, we also create <code>LogBestBrain</code> logging modules. These modules log a representation of the brain of the best agent found during each log interval. The brains are represented as graphics in <a href="http://en.wikipedia.org/wiki/Svg">scalable vector graphics (svg)</a> format. The <code>setBufferDump</code> method of species objects also allows us to dump the representation of the brain of each agent contained in the genetic buffer of the species at the end of each log interval.
+<p>
+The log time interval is generic to all logging modules and is set on the population dynamics object.
+
+<pre><code>
+
 -- Logs and Statistics
 --------------------------------------------------------------------------------
 
@@ -512,8 +635,15 @@ redSpecies:setBufferDump("bdump_red" .. logSuffix)
 
 popDyn:setLogTimeInterval(logTimeInterval)
 
+</code></pre>
+
+Finally we just initialize graphics and run the simulation. The parameters in the <code>initGraphics</code> method allow us to set the window size, full screen mode, and no graphic mode. The ability to run the simulation with no graphical visualization is useful for machines with no display and faster experiment runs where visualization is not important.
+
+<pre><code>
+
 -- Start Simulation
 --------------------------------------------------------------------------------
 
 sim:initGraphics(screenWidth, screenHeight, fullScreen, noGraphics)
 sim:run()
+</code></pre>

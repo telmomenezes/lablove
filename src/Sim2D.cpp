@@ -495,34 +495,6 @@ void Sim2D::drawBeforeObjects()
         }
     }
 
-    if (mShowViewRange)
-    {
-        list<SimObj*>::iterator iterObj;
-
-        for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
-        {
-            SimObj2D* obj = (SimObj2D*)(*iterObj);
-
-            if (obj->mType == SimObj::TYPE_AGENT)
-            {
-                float beginAngle = normalizeAngle(obj->mRot - obj->mHalfViewAngle);
-                float endAngle = normalizeAngle(obj->mRot + obj->mHalfViewAngle);
-
-                if (beginAngle > endAngle)
-                {
-                    endAngle += M_PI * 2.0f;
-                }
-
-                art_setColor(150, 150, 150, 100);
-                art_fillCircleSlice(obj->mX,
-                                obj->mY,
-                                obj->mViewRange,
-                                beginAngle,
-                                endAngle);
-            }
-        }
-    }
-
     list<VisualEvent*>::iterator iterEvent;
 
     while (mVisualEvents.size() > 100)
@@ -561,12 +533,40 @@ void Sim2D::drawBeforeObjects()
             iterEvent++;
         }
     }
+
+    if (mShowViewRange)
+    {
+        list<SimObj*>::iterator iterObj;
+
+        for (iterObj = mObjects.begin(); iterObj != mObjects.end(); ++iterObj)
+        {
+            SimObj2D* obj = (SimObj2D*)(*iterObj);
+
+            if (obj->mType == SimObj::TYPE_AGENT)
+            {
+                float beginAngle = normalizeAngle(obj->mRot - obj->mHalfViewAngle);
+                float endAngle = normalizeAngle(obj->mRot + obj->mHalfViewAngle);
+
+                if (beginAngle > endAngle)
+                {
+                    endAngle += M_PI * 2.0f;
+                }
+
+                art_setColor(150, 150, 150, 100);
+                art_fillCircleSlice(obj->mX,
+                                obj->mY,
+                                obj->mViewRange,
+                                beginAngle,
+                                endAngle);
+            }
+        }
+    }
 }
 
 void Sim2D::drawTerrain()
 {
-    art_setColor(0, 255, 0, 255);
-    art_setTexture(mBackgroundTexture);
+    art_setColor(255, 255, 255, 255);
+    //art_setTexture(mBackgroundTexture);
     art_fillRectangle(0, 0, mWorldWidth, mWorldLength);
     art_clearTexture();
 }
@@ -1008,7 +1008,7 @@ void Sim2D::processLaserShots()
 
 void Sim2D::drawLaserShots()
 {
-    art_setColor(255, 255, 255, 255);
+    art_setColor(0, 0, 0, 255);
     art_setLineWidth(1.0f);
 
     for (list<Laser2D>::iterator iterLaser = mLaserShots.begin();

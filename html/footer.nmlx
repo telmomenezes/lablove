@@ -1,0 +1,11 @@
+    </div>
+	<br clear="all" /><!-- without this little <br /> NS6 and IE5PC do not stretch the frame div down to encopass the content DIVs -->
+</div>
+
+<div id="footer">
+   Copyright (C) 2008 Telmo Menezes.
+   <br />
+   Generated with <a href="http://telmomenezes.com/nanon">nanon</a>
+</div>
+</body>
+</html>

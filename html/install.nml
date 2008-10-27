@@ -1,0 +1,7 @@
+<nanon file="header.nmlx" title="Welcome" />
+
+<strong>nanon</strong> is a command line tool written in Python. It needs Python 2.3 or greater.
+<p>
+To install <strong>nanon</strong> just copy the <code>nanon</code> file to a directory in systems's binaries path.
+
+<nanon file="footer.nmlx" />

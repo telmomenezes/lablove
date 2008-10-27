@@ -391,8 +391,10 @@ void SimObj2D::draw()
         x3 = mX + (cosf(a3) * mShapeSize);
         y3 = mY + (sinf(a3) * mShapeSize);
 
-        art_setLineWidth(2.0f);
         art_fillTriangle(x1, y1, x2, y2, x3, y3);
+
+        art_setLineWidth(1.0f);
+        art_setColor(0, 0, 0, 255);
         art_drawTriangle(x1, y1, x2, y2, x3, y3);
 
         //art_drawLine(mX, mY, mX + (cosf(a1) * 300.0f), mY + (sinf(a1) * 300.0f));
@@ -1161,7 +1163,7 @@ void SimObj2D::act()
         }
         if (mHumanSpeak)
         {
-            actionSpeakSymbol = new SymbolRGB(255, 0, 0);
+            actionSpeakSymbol = new SymbolRGB(130, 12, 138);
             actionSpeakParam = 1.0f;
         }
         if (mHumanFire)
