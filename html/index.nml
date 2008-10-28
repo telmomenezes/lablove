@@ -2,7 +2,9 @@
 
 <h1>Welcome</h1>
 
-<img src="screenshot.gif" width="300" class="picture" />
+<a href="screenshot.html">
+    <img src="screenshot.gif" width="300" border="0" class="picture" />
+</a>
 
 LabLOVE is an open source software platform for evolutionary multi-agent simulations. It allows for the definition of scenarios where populations of autonomous agents evolve through processes inspired in Darwinian evolution.
 <p>
@@ -12,7 +14,9 @@ Agent controllers are modeled using gridbrain, an artificial brain model created
 <p>
 In its current stage, LabLOVE comes with a two-dimensional continuous simulation environment. Due to its object-oriented and modular design, LabLOVE can be extended to support other simulation environments.
 <p>
-LabLOVE is implemented in C++ for high performance, and experimental scenarios are defined using the Lua scripting language.
+LabLOVE is implemented in C++ for high performance, and experimental scenarios are defined using the <a href="http://www.lua.org">Lua scripting language</a>.
+<p>
+This software tool was developed by Telmo Menezes while working in the <a href="http://ecos.dei.uc.pt">Evolutionary and Complex Systems (ECOS)</a> research group of the University of Coimbra.
 <p>
 The author of LabLOVE can be contacted at telmo /at/ telmomenezes /dot/ com.
 

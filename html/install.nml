@@ -1,7 +1,32 @@
-<nanon file="header.nmlx" title="Welcome" />
+<nanon file="header.nmlx" title="Install" />
 
-<strong>nanon</strong> is a command line tool written in Python. It needs Python 2.3 or greater.
+LabLOVE is currently a source code distribution. That means that to use it, you will have to compile it yourself. It is written in portable C++ code, so it should be possible to compile it in many platforms, including UNIX/Linux/BSD, Mac OS X and Windows 2000/XP/Vista. We have compiled it successfully in several Linux distributions and Mac OS X version 10.5.
 <p>
-To install <strong>nanon</strong> just copy the <code>nanon</code> file to a directory in systems's binaries path.
+We intend to provide binary distributions as soon as possible, but being able to compile LabLOVE is a good thing, since it is a tool meant to be extended. If you are experiencing problems compiling it or want to help with a binary distribution (or contribute in general), please do not hesitate to contact the author.
+
+<h1>Compiling LabLOVE</h1>
+
+To compile LabLOVE you will need the following things:
+
+<ul>
+<li>The LabLOVE <a href="http://sourceforge.net/project/showfiles.php?group_id=189296">source code distribution</a></li>
+<li>A working C++ compilation environment (gcc/cygwin/mingw/etc..)</li>
+<li><a href="http://cmake.org">CMake</a></li>
+<li><a href="http://sourceforge.net/projects/artist">The Artist graphics library</a></li>
+<li><a href="http://www.lua.org">Lua</a> and its libraries</li>
+</ul>
+
+After all the required software and libraries are installed, unzip the LabLOVE distribution file to a directory of your choice. Change to this directory and run the following commands:
+
+<pre><code>
+cmake .
+make
+</code></pre>
+
+To launch LabLOVE, you now just have to run the command <code>./lablove</code>.
+<p>
+To learn how to select and define new experiments, take a look at <a href="howto.html">this page</a>.
+<p>
+Have fun!
 
 <nanon file="footer.nmlx" />
