@@ -1,6 +1,4 @@
-This is a developer release so installation is not yet user friendly.
-
-You will need to compile LabLOVE yourself. To do this you will need
+For now you will need to compile LabLOVE yourself. To do this you will need
 the following:
 
 * CMake (http://www.cmake.org)
@@ -14,3 +12,5 @@ $ make
 $ ./lablove
 
 Edit default.lua to change the experiment to be run.
+
+More info at: http://telmomenezes.com/lablove
