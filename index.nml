@@ -1,36 +1,9 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
-<html>
-  <head>
-    <title>
-        LabLOVE - Welcome
-    </title>
-    <link rel="stylesheet" href="style.css" type="text/css">
-  </head>
-  
-  <body>
-  <div id="frame">
-    <div id="header">
-      <img src="lablove.gif"></img>
-      <h2>Laboratory of Life on a Virtual Environment</h2>
-    </div>
-    <div id="leftbar">
-        <a href="index.html">Welcome</a>
-        <a href="motivation.html">Motivation</a>
-        <a href="http://sourceforge.net/project/showfiles.php?group_id=189296">Download</a>
-        <a href="install.html">Install</a>
-        <a href="howto.html">How to use</a>
-        <a href="publications.html">Publications</a>
-        <a href="http://telmomenezes.com">Author</a>
-        <a href="license.html">License</a>
-	</div>
-
-    <div id="centerbar">
-
+<nanon file="header.nmlx" title="Welcome" />
 
 <h1>Welcome</h1>
 
 <a href="screenshot.html">
-    <img src="screenshot.gif" width="300" border="0" class="picture"></img>
+    <img src="screenshot.gif" width="300" border="0" class="picture" />
 </a>
 
 LabLOVE is an open source software platform for evolutionary multi-agent simulations. It allows for the definition of scenarios where populations of autonomous agents evolve through processes inspired in Darwinian evolution.
@@ -47,15 +20,4 @@ This software tool was developed by Telmo Menezes while working in the <a href="
 <p>
 The author of LabLOVE can be contacted at telmo /at/ telmomenezes /dot/ com.
 
-    </div>
-	<br clear="all"></br><!-- without this little <br /> NS6 and IE5PC do not stretch the frame div down to encopass the content DIVs -->
-</div>
-
-<div id="footer">
-   Copyright (C) 2008 Telmo Menezes.
-   <br></br>
-   Generated with <a href="http://telmomenezes.com/nanon">nanon</a>
-</div>
-</body>
-</html>
-
+<nanon file="footer.nmlx" />

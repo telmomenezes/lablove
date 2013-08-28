@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>
+        LabLOVE - Motivation
+    </title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+  </head>
+  
+  <body>
+  <div id="frame">
+    <div id="header">
+      <img src="lablove.gif"></img>
+      <h2>Laboratory of Life on a Virtual Environment</h2>
+    </div>
+    <div id="leftbar">
+        <a href="index.html">Welcome</a>
+        <a href="motivation.html">Motivation</a>
+        <a href="http://sourceforge.net/project/showfiles.php?group_id=189296">Download</a>
+        <a href="install.html">Install</a>
+        <a href="howto.html">How to use</a>
+        <a href="publications.html">Publications</a>
+        <a href="http://telmomenezes.com">Author</a>
+        <a href="license.html">License</a>
+	</div>
+
+    <div id="centerbar">
+
+
+<h1>Motivation, Concepts and Models behind LabLOVE</h1>
+
+The growing interest in multi-agent simulations, influenced by the advances in fields like complex adaptive systems and artificial life is related to a modern direction in computational intelligence research. Instead of building isolated artificial intelligence systems from the top-down, this new approach attempts to design systems where a population of agents and the environment interact and adaptation processes take place. Intelligence can be seen as the internal model of agents. In adaptive systems, this internal model can develop as the agent adapts to the environment. In nature, adaption encompasses varied processes, from neo Darwinian evolution to learning in the brain or in the immune system. We will focus on adaptation based on evolution, which may be considered the fundamental driving force of complexification in Nature.
+<p>
+We developed the gridbrain, a model that attempts to address several important limitations of current artificial brains used in evolutionary multi-agent systems. Two main classes of models are in use nowadays: symbolic approaches like production rule systems or decision trees and artificial neural networks. Evolutionary systems based on IF/THEN rules tend to lead to simple, reactive agents. They can be very effective in developing models to abstract and test ideas about biological, social or other systems, but they are limiting when it comes to evolving more complex computational intelligence. Artificial neural networks are inspired in biological nervous systems. A multitude of algorithms exist for both learning and evolution of ANNs, with many successful implementations. Recurrent neural networks can be shown to be Turing-complete and are theoretically capable of complex computations. It is important to note, however, that biological neural networks are analogic and highly parallel systems, while modern computers are digital and sequential devices. The implementation of artificial neural networks on digital computers demands for a significant simplification of the biological models. In neural networks, neurons are the building blocks. We believe that for the purpose of evolving artificial brains in multi-agent simulations, it is interesting to experiment with computational building blocks that are a more natural fit to von Neumann's modern digital computer model. We deconstruct the von Neumann machine into a set of computational building blocks that fall into the categories of input/output, boolean logic, arithmetic operations, information aggregation, memory and clocks. This way we expect to facilitate the evolution of systems that take advantage of the processing capabilities of the computer, and more easily develop behaviors that require memory and synchronization.
+<p>
+Another limitation of agent models in current evolutionary multi-agent simulation is the sensory system. Many such simulations use simple 2D grid models where an agent is only capable of perceiving one other world entity per simulation cycle. As we move towards continuous simulations and more sophisticated sensors like vision or audition, we become confronted with the problem of dealing with multiple-object perceptions per simulation cycle. A common approach to this problem is to pre-design a layer of translation for the agent's brain. In rule systems this can be done by defining input variables like number_of_visible_food_items or actions like go_to_nearest_food_item. In artificial neural networks, it is common to define fixed sequences of input neurons, sometimes called radars, that fire according to the distribution of a certain type of entity in the agent's vision range. These radars are predefined for certain types or properties of world objects. Predefinition of sensory translations limit the range of behaviors that the agent may evolve. In the architecture we present, this problem is addressed by dividing the brain in sensory layers (alpha grids) and a decision layer (beta grid). In a way loosely inspired by the human brain, a layer exists for each sensory channel (ex: vision, audition, self state). In a brain cycle, alpha grids first evaluates each of the objects perceived by their sensory channel at the moment and extracts general information, which is then transmitted to the beta grid, that then fires actions.
+<p>
+It is our goal to create systems where the perception layers can evolve with a great degree of freedom. We conceived a world definition model where object properties are defined as symbols. These symbols, like variables in programming languages, have types. Possible types include RGB color values, character strings and even tree structures. Agents have internal symbol tables for each symbol type used. For each symbol type, a method to determine the distance between two symbols is provided. Perception components in alpha grids are associated with internal symbols, and calculate the distance between this internal symbol and a symbol of the same type perceived in an external object. During evolution, alpha grids may increase their ability to establish distinctions in the environment by increasing the amount of internal symbols against which distance comparisons can be made.
+<p>
+The gridbrain is constituted by a set of rectangular grids of components and a set of feed-forward weighted connections between these components. Inter-grid connections are allowed, from any alpha grid to the beta grid. Some components have an internal state that is preserved across computation cycles, for example clocks. Others, like memory components, are linked to memory cells, which also contain persistent information.
+<p>
+We defined a set of mutation and recombination genetic operators that can be used to evolve gridbrains from initial empty configurations, allowing each grid to grow independently according to the demands of the environment. We describe mechanisms by which symbol tables and memory adapt their size as gridbrains evolve.
+<p>
+For the purpose of experimenting with our model, we developed a simulation tool called LabLOVE that is available to the scientific community under an open-source GPL license. LabLOVE implements the gridbrain model as well as multi-agent simulation environments. It is designed in an object oriented, modular fashion for easy extension to new environments, and it was developed in C++ for performance. It provides real-time graphical visualization, data gathering modules and an experiment configuration system using the LUA scripting language.
+<p>
+We defined experimental scenarios in LabLOVE where we evolved agents to operate in video-game like environments. We have been able to evolve agents capable of cooperating to perform task, synchronize behaviors and communicate. We have had success in scenarios where agents make use of information from both visions and audition sensory channels to form decisions.
+<p>
+We expect our work to have application to several systems that require autonomous agent intelligence, for example robotics, biological or social simulations and virtual environments like video games.
+
+    </div>
+	<br clear="all"></br><!-- without this little <br /> NS6 and IE5PC do not stretch the frame div down to encopass the content DIVs -->
+</div>
+
+<div id="footer">
+   Copyright (C) 2008 Telmo Menezes.
+   <br></br>
+   Generated with <a href="http://telmomenezes.com/nanon">nanon</a>
+</div>
+</body>
+</html>
+
