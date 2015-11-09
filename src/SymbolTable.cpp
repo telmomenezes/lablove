@@ -316,7 +316,7 @@ void SymbolTable::printDebug()
         iterSymbol != mSymbols.end();
         iterSymbol++)
     {
-        printf("%d: ", (*iterSymbol).first);
+        printf("%llu: ", (*iterSymbol).first);
         printf("%s\n", ((*iterSymbol).second)->toString().c_str());
     }
 }

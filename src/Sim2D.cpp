@@ -1098,6 +1098,8 @@ bool Sim2D::onKeyDown(Art_KeyCode key)
             return false;
         }
     }
+
+    return false;
 }
 
 bool Sim2D::onKeyUp(Art_KeyCode key)
@@ -1121,6 +1123,8 @@ bool Sim2D::onKeyUp(Art_KeyCode key)
     case ART_KEY_N:
         mShowEnergy = !mShowEnergy;
         return true;
+    default:
+        break;
     }
 
     if (mHumanAgent != NULL)
@@ -1145,6 +1149,8 @@ bool Sim2D::onKeyUp(Art_KeyCode key)
         case ART_KEY_SPACE:
             mHumanAgent->mHumanFire = false;
             return true;
+        default:
+            break;
         }
     }
 

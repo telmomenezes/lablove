@@ -173,7 +173,7 @@ void Species::bufferDump(gbULINT time, Simulation* sim)
             FILE* file = fopen(fileName, "w");
             if (file != NULL)
             {
-                fprintf(file, obj->getBrain()->write().c_str());
+                fprintf(file, "%s", obj->getBrain()->write().c_str());
                 fflush(file);
                 fclose(file);
             }
@@ -544,7 +544,7 @@ void Species::onCycle(gbULINT time)
 
         float avgDistance = totalDistance / comps;
 
-        fprintf(mFile, "%d, ", time / 1000);
+        fprintf(mFile, "%llu, ", time / 1000);
         fprintf(mFile, "%f\n", avgDistance);
         fflush(mFile);
     }

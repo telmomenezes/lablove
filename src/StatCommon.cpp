@@ -39,15 +39,15 @@ void StatCommon::init()
         list<float> valueList;
         mValueLists.push_back(valueList);
         fprintf(mFile, ",%s", (*iterField).c_str());
-        fprintf(mFile, "_med", (*iterField).c_str());
+        fprintf(mFile, "_med_%s", (*iterField).c_str());
         fprintf(mFile, ",%s", (*iterField).c_str());
-        fprintf(mFile, "_avg", (*iterField).c_str());
+        fprintf(mFile, "_avg_%s", (*iterField).c_str());
         fprintf(mFile, ",%s", (*iterField).c_str());
-        fprintf(mFile, "_sd", (*iterField).c_str());
+        fprintf(mFile, "_sd_%s", (*iterField).c_str());
         fprintf(mFile, ",%s", (*iterField).c_str());
-        fprintf(mFile, "_min", (*iterField).c_str());
+        fprintf(mFile, "_min_%s", (*iterField).c_str());
         fprintf(mFile, ",%s", (*iterField).c_str());
-        fprintf(mFile, "_max", (*iterField).c_str());
+        fprintf(mFile, "_max_%s", (*iterField).c_str());
     }
 
     fprintf(mFile, "\n");
@@ -73,8 +73,8 @@ void StatCommon::process(SimObj* obj, Simulation* sim)
 
 void StatCommon::dump(gbULINT time, double realTime)
 {
-    fprintf(mFile, "%d", time / 1000);
-    fprintf(mFile, ",%d", mCount);
+    fprintf(mFile, "%llu", time / 1000);
+    fprintf(mFile, ",%llu", mCount);
 
     for (list<list<float> >::iterator iterValueList = mValueLists.begin();
         iterValueList != mValueLists.end();

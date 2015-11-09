@@ -472,7 +472,7 @@ void Gridbrain::mutateChangeParam(float prob)
 
 void Gridbrain::debugMutationsCount()
 {
-    printf("CON+:%d CON-:%d SPL:%d JOI:%d CHG:%d CHIN:%d SWP:%d\n",
+    printf("CON+:%ld CON-:%ld SPL:%ld JOI:%ld CHG:%ld CHIN:%ld SWP:%ld\n",
             MUTATIONS_ADD_CONN,
             MUTATIONS_REM_CONN,
             MUTATIONS_SPLIT_CONN,

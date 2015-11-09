@@ -93,7 +93,7 @@ void CompPER::print()
 {
     printf("%s", getName().c_str());
     printf("(%d, %d, ", mInputType, mOrigSymTable);
-    printf("%d, ", mOrigSymID);
+    printf("%llu, ", mOrigSymID);
     printf("%d)", mTargetSymTable);
     printf("  [%d, %d, %d]", mColumn, mRow, mGrid);
 }

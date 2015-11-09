@@ -49,7 +49,7 @@ void StatTime::dump(gbULINT time, double realTime)
     mLastSimTime = time;
     mLastRealTime = realTime;
 
-    fprintf(mFile, "%d,%f,%f", time, realTime, cps);
+    fprintf(mFile, "%llu,%f,%f", time, realTime, cps);
 
     fprintf(mFile, "\n");
     fflush(mFile);

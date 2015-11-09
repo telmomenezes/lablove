@@ -149,9 +149,9 @@ SET(UNIT_TEST_FILES
         gridbrain/tests/TestGridbrainComponentSet.cpp
         )
 
-IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    SET(EXTRA_SRC_FILES ${EXTRA_SRC_FILES} src/MacOSXSDL/SDLMain.m)
-ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+#IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+#    SET(EXTRA_SRC_FILES ${EXTRA_SRC_FILES} src/MacOSXSDL/SDLMain.m)
+#ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 ########### Include dirs ###########
 

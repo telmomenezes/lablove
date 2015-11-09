@@ -264,6 +264,8 @@ bool Gridbrain::selectGene(gbULINT geneID, bool select)
 
         conn = (Connection*)conn->mNextGlobalConnection;
     }
+
+    return true;
 }
 
 void Gridbrain::selectConnUniform(Gridbrain* gb1, Gridbrain* gb2)
@@ -505,6 +507,8 @@ int Gridbrain::compEquivalence(Component* comp1, Component* comp2, CompEquivalen
         {
             return 1;
         }
+        break;
+    default:
         break;
     }
 

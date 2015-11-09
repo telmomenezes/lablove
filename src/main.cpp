@@ -60,7 +60,7 @@ using std::map;
 map<string, string> gCommandParameters;
 string gScriptFile;
 
-int parseCommandLine(int argc, char *argv[])
+void parseCommandLine(int argc, char *argv[])
 {
     gScriptFile = "default.lua";
     string paramName = "";

@@ -141,7 +141,7 @@ int Coord::position(Coord gc)
 string Coord::toString()
 {
     char buf[255];
-    sprintf(buf, "(%d, %d)", mDepth, mBranch);
+    sprintf(buf, "(%llu, %llu)", mDepth, mBranch);
     return string(buf);
 }
 

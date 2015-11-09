@@ -68,7 +68,7 @@ void LogBestBrain::dump(gbULINT time, double realTime)
 
     if (file != NULL)
     {
-        fprintf(file, mBrainString.c_str());
+        fprintf(file, "%s", mBrainString.c_str());
         fflush(file);
         fclose(file);
     }

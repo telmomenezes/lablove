@@ -107,9 +107,9 @@ string Gridbrain::write()
     string svg;
     char buffer[1000];
 
-    char* black = "black";
-    char* gray = "#707070";
-    char* color = black;
+    const char* black = "black";
+    const char* gray = "#707070";
+    const char* color = black;
 
     svg = "<?xml version=\"1.0\" standalone=\"no\"?>\n";
     svg += "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n";

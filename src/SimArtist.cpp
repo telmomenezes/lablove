@@ -149,7 +149,7 @@ void SimArtist::drawTimes()
 
         char text[255];
 
-        sprintf(text, "Sim Time: %d Kcycles", mSimulationTime / 1000);
+        sprintf(text, "Sim Time: %llu Kcycles", mSimulationTime / 1000);
         mSimulationTimeText = text;
 
         float totalRealTime = realTime - mInitialRealTime;

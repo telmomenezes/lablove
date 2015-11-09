@@ -62,9 +62,9 @@ bool Gene::isEquivalentTarget(Gene* tag)
 
 void Gene::print()
 {
-    printf(" g: %d", mGeneID);
-    printf(" o: %d", mOrigID);
-    printf(" t: %d", mTargID);
+    printf(" g: %llu", mGeneID);
+    printf(" o: %llu", mOrigID);
+    printf(" t: %llu", mTargID);
 }
 
 }

@@ -94,7 +94,7 @@ void SymbolUL::mutate()
 string SymbolUL::toString()
 {
     char str[255];
-    sprintf(str, "%d", mUL);
+    sprintf(str, "%llu", mUL);
     return str;
 }
 

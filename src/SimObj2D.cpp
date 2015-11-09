@@ -723,7 +723,7 @@ void SimObj2D::perceive()
     float distance;
     float angle;
 
-    while (target = mSim2D->nextCollision(distance, angle))
+    while ((target = mSim2D->nextCollision(distance, angle)))
     {
         if (this != target)
         {
@@ -1472,7 +1472,7 @@ void SimObj2D::sendMessage(Symbol* sym, float param)
     float distance;
     float angle;
 
-    while (target = mSim2D->nextCollision(distance, angle))
+    while ((target = mSim2D->nextCollision(distance, angle)))
     {
         if ((target->mType == SimObj::TYPE_AGENT)
             && (target != this))
@@ -1645,7 +1645,7 @@ void SimObj2D::calcProxDist()
     float w = mSim2D->getWorldWidth();
     float h = mSim2D->getWorldLength();
 
-    float maxDist = sqrtf((powf(w, 2)) + (h, 2));
+    float maxDist = sqrtf((powf(w, 2)) + powf(h, 2));
 
     mIntraDist = maxDist;
     mInterDist = maxDist;
