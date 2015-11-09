@@ -19,10 +19,11 @@
 
 #include "SymbolTable.h"
 #include "Simulation.h"
+#include "Random.h"
+
 
 int SymbolTable::NEXT_SYMBOL_TABLE_ID = 0;
-mt_distribution* SymbolTable::mDistIndex = gDistManager.getNewDistribution();
-mt_distribution* SymbolTable::mDistRecombine = gDistManager.getNewDistribution();
+
 
 SymbolTable::SymbolTable()
 {
@@ -187,7 +188,7 @@ Symbol* SymbolTable::selectSymbol(Symbol* sym, SymbolTable* table2)
     sym1->mUsed = false;
     sym2->mUsed = false;
 
-    unsigned int select = mDistRecombine->iuniform(0, 2);
+    unsigned int select = gRandom.iuniform(0, 2);
 
     if (select == 0)
     {
@@ -245,7 +246,7 @@ gbULINT SymbolTable::addRandomSymbol()
 
 gbULINT SymbolTable::getRandomSymbolId()
 {
-    unsigned int index = mDistIndex->iuniform(0, mSymbols.size());
+    unsigned int index = gRandom.iuniform(0, mSymbols.size());
     
     map<gbULINT, Symbol*>::iterator iterSymbol = mSymbols.begin();
 

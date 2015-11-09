@@ -22,7 +22,6 @@
 
 #include "Symbol.h"
 #include "Orbit.h"
-#include "RandDistManager.h"
 #include "types.h"
 
 #include <map>
@@ -85,8 +84,6 @@ protected:
     Symbol* selectSymbol(Symbol* sym, SymbolTable* table2);
 
     static int NEXT_SYMBOL_TABLE_ID;
-    static mt_distribution* mDistIndex;
-    static mt_distribution* mDistRecombine;
 
     int mID;
     gbULINT mReferenceSymbolID;

@@ -19,11 +19,10 @@
 
 #include "Species.h"
 #include "Orbit.h"
+#include "Random.h"
 
 #include <sys/stat.h>
 
-mt_distribution* Species::mDistOrganism = gDistManager.getNewDistribution();
-mt_distribution* Species::mDistRecombine = gDistManager.getNewDistribution();
 
 Species::Species(lua_State* luaState)
 {
@@ -204,7 +203,7 @@ void Species::xoverMutateSend(int bodyID, bool init, SimObj* nearObj, SimObj* de
         if (mQueenState >= (int)(((float)mPopulation) * mKinFactor))
         {
             parent1 = mCurrentQueen;
-            parent2 = mDistOrganism->iuniform(0, mBufferSize - 1);
+            parent2 = gRandom.iuniform(0, mBufferSize - 1);
             if (parent2 >= parent1)
             {
                 parent2++;
@@ -236,10 +235,10 @@ void Species::xoverMutateSend(int bodyID, bool init, SimObj* nearObj, SimObj* de
     }
     else
     {
-        parent1 = mDistOrganism->iuniform(0, mBufferSize);
+        parent1 = gRandom.iuniform(0, mBufferSize);
         if (mBufferSize > 1)
         {
-            parent2 = mDistOrganism->iuniform(0, mBufferSize - 1);
+            parent2 = gRandom.iuniform(0, mBufferSize - 1);
             if (parent2 >= parent1)
             {
                 parent2++;
@@ -257,7 +256,7 @@ void Species::xoverMutateSend(int bodyID, bool init, SimObj* nearObj, SimObj* de
     {
         SimObj* org = mBuffer[parent1];
 
-        float prob = mDistRecombine->uniform(0.0f, 1.0f);
+        float prob = gRandom.uniform(0.0f, 1.0f);
         if ((prob < mRecombineProb) && mEvolutionOn)
         {
             // Recombine
@@ -441,7 +440,7 @@ void Species::onOrganismDeath(SimObj* org)
     }
 
     // Challenges
-    unsigned int objPos = mDistOrganism->iuniform(0, mBufferSize);
+    unsigned int objPos = gRandom.iuniform(0, mBufferSize);
     SimObj* org2 = mBuffer[objPos];
     float totalFitness1 = 0.0f;
     float totalFitness2 = 0.0f;
@@ -497,7 +496,7 @@ void Species::onOrganismDeath(SimObj* org)
 
     if (mPopulation > 1)
     {
-        unsigned int refOrgNumber = mDistOrganism->iuniform(0, mPopulation - 1);
+        unsigned int refOrgNumber = gRandom.iuniform(0, mPopulation - 1);
 
         list<SimObj*>* objects = mSimulation->getObjectList();
 

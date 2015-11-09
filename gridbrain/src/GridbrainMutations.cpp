@@ -18,7 +18,7 @@
  */
 
 #include "Gridbrain.h"
-
+#include "Random.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdexcept>
@@ -82,7 +82,7 @@ Connection* Gridbrain::nextRandomConnection()
         return mConnSeqCurrent;
     }
 
-    float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+    float prob = gRandom.uniform(0.0f, 1.0f);
     unsigned int deltaPos = (unsigned int)(ceil(log(prob) / log(mConnSeqProb)));
 
     for (unsigned int i = 0; i < deltaPos; i++)
@@ -125,13 +125,13 @@ unsigned int Gridbrain::generateEventCount(float eventProb, unsigned int popSize
     float nonEventProb = 1.0f - eventProb;
 
     unsigned int count = 0;
-    float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+    float prob = gRandom.uniform(0.0f, 1.0f);
     unsigned int nextPos = (unsigned int)(ceil(log(prob) / log(nonEventProb)));
 
     while (nextPos <= (double)popSize)
     {
         count++;
-        prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+        prob = gRandom.uniform(0.0f, 1.0f);
         nextPos += (unsigned int)(ceil(log(prob) / log(nonEventProb)));
     }
 
@@ -153,7 +153,7 @@ int Gridbrain::nextRandomComponent()
         return mCompSeqPos;
     }
 
-    float prob = mDistMutationsProb->uniform(0.0f, 1.0f);
+    float prob = gRandom.uniform(0.0f, 1.0f);
     double nextPos = log(prob) / log(mCompSeqProb);
 
     mCompSeqPos += (unsigned int)(ceil(log(prob) / log(mCompSeqProb)));
@@ -175,7 +175,7 @@ Connection* Gridbrain::getRandomConnection()
 
     unsigned int pos;
     Connection* conn = mConnections;
-    pos = mDistConnections->iuniform(0, mConnectionsCount);
+    pos = gRandom.iuniform(0, mConnectionsCount);
     
     unsigned int i = 0;
     while (i < pos)
@@ -251,13 +251,13 @@ void Gridbrain::mutateSplitConnection(float prob)
             }
             if (absDeltaX > 1)
             {
-                unsigned int middleColumn = mDistConnections->iuniform(1, absDeltaX);
+                unsigned int middleColumn = gRandom.iuniform(1, absDeltaX);
                 if (deltaX < 0)
                 {
                     middleColumn = -middleColumn;
                 }
                 x3 = x1 + middleColumn;
-                y3 = mDistConnections->iuniform(0, gridOrig->getHeight());
+                y3 = gRandom.iuniform(0, gridOrig->getHeight());
                 g3 = g1;
             }
         }
@@ -280,7 +280,7 @@ void Gridbrain::mutateSplitConnection(float prob)
                 unsigned int candidateCells1 = candidateCols1 * gridOrig->getHeight();
                 unsigned int candidateCells2 = candidateCols2 * gridTarg->getHeight();
                 unsigned int totalCells = candidateCells1 + candidateCells2;
-                unsigned int pivotCell = mDistConnections->iuniform(0, totalCells);
+                unsigned int pivotCell = gRandom.iuniform(0, totalCells);
                 Grid* pivotGrid;
 
                 if (pivotCell < candidateCells1)
@@ -457,7 +457,7 @@ void Gridbrain::mutateChangeParam(float prob)
 
         Component* comp = mComponents[pos];
         float param = comp->mParam;
-        param += mDistComponents->normal(0.0f, mParamMutationStanDev);
+        param += gRandom.normal(0.0f, mParamMutationStanDev);
         if (param > 1.0f)
         {
             param = 1.0f;

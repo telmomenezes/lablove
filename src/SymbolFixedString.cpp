@@ -18,10 +18,10 @@
  */
 
 #include "SymbolFixedString.h"
+#include "Random.h"
 #include <math.h>
 #include <stdlib.h>
 
-mt_distribution* SymbolFixedString::mDistFixedString = gDistManager.getNewDistribution();
 
 SymbolFixedString::SymbolFixedString(lua_State* luaState)
 {
@@ -96,15 +96,15 @@ void SymbolFixedString::initRandom()
 
     for (unsigned int i = 0; i < mLength; i++)
     {
-        unsigned int pos = mDistFixedString->iuniform(0, mAlphabetLength);
+        unsigned int pos = gRandom.iuniform(0, mAlphabetLength);
         mString += mAlphabet.substr(pos, 1);
     }
 }
 
 void SymbolFixedString::mutate()
 {
-    unsigned int replacePos = mDistFixedString->iuniform(0, mLength);
-    unsigned int charIndex = mDistFixedString->iuniform(0, mAlphabetLength);
+    unsigned int replacePos = gRandom.iuniform(0, mLength);
+    unsigned int charIndex = gRandom.iuniform(0, mAlphabetLength);
     replaceChar(replacePos, charIndex);
 }
 

@@ -18,6 +18,7 @@
  */
 
 #include "Gridbrain.h"
+#include "Random.h"
 
 namespace gb
 {
@@ -275,7 +276,7 @@ void Gridbrain::selectConnUniform(Gridbrain* gb1, Gridbrain* gb2)
         {
             if (gb2->checkGene(conn->mGene.mGeneID))
             {
-                if (mDistRecombine->iuniform(0, 2) == 0)
+                if (gRandom.iuniform(0, 2) == 0)
                 {
                     gb1->selectGene(conn->mGene.mGeneID, true);
                     gb2->selectGene(conn->mGene.mGeneID, false);
@@ -288,7 +289,7 @@ void Gridbrain::selectConnUniform(Gridbrain* gb1, Gridbrain* gb2)
             }
             else
             {
-                if (mDistRecombine->iuniform(0, 2) == 0)
+                if (gRandom.iuniform(0, 2) == 0)
                 {
                     gb1->selectGene(conn->mGene.mGeneID, true);
                 }
@@ -308,7 +309,7 @@ void Gridbrain::selectConnUniform(Gridbrain* gb1, Gridbrain* gb2)
     {
         if (conn->mSelectionState == Connection::SS_UNKNOWN)
         {
-            if (mDistRecombine->iuniform(0, 2) == 0)
+            if (gRandom.iuniform(0, 2) == 0)
             {
                 gb2->selectGene(conn->mGene.mGeneID, true);
             }
@@ -449,7 +450,7 @@ void Gridbrain::recombineUnusedComponents(Gridbrain* gb1, Gridbrain* gb2)
 
                     if (choice1 && choice2)
                     {
-                        if (mDistRecombine->iuniform(0, 2) == 0)
+                        if (gRandom.iuniform(0, 2) == 0)
                         {
                             choice1 = false;
                         }

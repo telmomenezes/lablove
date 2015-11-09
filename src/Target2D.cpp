@@ -19,9 +19,8 @@
 
 #include "Target2D.h"
 #include "Sim2D.h"
+#include "Random.h"
 
-mt_distribution* Target2D::mDistEnergy = gDistManager.getNewDistribution();
-mt_distribution* Target2D::mDistSpeed = gDistManager.getNewDistribution();
 
 Target2D::Target2D(lua_State* luaState) : SimObj2D(luaState)
 {
@@ -49,7 +48,7 @@ Target2D::~Target2D()
 
 void Target2D::initSpeed()
 {
-    float angle = mDistSpeed->uniform(0, M_PI);
+    float angle = gRandom.uniform(0, M_PI);
 
     mSpeedX = cosf(angle) * mSpeed;
     mSpeedY = sinf(angle) * mSpeed;
@@ -62,7 +61,7 @@ SimObj* Target2D::clone()
 
 void Target2D::init()
 {
-    mEnergy = mDistEnergy->uniform(mMinEnergy, mMaxEnergy);
+    mEnergy = gRandom.uniform(mMinEnergy, mMaxEnergy);
     mSize = mEnergy * mEnergySizeFactor;
 
     SimObj2D::init();

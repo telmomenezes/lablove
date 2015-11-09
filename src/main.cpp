@@ -37,6 +37,7 @@
 #include "GridbrainLua.h"
 #include "CompPER.h"
 #include "CompACT.h"
+#include "Random.h"
 
 #if defined(__WIN32)
 #define WIN32_LEAN_AND_MEAN
@@ -58,8 +59,6 @@ using std::map;
 
 map<string, string> gCommandParameters;
 string gScriptFile;
-
-mt_distribution* gDistMain = gDistManager.getNewDistribution();
 
 int parseCommandLine(int argc, char *argv[])
 {
@@ -123,14 +122,14 @@ int randomZeroToOne(lua_State *luaState)
         lua_error(luaState);
     }
     
-    lua_pushnumber(luaState, gDistMain->uniform(0.0f, 1.0f));
+    lua_pushnumber(luaState, gRandom.uniform(0.0f, 1.0f));
     return 1;
 }
 
 int main(int argc, char *argv[])
 {
     parseCommandLine(argc, argv);
-    lua_State* luaState = lua_open();
+    lua_State* luaState = luaL_newstate();   
 
     // Disable LUA's garbage collector
     lua_gc(luaState, LUA_GCSTOP, 0);    

@@ -18,14 +18,15 @@
  */
 
 #include "CompCLK.h"
+#include "Random.h"
+
 
 namespace gb
 {
 
-mt_distribution* CompCLK::mDistRand = gDistManager.getNewDistribution();
-
 CompCLK::CompCLK()
 {
+    mParam = 0.0f;
     mInit = false;
     mLastInput = 0.0f;
 }
@@ -48,7 +49,12 @@ void CompCLK::reset(int pass, unsigned int entity)
     {
         mTriggerInterval = (gbULINT)(5000.0f * mParam);
         //mTimeToTrigger = mTriggerInterval;
-        mTimeToTrigger = mDistRand->iuniform(0, mTriggerInterval);
+        if (mTriggerInterval == 0) {
+            mTimeToTrigger = -1;    
+        }
+        else {
+            mTimeToTrigger = gRandom.iuniform(0, mTriggerInterval);
+        }
         mInit = true;
     }
 

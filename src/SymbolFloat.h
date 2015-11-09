@@ -23,7 +23,6 @@
 #include "Simulation.h"
 #include "Symbol.h"
 #include "Orbit.h"
-#include "RandDistManager.h"
 
 class SymbolFloat : public Symbol
 {
@@ -53,8 +52,6 @@ public:
     static Orbit<SymbolFloat>::NumberGlobalType mNumberGlobals[];
 
 protected:
-    static mt_distribution* mDistFloat;
-
     float mFloat;
     float mMax;
     float mMin;

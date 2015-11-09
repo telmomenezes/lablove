@@ -87,9 +87,6 @@ protected:
     void xoverMutateSend(int bodyID, bool init=false, SimObj* nearObj=NULL, SimObj* deadObj=NULL);
     void bufferDump(gbULINT time, Simulation* sim);
 
-    static mt_distribution* mDistOrganism;
-    static mt_distribution* mDistRecombine;
-
     vector<SimObj*> mBuffer;
     vector<Gridbrain*> mBrainBuffer;
     list<Goal> mGoals; 

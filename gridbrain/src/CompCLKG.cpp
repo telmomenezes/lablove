@@ -18,11 +18,11 @@
  */
 
 #include "CompCLKG.h"
+#include "Random.h"
+
 
 namespace gb
 {
-
-mt_distribution* CompCLKG::mDistRand = gDistManager.getNewDistribution();
 
 CompCLKG::CompCLKG()
 {
@@ -47,7 +47,7 @@ void CompCLKG::reset(int pass, unsigned int entity)
     {
         mTriggerInterval = (gbULINT)(5000.0f * mParam);
         //mTimeToTrigger = mTriggerInterval;
-        mTimeToTrigger = mDistRand->iuniform(0, mTriggerInterval);
+        mTimeToTrigger = gRandom.iuniform(0, mTriggerInterval);
         mInit = true;
     }
 

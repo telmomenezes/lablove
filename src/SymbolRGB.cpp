@@ -18,10 +18,10 @@
  */
 
 #include "SymbolRGB.h"
+#include "Random.h"
 #include <math.h>
 #include <stdlib.h>
 
-mt_distribution* SymbolRGB::mDistRGB = gDistManager.getNewDistribution();
 
 SymbolRGB::SymbolRGB(lua_State* luaState)
 {
@@ -100,20 +100,20 @@ bool SymbolRGB::equals(Symbol* sym)
 
 void SymbolRGB::initRandom()
 {
-    mRed = mDistRGB->iuniform(0, 256);
-    mGreen = mDistRGB->iuniform(0, 256);
-    mBlue = mDistRGB->iuniform(0, 256);
+    mRed = gRandom.iuniform(0, 256);
+    mGreen = gRandom.iuniform(0, 256);
+    mBlue = gRandom.iuniform(0, 256);
 }
 
 void SymbolRGB::mutate()
 {
-    int delta = mDistRGB->iuniform(0, 256);
-    int signal = mDistRGB->iuniform(0, 2);
+    int delta = gRandom.iuniform(0, 256);
+    int signal = gRandom.iuniform(0, 2);
     if (signal == 1)
     {
         delta = -delta;
     }
-    unsigned int selector = mDistRGB->iuniform(0, 3);
+    unsigned int selector = gRandom.iuniform(0, 3);
 
     switch (selector)
     {

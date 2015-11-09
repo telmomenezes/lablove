@@ -8,12 +8,15 @@ SET(PACKAGE lablove)
 
 ########### Global settings ###########
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 
 OPTION(DEBUG "Debug settings" OFF)
 OPTION(PROFILE "Profile settings" OFF)
 SET(CMAKE_VERBOSE_MAKEFILE "OFF")
 
+if(APPLE)
+    set(CMAKE_MACOSX_RPATH ON)
+endif()
 
 ########### Compiler settings ###########
 
@@ -50,6 +53,7 @@ SET(SOURCE_FILES
     src/Laser2D.cpp
     src/PopulationDynamics.cpp
     src/PopDynSEGA.cpp
+    src/Random.cpp
     src/Species.cpp
     src/Goal.cpp
     src/Symbol.cpp
@@ -79,9 +83,6 @@ SET(SOURCE_FILES
     gridbrain/src/Connection.cpp
     gridbrain/src/Gene.cpp
     gridbrain/src/ComponentSet.cpp
-    gridbrain/src/RandDistManager.cpp
-    gridbrain/mtwist/mtwist.c
-    gridbrain/mtwist/randistrs.c
     gridbrain/src/CompNUL.cpp
     gridbrain/src/CompIN.cpp
     gridbrain/src/CompOUT.cpp
@@ -154,42 +155,43 @@ ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 ########### Include dirs ###########
 
-INCLUDE(CMakeModules/FindLua.cmake)
+find_package(Lua REQUIRED)
+#INCLUDE(CMakeModules/FindLua.cmake)
 INCLUDE(CMakeModules/FindArtist.cmake)
 
 INCLUDE_DIRECTORIES("src")
 INCLUDE_DIRECTORIES("gridbrain/UnitTest++")
 INCLUDE_DIRECTORIES("gridbrain/mtwist")
 INCLUDE_DIRECTORIES("gridbrain/include")
-INCLUDE_DIRECTORIES(${Lua_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${LUA_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${Artist_INCLUDE_DIR})
 
 ########### Targets ###########
 
 ADD_LIBRARY(llove STATIC ${SOURCE_FILES})
-TARGET_LINK_LIBRARIES(llove llove ${Artist_LIBRARIES} ${Lua_LIBRARIES})
+TARGET_LINK_LIBRARIES(llove ${Artist_LIBRARIES} ${LUA_LIBRARIES})
 
 ADD_EXECUTABLE(lablove ${EXTRA_SRC_FILES} src/main.cpp)
-TARGET_LINK_LIBRARIES(lablove llove ${Artist_LIBRARIES} ${Lua_LIBRARIES})
+TARGET_LINK_LIBRARIES(lablove llove ${Artist_LIBRARIES} ${LUA_LIBRARIES})
 
-ADD_EXECUTABLE(test ${UNIT_TEST_FILES})
-SET(LINK_LIBS ${LINK_LIBS} ${Artist_LIBRARIES} ${Lua_LIBRARIES})
+ADD_EXECUTABLE(tests ${UNIT_TEST_FILES})
+SET(LINK_LIBS ${LINK_LIBS} ${Artist_LIBRARIES} ${LUA_LIBRARIES})
 
-ADD_CUSTOM_COMMAND(TARGET test POST_BUILD COMMAND "./test")
+ADD_CUSTOM_COMMAND(TARGET tests POST_BUILD COMMAND "./tests")
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    INCLUDE(CMakeModules/FindFreeType.cmake)
+    find_package(Freetype REQUIRED)
     INCLUDE(${CMAKE_ROOT}/Modules/FindSDL.cmake)
     INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIR})
     INCLUDE_DIRECTORIES(${FREETYPE_INCLUDE_DIR_freetype2})
     SET(LINK_LIBS ${LINK_LIBS} ${FREETYPE_LIBRARY} ${SDL_LIBRARY})
     SET(DEFINITIONS ${DEFINITIONS} -D_OSX_SDL_)
-    SET_TARGET_PROPERTIES(llove lablove test PROPERTIES LINK_FLAGS "-Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib")
+    SET_TARGET_PROPERTIES(llove lablove tests PROPERTIES LINK_FLAGS "-Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib")
 ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 ADD_DEFINITIONS(${DEFINITIONS})
 
 TARGET_LINK_LIBRARIES(llove ${LINK_LIBS})
 TARGET_LINK_LIBRARIES(lablove llove ${LINK_LIBS})
-TARGET_LINK_LIBRARIES(test llove ${LINK_LIBS})
+TARGET_LINK_LIBRARIES(tests llove ${LINK_LIBS})
 

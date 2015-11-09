@@ -22,7 +22,6 @@
 
 #include "Symbol.h"
 #include "Orbit.h"
-#include "RandDistManager.h"
 
 #include <string>
 
@@ -57,8 +56,6 @@ public:
 protected:
     void initFromString(string str);
     int getRandomBit();
-
-    static mt_distribution* mDistBitString;
 
     int* mBits;
     unsigned int mLength;

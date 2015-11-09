@@ -22,7 +22,6 @@
 
 #include "Component.h"
 #include "CompNUL.h"
-#include "RandDistManager.h"
 
 #include <vector>
 
@@ -56,8 +55,6 @@ public:
     vector<Component*> mComponentSet;
 
 protected:
-    static mt_distribution* mDistComponentSet;
-
     CompNUL mNullComponent;
 };
 

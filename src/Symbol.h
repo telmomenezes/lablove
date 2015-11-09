@@ -22,12 +22,10 @@
 
 #include "Orbit.h"
 #include "types.h"
-#include "RandDistManager.h"
 
 #include <string>
 
 using std::string;
-using namespace gb;
 
 class Symbol
 {

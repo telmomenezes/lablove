@@ -19,12 +19,12 @@
 
 #include "ComponentSet.h"
 #include "Gridbrain.h"
+#include "Random.h"
 
 namespace gb
 {
 
 int ComponentSet::CURRENT_COMP_TYPE = 0;
-mt_distribution* ComponentSet::mDistComponentSet = gDistManager.getNewDistribution();
 
 ComponentSet::ComponentSet()
 {
@@ -68,9 +68,9 @@ Component* ComponentSet::getRandom()
     }
     else
     {
-        unsigned int pos = mDistComponentSet->iuniform(0, mComponentSet.size());
+        unsigned int pos = gRandom.iuniform(0, mComponentSet.size());
         comp = mComponentSet[pos];
-        comp->mParam = mDistComponentSet->uniform(0.0f, 1.0f);
+        comp->mParam = gRandom.uniform(0.0f, 1.0f);
 
         return comp;
     }

@@ -23,7 +23,6 @@
 #include "SimObj.h"
 #include "PopulationDynamics.h"
 #include "Orbit.h"
-#include "RandDistManager.h"
 #include "types.h"
 
 #include <list>
@@ -100,8 +99,6 @@ public:
 
 protected:
     virtual void onCycle(){}
-    
-    static RandDistManager mDistManager;
 
     gbULINT mSimulationTime;
     PopulationDynamics* mPopulationDynamics;

@@ -17,17 +17,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "Random.h"
 #include "Sim2D.h"
 #include "PopulationDynamics.h"
 #include "SymbolFloat.h"
 
+#include <stdlib.h> 
 #include <math.h>
 #include <list>
 
 using std::list;
 
-mt_distribution* Sim2D::mDistAge = gDistManager.getNewDistribution();
-mt_distribution* Sim2D::mDistPosition = gDistManager.getNewDistribution();
 
 Sim2D::Sim2D(lua_State* luaState)
 {
@@ -229,11 +229,11 @@ void Sim2D::addObject(SimObj* obj, bool init)
     object->mSim2D = this;
 
     object->mEnergy = object->mInitialEnergy;
-    object->mMaxAge = mDistAge->iuniform(object->mMaxAgeLow, object->mMaxAgeHigh);
+    object->mMaxAge = gRandom.iuniform(object->mMaxAgeLow, object->mMaxAgeHigh);
 
     if (init)
     {
-        object->mAgeLimit = mDistAge->iuniform(1, object->mMaxAge);
+        object->mAgeLimit = gRandom.iuniform(1, object->mMaxAge);
     }
     else
     {
@@ -290,10 +290,10 @@ void Sim2D::removeObject(SimObj* obj, bool deleteObj)
 void Sim2D::placeRandom(SimObj* obj)
 {
     SimObj2D* obj2D = (SimObj2D*)obj;
-    float x = mDistPosition->uniform(0, mWorldWidth);
-    float y = mDistPosition->uniform(0, mWorldLength);
+    float x = gRandom.uniform(0, mWorldWidth);
+    float y = gRandom.uniform(0, mWorldLength);
     obj2D->setPos(x, y);
-    obj2D->setRot(mDistPosition->uniform(0, M_PI * 2));
+    obj2D->setRot(gRandom.uniform(0, M_PI * 2));
 }
 
 void Sim2D::replace(SimObj* obj, SimObj* ref)
@@ -319,8 +319,8 @@ void Sim2D::placeNear(SimObj* obj, SimObj* ref)
     float origX = ((SimObj2D*)ref)->mX;
     float origY = ((SimObj2D*)ref)->mY;
 
-    float distance = mDistPosition->uniform(0, obj->getBirthRadius());
-    float angle = mDistPosition->uniform(0, M_PI * 2);
+    float distance = gRandom.uniform(0, obj->getBirthRadius());
+    float angle = gRandom.uniform(0, M_PI * 2);
 
     float targX = origX + (sinf(angle) * distance);
     float targY = origY + (cosf(angle) * distance);
@@ -345,7 +345,7 @@ void Sim2D::placeNear(SimObj* obj, SimObj* ref)
     SimObj2D* obj2D = (SimObj2D*)obj;
 
     obj2D->setPos(targX, targY);
-    obj2D->setRot(mDistPosition->uniform(0, M_PI * 2));
+    obj2D->setRot(gRandom.uniform(0, M_PI * 2));
 }
 
 void Sim2D::startCollisionDetection(float x, float y, float rad)

@@ -21,7 +21,7 @@
 #define _INCLUDE_GRIDBRAIN_COMPONENT_CLKG_H
 
 #include "Component.h"
-#include "RandDistManager.h"
+
 
 namespace gb
 {
@@ -49,8 +49,6 @@ public:
     void reset();
 
 protected:
-    static mt_distribution* mDistRand;
-
     bool mInit;
     gbULINT mTimeToTrigger;
     gbULINT mTriggerInterval;

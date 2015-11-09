@@ -250,8 +250,6 @@ protected:
     void calcProxDistScores();
     void calcProxDist();
 
-    static mt_distribution* mDistFitnessRandom;
-
     SimObj2D* mTargetObject;
     float mDistanceToTargetObject;
     float* mCurrentTargetInputBuffer;

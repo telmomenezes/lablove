@@ -18,12 +18,11 @@
  */
 
 #include "Grid.h"
+#include <stdlib.h>
+#include "Random.h"
 
 namespace gb
 {
-
-mt_distribution* Grid::mDistRowsAndColumns = gDistManager.getNewDistribution();
-mt_distribution* Grid::mDistXover = gDistManager.getNewDistribution();
 
 Grid::Grid()
 {

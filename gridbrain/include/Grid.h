@@ -21,7 +21,6 @@
 #define __INCLUDE_GRID_H
 
 #include "ComponentSet.h"
-#include "RandDistManager.h"
 #include "Coord.h"
 
 #include <vector>
@@ -104,9 +103,6 @@ public:
     unsigned int mMaxActiveCol;
 
 protected:
-    static mt_distribution* mDistRowsAndColumns;
-    static mt_distribution* mDistXover;
-
     Type mType;
     unsigned int mWidth;
     unsigned int mHeight;

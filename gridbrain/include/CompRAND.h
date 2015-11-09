@@ -21,7 +21,7 @@
 #define _INCLUDE_GRIDBRAIN_COMPONENT_RAND_H
 
 #include "Component.h"
-#include "RandDistManager.h"
+
 
 namespace gb
 {
@@ -45,9 +45,6 @@ public:
     virtual bool compare(Component* comp){return true;}
 
     virtual bool isProducer(){return true;}
-
-protected:
-    static mt_distribution* mDistRand;
 };
 
 static CompRAND COMP_RAND;

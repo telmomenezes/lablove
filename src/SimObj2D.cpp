@@ -22,10 +22,10 @@
 #include "SymbolRGB.h"
 #include "CompPER.h"
 #include "CompACT.h"
+#include "Random.h"
 
 #include <stdexcept>
 
-mt_distribution* SimObj2D::mDistFitnessRandom = gDistManager.getNewDistribution();
 
 SimObj2D::SimObj2D(lua_State* luaState) : SimObj(luaState)
 {
@@ -669,7 +669,7 @@ void SimObj2D::updateFitnesses()
             fit->mFitness = mEnergyGainedSum;
             break;
         case FITNESS_RANDOM:
-            fit->mFitness = mDistFitnessRandom->uniform(0.0f, 1.0f);
+            fit->mFitness = gRandom.uniform(0.0f, 1.0f);
             break;
         case FITNESS_MSG_SCORE:
             fit->mFitness = mMsgScore;

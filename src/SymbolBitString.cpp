@@ -18,10 +18,10 @@
  */
 
 #include "SymbolBitString.h"
+#include "Random.h"
 #include <math.h>
 #include <stdlib.h>
 
-mt_distribution* SymbolBitString::mDistBitString = gDistManager.getNewDistribution();
 
 SymbolBitString::SymbolBitString(lua_State* luaState)
 {
@@ -139,7 +139,7 @@ int SymbolBitString::getRandomBit()
         start = -1;
     }
 
-    return mDistBitString->iuniform(start, 2);
+    return gRandom.iuniform(start, 2);
 }
 
 void SymbolBitString::initRandom()
@@ -152,7 +152,7 @@ void SymbolBitString::initRandom()
 
 void SymbolBitString::mutate()
 {
-    unsigned int replacePos = mDistBitString->iuniform(0, mLength);
+    unsigned int replacePos = gRandom.iuniform(0, mLength);
     mBits[replacePos] = getRandomBit();
 }
 

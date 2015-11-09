@@ -26,9 +26,9 @@ namespace gb
 Component::Component()
 {
     mType = -1;
-    mParam = 0;
-    mInput = 0;
-    mOutput = 0;
+    mParam = 0.0f;
+    mInput = 0.0f;
+    mOutput = 0.0f;
     mPerceptionPosition = 0;
     mActionPosition = 0;
 

@@ -13,6 +13,8 @@ extern "C"
 
 #define luaL_checkbool(L,i) (lua_isboolean(L,i) ? lua_toboolean(L,i) : luaL_checkint(L,i))
 
+#define LUA_GLOBALSINDEX 1
+
 template <typename T> class Orbit
 {
     typedef struct {T* pT;} userdataType;
@@ -165,7 +167,7 @@ public:
             static_cast<userdataType*>(luaL_checkudata(luaState, narg, T::mClassName));
         if(!ud)
         {
-            luaL_typerror(luaState, narg, T::mClassName);
+            //luaL_typerror(luaState, narg, T::mClassName);
         }
         return ud->pT;  // pointer to T object
     }
@@ -175,7 +177,7 @@ public:
     static void* pointer(lua_State* luaState, int narg)
     {
         userdataType* ud = static_cast<userdataType*>(lua_touserdata(luaState, narg));
-        if(!ud) luaL_typerror(luaState, narg, T::mClassName);
+        //if(!ud) luaL_typeerror(luaState, narg, T::mClassName);
         return (void*)ud->pT;  // pointer to T object
     }
 

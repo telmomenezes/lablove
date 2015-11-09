@@ -18,11 +18,10 @@
  */
 
 #include "SymbolUL.h"
-
+#include "Random.h"
 #include <math.h>
 #include <stdlib.h>
 
-mt_distribution* SymbolUL::mDistUL = gDistManager.getNewDistribution();
 
 SymbolUL::SymbolUL(lua_State* luaState)
 {
@@ -84,7 +83,7 @@ bool SymbolUL::equals(Symbol* sym)
 
 void SymbolUL::initRandom()
 {
-    mUL = mDistUL->iuniform(mMin, mMax);
+    mUL = gRandom.iuniform(mMin, mMax);
 }
 
 void SymbolUL::mutate()

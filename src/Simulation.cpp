@@ -21,7 +21,7 @@
 #include "PopulationDynamics.h"
 #include "Symbol.h"
 #include "SymbolTable.h"
-//#include "Gridbrain.h"
+#include "Random.h"
 
 #include <math.h>
 #include <stdexcept>
@@ -189,7 +189,7 @@ void Simulation::setSelectedObject(SimObj* object)
 
 void Simulation::setSeedIndex(int index)
 {
-    gDistManager.setSeedIndex(index);
+    gRandom.setSeedIndex(index);
 }
 
 bool Simulation::getFieldValue(SimObj* obj, string fieldName, float& value)

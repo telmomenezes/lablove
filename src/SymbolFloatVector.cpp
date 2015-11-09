@@ -19,11 +19,10 @@
 
 #include "SymbolFloatVector.h"
 #include "Simulation.h"
-
+#include "Random.h"
 #include <math.h>
 #include <stdlib.h>
 
-mt_distribution* SymbolFloatVector::mDistFloatVector = gDistManager.getNewDistribution();
 
 SymbolFloatVector::SymbolFloatVector(lua_State* luaState)
 {
@@ -125,7 +124,7 @@ void SymbolFloatVector::initRandom()
 {
     for (unsigned int i = 0; i < mSize; i++)
     {
-        mVector[i] = mDistFloatVector->uniform(mMin, mMax);
+        mVector[i] = gRandom.uniform(mMin, mMax);
     }
 }
 
@@ -133,8 +132,8 @@ void SymbolFloatVector::mutate()
 {
     // TODO: this mutation strategy is temporary
     float span = fabsf(mMax - mMin);
-    float delta = mDistFloatVector->uniform(0.0f, span);
-    unsigned int index = (unsigned int)(mDistFloatVector->uniform(0.0f, mSize));
+    float delta = gRandom.uniform(0.0f, span);
+    unsigned int index = (unsigned int)(gRandom.uniform(0.0f, mSize));
     delta -= span / 2.0f;
     mVector[index] += delta;
 

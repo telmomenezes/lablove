@@ -55,9 +55,6 @@ public:
 protected:
     void initSpeed();
 
-    static mt_distribution* mDistEnergy;
-    static mt_distribution* mDistSpeed;
-
     float mSpeedX;
     float mSpeedY;
     float mSpeed;

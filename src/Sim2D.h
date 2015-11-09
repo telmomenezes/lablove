@@ -23,7 +23,6 @@
 #include "SimArtist.h"
 #include "SimObj2D.h"
 #include "PopulationDynamics.h"
-#include "RandDistManager.h"
 #include "Laser2D.h"
 
 #include "art.h"
@@ -170,9 +169,6 @@ protected:
 
     void processLaserShots();
     void drawLaserShots();
-
-    static mt_distribution* mDistAge;
-    static mt_distribution* mDistPosition;
 
     float mWorldWidth;
     float mWorldLength;

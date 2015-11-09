@@ -19,11 +19,10 @@
 
 #include "SymbolFloat.h"
 #include "Simulation.h"
-
+#include "Random.h"
 #include <math.h>
 #include <stdlib.h>
 
-mt_distribution* SymbolFloat::mDistFloat = gDistManager.getNewDistribution();
 
 SymbolFloat::SymbolFloat(lua_State* luaState)
 {
@@ -85,13 +84,13 @@ bool SymbolFloat::equals(Symbol* sym)
 
 void SymbolFloat::initRandom()
 {
-    mFloat = mDistFloat->uniform(mMin, mMax);
+    mFloat = gRandom.uniform(mMin, mMax);
 }
 
 void SymbolFloat::mutate()
 {
     float span = fabsf(mMax - mMin);
-    float delta = mDistFloat->uniform(0.0f, span);
+    float delta = gRandom.uniform(0.0f, span);
     delta -= span / 2.0f;
     mFloat += delta;
 

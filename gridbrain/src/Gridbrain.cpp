@@ -19,7 +19,7 @@
 
 #include "Gridbrain.h"
 #include "ComponentSet.h"
-
+#include "Random.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdexcept>
@@ -28,12 +28,6 @@
 
 namespace gb
 {
-
-mt_distribution* Gridbrain::mDistConnections = gDistManager.getNewDistribution();
-mt_distribution* Gridbrain::mDistMutationsProb = gDistManager.getNewDistribution();
-mt_distribution* Gridbrain::mDistComponents = gDistManager.getNewDistribution();
-mt_distribution* Gridbrain::mDistRecombine = gDistManager.getNewDistribution();
-mt_distribution* Gridbrain::mDistGridbrain = gDistManager.getNewDistribution();
 
 Gridbrain::Gridbrain()
 {
@@ -930,7 +924,7 @@ bool Gridbrain::selectRandomConnection(unsigned int &x1,
     }
 
     // Randomly select a free connection index
-    unsigned int connPos = mDistConnections->iuniform(0, possibleConnections);
+    unsigned int connPos = gRandom.iuniform(0, possibleConnections);
 
     // Find the origin component of the selected connection
     unsigned int curPos = 0;
@@ -1062,7 +1056,7 @@ bool Gridbrain::selectRandomOrigin(unsigned int &x1,
         return false;
     }
 
-    unsigned int origin = mDistConnections->iuniform(0, possibleOrigins);
+    unsigned int origin = gRandom.iuniform(0, possibleOrigins);
     unsigned int curPos = 0;
 
     if (gridTarg->getType() == Grid::BETA)
@@ -1150,7 +1144,7 @@ bool Gridbrain::selectRandomTarget(unsigned int x1,
         return false;
     }
 
-    unsigned int target = mDistConnections->iuniform(0, possibleTargets);
+    unsigned int target = gRandom.iuniform(0, possibleTargets);
     unsigned int curPos = 0;
 
     if (gridOrig->getType() == Grid::ALPHA)

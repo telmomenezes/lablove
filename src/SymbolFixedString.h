@@ -22,11 +22,10 @@
 
 #include "Symbol.h"
 #include "Orbit.h"
-#include "RandDistManager.h"
-
 #include <string>
 
 using std::string;
+
 
 class SymbolFixedString : public Symbol
 {
@@ -55,8 +54,6 @@ public:
     static Orbit<SymbolFixedString>::NumberGlobalType mNumberGlobals[];
 
 protected:
-    static mt_distribution* mDistFixedString;
-
     string mString;
     string mAlphabet;
     unsigned int mLength;

@@ -23,7 +23,7 @@
 #include "Simulation.h"
 #include "Symbol.h"
 #include "Orbit.h"
-#include "RandDistManager.h"
+
 
 class SymbolFloatVector : public Symbol
 {
@@ -52,8 +52,6 @@ public:
 
 protected:
     void calcMaxBinding();
-
-    static mt_distribution* mDistFloatVector;
 
     unsigned int mSize;
     float* mVector;

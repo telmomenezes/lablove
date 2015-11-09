@@ -18,11 +18,11 @@
  */
 
 #include "CompRAND.h"
+#include "Random.h"
+
 
 namespace gb
 {
-
-mt_distribution* CompRAND::mDistRand = gDistManager.getNewDistribution();
 
 CompRAND::CompRAND()
 {
@@ -50,7 +50,7 @@ void CompRAND::input(float value, int pin)
 float CompRAND::output()
 {
 
-    mOutput = mDistRand->uniform(-1.0f, 1.0f);
+    mOutput = gRandom.uniform(-1.0f, 1.0f);
     return mOutput;
 }
 

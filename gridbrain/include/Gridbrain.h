@@ -29,7 +29,6 @@
 #include "Grid.h"
 #include "Component.h"
 #include "Connection.h"
-#include "RandDistManager.h"
 
 #include <vector>
 #include <string>
@@ -243,12 +242,6 @@ protected:
     Gene findGene(Connection* conn);
 
     void clearInterfaces();
-
-    static mt_distribution* mDistConnections;
-    static mt_distribution* mDistMutationsProb;
-    static mt_distribution* mDistComponents;
-    static mt_distribution* mDistRecombine;
-    static mt_distribution* mDistGridbrain;
 
     vector<Grid*> mGridsVec;
 
