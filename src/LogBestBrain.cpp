@@ -106,7 +106,7 @@ int LogBestBrain::setFileNameSuffix(lua_State* luaState)
 
 int LogBestBrain::setLogOnlyLast(lua_State* luaState)
 {
-    bool onlyLast = luaL_checkbool(luaState, 1);
+    bool onlyLast = lua_toboolean(luaState, 1);
     setLogOnlyLast(onlyLast);
 
     return 0;

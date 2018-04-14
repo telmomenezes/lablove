@@ -64,7 +64,7 @@ int Symbol::getID(lua_State* luaState)
 
 int Symbol::setID(lua_State* luaState)
 {
-    mID = luaL_checkint(luaState, 1);
+    mID = luaL_checkinteger(luaState, 1);
     return 0;
 }
 

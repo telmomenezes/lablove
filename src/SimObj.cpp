@@ -532,8 +532,8 @@ int SimObj::addSymbolTable(lua_State* luaState)
 int SimObj::setSymbolName(lua_State* luaState)
 {
     string name = luaL_checkstring(luaState, 1);
-    int table = luaL_checkint(luaState, 2);
-    int pos = luaL_checkint(luaState, 3);
+    int table = luaL_checkinteger(luaState, 2);
+    int pos = luaL_checkinteger(luaState, 3);
     setSymbolName(name, table, pos);
     return 0;
 }
@@ -554,14 +554,14 @@ int SimObj::setBrain(lua_State* luaState)
 
 int SimObj::setKeepBodyOnHardDeath(lua_State* luaState)
 {
-    bool val = luaL_checkbool(luaState, 1);
+    bool val = lua_toboolean(luaState, 1);
     setKeepBodyOnHardDeath(val);
     return 0;
 }
 
 int SimObj::setKeepBodyOnExpirationDeath(lua_State* luaState)
 {
-    bool val = luaL_checkbool(luaState, 1);
+    bool val = lua_toboolean(luaState, 1);
     setKeepBodyOnExpirationDeath(val);
     return 0;
 }

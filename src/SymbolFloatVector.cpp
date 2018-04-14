@@ -26,7 +26,7 @@
 
 SymbolFloatVector::SymbolFloatVector(lua_State* luaState)
 {
-    mSize = luaL_checkint(luaState, 1);
+    mSize = luaL_checkinteger(luaState, 1);
     mMin = luaL_optnumber(luaState, 2, 0.0f);
     mMax = luaL_optnumber(luaState, 3, 1.0f);
     mVector = (float*)malloc(mSize * sizeof(float));

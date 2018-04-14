@@ -29,8 +29,8 @@ Species::Species(lua_State* luaState)
     if (luaState != NULL)
     {
         mBaseOrganism = (SimObj*)Orbit<Species>::pointer(luaState, 1);
-        mPopulation = luaL_checkint(luaState, 2);
-        mBufferSize = luaL_checkint(luaState, 3);
+        mPopulation = luaL_checkinteger(luaState, 2);
+        mBufferSize = luaL_checkinteger(luaState, 3);
     }
     else
     {
@@ -579,7 +579,7 @@ Orbit<Species>::NumberGlobalType Species::mNumberGlobals[] = {{0,0}};
 
 int Species::addGoal(lua_State* luaState)
 {
-    int fitMeasure = luaL_checkint(luaState, 1);
+    int fitMeasure = luaL_checkinteger(luaState, 1);
     float factor = luaL_optnumber(luaState, 2, 1.0f);
     addGoal(fitMeasure, factor);
     return 0;
@@ -608,7 +608,7 @@ int Species::setKinFactor(lua_State* luaState)
 
 int Species::setKinMutation(lua_State* luaState)
 {
-    bool value = luaL_checkbool(luaState, 1);
+    bool value = lua_toboolean(luaState, 1);
     setKinMutation(value);
     return 0;
 }
@@ -637,7 +637,7 @@ int Species::setRecombineProb(lua_State* luaState)
 int Species::setLog(lua_State* luaState)
 {
     string path = luaL_checkstring(luaState, 1);
-    unsigned int interval = luaL_checkint(luaState, 2);
+    unsigned int interval = luaL_checkinteger(luaState, 2);
     setLog(path, interval);
     return 0;
 }

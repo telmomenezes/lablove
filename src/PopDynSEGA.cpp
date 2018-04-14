@@ -125,14 +125,14 @@ Orbit<PopDynSEGA>::NumberGlobalType PopDynSEGA::mNumberGlobals[] = {{0,0}};
 
 int PopDynSEGA::setLogTimeInterval(lua_State* luaState)
 {
-    gbULINT interval = luaL_checkint(luaState, 1);
+    gbULINT interval = luaL_checkinteger(luaState, 1);
     setLogTimeInterval(interval);
     return 0;
 }
 
 int PopDynSEGA::setEvolutionStopTime(lua_State* luaState)
 {
-    unsigned int time = luaL_checkint(luaState, 1);
+    unsigned int time = luaL_checkinteger(luaState, 1);
     setEvolutionStopTime(time);
     return 0;
 }

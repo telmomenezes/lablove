@@ -286,14 +286,14 @@ int Simulation::setPopulationDynamics(lua_State *luaState)
 
 int Simulation::setSeedIndex(lua_State* luaState)
 {
-    int index = luaL_optint(luaState, 1, -1);
+    int index = luaL_optinteger(luaState, 1, -1);
     setSeedIndex(index);
     return 0;
 }
 
 int Simulation::setTimeLimit(lua_State* luaState)
 {
-    int limit = luaL_checkint(luaState, 1);
+    int limit = luaL_checkinteger(luaState, 1);
     setTimeLimit(limit);
     return 0;
 }

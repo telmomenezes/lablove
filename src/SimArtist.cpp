@@ -205,13 +205,13 @@ bool SimArtist::onKeyDown(Art_KeyCode keycode)
 
 int SimArtist::initGraphics(lua_State* luaState)
 {
-    int width = luaL_checkint(luaState, 1);
-    int height = luaL_checkint(luaState, 2);
-    bool fullScreen = luaL_checkbool(luaState, 3);
+    int width = luaL_checkinteger(luaState, 1);
+    int height = luaL_checkinteger(luaState, 2);
+    bool fullScreen = lua_toboolean(luaState, 3);
     bool noGraphics = false;
     if (lua_gettop(luaState) > 3)
     {        
-        noGraphics = luaL_checkbool(luaState, 4);
+        noGraphics = lua_toboolean(luaState, 4);
     }
 
     initGraphics(width, height, fullScreen, noGraphics);

@@ -27,9 +27,9 @@ SymbolRGB::SymbolRGB(lua_State* luaState)
 {
     if (luaState != NULL)
     {
-        mRed = luaL_checkint(luaState, 1);
-        mGreen = luaL_checkint(luaState, 2);
-        mBlue = luaL_checkint(luaState, 3);
+        mRed = luaL_checkinteger(luaState, 1);
+        mGreen = luaL_checkinteger(luaState, 2);
+        mBlue = luaL_checkinteger(luaState, 3);
     }
     else
     {

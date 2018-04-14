@@ -1376,7 +1376,7 @@ int Sim2D::setWorldDimensions(lua_State* luaState)
 {
     float width = luaL_checknumber(luaState, 1);
     float height = luaL_checknumber(luaState, 2);
-    int cellSide = luaL_checkint(luaState, 3);
+    int cellSide = luaL_checkinteger(luaState, 3);
     setWorldDimensions(width, height, cellSide);
     return 0;
 }

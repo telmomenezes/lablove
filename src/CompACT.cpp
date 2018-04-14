@@ -27,11 +27,11 @@ CompACT::CompACT(lua_State* luaState)
 {
     if (luaState)
     {
-        int outputType = luaL_optint(luaState, 1, -1);
-        int origTable = luaL_optint(luaState, 2, -1);
-        gbULINT origSymID = luaL_optint(luaState, 3, 0);
-        int targTable = luaL_optint(luaState, 4, -1);
-        bool dynamic = luaL_opt(luaState, luaL_checkbool, 5, false);
+        int outputType = luaL_optinteger(luaState, 1, -1);
+        int origTable = luaL_optinteger(luaState, 2, -1);
+        gbULINT origSymID = luaL_optinteger(luaState, 3, 0);
+        int targTable = luaL_optinteger(luaState, 4, -1);
+        bool dynamic = luaL_opt(luaState, lua_toboolean, 5, false);
 
         mOutputType = outputType;
         mOrigSymTable = origTable;

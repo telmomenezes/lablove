@@ -1797,8 +1797,8 @@ int SimObj2D::setInitialEnergy(lua_State* luaState)
 
 int SimObj2D::setMaxAge(lua_State* luaState)
 {
-    gbULINT maxAgeLow = luaL_checkint(luaState, 1);
-    gbULINT maxAgeHigh = luaL_optint(luaState, 2, 0);
+    gbULINT maxAgeLow = luaL_checkinteger(luaState, 1);
+    gbULINT maxAgeHigh = luaL_optinteger(luaState, 2, 0);
     setMaxAge(maxAgeLow, maxAgeHigh);
     return 0;
 }
@@ -1861,21 +1861,21 @@ int SimObj2D::setSoundRange(lua_State* luaState)
 
 int SimObj2D::setSpeakInterval(lua_State* luaState)
 {
-    unsigned int speakInterval = luaL_checkint(luaState, 1);
+    unsigned int speakInterval = luaL_checkinteger(luaState, 1);
     setSpeakInterval(speakInterval);
     return 0;
 }
 
 int SimObj2D::setShape(lua_State* luaState)
 {
-    int shape = luaL_checkint(luaState, 1);
+    int shape = luaL_checkinteger(luaState, 1);
     setShape(shape);
     return 0;
 }
 
 int SimObj2D::setColoring(lua_State* luaState)
 {
-    int coloring = luaL_checkint(luaState, 1);
+    int coloring = luaL_checkinteger(luaState, 1);
     setShape(coloring);
     return 0;
 }
@@ -1892,19 +1892,19 @@ int SimObj2D::setColoringScale(lua_State* luaState)
     string name = luaL_checkstring(luaState, 1);
     Symbol* refSym = (Symbol*)Orbit<SimObj2D>::pointer(luaState, 2);
     float scaleCenter = luaL_checknumber(luaState, 3);
-    int r1 = luaL_checkint(luaState, 4);
-    int g1 = luaL_checkint(luaState, 5);
-    int b1 = luaL_checkint(luaState, 6);
-    int r2 = luaL_checkint(luaState, 7);
-    int g2 = luaL_checkint(luaState, 8);
-    int b2 = luaL_checkint(luaState, 9);
+    int r1 = luaL_checkinteger(luaState, 4);
+    int g1 = luaL_checkinteger(luaState, 5);
+    int b1 = luaL_checkinteger(luaState, 6);
+    int r2 = luaL_checkinteger(luaState, 7);
+    int g2 = luaL_checkinteger(luaState, 8);
+    int b2 = luaL_checkinteger(luaState, 9);
     setColoringScale(name, refSym, scaleCenter, r1, g1, b1, r2, g2, b2);
     return 0;
 }
 
 int SimObj2D::setFireInterval(lua_State* luaState)
 {
-    unsigned int interval = luaL_checkint(luaState, 1);
+    unsigned int interval = luaL_checkinteger(luaState, 1);
     setFireInterval(interval);
     return 0;
 }
@@ -1946,28 +1946,28 @@ int SimObj2D::setLaserCostFactor(lua_State* luaState)
 
 int SimObj2D::setLaserHitDuration(lua_State* luaState)
 {
-    unsigned int duration = luaL_checkint(luaState, 1);
+    unsigned int duration = luaL_checkinteger(luaState, 1);
     setLaserHitDuration(duration);
     return 0;
 }
 
 int SimObj2D::addObjectSymbolAcquisition(lua_State* luaState)
 {
-    int table = luaL_checkint(luaState, 1);
+    int table = luaL_checkinteger(luaState, 1);
     addObjectSymbolAcquisition(table);
     return 0;
 }
 
 int SimObj2D::addMessageSymbolAcquisition(lua_State* luaState)
 {
-    int table = luaL_checkint(luaState, 1);
+    int table = luaL_checkinteger(luaState, 1);
     addMessageSymbolAcquisition(table);
     return 0;
 }
 
 int SimObj2D::setTarget(lua_State* luaState)
 {
-    bool target = luaL_checkbool(luaState, 1);
+    bool target = lua_toboolean(luaState, 1);
     setTarget(target);
     return 0;
 }

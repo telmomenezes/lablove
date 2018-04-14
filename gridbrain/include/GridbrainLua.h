@@ -84,9 +84,9 @@ int LuaGridbrain::init(lua_State* luaState)
 
 int LuaGridbrain::setComponent(lua_State* luaState)
 {
-    unsigned int x = luaL_checkint(luaState, 1);
-    unsigned int y = luaL_checkint(luaState, 2);
-    unsigned int g = luaL_checkint(luaState, 3);
+    unsigned int x = luaL_checkinteger(luaState, 1);
+    unsigned int y = luaL_checkinteger(luaState, 2);
+    unsigned int g = luaL_checkinteger(luaState, 3);
     Component* comp = (Component*)(Orbit<LuaGridbrain>::pointer(luaState, 4));
     Gridbrain::setComponent(x, y, g, *comp);
     return 0;
@@ -102,12 +102,12 @@ int LuaGridbrain::addGrid(lua_State* luaState)
 
 int LuaGridbrain::addConnection(lua_State* luaState)
 {
-    unsigned int xOrig = luaL_checkint(luaState, 1);
-    unsigned int yOrig = luaL_checkint(luaState, 2);
-    unsigned int gOrig = luaL_checkint(luaState, 3);
-    unsigned int xTarg = luaL_checkint(luaState, 4);
-    unsigned int yTarg = luaL_checkint(luaState, 5);
-    unsigned int gTarg = luaL_checkint(luaState, 6);
+    unsigned int xOrig = luaL_checkinteger(luaState, 1);
+    unsigned int yOrig = luaL_checkinteger(luaState, 2);
+    unsigned int gOrig = luaL_checkinteger(luaState, 3);
+    unsigned int xTarg = luaL_checkinteger(luaState, 4);
+    unsigned int yTarg = luaL_checkinteger(luaState, 5);
+    unsigned int gTarg = luaL_checkinteger(luaState, 6);
 
     Gridbrain::addConnection(xOrig, yOrig, gOrig, xTarg, yTarg, gTarg);
     return 0;
@@ -115,7 +115,7 @@ int LuaGridbrain::addConnection(lua_State* luaState)
 
 int LuaGridbrain::addRandomConnections(lua_State* luaState)
 {
-    unsigned int count = luaL_checkint(luaState, 1);
+    unsigned int count = luaL_checkinteger(luaState, 1);
     Gridbrain::addRandomConnections(count);
     return 0;
 }
@@ -185,7 +185,7 @@ int LuaGridbrain::setParamMutationStanDev(lua_State* luaState)
 
 int LuaGridbrain::setMaxInputDepth(lua_State* luaState)
 {
-    unsigned int depth = luaL_checkint(luaState, 1);
+    unsigned int depth = luaL_checkinteger(luaState, 1);
     Gridbrain::setMaxInputDepth(depth);
     return 0;
 }
@@ -227,9 +227,9 @@ int LuaGrid::setComponentSet(lua_State* luaState)
 
 int LuaGrid::init(lua_State* luaState)
 {
-    Type type = (Type)luaL_checkint(luaState, 1);
-    unsigned int width = luaL_checkint(luaState, 2);
-    unsigned int height = luaL_checkint(luaState, 3);
+    Type type = (Type)luaL_checkinteger(luaState, 1);
+    unsigned int width = luaL_checkinteger(luaState, 2);
+    unsigned int height = luaL_checkinteger(luaState, 3);
     Grid::init(type, width, height);
     return 0;
 }

@@ -25,9 +25,9 @@
 
 SymbolUL::SymbolUL(lua_State* luaState)
 {
-    mUL = luaL_checkint(luaState, 1);
-    mMin = luaL_optint(luaState, 2, 0);
-    mMax = luaL_optint(luaState, 3, 100);
+    mUL = luaL_checkinteger(luaState, 1);
+    mMin = luaL_optinteger(luaState, 2, 0);
+    mMax = luaL_optinteger(luaState, 3, 100);
 }
 
 SymbolUL::SymbolUL(gbULINT value, gbULINT min, gbULINT max)

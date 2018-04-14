@@ -37,7 +37,7 @@ SymbolTable::SymbolTable(Symbol* refSymbol, int id)
 SymbolTable::SymbolTable(lua_State* luaState)
 {
     Symbol* refSymbol = (Symbol*)Orbit<SymbolTable>::pointer(luaState, 1);
-    int id = luaL_optint(luaState, 2, -1);
+    int id = luaL_optinteger(luaState, 2, -1);
 
     create(refSymbol, id);
 }
@@ -337,7 +337,7 @@ int SymbolTable::getID(lua_State* luaState)
 
 int SymbolTable::setDynamic(lua_State* luaState)
 {
-    bool dyn = luaL_checkbool(luaState, 1);
+    bool dyn = lua_toboolean(luaState, 1);
     setDynamic(dyn);
     return 0;
 }
